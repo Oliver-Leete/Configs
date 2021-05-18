@@ -1276,6 +1276,63 @@ require('telescope').setup{
     },
   },
 }
+
+local action_state = require('telescope.actions.state')
+
+local open_dif = function()
+  local selected_entry = action_state.get_selected_entry()
+  local value = selected_entry['value']
+  -- close Telescope window properly prior to switching windows
+  vim.api.nvim_win_close(0, true)
+  local cmd = 'DiffviewOpen ' .. value 
+  vim.cmd(cmd)
+end
+
+local open_single_dif = function()
+  local selected_entry = action_state.get_selected_entry()
+  local value = selected_entry['value']
+  -- close Telescope window properly prior to switching windows
+  vim.api.nvim_win_close(0, true)
+  local cmd = 'DiffviewOpen ' .. value .. '~1..' .. value
+  vim.cmd(cmd)
+end
+
+function _G.git_bcommits()
+    require('telescope.builtin').git_bcommits({
+      attach_mappings = function(_, map)
+        map('n', '<c-o>', open_dif)
+        map('i', '<c-o>', open_dif)
+        map('n', '<c-d>', open_single_dif)
+        map('i', '<c-d>', open_single_dif)
+        return true
+      end
+  })
+end
+
+function _G.git_commits()
+    require('telescope.builtin').git_commits({
+      attach_mappings = function(_, map)
+        map('n', '<c-o>', open_dif)
+        map('i', '<c-o>', open_dif)
+        map('n', '<c-d>', open_single_dif)
+        map('i', '<c-d>', open_single_dif)
+        return true
+      end
+  })
+end
+
+function _G.git_branch()
+    require('telescope.builtin').git_branches({
+      attach_mappings = function(_, map)
+        map('n', '<c-o>', open_dif)
+        map('i', '<c-o>', open_dif)
+        map('n', '<c-d>', open_single_dif)
+        map('i', '<c-d>', open_single_dif)
+        return true
+      end
+  })
+end
+
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('bibtex')
 
@@ -1479,8 +1536,8 @@ require("which-key").register({
       [":"] = {"<cmd>Telescope command_history<cr>", "Search History"},
       B = {"<cmd>Telescope buffers only_cwd=true show_all_buffers=true<cr>", "Buffers (cwd)"},
       b = {"<cmd>Telescope buffers show_all_buffers=true<cr>", "Buffers"},
-      C = {"<cmd>Telescope git_bcommits<cr>", "Commits (buffer)"},
-      c = {"<cmd>Telescope git_commits<cr>", "Git Commits"},
+      C = {"<cmd>call v:lua.git_bcommits()<cr>", "Commits (buffer)"},
+      c = {"<cmd>call v:lua.git_commits()<cr>", "Git Commits"},
       E = {"<cmd>Telescope lsp_document_diagnostics<cr>", "Errors (buffer)"},
       e = {"<cmd>Telescope lsp_workspace_diagnostics<cr>", "Errors"},
       F = {"<cmd>Telescope fd<cr>", "Files (non git)"},
@@ -1508,9 +1565,9 @@ require("which-key").register({
       name = "Git",
       a = {"<cmd>lua require'gitsigns'.blame_line()<CR>", "Blame Line"},
       A = {"<cmd>Gitsigns toggle_current_line_blame<CR>", "Blame Toggle"},
-      b = {"<cmd>Telescope git_branches<cr>", "Branches"},
-      C = {"<cmd>Telescope git_bcommits<cr>", "Commits (buffer)"},
-      c = {"<cmd>Telescope git_commits <cr>", "Commits"},
+      b = {"<cmd>call v:lua.git_branch()<cr>", "Branches"},
+      C = {"<cmd>call v:lua.git_bcommits()<cr>", "Commits (buffer)"},
+      c = {"<cmd>call v:lua.git_commits()<cr>", "Commits"},
       g = {"<cmd>call PMToggleView('gitdiff')<CR>", "Git Diff Viewer"},
       h = {"<cmd>GV?<CR>", "History"},
       m = {"<cmd>Git commit<cr>", "Edit Commit Message"},
