@@ -461,6 +461,7 @@ nmap <silent> <S-down>  <nop>
 let g:splitjoin_split_mapping = ''
 let g:splitjoin_join_mapping = ''
 let g:UnconditionalPaste_no_mappings = 1
+let g:caser_no_mappings	= 1
 
 " Expression Mapping (to go in which-key)
 nmap <expr> <plug>(Telescope-grep)  "<cmd>Telescope grep_string search=" . input("Grep For > ") . "<CR>"
@@ -505,12 +506,7 @@ call  PMRegisterPanelView('bottom', '3term',            '3ToggleTerm',          
 call  PMRegisterPanelView('bottom', '4term',            '4ToggleTerm',                          'windo if &filetype == "toggleterm" | q | endif')
 call  PMRegisterPanelView('bottom', '5term',            '5ToggleTerm',                          'windo if &filetype == "toggleterm" | q | endif')
 call  PMRegisterPanelView('right',  'symbols',          'SymbolsOutlineOpen',                   'SymbolsOutlineClose')
-call  PMRegisterPanelView('top',    'gitdiff',          'call DiffviewOpenAndSet()',            'DiffviewClose')
-
-function DiffviewOpenAndSet()
-  DiffviewOpen
-  set filetype=DiffviewFiles
-endfunction
+call  PMRegisterPanelView('top',    'gitdiff',          'DiffviewOpen',            'DiffviewClose')
 
 function CloseAllPanels()
   UndotreeHide
@@ -1417,7 +1413,7 @@ require("which-key").register({
     },
     s = {
       name = "Change Case",
-      p = {"<Plug>CaserMixedCase", "Mixed Case"},
+      p = {"<Plug>CaserMixedCase", "Pascal Case"},
       c = {"<Plug>CaserCamelCase", "Camel Case"},
       ["_"] = {"<Plug>CaserSnakeCase", "Snake Case"},
       u = {"<Plug>CaserUpperCase", "Upper Case"},
@@ -1429,7 +1425,7 @@ require("which-key").register({
       ["."] = {"<Plug>CaserDotCase", "Dot Case"},
       s ={
         name = "Change Case (Line)",
-        p = {"gspix", "Mixed Case", noremap=false},
+        p = {"gspix", "Pascal Case", noremap=false},
         c = {"gscix", "Camel Case", noremap=false},
         ["_"] = {"gs_ix", "Snake Case", noremap=false},
         u = {"gsuix", "Upper Case", noremap=false},
@@ -1442,7 +1438,7 @@ require("which-key").register({
       },
       S = {
         name = "Change Case (SOL)",
-        p = {"gspH", "Mixed Case", noremap=false},
+        p = {"gspH", "Pascal Case", noremap=false},
         c = {"gscH", "Camel Case", noremap=false},
         ["_"] = {"gs_H", "Snake Case", noremap=false},
         u = {"gsuH", "Upper Case", noremap=false},
@@ -1456,7 +1452,7 @@ require("which-key").register({
     },
     S = {
       name = "Change Case (EOL)",
-      p = {"gspL", "Mixed Case", noremap=false},
+      p = {"gspL", "Pascal Case", noremap=false},
       c = {"gscL", "Camel Case", noremap=false},
       ["_"] = {"gs_L", "Snake Case", noremap=false},
       u = {"gsuL", "Upper Case", noremap=false},
@@ -1597,11 +1593,7 @@ require("which-key").register({
     },
     t = {
       name = "Explorer",
-      e = {"<cmd>edit .<cr>", "Explorer"},
-      x = {"<cmd>split .<cr>", "Horizontal Explorer"},
-      v = {"<cmd>vsplit .<cr>", "Vertical Explorer"},
-      t = {"<cmd>tabnew .<cr>", "Tab Explorer"},
-      l = {"<cmd>Explore<cr>", "Explore Here"},
+      t = {"<cmd>call PMToggleView('nvim-tree')<cr>", "Open Explorer"},
     },
     b = {
       name = "buffers",
@@ -1723,7 +1715,7 @@ require("which-key").register({
     k = {"c<cr><esc>", "Split"},
     t = {"<Plug>(EasyAlign)", "Align"},
     s = {
-      p = {"<Plug>CaserVMixedCase", "Mixed Case"},
+      p = {"<Plug>CaserVMixedCase", "Pascal Case"},
       c = {"<Plug>CaserVCamelCase", "Camel Case"},
       ["_"] = {"<Plug>CaserVSnakeCase", "Snake Case"},
       u = {"<Plug>CaserVUpperCase", "Upper Case"},
