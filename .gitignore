@@ -1,0 +1,16 @@
+**/*
+**/*/
+!*/
+/nvim/pluged/**
+kak/
+zsh/
+rofi/
+
+!/.gitignore
+!/README.md
+!/nvim/init.vim
+!/kitty/*.conf
+!/picom/*.conf
+!/xmobar/*.conf
+!/fish/config.fish
+!starship.toml
