@@ -12,8 +12,7 @@ call plug#begin('~/.config/nvim/pluged')
   Plug 'tpope/vim-projectionist'
 
   " Git
-  Plug 'tpope/vim-fugitive'
-  Plug 'tpope/vim-rhubarb'
+  Plug 'TimUntersberger/neogit'
   Plug 'lewis6991/gitsigns.nvim', {'branch': 'sec'}
   Plug 'junegunn/gv.vim'
   Plug 'drzel/vim-repo-edit'
@@ -1346,6 +1345,30 @@ require('gitsigns').setup {
   use_internal_diff = true,  -- If luajit is present
 }
 
+local neogit = require("neogit")
+
+neogit.setup {
+  disable_signs = false,
+  disable_context_highlighting = false,
+  -- customize displayed signs
+  signs = {
+    -- { CLOSED, OPENED }
+    section = { ">", "v" },
+    item = { ">", "v" },
+    hunk = { "", "" },
+  },
+  integrations = {
+    diffview = true  
+  },
+  -- override/add mappings
+  mappings = {
+    -- modify status buffer mappings
+    status = {
+      ["B"] = "BranchPopup",
+    }
+  }
+}
+
 -- BQF Settup
 
 require('bqf').setup({
@@ -1543,11 +1566,12 @@ require("which-key").register({
       c = {"<cmd>call v:lua.git_commits()<cr>", "Commits"},
       g = {"<cmd>call PMToggleView('gitdiff')<CR>", "Git Diff Viewer"},
       h = {"<cmd>GV?<CR>", "History"},
-      m = {"<cmd>Git commit<cr>", "Edit Commit Message"},
+      m = {"<cmd>Neogit commit<cr>", "Edit Commit Message"},
+      n = {"<cmd>Neogit<cr>", "Neogit Status"},
       p = {"<cmd>lua require'gitsigns'.preview_hunk()<CR>", "Hunk Preview"},
       r = {"<cmd>lua require'gitsigns'.reset_hunk()<CR>", "Hunk Reset"},
       R = {"<cmd>Gitsigns reset_buffer<CR>", "Blame Toggle"},
-      S = {"<cmd>Git stage %<CR>", "Stage File"},
+      S = {"<cmd>Gitsigns stage_buffer<CR>", "Stage File"},
       s = {"<cmd>lua require'gitsigns'.stage_hunk()<CR>", "Hunk Stage"},
       T = {"<cmd>GV!<CR>", "Tree (buffer)"},
       t = {"<cmd>GV<CR>", "Tree"},
