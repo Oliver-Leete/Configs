@@ -8,7 +8,8 @@ call plug#begin('~/.config/nvim/pluged')
   Plug 'nvim-lua/plenary.nvim'
 
   " Project Managment
-  Plug 'tpope/vim-obsession'
+  Plug 'rmagatti/auto-session'
+  Plug 'rmagatti/session-lens'
   Plug 'tpope/vim-projectionist'
 
   " Git
@@ -492,15 +493,15 @@ call  PMRegisterPanelView('bottom', 'errorlistdoc',     'Trouble lsp_document_di
 call  PMRegisterPanelView('bottom', 'errorlist',        'Trouble lsp_workspace_diagnostics',    'TroubleClose')
 call  PMRegisterPanelView('bottom', 'troubleTelescope', 'Trouble telescope',                    'TroubleClose')
 call  PMRegisterPanelView('bottom', 'Todo-Trouble',     'TodoTrouble',                          'TroubleClose')
-call  PMRegisterPanelView('bottom', 'loclistFilter',    'lwindow',                              'windo if &buftype == "quickfix" || &buftype == "locationlist" | q | endif')
-call  PMRegisterPanelView('bottom', 'quickfixFilter',   'cwindow',                              'windo if &buftype == "quickfix" || &buftype == "locationlist" | q | endif')
+call  PMRegisterPanelView('bottom', 'loclistFilter',    'lopen',                                'windo if &buftype == "quickfix" || &buftype == "locationlist" | q | endif')
+call  PMRegisterPanelView('bottom', 'quickfixFilter',   'copen',                                'windo if &buftype == "quickfix" || &buftype == "locationlist" | q | endif')
 call  PMRegisterPanelView('bottom', 'term',             'ToggleTerm',                           'ToggleTerm')
 call  PMRegisterPanelView('bottom', '2term',            '2ToggleTerm',                          'windo if &filetype == "toggleterm" | q | endif')
 call  PMRegisterPanelView('bottom', '3term',            '3ToggleTerm',                          'windo if &filetype == "toggleterm" | q | endif')
 call  PMRegisterPanelView('bottom', '4term',            '4ToggleTerm',                          'windo if &filetype == "toggleterm" | q | endif')
 call  PMRegisterPanelView('bottom', '5term',            '5ToggleTerm',                          'windo if &filetype == "toggleterm" | q | endif')
 call  PMRegisterPanelView('right',  'symbols',          'SymbolsOutlineOpen',                   'SymbolsOutlineClose')
-call  PMRegisterPanelView('top',    'gitdiff',          'DiffviewOpen',            'DiffviewClose')
+call  PMRegisterPanelView('top',    'gitdiff',          'DiffviewOpen',                         'DiffviewClose')
 
 function CloseAllPanels()
   UndotreeHide
@@ -518,45 +519,37 @@ endfunction
 
 lua << EOF
 
+-- Auto Sessions
+local opts = {
+  log_level = 'info',
+  auto_session_enable_last_session = false,
+  auto_session_enabled = true,
+  auto_save_enabled = nil,
+  auto_restore_enabled = nil,
+  auto_session_suppress_dirs = nil
+}
+
+require('auto-session').setup(opts)
+
 -- Zen Mode
 
 require("zen-mode").setup {
   window = {
-    backdrop = 0.95, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
-    -- height and width can be:
-    -- * an absolute number of cells when > 1
-    -- * a percentage of the width / height of the editor when <= 1
-    width = 120, -- width of the Zen window
-    height = 1, -- height of the Zen window
-    -- by default, no options are changed for the Zen window
-    -- uncomment any of the options below, or add other vim.wo options you want to apply
+    backdrop = 0.9, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
+    width = 120,
+    height = 1,
     options = {
       signcolumn = "no",
       number = false, -- disable number column
       relativenumber = false, -- disable relative numbers
       scrolloff = 999,
-      -- cursorline = false, -- disable cursorline
-      -- cursorcolumn = false, -- disable cursor column
-      -- foldcolumn = "0", -- disable fold column
-      -- list = false, -- disable whitespace characters
     },
   },
   plugins = {
     gitsigns = true, -- disables git signs
-    tmux = true, -- disables the tmux statusline
-    -- this will change the font size on kitty when in Zen mode
-    -- to make this work, you need to set the following kitty options:
-    -- - allow_remote_control socket-only
-    -- - listen_on unix:/tmp/kitty
-    kitty = {
-      enabled = false,
-      font = "+1", -- font size increment
-    },
   },
-  -- callback where you can add custom code when the Zen window opens
   on_open = function(win)
   end,
-  -- callback where you can add custom code when the Zen window closes
   on_close = function()
   end,
 }
@@ -597,7 +590,6 @@ require'bufferline'.setup{
 require('lualine').setup{
   options = {
     theme = 'tokyonight',
-    -- theme = 'material-nvim',
     section_separators = {'', ''},
     component_separators = {'', ''},
     extensions = { 'nvim-tree', 'fugitive' },
@@ -1163,9 +1155,10 @@ vim.g.completion_timer_cycle = 200
 -- Telescope Settup
 
 local actions = require('telescope.actions')
-require"telescope".load_extension("bibtex")
+require('telescope').load_extension("bibtex")
 require('telescope').load_extension('gh')
-require"telescope".load_extension("media_files")
+require('telescope').load_extension("media_files")
+require("telescope").load_extension("session-lens")
 local trouble = require("trouble.providers.telescope")
 
 require('telescope').setup{
@@ -1549,6 +1542,7 @@ require("which-key").register({
       w = {"<plug>(Telescope-find)", "Find"},
       W = {"<plug>(Telescope-locate)", "Locate"},
       y = {"<cmd>Telescope registers<cr>", "Registers"},
+      z = {"<cmd>Telescope session-lens search_session<cr>", "Session Search"},
     },
     G = {
       name = "GitHub",
@@ -1824,5 +1818,6 @@ let g:vimtex_compiler_latexmk = {
     \}
 
 autocmd BufNewFile,BufRead *.jl set filetype=julia
+
 redraw
 
