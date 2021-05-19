@@ -21,9 +21,7 @@ call plug#begin('~/.config/nvim/pluged')
   Plug 'sindrets/diffview.nvim'
 
   " Registers
-  " Plug 'svermeulen/vim-cutlass'
   Plug 'svermeulen/vim-subversive'
-  " Plug 'junegunn/vim-peekaboo'
 
   " Movement Commands
   Plug 'unblevable/quick-scope'
@@ -65,8 +63,6 @@ call plug#begin('~/.config/nvim/pluged')
   " Plug 'JuliaEditorSupport/julia-vim'
 
   " UI Stuff
-  " Plug 'junegunn/goyo.vim'
-  " Plug 'junegunn/limelight.vim'
   Plug 'folke/zen-mode.nvim'
   Plug 'hoob3rt/lualine.nvim'
   Plug 'arkav/lualine-lsp-progress'
@@ -93,7 +89,6 @@ call plug#begin('~/.config/nvim/pluged')
   " Quickfix
   Plug 'kevinhwang91/nvim-bqf'
   Plug 'tommcdo/vim-lister'
-  " Plug 'inkarkat/vim-SpellCheck'
 
   " Themes
   Plug 'phanviet/vim-monokai-pro'
@@ -118,7 +113,6 @@ call plug#begin('~/.config/nvim/pluged')
   Plug 'hrsh7th/vim-vsnip-integ'
   Plug 'rafamadriz/friendly-snippets'
   Plug 'windwp/nvim-autopairs'
-  " Plug 'GoldsteinE/compe-latex-symbols'
 
   " Telescope
   Plug 'nvim-lua/popup.nvim'
@@ -128,6 +122,7 @@ call plug#begin('~/.config/nvim/pluged')
   Plug 'nvim-telescope/telescope-media-files.nvim'
   Plug 'tkmpypy/telescope-jumps.nvim'
   Plug 'nvim-telescope/telescope-bibtex.nvim'
+  Plug 'nvim-telescope/telescope-github.nvim'
 
   " Treesitter
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
@@ -931,35 +926,6 @@ local check_back_space = function()
     end
 end
 
--- Use (s-)tab to:
---- move to prev/next item in completion menuone
---- jump to prev/next snippet's placeholder
-_G.tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return t "<C-n>"
-  elseif vim.fn.call("vsnip#available", {1}) == 1 then
-    return t "<Plug>(vsnip-expand-or-jump)"
-  elseif check_back_space() then
-    return t "<Tab>"
-  else
-    return vim.fn['compe#complete']()
-  end
-end
-_G.s_tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return t "<C-p>"
-  elseif vim.fn.call("vsnip#jumpable", {-1}) == 1 then
-    return t "<Plug>(vsnip-jump-prev)"
-  else
-    return t "<S-Tab>"
-  end
-end
-
-vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-
 -- Snippets Settup
 
 local remap = vim.api.nvim_set_keymap
@@ -1199,6 +1165,7 @@ vim.g.completion_timer_cycle = 200
 
 local actions = require('telescope.actions')
 require"telescope".load_extension("bibtex")
+require('telescope').load_extension('gh')
 require"telescope".load_extension("media_files")
 local trouble = require("trouble.providers.telescope")
 
@@ -1560,7 +1527,13 @@ require("which-key").register({
       W = {"<plug>(Telescope-locate)", "Locate"},
       y = {"<cmd>Telescope registers<cr>", "Registers"},
     },
-    G = {"<cmd>Git<cr>", "Git Status"},
+    G = {
+      name = "GitHub",
+      i = {"<cmd>Telescope gh issues<cr>", "Search Issues"},
+      p = {"<cmd>Telescope gh pull_request<cr>", "Search Issues"},
+      g = {"<cmd>Telescope gh gist<cr>", "Search Issues"},
+      r = {"<cmd>Telescope gh run<cr>", "Search Issues"},
+    },
     g = {
       name = "Git",
       a = {"<cmd>lua require'gitsigns'.blame_line()<CR>", "Blame Line"},
