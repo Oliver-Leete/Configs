@@ -14,3 +14,4 @@ rofi/
 !/xmobar/*.conf
 !/fish/config.fish
 !starship.toml
+!/nvim/lua/*
