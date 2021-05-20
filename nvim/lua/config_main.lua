@@ -28,7 +28,7 @@ require("zen-mode").setup {
   plugins = {
     gitsigns = true, -- disables git signs
   },
-  on_open = function(win)
+  on_open = function()
   end,
   on_close = function()
   end,
@@ -195,12 +195,12 @@ require'diffview'.setup {
 -- Lsp Trouble
 
 require("trouble").setup {
-  height = 20, 
-  icons = true, 
-  mode = "workspace", 
-  fold_open = "", 
-  fold_closed = "", 
-  action_keys = { 
+  height = 20,
+  icons = true,
+  mode = "workspace",
+  fold_open = "",
+  fold_closed = "",
+  action_keys = {
       cancel = "q", -- cancel the preview and get back to your last window / buffer / cursor
       close = "<esc>", -- close the list
       refresh = "r", -- manually refresh
@@ -216,8 +216,8 @@ require("trouble").setup {
       next = "j" -- next item
   },
   indent_lines = true, -- add an indent guide below the fold icons
-  auto_open = false, 
-  auto_close = false, 
+  auto_open = false,
+  auto_close = false,
   auto_preview = false, -- automatically preview the location of the diagnostic. <esc> to close preview and go back
   signs = {
       -- icons / text used for a diagnostic
@@ -547,7 +547,7 @@ require'lsp_signature'.on_attach({
   handler_opts = {
     border = "single"   -- double, single, shadow, none
   },
-  decorator = {"`", "`"}  
+  decorator = {"`", "`"}
 })
 require'lspinstall'.setup()
 local servers = require'lspinstall'.installed_servers()
@@ -577,6 +577,36 @@ local servers = require'lspinstall'.installed_servers()
               }
             }
         }
+    }
+  elseif server == 'sumneko' then
+    require'lspconfig'.sumneko_lua.setup {
+      cmd = {
+          "/usr/lib/lua-language-server/lua-language-server",
+          "-E",
+          "/usr/share/lua-language-server/main.lua"
+      },
+      settings = {
+          on_attach=custom_attach,
+          Lua = {
+         completion = {
+              keywordSnippet = "Disable",
+          },
+          diagnostics = {
+              globals = {"vim", "use"},
+              disable = {"lowercase-global"}
+          },
+          runtime = {
+              version = "LuaJIT",
+              path = vim.split(package.path, ";"),
+          },
+          workspace = {
+              library = {
+                  [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                  [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+              },
+          },
+        }
+      }
     }
   else
     for _, server in pairs(servers) do

@@ -518,7 +518,7 @@ endfunction
 
 
 lua << EOF
-require('main_config')
+require('config_main')
 EOF
 
 silent! !git rev-parse --is-inside-work-tree
