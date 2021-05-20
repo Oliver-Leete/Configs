@@ -14,7 +14,7 @@ call plug#begin('~/.config/nvim/pluged')
 
   " Git
   Plug 'TimUntersberger/neogit'
-  Plug 'lewis6991/gitsigns.nvim', {'branch': 'sec'}
+  Plug 'lewis6991/gitsigns.nvim'
   Plug 'junegunn/gv.vim'
   Plug 'drzel/vim-repo-edit'
   Plug 'rhysd/committia.vim'
@@ -553,6 +553,7 @@ let g:vimtex_compiler_latexmk = {
     \}
 
 autocmd BufNewFile,BufRead *.jl set filetype=julia
+autocmd FileType julia set commentstring=#%s
 
 redraw
 

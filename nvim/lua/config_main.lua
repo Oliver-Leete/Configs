@@ -39,7 +39,7 @@ require("zen-mode").setup {
 require'bufferline'.setup{
  options = {
     view = "multiwindow",
-    numbers = "none", 
+    numbers = "none",
     number_style = "none",
     mappings = false,
     buffer_close_icon= '',
@@ -48,19 +48,19 @@ require'bufferline'.setup{
     left_trunc_marker = '',
     right_trunc_marker = '',
     max_name_length = 18,
-    max_prefix_length = 15, 
+    max_prefix_length = 15,
     tab_size = 18,
     diagnostics = "nvim_lsp",
-    diagnostics_indicator = function(count, level, diagnostics_dict)
+    diagnostics_indicator = function(count, level)
       local icon = level:match("error") and "" or (level:match("warning") and "" or "")
       return " " .. icon .. count
     end,
-    show_buffer_close_icons = true, 
-    show_close_icon = true, 
+    show_buffer_close_icons = true,
+    show_close_icon = true,
     show_tab_indicators = true,
     persist_buffer_sort = true,
-    separator_style = "slant", 
-    enforce_regular_tabs = true, 
+    separator_style = "slant",
+    enforce_regular_tabs = true,
     always_show_bufferline = true,
   }
 }
@@ -78,7 +78,7 @@ require('lualine').setup{
     lualine_a = {{'mode'}},
     lualine_b = {{'branch'}, { 'filename', file_status = true }},
     lualine_c = {
-      { 'diagnostics', 
+      { 'diagnostics',
         sources={ 'nvim_lsp' },
         sections={'error', 'warn', 'info'},
         color_error='#f85e84',
@@ -86,15 +86,15 @@ require('lualine').setup{
         color_info='#7accd7',
         {error = '', warn = '', info = ''},
         'lsp-progress'
-      }, 
+      },
     },
     lualine_x = {
-      { 'diff', 
+      { 'diff',
         color_added='#9ecd6f',
         color_modified='#7accd7',
         color_removed='#f85e84',
         symbols={added = '+', modified = '~', removed = '-'}
-      }, 
+      },
       'fileformat', 'filetype'
     },
     lualine_y = {'progress'},
@@ -117,7 +117,7 @@ vim.g.nvim_tree_git_hl = 1
 vim.g.nvim_tree_lsp_diagnostics = 1
 vim.g.netrw_liststyle = 3
 vim.g.netrw_preview=1
-vim.g.nvim_tree_width = 40 
+vim.g.nvim_tree_width = 40
 
 vim.g.nvim_tree_icons = {
     default = '',
@@ -170,7 +170,7 @@ require'diffview'.setup {
     -- The `view` bindings are active in the diff buffers, only when the current
     -- tabpage is a Diffview.
     view = {
-      ["<tab>"]     = cb("select_next_entry"),  -- Open the diff for the next file 
+      ["<tab>"]     = cb("select_next_entry"),  -- Open the diff for the next file
       ["<s-tab>"]   = cb("select_prev_entry"),  -- Open the diff for the previous file
       ["<leader>t"] = cb("focus_files"),        -- Bring focus to the files panel
       -- ["<leader>b"] = cb("toggle_files"),       -- Toggle the files panel.
@@ -265,6 +265,7 @@ require"toggleterm".setup{
 -- Treesitter
 
 require'nvim-treesitter.configs'.setup {
+  autopairs = {enable = true},
   highlight = { enable = true, },
   indent = { enable = true },
   rainbow = { enable = true },
@@ -316,7 +317,6 @@ require'nvim-treesitter.configs'.setup {
        enable = true,
        peek_definition_code = {
          ["<leader>pD"] = "@function.outer",
-         ["<leader>pD"] = "@class.outer",
        },
      },
   },
@@ -383,20 +383,6 @@ require'compe'.setup {
   };
 }
 
--- Compe Use Tab Keys
-local t = function(str)
-  return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
-local check_back_space = function()
-    local col = vim.fn.col('.') - 1
-    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
-        return true
-    else
-        return false
-    end
-end
-
 -- Snippets Settup
 
 local remap = vim.api.nvim_set_keymap
@@ -421,12 +407,6 @@ npairs.setup({
     check_ts = true,
 })
 
-require('nvim-treesitter.configs').setup {
-    autopairs = {enable = true}
-}
-
-local ts_conds = require('nvim-autopairs.ts-conds')
-
 -- Lsp Settup
 
 local nvim_lsp = require('lspconfig')
@@ -441,8 +421,6 @@ vim.fn.sign_define( "LspDiagnosticsSignHint", {texthl = "LspDiagnosticsSignHint"
 vim.fn.sign_define( "LspDiagnosticsSignInformation", {texthl = "LspDiagnosticsSignInformation", text = "", numhl = "LspDiagnosticsSignInformation"})
 
 local custom_attach = function(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
 	print("LSP started.");
   capabilities = capabilities
@@ -465,7 +443,7 @@ local custom_attach = function(client, bufnr)
     },
     finder_definition_icon = '  ',
     finder_reference_icon = '  ',
-    max_preview_lines = 10, 
+    max_preview_lines = 10,
     finder_action_keys = { open = '<cr>', vsplit = 's',split = 'i',quit = '<esc>',scroll_down = '<C-f>', scroll_up = '<C-b>'},
     code_action_keys = { quit = '<esc>',exec = '<CR>' },
     rename_action_keys = { quit = '<esc>',exec = '<CR>' },
@@ -474,7 +452,6 @@ local custom_attach = function(client, bufnr)
     rename_prompt_prefix = '➤',
   }
 
-  local opts = { noremap=true, silent=true }
   require("which-key").register({
     ["<leader>"] = {
       ["."] = {"<cmd>Lspsaga code_action<CR>", "Code Actions"},
@@ -628,9 +605,6 @@ require'lspconfig'.hls.setup{
       end;
 }
 
-local configs = require 'lspconfig/configs'
-local util = require 'lspconfig/util'
-
 require('lspkind').init({
      with_text = true,
      symbol_map = {
@@ -660,7 +634,7 @@ require('lspkind').init({
 vim.g.diagnostic_auto_popup_while_jump = 0
 vim.g.diagnostic_enable_virtual_text = 0
 vim.g.diagnostic_enable_underline = 0
-vim.g.completion_timer_cycle = 200 
+vim.g.completion_timer_cycle = 200
 
 -- Telescope Settup
 
@@ -724,10 +698,10 @@ require('telescope').setup{
         ["<C-j>"] = actions.move_to_top,
         ["<C-h>"] = actions.move_to_middle,
         ["<C-k>"] = actions.move_to_bottom,
-        ["<c-e>"] = trouble.open_with_trouble 
+        ["<c-e>"] = trouble.open_with_trouble
       },
       n = {
-        ["<c-e>"] = trouble.open_with_trouble 
+        ["<c-e>"] = trouble.open_with_trouble
       },
     },
   },
@@ -753,7 +727,7 @@ local open_dif = function()
   local value = selected_entry['value']
   -- close Telescope window properly prior to switching windows
   vim.api.nvim_win_close(0, true)
-  local cmd = 'DiffviewOpen ' .. value 
+  local cmd = 'DiffviewOpen ' .. value
   vim.cmd(cmd)
 end
 
@@ -814,6 +788,10 @@ require('gitsigns').setup {
     delete       = {hl = 'GitSignsDelete', text = '_', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
     topdelete    = {hl = 'GitSignsDelete', text = '‾', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
     changedelete = {hl = 'GitSignsDelete', text = '~', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    base = nil,
+    signcolumn = true,
+    numhl = true,
+    linehl = false,
   },
   signs_sec = {
     add          = {hl = 'Normal', text = '▌'},
@@ -821,10 +799,11 @@ require('gitsigns').setup {
     delete       = {hl = 'Normal', text = '_'},
     topdelete    = {hl = 'Normal', text = '‾'},
     changedelete = {hl = 'Normal', text = '~'},
-    base = 'HEAD'
+    base = 'HEAD',
+    signcolumn = true,
+    numhl      = true,
+    linehl     = false,
   },
-  numhl = true,
-  linehl = false,
   keymaps = {
     -- Default keymap options
     noremap = true,
@@ -861,7 +840,7 @@ neogit.setup {
     hunk = { "", "" },
   },
   integrations = {
-    diffview = true  
+    diffview = true
   },
   -- override/add mappings
   mappings = {
@@ -887,7 +866,6 @@ require('bqf').setup({
         stogglevm = '<c-space>',
         tab = '<c-t>',
         split = '<c-x>',
-        vsplit = '<c-v>',
         prevfile = 'k',
         nextfile = 'j',
         vsplit = '<c-v>',
@@ -1294,3 +1272,5 @@ require("which-key").register({
 require('numb').setup()
 require('foldsigns').setup()
 require("range-highlight").setup {}
+
+
