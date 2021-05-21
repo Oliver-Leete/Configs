@@ -455,7 +455,6 @@ local custom_attach = function(client, bufnr)
   require("which-key").register({
     ["<leader>"] = {
       ["."] = {"<cmd>Lspsaga code_action<CR>", "Code Actions"},
-      ["="] = {"<cmd>lua vim.lsp.buf.formatting()<CR>", "Format"},
       o = {
         d = {"<cmd>Telescope lsp_definitions<cr>", "Definitions"},
         r = {"<cmd>Telescope lsp_references<cr>", "References"},
@@ -476,6 +475,7 @@ local custom_attach = function(client, bufnr)
       },
       r = {
         r = {"<cmd>Lspsaga rename<CR>", "Rename (LSP)"},
+        ["="] = {"<cmd>lua vim.lsp.buf.formatting()<CR>", "Format"},
       },
     },
     ["["] = {
@@ -638,14 +638,14 @@ vim.g.completion_timer_cycle = 200
 
 -- Telescope Settup
 
-local actions = require('telescope.actions')
-require('telescope').load_extension("bibtex")
-require('telescope').load_extension('gh')
-require('telescope').load_extension("media_files")
+local actions = require("telescope.actions")
+require("telescope").load_extension("bibtex")
+require("telescope").load_extension("gh")
+require("telescope").load_extension("media_files")
 require("telescope").load_extension("session-lens")
 local trouble = require("trouble.providers.telescope")
 
-require('telescope').setup{
+require("telescope").setup{
   defaults = {
     vimgrep_arguments = {
       'rg',
@@ -708,7 +708,7 @@ require('telescope').setup{
   extensions = {
     bibtex = {
           depth = 2,
-          global_files = { '/home/oleete/UniDrive/1_Thesis/0.1_LaTeX/Citations.bib'},
+          global_files = {'/home/oleete/UniDrive/1_Thesis/0.1_LaTeX/Citations.bib'},
     },
     fzf = {
           override_generic_sorter = false, -- override the generic sorter
@@ -827,9 +827,9 @@ require('gitsigns').setup {
   use_internal_diff = true,  -- If luajit is present
 }
 
-local neogit = require("neogit")
+-- Neogit Setup
 
-neogit.setup {
+require("neogit").setup {
   disable_signs = false,
   disable_context_highlighting = false,
   -- customize displayed signs
@@ -1125,7 +1125,7 @@ require("which-key").register({
       s = {"<Plug>(Scalpel)", "Rename (Scalpel)"},
       t = {"Rename (Treesitter)"},
       v = {"<plug>(ExtractVar)", "Extract Variable"},
-      d = {"<cmd>norm [jOdocs<tab><cr>", "Make Docstring"}
+      d = {"[fO<esc><cmd>.!cat ~/.config/nvim/docstring/julia.txt<cr>", "Make Docstring", noremap=false}
     },
     t = {
       name = "Explorer",
@@ -1164,6 +1164,7 @@ require("which-key").register({
       J = {"<c-w>J", "Move Far Down"},
       K = {"<c-w>K", "Move Far Up"},
       L = {"<c-w>L", "Move Far Right"},
+      c = {"<c-w>c", "Close Window"},
       ["/"] = {"<c-w>^", "Open Alternate File"},
       [","] = {"<cmd>BufferLineCyclePrev<cr>", "Previous Buffer"},
       ["."] = {"<cmd>BufferLineCycleNext<cr>", "Next Buffer"},
@@ -1187,12 +1188,12 @@ require("which-key").register({
 
     },
   },
-      ["1<leader>vi"] = { "<cmd>call PMToggleView('term')<CR>", "Open Terminal 1"},
+      ["1<leader>vi"] = { "<cmd>call PMToggleView('term')<CR>",  "Open Terminal 1"},
       ["2<leader>vi"] = { "<cmd>call PMToggleView('2term')<CR>", "Open Terminal 2"},
       ["3<leader>vi"] = { "<cmd>call PMToggleView('3term')<CR>", "Open Terminal 3"},
       ["4<leader>vi"] = { "<cmd>call PMToggleView('4term')<CR>", "Open Terminal 4"},
       ["5<leader>vi"] = { "<cmd>call PMToggleView('5term')<CR>", "Open Terminal 5"},
-      ["1<leader>ii"] = { "<cmd>call PMToggleView('term')<CR>", "Open Terminal 1"},
+      ["1<leader>ii"] = { "<cmd>call PMToggleView('term')<CR>",  "Open Terminal 1"},
       ["2<leader>ii"] = { "<cmd>call PMToggleView('2term')<CR>", "Open Terminal 2"},
       ["3<leader>ii"] = { "<cmd>call PMToggleView('3term')<CR>", "Open Terminal 3"},
       ["4<leader>ii"] = { "<cmd>call PMToggleView('4term')<CR>", "Open Terminal 4"},
@@ -1238,6 +1239,7 @@ require("which-key").register({
 require("which-key").register({
   ["<leader>"] = {
     r = {
+      name = "Refactor",
       s = {"<Plug>(ScalpelVisual)", "Rename (Scalpel)"},
       v = {"<plug>(ExtractVarVisual)", "Extract Variable"}
     },
@@ -1251,6 +1253,7 @@ require("which-key").register({
     k = {"c<cr><esc>", "Split"},
     t = {"<Plug>(EasyAlign)", "Align"},
     s = {
+      name = "Change Case",
       p = {"<Plug>CaserVMixedCase", "Pascal Case"},
       c = {"<Plug>CaserVCamelCase", "Camel Case"},
       ["_"] = {"<Plug>CaserVSnakeCase", "Snake Case"},
@@ -1272,5 +1275,4 @@ require("which-key").register({
 require('numb').setup()
 require('foldsigns').setup()
 require("range-highlight").setup {}
-
 

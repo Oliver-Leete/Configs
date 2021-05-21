@@ -45,6 +45,7 @@ call plug#begin('~/.config/nvim/pluged')
   Plug 'tpope/vim-eunuch'
   Plug 'fvictorio/vim-extract-variable'
   Plug 'folke/todo-comments.nvim'
+  Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
 
   " Text Objects
   Plug 'wellle/targets.vim'
@@ -457,6 +458,7 @@ let g:splitjoin_split_mapping = ''
 let g:splitjoin_join_mapping = ''
 let g:UnconditionalPaste_no_mappings = 1
 let g:caser_no_mappings	= 1
+let g:doge_enable_mappings=0
 
 " Expression Mapping (to go in which-key)
 nmap <expr> <plug>(Telescope-grep)  "<cmd>Telescope grep_string search=" . input("Grep For > ") . "<CR>"
