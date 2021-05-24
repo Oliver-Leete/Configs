@@ -62,6 +62,7 @@ call plug#begin('~/.config/nvim/pluged')
   " LANGUAGE
   Plug 'lervag/vimtex'
   " Plug 'JuliaEditorSupport/julia-vim'
+  Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
 
   " UI Stuff
   Plug 'folke/zen-mode.nvim'
@@ -442,16 +443,16 @@ nmap <c-_> gcc
 xmap <c-_> gc
 
 " Arrows
-nmap <silent> <right>   <cmd>try <bar> cnext     <bar> catch /E553/ <bar> cfirst <bar> endtry<CR>
-nmap <silent> <left>    <cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast  <bar> endtry<CR>
-nmap <silent> <C-right> <cmd>try <bar> lnext     <bar> catch /E553/ <bar> lfirst <bar> endtry<CR>
-nmap <silent> <C-left>  <cmd>try <bar> lprevious <bar> catch /E553/ <bar> llast  <bar> endtry<CR>
-nmap <silent> <S-right> <cmd>BufferLineCycleNext<cr>
-nmap <silent> <S-left>  <cmd>BufferLineCyclePrev<cr>
-nmap <silent> <C-up>    <nop>
-nmap <silent> <C-down>  <nop>
-nmap <silent> <S-up>    <nop>
-nmap <silent> <S-down>  <nop>
+nmap <silent> <right>   <cmd>BufferLineCycleNext<cr>
+nmap <silent> <left>    <cmd>BufferLineCyclePrev<cr>
+nmap <silent> <S-right> <nop>
+nmap <silent> <S-left>  <nop>
+nmap <silent> <C-right> <nop>
+nmap <silent> <C-left>  <nop>
+nmap <silent> <C-up>    <cmd>try <bar> cnext     <bar> catch /E553/ <bar> cfirst <bar> endtry<CR>
+nmap <silent> <C-down>  <cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast  <bar> endtry<CR>
+nmap <silent> <S-up>    <cmd>try <bar> lnext     <bar> catch /E553/ <bar> lfirst <bar> endtry<CR>
+nmap <silent> <S-down>  <cmd>try <bar> lprevious <bar> catch /E553/ <bar> llast  <bar> endtry<CR>
 
 " Unmap Pluggins
 let g:splitjoin_split_mapping = ''

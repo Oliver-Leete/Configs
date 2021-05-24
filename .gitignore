@@ -16,3 +16,4 @@ rofi/
 !starship.toml
 !/nvim/lua/*
 !/nvim/ftplugin/*
+!/nvim/docstring/*

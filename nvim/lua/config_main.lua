@@ -484,13 +484,13 @@ local custom_attach = function(client, bufnr)
     ["]"] = {
       e = {"<cmd>Lspsaga diagnostic_jump_next<CR>", "Error"},
     },
-  })
+  }, {buffer=bufnr})
   require("which-key").register({
     ["<leader>"] = {
       ["."] = {"<cmd>Lspsaga range_code_action<CR>", "Code Actions"},
       ["="] = {"<cmd>lua vim.lsp.buf.formatting()<CR>", "Format"},
     }
-  }, {mode="v"})
+  }, {mode="v", buffer=bufnr})
 
   vim.api.nvim_exec([[
     autocmd CursorHold * :Lspsaga show_cursor_diagnostics
@@ -1125,7 +1125,7 @@ require("which-key").register({
       s = {"<Plug>(Scalpel)", "Rename (Scalpel)"},
       t = {"Rename (Treesitter)"},
       v = {"<plug>(ExtractVar)", "Extract Variable"},
-      d = {"[fO<esc><cmd>.!cat ~/.config/nvim/docstring/julia.txt<cr>", "Make Docstring", noremap=false}
+      d = {"[fyyO<esc><cmd>.!cat ~/.config/nvim/docstring/julia.txt<cr>pdw>>>>/TODO:<cr>", "Make Docstring", noremap=false}
     },
     t = {
       name = "Explorer",
@@ -1134,6 +1134,7 @@ require("which-key").register({
     b = {
       name = "buffers",
       o = {"<cmd>Bdelete hidden<cr>", "Close All Hidden Buffers"},
+      d = {"<cmd>bdelete<cr>", "Delete the current buffer"},
     },
     w = {
       name = "Window Managment",
