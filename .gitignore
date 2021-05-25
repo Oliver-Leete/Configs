@@ -17,3 +17,6 @@ rofi/
 !/nvim/lua/*
 !/nvim/ftplugin/*
 !/nvim/docstring/*
+!/xmonad/xmonad.hs
+!/xmonad/lib/XMonad/**/*.hs
+!/xmobar/*

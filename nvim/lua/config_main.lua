@@ -279,10 +279,16 @@ require'nvim-treesitter.configs'.setup {
       enable = true,
       keymaps = {
         -- You can use the capture groups defined in textobjects.scm
-        ["ao"] = "@block.outer",
-        ["io"] = "@block.inner",
+        ["ao"] = "@class.outer",
+        ["io"] = "@class.inner",
         ["af"] = "@function.outer",
         ["if"] = "@function.inner",
+        ["aC"] = "@conditional.outer",
+        ["iC"] = "@conditional.inner",
+        ["ac"] = "@comment.outer",
+        ["ic"] = "@comment.inner",
+        ["aL"] = "@loop.outer",
+        ["iL"] = "@loop.inner",
       },
     },
     swap = {

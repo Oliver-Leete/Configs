@@ -51,7 +51,6 @@ call plug#begin('~/.config/nvim/pluged')
   Plug 'wellle/targets.vim'
   Plug 'wellle/line-targets.vim'
   Plug 'michaeljsmith/vim-indent-object'
-  Plug 'coderifous/textobj-word-column.vim'
   Plug 'tommcdo/vim-ninja-feet'
   Plug 'junegunn/vim-after-object'
 
@@ -282,7 +281,7 @@ let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab A
 " let g:targets_nl = 'nl'
 let g:targets_gracious = 1
 
-autocmd VimEnter * call after_object#enable(['a', 'af'], '=', ':', '-', '#', ' ')
+autocmd VimEnter * call after_object#enable(['a', 'A'], '=', ':', '-', '#', ' ')
 
 let g:loaded_matchit = 1
 let g:matchup_override_vimtex = 1
@@ -427,10 +426,6 @@ omap S <cmd> lua require'hop'.hint_lines()<cr>
 let g:wordmotion_prefix = '$'
 
 " Text Object Mappings
-xnoremap <silent> Ac :<C-u>call TextObjWordBasedColumn("aW")<cr>
-xnoremap <silent> Ic :<C-u>call TextObjWordBasedColumn("iW")<cr>
-onoremap <silent> Ac :call TextObjWordBasedColumn("aW")<cr>
-onoremap <silent> Ic :call TextObjWordBasedColumn("iW")<cr>
 
 onoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0, 1, 0, [line("."), line("."), col("."), col(".")])<CR>
 onoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1, 1, 0, [line("."), line("."), col("."), col(".")])<CR>
