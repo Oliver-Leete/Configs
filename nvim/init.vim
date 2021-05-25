@@ -74,6 +74,7 @@ call plug#begin('~/.config/nvim/pluged')
   Plug 'akinsho/nvim-bufferline.lua'
   Plug 'Asheq/close-buffers.vim'
   Plug 'lewis6991/foldsigns.nvim'
+  Plug 'lukas-reineke/indent-blankline.nvim', { 'branch': 'lua'}
 
   " Panels
   Plug 'mipmip/panelmanager.vim'
@@ -127,7 +128,7 @@ call plug#begin('~/.config/nvim/pluged')
 
   " Treesitter
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
-  Plug 'romgrk/nvim-treesitter-context'
+  " Plug 'romgrk/nvim-treesitter-context'
   Plug 'code-biscuits/nvim-biscuits'
   Plug 'nvim-treesitter/nvim-treesitter-textobjects'
   Plug 'nvim-treesitter/nvim-treesitter-refactor'
@@ -164,8 +165,8 @@ set inccommand=split
 noremap <plug>(slash-after) zz
 
 " Indenting
-set tabstop=2
-set shiftwidth=2
+set tabstop=4
+set shiftwidth=4
 set expandtab
 
 " Word Wrapping
@@ -218,41 +219,6 @@ set undofile
 let g:auto_save = 1  " enable AutoSave on Vim startup
 let g:auto_save_silent = 1  " do not display the auto-save notification
 
-" !!THEMES!!
-set cursorline
-
-let g:tokyonight_style='night'
-let g:tokyonight_terminal_colors=1
-let g:tokyonight_sidebars = [ "qf", "Outline", "terminal", "vim-plug", "undotree", "help", "DiffviewFiles", "juliadoc"]
-colorscheme tokyonight
-
-" let g:material_style = 'darker'
-" colorscheme material
-
-highlight clear LineNr
-highlight clear SignColumn
-highlight link BiscuitColor TSComment
-set noshowmode
-set termguicolors
-
-" Theme Changes
-highlight BufferLineFill guifg=#0e0e14 guibg=#0e0e14
-
-highlight link LspSagaHoverBorder            FloatBorder
-highlight link LspSagaSignatureHelpBorder    FloatBorder
-highlight link LspSagaCodeActionBorder       FloatBorder
-highlight link LspSagaDefPreviewBorder       FloatBorder
-highlight link LspSagaDiagnosticBorder       FloatBorder
-highlight link LspSagaShTruncateLine         FloatBorder
-highlight link LspSagaDocTruncateLine        FloatBorder
-highlight link LspSagaCodeActionTruncateLine FloatBorder
-highlight link LspSagaProviderTruncateLine   FloatBorder
-highlight link LspSagaDiagnosticTruncateLine FloatBorder
-highlight link LspSagaBorderTitle            FloatBorder
-highlight link TelescopePromptBorder         FloatBorder
-highlight link TelescopePreviewBorder        FloatBorder
-highlight link TelescopeResultsBorder        FloatBorder
-highlight link BqfPreveiwBorder              FloatBorder
 
 " Git Committia Settings
 let g:committia_hooks = {}
@@ -270,6 +236,7 @@ function! g:committia_hooks.edit_open(info)
     imap <buffer><C-n> <Plug>(committia-scroll-diff-down-half)
     imap <buffer><C-p> <Plug>(committia-scroll-diff-up-half)
 endfunction
+
 
 " Wellle Tagets settings
 autocmd User targets#mappings#user call targets#mappings#extend({
@@ -553,5 +520,43 @@ let g:vimtex_compiler_latexmk = {
 autocmd BufNewFile,BufRead *.jl set filetype=julia
 autocmd FileType julia set commentstring=#%s
 
-redraw
+" !!THEMES!!
+set cursorline
 
+let g:tokyonight_style='night'
+let g:tokyonight_terminal_colors=1
+let g:tokyonight_sidebars = [ "qf", "Outline", "terminal", "vim-plug", "undotree", "help", "DiffviewFiles", "juliadoc"]
+let g:tokyonight_hide_inactive_statusline=1
+colorscheme tokyonight
+
+highlight clear LineNr
+highlight clear SignColumn
+highlight link BiscuitColor TSComment
+set noshowmode
+set termguicolors
+
+" Theme Changes
+highlight BufferLineFill guifg=#0e0e14 guibg=#0e0e14
+
+highlight link LspSagaHoverBorder            FloatBorder
+highlight link LspSagaSignatureHelpBorder    FloatBorder
+highlight link LspSagaCodeActionBorder       FloatBorder
+highlight link LspSagaDefPreviewBorder       FloatBorder
+highlight link LspSagaDiagnosticBorder       FloatBorder
+highlight link LspSagaShTruncateLine         FloatBorder
+highlight link LspSagaDocTruncateLine        FloatBorder
+highlight link LspSagaCodeActionTruncateLine FloatBorder
+highlight link LspSagaProviderTruncateLine   FloatBorder
+highlight link LspSagaDiagnosticTruncateLine FloatBorder
+highlight link LspSagaBorderTitle            FloatBorder
+highlight link TelescopePromptBorder         FloatBorder
+highlight link TelescopePreviewBorder        FloatBorder
+highlight link TelescopeResultsBorder        FloatBorder
+highlight link BqfPreveiwBorder              FloatBorder
+
+" Indent Blankline Settings
+let g:indent_blankline_char_list = ['│']
+let g:indent_blankline_char_highlight_list = ['rainbowcol7', 'rainbowcol6', 'rainbowcol5', 'rainbowcol4', 'rainbowcol3', 'rainbowcol2', 'rainbowcol1']
+
+
+redraw

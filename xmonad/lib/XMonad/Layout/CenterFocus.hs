@@ -29,8 +29,6 @@ import XMonad
     ( fromMessage,
       splitHorizontally,
       splitVertically,
-      splitHorizontallyBy,
-      splitVerticallyBy,
       Rectangle(Rectangle),
       LayoutClass(pureLayout, description, handleMessage),
       IncMasterN(IncMasterN),
@@ -102,7 +100,7 @@ tile3 middle f mf r nmaster n
     | n <= nmaster || nmaster == 0 = splitHorizontally n r1
     | otherwise = splitHorizontally nmaster r1 ++ splitVertically nstack1 r2 ++ splitHorizontally nstack2 r5 ++ rev (splitVertically nstack3 r3) ++ rev (splitHorizontally nstack4 r4)
         where (r0, r2, r3) = split3HorizontallyBy middle (if f<0 then 1+2*f else f) r
-              (r1, r4, r5) = split3VerticallyBy middle (if mf<0 then 1+2*mf else mf) r0
+              (r1, r4, r5) = split3VerticallyBy (if mf<0 then 1+2*mf else mf) r0
               nstack = n - nmaster
               nstack1 = ceiling (nstack % 4)
               nstack2 = ceiling ((nstack - nstack1) % 3)
@@ -126,8 +124,8 @@ split3HorizontallyBy middle f (Rectangle sx sy sw sh) =
               r2w = ceiling ( (sw - r1w) % 2 )
               r3w = sw - r1w - r2w
 
-split3VerticallyBy :: Bool -> Rational -> Rectangle -> (Rectangle, Rectangle, Rectangle)
-split3VerticallyBy middle f (Rectangle sx sy sw sh) =
+split3VerticallyBy :: Rational -> Rectangle -> (Rectangle, Rectangle, Rectangle)
+split3VerticallyBy f (Rectangle sx sy sw sh) =
      (Rectangle sx (sy + fromIntegral r3w) sw r1w
      , Rectangle sx sy sw r3w
      , Rectangle sx (sy + fromIntegral r3w + fromIntegral r1w) sw r2w )

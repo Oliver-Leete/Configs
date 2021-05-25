@@ -35,22 +35,20 @@ import XMonad
       splitVertically,
       splitHorizontallyBy,
       splitVerticallyBy,
-      Rectangle(Rectangle, rect_height),
       LayoutClass(pureLayout, description, handleMessage),
       IncMasterN(IncMasterN),
-      Resize(Expand, Shrink), tile , Typeable,Full (Full))
+      Resize(Expand, Shrink), Typeable)
 import qualified XMonad.StackSet as W
 import XMonad.Layout.ResizableTile(MirrorResize(..))
 
 import Data.Ratio ( (%) )
 
-import Control.Monad ( msum, ap )
+import Control.Monad ( msum )
 import Graphics.X11.Xlib ( Rectangle(..) )
-import Data.Ord (comparing)
-import Data.List (sortOn, sortBy)
-import qualified Graphics.X11 as Graphics.X11.Xlib.Types
-import qualified Basement.Compat.Base as GHC.Int
+import Data.List (sortOn)
+-- import qualified Basement.Compat.Base as GHC.Int
 import XMonad.Core (Message)
+import qualified Data.Ord
 -- $usage
 -- You can use this module with the following in your @~\/.xmonad\/xmonad.hs@:
 --
@@ -87,7 +85,7 @@ import XMonad.Core (Message)
 -- $screenshot
 -- <<http://server.c-otto.de/xmonad/NotebookMiddle.png>>
 --
-data IncColumnN = IncColumnN !Int deriving Typeable
+newtype IncColumnN = IncColumnN Int deriving Typeable
 instance Message IncColumnN
 
 data ToggleMiddle = ToggleMiddle deriving (Read, Show, Typeable)
@@ -139,6 +137,7 @@ doL res m s dir n c f mf r st
     | c == 0 = zip sti (splitHorizontally nwin r)
     | m      = zip sti (r1 : splitVertically (nwin-c) r2)
     | not m  = zip sti (q1 : splitHorizontally (nwin-c) q2)
+    | otherwise = zip sti (splitHorizontally nwin r)
             where sti = W.integrate st
                   nwin = length sti
                 --   ncol = if n <= c
@@ -166,7 +165,8 @@ tileSlim middle f mf r nmain nmaster n
  | not middle && (n-nmaster-nmain) <= 2 = rep nmain r11 ++ rep (nmaster-nmain) r2 ++ splitHorizontally (n-nmaster-nmain) r12
  | not middle = rep nmain r11 ++ rep (nmaster-nmain) r21 ++ splitHorizontally (n-nmaster-nmain) q2
  | middle = rep nmain r1 ++ rep (nmaster-nmain) r21 ++ rep (n-nmaster-nmain) r22
- where (q1, q2) = splitVerticallyBy (if mf<0 then 1+2*mf else mf) r
+ | otherwise = splitHorizontally n r
+ where q2 = snd $ splitVerticallyBy (if mf<0 then 1+2*mf else mf) r
        (r1, r2) = splitHorizontallyBy (if f<0 then 1+2*f else f) r
        (r11, r12) = splitVerticallyBy (if mf<0 then 1+2*mf else mf) r1
        (r21, r22) = splitVerticallyBy (if mf<0 then 1+2*mf else mf) r2
@@ -182,6 +182,7 @@ newWide m s d n c nwin f mf r
             | m && not s                                    = toInteger (rect_x r) + (floor ((nmain-1)%2) * fromIntegral width) + (ceiling (ncol%2) * fromIntegral colWidth)
             | not m && s                                    = toInteger (rect_x r)
             | not m && not s                                = toInteger (rect_x r) + toInteger (rect_width r) - toInteger width
+            | otherwise                                     = toInteger width
 
           width
             | c <= 1 = rect_width r
@@ -189,7 +190,7 @@ newWide m s d n c nwin f mf r
             | otherwise = 2 * floor (toRational (rect_width r) / (toRational ncol + (f * toRational nmain)))
           colWidth
             | c <= 1 = 0
-            | ncol == 0 = floor (fromIntegral width/2)
+            | ncol == 0 = floor (toRational width/2)
             | otherwise = floor (toRational (toRational (rect_width r) - (toRational width*toRational nmain)) / toRational ncol)
 
           minWidth = colWidth * nstack
@@ -208,15 +209,15 @@ newWide m s d n c nwin f mf r
             | m     && s     = splitMiddleMaster (-1) (fromInteger startPoint) (fromIntegral width) colWidth 1 nmain ncol f r
             | not m && s     = splitLeftMaster (fromInteger startPoint) (fromIntegral width) colWidth 1 nmain ncol f r
             | m     && not s = splitRightMiddleMaster 1 (fromInteger startPoint) (fromIntegral width) colWidth 1 nmain ncol f r
-            | not m && not s = splitRightMaster (fromInteger startPoint) (fromIntegral width) colWidth 1 nmain ncol f r
+            | otherwise = splitRightMaster (fromInteger startPoint) (fromIntegral width) colWidth 1 nmain ncol f r
 
           listAll
             | d     = splitColumns (sortByXLocation listCols) (fromIntegral minWidth - 10) initStackRect mf d
-            | not d = splitColumns (sortByRevXLocation listCols) (fromIntegral minWidth - 10) initStackRect mf d
+            | otherwise = splitColumns (sortByRevXLocation listCols) (fromIntegral minWidth - 10) initStackRect mf d
 
           listWithStack
             | d     = map fst (sortByIndex $ init listAll) ++ splitHorizontally nstack (fst $ last listAll)
-            | not d = map fst (sortByIndex $ init listAll) ++ reverse (splitHorizontally nstack (fst $ last listAll))
+            | otherwise = map fst (sortByIndex $ init listAll) ++ reverse (splitHorizontally nstack (fst $ last listAll))
 
           initYPos = floor $ fromIntegral (rect_height r) * mf
           initHeight = rect_height r - fromIntegral initYPos
@@ -287,14 +288,14 @@ splitColumns list minWidth stackRect mf d
         (masterRect, stackRectAdd) = splitVerticallyBy mf rect
         stackRectN
           | d     = rectangleDiff stackRect stackRectAdd
-          | not d = rectangleDiff stackRectAdd stackRect
+          | otherwise = rectangleDiff stackRectAdd stackRect
 
 
 sortByXLocation :: [(Rectangle, Int)] -> [(Rectangle, Int)]
 sortByXLocation = sortOn (rect_x . fst)
 
 sortByRevXLocation :: [(Rectangle, Int)] -> [(Rectangle, Int)]
-sortByRevXLocation list = reverse $ sortOn (rect_x . fst) list
+sortByRevXLocation = sortOn (Data.Ord.Down . (rect_x . fst))
 
 sortByIndex :: [(Rectangle , Int)] -> [(Rectangle , Int)]
 sortByIndex = sortOn snd

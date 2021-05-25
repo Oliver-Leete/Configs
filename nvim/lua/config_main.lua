@@ -1,4 +1,3 @@
-
 -- Auto Sessions
 local opts = {
   log_level = 'info',
@@ -269,10 +268,11 @@ require'nvim-treesitter.configs'.setup {
   highlight = { enable = true, },
   indent = { enable = true },
   rainbow = { enable = true },
-  context = { enable = true },
-  context_commentstring = { enable = true },
+  -- context = { enable = true },
+  -- context_commentstring = { enable = true },
   matchup = {
     enable = true,
+
   },
   textobjects = {
     select = {
@@ -561,41 +561,49 @@ local servers = require'lspinstall'.installed_servers()
             }
         }
     }
-  elseif server == 'sumneko' then
+  elseif (server == 'sumneko') or (server == 'sumneko_lua') then
     require'lspconfig'.sumneko_lua.setup {
       cmd = {
           "/usr/lib/lua-language-server/lua-language-server",
           "-E",
           "/usr/share/lua-language-server/main.lua"
       },
+      root_dir = nvim_lsp.util.root_pattern("init.vim", "init.lua"),
       settings = {
-          on_attach=custom_attach,
-          Lua = {
-         completion = {
-              keywordSnippet = "Disable",
-          },
-          diagnostics = {
-              globals = {"vim", "use"},
-              disable = {"lowercase-global"}
-          },
-          runtime = {
-              version = "LuaJIT",
-              path = vim.split(package.path, ";"),
-          },
-          workspace = {
+        on_attach=custom_attach,
+        Lua = {
+            runtime = {
+              -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+              version = 'LuaJIT',
+              -- Setup your lua path
+              path = vim.split(package.path, ';'),
+            },
+            diagnostics = {
+              -- Get the language server to recognize the `vim` global
+              globals = {'vim'},
+            },
+            workspace = {
+              -- Make the server aware of Neovim runtime files
               library = {
-                  [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                  [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+                [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+                [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
               },
-          },
-        }
+            },
+            -- Do not send telemetry data containing a randomized but unique identifier
+            telemetry = {
+              enable = false,
+            },
+        },
       }
     }
+  elseif server == 'diagnosticls' then
+
   else
     for _, server in pairs(servers) do
       require'lspconfig'[server].setup{on_attach=custom_attach}
     end
   end
+
 
 require'lspconfig'.hls.setup{
   on_attach=custom_attach,
@@ -1208,9 +1216,9 @@ require("which-key").register({
   ["["] = {
     name = "Backward Leader",
     L = {"<cmd>try <bar> lpfile <bar> catch /E553/ <bar> llast <bar> endtry<CR>", "Loclist File"},
-    N = {"<cmd>try <bar> cpfile <bar> catch /E553/ <bar> clast <bar> endtry<CR>", "QuickFix File"},
+    Q = {"<cmd>try <bar> cpfile <bar> catch /E553/ <bar> clast <bar> endtry<CR>", "QuickFix File"},
     l = {"<cmd>try <bar> lprevious <bar> catch /E553/ <bar> llast <bar> endtry<CR>", "LocList Entry"},
-    n = {"<cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast <bar> endtry<CR>", "QuickFix Entry"},
+    q = {"<cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast <bar> endtry<CR>", "QuickFix Entry"},
     t = {"<cmd>tabprevious<cr>", "Tab"},
     b = {"<cmd>BufferLineCyclePrev", "Buffer"},
     c = {"Hunk"},
@@ -1225,9 +1233,9 @@ require("which-key").register({
   ["]"] = {
     name = "Forward Leader",
     L = {"<cmd>try <bar> lnfile <bar> catch /E553/ <bar> lfirst <bar> endtry<CR>", "LocList File"},
-    N = {"<cmd>try <bar> cnfile <bar> catch /E553/ <bar> cfirst <bar> endtry<CR>", "QuickFix File"},
+    Q = {"<cmd>try <bar> cnfile <bar> catch /E553/ <bar> cfirst <bar> endtry<CR>", "QuickFix File"},
     l = {"<cmd>try <bar> lnext <bar> catch /E553/ <bar> lfirst <bar> endtry<CR>", "LocList Entry"},
-    n = {"<cmd>try <bar> cnext <bar> catch /E553/ <bar> cfirst <bar> endtry<CR>", "QuickFix Entry"},
+    q = {"<cmd>try <bar> cnext <bar> catch /E553/ <bar> cfirst <bar> endtry<CR>", "QuickFix Entry"},
     t = {"<cmd>tabnext<cr>", "Tab"},
     b = {"<cmd>BufferLineCycleNext", "Buffer"},
     c = {"Hunk"},

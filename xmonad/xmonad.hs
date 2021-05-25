@@ -22,17 +22,15 @@
 -- Modules                                                              {{{
 ---------------------------------------------------------------------------
 {-# LANGUAGE LambdaCase #-}
-import Control.Monad (liftM, liftM2, join)
+import Control.Monad (join)
 import Data.List
 import qualified Data.Map as M
 import Data.Monoid
 import System.Exit
 import System.IO
-import System.Posix.Process(executeFile)
 
 import XMonad hiding ( (|||) )
 import qualified XMonad.StackSet as W
-import XMonad.Core
 
 import XMonad.Actions.ConditionalKeys
 import qualified XMonad.Actions.ConstrainedResize as Sqr
@@ -51,7 +49,7 @@ import XMonad.Actions.WithAll
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.DynamicProperty
-import XMonad.Hooks.EwmhDesktops ( fullscreenEventHook, ewmhDesktopsLogHook, ewmh )
+import XMonad.Hooks.EwmhDesktops ( ewmhDesktopsLogHook, ewmh )
 import XMonad.Hooks.FadeWindows
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
@@ -60,9 +58,7 @@ import XMonad.Hooks.ToggleHook
 import XMonad.Hooks.UrgencyHook
 
 import XMonad.Layout.BorderResize
-import XMonad.Layout.Column
 import XMonad.Layout.DraggingVisualizer
-import XMonad.Layout.Fullscreen
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
@@ -85,7 +81,7 @@ import XMonad.Layout.WindowNavigation
 import XMonad.Layout.WindowSwitcherDecoration
 
 import XMonad.Layout.FourColumns
-import XMonad.Layout.CenterFocus
+-- import XMonad.Layout.CenterFocus
 import XMonad.Layout.Notebook
 
 import XMonad.Prompt
@@ -106,13 +102,12 @@ import XMonad.Util.XSelection
 
 -- experimenting with tripane
 -- import XMonad.Layout.Decoration
+-- import XMonad.Hooks.WindowSwallowing
 
 -- testing
-import XMonad.Layout.AutoMaster
 import XMonad.Layout.SimpleFocus
 import XMonad.Layout.Master
 import XMonad.Actions.Warp
-import XMonad.Layout.IfMax
 import XMonad.Layout.Magnifier as Mag
 import XMonad.Layout.LayoutModifier as Mod
 import XMonad.Util.Paste as P
@@ -183,8 +178,9 @@ wsWRK4   = "wrk4"
 myWorkspaces :: [[Char]]
 myWorkspaces = [wsTMP, wsTMP2, wsPRO1, wsPRO2, wsPRO3, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsWRK4,  wsFLOAT]
 
-myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces ["<Home>", "<End>", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"] -- (,) == \x y -> (x,y)
+myWorkspaceIndices = M.fromList $ zip myWorkspaces ["<Home>", "<End>", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"] -- (,) == \x y -> (x,y)
 
+clickable :: [Char] -> [Char]
 clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
     where i = fromJust $ M.lookup ws myWorkspaceIndices
 
@@ -523,7 +519,7 @@ instance Transformer FULLBAR Window where
 
 -- tabBarFull = avoidStruts $ noFrillsDeco shrinkText topBarTheme $ addTabs shrinkText myTabTheme $ Simplest
 -- barFull :: ModifiedLayout AvoidStruts Simplest a
-barFull = renamed [Replace "Maximized"] $ noFrillsDeco shrinkText topMaxBarTheme $ avoidStruts $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True $ Simplest
+barFull = renamed [Replace "Maximized"] $ noFrillsDeco shrinkText topMaxBarTheme $ avoidStruts $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True Simplest
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
@@ -572,7 +568,7 @@ myLayoutHook = onWorkspaces [wsFLOAT] floatWorkSpace
     notebookLayout = renamed [Replace "Notebook"] (subLayout [] Simplest (Notebook monResWidth True True True 1 3 (sizeDelta*2) 2 (2/3)))
 
     -- Center Layout
-    centMast = renamed [Replace "Center Main"] (CenterFocMid 1 sizeDelta (1/2) (1/2))
+    centMast = renamed [Replace "Tabs"] Simplest
     oneBigLayout = renamed [Replace "One Big"] (Mirror (OneBig (2/4) (2/4)))
     centerLayout = toggleLayouts centMast oneBigLayout
 
@@ -938,6 +934,7 @@ myMouseBindings XConfig {XMonad.modMask = myModMask} = M.fromList
 -- Startup                                                              {{{
 ---------------------------------------------------------------------------
 
+myStartupHook :: X ()
 myStartupHook = do
     spawnOnce myCompositor
     spawn myWallpaper
@@ -948,16 +945,6 @@ myStartupHook = do
     spawnOnce "xsetroot -cursor_name left_ptr"
     spawnOnce "deadd-notification-center &"
 
-quitXmonad :: X ()
-quitXmonad = io exitSuccess
-
-rebuildXmonad :: X ()
-rebuildXmonad =
-    spawn "xmonad --recompile && xmonad --restart"
-
-restartXmonad :: X ()
-restartXmonad =
-    spawn "xmonad --restart"
 
 ------------------------------------------------------------------------}}}
 -- Log                                                                  {{{
@@ -1020,10 +1007,10 @@ data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
 
 instance UrgencyHook LibNotifyUrgencyHook where
     urgencyHook LibNotifyUrgencyHook w = do
-        name     <- getName w
+        wsname     <- getName w
         Just idx <- W.findTag w <$> gets windowset
 
-        safeSpawn "notify-send" [show name, "workspace " ++ idx]
+        safeSpawn "notify-send" [show wsname, "workspace " ++ idx]
 -- cf https://github.com/pjones/xmonadrc
 
 
@@ -1080,7 +1067,6 @@ myManageHook =
         -- insert WHERE and focus WHAT
         doMain = insertPosition Master Newer
         tileBelow = insertPosition End Newer
-        tileBelowNoFocus = insertPosition End Older
 
 ---------------------------------------------------------------------------
 -- X Event Actions
