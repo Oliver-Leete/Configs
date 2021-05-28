@@ -22,7 +22,7 @@
 -- Modules                                                              {{{
 ---------------------------------------------------------------------------
 {-# LANGUAGE LambdaCase #-}
-import Control.Monad (join)
+{-# OPTIONS_GHC -Wno-missing-signatures #-}
 import Data.List
 import qualified Data.Map as M
 import Data.Monoid
@@ -38,7 +38,6 @@ import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
 import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
-import XMonad.Actions.MessageFeedback
 import XMonad.Actions.Navigation2D
 import XMonad.Actions.Promote
 import XMonad.Actions.RotSlaves
@@ -98,7 +97,6 @@ import XMonad.Util.NamedWindows
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 import XMonad.Util.WorkspaceCompare
-import XMonad.Util.XSelection
 
 -- experimenting with tripane
 -- import XMonad.Layout.Decoration
@@ -108,8 +106,6 @@ import XMonad.Util.XSelection
 import XMonad.Layout.SimpleFocus
 import XMonad.Layout.Master
 import XMonad.Actions.Warp
-import XMonad.Layout.Magnifier as Mag
-import XMonad.Layout.LayoutModifier as Mod
 import XMonad.Util.Paste as P
 -- NOTE: Try out prompt with submap
 import Data.Maybe
@@ -178,6 +174,7 @@ wsWRK4   = "wrk4"
 myWorkspaces :: [[Char]]
 myWorkspaces = [wsTMP, wsTMP2, wsPRO1, wsPRO2, wsPRO3, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsWRK4,  wsFLOAT]
 
+myWorkspaceIndices :: M.Map [Char] [Char]
 myWorkspaceIndices = M.fromList $ zip myWorkspaces ["<Home>", "<End>", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"] -- (,) == \x y -> (x,y)
 
 clickable :: [Char] -> [Char]
@@ -354,19 +351,11 @@ myClickJustFocuses   = True
 
 base03  = "#2C292D"
 base02  = "#2C292D"
-base01  = "#586e75"
 base00  = "#848B91"
-base0   = "#839496"
-base1   = "#93a1a1"
 base2   = "#FDF9F3"
-base3   = "#FDF9F3"
 yellow  = "#ffd866"
 orange  = "#fc9867"
 red     = "#ff6188"
-magenta = "#ab9df2"
-violet  = "#6c71c4"
-blue    = "#6C99BB"
-cyan    = "#78DCE8"
 green   = "#A9DC76"
 
 -- sizes
@@ -377,19 +366,13 @@ topbar      = 8
 tabsh       = 30
 myborder    = 3
 prompt      = 30
-status      = 20
 
 myNormalBorderColor     = base03
 myFocusedBorderColor    = yellow
 
 active       = yellow
-activeWarn   = red
-inactive     = base02
-focusColor   = yellow
-unfocusColor = base03
 
 myFont      = "xft:Ubuntu:weight=normal:pixelsize=16:antialias=true:hinting=true"
-myBigFont   = "-*-terminus-medium-*-*-*-*-240-*-*-*-*-*-*"
 myWideFont  = "xft:Eurostar Black Extended:"
             ++ "style=Regular:pixelsize=180:hinting=true"
 
@@ -451,7 +434,7 @@ myTabTheme = def
     , decoHeight            = tabsh
     }
 
--- myPromptTheme :: XPConfig
+myPromptTheme :: XPConfig
 myPromptTheme = def
     { font                  = myFont
     , bgColor               = base02
@@ -467,14 +450,7 @@ myPromptTheme = def
     , autoComplete          = Nothing
     }
 
--- warmPromptTheme :: XPConfig
-warmPromptTheme = myPromptTheme
-    { bgColor               = base03
-    , fgColor               = yellow
-    , position              = Bottom
-    }
-
--- hotPromptTheme :: XPConfig
+hotPromptTheme :: XPConfig
 hotPromptTheme = myPromptTheme
     { bgColor               = base02
     , fgColor               = red
@@ -517,21 +493,13 @@ data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
 
--- tabBarFull = avoidStruts $ noFrillsDeco shrinkText topBarTheme $ addTabs shrinkText myTabTheme $ Simplest
--- barFull :: ModifiedLayout AvoidStruts Simplest a
 barFull = renamed [Replace "Maximized"] $ noFrillsDeco shrinkText topMaxBarTheme $ avoidStruts $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True Simplest
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
     transform FULLCENTER x k = k centerFull (const x)
 
--- tabBarFull = avoidStruts $ noFrillsDeco shrinkText topBarTheme $ addTabs shrinkText myTabTheme $ Simplest
--- barFull :: ModifiedLayout AvoidStruts Simplest a
 centerFull = renamed [Replace "Centered Max"] $ noFrillsDeco shrinkText topMaxBarTheme $ avoidStruts $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True $ SimpleFocus (1/2) sizeDelta
-
-data MAGNIFY = MAGNIFY deriving (Read, Show, Eq, Typeable)
-instance Transformer MAGNIFY Window where
-    transform MAGNIFY x k = k (Mag.magnifiercz 1.5 x) (\(Mod.ModifiedLayout _ x') -> x)
 
 -- cf http://xmonad.org/xmonad-docs/xmonad-contrib/src/XMonad-Config-Droundy.html
 
@@ -546,7 +514,6 @@ myLayoutHook = onWorkspaces [wsFLOAT] floatWorkSpace
              $ addTabs shrinkText myTabTheme
              $ avoidStruts
              $ mySpacing
-             $ magnifyToggle
              $ mirrorToggle
              $ reflectToggle
              $ windowNavigation
@@ -582,7 +549,6 @@ myLayoutHook = onWorkspaces [wsFLOAT] floatWorkSpace
 
 
     -- Other Layout Stuff
-    magnifyToggle       = mkToggle (single MAGNIFY)
     floatWorkSpace      = renamed [Replace "Float"] (borderResize $ addFloatTopBar positionStoreFloat)
     fullBarToggle       = mkToggle (single FULLBAR)
     fullCenterToggle    = mkToggle (single FULLCENTER)
@@ -613,37 +579,6 @@ showKeybindings x = addName "Show Keybindings" $ io $ do
 -- https://github.com/paul-axe/dotfiles/blob/master/.xmonad/xmonad.hs
 -- https://github.com/pjones/xmonadrc (+ all the dyn project stuff)
 
-
--- any workspace but scratchpad
-notSP :: X (WindowSpace -> Bool)
-notSP = (return $ ("NSP" /=) . W.tag) :: X (WindowSpace -> Bool)
-
-shiftAndView :: Direction1D -> X ()
-shiftAndView dir = findWorkspace getSortByIndex dir (WSIs notSP) 1
-        >>= \t -> (windows . W.shift $ t) >> (windows . W.greedyView $ t)
-
--- hidden, non-empty workspaces less scratchpad
-shiftAndView' :: Direction1D -> X ()
-shiftAndView' dir = findWorkspace getSortByIndexNoSP dir HiddenNonEmptyWS 1
-        >>= \t -> (windows . W.shift $ t) >> (windows . W.greedyView $ t)
-
-nextNonEmptyWS :: X ()
-nextNonEmptyWS = findWorkspace getSortByIndexNoSP Next HiddenNonEmptyWS 1
-        >>= \t -> windows . W.view $ t
-
-prevNonEmptyWS :: X ()
-prevNonEmptyWS = findWorkspace getSortByIndexNoSP Prev HiddenNonEmptyWS 1
-        >>= \t -> windows . W.view $ t
-
-getSortByIndexNoSP :: X ([WindowSpace] -> [WindowSpace])
-getSortByIndexNoSP =
-        fmap (.namedScratchpadFilterOutWorkspace) getSortByIndex
-
--- toggle any workspace but scratchpad
-myToggle :: X ()
-myToggle = windows $ W.view =<< W.tag . head . filter
-        ((\x -> x /= "NSP" && x /= "SP") . W.tag) . W.hidden
-
 myKeys :: XConfig Layout -> [((KeyMask, KeySym), NamedAction)]
 myKeys conf = let
 
@@ -651,21 +586,12 @@ myKeys conf = let
     -- added home and end for the two starting workspaces
     -- (On my keyboard they are on the number layer just abouve space)
     wsKeys = ["<Home>", "<End>", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-    screenKeys     = ["w","v","z"]
     dirKeys        = ["j","k","h","l"]
-    arrowKeys        = ["<D>","<U>","<L>","<R>"]
     dirs           = [ D,  U,  L,  R ]
 
     zipM  m nm ks as f = zipWith (\k d -> (m ++ k, addName nm $ f d)) ks as
-    zipM' m nm ks as f b = zipWith (\k d -> (m ++ k, addName nm $ f d b)) ks as
 
-    -- from xmonad.layout.sublayouts
-    focusMaster' st = let (f:fs) = W.integrate st
-        in W.Stack f [] fs
     swapMaster' (W.Stack f u d) = W.Stack f [] $ reverse u ++ d
-
-    -- try sending one message, fallback if unreceived, then refresh
-    tryMsgR x y = sequence_ [tryMessageWithNoRefreshToCurrent x y, refresh]
 
     warpCursor = warpToWindow (1/2) (1/2)
 
@@ -674,10 +600,6 @@ myKeys conf = let
     --switch ps name = case Map.lookup name ps of
     --  Just p              -> switchProject p
     --  Nothing | null name -> return ()
-
-    -- do something with current X selection
-    unsafeWithSelection app = join $ io $ fmap (unsafeSpawn . (\x -> app ++ " " ++ x)) getSelection
-
 
     toggleFloat w = windows (\s -> if M.member w (W.floating s)
                     then W.sink w s
@@ -829,7 +751,6 @@ myKeys conf = let
 
     , ("M-w"                    , addName "Maximize"                        $ sequence_ [ withFocused $ windows . W.sink
                                                                             , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLBAR ])
-    , ("M-C-w"                  , addName "Magnify"                         $ sendMessage $ XMonad.Layout.MultiToggle.Toggle MAGNIFY)
 
     , ("M-C-c"                  , addName "Center Focus"                    $ sequence_ [ withFocused $ windows . W.sink
                                                                             , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLCENTER

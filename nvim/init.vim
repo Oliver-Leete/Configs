@@ -2,138 +2,134 @@ let $SHELL = "/bin/zsh"
 set shell=/bin/zsh
 
 call plug#begin('~/.config/nvim/pluged')
-  Plug 'lambdalisue/suda.vim'
-  Plug '907th/vim-auto-save'
-  Plug 'farmergreg/vim-lastplace'
-  Plug 'nvim-lua/plenary.nvim'
+    Plug 'lambdalisue/suda.vim'
+    Plug '907th/vim-auto-save'
+    Plug 'farmergreg/vim-lastplace'
+    Plug 'nvim-lua/plenary.nvim'
 
-  " Project Managment
-  Plug 'rmagatti/auto-session'
-  Plug 'rmagatti/session-lens'
-  Plug 'tpope/vim-projectionist'
+    " Project Managment
+    Plug 'rmagatti/auto-session'
+    Plug 'rmagatti/session-lens'
+    Plug 'tpope/vim-projectionist'
 
-  " Git
-  Plug 'TimUntersberger/neogit'
-  Plug 'lewis6991/gitsigns.nvim'
-  Plug 'junegunn/gv.vim'
-  Plug 'drzel/vim-repo-edit'
-  Plug 'rhysd/committia.vim'
-  Plug 'sindrets/diffview.nvim'
+    " Git
+    Plug 'TimUntersberger/neogit'
+    Plug 'lewis6991/gitsigns.nvim'
+    Plug 'drzel/vim-repo-edit'
+    Plug 'rhysd/committia.vim'
+    Plug 'sindrets/diffview.nvim'
 
-  " Registers
-  Plug 'svermeulen/vim-subversive'
+    " Registers
+    Plug 'svermeulen/vim-subversive'
 
-  " Movement Commands
-  Plug 'unblevable/quick-scope'
-  Plug 'phaazon/hop.nvim'
-  Plug 'andymass/vim-matchup'
-  Plug 'chaoren/vim-wordmotion'
-  Plug 'junegunn/vim-slash'
+    " Movement Commands
+    Plug 'unblevable/quick-scope'
+    Plug 'phaazon/hop.nvim'
+    Plug 'andymass/vim-matchup'
+    Plug 'chaoren/vim-wordmotion'
+    Plug 'junegunn/vim-slash'
 
-  " Editor Commands
-  Plug 'arthurxavierx/vim-caser'
-  Plug 'inkarkat/vim-unconditionalpaste'
-  Plug 'tommcdo/vim-nowchangethat'
-  Plug 'tpope/vim-surround'
-  Plug 'tpope/vim-repeat'
-  Plug 'tommcdo/vim-nowchangethat'
-  Plug 'wincent/scalpel'
-  Plug 'terrortylor/nvim-comment'
-  Plug 'junegunn/vim-easy-align'
-  Plug 'AndrewRadev/splitjoin.vim'
-  Plug 'tpope/vim-abolish'
-  Plug 'tpope/vim-eunuch'
-  Plug 'fvictorio/vim-extract-variable'
-  Plug 'folke/todo-comments.nvim'
-  Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
+    " Editor Commands
+    Plug 'arthurxavierx/vim-caser'
+    Plug 'inkarkat/vim-unconditionalpaste'
+    Plug 'tommcdo/vim-nowchangethat'
+    Plug 'tpope/vim-surround'
+    Plug 'tpope/vim-repeat'
+    Plug 'tommcdo/vim-nowchangethat'
+    Plug 'wincent/scalpel'
+    Plug 'terrortylor/nvim-comment'
+    Plug 'junegunn/vim-easy-align'
+    Plug 'AndrewRadev/splitjoin.vim'
+    Plug 'tpope/vim-abolish'
+    Plug 'tpope/vim-eunuch'
+    Plug 'fvictorio/vim-extract-variable'
+    Plug 'folke/todo-comments.nvim'
 
-  " Text Objects
-  Plug 'wellle/targets.vim'
-  Plug 'wellle/line-targets.vim'
-  Plug 'michaeljsmith/vim-indent-object'
-  Plug 'tommcdo/vim-ninja-feet'
-  Plug 'junegunn/vim-after-object'
+    " Text Objects
+    Plug 'wellle/targets.vim'
+    Plug 'wellle/line-targets.vim'
+    Plug 'michaeljsmith/vim-indent-object'
+    Plug 'tommcdo/vim-ninja-feet'
+    Plug 'junegunn/vim-after-object'
 
-  " Insert Mode
-  Plug 'Konfekt/vim-CtrlXA'
-  Plug 'tpope/vim-rsi'
+    " Insert Mode
+    Plug 'Konfekt/vim-CtrlXA'
+    Plug 'tpope/vim-rsi'
 
-  " LANGUAGE
-  Plug 'lervag/vimtex'
-  " Plug 'JuliaEditorSupport/julia-vim'
-  Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
+    " LANGUAGE
+    Plug 'lervag/vimtex'
+    " Plug 'JuliaEditorSupport/julia-vim'
+    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
 
-  " UI Stuff
-  Plug 'folke/zen-mode.nvim'
-  Plug 'hoob3rt/lualine.nvim'
-  Plug 'arkav/lualine-lsp-progress'
-  Plug 'kyazdani42/nvim-web-devicons'
-  Plug 'nacro90/numb.nvim'
-  Plug 'winston0410/range-highlight.nvim'
-  Plug 'Jorengarenar/vim-syntaxMarkerFold'
-  Plug 'akinsho/nvim-bufferline.lua'
-  Plug 'Asheq/close-buffers.vim'
-  Plug 'lewis6991/foldsigns.nvim'
-  Plug 'lukas-reineke/indent-blankline.nvim', { 'branch': 'lua'}
+    " UI Stuff
+    Plug 'folke/zen-mode.nvim'
+    Plug 'hoob3rt/lualine.nvim'
+    Plug 'arkav/lualine-lsp-progress'
+    Plug 'kyazdani42/nvim-web-devicons'
+    Plug 'nacro90/numb.nvim'
+    Plug 'winston0410/range-highlight.nvim'
+    Plug 'Jorengarenar/vim-syntaxMarkerFold'
+    Plug 'akinsho/nvim-bufferline.lua'
+    Plug 'Asheq/close-buffers.vim'
+    Plug 'lewis6991/foldsigns.nvim'
+    Plug 'lukas-reineke/indent-blankline.nvim', { 'branch': 'lua'}
 
-  " Panels
-  Plug 'mipmip/panelmanager.vim'
-  Plug 'mbbill/undotree'
-  Plug 'kyazdani42/nvim-tree.lua'
-  Plug 'simrat39/symbols-outline.nvim'
-  Plug 'folke/trouble.nvim'
-  Plug 'akinsho/nvim-toggleterm.lua'
-  Plug 'folke/which-key.nvim'
+    " Panels
+    Plug 'mipmip/panelmanager.vim'
+    Plug 'mbbill/undotree'
+    Plug 'kyazdani42/nvim-tree.lua'
+    Plug 'simrat39/symbols-outline.nvim'
+    Plug 'folke/trouble.nvim'
+    Plug 'akinsho/nvim-toggleterm.lua'
+    Plug 'folke/which-key.nvim'
 
-  " File Manager
-  Plug 'tpope/vim-vinegar'
+    " File Manager
+    Plug 'tpope/vim-vinegar'
 
-  " Quickfix
-  Plug 'kevinhwang91/nvim-bqf'
-  Plug 'tommcdo/vim-lister'
+    " Quickfix
+    Plug 'kevinhwang91/nvim-bqf'
+    Plug 'tommcdo/vim-lister'
 
-  " Themes
-  Plug 'phanviet/vim-monokai-pro'
-  Plug 'sainnhe/sonokai'
-  Plug 'tanvirtin/monokai.nvim'
-  Plug 'folke/tokyonight.nvim'
-  Plug 'marko-cerovac/material.nvim'
+    " Themes
+    Plug 'phanviet/vim-monokai-pro'
+    Plug 'sainnhe/sonokai'
+    Plug 'tanvirtin/monokai.nvim'
+    Plug 'folke/tokyonight.nvim'
+    Plug 'marko-cerovac/material.nvim'
 
-  " LSP
-  Plug 'neovim/nvim-lspconfig'
-  Plug 'kabouzeid/nvim-lspinstall'
-  Plug 'onsails/lspkind-nvim'
-  Plug 'glepnir/lspsaga.nvim'
-  Plug 'jubnzv/virtual-types.nvim'
-  Plug 'ray-x/lsp_signature.nvim'
-  Plug 'folke/lsp-colors.nvim'
-  Plug 'RRethy/vim-illuminate'
+    " LSP
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'kabouzeid/nvim-lspinstall'
+    Plug 'onsails/lspkind-nvim'
+    Plug 'glepnir/lspsaga.nvim'
+    Plug 'jubnzv/virtual-types.nvim'
+    Plug 'ray-x/lsp_signature.nvim'
+    Plug 'folke/lsp-colors.nvim'
+    Plug 'RRethy/vim-illuminate'
 
-  " Compleation
-  Plug 'hrsh7th/nvim-compe'
-  Plug 'hrsh7th/vim-vsnip'
-  Plug 'hrsh7th/vim-vsnip-integ'
-  Plug 'rafamadriz/friendly-snippets'
-  Plug 'windwp/nvim-autopairs'
+    " Compleation
+    Plug 'hrsh7th/nvim-compe'
+    Plug 'hrsh7th/vim-vsnip'
+    Plug 'hrsh7th/vim-vsnip-integ'
+    Plug 'rafamadriz/friendly-snippets'
+    Plug 'windwp/nvim-autopairs'
 
-  " Telescope
-  Plug 'nvim-lua/popup.nvim'
-  Plug 'nvim-telescope/telescope.nvim'
-  Plug 'nvim-telescope/telescope-symbols.nvim'
-  Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make'}
-  Plug 'nvim-telescope/telescope-media-files.nvim'
-  Plug 'tkmpypy/telescope-jumps.nvim'
-  Plug 'nvim-telescope/telescope-bibtex.nvim'
-  Plug 'nvim-telescope/telescope-github.nvim'
+    " Telescope
+    Plug 'nvim-lua/popup.nvim'
+    Plug 'nvim-telescope/telescope.nvim'
+    Plug 'nvim-telescope/telescope-symbols.nvim'
+    Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make'}
+    Plug 'nvim-telescope/telescope-media-files.nvim'
+    Plug 'tkmpypy/telescope-jumps.nvim'
+    Plug 'nvim-telescope/telescope-bibtex.nvim'
+    Plug 'nvim-telescope/telescope-github.nvim'
 
-  " Treesitter
-  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
-  " Plug 'romgrk/nvim-treesitter-context'
-  Plug 'code-biscuits/nvim-biscuits'
-  Plug 'nvim-treesitter/nvim-treesitter-textobjects'
-  Plug 'nvim-treesitter/nvim-treesitter-refactor'
-  Plug 'p00f/nvim-ts-rainbow'
-  Plug 'JoosepAlviste/nvim-ts-context-commentstring'
+    " Treesitter
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
+    Plug 'code-biscuits/nvim-biscuits'
+    Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+    Plug 'nvim-treesitter/nvim-treesitter-refactor'
+    Plug 'p00f/nvim-ts-rainbow'
 
 call plug#end()
 
@@ -197,20 +193,12 @@ set shortmess=Iflmnrwxt
 set signcolumn=yes:1
 set number
 set relativenumber
-function! Togglenumbertoggle()
-    if !exists('#TestAutoGroup#BufEnter')
-        augroup numbertoggle
-            autocmd!
-            autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
-            autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu                  | set nornu | endif
-        augroup END
-    else
-        augroup numbertoggle
-            autocmd!
-        augroup END
-    endif
-endfunction
-call Togglenumbertoggle()
+
+augroup numbertoggle
+    autocmd!
+    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
+    autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu                  | set nornu | endif
+augroup END
 
 " Saving and Backup
 set noswapfile
@@ -272,42 +260,42 @@ let maplocalleader = "\\"
 lua << EOF
 local wk = require("which-key")
 wk.setup {
-  plugins = {
-    marks = true, -- shows a list of your marks on ' and `
-    registers = true, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
-    -- the presets plugin, adds help for a bunch of default keybindings in Neovim
-    -- No actual key bindings are created
-    presets = {
-      operators = true, -- adds help for operators like d, y, ... and registers them for motion / text object completion
-      motions = true, -- adds help for motions
-      text_objects = true, -- help for text objects triggered after entering an operator
-      windows = true, -- default bindings on <c-w>
-      nav = true, -- misc bindings to work with windows
-      z = true, -- bindings for folds, spelling and others prefixed with z
-      g = true, -- bindings for prefixed with g
+    plugins = {
+        marks = true,
+        registers = true,
+        spelling = {
+            enabled = true,
+            suggestions = 20,
+        },
+        presets = {
+            operators = true,
+            motions = true, 
+            text_objects = true, 
+            windows = true, 
+            nav = true, 
+            z = true, 
+            g = true, 
+        },
     },
-  },
-  -- add operators that will trigger motion and text object completion
-  -- to enable all native operators, set the preset / operators plugin above
-  operators = { gc = "Comments" },
-  icons = {
-    breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
-    separator = "➜", -- symbol used between a key and it's label
-    group = "+", -- symbol prepended to a group
-  },
-  window = {
-    border = "none", -- none, single, double, shadow
-    position = "bottom", -- bottom, top
-    margin = { 1, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]
-    padding = { 2, 2, 2, 2 }, -- extra window padding [top, right, bottom, left]
-  },
-  layout = {
-    height = { min = 4, max = 30 }, -- min and max height of the columns
-    width = { min = 20, max = 50 }, -- min and max width of the columns
-    spacing = 3, -- spacing between columns
-  },
-  hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ "}, -- hide mapping boilerplate
-  show_help = true -- show help message on the command line when the popup is visible
+    operators = { gc = "Comments" },
+    icons = {
+        breadcrumb = "»", 
+        separator = "➜", 
+        group = "+", 
+    },
+    window = {
+        border = "none", 
+        position = "bottom", 
+        margin = { 1, 0, 1, 0 }, 
+        padding = { 2, 2, 2, 2 }, 
+    },
+    layout = {
+        height = { min = 4, max = 30 }, 
+        width = { min = 20, max = 50 }, 
+        spacing = 3, 
+    },
+    hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ "}, 
+    show_help = true 
 }
 EOF
 
@@ -321,12 +309,13 @@ xnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
 onoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
 onoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
 
-nnoremap L $
-nnoremap H ^
-xnoremap L $
-xnoremap H ^
-onoremap L $
-onoremap H ^
+nnoremap <expr> H getline('.')[0 : col('.') - 2] =~# '^\s\+$' ? '0' : '^'
+xnoremap <expr> H getline('.')[0 : col('.') - 2] =~# '^\s\+$' ? '0' : '^'
+onoremap <expr> H getline('.')[0 : col('.') - 2] =~# '^\s\+$' ? '0' : '^'
+
+nnoremap <expr> L getline('.')[col('.') : -1] =~# '^\s\+$' ? '$' : 'g_'
+xnoremap <expr> L getline('.')[col('.') : -1] =~# '^\s\+$' ? '$' : 'g_'
+onoremap <expr> L getline('.')[col('.') : -1] =~# '^\s\+$' ? '$' : 'g_'
 
 nnoremap <C-j> H
 nnoremap <C-h> M
@@ -335,6 +324,13 @@ nnoremap <C-k> L
 xnoremap <C-j> H
 xnoremap <C-h> M
 xnoremap <C-k> L
+
+onoremap <C-j> H
+onoremap <C-h> M
+onoremap <C-k> L
+
+" Jump back to where you were
+nnoremap J gi
 
 " Some Sensible Changes
 nnoremap U <c-r>
@@ -370,6 +366,7 @@ inoremap <silent><expr> <C-Space> compe#complete()
 vnoremap < <gv
 vnoremap > >gv
 
+"
 " Terminal
 tnoremap <Esc> <C-\><C-n>
 
@@ -421,7 +418,6 @@ let g:splitjoin_split_mapping = ''
 let g:splitjoin_join_mapping = ''
 let g:UnconditionalPaste_no_mappings = 1
 let g:caser_no_mappings	= 1
-let g:doge_enable_mappings=0
 
 " Expression Mapping (to go in which-key)
 nmap <expr> <plug>(Telescope-grep)  "<cmd>Telescope grep_string search=" . input("Grep For > ") . "<CR>"
@@ -557,6 +553,5 @@ highlight link BqfPreveiwBorder              FloatBorder
 " Indent Blankline Settings
 let g:indent_blankline_char_list = ['│']
 let g:indent_blankline_char_highlight_list = ['rainbowcol7', 'rainbowcol6', 'rainbowcol5', 'rainbowcol4', 'rainbowcol3', 'rainbowcol2', 'rainbowcol1']
-
 
 redraw
