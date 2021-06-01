@@ -96,7 +96,7 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.NamedWindows
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
-import XMonad.Util.WorkspaceCompare
+import XMonad.Util.WorkspaceCompare()
 
 -- experimenting with tripane
 -- import XMonad.Layout.Decoration
@@ -272,7 +272,6 @@ projects =
 -- Just a general list of all the apps I reference elsewhere
 
 myTerminal     = "kitty"
-myTermEditor   = "kitty neovim"
 myEditor       = "code-insiders"
 myNotebook     = "code-insiders"
 myBrowser      = "browser"
@@ -320,7 +319,6 @@ chromenspWrkResource   = "Chromewrknsp"
 isChromenspWrk         = className =? chromenspWrkResource
 
 youtubeMusicCommand    = "$HOME/.local/bin/YouTube-Music-Desktop-App-1.13.0.AppImage"
-youtubeMusicInfix      = "Youtube Music Desktop"
 youtubeMusicResource   = "youtube-music-desktop-app"
 isYoutubeMusic         = className =? youtubeMusicResource
 
@@ -884,7 +882,7 @@ myLogHook h = do
     fadeWindowsLogHook myFadeHook
     ewmhDesktopsLogHook
     masterHistoryHook
-    dynamicLogWithPP $ def
+    dynamicLogWithPP . filterOutWsPP ["NSP", wsTMP, wsTMP2] $ def
 
         { ppCurrent             = xmobarColor yellow "" . wrap "[" "]" . clickable
         , ppTitle               = xmobarColor yellow "" . wrap "<action=xdotool key Super+w>" "</action>" . shorten 40
@@ -897,10 +895,7 @@ myLogHook h = do
         , ppLayout              = xmobarColor green "" . wrap "<action=xdotool key Super+Tab>" "</action>"
         , ppOrder               = id
         , ppOutput              = hPutStrLn h
-        , ppSort                = fmap
-                                  (namedScratchpadFilterOutWorkspace.)
-                                  (ppSort def)
-                                  --(ppSort defaultPP)
+        , ppSort                = ppSort def
         , ppExtras              = [willHookNextPP "Main" $ xmobarColor red "> Place in Main <fn=1></fn"] }
 
 

@@ -248,26 +248,26 @@ vim.g.symbols_outline = {
 -- Toggle Terminal
 
 require"toggleterm".setup({
-    size = 25,
-    open_mapping = [[<c-\>]],
-    hide_numbers = true, -- hide the number column in toggleterm buffers
+    size            = 25,
+    open_mapping    = [[<c-\>]],
+    hide_numbers    = true,
     shade_filetypes = {},
     shade_terminals = false,
-    shading_factor = '1', -- the degree by which to darken to terminal colour, default: 1 for dark backgrounds, 3 for light
+    shading_factor  = '1',
     start_in_insert = false,
-    persist_size = true,
-    direction = 'horizontal',
-    shell = 'fish',
+    persist_size    = true,
+    direction       = 'horizontal',
+    shell           = 'fish',
 })
 
 -- Treesitter
 
 require'nvim-treesitter.configs'.setup({
-    autopairs = {enable = true},
-    highlight = {enable = true},
-    indent = {enable = true},
-    rainbow = {enable = true},
-    matchup = {
+    autopairs = { enable = true },
+    highlight = { enable = true },
+    indent    = { enable = true },
+    rainbow   = { enable = true },
+    matchup   = {
         enable = true,
     },
     textobjects = {
@@ -290,30 +290,30 @@ require'nvim-treesitter.configs'.setup({
         swap = {
             enable = true,
             swap_next = {
-                -- ["g>"] = "@parameter.outer",
+                ["g>"] = "@parameter.inner",
             },
             swap_previous = {
-                -- ["g<"] = "@parameter.outer",
+                ["g<"] = "@parameter.inner",
             },
         },
         move = {
-            enable = true,
-            goto_next_start = {
-                ["]o"] = "@block.outer",
-                ["]f"] = "@function.outer",
-            },
-            goto_next_end = {
-                ["]O"] = "@block.outer",
-                ["]F"] = "@function.outer"
-            },
-            goto_previous_start = {
-                ["[o"] = "@block.outer",
-                ["[f"] = "@function.outer",
-            },
-            goto_previous_end = {
-                ["[O"] = "@block.outer",
-                ["[F"] = "@function.outer",
-            },
+            enable = false,
+            -- goto_next_start = {
+            --     ["]o"] = "@block.outer",
+            --     ["]f"] = "@function.outer",
+            -- },
+            -- goto_next_end = {
+            --     ["]O"] = "@block.outer",
+            --     ["]F"] = "@function.outer"
+            -- },
+            -- goto_previous_start = {
+            --     ["[o"] = "@block.outer",
+            --     ["[f"] = "@function.outer",
+            -- },
+            -- goto_previous_end = {
+            --     ["[O"] = "@block.outer",
+            --     ["[F"] = "@function.outer",
+            -- },
         },
         lsp_interop = {
             enable = true,
@@ -323,22 +323,38 @@ require'nvim-treesitter.configs'.setup({
          },
     },
     refactor = {
+        highlight_current_scope = { enable = false },
+        highlight_definitions = { enable = false },
         smart_rename = {
             enable = true,
             keymaps = {
                 smart_rename = "<leader>rt",
-                -- list_definitions_toc = "<leader>od",
             },
         },
         navigation = {
-            enable = true,
+            enable = false,
             keymaps = {
-                -- goto_definition = "<leader>od",
-                -- list_definitions = "<leader>fs",
-                -- goto_next_usage = "<leader>or",
             },
         },
     },
+    playground = {
+        enable = true,
+        disable = {},
+        updatetime = 25,
+        persist_queries = false,
+        keybindings = {
+            toggle_query_editor       = 'o',
+            toggle_hl_groups          = 'i',
+            toggle_injected_languages = 't',
+            toggle_anonymous_nodes    = 'a',
+            toggle_language_display   = 'I',
+            focus_language            = 'f',
+            unfocus_language          = 'F',
+            update                    = 'R',
+            goto_node                 = '<cr>',
+            show_help                 = '?',
+        },
+    }
 })
 require('nvim-biscuits').setup({
     default_config = {
@@ -699,26 +715,26 @@ require("telescope").setup({
             i = {
                 ["<C-q>"] = actions.smart_send_to_qflist,
                 ["<C-a>"] = actions.smart_add_to_qflist,
+                ["<C-l>"] = actions.smart_send_to_loclist,
+                ["<C-n>"] = actions.smart_add_to_loclist,
+                ["<c-e>"] = trouble.open_with_trouble,
+                ["<c-u>"] = trouble.open_selected_with_trouble,
                 ["<C-space>"] = actions.toggle_selection + actions.move_selection_worse,
-                -- ["<C-l>"] = actions.smart_send_to_loclist,
-                -- ["<C-n>"] = actions.smart_add_to_loclist,
                 ["<C-j>"] = actions.move_to_top,
                 ["<C-h>"] = actions.move_to_middle,
                 ["<C-k>"] = actions.move_to_bottom,
-                ["<c-e>"] = trouble.open_with_trouble,
-                ["<c-u>"] = trouble.open_selected_with_trouble
             },
             n = {
                 ["<C-q>"] = actions.smart_send_to_qflist,
                 ["<C-a>"] = actions.smart_add_to_qflist,
+                ["<C-l>"] = actions.smart_send_to_loclist,
+                ["<C-n>"] = actions.smart_add_to_loclist,
+                ["<c-e>"] = trouble.open_with_trouble,
+                ["<c-u>"] = trouble.open_selected_with_trouble,
                 ["<C-space>"] = actions.toggle_selection + actions.move_selection_worse,
-                -- ["<C-l>"] = actions.smart_send_to_loclist,
-                -- ["<C-n>"] = actions.smart_add_to_loclist,
                 ["<C-j>"] = actions.move_to_top,
                 ["<C-h>"] = actions.move_to_middle,
                 ["<C-k>"] = actions.move_to_bottom,
-                ["<c-e>"] = trouble.open_with_trouble,
-                ["<c-u>"] = trouble.open_selected_with_trouble
             },
         },
     },
@@ -923,6 +939,8 @@ require("which-key").register({
         rR = {"<plug>(SubversiveSubstitute)^", "Substitute to SOL"},
         rr = {"<plug>(SubversiveSubstituteLine)", "Substitute Line"},
         [":"] = {"Q", "Ex Mode"},
+        ["<"] = {"Swap With Previous Argument"},
+        [">"] = {"Swap With Next Argument"},
         O = {"O<Esc>", "Insert Blankline Before"},
         o = {"o<Esc>", "Insert Blankline"},
         j = {"J", "Join"},
@@ -1286,7 +1304,4 @@ require("which-key").register({
 
 require('numb').setup()
 require('foldsigns').setup()
--- require("range-highlight").setup({
---     highlight = "Visual"
--- })
-
+require("range-highlight").setup({})

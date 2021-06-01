@@ -58,7 +58,7 @@ call plug#begin('~/.config/nvim/pluged')
 
     " LANGUAGE
     Plug 'lervag/vimtex'
-    " Plug 'JuliaEditorSupport/julia-vim'
+    Plug 'JuliaEditorSupport/julia-vim'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
 
     " UI Stuff
@@ -67,6 +67,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'arkav/lualine-lsp-progress'
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'nacro90/numb.nvim'
+    Plug 'winston0410/cmd-parser.nvim'
     Plug 'winston0410/range-highlight.nvim'
     Plug 'Jorengarenar/vim-syntaxMarkerFold'
     Plug 'akinsho/nvim-bufferline.lua'
@@ -130,6 +131,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-treesitter/nvim-treesitter-refactor'
     Plug 'p00f/nvim-ts-rainbow'
+    Plug 'nvim-treesitter/playground'
 
 call plug#end()
 
