@@ -440,7 +440,7 @@ vim.fn.sign_define( "LspDiagnosticsSignInformation", {texthl = "LspDiagnosticsSi
 local custom_attach = function(client, bufnr)
 	-- print("LSP started.");
     capabilities = capabilities
-    -- require'virtualtypes'.on_attach()
+    require'virtualtypes'.on_attach()
     require'lsp_signature'.on_attach()
     require 'illuminate'.on_attach(client)
     saga.init_lsp_saga {
@@ -1045,7 +1045,7 @@ require("which-key").register({
             F = {"<cmd>Telescope fd<cr>", "Files (non git)"},
             G = {"<cmd>Git! difftool<cr><cmd>cclose<cr><cmd>Telescope quickfix<cr>", "Git Chunks"},
             g = {"<cmd>Telescope git_status<cr>", "Git Status"},
-            j = {"<cmd>Telescope jumps jumps<cr>", "Jumps"},
+            j = {"<cmd>Telescope jumplist<cr>", "Jumps"},
             l = {"<cmd>Telescope current_buffer_fuzzy_find<cr>", "Line"},
             m = {"<cmd>Telescope marks<cr>", "Marks"},
             n = {"<cmd>TodoTelescope<cr>", "Todo Items"},
@@ -1155,7 +1155,7 @@ require("which-key").register({
             s = {"<Plug>(Scalpel)", "Rename (Scalpel)"},
             t = {"Rename (Treesitter)"},
             v = {"<plug>(ExtractVar)", "Extract Variable"},
-            d = {"[fyyO<esc><cmd>.!cat ~/.config/nvim/docstring/julia.txt<cr>pdw>>>>/TODO:<cr>", "Make Docstring", noremap=false}
+            d = {"[fyyO<esc><cmd>.!cat ~/.config/nvim/docstring/julia.txt<cr>pdw>>/TODO:<cr>", "Make Docstring", noremap=false}
         },
         t = {
             name = "Explorer",

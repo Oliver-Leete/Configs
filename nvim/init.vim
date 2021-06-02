@@ -2,15 +2,19 @@ let $SHELL = "/bin/zsh"
 set shell=/bin/zsh
 
 call plug#begin('~/.config/nvim/pluged')
+    " Misc and Dependencies
     Plug 'lambdalisue/suda.vim'
-    Plug '907th/vim-auto-save'
-    Plug 'farmergreg/vim-lastplace'
     Plug 'nvim-lua/plenary.nvim'
+    Plug 'tpope/vim-repeat'
+    Plug 'kyazdani42/nvim-web-devicons'
+    Plug 'winston0410/cmd-parser.nvim'
 
-    " Project Managment
+    " Project Management
     Plug 'rmagatti/auto-session'
     Plug 'rmagatti/session-lens'
     Plug 'tpope/vim-projectionist'
+    Plug 'farmergreg/vim-lastplace'
+    Plug '907th/vim-auto-save'
 
     " Git
     Plug 'TimUntersberger/neogit'
@@ -21,6 +25,7 @@ call plug#begin('~/.config/nvim/pluged')
 
     " Registers
     Plug 'svermeulen/vim-subversive'
+    Plug 'inkarkat/vim-unconditionalpaste'
 
     " Movement Commands
     Plug 'unblevable/quick-scope'
@@ -29,21 +34,22 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
 
-    " Editor Commands
-    Plug 'arthurxavierx/vim-caser'
-    Plug 'inkarkat/vim-unconditionalpaste'
-    Plug 'tommcdo/vim-nowchangethat'
+    " Normal Commands
     Plug 'tpope/vim-surround'
-    Plug 'tpope/vim-repeat'
     Plug 'tommcdo/vim-nowchangethat'
     Plug 'wincent/scalpel'
     Plug 'terrortylor/nvim-comment'
+    Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
     Plug 'AndrewRadev/splitjoin.vim'
+    Plug 'fvictorio/vim-extract-variable'
+
+    " Command Mode
     Plug 'tpope/vim-abolish'
     Plug 'tpope/vim-eunuch'
-    Plug 'fvictorio/vim-extract-variable'
-    Plug 'folke/todo-comments.nvim'
+    Plug 'nacro90/numb.nvim'
+    Plug 'winston0410/range-highlight.nvim'
+    Plug 'Asheq/close-buffers.vim'
 
     " Text Objects
     Plug 'wellle/targets.vim'
@@ -63,15 +69,9 @@ call plug#begin('~/.config/nvim/pluged')
 
     " UI Stuff
     Plug 'folke/zen-mode.nvim'
+    Plug 'akinsho/nvim-bufferline.lua'
     Plug 'hoob3rt/lualine.nvim'
     Plug 'arkav/lualine-lsp-progress'
-    Plug 'kyazdani42/nvim-web-devicons'
-    Plug 'nacro90/numb.nvim'
-    Plug 'winston0410/cmd-parser.nvim'
-    Plug 'winston0410/range-highlight.nvim'
-    Plug 'Jorengarenar/vim-syntaxMarkerFold'
-    Plug 'akinsho/nvim-bufferline.lua'
-    Plug 'Asheq/close-buffers.vim'
     Plug 'lewis6991/foldsigns.nvim'
     Plug 'lukas-reineke/indent-blankline.nvim', { 'branch': 'lua'}
 
@@ -83,6 +83,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/trouble.nvim'
     Plug 'akinsho/nvim-toggleterm.lua'
     Plug 'folke/which-key.nvim'
+    Plug 'folke/todo-comments.nvim'
 
     " File Manager
     Plug 'tpope/vim-vinegar'
@@ -108,7 +109,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/lsp-colors.nvim'
     Plug 'RRethy/vim-illuminate'
 
-    " Compleation
+    " Completion
     Plug 'hrsh7th/nvim-compe'
     Plug 'hrsh7th/vim-vsnip'
     Plug 'hrsh7th/vim-vsnip-integ'
@@ -121,7 +122,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-telescope/telescope-symbols.nvim'
     Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make'}
     Plug 'nvim-telescope/telescope-media-files.nvim'
-    Plug 'tkmpypy/telescope-jumps.nvim'
     Plug 'nvim-telescope/telescope-bibtex.nvim'
     Plug 'nvim-telescope/telescope-github.nvim'
 
@@ -184,7 +184,7 @@ set splitright
 augroup windowPositioning
   autocmd FileType help wincmd H
   autocmd FileType juliadoc wincmd H 
-  autocmd FileType gitcommit wincmd H
+  " autocmd FileType gitcommit wincmd H
   autocmd FileType qf wincmd J
 augroup END
 " autocmd VimResized * exe "normal \<c-w>="

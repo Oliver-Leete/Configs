@@ -378,6 +378,7 @@ myWideFont  = "xft:Eurostar Black Extended:"
 -- I'm not a fan of it, so it's not being used right now
 -- I take that back, spent a short time with a border, but now I've moved
 -- back to the top bar, it works a lot better without rounded corners
+-- although part of me so wishes to return to rounded corners
 topBarTheme :: Theme
 topBarTheme = def
     { fontName              = myFont
