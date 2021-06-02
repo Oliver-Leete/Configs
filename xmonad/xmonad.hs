@@ -103,6 +103,7 @@ import XMonad.Util.WorkspaceCompare()
 -- import XMonad.Hooks.WindowSwallowing
 
 -- testing
+import XMonad.Layout.Column
 import XMonad.Layout.SimpleFocus
 import XMonad.Layout.Master
 import XMonad.Actions.Warp
@@ -197,13 +198,11 @@ projects =
     , Project   { projectName       = wsPRO1
                 , projectDirectory  = "~/Projects"
                 , projectStartHook  = Just $ do spawnOn wsPRO1 ("sleep .3; " ++ myBrowser)
-                                                -- spawnOn wsPRO2 ("sleep .5;" ++ myExplorer ++ " .")
                 }
     , Project   { projectName       = wsPRO2
                 , projectDirectory  = "~/Projects/julia-vscode"
                 , projectStartHook  = Just $ do spawnOn wsPRO2 (myEditor ++ " .")
                                                 spawnOn wsPRO2 ("sleep .3; " ++ myBrowser)
-                                                -- spawnOn wsPRO2 ("sleep 1;" ++ myExplorer ++ "-t . ../julia-benchmark-example")
                 }
 
     , Project   { projectName       = wsPRO3
@@ -215,44 +214,32 @@ projects =
     , Project   { projectName       = wsCON
                 , projectDirectory  = "~/.config"
                 , projectStartHook  = Just $ do spawnOn wsCON (myTerminal ++ " --session=/home/oleete/.config/kitty/config.conf")
-                -- , projectStartHook  = Just $ do spawnOn wsCON (myEditor ++ " .")
-                                                -- spawnOn wsPRO2 ("sleep 1;" ++ myExplorer ++ "-t ~/Projects/Configs ~/Projects/ConfigExamples ~/.config")
-                                                -- spawnOn wsCON ("sleep 1.2; " ++ myTerminal)
                                                 spawnOn wsCON ("sleep 1.5; " ++ myBrowser)
                 }
 
     , Project   { projectName       = wsPER
                 , projectDirectory  = "~/PersonalDrive"
-                , projectStartHook  = Just $ spawnOn wsPER myBrowser
+                , projectStartHook  = Just $    spawnOn wsPER myBrowser
                 }
 
     , Project   { projectName       = wsWRK
                 , projectDirectory  = "~/UniDrive"
-                , projectStartHook  = Just $ spawnOn wsWRK myBrowser
+                , projectStartHook  = Just $    spawnOn wsWRK myBrowser
                 }
 
     , Project   { projectName       = wsSIM
                 , projectDirectory  = "~/Projects/JuliaPowderModel"
-                -- , projectStartHook  = Just $ do spawnOn wsSIM (myEditor ++ " .")
                 , projectStartHook  = Just $ do spawnOn wsSIM (myTerminal ++ " --session=/home/oleete/.config/kitty/sim.conf")
                                                 spawnOn wsSIM ("sleep .2; " ++ myBrowser)
-                                                -- spawnOn wsSIM ("sleep .3; " ++ myNotebook ++ " ~/Projects/Notebooks/PowderModel")
-                                                -- spawnOn wsSIM ("sleep .8; " ++ myTerminal ++ " --session=/home/oleete/.config/kitty/sim2.conf")
-                                                -- spawnOn wsSIM (myTerminal ++ " --session=/home/oleete/.config/kitty/sim.conf")
                 }
     , Project   { projectName       = wsEXP
                 , projectDirectory  = "~/Projects/JuliaPlotting"
-                -- , projectStartHook  = Just $ do spawnOn wsEXP (myEditor ++ " ~/Projects/JuliaPlotting")
                 , projectStartHook  = Just $ do spawnOn wsEXP (myTerminal ++ " --session=/home/oleete/.config/kitty/exp.conf")
                                                 spawnOn wsEXP ("sleep .2; " ++ myBrowser)
-                                                -- spawnOn wsEXP ("sleep .3; " ++ myNotebook ++ " ~/Projects/Notebooks/PowderExp")
-                                                -- spawnOn wsEXP ("sleep .8; " ++ myTerminal ++ " --session=/home/oleete/.config/kitty/exp2.conf")
-                                                -- spawnOn wsEXP ("sleep 1.25; cd ~/Projects/JuliaPlotting; " ++ myTerminal ++ " --session=/home/oleete/.config/kitty/exp.conf")
                 }
 
     , Project   { projectName       = wsTHESIS
                 , projectDirectory  = "~/Projects/Thesis/0.1_LaTeX"
-                -- , projectStartHook  = Just $ spawnOn wsTHESIS (myEditor ++ " ~/Projects/Thesis" )
                 , projectStartHook  = Just $ do spawnOn wsTHESIS (myTerminal ++ " --session=/home/oleete/.config/kitty/thesis.conf")
                                                 spawnOn wsTHESIS ("sleep .2; " ++ myBrowser)
                                                 spawnOn wsTHESIS "sleep .5; zathura /home/oleete/Projects/Thesis/0.1_LaTeX/OML-Thesis.pdf"
@@ -260,7 +247,7 @@ projects =
 
     , Project   { projectName       = wsWRK4
                 , projectDirectory  = "~/UniDrive"
-                , projectStartHook  = Just $ spawnOn wsWRK4 "sleep .3; browser"
+                , projectStartHook  = Just $    spawnOn wsWRK4 "sleep .3; browser"
                 }
 
     ]
@@ -526,9 +513,9 @@ myLayoutHook = onWorkspaces [wsFLOAT] floatWorkSpace
 
     -- Three column layouts
     threeCol = renamed [Replace "Three Col"] (subLayout [] Simplest (FourCol True 1 sizeDelta (51/100)))
-    tallThird = renamed [Replace "Tall 1/3"] (subLayout [] Simplest (ResizableTall 1 sizeDelta (2/3) []))
     tabsThird = renamed [Replace "Third Tabs"] (mastered sizeDelta (2/3) Simplest)
-    threeColLayout = ifWider smallMonResWidth threeCol (toggleLayouts tabsThird tallThird )
+    columns = Mirror $ Column 1
+    threeColLayout = ifWider smallMonResWidth threeCol (toggleLayouts tabsThird columns)
 
     -- Notebook Layouts
     notebookLayout = renamed [Replace "Notebook"] (subLayout [] Simplest (Notebook monResWidth True True True 1 3 (sizeDelta*2) 2 (2/3)))
@@ -544,7 +531,7 @@ myLayoutHook = onWorkspaces [wsFLOAT] floatWorkSpace
     -- Tabs Layouts
     tallTabs = renamed [Replace "Tall Tabs"] (mastered (1/100) (1/2) Simplest)
     allTabs = renamed [Replace "Tabs"] Simplest
-    tabsLayout = toggleLayouts allTabs tallTabs
+    tabsLayout = ifWider smallMonResWidth (toggleLayouts allTabs tallTabs) (toggleLayouts tallTabs allTabs)
 
 
     -- Other Layout Stuff
@@ -825,7 +812,6 @@ myKeys conf = let
 -- Think I got rid of this as well, I don't use floats much at all
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {XMonad.modMask = myModMask} = M.fromList
-
     [ ((myModMask,               button1) ,\w -> focus w
       >> mouseMoveWindow w
       >> windows W.shiftMaster)
@@ -841,13 +827,6 @@ myMouseBindings XConfig {XMonad.modMask = myModMask} = M.fromList
     , ((myModMask .|. shiftMask, button3), \w -> focus w
       >> Sqr.mouseResizeWindow w True
       >> windows W.shiftMaster)
-
---    , ((mySecondaryModMask,      button4), (\w -> focus w
---      >> prevNonEmptyWS))
---
---    , ((mySecondaryModMask,      button5), (\w -> focus w
---      >> nextNonEmptyWS))
-
     ]
 
 ------------------------------------------------------------------------}}}

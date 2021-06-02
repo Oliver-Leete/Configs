@@ -331,11 +331,7 @@ require'nvim-treesitter.configs'.setup({
                 smart_rename = "<leader>rt",
             },
         },
-        navigation = {
-            enable = false,
-            keymaps = {
-            },
-        },
+        navigation = { enable = false },
     },
     playground = {
         enable = true,
@@ -440,7 +436,6 @@ vim.fn.sign_define( "LspDiagnosticsSignInformation", {texthl = "LspDiagnosticsSi
 local custom_attach = function(client, bufnr)
 	-- print("LSP started.");
     capabilities = capabilities
-    require'virtualtypes'.on_attach()
     require'lsp_signature'.on_attach()
     require 'illuminate'.on_attach(client)
     saga.init_lsp_saga {
@@ -908,7 +903,7 @@ require('bqf').setup({
 require("todo-comments").setup({
     signs = true,
     keywords = {
-        FIX = { icon = " ", color = "error", alt = { "FIXME", "BUG", "FIXIT", "FIX", "ISSUE" }, },
+        FIX  = { icon = " ", color = "error", alt = { "FIXME", "BUG", "FIXIT", "FIX", "ISSUE" }, },
         TODO = { icon = " ", color = "info" },
         HACK = { icon = " ", color = "warning", alt = {"JANK", "WORKAROUND"}},
         WARN = { icon = " ", color = "warning", alt = { "WARNING"} },
@@ -916,15 +911,15 @@ require("todo-comments").setup({
         NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
     },
     highlight = {
-        before = "fg",
+        before  = "fg",
         keyword = "wide",
-        after = "fg",
+        after   = "fg",
     },
     colors = {
-        error = { "LspDiagnosticsDefaultError", "ErrorMsg", "#DC2626" },
+        error   = { "LspDiagnosticsDefaultError", "ErrorMsg", "#DC2626" },
         warning = { "LspDiagnosticsDefaultWarning", "WarningMsg", "#FBBF24" },
-        info = { "LspDiagnosticsDefaultInformation", "#2563EB" },
-        hint = { "LspDiagnosticsDefaultHint", "#10B981" },
+        info    = { "LspDiagnosticsDefaultInformation", "#2563EB" },
+        hint    = { "LspDiagnosticsDefaultHint", "#10B981" },
         default = { "Identifier", "#7C3AED" },
     },
 })
@@ -1092,6 +1087,7 @@ require("which-key").register({
         p = {
             name = "Preview",
             g = {"<cmd>lua require'gitsigns'.preview_hunk()<CR>", "Hunk Preview"},
+            w = {"<cmd>MatchupWhereAmI??<cr>", "Preview Location"}
         },
         v = {
             name = "View",

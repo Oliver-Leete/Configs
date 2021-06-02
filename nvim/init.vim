@@ -66,6 +66,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'lervag/vimtex'
     Plug 'JuliaEditorSupport/julia-vim'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
+    Plug 'neovimhaskell/haskell-vim'
 
     " UI Stuff
     Plug 'folke/zen-mode.nvim'
@@ -104,7 +105,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'kabouzeid/nvim-lspinstall'
     Plug 'onsails/lspkind-nvim'
     Plug 'glepnir/lspsaga.nvim'
-    Plug 'jubnzv/virtual-types.nvim'
     Plug 'ray-x/lsp_signature.nvim'
     Plug 'folke/lsp-colors.nvim'
     Plug 'RRethy/vim-illuminate'
@@ -202,6 +202,15 @@ augroup numbertoggle
     autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu                  | set nornu | endif
 augroup END
 
+set cursorline
+augroup ActiveWindowBufferCursorline
+    autocmd!
+    autocmd WinEnter * setlocal cursorline
+    autocmd BufEnter * setlocal cursorline
+    autocmd WinLeave * setlocal nocursorline
+    autocmd BufLeave * setlocal nocursorline
+augroup END
+
 " Saving and Backup
 set noswapfile
 set undodir=~/.vim/undo//
@@ -243,6 +252,7 @@ autocmd VimEnter * call after_object#enable(['a', 'A'], '=', ':', '-', '#', ' ')
 let g:loaded_matchit = 1
 let g:matchup_override_vimtex = 1
 let g:matchup_matchparen_offscreen = {'method': 'popup'}
+let g:matchup_transmute_enabled = 1
 
 " highlight Yank
 augroup LuaHighlight
@@ -518,8 +528,15 @@ let g:vimtex_compiler_latexmk = {
 autocmd BufNewFile,BufRead *.jl set filetype=julia
 autocmd FileType julia set commentstring=#%s
 
+let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
+let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
+let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
+let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
+let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
+let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
+let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
+
 " !!THEMES!!
-set cursorline
 
 let g:tokyonight_style='night'
 let g:tokyonight_terminal_colors=1
