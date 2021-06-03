@@ -1301,3 +1301,4 @@ require("which-key").register({
 require('numb').setup()
 require('foldsigns').setup()
 require("range-highlight").setup({})
+require'colorizer'.setup()

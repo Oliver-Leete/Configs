@@ -95,7 +95,6 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.NamedWindows
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
-import XMonad.Util.WorkspaceCompare()
 
 -- experimenting with tripane
 -- import XMonad.Layout.Decoration
@@ -157,10 +156,10 @@ myConfig p = def
 -- being destracting whilst I work
 
 wsTMP    = "tmp"
-wsTMP2    = "tmp2"
+wsTMP2   = "tmp2"
 wsPRO1   = "pro1 - home"
 wsPRO2   = "extension - home"
-wsPRO3   = "tutorils - home"
+wsPRO3   = "dnd - home"
 wsCON    = "configs - home"
 wsPER    = "home"
 wsFLOAT  = "flt"
@@ -170,11 +169,8 @@ wsTHESIS = "thesis - wrk"
 wsEXP    = "experiments - wrk"
 wsWRK4   = "wrk4"
 
-wsDND    = "dnd"
-wsDND2   = "dnd2"
-
 myWorkspaces :: [[Char]]
-myWorkspaces = [wsTMP, wsTMP2, wsPRO1, wsPRO2, wsPRO3, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsWRK4, wsFLOAT, wsDND, wsDND2]
+myWorkspaces = [wsTMP, wsTMP2, wsPRO1, wsPRO2, wsPRO3, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsWRK4, wsFLOAT]
 
 myWorkspaceIndices :: M.Map [Char] [Char]
 myWorkspaceIndices = M.fromList $ zip myWorkspaces ["<Home>", "<End>", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"] -- (,) == \x y -> (x,y)
@@ -207,9 +203,8 @@ projects =
                 }
 
     , Project   { projectName       = wsPRO3
-                , projectDirectory  = "~/Projects/JuliaTutorials"
-                , projectStartHook  = Just $ do spawnOn wsPRO3 (myNotebook ++ " .")
-                                                spawnOn wsPRO3 ("sleep .5; " ++ myBrowser)
+                , projectDirectory  = "~/Projects/D&D Home"
+                , projectStartHook  = Just $    spawnOn wsPRO3 "google-chrome-stable https://roll20.net/welcome"
                 }
 
     , Project   { projectName       = wsCON
@@ -250,11 +245,6 @@ projects =
                 , projectDirectory  = "~/UniDrive"
                 , projectStartHook  = Just $    spawnOn wsWRK4 "sleep .3; browser"
                 }
-    , Project   { projectName       = wsDND
-                , projectDirectory  = "~/Projects/D&D Home"
-                , projectStartHook  = Just $    spawnOn wsDND (myBrowser ++ " https://roll20.net/welcome")
-                }
-
     ]
 
 ----------------------------------------------------------------------------------------------------
@@ -265,7 +255,6 @@ projects =
 
 myTerminal     = "kitty"
 myEditor       = "code-insiders"
-myNotebook     = "code-insiders"
 myBrowser      = "browser"
 myBrowserClass = "google-chrome-stable"
 myStatusBar    = "/home/oleete/.config/xmobar/init-xmobars"
@@ -338,7 +327,7 @@ scratchpads =
 
     ,   NS "console"  "kitty --class=kittyconsole" (className =? "kittyconsole") nonFloating
     ]
- 
+
 ----------------------------------------------------------------------------------------------------
 -- Theme                                                                                     --
 ----------------------------------------------------------------------------------------------------
@@ -346,14 +335,12 @@ scratchpads =
 myFocusFollowsMouse  = True
 myClickJustFocuses   = True
 
-base03 = "#2C292D"
-base02 = "#2C292D"
-base00 = "#848B91"
-base2  = "#FDF9F3"
-yellow = "#ffd866"
-orange = "#fc9867"
-red    = "#ff6188"
-green  = "#A9DC76"
+background = "#1a1b26"
+foreground = "#a9b1d6"
+active     = "#7595E0"
+visible    = "#9ece6a"
+warning    = "#e0af68"
+alert      = "#f7768e"
 
 -- sizes
 gap    = 4
@@ -364,10 +351,8 @@ tabsh    = 30
 myborder = 3
 prompt   = 30
 
-myNormalBorderColor     = base03
-myFocusedBorderColor    = yellow
-
-active       = yellow
+myNormalBorderColor     = background
+myFocusedBorderColor    = active
 
 myFont      = "xft:Ubuntu:weight=normal:pixelsize=16:antialias=true:hinting=true"
 myWideFont  = "xft:Eurostar Black Extended:"
@@ -380,53 +365,53 @@ myWideFont  = "xft:Eurostar Black Extended:"
 topBarTheme :: Theme
 topBarTheme = def
     { fontName              = myFont
-    , inactiveBorderColor   = base03
-    , inactiveColor         = base03
-    , inactiveTextColor     = base03
+    , inactiveBorderColor   = background
+    , inactiveColor         = background
+    , inactiveTextColor     = background
     , activeBorderColor     = active
     , activeColor           = active
     , activeTextColor       = active
-    , urgentBorderColor     = red
-    , urgentTextColor       = yellow
+    , urgentBorderColor     = alert
+    , urgentTextColor       = warning
     , decoHeight            = topbar
     }
 
 topMaxBarTheme :: Theme
 topMaxBarTheme = topBarTheme
-    { inactiveBorderColor   = orange
-    , inactiveColor         = orange
-    , inactiveTextColor     = orange
-    , activeBorderColor     = orange
-    , activeColor           = orange
-    , activeTextColor       = orange
-    , urgentBorderColor     = red
-    , urgentTextColor       = red
+    { inactiveBorderColor   = warning
+    , inactiveColor         = warning
+    , inactiveTextColor     = warning
+    , activeBorderColor     = warning
+    , activeColor           = warning
+    , activeTextColor       = warning
+    , urgentBorderColor     = alert
+    , urgentTextColor       = alert
     , decoHeight            = topbar
     }
 
 topFloatBarTheme :: Theme
 topFloatBarTheme = topBarTheme
     { fontName              = myFont
-    , inactiveBorderColor   = base02
-    , inactiveColor         = base02
-    , inactiveTextColor     = base00
-    , activeBorderColor     = base02
-    , activeColor           = base02
+    , inactiveBorderColor   = background
+    , inactiveColor         = background
+    , inactiveTextColor     = foreground
+    , activeBorderColor     = background
+    , activeColor           = background
     , activeTextColor       = active
-    , urgentBorderColor     = red
-    , urgentTextColor       = yellow
+    , urgentBorderColor     = alert
+    , urgentTextColor       = warning
     , decoHeight            = tabsh
     }
 
 myTabTheme :: Theme
 myTabTheme = def
     { fontName              = myFont
-    , activeColor           = base02
-    , inactiveColor         = base02
-    , activeBorderColor     = base02
-    , inactiveBorderColor   = base02
-    , activeTextColor       = active
-    , inactiveTextColor     = base00
+    , activeColor           = active
+    , activeBorderColor     = active
+    , activeTextColor       = background
+    , inactiveColor         = background
+    , inactiveBorderColor   = background
+    , inactiveTextColor     = foreground
     , decoWidth             = 150
     , decoHeight            = tabsh
     }
@@ -434,11 +419,11 @@ myTabTheme = def
 myPromptTheme :: XPConfig
 myPromptTheme = def
     { font                  = myFont
-    , bgColor               = base02
-    , fgColor               = base2
-    , fgHLight              = yellow
-    , bgHLight              = base02
-    , borderColor           = yellow
+    , bgColor               = background
+    , fgColor               = foreground
+    , fgHLight              = visible
+    , bgHLight              = background
+    , borderColor           = active
     , promptBorderWidth     = 2
     , height                = prompt
     , position              = CenteredAt (1 / 4) (1 / 4)
@@ -449,16 +434,16 @@ myPromptTheme = def
 
 hotPromptTheme :: XPConfig
 hotPromptTheme = myPromptTheme
-    { bgColor               = base02
-    , fgColor               = red
+    { bgColor               = background
+    , fgColor               = alert
     }
 
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def
     { swn_font              = myWideFont
     , swn_fade              = 0.3
-    , swn_bgcolor           = yellow
-    , swn_color             = base03
+    , swn_bgcolor           = active
+    , swn_color             = background
     }
 
 ----------------------------------------------------------------------------------------------------
@@ -476,7 +461,8 @@ myNav2DConf = def
     , unmappedWindowRect        = [("Full", singleWindowRect)]
     }
 
--- To make a toggle for fullscreening an app but leaving the bar in place
+-- To make a toggle for full-screening a program but leaving the bar in place. Also changes the top
+-- bar to warning to remind me that there are probably other programs open.
 data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
@@ -486,12 +472,13 @@ barFull = renamed [Replace "Maximized"]
         $ avoidStruts
         $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True Simplest
 
--- To make a toggle pure zen. Centres the active window and hides everything else except the bar
+-- To make a toggle pure Zen. Centres the active window and hides everything else except the bar. 
+-- Also sets the top bar to warning to remind me that other programs are probably still open.
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
     transform FULLCENTER x k = k centerFull (const x)
 
-centerFull = renamed [Replace "Centered Max"]
+centerFull = renamed [Replace "Centred Max"]
            $ noFrillsDeco shrinkText topMaxBarTheme
            $ avoidStruts
            $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
@@ -525,7 +512,7 @@ myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
     columns = Mirror $ Column 1
     threeColLayout = ifWider smallMonResWidth threeCol (toggleLayouts tabsThird columns)
 
-    tallTabs = renamed [Replace "Tall Tabs"] (mastered (1/100) (1/2) Simplest)
+    tallTabs = renamed [Replace "Tall Tabs"] (subLayout [] Simplest (mastered (1/100) (1/2) Simplest))
     allTabs = renamed [Replace "Tabs"] Simplest
     tabsLayout = ifWider smallMonResWidth (toggleLayouts allTabs tallTabs) (toggleLayouts tallTabs allTabs)
 
@@ -831,8 +818,8 @@ myLogHook h = do
     -- following block for copy windows marking
     copies <- wsContainingCopies
     let check ws | ws `elem` copies =
-                   pad . xmobarColor base2 "" . wrap "" ""  $ ws
-                 | otherwise = pad . xmobarColor base2 "" . wrap "" "" $ ws
+                   pad . xmobarColor foreground "" . wrap "" ""  $ ws
+                 | otherwise = pad . xmobarColor foreground "" . wrap "" "" $ ws
 
     -- updatePointer (0.5, 0.5) (0, 0)
     fadeWindowsLogHook myFadeHook
@@ -840,19 +827,19 @@ myLogHook h = do
     masterHistoryHook
     dynamicLogWithPP . filterOutWsPP ["NSP", wsTMP, wsTMP2] $ def
 
-        { ppCurrent             = xmobarColor yellow "" . wrap "[" "]" . clickable
-        , ppTitle               = xmobarColor yellow "" . wrap "<action=xdotool key Super+w>" "</action>" . shorten 40
-        , ppVisible             = xmobarColor yellow  "" . clickable
-        , ppUrgent              = xmobarColor red    "" . wrap "!" "!"
+        { ppCurrent             = xmobarColor active "" . wrap "[" "]" . clickable
+        , ppTitle               = xmobarColor foreground "" . wrap "<action=xdotool key Super+w>" "</action>" . shorten 40
+        , ppVisible             = xmobarColor visible  "" . clickable
+        , ppUrgent              = xmobarColor alert    "" . wrap "!" "!"
         , ppHidden              = check . clickable
         , ppHiddenNoWindows     = const ""
         , ppSep                 = "  :  "
         , ppWsSep               = " "
-        , ppLayout              = xmobarColor green "" . wrap "<action=xdotool key Super+Tab>" "</action>"
+        , ppLayout              = xmobarColor foreground "" . wrap "<action=xdotool key Super+Tab>" "</action>"
         , ppOrder               = id
         , ppOutput              = hPutStrLn h
         , ppSort                = ppSort def
-        , ppExtras              = [willHookNextPP "Main" $ xmobarColor red "> Place in Main <fn=1></fn"] }
+        , ppExtras              = [willHookNextPP "Main" $ xmobarColor alert "> Place in Main <fn=1></fn"] }
 
 
 myFadeHook :: FadeHook
