@@ -7,9 +7,10 @@
 --                          > <   | |\/| |  / _ \  | '_ \   / _` |  / _` |                        --
 --                         / . \  | |  | | | (_) | | | | | | (_| | | (_| |                        --
 --                        /_/ \_\ |_|  |_|  \___/  |_| |_|  \__,_|  \__,_|                        --
+--                                                                                                --
 ----------------------------------------------------------------------------------------------------
 -- Oliver Leete <oliverleete@gmail.com>                                                           --
--- https://github.com/altercation                                                                 --
+-- https://github.com/oliver-leete                                                                 --
 ----------------------------------------------------------------------------------------------------
 -- As of May 2021 this should be using github xmonad/xmonad-contrib This is mostly taken from     --
 -- Ethan Schoonover's config and from those before him, I have moved a decent bit around but have --
