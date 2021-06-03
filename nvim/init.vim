@@ -171,7 +171,7 @@ set expandtab
 set linebreak
 set breakindent
 set breakindentopt=shift:2
-call matchadd('TabLine', '\%81v', 203)
+call matchadd('TabLine', '\%101v', 203)
 
 " Folding
 set foldmethod=expr

@@ -1,26 +1,24 @@
 {-# LANGUAGE AllowAmbiguousTypes, DeriveDataTypeable, TypeSynonymInstances, MultiParamTypeClasses #-}
----------------------------------------------------------------------------
---                                                                       --
---     _|      _|  _|      _|                                      _|    --
---       _|  _|    _|_|  _|_|    _|_|    _|_|_|      _|_|_|    _|_|_|    --
---         _|      _|  _|  _|  _|    _|  _|    _|  _|    _|  _|    _|    --
---       _|  _|    _|      _|  _|    _|  _|    _|  _|    _|  _|    _|    --
---     _|      _|  _|      _|    _|_|    _|    _|    _|_|_|    _|_|_|    --
---                                                                       --
----------------------------------------------------------------------------
--- Oliver Leete <oliverleete@gmail.com>                                  --
--- https://github.com/altercation                                        --
----------------------------------------------------------------------------
--- As of May 2021 this should be using github xmonad/xmonad-contrib
--- This is mostly taken from Ethan Schoonover's config and from those    --
--- before him, I have moved a decent bit around but have tried to keep   --
--- all credit to others in. A lot of the comments weren't written by me, --
--- so to avoid people thinking I am taking credit for things I'll just   --
--- say if it looks like good code, there's no way I wrote it             --
+----------------------------------------------------------------------------------------------------
+--                                                                                                --
+--                        __   __  __  __                               _                         --
+--                        \ \ / / |  \/  |                             | |                        --
+--                         \ V /  | \  / |   ___    _ __     __ _    __| |                        --
+--                          > <   | |\/| |  / _ \  | '_ \   / _` |  / _` |                        --
+--                         / . \  | |  | | | (_) | | | | | | (_| | | (_| |                        --
+--                        /_/ \_\ |_|  |_|  \___/  |_| |_|  \__,_|  \__,_|                        --
+----------------------------------------------------------------------------------------------------
+-- Oliver Leete <oliverleete@gmail.com>                                                           --
+-- https://github.com/altercation                                                                 --
+----------------------------------------------------------------------------------------------------
+-- As of May 2021 this should be using github xmonad/xmonad-contrib This is mostly taken from     --
+-- Ethan Schoonover's config and from those before him, I have moved a decent bit around but have --
+-- tried to keep all credit to others in. I am taking credit for things I'll just say if it looks --
+-- like good code, there's no way I wrote it                                                      --
 
-------------------------------------------------------------------------}}}
--- Modules                                                              {{{
----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- Modules                                                                                        --
+----------------------------------------------------------------------------------------------------
 {-# LANGUAGE LambdaCase #-}
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 import Data.List
@@ -113,9 +111,9 @@ import Data.Maybe
 
 -- NOTE: try out XMonad.Actions.Submap
 
-------------------------------------------------------------------------}}}
--- Main                                                                 {{{
----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- Main                                                                                           --
+----------------------------------------------------------------------------------------------------
 
 main :: IO ()
 main = do
@@ -147,16 +145,15 @@ myConfig p = def
         }
 
 
-------------------------------------------------------------------------}}}
--- Workspaces                                                           {{{
----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- Workspaces                                                                                     --
+----------------------------------------------------------------------------------------------------
 
--- I have my number keys in a layer under my home row, so these are set to
--- have all of my personal layouts under my left hand and my work under my
--- right. The "admin groups" for work and personal are inbetween the two.
--- The Start and Gen workspaces are hidden elsewhere mostly as placeholders
--- so no applications are run at start up, with the bonus of having nice
--- wallpapers without them being destracting whilst I work
+-- I have my number keys in a layer under my home row, so these are set to have all of my personal
+-- layouts under my left hand and my work under my right. The "admin groups" for work and personal
+-- are inbetween the two. The Start and Gen workspaces are hidden elsewhere mostly as placeholders
+-- so no applications are run at start up, with the bonus of having nice wallpapers without them
+-- being destracting whilst I work
 
 wsTMP    = "tmp"
 wsTMP2    = "tmp2"
@@ -172,8 +169,11 @@ wsTHESIS = "thesis - wrk"
 wsEXP    = "experiments - wrk"
 wsWRK4   = "wrk4"
 
+wsDND    = "dnd"
+wsDND2   = "dnd2"
+
 myWorkspaces :: [[Char]]
-myWorkspaces = [wsTMP, wsTMP2, wsPRO1, wsPRO2, wsPRO3, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsWRK4,  wsFLOAT]
+myWorkspaces = [wsTMP, wsTMP2, wsPRO1, wsPRO2, wsPRO3, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsWRK4, wsFLOAT, wsDND, wsDND2]
 
 myWorkspaceIndices :: M.Map [Char] [Char]
 myWorkspaceIndices = M.fromList $ zip myWorkspaces ["<Home>", "<End>", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"] -- (,) == \x y -> (x,y)
@@ -249,12 +249,16 @@ projects =
                 , projectDirectory  = "~/UniDrive"
                 , projectStartHook  = Just $    spawnOn wsWRK4 "sleep .3; browser"
                 }
+    , Project   { projectName       = wsDND
+                , projectDirectory  = "~/Projects/D&D Home"
+                , projectStartHook  = Just $    spawnOn wsDND (myBrowser ++ " https://roll20.net/welcome")
+                }
 
     ]
 
-------------------------------------------------------------------------}}}
--- Applications                                                         {{{
----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- Applications                                                                                   --
+----------------------------------------------------------------------------------------------------
 
 -- Just a general list of all the apps I reference elsewhere
 
@@ -267,15 +271,22 @@ myStatusBar    = "/home/oleete/.config/xmobar/init-xmobars"
 myTray         = "trayer --edge bottom --align center --distance 5 --height 20 --widthtype request --transparent true --alpha 0 --tint 0x2c292d "
 myLauncher     = "rofi -matching fuzzy -modi combi -show combi -combi-modi window,drun,run -show-icons"
 myLockscreen   = "slock"
--- myLockscreen   = "i3lock -i ~/Pictures/wallpapers/nighttuned.png"
 myExplorer     = "nemo"
 myCompositor   = "picom -b --config ~/.config/picom/picom.conf"
 myColorPicker  = "colorpicker"
-myWallpaper    = "nitrogen --head=0 --random ~/Pictures/wallpapers/start/ --set-zoom-fill"
-myWallpaper1   = "nitrogen --head=1 --random ~/Pictures/wallpapers/start/ --set-zoom-fill"
+-- Lets see if this fixes the below bug
+myWallpaper    = "feh --bg-fill --randomize ~/Pictures/wallpapers/"
 
--- Named scratchpads, using browser script and bindOn to have some of them be workspace based
--- so the work tasks and keep are on
+-- Ok, this gives the stranges bug. Sometimes on startup one of the two screens will have what seems
+-- to be a dump of whatever is in the graphics memory. It is normally just static (sometimes a bit
+-- blocky), but if I have recenty turned my computer off it will have splotches of what was on there
+-- before.
+--
+-- myWallpaper    = "nitrogen --head=0 --random ~/Pictures/wallpapers/start/ --set-zoom-fill"
+-- myWallpaper1   = "nitrogen --head=1 --random ~/Pictures/wallpapers/start/ --set-zoom-fill"
+
+-- Named scratchpads, using browser script and bindOn to have some of them be workspace based so the
+-- work tasks and keep are on the work layouts and the personal on personal.
 
 discordCommand         = "discord"
 discordResource        = "discord"
@@ -326,31 +337,31 @@ scratchpads =
 
     ,   NS "console"  "kitty --class=kittyconsole" (className =? "kittyconsole") nonFloating
     ]
-
-------------------------------------------------------------------------}}}
--- Theme                                                                {{{
----------------------------------------------------------------------------
+ 
+----------------------------------------------------------------------------------------------------
+-- Theme                                                                                     --
+----------------------------------------------------------------------------------------------------
 
 myFocusFollowsMouse  = True
 myClickJustFocuses   = True
 
-base03  = "#2C292D"
-base02  = "#2C292D"
-base00  = "#848B91"
-base2   = "#FDF9F3"
-yellow  = "#ffd866"
-orange  = "#fc9867"
-red     = "#ff6188"
-green   = "#A9DC76"
+base03 = "#2C292D"
+base02 = "#2C292D"
+base00 = "#848B91"
+base2  = "#FDF9F3"
+yellow = "#ffd866"
+orange = "#fc9867"
+red    = "#ff6188"
+green  = "#A9DC76"
 
 -- sizes
-gap        = 4
-sizeDelta  = 1/20
+gap    = 4
+reSize = 1/40
 
-topbar      = 8
-tabsh       = 30
-myborder    = 3
-prompt      = 30
+topbar   = 8
+tabsh    = 30
+myborder = 3
+prompt   = 30
 
 myNormalBorderColor     = base03
 myFocusedBorderColor    = yellow
@@ -361,11 +372,10 @@ myFont      = "xft:Ubuntu:weight=normal:pixelsize=16:antialias=true:hinting=true
 myWideFont  = "xft:Eurostar Black Extended:"
             ++ "style=Regular:pixelsize=180:hinting=true"
 
--- this is a "fake title" used as a highlight bar in lieu of full borders
--- I'm not a fan of it, so it's not being used right now
--- I take that back, spent a short time with a border, but now I've moved
--- back to the top bar, it works a lot better without rounded corners
--- although part of me so wishes to return to rounded corners
+-- This is a "fake title" used as a highlight bar in lieu of full borders I'm not a fan of it, so
+-- it's not being used right now I take that back, spent a short time with a border, but now I've
+-- moved back to the top bar, it works a lot better without rounded corners although part of me so
+-- wishes to return to rounded corners
 topBarTheme :: Theme
 topBarTheme = def
     { fontName              = myFont
@@ -450,9 +460,9 @@ myShowWNameTheme = def
     , swn_color             = base03
     }
 
-------------------------------------------------------------------------}}}
--- Layouts                                                              {{{
----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- Layouts                                                                                        --
+----------------------------------------------------------------------------------------------------
 
 -- Tell X.A.Navigation2D about specific layouts and how to handle them
 
@@ -461,78 +471,64 @@ myNav2DConf = def
     { defaultTiledNavigation    = centerNavigation
     , floatNavigation           = centerNavigation
     , screenNavigation          = lineNavigation
-    , layoutNavigation          = [("Full",          centerNavigation)
-    -- line/center same results   ,("Simple Tabs", lineNavigation)
-    --                            ,("Simple Tabs", centerNavigation)
-                                  ]
-    , unmappedWindowRect        = [("Full", singleWindowRect)
-    -- works but breaks tab deco  ,("Simple Tabs", singleWindowRect)
-    -- doesn't work but deco ok   ,("Simple Tabs", fullScreenRect)
-                                  ]
+    , layoutNavigation          = [("Full", centerNavigation)]
+    , unmappedWindowRect        = [("Full", singleWindowRect)]
     }
 
-
--- Define the transforms for fullscreen with bar and magnifier (this is basically
--- the same as the built in magnifier toggle, but without the annoying text in the
--- layout name when it's not in use)
+-- To make a toggle for fullscreening an app but leaving the bar in place
 data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
 
-barFull = renamed [Replace "Maximized"] $ noFrillsDeco shrinkText topMaxBarTheme $ avoidStruts $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True Simplest
+barFull = renamed [Replace "Maximized"]
+        $ noFrillsDeco shrinkText topMaxBarTheme
+        $ avoidStruts
+        $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True Simplest
 
+-- To make a toggle pure zen. Centres the active window and hides everything else except the bar
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
     transform FULLCENTER x k = k centerFull (const x)
 
-centerFull = renamed [Replace "Centered Max"] $ noFrillsDeco shrinkText topMaxBarTheme $ avoidStruts $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True $ SimpleFocus (1/2) sizeDelta
+centerFull = renamed [Replace "Centered Max"]
+           $ noFrillsDeco shrinkText topMaxBarTheme
+           $ avoidStruts
+           $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
+           $ SimpleFocus (1/2) reSize
 
 -- cf http://xmonad.org/xmonad-docs/xmonad-contrib/src/XMonad-Config-Droundy.html
 
-myLayoutHook = onWorkspaces [wsFLOAT] floatWorkSpace
-             $ noBorders
-             $ fullScreenToggle
-             $ fullBarToggle
-             $ fullCenterToggle
-             $ renamed [CutWordsLeft 4]
-             $ showWorkspaceName
-             $ windowSwitcherDecoration shrinkText topBarTheme $ draggingVisualizer
-             $ addTabs shrinkText myTabTheme
-             $ avoidStruts
-             $ mySpacing
-             $ mirrorToggle
-             $ reflectToggle
-             $ windowNavigation
-             $ onWorkspaces [wsPER, wsWRK, wsWRK4] (centerLayout ||| notebookLayout ||| threeColLayout ||| tabsLayout)
-             $ onWorkspaces [wsTMP, wsTMP2] (threeColLayout ||| tabsLayout ||| centerLayout ||| notebookLayout)
-             $ notebookLayout
-             ||| threeColLayout
-             ||| tabsLayout
-             ||| centerLayout
+myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
+            $ noBorders
+            $ fullScreenToggle
+            $ fullBarToggle
+            $ fullCenterToggle
+            $ renamed [CutWordsLeft 4]
+            $ showWorkspaceName
+            $ windowSwitcherDecoration shrinkText topBarTheme $ draggingVisualizer
+            $ addTabs shrinkText myTabTheme
+            $ avoidStruts
+            $ mySpacing
+            $ mirrorToggle
+            $ reflectToggle
+            $ windowNavigation
+            $ onWorkspaces [wsPER, wsWRK, wsWRK4] (oneBigLayout   ||| notebookLayout ||| threeColLayout ||| tabsLayout)
+            $ onWorkspaces [wsTMP, wsTMP2]        (threeColLayout ||| tabsLayout     ||| oneBigLayout   ||| notebookLayout)
+            $                                      notebookLayout ||| threeColLayout ||| tabsLayout     ||| oneBigLayout
     where
+    notebookLayout = renamed [Replace "Notebook"] (subLayout [] Simplest
+                   $ Notebook monResWidth True True True 1 3 (reSize*2) 2 (2/3))
 
-    -- Three column layouts
-    threeCol = renamed [Replace "Three Col"] (subLayout [] Simplest (FourCol True 1 sizeDelta (51/100)))
-    tabsThird = renamed [Replace "Third Tabs"] (mastered sizeDelta (2/3) Simplest)
+    threeCol = renamed [Replace "Three Col"] (subLayout [] Simplest (FourCol True 1 reSize (51/100)))
+    tabsThird = renamed [Replace "Third Tabs"] (mastered reSize (2/3) Simplest)
     columns = Mirror $ Column 1
     threeColLayout = ifWider smallMonResWidth threeCol (toggleLayouts tabsThird columns)
 
-    -- Notebook Layouts
-    notebookLayout = renamed [Replace "Notebook"] (subLayout [] Simplest (Notebook monResWidth True True True 1 3 (sizeDelta*2) 2 (2/3)))
-
-    -- Center Layout
-    centMast = renamed [Replace "Tabs"] Simplest
-    oneBigLayout = renamed [Replace "One Big"] (Mirror (OneBig (2/4) (2/4)))
-    centerLayout = toggleLayouts centMast oneBigLayout
-
-    -- Small Layouts
-    -- Layouts to use on second screen
-
-    -- Tabs Layouts
     tallTabs = renamed [Replace "Tall Tabs"] (mastered (1/100) (1/2) Simplest)
     allTabs = renamed [Replace "Tabs"] Simplest
     tabsLayout = ifWider smallMonResWidth (toggleLayouts allTabs tallTabs) (toggleLayouts tallTabs allTabs)
 
+    oneBigLayout = renamed [Replace "One Big"] (Mirror (OneBig (2/4) (2/4)))
 
     -- Other Layout Stuff
     floatWorkSpace      = renamed [Replace "Float"] (borderResize $ addFloatTopBar positionStoreFloat)
@@ -593,9 +589,6 @@ myKeys conf = let
 
     in
 
-    -----------------------------------------------------------------------
-    -- System / Utilities
-    -----------------------------------------------------------------------
     subKeys "System"
     [ ("M-q"                    , addName "Restart XMonad"                  $ spawn "xmonad --restart")
     , ("M-C-q"                  , addName "Rebuild & restart XMonad"        $ spawn "xmonad --recompile && xmonad --restart")
@@ -605,9 +598,6 @@ myKeys conf = let
     , ("M-x"                    , addName "notification panel"              $ spawn "toggle notif")
     ] ^++^
 
-    -----------------------------------------------------------------------
-    -- Actions
-    -----------------------------------------------------------------------
     subKeys "Utilities"
     [ ("M-M1-C-S-z"                  , addName "Colour picker"                   $ spawn myColorPicker) -- kill picom before use
     , ("M-M1-C-S-o"                  , addName "On-screen keys"                  $ spawn "killall screenkey || screenkey")
@@ -619,9 +609,6 @@ myKeys conf = let
     , ("M-;"                         , addName "Warp Cursor"                     $ warpToWindow (1/2) (1/2))
     ] ^++^
 
-    -----------------------------------------------------------------------
-    -- Launchers
-    -----------------------------------------------------------------------
     subKeys "Apps"
     [ ("M-<Return>"             , addName "Terminal"                        $ spawn myTerminal)
     , ("M-b"                    , addName "Browser"                         $ spawn myBrowser)
@@ -633,7 +620,7 @@ myKeys conf = let
                                                                                          (wsEXP,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'"),
                                                                                          (wsSIM,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'"),
                                                                                          ("",       spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable-wrk'")])
-    , ("M-c"                    , addName "Editor"                          $ AL.launchApp myPromptTheme myEditor)
+    , ("M-S-c"                    , addName "Editor"                        $ AL.launchApp myPromptTheme myEditor)
     , ("M-e"                    , addName "Explorer"                        $ bindOn WS [(wsSIM, spawn (myExplorer ++ " -t ~/Projects/JuliaPowderModel ~/UniDrive/1_Thesis/1.4_PowderModel")),
                                                                               (wsEXP, spawn (myExplorer ++ " -t ~/Projects/JuliaPlotting ~/UniDrive/1_Thesis/1.4_PowderModel")),
                                                                               (wsPRO2, spawn (myExplorer ++  " -t ~/Projects/julia-vscode ~/Projects/julia-benchmark-example")),
@@ -668,9 +655,6 @@ myKeys conf = let
     , ("M-S-m"                  , addName "NSP Music"                       $ namedScratchpadAction scratchpads "youtubeMusic")
     ] ^++^
 
-    -----------------------------------------------------------------------
-    -- Workspaces & Projects
-    -----------------------------------------------------------------------
 
     subKeys "Workspaces & Projects"
     [ ("M-a"                       , addName "Launcher"                    $ spawn myLauncher)
@@ -693,10 +677,6 @@ myKeys conf = let
     ++ zipM "M-C-"                 "Move w to ws"                          wsKeys [0..] (withNthWorkspace W.shift)
     ++ zipM "M-M1-"                "Copy w to ws"                          wsKeys [0..] (withNthWorkspace copy)
     ) ^++^
-
-    -----------------------------------------------------------------------
-    -- Windows
-    -----------------------------------------------------------------------
 
     subKeys "Windows"
     (
@@ -738,7 +718,7 @@ myKeys conf = let
     , ("M-w"                    , addName "Maximize"                        $ sequence_ [ withFocused $ windows . W.sink
                                                                             , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLBAR ])
 
-    , ("M-C-c"                  , addName "Center Focus"                    $ sequence_ [ withFocused $ windows . W.sink
+    , ("M-c"                  , addName "Center Focus"                      $ sequence_ [ withFocused $ windows . W.sink
                                                                             , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLCENTER
                                                                             , P.sendKey P.noModMask xK_F11])
 
@@ -758,10 +738,6 @@ myKeys conf = let
     ++ zipM  "M-M1-"            "Merge w/sublayout"                         dirKeys dirs (sendMessage . pullGroup)
 
     ) ^++^
-
-    -----------------------------------------------------------------------
-    -- Layouts & Sublayouts
-    -----------------------------------------------------------------------
 
     subKeys "Layout Management"
     [ ("M-<Tab>"                , addName "Cycle all layouts"               $ sendMessage NextLayout)
@@ -829,15 +805,14 @@ myMouseBindings XConfig {XMonad.modMask = myModMask} = M.fromList
       >> windows W.shiftMaster)
     ]
 
-------------------------------------------------------------------------}}}
--- Startup                                                              {{{
----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- Startup                                                                                        --
+----------------------------------------------------------------------------------------------------
 
 myStartupHook :: X ()
 myStartupHook = do
     spawnOnce myCompositor
     spawn myWallpaper
-    spawn myWallpaper1
     spawnOnce myTray
     -- spawnOnce "logid -c ~/.config/logid/logid.cfg"
     spawnOnce "insync start; insync hide"
@@ -845,9 +820,9 @@ myStartupHook = do
     spawnOnce "deadd-notification-center &"
 
 
-------------------------------------------------------------------------}}}
--- Log                                                                  {{{
----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- Log                                                                                            --
+----------------------------------------------------------------------------------------------------
 
 myLogHook :: Handle -> X ()
 myLogHook h = do
@@ -890,14 +865,14 @@ myFadeHook = composeAll
     , isFloating  --> opacity 1
     ]
 
-------------------------------------------------------------------------}}}
--- Actions                                                              {{{
----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- Actions                                                                                        --
+----------------------------------------------------------------------------------------------------
 
 
----------------------------------------------------------------------------
--- Urgency Hook
----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- Urgency Hook                                                                                   --
+----------------------------------------------------------------------------------------------------
 -- from https://pbrisbin.com/posts/using_notify_osd_for_xmonad_notifications/
 data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
 
@@ -910,9 +885,9 @@ instance UrgencyHook LibNotifyUrgencyHook where
 -- cf https://github.com/pjones/xmonadrc
 
 
----------------------------------------------------------------------------
--- New Window Actions
----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- New Window Actions                                                                             --
+----------------------------------------------------------------------------------------------------
 
 -- https://wiki.haskell.org/Xmonad/General_xmonad.hs_config_tips#ManageHook_examples
 -- <+> manageHook defaultConfig
@@ -964,9 +939,9 @@ myManageHook =
         doMain = insertPosition Master Newer
         tileBelow = insertPosition End Newer
 
----------------------------------------------------------------------------
--- X Event Actions
----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- X Event Actions                                                                                --
+----------------------------------------------------------------------------------------------------
 
 -- for reference, the following line is the same as dynamicTitle myDynHook
 -- <+> dynamicPropertyChange "WM_NAME" myDynHook
@@ -990,9 +965,9 @@ myHandleEventHook = docksEventHook
             [ isDiscord --> forceCenterFloat
             ]
 
----------------------------------------------------------------------------
--- Custom hook helpers
----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- Custom hook helpers                                                                            --
+----------------------------------------------------------------------------------------------------
 
 -- from:
 -- https://github.com/pjones/xmonadrc/blob/master/src/XMonad/Local/Action.hs
