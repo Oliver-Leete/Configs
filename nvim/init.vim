@@ -266,7 +266,6 @@ autocmd VimEnter * call after_object#enable(['a', 'A'], '=', ':', '-', '#', ' ')
 let g:loaded_matchit = 1
 let g:matchup_override_vimtex = 1
 let g:matchup_matchparen_offscreen = {'method': 'popup'}
-let g:matchup_transmute_enabled = 1
 
 " highlight Yank
 augroup LuaHighlight

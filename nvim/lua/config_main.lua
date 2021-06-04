@@ -436,7 +436,21 @@ vim.fn.sign_define( "LspDiagnosticsSignInformation", {texthl = "LspDiagnosticsSi
 local custom_attach = function(client, bufnr)
 	-- print("LSP started.");
     capabilities = capabilities
-    require'lsp_signature'.on_attach()
+    require'lsp_signature'.on_attach({
+        bind = true,
+        doc_lines = 10,
+        floating_window = true,
+        hint_enable = false,
+        hint_prefix = "🐼 ",
+        hint_scheme = "String",
+        use_lspsaga = false,
+        hi_parameter = "Search",
+        max_height = 12,
+        max_width = 120,
+        handler_opts = {
+            border = "single"
+        },
+    })
     require 'illuminate'.on_attach(client)
     saga.init_lsp_saga {
         use_saga_diagnostic_sign = true,
@@ -517,20 +531,6 @@ end
 require'lspconfig'.julials.setup({
     on_attach=custom_attach,
     root_dir = nvim_lsp.util.root_pattern('Project.toml', 'git', vim.fn.getcwd());
-})
-
-require'lsp_signature'.on_attach({
-    bind = true, -- This is mandatory, otherwise border config won't get registered.
-    doc_lines = 10, -- only show one line of comment set to 0 if you do not want API comments be shown
-
-    hint_enable = true, -- virtual hint enable
-    hint_prefix = "🐼 ",  -- Panda for parameter
-    hint_scheme = "String",
-
-    handler_opts = {
-        border = "single"   -- double, single, shadow, none
-    },
-    decorator = {"`", "`"}
 })
 
 require'lspinstall'.setup()
