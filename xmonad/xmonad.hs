@@ -599,7 +599,9 @@ myKeys conf = let
     ] ^++^
 
     subKeys "Apps"
-    [ ("M-<Return>"             , addName "Terminal"                        $ spawn myTerminal)
+    [ ("M-<Return>"             , addName "Terminal"                        $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Return)
+                                                                                        ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Return)
+                                                                                        ,(pure True, spawn myTerminal)])
     , ("M-b"                    , addName "Browser"                         $ spawn myBrowser)
     , ("M-C-b"                  , addName "Work Browser"                    $ bindOn WS [(wsTMP2,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'"),
                                                                                          (wsTMP,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'"),
@@ -669,7 +671,11 @@ myKeys conf = let
 
     subKeys "Windows"
     (
-    [ ("M-<Backspace>"          , addName "Kill"                            $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_F12), (pure True, kill1)])
+    [ ("M-<Backspace>"          , addName "Kill"                            $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_F12)
+                                                                                        ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_F12)
+                                                                                        ,(className =? "Google-chrome", P.sendKey controlMask xK_w)
+                                                                                        ,(pure True, kill1)])
+    , ("M-C-<Backspace>"        , addName "Force Kill"                      kill1)
     , ("M-S-<Backspace>"        , addName "Kill all"                        $ confirmPrompt hotPromptTheme "kill all" killAll)
 
     , ("M-m"                    , addName "Promote to main"                 $ sequence_ [swapPromote' False, warpCursor])
@@ -695,8 +701,15 @@ myKeys conf = let
     , ("M-M1-<D>"               , addName "SubLayout combine down"          $ withFocused (sendMessage . mergeDir W.focusDown'))
     , ("M-M1-<U>"               , addName "SubLayout combine up"            $ withFocused (sendMessage . mergeDir W.focusUp'))
 
-    , ("M-<R>"                  , addName "Cycle up"                        rotSlavesUp)
-    , ("M-<L>"                  , addName "Cycle down"                      rotSlavesDown)
+    , ("M-<R>"                  , addName "Cycle up"                        $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Right)
+                                                                                        ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Right)
+                                                                                        ,(className =? "Google-chrome", P.sendKey controlMask xK_Tab)
+                                                                                        ,(pure True, rotSlavesUp)])
+
+    , ("M-<L>"                  , addName "Cycle down"                      $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Left)
+                                                                                        ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Left)
+                                                                                        ,(className =? "Google-chrome", P.sendKey (controlMask .|. shiftMask) xK_Tab)
+                                                                                        ,(pure True, rotSlavesDown)])
     , ("M-C-<R>"                , addName "Cycle up"                        rotAllUp)
     , ("M-C-<L>"                , addName "Cycle down"                      rotAllDown)
 
@@ -909,7 +922,6 @@ myManageHook =
             , className =? "Chromewrknsp" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
             , resource =? youtubeMusicResource -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
             , resource =? discordResource -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
-            , title =? "Picture-in-picture" -?> doRectFloat (W.RationalRect (2/3) (1/4) (1/4) (1/4))
             , transience
             , isBrowserDialog -?> forceCenterFloat
             -- , isConsole -?> forceCenterFloat
