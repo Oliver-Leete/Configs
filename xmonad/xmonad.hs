@@ -43,6 +43,7 @@ import XMonad.Actions.RotSlaves
 import XMonad.Actions.SinkAll
 import XMonad.Actions.SpawnOn
 import XMonad.Actions.SwapPromote
+import XMonad.Actions.PerWindowKeys
 import XMonad.Actions.WithAll
 
 import XMonad.Hooks.DynamicLog
@@ -668,7 +669,7 @@ myKeys conf = let
 
     subKeys "Windows"
     (
-    [ ("M-<Backspace>"          , addName "Kill"                            kill1)
+    [ ("M-<Backspace>"          , addName "Kill"                            $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_F12), (pure True, kill1)])
     , ("M-S-<Backspace>"        , addName "Kill all"                        $ confirmPrompt hotPromptTheme "kill all" killAll)
 
     , ("M-m"                    , addName "Promote to main"                 $ sequence_ [swapPromote' False, warpCursor])
@@ -682,17 +683,17 @@ myKeys conf = let
 
     , ("M-n"                    , addName "Focus down"                      $ sequence_ [windows W.focusDown, warpCursor])
     , ("M-p"                    , addName "Focus up"                        $ sequence_ [windows W.focusUp, warpCursor])
-    , ("M-<D>"                    , addName "Focus down"                      $ sequence_ [windows W.focusDown, warpCursor])
-    , ("M-<U>"                    , addName "Focus up"                        $ sequence_ [windows W.focusUp, warpCursor])
+    , ("M-<D>"                  , addName "Focus down"                      $ sequence_ [windows W.focusDown, warpCursor])
+    , ("M-<U>"                  , addName "Focus up"                        $ sequence_ [windows W.focusUp, warpCursor])
     , ("M-C-n"                  , addName "Shift down"                      $ sequence_ [windows W.swapDown, warpCursor])
     , ("M-C-p"                  , addName "Shift up"                        $ sequence_ [windows W.swapUp, warpCursor])
-    , ("M-C-<D>"                  , addName "Shift down"                      $ sequence_ [windows W.swapDown, warpCursor])
-    , ("M-C-<U>"                  , addName "Shift up"                        $ sequence_ [windows W.swapUp, warpCursor])
+    , ("M-C-<D>"                , addName "Shift down"                      $ sequence_ [windows W.swapDown, warpCursor])
+    , ("M-C-<U>"                , addName "Shift up"                        $ sequence_ [windows W.swapUp, warpCursor])
 
     , ("M-M1-n"                 , addName "SubLayout combine down"          $ withFocused (sendMessage . mergeDir W.focusDown'))
     , ("M-M1-p"                 , addName "SubLayout combine up"            $ withFocused (sendMessage . mergeDir W.focusUp'))
-    , ("M-M1-<D>"                 , addName "SubLayout combine down"          $ withFocused (sendMessage . mergeDir W.focusDown'))
-    , ("M-M1-<U>"                 , addName "SubLayout combine up"            $ withFocused (sendMessage . mergeDir W.focusUp'))
+    , ("M-M1-<D>"               , addName "SubLayout combine down"          $ withFocused (sendMessage . mergeDir W.focusDown'))
+    , ("M-M1-<U>"               , addName "SubLayout combine up"            $ withFocused (sendMessage . mergeDir W.focusUp'))
 
     , ("M-<R>"                  , addName "Cycle up"                        rotSlavesUp)
     , ("M-<L>"                  , addName "Cycle down"                      rotSlavesDown)
