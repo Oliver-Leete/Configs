@@ -570,189 +570,189 @@ myKeys conf = let
     in
 
     subKeys "System"
-    [ ("M-q"                    , addName "Restart XMonad"                  $ spawn "xmonad --restart")
-    , ("M-C-q"                  , addName "Rebuild & restart XMonad"        $ spawn "xmonad --recompile && xmonad --restart")
-    , ("M-S-q"                  , addName "Quit XMonad"                     $ confirmPrompt hotPromptTheme "Quit XMonad" $ io exitSuccess)
-    , ("M-M1-C-S-x"             , addName "Lock screen"                     $ spawn myLockscreen)
-    , ("M-x"                    , addName "notification panel"              $ spawn "toggle notif")
+    [ ("M-q"             , addName "Restart XMonad"              $ spawn "xmonad --restart")
+    , ("M-C-q"           , addName "Rebuild & restart XMonad"    $ spawn "xmonad --recompile && xmonad --restart")
+    , ("M-S-q"           , addName "Quit XMonad"                 $ confirmPrompt hotPromptTheme "Quit XMonad" $ io exitSuccess)
+    , ("M-M1-C-S-x"      , addName "Lock screen"                 $ spawn myLockscreen)
+    , ("M-x"             , addName "notification panel"          $ spawn "toggle notif")
     ] ^++^
 
-    subKeys "Utilities"
-    [ ("M-M1-C-S-z"             , addName "Colour picker"                   $ spawn myColorPicker) -- kill picom before use
-    , ("M-M1-C-S-o"             , addName "On-screen keys"                  $ spawn "killall screenkey || screenkey")
-    , ("M-M1-C-S-/"             , addName "On-screen keys settings"         $ spawn "screenkey --show-settings")
-    , ("M-M1-C-S-f"             , addName "Capture screen"                  $ spawn "screencapt" )
-    , ("M-M1-C-S-s"             , addName "Capture selection"               $ spawn "screencapt area" )
-    , ("M-M1-C-S-w"             , addName "Record screen"                   $ spawn "screencast" )
-    , ("M-M1-C-S-r"             , addName "Record area"                     $ spawn "screencast area" )
-    , ("M-;"                    , addName "Warp Cursor"                     $ warpToWindow (1/2) (1/2))
+    subKeys "Utilities"  
+    [ ("M-M1-C-S-z"      , addName "Colour picker"               $ spawn myColorPicker) -- kill picom before use
+    , ("M-M1-C-S-o"      , addName "On-screen keys"              $ spawn "killall screenkey || screenkey")
+    , ("M-M1-C-S-/"      , addName "On-screen keys settings"     $ spawn "screenkey --show-settings")
+    , ("M-M1-C-S-f"      , addName "Capture screen"              $ spawn "screencapt" )
+    , ("M-M1-C-S-s"      , addName "Capture selection"           $ spawn "screencapt area" )
+    , ("M-M1-C-S-w"      , addName "Record screen"               $ spawn "screencast" )
+    , ("M-M1-C-S-r"      , addName "Record area"                 $ spawn "screencast area" )
+    , ("M-;"             , addName "Warp Cursor"                 $ warpToWindow (1/2) (1/2))
     ] ^++^
 
     subKeys "Apps"
-    [ ("M-<Return>"             , addName "Terminal"                        $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Return)
-                                                                                        ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Return)
-                                                                                        ,(className =? "Google-chrome", P.sendKey controlMask xK_t)
-                                                                                        ,(pure True, spawn myTerminal)])
-    , ("M-C-<Return>"           , addName "Force Terminal"                  $ spawn myTerminal) 
-    , ("M-b"                    , addName "Browser"                         $ spawn myBrowser)
-    , ("M-C-b"                  , addName "Work Browser"                    $ bindOn WS [(wsTMP2,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
-                                                                                        ,(wsTMP,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
-                                                                                        ,(wsWRK,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
-                                                                                        ,(wsWRK4,   spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
-                                                                                        ,(wsTHESIS, spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
-                                                                                        ,(wsEXP,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
-                                                                                        ,(wsSIM,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
-                                                                                        ,("",       spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable-wrk'")])
-    , ("M-C-c"                  , addName "Terminal in directory"           $ AL.launchApp myPromptTheme myTerminal)
-    , ("M-e"                    , addName "Explorer"                        $ bindOn WS [(wsSIM, spawn (myExplorer ++ " -t ~/Projects/JuliaPowderModel ~/UniDrive/1_Thesis/1.4_PowderModel"))
-                                                                                        ,(wsEXP,  spawn (myExplorer ++ " -t ~/Projects/JuliaPlotting ~/UniDrive/1_Thesis/1.4_PowderModel"))
-                                                                                        ,(wsPRO2, spawn (myExplorer ++  " -t ~/Projects/julia-vscode ~/Projects/julia-benchmark-example"))
-                                                                                        ,(wsCON,  spawn (myExplorer ++  " -t ~/Projects/Configs ~/Projects/ConfigExamples ~/.config"))
-                                                                                        ,(wsPER,  spawn (myExplorer ++  " -t ~/Downloads ~/PersonalDrive"))
-                                                                                        ,(wsWRK,  spawn (myExplorer ++  " -t ~/Downloads ~/UniDrive"))
-                                                                                        ,("",     spawn (myExplorer ++ " ."))])
+    [ ("M-<Return>"      , addName "Terminal"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Return)
+                                                                             ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Return)
+                                                                             ,(className =? "Google-chrome", P.sendKey controlMask xK_t)
+                                                                             ,(pure True, spawn myTerminal)])
+    , ("M-C-<Return>"    , addName "Force Terminal"              $ spawn myTerminal) 
+    , ("M-b"             , addName "Browser"                     $ spawn myBrowser)
+    , ("M-C-b"           , addName "Work Browser"                $ bindOn WS [(wsTMP2,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
+                                                                             ,(wsTMP,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
+                                                                             ,(wsWRK,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
+                                                                             ,(wsWRK4,   spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
+                                                                             ,(wsTHESIS, spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
+                                                                             ,(wsEXP,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
+                                                                             ,(wsSIM,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
+                                                                             ,("",       spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable-wrk'")])
+    , ("M-C-c"           , addName "Terminal in directory"       $ AL.launchApp myPromptTheme myTerminal)
+    , ("M-e"             , addName "Explorer"                    $ bindOn WS [(wsSIM, spawn (myExplorer ++ " -t ~/Projects/JuliaPowderModel ~/UniDrive/1_Thesis/1.4_PowderModel"))
+                                                                              ,(wsEXP,  spawn (myExplorer ++ " -t ~/Projects/JuliaPlotting ~/UniDrive/1_Thesis/1.4_PowderModel"))
+                                                                              ,(wsPRO2, spawn (myExplorer ++  " -t ~/Projects/julia-vscode ~/Projects/julia-benchmark-example"))
+                                                                              ,(wsCON,  spawn (myExplorer ++  " -t ~/Projects/Configs ~/Projects/ConfigExamples ~/.config"))
+                                                                              ,(wsPER,  spawn (myExplorer ++  " -t ~/Downloads ~/PersonalDrive"))
+                                                                              ,(wsWRK,  spawn (myExplorer ++  " -t ~/Downloads ~/UniDrive"))
+                                                                              ,("",     spawn (myExplorer ++ " ."))])
     ] ^++^
 
     subKeys "ScratchPad Apps"
-    [ ("M-S-c"                  , addName "NSP Calculator"                  $ namedScratchpadAction scratchpads "calc")
-    , ("M-S-<Return>"           , addName "NSP Console"                     $ namedScratchpadAction scratchpads "console")
-    , ("M-S-d"                  , addName "NSP Discord"                     $ namedScratchpadAction scratchpads "discord")
-    , ("M-S-m"                  , addName "NSP Music"                       $ namedScratchpadAction scratchpads "youtubeMusic")
-    , ("M-S-b"                  , addName "NSP Browser"                     $ bindOn WS [(wsWRK, namedScratchpadAction scratchpads "chromenspwrk")
-                                                                                        ,(wsSIM, namedScratchpadAction scratchpads "chromenspwrk")
-                                                                                        ,(wsEXP, namedScratchpadAction scratchpads "chromenspwrk")
-                                                                                        ,(wsTHESIS, namedScratchpadAction scratchpads "chromenspwrk")
-                                                                                        ,(wsWRK4, namedScratchpadAction scratchpads "chromenspwrk")
-                                                                                        ,("", namedScratchpadAction scratchpads "chromensp")])
-    , ("M-S-t"                  , addName "NSP Tasks"                       $ bindOn WS [(wsWRK, namedScratchpadAction scratchpads "tasksWork")
-                                                                                        ,(wsSIM, namedScratchpadAction scratchpads "tasksWork")
-                                                                                        ,(wsEXP, namedScratchpadAction scratchpads "tasksWork")
-                                                                                        ,(wsTHESIS, namedScratchpadAction scratchpads "tasksWork")
-                                                                                        ,(wsWRK4, namedScratchpadAction scratchpads "tasksWork")
-                                                                                        ,("", namedScratchpadAction scratchpads "tasks")])
-    , ("M-S-n"                  , addName "NSP Keep"                        $ bindOn WS [(wsWRK, namedScratchpadAction scratchpads "keepWrkNsp")
-                                                                                        ,(wsSIM, namedScratchpadAction scratchpads "keepWrkNsp")
-                                                                                        ,(wsEXP, namedScratchpadAction scratchpads "keepWrkNsp")
-                                                                                        ,(wsTHESIS, namedScratchpadAction scratchpads "keepWrkNsp")
-                                                                                        ,(wsWRK4, namedScratchpadAction scratchpads "keepWrkNsp")
-                                                                                        ,("", namedScratchpadAction scratchpads "keepNsp")])
+    [ ("M-S-c"           , addName "NSP Calculator"              $ namedScratchpadAction scratchpads "calc")
+    , ("M-S-<Return>"    , addName "NSP Console"                 $ namedScratchpadAction scratchpads "console")
+    , ("M-S-d"           , addName "NSP Discord"                 $ namedScratchpadAction scratchpads "discord")
+    , ("M-S-m"           , addName "NSP Music"                   $ namedScratchpadAction scratchpads "youtubeMusic")
+    , ("M-S-b"           , addName "NSP Browser"                 $ bindOn WS [(wsWRK, namedScratchpadAction scratchpads "chromenspwrk")
+                                                                             ,(wsSIM, namedScratchpadAction scratchpads "chromenspwrk")
+                                                                             ,(wsEXP, namedScratchpadAction scratchpads "chromenspwrk")
+                                                                             ,(wsTHESIS, namedScratchpadAction scratchpads "chromenspwrk")
+                                                                             ,(wsWRK4, namedScratchpadAction scratchpads "chromenspwrk")
+                                                                             ,("", namedScratchpadAction scratchpads "chromensp")])
+    , ("M-S-t"           , addName "NSP Tasks"                   $ bindOn WS [(wsWRK, namedScratchpadAction scratchpads "tasksWork")
+                                                                             ,(wsSIM, namedScratchpadAction scratchpads "tasksWork")
+                                                                             ,(wsEXP, namedScratchpadAction scratchpads "tasksWork")
+                                                                             ,(wsTHESIS, namedScratchpadAction scratchpads "tasksWork")
+                                                                             ,(wsWRK4, namedScratchpadAction scratchpads "tasksWork")
+                                                                             ,("", namedScratchpadAction scratchpads "tasks")])
+    , ("M-S-n"           , addName "NSP Keep"                    $ bindOn WS [(wsWRK, namedScratchpadAction scratchpads "keepWrkNsp")
+                                                                             ,(wsSIM, namedScratchpadAction scratchpads "keepWrkNsp")
+                                                                             ,(wsEXP, namedScratchpadAction scratchpads "keepWrkNsp")
+                                                                             ,(wsTHESIS, namedScratchpadAction scratchpads "keepWrkNsp")
+                                                                             ,(wsWRK4, namedScratchpadAction scratchpads "keepWrkNsp")
+                                                                             ,("", namedScratchpadAction scratchpads "keepNsp")])
     ] ^++^
 
 
     subKeys "Workspaces and Projects"
     (
-    [ ("M-a"                    , addName "Launcher"                        $ spawn myLauncher)
+    [ ("M-a"             , addName "Launcher"                    $ spawn myLauncher)
 
-    , ("<F8>"                   , addName "prompt select window"            $ windowPrompt myPromptTheme Goto allWindows)
-    , ("C-<F8>"                 , addName "prompt fetch window"             $ windowPrompt myPromptTheme Bring allWindows)
-    , ("M-w"                    , addName "prompt select ws"                $ switchProjectPrompt myPromptTheme)
-    , ("M-C-w"                  , addName "prompt send to ws"               $ shiftToProjectPrompt myPromptTheme)
+    , ("<F8>"            , addName "prompt select window"        $ windowPrompt myPromptTheme Goto allWindows)
+    , ("C-<F8>"          , addName "prompt fetch window"         $ windowPrompt myPromptTheme Bring allWindows)
+    , ("M-w"             , addName "prompt select ws"            $ switchProjectPrompt myPromptTheme)
+    , ("M-C-w"           , addName "prompt send to ws"           $ shiftToProjectPrompt myPromptTheme)
 
-    , ("M-C-d"                  , addName "Kill other duplicates"           killAllOtherCopies)
-    , ("M-d"                    , addName "Duplicate w to all ws"           toggleCopyToAll)
-    ]                                                                 
-    ++ zipM "M-"                "View ws"                                   wsKeys [0..] (withNthWorkspace W.greedyView)
-    ++ zipM "M-C-"              "Move w to ws"                              wsKeys [0..] (withNthWorkspace W.shift)
-    ++ zipM "M-S-"              "Copy w to ws"                              wsKeys [0..] (withNthWorkspace copy)
+    , ("M-C-d"           , addName "Kill other duplicates"       killAllOtherCopies)
+    , ("M-d"             , addName "Duplicate w to all ws"       toggleCopyToAll)
+    ]                                                          
+    ++ zipM "M-"         "View ws"                               wsKeys [0..] (withNthWorkspace W.greedyView)
+    ++ zipM "M-C-"       "Move w to ws"                          wsKeys [0..] (withNthWorkspace W.shift)
+    ++ zipM "M-S-"       "Copy w to ws"                          wsKeys [0..] (withNthWorkspace copy)
     ) ^++^
 
     subKeys "Windows"
-    [ ("M-<Backspace>"          , addName "Kill"                            $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_F12)
-                                                                                        ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_F12)
-                                                                                        ,(className =? "Google-chrome", P.sendKey controlMask xK_w)
-                                                                                        ,(pure True, kill1)])
-    , ("M-C-<Backspace>"        , addName "Force kill"                      kill1)
-    , ("M-S-<Backspace>"        , addName "Kill all"                        $ confirmPrompt hotPromptTheme "kill all" killAll)
+    [ ("M-<Backspace>"   , addName "Kill"                        $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_F12)
+                                                                             ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_F12)
+                                                                             ,(className =? "Google-chrome", P.sendKey controlMask xK_w)
+                                                                             ,(pure True, kill1)])
+    , ("M-C-<Backspace>" , addName "Force kill"                  kill1)
+    , ("M-S-<Backspace>" , addName "Kill all"                    $ confirmPrompt hotPromptTheme "kill all" killAll)
 
-    , ("M-m"                    , addName "Swap with main"                  $ sequence_ [swapPromote' False, warpCursor])
-    , ("M-C-m"                  , addName "Promote to main"                 $ sequence_ [promote, warpCursor])
+    , ("M-m"             , addName "Swap with main"              $ sequence_ [swapPromote' False, warpCursor])
+    , ("M-C-m"           , addName "Promote to main"             $ sequence_ [promote, warpCursor])
 
-    , ("M-<Escape>"             , addName "Spawn next window in main"       $ toggleHookNext "Main" >> runLogHook)
+    , ("M-<Escape>"      , addName "Spawn next window in main"   $ toggleHookNext "Main" >> runLogHook)
 
-    , ("M-<Space>"              , addName "Swap monitor workspaces"         swapNextScreen)
-    , ("M-C-<Space>"            , addName "Send window to next monitor"     shiftNextScreen)
+    , ("M-<Space>"       , addName "Swap monitor workspaces"     swapNextScreen)
+    , ("M-C-<Space>"     , addName "Send window to next monitor" shiftNextScreen)
 
-    , ("M-<D>"                  , addName "Focus down"                      $ sequence_ [windows W.focusDown, warpCursor])
-    , ("M-<U>"                  , addName "Focus up"                        $ sequence_ [windows W.focusUp, warpCursor])
-    , ("M-C-<D>"                , addName "Shift down"                      $ sequence_ [windows W.swapDown, warpCursor])
-    , ("M-C-<U>"                , addName "Shift up"                        $ sequence_ [windows W.swapUp, warpCursor])
+    , ("M-<D>"           , addName "Focus down"                  $ sequence_ [windows W.focusDown, warpCursor])
+    , ("M-<U>"           , addName "Focus up"                    $ sequence_ [windows W.focusUp, warpCursor])
+    , ("M-C-<D>"         , addName "Shift down"                  $ sequence_ [windows W.swapDown, warpCursor])
+    , ("M-C-<U>"         , addName "Shift up"                    $ sequence_ [windows W.swapUp, warpCursor])
 
-    , ("M-<R>"                  , addName "Cycle up"                        $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Right)
-                                                                                        ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Right)
-                                                                                        ,(className =? "Google-chrome", P.sendKey controlMask xK_Tab)
-                                                                                        ,(pure True, bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("", onGroup W.focusDown')] )])
+    , ("M-<R>"           , addName "Cycle up"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Right)
+                                                                             ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Right)
+                                                                             ,(className =? "Google-chrome", P.sendKey controlMask xK_Tab)
+                                                                             ,(pure True, bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("", onGroup W.focusDown')] )])
 
-    , ("M-<L>"                  , addName "Cycle down"                      $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Left)
-                                                                                        ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Left)
-                                                                                        ,(className =? "Google-chrome", P.sendKey (controlMask .|. shiftMask) xK_Tab)
-                                                                                        ,(pure True, bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("", onGroup W.focusUp')] )])
-    , ("M-C-<R>"                , addName "Force Cycle up"                  $ bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("", onGroup W.focusDown')])
-    , ("M-C-<L>"                , addName "Force Cycle down"                $ bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("", onGroup W.focusUp')])
+    , ("M-<L>"           , addName "Cycle down"                  $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Left)
+                                                                             ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Left)
+                                                                             ,(className =? "Google-chrome", P.sendKey (controlMask .|. shiftMask) xK_Tab)
+                                                                             ,(pure True, bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("", onGroup W.focusUp')] )])
+    , ("M-C-<R>"         , addName "Force Cycle up"              $ bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("", onGroup W.focusDown')])
+    , ("M-C-<L>"         , addName "Force Cycle down"            $ bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("", onGroup W.focusUp')])
 
 
-    , ("M-f"                    , addName "Fullscreen"                      $ sequence_ [ withFocused $ windows . W.sink
-                                                                            , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULL ])
+    , ("M-f"             , addName "Fullscreen"                  $ sequence_ [ withFocused $ windows . W.sink
+                                                                 , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULL ])
 
-    , ("M-s"                    , addName "Maximize"                        $ sequence_ [ withFocused $ windows . W.sink
-                                                                            , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLBAR ])
+    , ("M-s"             , addName "Maximize"                    $ sequence_ [ withFocused $ windows . W.sink
+                                                                 , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLBAR ])
 
-    , ("M-c"                    , addName "Center Focus"                    $ sequence_ [ withFocused $ windows . W.sink
-                                                                            , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLCENTER])
+    , ("M-c"             , addName "Center Focus"                $ sequence_ [ withFocused $ windows . W.sink
+                                                                 , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLCENTER])
 
-    , ("M-h"                    , addName "Navigate Left"                   $ sequence_ [windowGo L True, warpCursor])
-    , ("M-j"                    , addName "Navigate Down"                   $ sequence_ [windowGo D True, warpCursor])
-    , ("M-k"                    , addName "Navigate Up"                     $ sequence_ [windowGo U True, warpCursor])
-    , ("M-l"                    , addName "Navigate Right"                  $ sequence_ [windowGo R True, warpCursor])
+    , ("M-h"             , addName "Navigate Left"               $ sequence_ [windowGo L True, warpCursor])
+    , ("M-j"             , addName "Navigate Down"               $ sequence_ [windowGo D True, warpCursor])
+    , ("M-k"             , addName "Navigate Up"                 $ sequence_ [windowGo U True, warpCursor])
+    , ("M-l"             , addName "Navigate Right"              $ sequence_ [windowGo R True, warpCursor])
 
-    , ("M-C-h"                  , addName "Move Left"                       $ sequence_ [windowSwap L True, warpCursor])
-    , ("M-C-j"                  , addName "Move Down"                       $ sequence_ [windowSwap D True, warpCursor])
-    , ("M-C-k"                  , addName "Move Up"                         $ sequence_ [windowSwap U True, warpCursor])
-    , ("M-C-l"                  , addName "Move Right"                      $ sequence_ [windowSwap R True, warpCursor])
+    , ("M-C-h"           , addName "Move Left"                   $ sequence_ [windowSwap L True, warpCursor])
+    , ("M-C-j"           , addName "Move Down"                   $ sequence_ [windowSwap D True, warpCursor])
+    , ("M-C-k"           , addName "Move Up"                     $ sequence_ [windowSwap U True, warpCursor])
+    , ("M-C-l"           , addName "Move Right"                  $ sequence_ [windowSwap R True, warpCursor])
     ] ^++^
 
     subKeys "SubLayouts"
-    [ ("M-M1-m"                 , addName "SubLayout swapMain"              $ onGroup swapMaster')
-    , ("M-M1-<Tab>"             , addName "Cycle sublayout"                 $ toSubl NextLayout)
-    , ("M-M1-<D>"               , addName "SubLayout combine down"          $ withFocused (sendMessage . mergeDir W.focusDown'))
-    , ("M-M1-<U>"               , addName "SubLayout combine up"            $ withFocused (sendMessage . mergeDir W.focusUp'))
+    [ ("M-M1-m"          , addName "SubLayout swapMain"          $ onGroup swapMaster')
+    , ("M-M1-<Tab>"      , addName "Cycle sublayout"             $ toSubl NextLayout)
+    , ("M-M1-<D>"        , addName "SubLayout combine down"      $ withFocused (sendMessage . mergeDir W.focusDown'))
+    , ("M-M1-<U>"        , addName "SubLayout combine up"        $ withFocused (sendMessage . mergeDir W.focusUp'))
 
-    , ("M-u"                    , addName "Un-merge from sublayout"         $ withFocused (sendMessage . UnMerge))
-    , ("M-C-u"                  , addName "Unmerge all from sublayout"      $ withFocused (sendMessage . UnMergeAll))
+    , ("M-u"             , addName "Un-merge from sublayout"     $ withFocused (sendMessage . UnMerge))
+    , ("M-C-u"           , addName "Unmerge all from sublayout"  $ withFocused (sendMessage . UnMergeAll))
 
-    , ("M-M1-h"                 , addName "Merge Left"                      $ sequence_ [sendMessage $ pushGroup L, warpCursor])
-    , ("M-M1-j"                 , addName "Merge Down"                      $ sequence_ [sendMessage $ pushGroup D, warpCursor])
-    , ("M-M1-k"                 , addName "Merge Up"                        $ sequence_ [sendMessage $ pushGroup U, warpCursor])
-    , ("M-M1-l"                 , addName "Merge Right"                     $ sequence_ [sendMessage $ pushGroup R, warpCursor])
+    , ("M-M1-h"          , addName "Merge Left"                  $ sequence_ [sendMessage $ pushGroup L, warpCursor])
+    , ("M-M1-j"          , addName "Merge Down"                  $ sequence_ [sendMessage $ pushGroup D, warpCursor])
+    , ("M-M1-k"          , addName "Merge Up"                    $ sequence_ [sendMessage $ pushGroup U, warpCursor])
+    , ("M-M1-l"          , addName "Merge Right"                 $ sequence_ [sendMessage $ pushGroup R, warpCursor])
 
-    , ("M-C-M1-h"               , addName "Send Left"                       $ sequence_ [sendMessage $ pullWindow L, warpCursor])
-    , ("M-C-M1-j"               , addName "Send Down"                       $ sequence_ [sendMessage $ pullWindow D, warpCursor])
-    , ("M-C-M1-k"               , addName "Send Up"                         $ sequence_ [sendMessage $ pullWindow U, warpCursor])
-    , ("M-C-M1-l"               , addName "Send Right"                      $ sequence_ [sendMessage $ pullWindow R, warpCursor])
+    , ("M-C-M1-h"        , addName "Send Left"                   $ sequence_ [sendMessage $ pullWindow L, warpCursor])
+    , ("M-C-M1-j"        , addName "Send Down"                   $ sequence_ [sendMessage $ pullWindow D, warpCursor])
+    , ("M-C-M1-k"        , addName "Send Up"                     $ sequence_ [sendMessage $ pullWindow U, warpCursor])
+    , ("M-C-M1-l"        , addName "Send Right"                  $ sequence_ [sendMessage $ pullWindow R, warpCursor])
     ] ^++^
 
     subKeys "Layout Management"
-    [ ("M-<Tab>"                , addName "Cycle all layouts"               $ sendMessage NextLayout)
-    , ("M-S-<Tab>"              , addName "Reset layout"                    $ setLayout $ XMonad.layoutHook conf)
-    , ("M-C-<Tab>"              , addName "Toggle sublayout"                $ bindOn LD [("Notebook", sendMessage ToggleMiddle)
-                                                                                        ,("Three Col", sendMessage ToggleMid)
-                                                                                        ,("", sendMessage ToggleLayout)])
+    [ ("M-<Tab>"         , addName "Cycle all layouts"           $ sendMessage NextLayout)
+    , ("M-S-<Tab>"       , addName "Reset layout"                $ setLayout $ XMonad.layoutHook conf)
+    , ("M-C-<Tab>"       , addName "Toggle sublayout"            $ bindOn LD [("Notebook", sendMessage ToggleMiddle)
+                                                                             ,("Three Col", sendMessage ToggleMid)
+                                                                             ,("", sendMessage ToggleLayout)])
 
-    , ("M-y"                    , addName "Toggle window floating"          $ withFocused toggleFloat)
-    , ("M-C-y"                  , addName "Tile all floating w"             sinkAll)
+    , ("M-y"             , addName "Toggle window floating"      $ withFocused toggleFloat)
+    , ("M-C-y"           , addName "Tile all floating w"         sinkAll)
 
-    , ("M-,"                    , addName "Decrease main windows"           $ sendMessage (IncMasterN (-1)))
-    , ("M-."                    , addName "Increase main windows"           $ sendMessage (IncMasterN 1))
-    , ("M-C-,"                  , addName "Decrease big windows"            $ sendMessage (IncColumnN (-1)))
-    , ("M-C-."                  , addName "Increase big windows"            $ sendMessage (IncColumnN 1))
+    , ("M-,"             , addName "Decrease main windows"       $ sendMessage (IncMasterN (-1)))
+    , ("M-."             , addName "Increase main windows"       $ sendMessage (IncMasterN 1))
+    , ("M-C-,"           , addName "Decrease big windows"        $ sendMessage (IncColumnN (-1)))
+    , ("M-C-."           , addName "Increase big windows"        $ sendMessage (IncColumnN 1))
 
-    , ("M-["                    , addName "Shrink Main"                     $ sendMessage Shrink)
-    , ("M-]"                    , addName "Expand Main"                     $ sendMessage Expand)
-    , ("M-C-["                  , addName "Shrink height"                   $ sendMessage MirrorShrink)
-    , ("M-C-]"                  , addName "Expand height"                   $ sendMessage MirrorExpand)
+    , ("M-["             , addName "Shrink Main"                 $ sendMessage Shrink)
+    , ("M-]"             , addName "Expand Main"                 $ sendMessage Expand)
+    , ("M-C-["           , addName "Shrink height"               $ sendMessage MirrorShrink)
+    , ("M-C-]"           , addName "Expand height"               $ sendMessage MirrorExpand)
 
-    , ("M-r"                    , addName "Reflect/Rotate"                  $ bindOn LD [("Notebook",sendMessage ToggleSide)
-                                                                                        ,("", sendMessage (XMonad.Layout.MultiToggle.Toggle REFLECTX))])
-    , ("M-C-r"                  , addName "Reflect Stack"                   $ sendMessage ToggleStackDir)
+    , ("M-r"             , addName "Reflect/Rotate"              $ bindOn LD [("Notebook",sendMessage ToggleSide)
+                                                                             ,("", sendMessage (XMonad.Layout.MultiToggle.Toggle REFLECTX))])
+    , ("M-C-r"           , addName "Reflect Stack"               $ sendMessage ToggleStackDir)
     ]
     where
       toggleCopyToAll = wsContainingCopies >>= \case
@@ -840,6 +840,12 @@ myFadeHook = composeAll
 ----------------------------------------------------------------------------------------------------
 -- New Window Actions                                                                             --
 ----------------------------------------------------------------------------------------------------
+
+-- Things to do when a new window is opened. Mostly just making the named scratchpad apps open
+-- floating in rectangles. Also adds the main toggle, this one shot toggle puts the next created
+-- window in the master spot. This sometimes useful, but I normally like new windows spawning at
+-- the bottom of the stack (I often just have the one or two 'main' programs that I want on each
+-- workspace, and new windows after that are just supporting windows)
 
 -- https://wiki.haskell.org/Xmonad/General_xmonad.hs_config_tips#ManageHook_examples
 
