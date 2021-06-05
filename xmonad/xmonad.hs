@@ -25,6 +25,7 @@
 import Data.List
 import qualified Data.Map as M
 import Data.Monoid
+import Data.Maybe
 import System.Exit
 import System.IO
 
@@ -38,12 +39,13 @@ import XMonad.Actions.CycleWS
 import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.Navigation2D
+import XMonad.Actions.PerWindowKeys
 import XMonad.Actions.Promote
 import XMonad.Actions.RotSlaves
 import XMonad.Actions.SinkAll
 import XMonad.Actions.SpawnOn
 import XMonad.Actions.SwapPromote
-import XMonad.Actions.PerWindowKeys
+import XMonad.Actions.Warp
 import XMonad.Actions.WithAll
 
 import XMonad.Hooks.DynamicLog
@@ -56,20 +58,24 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.ToggleHook
 
 import XMonad.Layout.BorderResize
+import XMonad.Layout.Column
 import XMonad.Layout.DraggingVisualizer
+import XMonad.Layout.FourColumns
 import XMonad.Layout.LayoutCombinators
+import XMonad.Layout.Master
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.NoBorders
 import XMonad.Layout.NoFrillsDecoration
+import XMonad.Layout.Notebook
 import XMonad.Layout.OneBig
 import XMonad.Layout.PerScreen
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.PositionStoreFloat
 import XMonad.Layout.Reflect
 import XMonad.Layout.Renamed
-import XMonad.Layout.ResizableTile
 import XMonad.Layout.ShowWName
+import XMonad.Layout.SimpleFocus
 import XMonad.Layout.Simplest
 import XMonad.Layout.Spacing
 import XMonad.Layout.SubLayouts
@@ -77,10 +83,6 @@ import XMonad.Layout.Tabbed
 import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.WindowNavigation
 import XMonad.Layout.WindowSwitcherDecoration
-
-import XMonad.Layout.FourColumns
--- import XMonad.Layout.CenterFocus
-import XMonad.Layout.Notebook
 
 import XMonad.Prompt
 import XMonad.Prompt.AppLauncher as AL
@@ -92,23 +94,10 @@ import XMonad.Util.EZConfig
 import XMonad.Util.Hacks
 import XMonad.Util.NamedActions
 import XMonad.Util.NamedScratchpad
+import XMonad.Util.Paste as P
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 
--- experimenting with tripane
--- import XMonad.Layout.Decoration
--- import XMonad.Hooks.WindowSwallowing
-
--- testing
-import XMonad.Layout.Column
-import XMonad.Layout.SimpleFocus
-import XMonad.Layout.Master
-import XMonad.Actions.Warp
-import XMonad.Util.Paste as P
--- NOTE: Try out prompt with submap
-import Data.Maybe
-
--- NOTE: try out XMonad.Actions.Submap
 
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
@@ -149,9 +138,10 @@ myConfig p = def
 
 -- I have my number keys in a layer under my home row, so these are set to have all of my personal
 -- layouts under my left hand and my work under my right. The "admin groups" for work and personal
--- are inbetween the two. The Start and Gen workspaces are hidden elsewhere mostly as placeholders
--- so no applications are run at start up, with the bonus of having nice wallpapers without them
--- being destracting whilst I work
+-- are in-between the two. The TMP 1&2 workspaces are hidden elsewhere mostly as place holders so no
+-- applications are opened at start up, with the bonus of having nice wallpapers that I can bring up
+-- again without closing programs (it's nice to set the second monitor to a pretty picture instead
+-- of just being surrounded by applications)
 
 wsTMP    = "tmp"
 wsTMP2   = "tmp2"
@@ -249,7 +239,9 @@ projects =
 -- Applications                                                                                   --
 ----------------------------------------------------------------------------------------------------
 
--- Just a general list of all the apps I reference elsewhere
+-- Just a general list of all the programs I reference elsewhere. I should be more consistent with
+-- what I put here. Either I should only be putting things used regularly, or I should be putting
+-- anything.
 
 myTerminal     = "kitty"
 myBrowser      = "browser"
@@ -263,14 +255,6 @@ myCompositor   = "picom -b --config ~/.config/picom/picom.conf"
 myColorPicker  = "colorpicker"
 -- Lets see if this fixes the below bug
 myWallpaper    = "feh --bg-fill --randomize ~/Pictures/wallpapers/"
-
--- Ok, this gives the stranges bug. Sometimes on startup one of the two screens will have what seems
--- to be a dump of whatever is in the graphics memory. It is normally just static (sometimes a bit
--- blocky), but if I have recenty turned my computer off it will have splotches of what was on there
--- before.
---
--- myWallpaper    = "nitrogen --head=0 --random ~/Pictures/wallpapers/start/ --set-zoom-fill"
--- myWallpaper1   = "nitrogen --head=1 --random ~/Pictures/wallpapers/start/ --set-zoom-fill"
 
 -- Named scratchpads, using browser script and bindOn to have some of them be workspace based so the
 -- work tasks and keep are on the work layouts and the personal on personal.
@@ -329,6 +313,10 @@ scratchpads =
 -- Theme                                                                                     --
 ----------------------------------------------------------------------------------------------------
 
+-- At the moment this theme is an attempt at a TokyoNight colour pallet. There might still be some
+-- leftovers of my Monokai theme from when I used that. I moved not for looks, but because of the
+-- amazing functionality of Folke's Neovim theme.
+
 myFocusFollowsMouse  = True
 myClickJustFocuses   = True
 
@@ -344,7 +332,7 @@ gap    = 4
 reSize = 1/40
 
 topbar   = 8
-tabsh    = 30
+tabsh    = 20
 myborder = 3
 prompt   = 30
 
@@ -447,6 +435,13 @@ myShowWNameTheme = def
 -- Layouts                                                                                        --
 ----------------------------------------------------------------------------------------------------
 
+-- Honestly just my favourite section. I like things to just be exactly where I want them to, so
+-- having custom layouts is what brought me to XMonad it the first place. The Notebook Layout is my
+-- baby, it gets it's name from the fact that I originally made it to have a jupyter notebook next
+-- to my text editor and browser. Even with that not being a use case for me any more, I still love
+-- it so much. It has now been generalised to work for more use cases and can be of much use for
+-- very wide monitors.
+
 -- Tell X.A.Navigation2D about specific layouts and how to handle them
 
 myNav2DConf :: Navigation2DConfig
@@ -526,12 +521,23 @@ myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
     mySpacing           = spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
     addFloatTopBar      = noFrillsDeco shrinkText topFloatBarTheme
 
+----------------------------------------------------------------------------------------------------
+-- Keybindings                                                                                    --
+----------------------------------------------------------------------------------------------------
+
+-- The general philosophy was that all WM bindings would be on the Super key, and no other bindings
+-- would go there. Some exceptions have been made. F8 is used as my keyboard is set up so that
+-- a tap of the Super key actually sends the F8 key (It can't do modified key presses with that
+-- function). And also some more keys are creeping onto the Super layer in the form of 'magic'
+-- bindings. Bindings that try to bridge the gap between the XMonad and the window management within
+-- certain programs.
+
 myModMask :: KeyMask
 myModMask = mod4Mask -- super (and on my system, hyper) keys
 
--- Display keyboard mappings using zenity
--- from https://github.com/thomasf/dotfiles-thomasf-xmonad/
---              blob/master/.xmonad/lib/XMonad/Config/A00001.hs
+-- Display keyboard mappings using zenity.
+-- from: github.com/thomasf/dotfiles-thomasf-xmonad/blob/master/.xmonad/lib/XMonad/Config/A00001.hs
+
 showKeybindings :: [((KeyMask, KeySym), NamedAction)] -> NamedAction
 showKeybindings x = addName "Show Keybindings" $ io $ do
     h <- spawnPipe "zenity --text-info --font=terminus"
