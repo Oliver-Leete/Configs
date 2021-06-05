@@ -54,7 +54,6 @@ import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.ToggleHook
-import XMonad.Hooks.UrgencyHook
 
 import XMonad.Layout.BorderResize
 import XMonad.Layout.DraggingVisualizer
@@ -93,7 +92,6 @@ import XMonad.Util.EZConfig
 import XMonad.Util.Hacks
 import XMonad.Util.NamedActions
 import XMonad.Util.NamedScratchpad
-import XMonad.Util.NamedWindows
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 
@@ -123,9 +121,8 @@ main = do
     xmonad
         $ dynamicProjects projects
         $ withNavigation2DConfig myNav2DConf
-        $ withUrgencyHook LibNotifyUrgencyHook
         $ ewmh
-        $ addDescrKeys' ((myModMask, xK_F1), showKeybindings) myKeys
+        $ addDescrKeys' ((controlMask .|. shiftMask .|. mod4Mask .|. mod1Mask, xK_semicolon), showKeybindings) myKeys
         $ myConfig xmproc0
 
 myConfig p = def
@@ -551,11 +548,8 @@ myKeys :: XConfig Layout -> [((KeyMask, KeySym), NamedAction)]
 myKeys conf = let
 
     subKeys str ks = subtitle str : mkNamedKeymap conf ks
-    -- added home and end for the two starting workspaces
-    -- (On my keyboard they are on the number layer just abouve space)
+    -- added home and end for the two starting workspaces (This makes sense on my batshit keyboard layout)
     wsKeys = ["<Home>", "<End>", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-    dirKeys        = ["j","k","h","l"]
-    dirs           = [ D,  U,  L,  R ]
 
     zipM  m nm ks as f = zipWith (\k d -> (m ++ k, addName nm $ f d)) ks as
 
@@ -563,15 +557,9 @@ myKeys conf = let
 
     warpCursor = warpToWindow (1/2) (1/2)
 
-    -- cf https://github.com/pjones/xmonadrc
-    --switch :: ProjectTable -> ProjectName -> X ()
-    --switch ps name = case Map.lookup name ps of
-    --  Just p              -> switchProject p
-    --  Nothing | null name -> return ()
-
     toggleFloat w = windows (\s -> if M.member w (W.floating s)
                     then W.sink w s
-                    else W.float w (W.RationalRect (1/3) (1/4) (1/2) (4/5)) s)
+                    else W.float w (W.RationalRect (1/4) (1/4) (1/2) (1/2)) s)
 
     in
 
@@ -579,20 +567,19 @@ myKeys conf = let
     [ ("M-q"                    , addName "Restart XMonad"                  $ spawn "xmonad --restart")
     , ("M-C-q"                  , addName "Rebuild & restart XMonad"        $ spawn "xmonad --recompile && xmonad --restart")
     , ("M-S-q"                  , addName "Quit XMonad"                     $ confirmPrompt hotPromptTheme "Quit XMonad" $ io exitSuccess)
-    , ("M-M1-C-S-q"             , addName "Quit XMonad"                     $ confirmPrompt hotPromptTheme "Quit XMonad" $ io exitSuccess)
     , ("M-M1-C-S-x"             , addName "Lock screen"                     $ spawn myLockscreen)
     , ("M-x"                    , addName "notification panel"              $ spawn "toggle notif")
     ] ^++^
 
     subKeys "Utilities"
-    [ ("M-M1-C-S-z"                  , addName "Colour picker"                   $ spawn myColorPicker) -- kill picom before use
-    , ("M-M1-C-S-o"                  , addName "On-screen keys"                  $ spawn "killall screenkey || screenkey")
-    , ("M-M1-C-S-/"                  , addName "On-screen keys settings"         $ spawn "screenkey --show-settings")
-    , ("M-M1-C-S-f"                  , addName "Capture screen"                  $ spawn "screencapt" )
-    , ("M-M1-C-S-s"                  , addName "Capture selection"               $ spawn "screencapt area" )
-    , ("M-M1-C-S-w"                  , addName "Record screen"                   $ spawn "screencast" )
-    , ("M-M1-C-S-r"                  , addName "Record screen - area select"     $ spawn "screencast area" )
-    , ("M-;"                         , addName "Warp Cursor"                     $ warpToWindow (1/2) (1/2))
+    [ ("M-M1-C-S-z"             , addName "Colour picker"                   $ spawn myColorPicker) -- kill picom before use
+    , ("M-M1-C-S-o"             , addName "On-screen keys"                  $ spawn "killall screenkey || screenkey")
+    , ("M-M1-C-S-/"             , addName "On-screen keys settings"         $ spawn "screenkey --show-settings")
+    , ("M-M1-C-S-f"             , addName "Capture screen"                  $ spawn "screencapt" )
+    , ("M-M1-C-S-s"             , addName "Capture selection"               $ spawn "screencapt area" )
+    , ("M-M1-C-S-w"             , addName "Record screen"                   $ spawn "screencast" )
+    , ("M-M1-C-S-r"             , addName "Record area"                     $ spawn "screencast area" )
+    , ("M-;"                    , addName "Warp Cursor"                     $ warpToWindow (1/2) (1/2))
     ] ^++^
 
     subKeys "Apps"
@@ -648,19 +635,19 @@ myKeys conf = let
 
     subKeys "Workspaces and Projects"
     (
-    [ ("M-a"                       , addName "Launcher"                    $ spawn myLauncher)
+    [ ("M-a"                    , addName "Launcher"                        $ spawn myLauncher)
 
-    , ("<F8>"                      , addName "prompt select window"        $ windowPrompt myPromptTheme Goto allWindows)
-    , ("C-<F8>"                    , addName "prompt fetch window"         $ windowPrompt myPromptTheme Bring allWindows)
-    , ("M-w"                       , addName "prompt select ws"            $ switchProjectPrompt myPromptTheme)
-    , ("M-C-w"                     , addName "prompt send to ws"           $ shiftToProjectPrompt myPromptTheme)
+    , ("<F8>"                   , addName "prompt select window"            $ windowPrompt myPromptTheme Goto allWindows)
+    , ("C-<F8>"                 , addName "prompt fetch window"             $ windowPrompt myPromptTheme Bring allWindows)
+    , ("M-w"                    , addName "prompt select ws"                $ switchProjectPrompt myPromptTheme)
+    , ("M-C-w"                  , addName "prompt send to ws"               $ shiftToProjectPrompt myPromptTheme)
 
-    , ("M-C-d"                     , addName "Kill other duplicates"       killAllOtherCopies)
-    , ("M-d"                       , addName "Duplicate w to all ws"       toggleCopyToAll)
-    ]
-    ++ zipM "M-"                   "View ws"                               wsKeys [0..] (withNthWorkspace W.greedyView)
-    ++ zipM "M-C-"                 "Move w to ws"                          wsKeys [0..] (withNthWorkspace W.shift)
-    ++ zipM "M-M1-"                "Copy w to ws"                          wsKeys [0..] (withNthWorkspace copy)
+    , ("M-C-d"                  , addName "Kill other duplicates"           killAllOtherCopies)
+    , ("M-d"                    , addName "Duplicate w to all ws"           toggleCopyToAll)
+    ]                                                                 
+    ++ zipM "M-"                "View ws"                                   wsKeys [0..] (withNthWorkspace W.greedyView)
+    ++ zipM "M-C-"              "Move w to ws"                              wsKeys [0..] (withNthWorkspace W.shift)
+    ++ zipM "M-S-"              "Copy w to ws"                              wsKeys [0..] (withNthWorkspace copy)
     ) ^++^
 
     subKeys "Windows"
@@ -673,7 +660,6 @@ myKeys conf = let
 
     , ("M-m"                    , addName "Swap with main"                  $ sequence_ [swapPromote' False, warpCursor])
     , ("M-C-m"                  , addName "Promote to main"                 $ sequence_ [promote, warpCursor])
-    , ("M-M1-m"                 , addName "SubLayout swapMain"              $ onGroup swapMaster')
 
     , ("M-<Escape>"             , addName "Spawn next window in main"       $ toggleHookNext "Main" >> runLogHook)
 
@@ -684,9 +670,6 @@ myKeys conf = let
     , ("M-<U>"                  , addName "Focus up"                        $ sequence_ [windows W.focusUp, warpCursor])
     , ("M-C-<D>"                , addName "Shift down"                      $ sequence_ [windows W.swapDown, warpCursor])
     , ("M-C-<U>"                , addName "Shift up"                        $ sequence_ [windows W.swapUp, warpCursor])
-
-    , ("M-M1-<D>"               , addName "SubLayout combine down"          $ withFocused (sendMessage . mergeDir W.focusDown'))
-    , ("M-M1-<U>"               , addName "SubLayout combine up"            $ withFocused (sendMessage . mergeDir W.focusUp'))
 
     , ("M-<R>"                  , addName "Cycle up"                        $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Right)
                                                                                         ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Right)
@@ -719,6 +702,16 @@ myKeys conf = let
     , ("M-C-j"                  , addName "Move Down"                       $ sequence_ [windowSwap D True, warpCursor])
     , ("M-C-k"                  , addName "Move Up"                         $ sequence_ [windowSwap U True, warpCursor])
     , ("M-C-l"                  , addName "Move Right"                      $ sequence_ [windowSwap R True, warpCursor])
+    ] ^++^
+
+    subKeys "SubLayouts"
+    [ ("M-M1-m"                 , addName "SubLayout swapMain"              $ onGroup swapMaster')
+    , ("M-M1-<Tab>"             , addName "Cycle sublayout"                 $ toSubl NextLayout)
+    , ("M-M1-<D>"               , addName "SubLayout combine down"          $ withFocused (sendMessage . mergeDir W.focusDown'))
+    , ("M-M1-<U>"               , addName "SubLayout combine up"            $ withFocused (sendMessage . mergeDir W.focusUp'))
+
+    , ("M-u"                    , addName "Un-merge from sublayout"         $ withFocused (sendMessage . UnMerge))
+    , ("M-C-u"                  , addName "Unmerge all from sublayout"      $ withFocused (sendMessage . UnMergeAll))
 
     , ("M-M1-h"                 , addName "Merge Left"                      $ sequence_ [sendMessage $ pushGroup L, warpCursor])
     , ("M-M1-j"                 , addName "Merge Down"                      $ sequence_ [sendMessage $ pushGroup D, warpCursor])
@@ -734,20 +727,17 @@ myKeys conf = let
     subKeys "Layout Management"
     [ ("M-<Tab>"                , addName "Cycle all layouts"               $ sendMessage NextLayout)
     , ("M-S-<Tab>"              , addName "Reset layout"                    $ setLayout $ XMonad.layoutHook conf)
-    , ("M-M1-<Tab>"             , addName "Cycle sublayout"                 $ toSubl NextLayout)
     , ("M-C-<Tab>"              , addName "Toggle sublayout"                $ bindOn LD [("Notebook", sendMessage ToggleMiddle)
                                                                                         ,("Three Col", sendMessage ToggleMid)
                                                                                         ,("", sendMessage ToggleLayout)])
 
-    , ("M-y"                    , addName "Float tiled w"                   $ withFocused toggleFloat)
+    , ("M-y"                    , addName "Toggle window floating"          $ withFocused toggleFloat)
     , ("M-C-y"                  , addName "Tile all floating w"             sinkAll)
 
     , ("M-,"                    , addName "Decrease main windows"           $ sendMessage (IncMasterN (-1)))
     , ("M-."                    , addName "Increase main windows"           $ sendMessage (IncMasterN 1))
-    , ("M-C-,"                  , addName "Decrease main windows"           $ sendMessage (IncColumnN (-1)))
-    , ("M-C-."                  , addName "Increase main windows"           $ sendMessage (IncColumnN 1))
-    , ("M-M1-."                 , addName "toSubl IncMainN 1"               $ toSubl $ IncMasterN 1)
-    , ("M-M1-,"                 , addName "toSubl IncMainN -1"              $ toSubl $ IncMasterN (-1))
+    , ("M-C-,"                  , addName "Decrease big windows"            $ sendMessage (IncColumnN (-1)))
+    , ("M-C-."                  , addName "Increase big windows"            $ sendMessage (IncColumnN 1))
 
     , ("M-["                    , addName "Shrink Main"                     $ sendMessage Shrink)
     , ("M-]"                    , addName "Expand Main"                     $ sendMessage Expand)
@@ -757,29 +747,18 @@ myKeys conf = let
     , ("M-r"                    , addName "Reflect/Rotate"                  $ bindOn LD [("Notebook",sendMessage ToggleSide)
                                                                                         ,("", sendMessage (XMonad.Layout.MultiToggle.Toggle REFLECTX))])
     , ("M-C-r"                  , addName "Reflect Stack"                   $ sendMessage ToggleStackDir)
-
-    , ("M-g"                    , addName "Un-merge from sublayout"         $ withFocused (sendMessage . UnMerge))
-    , ("M-M1-g"                 , addName "Unmerge all from sublayout"      $ withFocused (sendMessage . UnMergeAll))
-    , ("M-M1-S-g"               , addName "Merge all into sublayout"        $ withFocused (sendMessage . MergeAll))
     ]
     where
       toggleCopyToAll = wsContainingCopies >>= \case
               [] -> windows copyToAll
               _ -> killAllOtherCopies
 
---    subKeys "Media Controls"
---    [
---    ("<XF86AudioMicMute>"      , addName "Mic Mute"                    $ spawn "notify-send mic mute")
---    ]
 
-
--- Mouse bindings: default actions bound to mouse events
--- Includes window snapping on move/resize using X.A.FloatSnap
--- I got rid of that, seemed to be causing a lot of lag
--- Includes window w/h ratio constraint (square) using X.H.ConstrainedResize
--- Think I got rid of this as well, I don't use floats much at all
+-- Mouse bindings: default actions bound to mouse events. Includes window w/h ratio constraint
+-- (square) using X.H.ConstrainedResize. cleared these down a bit as I don't use floating windows
+-- often
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
-myMouseBindings XConfig {XMonad.modMask = myModMask} = M.fromList
+myMouseBindings XConfig {} = M.fromList
     [ ((myModMask,               button1) ,\w -> focus w
       >> mouseMoveWindow w
       >> windows W.shiftMaster)
@@ -801,12 +780,14 @@ myMouseBindings XConfig {XMonad.modMask = myModMask} = M.fromList
 -- Startup                                                                                        --
 ----------------------------------------------------------------------------------------------------
 
+-- Things to do on startup. Spawn is used instead of spawnOnce for wallpaper to give a new random on
+-- every reset of XMonad.
+
 myStartupHook :: X ()
 myStartupHook = do
     spawnOnce myCompositor
     spawn myWallpaper
     spawnOnce myTray
-    -- spawnOnce "logid -c ~/.config/logid/logid.cfg"
     spawnOnce "insync start; insync hide"
     spawnOnce "xsetroot -cursor_name left_ptr"
     spawnOnce "deadd-notification-center &"
@@ -816,25 +797,19 @@ myStartupHook = do
 -- Log                                                                                            --
 ----------------------------------------------------------------------------------------------------
 
+-- Here is all the stuff to make my pp look nice. And by this, I mean it's the things used to put
+-- the workspace names in xmobar.
+
 myLogHook :: Handle -> X ()
 myLogHook h = do
-
-    -- following block for copy windows marking
-    copies <- wsContainingCopies
-    let check ws | ws `elem` copies = pad . xmobarColor foreground "" . wrap "" ""  $ ws
-                 | otherwise = pad . xmobarColor foreground "" . wrap "" "" $ ws
-
-    -- updatePointer (0.5, 0.5) (0, 0)
     fadeWindowsLogHook myFadeHook
     ewmhDesktopsLogHook
     masterHistoryHook
     dynamicLogWithPP . filterOutWsPP ["NSP", wsTMP, wsTMP2] $ def
-
         { ppCurrent             = xmobarColor active "" . wrap "[" "]" . clickable
         , ppTitle               = xmobarColor foreground "" . wrap "<action=xdotool key Super+w>" "</action>" . shorten 40
         , ppVisible             = xmobarColor visible  "" . clickable
         , ppUrgent              = xmobarColor alert    "" . wrap "!" "!"
-        , ppHidden              = check . clickable
         , ppHiddenNoWindows     = const ""
         , ppSep                 = "  :  "
         , ppWsSep               = " "
@@ -857,31 +832,10 @@ myFadeHook = composeAll
     ]
 
 ----------------------------------------------------------------------------------------------------
--- Actions                                                                                        --
-----------------------------------------------------------------------------------------------------
-
-
-----------------------------------------------------------------------------------------------------
--- Urgency Hook                                                                                   --
-----------------------------------------------------------------------------------------------------
--- from https://pbrisbin.com/posts/using_notify_osd_for_xmonad_notifications/
-data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
-
-instance UrgencyHook LibNotifyUrgencyHook where
-    urgencyHook LibNotifyUrgencyHook w = do
-        wsname     <- getName w
-        Just idx <- W.findTag w <$> gets windowset
-
-        safeSpawn "notify-send" [show wsname, "workspace " ++ idx]
--- cf https://github.com/pjones/xmonadrc
-
-
-----------------------------------------------------------------------------------------------------
 -- New Window Actions                                                                             --
 ----------------------------------------------------------------------------------------------------
 
 -- https://wiki.haskell.org/Xmonad/General_xmonad.hs_config_tips#ManageHook_examples
--- <+> manageHook defaultConfig
 
 myManageHook :: ManageHook
 myManageHook =
@@ -889,12 +843,12 @@ myManageHook =
     <+> manageDocks
     <+> toggleHook' "Main" doMain tileBelow
     <+> namedScratchpadManageHook scratchpads
-    -- <+> fullscreenManageHook
     <+> manageSpawn
     where
         manageSpecific = composeOne
             [ resource =? "desktop_window" -?> doIgnore
             , resource =? "stalonetray"    -?> doIgnore
+            , className =? "Zenity" -?> doRectFloat (W.RationalRect (3 / 8) (1 / 16) (1 / 4) (7 / 8))
             -- , resource =? "vlc"    -?> doFloat
             -- , resource =? "Steam"    -?> doFloat
             , resource =? "gnome-calculator" -?> doCenterFloat
@@ -909,6 +863,7 @@ myManageHook =
             , resource =? "kittyconsole" -?> doRectFloat (W.RationalRect (3 / 5) (3 / 5) (1 / 3) (1 / 3))
             , className =? "Chromensp" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
             , className =? "Chromewrknsp" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
+            , className =? "Zenity" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
             , resource =? youtubeMusicResource -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
             , resource =? discordResource -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
             , transience
@@ -933,14 +888,10 @@ myManageHook =
 -- X Event Actions                                                                                --
 ----------------------------------------------------------------------------------------------------
 
--- for reference, the following line is the same as dynamicTitle myDynHook
--- <+> dynamicPropertyChange "WM_NAME" myDynHook
-
--- I'm not really into full screens without my say so... I often like to
--- fullscreen a window but keep it constrained to a window rect (e.g.
--- for videos, etc. without the UI chrome cluttering things up). I can
--- always do that and then full screen the subsequent window if I want.
--- THUS, to cut a long comment short, no fullscreenEventHook
+-- I'm not really into full screens without my say so... I often like to fullscreen a window but
+-- keep it constrained to a window rect (e.g. for videos, etc. without the UI chrome cluttering
+-- things up). I can always do that and then full screen the subsequent window if I want. THUS, to
+-- cut a long comment short, no fullscreenEventHook
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook = docksEventHook
@@ -948,8 +899,6 @@ myHandleEventHook = docksEventHook
                 <+> dynamicTitle myDynHook
                 <+> handleEventHook def
                 <+> XMonad.Util.Hacks.windowedFullscreenFixEventHook
-                -- <+> XMonad.Layout.Fullscreen.fullscreenEventHook
-                -- <+> XMonad.Hooks.EwmhDesktops.fullscreenEventHook
     where
         myDynHook = composeAll
             [ isDiscord --> forceCenterFloat
@@ -962,9 +911,8 @@ myHandleEventHook = docksEventHook
 -- from:
 -- https://github.com/pjones/xmonadrc/blob/master/src/XMonad/Local/Action.hs
 --
--- Useful when a floating window requests stupid dimensions.  There
--- was a bug in Handbrake that would pop up the file dialog with
--- almost no height due to one of my rotated monitors.
+-- Useful when a floating window requests stupid dimensions. There was a bug in Handbrake that would
+-- pop up the file dialog with almost no height due to one of my rotated monitors.
 
 forceCenterFloat :: ManageHook
 forceCenterFloat = doFloatDep move
