@@ -24,8 +24,8 @@
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 import Data.List
 import qualified Data.Map as M
-import Data.Monoid
 import Data.Maybe
+import Data.Monoid
 import System.Exit
 import System.IO
 
@@ -102,6 +102,8 @@ import XMonad.Util.SpawnOnce
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
 ----------------------------------------------------------------------------------------------------
+
+-- The main thing.
 
 main :: IO ()
 main = do
@@ -247,7 +249,7 @@ myTerminal     = "kitty"
 myBrowser      = "browser"
 myBrowserClass = "google-chrome-stable"
 myStatusBar    = "/home/oleete/.config/xmobar/init-xmobars"
-myTray         = "trayer --edge bottom --align center --distance 5 --height 20 --widthtype request --transparent true --alpha 0 --tint 0x2c292d "
+myTray         = "trayer --edge bottom --align center --distance 5 --height 20 --widthtype request --transparent true --alpha 0 --tint 0x1a1b26"
 myLauncher     = "rofi -matching fuzzy -modi combi -show combi -combi-modi window,drun,run -show-icons"
 myLockscreen   = "slock"
 myExplorer     = "nemo"
@@ -345,8 +347,10 @@ myWideFont  = "xft:Eurostar Black Extended:"
 
 -- This is a "fake title" used as a highlight bar in lieu of full borders I'm not a fan of it, so
 -- it's not being used right now I take that back, spent a short time with a border, but now I've
--- moved back to the top bar, it works a lot better without rounded corners although part of me so
--- wishes to return to rounded corners
+-- moved back to the top bar, it works a lot better without rounded corners although part of me
+-- so wishes to return to rounded corners. I think some of these could be cleaned up, especially
+-- because I don't use the urgency hooks, so I don't ever get the urgency colours.
+
 topBarTheme :: Theme
 topBarTheme = def
     { fontName              = myFont
@@ -443,6 +447,7 @@ myShowWNameTheme = def
 -- very wide monitors.
 
 -- Tell X.A.Navigation2D about specific layouts and how to handle them
+-- Don't actually know what this does, but removing it breaks things
 
 myNav2DConf :: Navigation2DConfig
 myNav2DConf = def

@@ -481,18 +481,19 @@ call  PMRegisterPanelView('bottom', 'troubleTelescope', 'Trouble telescope',    
 call  PMRegisterPanelView('bottom', 'Todo-Trouble',     'TodoTrouble',                          'TroubleClose')
 call  PMRegisterPanelView('bottom', 'loclistFilter',    'lopen',                                'windo if &buftype == "quickfix" || &buftype == "locationlist" | q | endif')
 call  PMRegisterPanelView('bottom', 'quickfixFilter',   'copen',                                'windo if &buftype == "quickfix" || &buftype == "locationlist" | q | endif')
-call  PMRegisterPanelView('bottom', 'term',             'ToggleTerm',                           'ToggleTerm')
-call  PMRegisterPanelView('bottom', '2term',            '2ToggleTerm',                          'windo if &filetype == "toggleterm" | q | endif')
-call  PMRegisterPanelView('bottom', '3term',            '3ToggleTerm',                          'windo if &filetype == "toggleterm" | q | endif')
-call  PMRegisterPanelView('bottom', '4term',            '4ToggleTerm',                          'windo if &filetype == "toggleterm" | q | endif')
-call  PMRegisterPanelView('bottom', '5term',            '5ToggleTerm',                          'windo if &filetype == "toggleterm" | q | endif')
+call  PMRegisterPanelView('bottom', 'term',             'ToggleTerm',                           'ToggleTermCloseAll')
+call  PMRegisterPanelView('bottom', '2term',            '2ToggleTerm',                          'ToggleTermCloseAll')
+call  PMRegisterPanelView('bottom', '3term',            '3ToggleTerm',                          'ToggleTermCloseAll')
+call  PMRegisterPanelView('bottom', '4term',            '4ToggleTerm',                          'ToggleTermCloseAll')
+call  PMRegisterPanelView('bottom', '5term',            '5ToggleTerm',                          'ToggleTermCloseAll')
 call  PMRegisterPanelView('right',  'symbols',          'SymbolsOutlineOpen',                   'SymbolsOutlineClose')
 call  PMRegisterPanelView('top',    'gitdiff',          'DiffviewOpen',                         'DiffviewClose')
 
 function CloseAllPanels()
   UndotreeHide
   windo if &buftype == "quickfix" || &buftype == "locationlist" | q | endif
-  windo if &filetype == "toggleterm" | q | endif
+  " windo if &filetype == "toggleterm" | q | endif
+  ToggleTermCloseAll
   NvimTreeClose
   TroubleClose
   TroubleClose 
