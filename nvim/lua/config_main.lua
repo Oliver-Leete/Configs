@@ -1,6 +1,19 @@
+----------------------------------------------------------------------------------------------------
+--                      _   _   ______    ____   __      __  _____   __  __                       --
+--                     | \ | | |  ____|  / __ \  \ \    / / |_   _| |  \/  |                      --
+--                     |  \| | | |__    | |  | |  \ \  / /    | |   | \  / |                      --
+--                     | . ` | |  __|   | |  | |   \ \/ /     | |   | |\/| |                      --
+--                     | |\  | | |____  | |__| |    \  /     _| |_  | |  | |                      --
+--                     |_| \_| |______|  \____/      \/     |_____| |_|  |_|                      --
+--                                                                                                --
+----------------------------------------------------------------------------------------------------
+-- Oliver Leete <oliverleete@gmail.com>                                                            -- 
+-- https://github.com/oliver-leete                                                                 --
+----------------------------------------------------------------------------------------------------
+
 -- Auto Sessions
 
-require('auto-session').setup({
+require("auto-session").setup({
     log_level = 'info',
     auto_session_enable_last_session = false,
     auto_session_enabled = true,
@@ -34,7 +47,7 @@ require("zen-mode").setup({
 
 -- BufferLine
 
-require'bufferline'.setup({
+require("bufferline").setup({
     options = {
         view = "multiwindow",
         numbers = "none",
@@ -65,7 +78,7 @@ require'bufferline'.setup({
 
 -- LuaLine Status Line
 
-require('lualine').setup({
+require("lualine").setup({
     options = {
         theme = 'tokyonight',
         section_separators = {'', ''},
@@ -123,7 +136,7 @@ vim.g.nvim_tree_icons = {
     git = {unstaged = "", staged = "✓", unmerged = "", renamed = "➜", untracked = ""},
     folder = {default = "", open = "", empty = "", empty_open = "", symlink = ""}
 }
-local tree_cb = require'nvim-tree.config'.nvim_tree_callback
+local tree_cb = require("nvim-tree.config").nvim_tree_callback
 vim.g.nvim_tree_bindings = {
     ["<CR>"]           = tree_cb("edit"),
     ["o"]              = "<cmd>lua require('nvim-tree').on_keypress('edit')<cr><cmd>sleep 250m<cr><cmd>NvimTreeClose<cr>",
@@ -157,8 +170,8 @@ vim.g.nvim_tree_bindings = {
 
 -- DiffView.nvim
 
-local cb = require'diffview.config'.diffview_callback
-require'diffview'.setup({
+local cb = require("diffview.config").diffview_callback
+require("diffview").setup({
     diff_binaries = false,    -- Show diffs for binaries
     file_panel = {
         width = 35,
@@ -247,7 +260,7 @@ vim.g.symbols_outline = {
 
 -- Toggle Terminal
 
-require"toggleterm".setup({
+require("toggleterm").setup({
     size            = 25,
     open_mapping    = [[<c-\>]],
     hide_numbers    = true,
@@ -262,7 +275,7 @@ require"toggleterm".setup({
 
 -- Treesitter
 
-require'nvim-treesitter.configs'.setup({
+require("nvim-treesitter.configs").setup({
     autopairs = { enable = true },
     highlight = { enable = true },
     indent    = { enable = true },
@@ -352,7 +365,7 @@ require'nvim-treesitter.configs'.setup({
         },
     }
 })
-require('nvim-biscuits').setup({
+require("nvim-biscuits").setup({
     default_config = {
         min_distance = 10,
     },
@@ -366,7 +379,7 @@ require('nvim-biscuits').setup({
 -- Compleation Setup
 
 vim.o.completeopt = "menuone,noselect"
-require'compe'.setup({
+require("compe").setup({
     disabled = true;
     autocomplete = true;
     debug = false;
@@ -399,7 +412,7 @@ require'compe'.setup({
 -- Snippets Settup
 
 local remap = vim.api.nvim_set_keymap
-local npairs = require('nvim-autopairs')
+local npairs = require("nvim-autopairs")
 _G.MUtils= {}
 
 vim.g.completion_confirm_key = ""
@@ -422,8 +435,8 @@ npairs.setup({
 
 -- Lsp Settup
 
-local nvim_lsp = require('lspconfig')
-local saga = require('lspsaga')
+local nvim_lsp = require("lspconfig")
+local saga = require("lspsaga")
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -436,7 +449,7 @@ vim.fn.sign_define( "LspDiagnosticsSignInformation", {texthl = "LspDiagnosticsSi
 local custom_attach = function(client, bufnr)
 	-- print("LSP started.");
     capabilities = capabilities
-    require'lsp_signature'.on_attach({
+    require("lsp_signature").on_attach({
         bind = true,
         doc_lines = 10,
         floating_window = true,
@@ -451,7 +464,7 @@ local custom_attach = function(client, bufnr)
             border = "single"
         },
     })
-    require 'illuminate'.on_attach(client)
+    require("illuminate").on_attach(client)
     saga.init_lsp_saga {
         use_saga_diagnostic_sign = true,
         error_sign = '',
@@ -528,16 +541,16 @@ local custom_attach = function(client, bufnr)
         ]], false)
     end
 end
-require'lspconfig'.julials.setup({
+require("lspconfig").julials.setup({
     on_attach=custom_attach,
     root_dir = nvim_lsp.util.root_pattern('Project.toml', 'git', vim.fn.getcwd());
 })
 
-require'lspinstall'.setup()
-local servers = require'lspinstall'.installed_servers()
+require("lspinstall").setup()
+local servers = require("lspinstall").installed_servers()
 for _, server in pairs(servers) do
     if server == 'texlab' then
-        require'lspconfig'.texlab.setup{
+        require("lspconfig").texlab.setup{
             on_attach=custom_attach,
             settings = {
                 bibtex = {
@@ -564,7 +577,7 @@ for _, server in pairs(servers) do
             }
          }
     elseif (server == 'lua') then
-        require'lspconfig'.lua.setup {
+        require("lspconfig").lua.setup {
             on_attach=custom_attach,
             cmd = {
                 "/home/oleete/.local/share/nvim/lspinstall/lua/sumneko-lua-language-server",
@@ -602,12 +615,12 @@ for _, server in pairs(servers) do
     elseif server == 'diagnosticls' then
 
     else
-        require'lspconfig'[server].setup{on_attach=custom_attach}
+        require("lspconfig")[server].setup{on_attach=custom_attach}
     end
 end
 
 
-require'lspconfig'.hls.setup({
+require("lspconfig").hls.setup({
     on_attach=custom_attach,
     cmd = { "haskell-language-server-wrapper", "--lsp" },
     filetypes = { "haskell", "lhaskell" },
@@ -621,7 +634,7 @@ require'lspconfig'.hls.setup({
     end;
 })
 
-require('lspkind').init({
+require("lspkind").init({
     with_text = true,
     symbol_map = {
         Text = '',
@@ -688,9 +701,9 @@ require("telescope").setup({
                 mirror = false,
             },
         },
-        file_sorter =  require'telescope.sorters'.get_fuzzy_file,
+        file_sorter =  require("telescope.sorters").get_fuzzy_file,
         file_ignore_patterns = {},
-        generic_sorter =  require'telescope.sorters'.get_generic_fuzzy_sorter,
+        generic_sorter =  require("telescope.sorters").get_generic_fuzzy_sorter,
         shorten_path = true,
         winblend = 0,
         width = 0.75,
@@ -702,9 +715,9 @@ require("telescope").setup({
         color_devicons = true,
         use_less = true,
         set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
-        file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
-        grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
-        qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
+        file_previewer = require("telescope.previewers").vim_buffer_cat.new,
+        grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
+        qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
 
         mappings = {
             i = {
@@ -748,7 +761,7 @@ require("telescope").setup({
     },
 })
 
-local action_state = require('telescope.actions.state')
+local action_state = require("telescope.actions.state")
 
 local open_dif = function()
     local selected_entry = action_state.get_selected_entry()
@@ -769,7 +782,7 @@ local open_single_dif = function()
 end
 
 function _G.git_bcommits()
-    require('telescope.builtin').git_bcommits({
+    require("telescope.builtin").git_bcommits({
         attach_mappings = function(_, map)
             map('n', '<c-o>', open_dif)
             map('i', '<c-o>', open_dif)
@@ -781,7 +794,7 @@ function _G.git_bcommits()
 end
 
 function _G.git_commits()
-    require('telescope.builtin').git_commits({
+    require("telescope.builtin").git_commits({
         attach_mappings = function(_, map)
             map('n', '<c-o>', open_dif)
             map('i', '<c-o>', open_dif)
@@ -793,7 +806,7 @@ function _G.git_commits()
 end
 
 function _G.git_branch()
-    require('telescope.builtin').git_branches({
+    require("telescope.builtin").git_branches({
         attach_mappings = function(_, map)
             map('n', '<c-o>', open_dif)
             map('i', '<c-o>', open_dif)
@@ -804,12 +817,12 @@ function _G.git_branch()
     })
 end
 
-require('telescope').load_extension('fzf')
-require('telescope').load_extension('bibtex')
+require("telescope").load_extension('fzf')
+require("telescope").load_extension('bibtex')
 
 -- Gitsigns Settup
 
-require('gitsigns').setup({
+require("gitsigns").setup({
     signs = {
         add          = {hl = 'GitSignsAdd',    text = '▌', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
         change       = {hl = 'GitSignsChange', text = '▌', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
@@ -881,7 +894,7 @@ require("neogit").setup({
 
 -- BQF Settup
 
-require('bqf').setup({
+require("bqf").setup({
     auto_enable = true,
     preview = {
         win_height = 12,
@@ -1067,7 +1080,7 @@ require("which-key").register({
         },
         g = {
             name = "Git",
-            a = {"<cmd>lua require'gitsigns'.blame_line()<CR>", "Blame Line"},
+            a = {"<cmd>lua require' '.blame_line()<CR>", "Blame Line"},
             A = {"<cmd>Gitsigns toggle_current_line_blame<CR>", "Blame Toggle"},
             b = {"<cmd>call v:lua.git_branch()<cr>", "Branches"},
             C = {"<cmd>call v:lua.git_bcommits()<cr>", "Commits (buffer)"},
@@ -1298,10 +1311,10 @@ require("which-key").register({
     },
 },{ mode = "v" })
 
-require('numb').setup()
-require('foldsigns').setup()
+require("numb").setup()
+require("foldsigns").setup()
 require("range-highlight").setup()
-require('colorizer').setup({'*'}, {
+require("colorizer").setup({'*'}, {
         RGB      = true;
         RRGGBB   = true;
         names    = false;
