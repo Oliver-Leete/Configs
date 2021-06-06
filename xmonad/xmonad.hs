@@ -33,8 +33,6 @@ import XMonad hiding ( (|||) )
 import qualified XMonad.StackSet as W
 
 import XMonad.Actions.ConditionalKeys
-import qualified XMonad.Actions.ConstrainedResize as Sqr
-import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
 import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
@@ -81,11 +79,9 @@ import XMonad.Layout.Spacing
 import XMonad.Layout.SubLayouts
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ToggleLayouts
-import XMonad.Layout.WindowNavigation
 import XMonad.Layout.WindowSwitcherDecoration
 
 import XMonad.Prompt
-import XMonad.Prompt.AppLauncher as AL
 import XMonad.Prompt.ConfirmPrompt
 import XMonad.Prompt.FuzzyMatch
 import XMonad.Prompt.Window
@@ -117,7 +113,7 @@ main = do
         $ myConfig xmproc0
 
 myConfig p = def
-        { borderWidth        = myborder
+        { borderWidth        = myBorder
         , clickJustFocuses   = myClickJustFocuses
         , focusFollowsMouse  = myFocusFollowsMouse
         , normalBorderColor  = myNormalBorderColor
@@ -249,7 +245,7 @@ myTerminal     = "kitty"
 myBrowser      = "browser"
 myBrowserClass = "google-chrome-stable"
 myStatusBar    = "/home/oleete/.config/xmobar/init-xmobars"
-myTray         = "trayer --edge bottom --align center --distance 5 --height 20 --widthtype request --transparent true --alpha 0 --tint 0x1a1b26"
+myTray         = "trayer --edge top --align center --distance 5 --heighttype pixel --height 18 --widthtype request --transparent true --alpha 0 --tint 0x1a1b26"
 myLauncher     = "rofi -matching fuzzy -modi combi -show combi -combi-modi window,drun,run -show-icons"
 myLockscreen   = "slock"
 myExplorer     = "nemo"
@@ -335,7 +331,7 @@ reSize = 1/40
 
 topbar   = 8
 tabsh    = 20
-myborder = 3
+myBorder = 3
 prompt   = 30
 
 myNormalBorderColor     = background
@@ -413,7 +409,7 @@ myPromptTheme = def
     , fgHLight              = visible
     , bgHLight              = background
     , borderColor           = active
-    , promptBorderWidth     = 2
+    , promptBorderWidth     = myBorder
     , height                = prompt
     , position              = CenteredAt (1 / 4) (1 / 4)
     , searchPredicate       = fuzzyMatch
@@ -490,13 +486,13 @@ myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
             $ fullCenterToggle
             $ renamed [CutWordsLeft 4]
             $ showWorkspaceName
-            $ windowSwitcherDecoration shrinkText topBarTheme $ draggingVisualizer
+            $ windowSwitcherDecoration shrinkText topBarTheme 
+            $ draggingVisualizer
             $ addTabs shrinkText myTabTheme
             $ avoidStruts
             $ mySpacing
             $ mirrorToggle
             $ reflectToggle
-            $ windowNavigation
             $ onWorkspaces [wsPER, wsWRK, wsWRK4] (oneBigLayout   ||| notebookLayout ||| colLayout      ||| tabsLayout)
             $ onWorkspaces [wsTMP, wsTMP2]        (colLayout      ||| tabsLayout     ||| oneBigLayout   ||| notebookLayout)
             $                                      notebookLayout ||| colLayout      ||| tabsLayout     ||| oneBigLayout
@@ -608,7 +604,6 @@ myKeys conf = let
                                                                              ,(wsEXP,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
                                                                              ,(wsSIM,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
                                                                              ,("",       spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable-wrk'")])
-    , ("M-C-c"           , addName "Terminal in directory"       $ AL.launchApp myPromptTheme myTerminal)
     , ("M-e"             , addName "Explorer"                    $ bindOn WS [(wsSIM, spawn (myExplorer ++ " -t ~/Projects/JuliaPowderModel ~/UniDrive/1_Thesis/1.4_PowderModel"))
                                                                               ,(wsEXP,  spawn (myExplorer ++ " -t ~/Projects/JuliaPlotting ~/UniDrive/1_Thesis/1.4_PowderModel"))
                                                                               ,(wsPRO2, spawn (myExplorer ++  " -t ~/Projects/julia-vscode ~/Projects/julia-benchmark-example"))
@@ -652,21 +647,17 @@ myKeys conf = let
     , ("C-<F8>"          , addName "prompt fetch window"         $ windowPrompt myPromptTheme Bring allWindows)
     , ("M-w"             , addName "prompt select ws"            $ switchProjectPrompt myPromptTheme)
     , ("M-C-w"           , addName "prompt send to ws"           $ shiftToProjectPrompt myPromptTheme)
-
-    , ("M-C-d"           , addName "Kill other duplicates"       killAllOtherCopies)
-    , ("M-d"             , addName "Duplicate w to all ws"       toggleCopyToAll)
     ]                                                          
     ++ zipM "M-"         "View ws"                               wsKeys [0..] (withNthWorkspace W.greedyView)
     ++ zipM "M-C-"       "Move w to ws"                          wsKeys [0..] (withNthWorkspace W.shift)
-    ++ zipM "M-S-"       "Copy w to ws"                          wsKeys [0..] (withNthWorkspace copy)
     ) ^++^
 
     subKeys "Windows"
     [ ("M-<Backspace>"   , addName "Kill"                        $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_F12)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_F12)
                                                                              ,(className =? "Google-chrome", P.sendKey controlMask xK_w)
-                                                                             ,(pure True, kill1)])
-    , ("M-C-<Backspace>" , addName "Force kill"                  kill1)
+                                                                             ,(pure True, kill)])
+    , ("M-C-<Backspace>" , addName "Force kill"                  kill)
     , ("M-S-<Backspace>" , addName "Kill all"                    $ confirmPrompt hotPromptTheme "kill all" killAll)
 
     , ("M-m"             , addName "Swap with main"              $ sequence_ [swapPromote' False, warpCursor])
@@ -755,15 +746,10 @@ myKeys conf = let
     , ("M-C-["           , addName "Shrink height"               $ sendMessage MirrorShrink)
     , ("M-C-]"           , addName "Expand height"               $ sendMessage MirrorExpand)
 
-    , ("M-r"             , addName "Reflect/Rotate"              $ bindOn LD [("Notebook",sendMessage ToggleSide)
+    , ("M-r"             , addName "Reflect"                     $ bindOn LD [("Notebook",sendMessage ToggleSide)
                                                                              ,("", sendMessage (XMonad.Layout.MultiToggle.Toggle REFLECTX))])
     , ("M-C-r"           , addName "Reflect Stack"               $ sendMessage ToggleStackDir)
     ]
-    where
-      toggleCopyToAll = wsContainingCopies >>= \case
-              [] -> windows copyToAll
-              _ -> killAllOtherCopies
-
 
 -- Mouse bindings: default actions bound to mouse events. Includes window w/h ratio constraint
 -- (square) using X.H.ConstrainedResize. cleared these down a bit as I don't use floating windows
@@ -780,10 +766,6 @@ myMouseBindings XConfig {} = M.fromList
 
     , ((myModMask,               button3), \w -> focus w
       >> mouseResizeWindow w
-      >> windows W.shiftMaster)
-
-    , ((myModMask .|. shiftMask, button3), \w -> focus w
-      >> Sqr.mouseResizeWindow w True
       >> windows W.shiftMaster)
     ]
 
