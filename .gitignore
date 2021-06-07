@@ -18,7 +18,7 @@ rofi/
 !/nvim/ftplugin/*
 !/nvim/docstring/*
 !/xmonad/xmonad.hs
-!/xmonad/lib/XMonad/**/*.hs
+!/xmonad/xmonad-oleete/XMonad/**/*.hs
 !/xmobar/*
 !/deadd/deadd.conf
 !/deadd/deadd.css

@@ -172,9 +172,9 @@ tileSlim middle f mf r nmain nmaster n
        (r21, r22) = splitVerticallyBy (if mf<0 then 1+2*mf else mf) r2
 
 newWide ::Bool -> Bool -> Bool -> Int -> Int -> Int -> Rational -> Rational -> Rectangle -> [Rectangle]
-newWide m s d n c nwin f mf r = if nwin <= ncol + nmain
-                                then map fst listCols
-                                else listWithStack
+newWide m s d n c nwin f mf r
+    | nwin <= ncol + nmain = map fst listCols
+    | otherwise = listWithStack
     where startPoint
             | m && s     && even (nmain+ncol)               = toInteger (rect_x r) + (floor (nmain%2) * fromIntegral width) + (ceiling (ncol%2) * fromIntegral colWidth)
             | m && s                                        = toInteger (rect_x r) + (floor (nmain%2) * fromIntegral width) + (floor (ncol%2) * fromIntegral colWidth)
@@ -211,13 +211,13 @@ newWide m s d n c nwin f mf r = if nwin <= ncol + nmain
             | m     && not s = splitRightMiddleMaster 1 (fromInteger startPoint) (fromIntegral width) colWidth 1 nmain ncol f r
             | otherwise = splitRightMaster (fromInteger startPoint) (fromIntegral width) colWidth 1 nmain ncol f r
 
-          listAll = if d
-                    then splitColumns (sortByXLocation listCols) (fromIntegral minWidth - 10) initStackRect mf d
-                    else splitColumns (sortByRevXLocation listCols) (fromIntegral minWidth - 10) initStackRect mf d
+          listAll
+            | d     = splitColumns (sortByXLocation listCols) (fromIntegral minWidth - 10) initStackRect mf d
+            | otherwise = splitColumns (sortByRevXLocation listCols) (fromIntegral minWidth - 10) initStackRect mf d
 
-          listWithStack = if d
-                          then map fst (sortByIndex $ init listAll) ++ splitHorizontally nstack (fst $ last listAll)
-                          else map fst (sortByIndex $ init listAll) ++ reverse (splitHorizontally nstack (fst $ last listAll))
+          listWithStack
+            | d     = map fst (sortByIndex $ init listAll) ++ splitHorizontally nstack (fst $ last listAll)
+            | otherwise = map fst (sortByIndex $ init listAll) ++ reverse (splitHorizontally nstack (fst $ last listAll))
 
           initYPos = floor $ fromIntegral (rect_height r) * mf
           initHeight = rect_height r - fromIntegral initYPos
@@ -273,8 +273,8 @@ splitRightMiddleMaster sign xpos width colWidth count main colu f rect
           countN = count + 1
           xposN = xpos + (sign * width * count)
           xposNN = if even main
-                   then xpos + (sign * ((colWidth * ((1+count) - main)) + (width * (main-1))))
-                   else xpos + (sign * ((colWidth * (count - main)) + (width * main)))
+              then xpos + (sign * ((colWidth * ((1+count) - main)) + (width * (main-1))))
+              else xpos + (sign * ((colWidth * (count - main)) + (width * main)))
           xposNNN = xpos + (sign * ((colWidth * (count - main)) + (width * main)))
 
 splitColumns :: [(Rectangle, Int)] -> Int -> Rectangle -> Rational -> Bool -> [(Rectangle, Int)]
@@ -286,9 +286,9 @@ splitColumns list minWidth stackRect mf d
         index = snd $ head list
         listN = tail list
         (masterRect, stackRectAdd) = splitVerticallyBy mf rect
-        stackRectN = if d
-                     then  rectangleDiff stackRect stackRectAdd
-                     else  rectangleDiff stackRectAdd stackRect
+        stackRectN
+          | d     = rectangleDiff stackRect stackRectAdd
+          | otherwise = rectangleDiff stackRectAdd stackRect
 
 
 sortByXLocation :: [(Rectangle, Int)] -> [(Rectangle, Int)]

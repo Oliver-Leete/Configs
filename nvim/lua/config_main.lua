@@ -288,8 +288,8 @@ require("nvim-treesitter.configs").setup({
             enable = true,
             keymaps = {
                 -- You can use the capture groups defined in textobjects.scm
-                ["ao"] = "@class.outer",
-                ["io"] = "@class.inner",
+                -- ["ao"] = "@class.outer",
+                -- ["io"] = "@class.inner",
                 ["af"] = "@function.outer",
                 ["if"] = "@function.inner",
                 ["aC"] = "@conditional.outer",
@@ -363,7 +363,13 @@ require("nvim-treesitter.configs").setup({
             goto_node                 = '<cr>',
             show_help                 = '?',
         },
-    }
+    },
+    textsubjects = {
+        enable = true,
+        keymaps = {
+            [";"] = 'textsubjects-smart',
+        }
+    },
 })
 require("nvim-biscuits").setup({
     default_config = {

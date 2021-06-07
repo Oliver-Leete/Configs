@@ -146,7 +146,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-treesitter/nvim-treesitter-refactor'
     Plug 'p00f/nvim-ts-rainbow'
     Plug 'nvim-treesitter/playground'
-
+    Plug 'RRethy/nvim-treesitter-textsubjects'
 call plug#end()
 
 set errorformat=%tRROR:\ %m\ at\ %f:%l,%-G%.%#
