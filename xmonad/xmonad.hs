@@ -144,7 +144,7 @@ myConfig p = def
 
 wsTMP    = "tmp"
 wsTMP2   = "tmp2"
-wsPRO1   = "pro1 - home"
+wsPRO1   = "3DPrint - home"
 wsPRO2   = "extension - home"
 wsPRO3   = "dnd - home"
 wsCON    = "configs - home"
@@ -180,8 +180,9 @@ projects =
                 }
 
     , Project   { projectName       = wsPRO1
-                , projectDirectory  = "~/Projects"
-                , projectStartHook  = Just $ do spawnOn wsPRO1 ("sleep .3; " ++ myBrowser)
+                , projectDirectory  = "~/Projects/Prints"
+                , projectStartHook  = Just $ do spawnOn wsPRO1 "prusaslicer"
+                                                spawnOn wsPRO1 ("sleep 2; " ++ myBrowser)
                 }
     , Project   { projectName       = wsPRO2
                 , projectDirectory  = "~/Projects/julia-vscode"
@@ -610,6 +611,7 @@ myKeys conf = let
                                                                              ,(wsEXP,  spawn (myExplorer ++ " -t ~/Projects/JuliaPlotting ~/UniDrive/1_Thesis/1.4_PowderModel"))
                                                                              ,(wsPRO2, spawn (myExplorer ++  " -t ~/Projects/julia-vscode ~/Projects/julia-benchmark-example"))
                                                                              ,(wsCON,  spawn (myExplorer ++  " -t ~/Projects/Configs ~/Projects/ConfigExamples ~/.config"))
+                                                                             ,(wsPRO1,  spawn (myExplorer ++  " -t ~/Projects/Prints/stl ~/Projects/Prints/gcode"))
                                                                              ,(wsPER,  spawn (myExplorer ++  " -t ~/Downloads ~/PersonalDrive"))
                                                                              ,(wsWRK,  spawn (myExplorer ++  " -t ~/Downloads ~/UniDrive"))
                                                                              ,("",     spawn (myExplorer ++ " ."))])

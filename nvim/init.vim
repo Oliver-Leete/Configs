@@ -374,6 +374,11 @@ onoremap ' `
 xnoremap ` '
 xnoremap ' `
 
+" Stop The Deselecting
+vnoremap < <gv
+vnoremap > >gv
+
+
 " Instert Mode
 inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
@@ -386,10 +391,6 @@ inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
 inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
 inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 inoremap <silent><expr> <C-Space> compe#complete()
-
-" Stop The Deselecting
-vnoremap < <gv
-vnoremap > >gv
 
 "
 " Terminal
