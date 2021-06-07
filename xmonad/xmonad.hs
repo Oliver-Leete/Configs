@@ -363,19 +363,6 @@ topBarTheme = def
     , decoHeight            = topbar
     }
 
-topMaxBarTheme :: Theme
-topMaxBarTheme = topBarTheme
-    { inactiveBorderColor   = warning
-    , inactiveColor         = warning
-    , inactiveTextColor     = warning
-    , activeBorderColor     = warning
-    , activeColor           = warning
-    , activeTextColor       = warning
-    , urgentBorderColor     = alert
-    , urgentTextColor       = alert
-    , decoHeight            = topbar
-    }
-
 topFloatBarTheme :: Theme
 topFloatBarTheme = topBarTheme
     { fontName              = myFont
@@ -463,9 +450,11 @@ instance Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
 
 barFull = renamed [Replace "Maximized"]
-        $ noFrillsDeco shrinkText topMaxBarTheme
+        $ noFrillsDeco shrinkText topBarTheme
         $ avoidStruts
-        $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True Simplest
+        $ addTabs shrinkText myTabTheme
+        $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True 
+          Simplest
 
 -- To make a toggle pure Zen. Centres the active window and hides everything else except the bar. 
 -- Also sets the top bar to warning to remind me that other programs are probably still open.
@@ -474,8 +463,9 @@ instance Transformer FULLCENTER Window where
     transform FULLCENTER x k = k centerFull (const x)
 
 centerFull = renamed [Replace "Centred Max"]
-           $ noFrillsDeco shrinkText topMaxBarTheme
+           $ noFrillsDeco shrinkText topBarTheme
            $ avoidStruts
+           $ addTabs shrinkText myTabTheme
            $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
            $ SimpleFocus (1/2) reSize
 
@@ -686,8 +676,8 @@ myKeys conf = let
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Left)
                                                                              ,(className =? "Google-chrome", P.sendKey (controlMask .|. shiftMask) xK_Tab)
                                                                              ,(pure True, bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("", onGroup W.focusUp')] )])
-    , ("M-C-<R>"         , addName "Force Cycle up"              $ bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("", onGroup W.focusDown')])
-    , ("M-C-<L>"         , addName "Force Cycle down"            $ bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("", onGroup W.focusUp')])
+    , ("M-C-<R>"         , addName "Force Cycle up"              $ bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("Maximized", windows W.focusDown), ("Centred Max", windows W.focusDown), ("", onGroup W.focusDown')])
+    , ("M-C-<L>"         , addName "Force Cycle down"            $ bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("Maximized", windows W.focusUp), ("Centred Max", windows W.focusUp), ("", onGroup W.focusDown')])
 
 
     , ("M-f"             , addName "Fullscreen"                  $ sequence_ [ withFocused $ windows . W.sink
