@@ -6,11 +6,7 @@ Maintainer  :  <gwern0@gmail.com>
 Stability   :  unstable
 Portability :  unportable
 
-Defines a few convenient operations for raising (traveling to) windows based on XMonad's Query
-monad, such as 'runOrRaise'. runOrRaise will run a shell command unless it can
-find a specified window; you would use this to automatically travel to your
-Firefox or Emacs session, or start a new one (for example), instead of trying to
-remember where you left it or whether you still have one running. -}
+Same as the normal WindowGo but only affecting the current workspace -}
 
 module XMonad.Actions.WindowGoLocal (
                  -- * Usage
@@ -26,7 +22,6 @@ module XMonad.Actions.WindowGoLocal (
                  raiseBrowser,
                  raiseEditor,
                  runOrRaiseAndDo,
-                 runOrRaiseMaster,
                  raiseAndDo,
                  raiseMaster,
 
@@ -36,14 +31,13 @@ module XMonad.Actions.WindowGoLocal (
                  module XMonad.ManageHook
                 ) where
 
-import qualified Data.List as L (nub,sortBy)
 import XMonad.Prelude
 import XMonad (Query(), X(), ManageHook, WindowSet, withWindowSet, runQuery, liftIO, ask)
 import Graphics.X11 (Window)
 import XMonad.ManageHook
 import XMonad.Operations (windows)
 import XMonad.Prompt.Shell (getBrowser, getEditor)
-import qualified XMonad.StackSet as W (peek, swapMaster, focusWindow, workspaces, StackSet, Workspace, integrate', tag, stack, current, index)
+import qualified XMonad.StackSet as W
 import XMonad.Util.Run (safeSpawnProg)
 {- $usage
 
@@ -66,19 +60,17 @@ For detailed instructions on editing your key bindings, see
 "XMonad.Doc.Extending#Editing_key_bindings". -}
 
 -- | Get the list of workspaces sorted by their tag
-workspacesSorted :: Ord i => W.StackSet i l a s sd -> [W.Workspace i l a]
-workspacesSorted s = L.sortBy (\u t -> W.tag u `compare` W.tag t) $ W.workspaces s
 
 -- | Get a list of all windows in the 'StackSet' with an absolute ordering of workspaces
-allWindowsSorted :: Ord i => Eq a => W.StackSet i l a s sd -> [a]
-allWindowsSorted = L.nub . concatMap (W.integrate' . W.stack) . workspacesSorted
+allWindowsSorted :: W.StackSet i l a s sd -> [a]
+allWindowsSorted = W.index
 
 -- | If windows that satisfy the query exist, apply the supplied
 -- function to them, otherwise run the action given as
 -- second parameter.
 ifWindows :: Query Bool -> ([Window] -> X ()) -> X () -> X ()
 ifWindows qry f el = withWindowSet $ \wins -> do
-  matches <- filterM (runQuery qry) $ allWindowsSorted (wins)
+  matches <- filterM (runQuery qry) $ allWindowsSorted wins
   case matches of
     [] -> el
     ws -> f ws
@@ -192,10 +184,3 @@ runOrRaiseAndDo = raiseAndDo . safeSpawnProg
      > raiseMaster (runInTerm "-title ghci"  "zsh -c 'ghci'") (title =? "ghci") -}
 raiseMaster :: X () -> Query Bool -> X ()
 raiseMaster raisef thatUserQuery = raiseAndDo raisef thatUserQuery (\_ -> windows W.swapMaster)
-
-{- |  If the window is found the window is focused and set to master
-      otherwise, action is run.
-
-      > runOrRaiseMaster "firefox" (className =? "Firefox")) -}
-runOrRaiseMaster :: String -> Query Bool -> X ()
-runOrRaiseMaster run query = runOrRaiseAndDo run query (\_ -> windows W.swapMaster)
