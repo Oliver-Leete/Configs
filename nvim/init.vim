@@ -31,7 +31,7 @@ call plug#begin('~/.config/nvim/pluged')
 
     " Git
     Plug 'TimUntersberger/neogit'
-    Plug 'lewis6991/gitsigns.nvim'
+    Plug 'lewis6991/gitsigns.nvim', {'branch': 'sec'}
     Plug 'drzel/vim-repo-edit'
     Plug 'rhysd/committia.vim'
     Plug 'sindrets/diffview.nvim'

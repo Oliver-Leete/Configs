@@ -670,14 +670,18 @@ myKeys conf = let
     , ("M-<R>"           , addName "Cycle up"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Right)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Right)
                                                                              ,(className =? "Google-chrome", P.sendKey controlMask xK_Tab)
-                                                                             ,(pure True, bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("", onGroup W.focusDown')] )])
+                                                                             ,(pure True, bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("Maximized", windows W.focusDown), ("Centred Max", windows W.focusDown), ("", onGroup W.focusDown')])])
 
     , ("M-<L>"           , addName "Cycle down"                  $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Left)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Left)
                                                                              ,(className =? "Google-chrome", P.sendKey (controlMask .|. shiftMask) xK_Tab)
-                                                                             ,(pure True, bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("", onGroup W.focusUp')] )])
+                                                                             ,(pure True, bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("Maximized", windows W.focusUp), ("Centred Max", windows W.focusUp), ("", onGroup W.focusDown')])])
     , ("M-C-<R>"         , addName "Force Cycle up"              $ bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("Maximized", windows W.focusDown), ("Centred Max", windows W.focusDown), ("", onGroup W.focusDown')])
     , ("M-C-<L>"         , addName "Force Cycle down"            $ bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("Maximized", windows W.focusUp), ("Centred Max", windows W.focusUp), ("", onGroup W.focusDown')])
+
+    , ("M-t"             , addName "New Tab"                     $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_t)
+                                                                             ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_t)
+                                                                             ,(className =? "Google-chrome", P.sendKey controlMask xK_t)])
 
 
     , ("M-f"             , addName "Fullscreen"                  $ sequence_ [ withFocused $ windows . W.sink
@@ -794,7 +798,7 @@ myLogHook h = do
     masterHistoryHook
     dynamicLogWithPP . filterOutWsPP ["NSP", wsTMP, wsTMP2] $ def
         { ppCurrent             = xmobarColor active "" . wrap "[" "]" . clickable
-        , ppTitle               = xmobarColor foreground "" . wrap "<action=xdotool key Super+w>" "</action>" . shorten 40
+        , ppTitle               = xmobarColor foreground "" . wrap "<action=xdotool key Super+s>" "</action>" . shorten 40
         , ppVisible             = xmobarColor visible  "" . clickable
         , ppUrgent              = xmobarColor alert    "" . wrap "!" "!"
         , ppHiddenNoWindows     = const ""

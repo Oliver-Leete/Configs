@@ -7,7 +7,7 @@
 --                     |_| \_| |______|  \____/      \/     |_____| |_|  |_|                      --
 --                                                                                                --
 ----------------------------------------------------------------------------------------------------
--- Oliver Leete <oliverleete@gmail.com>                                                            -- 
+-- Oliver Leete <oliverleete@gmail.com>                                                            --
 -- https://github.com/oliver-leete                                                                 --
 ----------------------------------------------------------------------------------------------------
 
@@ -97,18 +97,18 @@ require("lualine").setup({
           { 'diagnostics',
             sources={ 'nvim_lsp' },
             sections={'error', 'warn', 'info'},
-            color_error='#f85e84',
-            color_warn='#e5c463',
-            color_info='#7accd7',
+            color_error='#db4b4b',
+            color_warn='#e0af68',
+            color_info='#1abc9c',
             {error = '', warn = '', info = ''},
             'lsp-progress'
           },
         },
         lualine_x = {
             { 'diff',
-                color_added='#9ecd6f',
-                color_modified='#7accd7',
-                color_removed='#f85e84',
+                color_added='#266d6a',
+                color_modified='#536c9e',
+                color_removed='#b2555b',
                 symbols={added = '+', modified = '~', removed = '-'}
             },
             'fileformat', 'filetype'
@@ -536,12 +536,23 @@ local custom_attach = function(client, bufnr)
     require("which-key").register({
         ["<leader>"] = {
             ["."] = {"<cmd>Lspsaga range_code_action<CR>", "Code Actions"},
-            ["="] = {"<cmd>lua vim.lsp.buf.formatting()<CR>", "Format"},
         }
     }, {mode="v", buffer=bufnr})
     vim.api.nvim_exec([[
         autocmd CursorHold * :Lspsaga show_cursor_diagnostics
     ]], false)
+    if client.resolved_capabilities.document_formatting then
+        require("which-key").register({
+            ["<leader>"] = {
+            ["="] = {"<cmd>lua vim.lsp.buf.formatting()<CR>", "Format"},
+            }
+        })
+        require("which-key").register({
+            ["<leader>"] = {
+            ["="] = {"<cmd>lua vim.lsp.buf.range_formatting()<CR>", "Format"},
+            }
+        }, {mode="v", buffer=bufnr})
+    end
     if client.resolved_capabilities.document_highlight then
         vim.api.nvim_exec([[
             augroup lsp_document_highlight
@@ -835,25 +846,29 @@ require("telescope").load_extension('bibtex')
 
 require("gitsigns").setup({
     signs = {
-        add          = {hl = 'GitSignsAdd',    text = '▌', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
-        change       = {hl = 'GitSignsChange', text = '▌', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
-        delete       = {hl = 'GitSignsDelete', text = '_', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
-        topdelete    = {hl = 'GitSignsDelete', text = '‾', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
-        changedelete = {hl = 'GitSignsDelete', text = '~', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
-        base = nil,
+        add          = {hl = 'GitSignsAdd'   , numhl='GitSignsAdd'   , linehl='GitSignsAdd'    , text = '▋'},
+        change       = {hl = 'GitSignsChange', numhl='GitSignsChange', linehl='GitSignsChange' , text = '▋'},
+        delete       = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete' , text = '▂'},
+        topdelete    = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete' , text = '▔'},
+        changedelete = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete' , text = '▋'},
+        empty        = {}, -- Unused
+
+        base       = nil,  -- Use index
         signcolumn = true,
-        numhl = true,
-        linehl = false,
+        numhl      = false,
+        linehl     = false,
     },
     signs_sec = {
-        add          = {hl = 'Normal', text = '▌'},
-        change       = {hl = 'Normal', text = '▌'},
-        delete       = {hl = 'Normal', text = '_'},
-        topdelete    = {hl = 'Normal', text = '‾'},
-        changedelete = {hl = 'Normal', text = '~'},
-        base = 'HEAD',
+        add          = {hl = 'GitSignsAdd'   , numhl='GitSignsAdd'   , linehl='GitSignsAdd'   , text = '▎' },
+        change       = {hl = 'GitSignsChange', numhl='GitSignsChange', linehl='GitSignsChange', text = '▎' },
+        delete       = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete', text = '_' },
+        topdelete    = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete', text = '‾' },
+        changedelete = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete', text = '▎' },
+        empty        = {},
+
+        base       = nil,
         signcolumn = true,
-        numhl      = true,
+        numhl      = false,
         linehl     = false,
     },
     keymaps = {
@@ -872,11 +887,13 @@ require("gitsigns").setup({
         interval = 1000
     },
     current_line_blame = false,
+    current_line_blame_position = 'eol',
     sign_priority = 6,
     update_debounce = 100,
-    status_formatter = nil, -- Use default
+    status_formatter = nil,
     use_decoration_api = true,
-    use_internal_diff = true,  -- If luajit is present
+    use_internal_diff = true,
+    staged_signs = true,
 })
 
 -- Neogit Setup
@@ -1096,16 +1113,15 @@ require("which-key").register({
             b = {"<cmd>call v:lua.git_branch()<cr>", "Branches"},
             C = {"<cmd>call v:lua.git_bcommits()<cr>", "Commits (buffer)"},
             c = {"<cmd>call v:lua.git_commits()<cr>", "Commits"},
-            d = {"<cmd>Gitsigns diffthis", "Diff View of Signs"},
-            g = {"<cmd>call PMToggleView('gitdiff')<CR>", "Git Diff Viewer"},
+            -- d = {"<cmd>Gitsigns diffthis", "Diff View of Signs"},
+            d = {"<cmd>call PMToggleView('gitdiff')<CR>", "Git Diff Viewer"},
             m = {"<cmd>Neogit commit<cr>", "Edit Commit Message"},
-            n = {"<cmd>Neogit<cr>", "Neogit Status"},
+            g = {"<cmd>Neogit<cr>", "Neogit Status"},
             p = {"<cmd>lua require'gitsigns'.preview_hunk()<CR>", "Hunk Preview"},
             r = {"<cmd>lua require'gitsigns'.reset_hunk()<CR>", "Hunk Reset"},
             R = {"<cmd>Gitsigns reset_buffer<CR>", "Blame Toggle"},
             S = {"<cmd>Gitsigns stage_buffer<CR>", "Stage File"},
             s = {"<cmd>lua require'gitsigns'.stage_hunk()<CR>", "Hunk Stage"},
-            u = {"<cmd>lua require'gitsigns'.undo_stage_hunk()<CR>", "Hunk Undo"},
             v = {"<cmd>Gitsigns select_hunk<CR>", "Blame Toggle"},
         },
         p = {
