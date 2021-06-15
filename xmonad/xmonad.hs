@@ -192,7 +192,7 @@ projects =
 
     , Project   { projectName       = wsPRO3
                 , projectDirectory  = "~/Projects/D&D Home"
-                , projectStartHook  = Just $    spawnOn wsPRO3 "google-chrome-stable https://roll20.net/welcome"
+                , projectStartHook  = Just $    spawnOn wsPRO3 "google-chrome-stable --user-data-dir=/home/oleete/.config/browser/google-chrome-stable --new-window 'https://roll20.net/welcome'"
                 }
 
     , Project   { projectName       = wsCON
@@ -849,9 +849,9 @@ myManageHook =
             -- , resource =? "vlc"    -?> doFloat
             -- , resource =? "Steam"    -?> doFloat
             , resource =? "gnome-calculator" -?> doCenterFloat
-            , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect ((3840-500-6)/3840) ((2160-700-42)/2160) (500/3840) (700/2160))
-            , resource =? "nm-connection-editor" -?> doRectFloat (W.RationalRect ((3840-500-6)/3840) ((2160-700-42)/2160) (500/3840) (700/2160))
-            , resource =? "galendae" -?> doRectFloat (W.RationalRect ((3840-300-6)/3840) ((2160-300-42)/2160) (300/3840) (300/2160))
+            , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect ((3840-500-9)/3840) (30/2160) (500/3840) (700/2160))
+            , resource =? "nm-connection-editor" -?> doRectFloat (W.RationalRect ((3840-500-9)/3840) (30/2160) (500/3840) (700/2160))
+            , resource =? "galendae" -?> doRectFloat (W.RationalRect ((3840-300-16)/3840) (30/2160) (300/3840) (300/2160))
             , resource =? "nitrogen" -?> doCenterFloat
             , resource =? "Tasks" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
             , resource =? "WrkTasks" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))

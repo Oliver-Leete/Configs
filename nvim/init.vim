@@ -108,11 +108,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'tommcdo/vim-lister'
 
     " Themes
-    Plug 'phanviet/vim-monokai-pro'
-    Plug 'sainnhe/sonokai'
-    Plug 'tanvirtin/monokai.nvim'
     Plug 'folke/tokyonight.nvim'
-    Plug 'marko-cerovac/material.nvim'
 
     " LSP
     Plug 'neovim/nvim-lspconfig'
@@ -507,6 +503,9 @@ endfunction
 
 lua << EOF
 require('config_main')
+require('config_ui')
+require('config_panels')
+require('config_bindings')
 EOF
 
 silent! !git rev-parse --is-inside-work-tree
