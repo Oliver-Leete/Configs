@@ -157,6 +157,7 @@ require("nvim-treesitter.configs").setup({
     },
 })
 require("nvim-biscuits").setup({
+    on_events = { 'InsertLeave', 'CursorHoldI' },
     default_config = {
         min_distance = 10,
     },
@@ -195,7 +196,7 @@ require("compe").setup({
             priority = 1000,
         },
         omni = {
-            filetypes = 'tex'
+            filetypes = {'tex'},
         }
     };
 })
