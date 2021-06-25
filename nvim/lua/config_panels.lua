@@ -173,3 +173,13 @@ require("bqf").setup({
         vsplit = '<c-v>',
     },
 })
+
+-- Lvim Helper
+local home = os.getenv('HOME')
+require('lvim-helper').setup({
+    files = {
+        home .. '/.config/nvim/insertModeMappings.md',
+    },
+    width = 80,
+    side = 'left',
+})

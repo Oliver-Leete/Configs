@@ -296,6 +296,11 @@ require("which-key").register({
             h = {"<cmd>Telescope help_tags<cr>", "Help Tags"},
             m = {"<cmd>Telescope man_pages<cr>", "Man Pages"},
         },
+        h = {
+            h = {"<cmd>Telescope help_tags<cr>", "Search Help Tags"},
+            i = {"<cmd>LvimHelper<cr>", "Insert Mode Mappings"},
+            k = {"K", "Documentation"},
+        }
     },
         ["1<leader>vi"] = { "<cmd>call PMToggleView('term')<CR>",  "Open Terminal 1"},
         ["2<leader>vi"] = { "<cmd>call PMToggleView('2term')<CR>", "Open Terminal 2"},

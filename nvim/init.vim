@@ -78,7 +78,7 @@ call plug#begin('~/.config/nvim/pluged')
     " LANGUAGE
     Plug 'lervag/vimtex'
     Plug 'JuliaEditorSupport/julia-vim'
-    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
+    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
     Plug 'neovimhaskell/haskell-vim'
 
     " UI Stuff
@@ -99,6 +99,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'akinsho/nvim-toggleterm.lua'
     Plug 'folke/which-key.nvim'
     Plug 'folke/todo-comments.nvim'
+    Plug 'lvim-tech/lvim-helper'
 
     " File Manager
     Plug 'tpope/vim-vinegar'
@@ -145,8 +146,21 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'RRethy/nvim-treesitter-textsubjects'
 call plug#end()
 
-set errorformat=%tRROR:\ %m\ at\ %f:%l,%-G%.%#
-set makeprg=julia\ -e\ \'using\ Pkg;\ Pkg.precompile()\'
+" !!THEMES!!
+highlight link BiscuitColor TSComment
+set noshowmode
+set termguicolors
+
+let g:tokyonight_style='night'
+let g:tokyonight_terminal_colors=1
+let g:tokyonight_sidebars = [ "qf", "Outline", "terminal", "vim-plug", "undotree", "help", "DiffviewFiles", "juliadoc"]
+let g:tokyonight_hide_inactive_statusline=1
+colorscheme tokyonight
+
+" Indent Blankline Settings
+let g:indent_blankline_char_list = ['│']
+let g:indent_blankline_char_highlight_list = ['rainbowcol7', 'rainbowcol6', 'rainbowcol5', 'rainbowcol4', 'rainbowcol3', 'rainbowcol2', 'rainbowcol1']
+
 
 " !!SETTINGS!!
 set nrformats-=octal
@@ -399,6 +413,7 @@ augroup panelMappings
   au filetype help map <buffer> <esc> <cmd>q<cr>
   au filetype vim-plug map <buffer> <esc> <cmd>q<cr>
   au filetype juliadoc map <buffer> <esc> <cmd>q<cr>
+  au filetype LvimHelper map <buffer> <esc> <cmd>q<cr>
 augroup END
 
 " Vim Hop
@@ -497,6 +512,7 @@ function CloseAllPanels()
   SymbolsOutlineClose
   DiffviewClose
   windo if &filetype == "help" | q | endif
+  windo if &filetype == "LvimHelper" | q | endif
   windo if &filetype == "juliadoc" | q | endif
 endfunction
 
@@ -542,49 +558,13 @@ let g:vimtex_compiler_latexmk = {
 autocmd BufNewFile,BufRead *.jl set filetype=julia
 autocmd FileType julia set commentstring=#%s
 
-let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
-let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
-let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
-let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
-let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
-let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
-let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
+let g:haskell_enable_quantification = 1
+let g:haskell_enable_recursivedo = 1
+let g:haskell_enable_arrowsyntax = 1
+let g:haskell_enable_pattern_synonyms = 1
+let g:haskell_enable_typeroles = 1
+let g:haskell_enable_static_pointers = 1
+let g:haskell_backpack = 1
 
-" !!THEMES!!
-
-let g:tokyonight_style='night'
-let g:tokyonight_terminal_colors=1
-let g:tokyonight_sidebars = [ "qf", "Outline", "terminal", "vim-plug", "undotree", "help", "DiffviewFiles", "juliadoc"]
-let g:tokyonight_hide_inactive_statusline=1
-colorscheme tokyonight
-
-highlight clear LineNr
-highlight clear SignColumn
-highlight link BiscuitColor TSComment
-set noshowmode
-set termguicolors
-
-" Theme Changes
-highlight BufferLineFill guifg=#0e0e14 guibg=#0e0e14
-
-highlight link LspSagaHoverBorder            FloatBorder
-highlight link LspSagaSignatureHelpBorder    FloatBorder
-highlight link LspSagaCodeActionBorder       FloatBorder
-highlight link LspSagaDefPreviewBorder       FloatBorder
-highlight link LspSagaDiagnosticBorder       FloatBorder
-highlight link LspSagaShTruncateLine         FloatBorder
-highlight link LspSagaDocTruncateLine        FloatBorder
-highlight link LspSagaCodeActionTruncateLine FloatBorder
-highlight link LspSagaProviderTruncateLine   FloatBorder
-highlight link LspSagaDiagnosticTruncateLine FloatBorder
-highlight link LspSagaBorderTitle            FloatBorder
-highlight link TelescopePromptBorder         FloatBorder
-highlight link TelescopePreviewBorder        FloatBorder
-highlight link TelescopeResultsBorder        FloatBorder
-highlight link BqfPreveiwBorder              FloatBorder
-
-" Indent Blankline Settings
-let g:indent_blankline_char_list = ['│']
-let g:indent_blankline_char_highlight_list = ['rainbowcol7', 'rainbowcol6', 'rainbowcol5', 'rainbowcol4', 'rainbowcol3', 'rainbowcol2', 'rainbowcol1']
 
 redraw
