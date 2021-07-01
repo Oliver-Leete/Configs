@@ -469,7 +469,7 @@ vim.g.diagnostic_enable_virtual_text = 0
 vim.g.diagnostic_enable_underline = 0
 vim.g.completion_timer_cycle = 200
 
--- Telescope Settup
+-- Telescope Setup
 
 local actions = require("telescope.actions")
 require("telescope").load_extension("bibtex")
@@ -489,19 +489,18 @@ require("telescope").setup({
             '--column',
             '--smart-case'
         },
-        prompt_position = "bottom",
         prompt_prefix = "> ",
         selection_caret = "> ",
         entry_prefix = "  ",
         initial_mode = "insert",
         selection_strategy = "reset",
         sorting_strategy = "descending",
-        layout_strategy = "flex",
-        layout_defaults = {
-            horizontal = {
-                mirror = false,
-            },
+        layout_strategy = "vertical",
+        layout_config = {
             vertical = {
+                width = 100,
+                preview_height = 40,
+                height = 80,
                 mirror = false,
             },
         },
@@ -510,12 +509,13 @@ require("telescope").setup({
         generic_sorter =  require("telescope.sorters").get_generic_fuzzy_sorter,
         shorten_path = true,
         winblend = 0,
-        width = 0.75,
-        preview_cutoff = 1,
-        results_height = 1,
-        results_width = 0.8,
         border = {},
-        borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
+        borderchars = {
+            { '─', '│', '─', '│', '┌', '┐', '┘', '└'},
+            results = {"─", "│", " ", "│", '┌', '┐', "│", "│"},
+            prompt = {"─", "│", "─", "│", "├", "┤", "┘", "└"},
+            preview = { '─', '│', '─', '│', '┌', '┐', '┘', '└'},
+        },
         color_devicons = true,
         use_less = true,
         set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,

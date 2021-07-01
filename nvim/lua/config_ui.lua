@@ -29,8 +29,10 @@ require("zen-mode").setup({
         gitsigns = true, -- disables git signs
     },
     on_open = function()
+        vim.api.nvim_command("IndentBlanklineDisable")
     end,
     on_close = function()
+        vim.api.nvim_command("IndentBlanklineEnable")
     end,
 })
 
