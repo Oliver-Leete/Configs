@@ -81,6 +81,7 @@ import XMonad.Layout.SubLayouts
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.WindowSwitcherDecoration
+import XMonad.Layout.WindowNavigation
 
 import XMonad.Prompt
 import XMonad.Prompt.ConfirmPrompt
@@ -473,6 +474,7 @@ centerFull = renamed [Replace "Centred Max"]
 
 myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
             $ noBorders
+            $ windowNavigation
             $ fullScreenToggle
             $ fullBarToggle
             $ fullCenterToggle
@@ -712,16 +714,17 @@ myKeys conf = let
 
     , ("M-u"             , addName "Un-merge from sublayout"     $ withFocused (sendMessage . UnMerge))
     , ("M-C-u"           , addName "Unmerge all from sublayout"  $ withFocused (sendMessage . UnMergeAll))
+    , ("M-M1-u"          , addName "Unmerge all from sublayout"  $ withFocused (sendMessage . UnMergeAll))
 
-    , ("M-M1-h"          , addName "Merge Left"                  $ sequence_ [sendMessage $ pushGroup L, warpCursor])
-    , ("M-M1-j"          , addName "Merge Down"                  $ sequence_ [sendMessage $ pushGroup D, warpCursor])
-    , ("M-M1-k"          , addName "Merge Up"                    $ sequence_ [sendMessage $ pushGroup U, warpCursor])
-    , ("M-M1-l"          , addName "Merge Right"                 $ sequence_ [sendMessage $ pushGroup R, warpCursor])
+    , ("M-M1-h"          , addName "Merge Left"                  $ sequence_ [sendMessage $ pullGroup L, warpCursor])
+    , ("M-M1-j"          , addName "Merge Down"                  $ sequence_ [sendMessage $ pullGroup D, warpCursor])
+    , ("M-M1-k"          , addName "Merge Up"                    $ sequence_ [sendMessage $ pullGroup U, warpCursor])
+    , ("M-M1-l"          , addName "Merge Right"                 $ sequence_ [sendMessage $ pullGroup R, warpCursor])
 
-    , ("M-C-M1-h"        , addName "Send Left"                   $ sequence_ [sendMessage $ pullWindow L, warpCursor])
-    , ("M-C-M1-j"        , addName "Send Down"                   $ sequence_ [sendMessage $ pullWindow D, warpCursor])
-    , ("M-C-M1-k"        , addName "Send Up"                     $ sequence_ [sendMessage $ pullWindow U, warpCursor])
-    , ("M-C-M1-l"        , addName "Send Right"                  $ sequence_ [sendMessage $ pullWindow R, warpCursor])
+    , ("M-C-M1-h"        , addName "Send Left"                   $ sequence_ [sendMessage $ pushWindow L, warpCursor])
+    , ("M-C-M1-j"        , addName "Send Down"                   $ sequence_ [sendMessage $ pushWindow D, warpCursor])
+    , ("M-C-M1-k"        , addName "Send Up"                     $ sequence_ [sendMessage $ pushWindow U, warpCursor])
+    , ("M-C-M1-l"        , addName "Send Right"                  $ sequence_ [sendMessage $ pushWindow R, warpCursor])
     ] ^++^
 
     subKeys "Layout Management"

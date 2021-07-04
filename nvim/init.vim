@@ -28,6 +28,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'tpope/vim-projectionist'
     Plug 'farmergreg/vim-lastplace'
     Plug '907th/vim-auto-save'
+    " Plug 'Pocco81/AutoSave.nvim'
 
     " Git
     Plug 'TimUntersberger/neogit'
@@ -414,6 +415,7 @@ augroup panelMappings
   au filetype vim-plug map <buffer> <esc> <cmd>q<cr>
   au filetype juliadoc map <buffer> <esc> <cmd>q<cr>
   au filetype LvimHelper map <buffer> <esc> <cmd>q<cr>
+  au filetype NeogitStatus map <buffer> <esc> <cmd>tabclose<cr>
 augroup END
 
 " Vim Hop

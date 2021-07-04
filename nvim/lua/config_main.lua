@@ -22,6 +22,23 @@ require("auto-session").setup({
     auto_session_suppress_dirs = nil
 })
 
+-- Autosave Setup
+
+-- require("autosave").setup({
+--     verbosity = 0,
+--     enabled = true,
+--     execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
+--     events = {"InsertLeave", "TextChanged"},
+--     conditions = {
+--         exists = true,
+--         filetype_is_not = {},
+--         modifiable = true
+--     },
+--     write_all_buffers = true,
+--     on_off_commands = true,
+--     clean_command_line_interval = 2500
+-- })
+
 -- DiffView.nvim
 
 local cb = require("diffview.config").diffview_callback
@@ -38,6 +55,7 @@ require("diffview").setup({
         ["<tab>"]     = cb("select_next_entry"),  -- Open the diff for the next file
         ["<s-tab>"]   = cb("select_prev_entry"),  -- Open the diff for the previous file
         ["<leader>t"] = cb("focus_files"),        -- Bring focus to the files panel
+        ["<esc>"] = "<cmd>tabclose<cr>",
         -- ["<leader>b"] = cb("toggle_files"),       -- Toggle the files panel.
     },
     file_panel = {
@@ -53,6 +71,7 @@ require("diffview").setup({
         ["<s-tab>"]   = cb("select_prev_entry"),
         ["<leader>t"] = cb("focus_files"),
         ["<leader>b"] = cb("toggle_files"),
+        ["<esc>"] = "<cmd>tabclose<cr>",
     }
   }
 })
@@ -201,28 +220,13 @@ require("compe").setup({
     };
 })
 
--- Snippets Settup
+-- AutoPairs Setup
 
-local remap = vim.api.nvim_set_keymap
-local npairs = require("nvim-autopairs")
-_G.MUtils= {}
-
-vim.g.completion_confirm_key = ""
-MUtils.completion_confirm=function()
-    if vim.fn.pumvisible() ~= 0  then
-        if vim.fn.complete_info()["selected"] ~= -1 then
-            return vim.fn["compe#confirm"](npairs.esc("<cr>"))
-        else
-            return npairs.esc("<cr>")
-        end
-    else
-        return npairs.autopairs_cr()
-    end
-end
-
-remap('i' , '<CR>','v:lua.MUtils.completion_confirm()', {expr = true , noremap = true})
-npairs.setup({
+require("nvim-autopairs").setup({
     check_ts = true,
+    map_cr = true, --  map <CR> on insert mode
+    map_complete = true, -- it will auto insert `(` after select function or method item
+    enable_check_bracket_line = true,
 })
 
 -- Lsp Settup
