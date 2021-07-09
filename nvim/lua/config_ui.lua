@@ -73,6 +73,9 @@ require("bufferline").setup({
 })
 
 -- LuaLine Status Line
+local function toggleTermNum()
+    return vim.api.nvim_eval('&ft == "toggleterm" ? "TERM ".b:toggle_number."" : ""')
+end
 
 require("lualine").setup({
     options = {
@@ -83,17 +86,16 @@ require("lualine").setup({
     },
     sections = {
         lualine_a = {{'mode'}},
-        lualine_b = {{'branch'}, { 'filename', file_status = true }},
+        lualine_b = {{toggleTermNum}, {'branch'}, { 'filename', file_status = true }},
         lualine_c = {
-          { 'diagnostics',
-            sources={ 'nvim_lsp' },
-            sections={'error', 'warn', 'info'},
-            color_error='#db4b4b',
-            color_warn='#e0af68',
-            color_info='#1abc9c',
-            {error = '', warn = '', info = ''},
-            'lsp-progress'
-          },
+            { 'diagnostics',
+                sources={ 'nvim_lsp' },
+                sections={'error', 'warn', 'info'},
+                color_error='#db4b4b',
+                color_warn='#e0af68',
+                color_info='#1abc9c',
+                {error = '', warn = '', info = ''},
+            },
         },
         lualine_x = {
             { 'diff',
@@ -130,22 +132,22 @@ require("gitsigns").setup({
 
         base       = nil,  -- Use index
         signcolumn = true,
-        numhl      = false,
+        numhl      = true,
         linehl     = false,
     },
-    signs_sec = {
-        add          = {hl = 'GitSignsAdd'   , numhl='GitSignsAdd'   , linehl='GitSignsAdd'   , text = '▎' },
-        change       = {hl = 'GitSignsChange', numhl='GitSignsChange', linehl='GitSignsChange', text = '▎' },
-        delete       = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete', text = '_' },
-        topdelete    = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete', text = '‾' },
-        changedelete = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete', text = '▎' },
-        empty        = {},
+--     signs_sec = {
+--         add          = {hl = 'GitSignsAdd'   , numhl='GitSignsAdd'   , linehl='GitSignsAdd'   , text = '▎' },
+--         change       = {hl = 'GitSignsChange', numhl='GitSignsChange', linehl='GitSignsChange', text = '▎' },
+--         delete       = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete', text = '_' },
+--         topdelete    = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete', text = '‾' },
+--         changedelete = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete', text = '▎' },
+--         empty        = {},
 
-        base       = nil,
-        signcolumn = true,
-        numhl      = false,
-        linehl     = false,
-    },
+--         base       = nil,
+--         signcolumn = true,
+--         numhl      = true,
+--         linehl     = false,
+--     },
     keymaps = {
         -- Default keymap options
         noremap = true,
@@ -162,11 +164,11 @@ require("gitsigns").setup({
         interval = 1000
     },
     current_line_blame_position = 'eol',
-    current_line_blame = true,
+    current_line_blame = false,
     sign_priority = 6,
     update_debounce = 100,
     status_formatter = nil,
     use_decoration_api = true,
     use_internal_diff = true,
-    staged_signs = true,
+    -- staged_signs = true,
 })

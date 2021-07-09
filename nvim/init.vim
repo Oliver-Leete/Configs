@@ -32,7 +32,7 @@ call plug#begin('~/.config/nvim/pluged')
 
     " Git
     Plug 'TimUntersberger/neogit'
-    Plug 'lewis6991/gitsigns.nvim', {'branch': 'sec'}
+    Plug 'lewis6991/gitsigns.nvim'
     Plug 'drzel/vim-repo-edit'
     Plug 'rhysd/committia.vim'
     Plug 'sindrets/diffview.nvim'
@@ -86,9 +86,8 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/zen-mode.nvim'
     Plug 'akinsho/nvim-bufferline.lua'
     Plug 'hoob3rt/lualine.nvim'
-    Plug 'arkav/lualine-lsp-progress'
     Plug 'lewis6991/foldsigns.nvim'
-    Plug 'lukas-reineke/indent-blankline.nvim', { 'branch': 'lua'}
+    Plug 'lukas-reineke/indent-blankline.nvim',
     Plug 'norcalli/nvim-colorizer.lua'
 
     " Panels
@@ -127,6 +126,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'hrsh7th/vim-vsnip-integ'
     Plug 'rafamadriz/friendly-snippets'
     Plug 'windwp/nvim-autopairs'
+    Plug 'tzachar/compe-tabnine', { 'do': './install.sh' }
 
     " Telescope
     Plug 'nvim-lua/popup.nvim'
@@ -136,6 +136,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-telescope/telescope-media-files.nvim'
     Plug 'nvim-telescope/telescope-bibtex.nvim'
     Plug 'nvim-telescope/telescope-github.nvim'
+    Plug 'crispgm/telescope-heading.nvim'
 
     " Treesitter
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
@@ -416,6 +417,7 @@ augroup panelMappings
   au filetype juliadoc map <buffer> <esc> <cmd>q<cr>
   au filetype LvimHelper map <buffer> <esc> <cmd>q<cr>
   au filetype NeogitStatus map <buffer> <esc> <cmd>tabclose<cr>
+  au filetype toggleterm map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
 augroup END
 
 " Vim Hop
@@ -473,8 +475,8 @@ nmap <expr> <plug>(Loclist-find)            "<cmd> Lfind! " . input("What would 
 nmap <expr> <plug>(Loclist-locate)          "<cmd> Llocate! " . input("What would you like to locate? ")  . "<cr><cmd>Trouble loclist<cr>"
 nmap <expr> <plug>(Loclist-vimgrep-files)   "<cmd> noautocmd lvimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>Trouble loclist<cr>"
 nmap <expr> <plug>(Loclist-vimgrep-all)     "<cmd> noautocmd lvimgrep /" . input("What would you like to vimgrep? > ") . "/gj " . input("In what files? > ") . "<cr><cmd>Trouble loclist<cr>"
-nmap <expr> <plug>(Julia-precompile)        "<cmd> TermExec cmd='clear'<cr><cmd>TermExec cmd=\"julia --project -e 'using Pkg; Pkg.precompile()'\"<cr>"
-nmap <expr> <plug>(Julia-test)              "<cmd> TermExec cmd='clear'<cr><cmd>TermExec cmd=\"julia --project -e 'using Pkg; Pkg.test()'\"<cr>"
+nmap <expr> <plug>(Julia-precompile)        "<cmd> TermExec cmd='clear'<cr><cmd>TermExec cmd=\"julia\ --project\ -e\ 'using Pkg;\ Pkg.precompile()'\"<cr>"
+nmap <expr> <plug>(Julia-test)              "<cmd> TermExec cmd='clear'<cr><cmd>TermExec cmd=\"julia\ --project\ -e\ 'using Pkg;\ Pkg.test()'\"<cr>"
 
 command! CClear cexpr []
 command! LClear lexpr []
@@ -495,11 +497,7 @@ call  PMRegisterPanelView('bottom', 'troubleTelescope', 'Trouble telescope',    
 call  PMRegisterPanelView('bottom', 'Todo-Trouble',     'TodoTrouble',                          'TroubleClose')
 call  PMRegisterPanelView('bottom', 'loclistFilter',    'lopen',                                'windo if &buftype == "quickfix" || &buftype == "locationlist" | q | endif')
 call  PMRegisterPanelView('bottom', 'quickfixFilter',   'copen',                                'windo if &buftype == "quickfix" || &buftype == "locationlist" | q | endif')
-call  PMRegisterPanelView('bottom', 'term',             'ToggleTerm',                           'ToggleTermCloseAll')
-call  PMRegisterPanelView('bottom', '2term',            '2ToggleTerm',                          'ToggleTermCloseAll')
-call  PMRegisterPanelView('bottom', '3term',            '3ToggleTerm',                          'ToggleTermCloseAll')
-call  PMRegisterPanelView('bottom', '4term',            '4ToggleTerm',                          'ToggleTermCloseAll')
-call  PMRegisterPanelView('bottom', '5term',            '5ToggleTerm',                          'ToggleTermCloseAll')
+call  PMRegisterPanelView('bottom', 'term',             'ToggleTermOpenAll',                    'ToggleTermCloseAll')
 call  PMRegisterPanelView('right',  'symbols',          'SymbolsOutlineOpen',                   'SymbolsOutlineClose')
 call  PMRegisterPanelView('top',    'gitdiff',          'DiffviewOpen',                         'DiffviewClose')
 

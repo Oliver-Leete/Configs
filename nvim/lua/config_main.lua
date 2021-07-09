@@ -54,7 +54,7 @@ require("diffview").setup({
     view = {
         ["<tab>"]     = cb("select_next_entry"),  -- Open the diff for the next file
         ["<s-tab>"]   = cb("select_prev_entry"),  -- Open the diff for the previous file
-        ["<leader>t"] = cb("focus_files"),        -- Bring focus to the files panel
+        ["<leader>x"] = cb("focus_files"),        -- Bring focus to the files panel
         ["<esc>"] = "<cmd>tabclose<cr>",
         -- ["<leader>b"] = cb("toggle_files"),       -- Toggle the files panel.
     },
@@ -191,7 +191,7 @@ require("nvim-biscuits").setup({
 
 vim.o.completeopt = "menuone,noselect"
 require("compe").setup({
-    disabled = true;
+    enabled = true;
     autocomplete = true;
     debug = false;
     min_length = 1;
@@ -202,7 +202,14 @@ require("compe").setup({
     max_abbr_width = 100;
     max_kind_width = 100;
     max_menu_width = 100;
-    documentation = true;
+    documentation = {
+        border = { '', '' ,'', ' ', '', '', '', ' ' },
+        winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
+        max_width = 120,
+        min_width = 60,
+        max_height = math.floor(vim.o.lines * 0.3),
+        min_height = 1,
+    };
 
     source = {
         path = true;
@@ -211,14 +218,14 @@ require("compe").setup({
         nvim_lsp = true;
         nvim_lua = true;
         nvim_treesitter = false;
-        vsnip = {
-            priority = 1000,
-        },
+        vsnip = true,
         omni = {
             filetypes = {'tex'},
-        }
+        },
+        tabnine = true
     };
 })
+
 
 -- AutoPairs Setup
 
@@ -480,6 +487,7 @@ require("telescope").load_extension("bibtex")
 require("telescope").load_extension("gh")
 require("telescope").load_extension("media_files")
 require("telescope").load_extension("session-lens")
+require("telescope").load_extension("heading")
 local trouble = require("trouble.providers.telescope")
 
 require("telescope").setup({
@@ -511,7 +519,7 @@ require("telescope").setup({
         file_sorter =  require("telescope.sorters").get_fuzzy_file,
         file_ignore_patterns = {},
         generic_sorter =  require("telescope.sorters").get_generic_fuzzy_sorter,
-        shorten_path = true,
+        path_display = {"shorten"},
         winblend = 0,
         border = {},
         borderchars = {

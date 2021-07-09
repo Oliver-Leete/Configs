@@ -122,8 +122,8 @@ require("which-key").register({
             c = {"<cmd>call v:lua.git_commits()<cr>", "Git Commits"},
             E = {"<cmd>Telescope lsp_document_diagnostics<cr>", "Errors (buffer)"},
             e = {"<cmd>Telescope lsp_workspace_diagnostics<cr>", "Errors"},
-            F = {"<cmd>Telescope fd<cr>", "Files (non git)"},
-            G = {"<cmd>Git! difftool<cr><cmd>cclose<cr><cmd>Telescope quickfix<cr>", "Git Chunks"},
+            F = {"<cmd>lua require('telescope.builtin').find_files({find_command={'fd', '-I'}})<cr>", "Files (non git)"},
+            -- G = {"<cmd>Git! difftool<cr><cmd>cclose<cr><cmd>Telescope quickfix<cr>", "Git Chunks"},
             g = {"<cmd>Telescope git_status<cr>", "Git Status"},
             j = {"<cmd>Telescope jumplist<cr>", "Jumps"},
             l = {"<cmd>Telescope current_buffer_fuzzy_find<cr>", "Line"},
@@ -177,11 +177,14 @@ require("which-key").register({
             e = {"<cmd>call PMToggleView('errorlist')<CR>", "Error List"},
             E = {"<cmd>call PMToggleView('errorlistdoc')<CR>", "Error List (buffer)"},
             g = {"<cmd>call PMToggleView('gitdiff')<CR>", "Git"},
-            i = {"<cmd>call PMToggleView('term')<CR>", "Terminal"},
+            i = {"<cmd>3ToggleTerm<cr>", "Terminals"},
+            m = {"<cmd>2ToggleTerm<cr>", "Terminals"},
             l = {"<cmd>call PMToggleView('loclist')<CR>", "Location List"},
             q = {"<cmd>call PMToggleView('quickfix')<CR>", "QuickFix List"},
             s = {"<cmd>call PMToggleView('symbols')<CR>", "Symbol List"},
-            t = {"<cmd>call PMToggleView('nvim-tree')<CR>", "File Tree"},
+            x = {"<cmd>call PMToggleView('nvim-tree')<CR>", "File Tree"},
+            T = {"<cmd>call PMToggleView('term')<CR>", "Terminals"},
+            t = {"<cmd>1ToggleTerm<cr>", "Terminals"},
             u = {"<cmd>call PMToggleView('undotree')<CR>", "Undo Tree"},
             v = {"<cmd>call CloseAllPanels()<cr>", "Close All Panels"},
         },
@@ -203,7 +206,8 @@ require("which-key").register({
         },
         i = {
             name = "Interactive Terminal",
-            i = {"<cmd>call PMToggleView('term')<CR>", "Open Terminal"},
+            i = {"<cmd>3ToggleTerm<CR>", "Open Terminal"},
+            r = {"<cmd>bufdo \\| if b:toggle_number == 3 \\| Bdelete! \\| endif <cr><cmd>3ToggleTerm<CR>", "Open Terminal"},
         },
         L = {"<cmd>LClear<cr><cmd>lgetbuffer<cr><cmd>TroubleRefresh<cr>", "Populater LocList With Buffer Errors "},
         l = {
@@ -236,14 +240,14 @@ require("which-key").register({
             v = {"<plug>(ExtractVar)", "Extract Variable"},
             d = {"[fyyO<esc><cmd>.!cat ~/.config/nvim/docstring/julia.txt<cr>pdw>>/TODO:<cr>", "Make Docstring", noremap=false}
         },
-        t = {
+        x = {
             name = "Explorer",
             t = {"<cmd>call PMToggleView('nvim-tree')<cr>", "Open Explorer"},
         },
         b = {
             name = "buffers",
             o = {"<cmd>Bdelete hidden<cr>", "Close All Hidden Buffers"},
-            d = {"<cmd>bdelete<cr>", "Delete the current buffer"},
+            d = {"<cmd>bdelete!<cr>", "Delete the current buffer"},
         },
         w = {
             name = "Window Managment",
@@ -302,16 +306,6 @@ require("which-key").register({
             k = {"K", "Documentation"},
         }
     },
-        ["1<leader>vi"] = { "<cmd>call PMToggleView('term')<CR>",  "Open Terminal 1"},
-        ["2<leader>vi"] = { "<cmd>call PMToggleView('2term')<CR>", "Open Terminal 2"},
-        ["3<leader>vi"] = { "<cmd>call PMToggleView('3term')<CR>", "Open Terminal 3"},
-        ["4<leader>vi"] = { "<cmd>call PMToggleView('4term')<CR>", "Open Terminal 4"},
-        ["5<leader>vi"] = { "<cmd>call PMToggleView('5term')<CR>", "Open Terminal 5"},
-        ["1<leader>ii"] = { "<cmd>call PMToggleView('term')<CR>",  "Open Terminal 1"},
-        ["2<leader>ii"] = { "<cmd>call PMToggleView('2term')<CR>", "Open Terminal 2"},
-        ["3<leader>ii"] = { "<cmd>call PMToggleView('3term')<CR>", "Open Terminal 3"},
-        ["4<leader>ii"] = { "<cmd>call PMToggleView('4term')<CR>", "Open Terminal 4"},
-        ["5<leader>ii"] = { "<cmd>call PMToggleView('5term')<CR>", "Open Terminal 5"},
     ["["] = {
         name = "Backward Leader",
         L = {"<cmd>try <bar> lpfile <bar> catch /E553/ <bar> llast <bar> endtry<CR>", "Loclist File"},
