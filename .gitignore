@@ -16,6 +16,7 @@ rofi/
 !starship.toml
 !/nvim/lua/*
 !/nvim/ftplugin/*
+!/nvim/filetype/*
 !/nvim/docstring/*
 !/xmonad/xmonad.hs
 !/xmonad/xmonad-oleete/XMonad/**/*.hs

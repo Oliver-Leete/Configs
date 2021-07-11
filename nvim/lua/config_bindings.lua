@@ -177,14 +177,14 @@ require("which-key").register({
             e = {"<cmd>call PMToggleView('errorlist')<CR>", "Error List"},
             E = {"<cmd>call PMToggleView('errorlistdoc')<CR>", "Error List (buffer)"},
             g = {"<cmd>call PMToggleView('gitdiff')<CR>", "Git"},
-            i = {"<cmd>3ToggleTerm<cr>", "Terminals"},
-            m = {"<cmd>2ToggleTerm<cr>", "Terminals"},
+            i = {"<cmd>3ToggleTerm<cr>", "REPL Terminal"},
+            m = {"<cmd>2ToggleTerm<cr>", "Build Terminal"},
             l = {"<cmd>call PMToggleView('loclist')<CR>", "Location List"},
             q = {"<cmd>call PMToggleView('quickfix')<CR>", "QuickFix List"},
             s = {"<cmd>call PMToggleView('symbols')<CR>", "Symbol List"},
             x = {"<cmd>call PMToggleView('nvim-tree')<CR>", "File Tree"},
-            T = {"<cmd>call PMToggleView('term')<CR>", "Terminals"},
-            t = {"<cmd>1ToggleTerm<cr>", "Terminals"},
+            T = {"<cmd>call PMToggleView('term')<CR>", "All Terminals"},
+            t = {"<cmd>1ToggleTerm<cr>", "Terminal"},
             u = {"<cmd>call PMToggleView('undotree')<CR>", "Undo Tree"},
             v = {"<cmd>call CloseAllPanels()<cr>", "Close All Panels"},
         },
@@ -203,11 +203,6 @@ require("which-key").register({
             w = {"<plug>(Quickfix-find)", "Populate With find"},
             W = {"<plug>(Quickfix-locate)", "Populate With Locate"},
             -- s = {"<cmd>SpellCheck!<cr>", "Populate With Spelling Errors"},
-        },
-        i = {
-            name = "Interactive Terminal",
-            i = {"<cmd>3ToggleTerm<CR>", "Open Terminal"},
-            r = {"<cmd>bufdo \\| if b:toggle_number == 3 \\| Bdelete! \\| endif <cr><cmd>3ToggleTerm<CR>", "Open Terminal"},
         },
         L = {"<cmd>LClear<cr><cmd>lgetbuffer<cr><cmd>TroubleRefresh<cr>", "Populater LocList With Buffer Errors "},
         l = {
@@ -233,12 +228,23 @@ require("which-key").register({
             f = {"<cmd>call PMToggleView('troubleTelescope')<CR>", "Open Telescope List"},
             r = {"<cmd>TroubleRefresh<cr>", "Refresh Errors"},
         },
+        t = {
+            name = "Terminal",
+            t = {"<cmd>1ToggleTerm<cr>", "Open Terminal"}
+        },
+        i = {
+            name = "Interactive REPL",
+            i = {"<cmd>3ToggleTerm<CR>", "Open REPL"},
+            r = {"<cmd>bufdo \\| if b:toggle_number == 3 \\| Bdelete! \\| endif <cr><cmd>3ToggleTerm<CR>", "Open Terminal"},
+        },
+        m = {
+            name = "Make",
+        },
         r = {
             name = "Refactor",
             s = {"<Plug>(Scalpel)", "Rename (Scalpel)"},
             t = {"Rename (Treesitter)"},
             v = {"<plug>(ExtractVar)", "Extract Variable"},
-            d = {"[fyyO<esc><cmd>.!cat ~/.config/nvim/docstring/julia.txt<cr>pdw>>/TODO:<cr>", "Make Docstring", noremap=false}
         },
         x = {
             name = "Explorer",
@@ -282,11 +288,6 @@ require("which-key").register({
             ["/"] = {"<c-w>^", "Open Alternate File"},
             [","] = {"<cmd>BufferLineCyclePrev<cr>", "Previous Buffer"},
             ["."] = {"<cmd>BufferLineCycleNext<cr>", "Next Buffer"},
-        },
-        m = {
-            name = "Make",
-            m = {"<plug>(Julia-precompile)", "Precompile"},
-            t = {"<plug>(Julia-test)", "Test Package"},
         },
         [","] = {
             name = "Settings",

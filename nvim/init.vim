@@ -532,31 +532,9 @@ else
 endif
 
 " TODO: Move to Latex File
-let g:tex_flavor='latex'
-let g:vimtex_view_method='zathura'
-let g:vimtex_quickfix_mode=0
-let g:vimtex_view_automatic=1
-let g:vimtex_view_forward_search_on_start=1
-nnoremap <localleader>fb <cmd>Telescope bibtex bibtex<cr>
 
-autocmd FileType markdown let b:compe_latex_insert_code = v:true
-autocmd FileType tex let b:compe_latex_insert_code = v:true
-let g:vimtex_compiler_latexmk = {
-    \ 'build_dir' : '',
-    \ 'callback' : 1,
-    \ 'continuous' : 0,
-    \ 'executable' : 'latexmk',
-    \ 'hooks' : [],
-    \ 'options' : [
-    \   '-verbose',
-    \   '-file-line-error',
-    \   '-synctex=1',
-    \   '-interaction=nonstopmode',
-    \ ],
-    \}
-
-autocmd BufNewFile,BufRead *.jl set filetype=julia
-autocmd FileType julia set commentstring=#%s
+" autocmd BufNewFile,BufRead *.jl set filetype=julia
+" autocmd FileType julia set commentstring=#%s
 
 let g:haskell_enable_quantification = 1
 let g:haskell_enable_recursivedo = 1
