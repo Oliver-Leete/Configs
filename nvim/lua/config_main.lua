@@ -101,36 +101,29 @@ require("nvim-treesitter.configs").setup({
                 ["ac"] = "@comment.outer",
                 ["ic"] = "@comment.inner",
                 ["aL"] = "@loop.outer",
-                ["iL"] = "@loop.inner",
-            },
-        },
-        swap = {
-            enable = true,
-            swap_next = {
-                ["g>"] = "@parameter.inner",
-            },
-            swap_previous = {
-                ["g<"] = "@parameter.inner",
+                ["il"] = "@loop.inner",
+                ["ib"] = "@block.inner",
+                ["ab"] = "@block.outer",
             },
         },
         move = {
             enable = false,
-            -- goto_next_start = {
-            --     ["]o"] = "@block.outer",
-            --     ["]f"] = "@function.outer",
-            -- },
-            -- goto_next_end = {
-            --     ["]O"] = "@block.outer",
-            --     ["]F"] = "@function.outer"
-            -- },
-            -- goto_previous_start = {
-            --     ["[o"] = "@block.outer",
-            --     ["[f"] = "@function.outer",
-            -- },
-            -- goto_previous_end = {
-            --     ["[O"] = "@block.outer",
-            --     ["[F"] = "@function.outer",
-            -- },
+            goto_next_start = {
+                ["]o"] = "@class.outer",
+                ["]f"] = "@function.outer",
+            },
+            goto_next_end = {
+                ["]O"] = "@class.outer",
+                ["]F"] = "@function.outer"
+            },
+            goto_previous_start = {
+                ["[o"] = "@class.outer",
+                ["[f"] = "@function.outer",
+            },
+            goto_previous_end = {
+                ["[O"] = "@class.outer",
+                ["[F"] = "@function.outer",
+            },
         },
         lsp_interop = {
             enable = true,
@@ -668,28 +661,8 @@ require("todo-comments").setup({
     },
 })
 
--- require("sniprun").setup({
---     selected_interpreters = {},
---     repl_enable = {},
---     repl_disable = {},
---     interpreter_options = {},
---     display = {
---         "VirtualTextOk",
---         "VirtualTextErr",
---         "LongTempFloatingWindow",
---         "Terminal"
---       },
---     snipruncolors = {
---         SniprunVirtualTextOk   =  {bg="#66eeff",fg="#000000",ctermbg="Cyan",cterfg="Black"},
---         SniprunFloatingWinOk   =  {fg="#66eeff",ctermfg="Cyan"},
---         SniprunVirtualTextErr  =  {bg="#881515",fg="#000000",ctermbg="DarkRed",cterfg="Black"},
---         SniprunFloatingWinErr  =  {fg="#881515",ctermfg="DarkRed"},
---     },
---     inline_messages = 0,
---     borders = 'single'
--- })
-require("hop").setup({keys="tnseriaodhgjplfuwy"})
 
+require("hop").setup({keys="tnseriaodhgjplfuwy"})
 require("numb").setup()
 require("foldsigns").setup()
 require("range-highlight").setup()

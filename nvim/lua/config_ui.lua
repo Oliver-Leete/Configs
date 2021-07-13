@@ -35,6 +35,13 @@ require("zen-mode").setup({
         vim.api.nvim_command("IndentBlanklineEnable")
     end,
 })
+require("twilight").setup({
+    dimming = {
+        alpha = 0.25,
+    },
+    context = 10,
+    exclude = {},
+})
 
 -- BufferLine
 

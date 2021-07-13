@@ -51,7 +51,6 @@ call plug#begin('~/.config/nvim/pluged')
     " Normal Commands
     Plug 'tpope/vim-surround'
     Plug 'tommcdo/vim-nowchangethat'
-    Plug 'wincent/scalpel'
     Plug 'terrortylor/nvim-comment'
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
@@ -89,6 +88,8 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'lewis6991/foldsigns.nvim'
     Plug 'lukas-reineke/indent-blankline.nvim',
     Plug 'norcalli/nvim-colorizer.lua'
+    Plug 'sunjon/shade.nvim'
+    Plug 'folke/twilight.nvim'
 
     " Panels
     Plug 'mipmip/panelmanager.vim'
@@ -100,7 +101,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/which-key.nvim'
     Plug 'folke/todo-comments.nvim'
     Plug 'lvim-tech/lvim-helper'
-    Plug 'michaelb/sniprun', { 'do': './install.sh 1'}
+    Plug 'jpalardy/vim-slime'
 
     " File Manager
     Plug 'tpope/vim-vinegar'
@@ -165,6 +166,8 @@ colorscheme tokyonight
 let g:indent_blankline_char_list = ['│']
 let g:indent_blankline_char_highlight_list = ['rainbowcol7', 'rainbowcol6', 'rainbowcol5', 'rainbowcol4', 'rainbowcol3', 'rainbowcol2', 'rainbowcol1']
 
+" Vim Slime Settings
+let g:slime_target = "neovim"
 
 " !!SETTINGS!!
 set nrformats-=octal

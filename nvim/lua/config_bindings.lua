@@ -244,7 +244,6 @@ require("which-key").register({
         },
         r = {
             name = "Refactor",
-            s = {"<Plug>(Scalpel)", "Rename (Scalpel)"},
             t = {"Rename (Treesitter)"},
             v = {"<plug>(ExtractVar)", "Extract Variable"},
         },
@@ -316,12 +315,7 @@ require("which-key").register({
         l = {"<cmd>try <bar> lprevious <bar> catch /E553/ <bar> llast <bar> endtry<CR>", "LocList Entry"},
         q = {"<cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast <bar> endtry<CR>", "QuickFix Entry"},
         t = {"<cmd>tabprevious<cr>", "Tab"},
-        b = {"<cmd>BufferLineCyclePrev", "Buffer"},
-        c = {"Hunk"},
-        f = {"function"},
-        F = {"function (end)"},
-        o = {"Block"},
-        O = {"Block (end)"},
+        h = {"Hunk"},
         s = {"[s", "Spelling Mistake"},
         ["["] = {"Section"},
         ["]"] = {"Section (end)"},
@@ -333,12 +327,7 @@ require("which-key").register({
         l = {"<cmd>try <bar> lnext <bar> catch /E553/ <bar> lfirst <bar> endtry<CR>", "LocList Entry"},
         q = {"<cmd>try <bar> cnext <bar> catch /E553/ <bar> cfirst <bar> endtry<CR>", "QuickFix Entry"},
         t = {"<cmd>tabnext<cr>", "Tab"},
-        b = {"<cmd>BufferLineCycleNext", "Buffer"},
-        c = {"Hunk"},
-        f = {"function"},
-        F = {"function (end)"},
-        o = {"Block"},
-        O = {"Block (end)"},
+        h = {"Hunk"},
         s = {"]s", "Spelling Mistake"},
         ["["] = {"Section (end)"},
         ["]"] = {"Section"},
@@ -352,7 +341,6 @@ require("which-key").register({
         r = {
             name = "Refactor",
             s = {"<Plug>(ScalpelVisual)", "Rename (Scalpel)"},
-            v = {"<plug>(ExtractVarVisual)", "Extract Variable"}
         },
     },
     g = {
