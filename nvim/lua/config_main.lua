@@ -187,6 +187,9 @@ require("nvim-biscuits").setup({
     }
 })
 
+require('iswap').setup{
+    keys = 'tnseriaodhgjplfuwy',
+}
 -- Compleation Setup
 
 vim.o.completeopt = "menuone,noselect"
@@ -538,11 +541,13 @@ require("telescope").setup({
         mappings = {
             i = {
                 ["<C-q>"] = actions.smart_send_to_qflist,
-                ["<C-a>"] = actions.smart_add_to_qflist,
+                ["<C-Q>"] = actions.smart_add_to_qflist,
                 ["<C-l>"] = actions.smart_send_to_loclist,
-                ["<C-n>"] = actions.smart_add_to_loclist,
+                ["<C-L>"] = actions.smart_add_to_loclist,
                 ["<c-e>"] = trouble.open_with_trouble,
-                ["<c-u>"] = trouble.open_selected_with_trouble,
+                ["<c-E>"] = trouble.open_selected_with_trouble,
+                ["<C-n>"] = actions.cycle_history_next,
+                ["<C-p>"] = actions.cycle_history_prev,
                 ["<C-space>"] = actions.toggle_selection + actions.move_selection_worse,
                 ["<C-j>"] = actions.move_to_top,
                 ["<C-h>"] = actions.move_to_middle,
@@ -550,11 +555,13 @@ require("telescope").setup({
             },
             n = {
                 ["<C-q>"] = actions.smart_send_to_qflist,
-                ["<C-a>"] = actions.smart_add_to_qflist,
+                ["<C-Q>"] = actions.smart_add_to_qflist,
                 ["<C-l>"] = actions.smart_send_to_loclist,
-                ["<C-n>"] = actions.smart_add_to_loclist,
+                ["<C-L>"] = actions.smart_add_to_loclist,
                 ["<c-e>"] = trouble.open_with_trouble,
-                ["<c-u>"] = trouble.open_selected_with_trouble,
+                ["<c-E>"] = trouble.open_selected_with_trouble,
+                ["<C-n>"] = actions.cycle_history_next,
+                ["<C-p>"] = actions.cycle_history_prev,
                 ["<C-space>"] = actions.toggle_selection + actions.move_selection_worse,
                 ["<C-j>"] = actions.move_to_top,
                 ["<C-h>"] = actions.move_to_middle,
@@ -661,6 +668,27 @@ require("todo-comments").setup({
     },
 })
 
+-- require("sniprun").setup({
+--     selected_interpreters = {},
+--     repl_enable = {},
+--     repl_disable = {},
+--     interpreter_options = {},
+--     display = {
+--         "VirtualTextOk",
+--         "VirtualTextErr",
+--         "LongTempFloatingWindow",
+--         "Terminal"
+--       },
+--     snipruncolors = {
+--         SniprunVirtualTextOk   =  {bg="#66eeff",fg="#000000",ctermbg="Cyan",cterfg="Black"},
+--         SniprunFloatingWinOk   =  {fg="#66eeff",ctermfg="Cyan"},
+--         SniprunVirtualTextErr  =  {bg="#881515",fg="#000000",ctermbg="DarkRed",cterfg="Black"},
+--         SniprunFloatingWinErr  =  {fg="#881515",ctermfg="DarkRed"},
+--     },
+--     inline_messages = 0,
+--     borders = 'single'
+-- })
+require("hop").setup({keys="tnseriaodhgjplfuwy"})
 
 require("numb").setup()
 require("foldsigns").setup()

@@ -100,6 +100,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/which-key.nvim'
     Plug 'folke/todo-comments.nvim'
     Plug 'lvim-tech/lvim-helper'
+    Plug 'michaelb/sniprun', { 'do': './install.sh 1'}
 
     " File Manager
     Plug 'tpope/vim-vinegar'
@@ -146,6 +147,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'p00f/nvim-ts-rainbow'
     Plug 'nvim-treesitter/playground'
     Plug 'RRethy/nvim-treesitter-textsubjects'
+    Plug 'mizlan/iswap.nvim'
 call plug#end()
 
 " !!THEMES!!
@@ -422,9 +424,8 @@ augroup END
 
 " Vim Hop
 map s <cmd>lua require'hop'.hint_char1()<cr>
-map S <cmd>lua require'hop'.hint_lines()<cr>
+map S <cmd>ISwapWith<cr>
 omap s <cmd> lua require'hop'.hint_char1()<cr>
-omap S <cmd> lua require'hop'.hint_lines()<cr>
 
 
 " Word Motion Command
@@ -460,24 +461,7 @@ let g:splitjoin_join_mapping = ''
 let g:UnconditionalPaste_no_mappings = 1
 let g:caser_no_mappings	= 1
 
-" Expression Mapping (to go in which-key)
-nmap <expr> <plug>(Telescope-grep)          "<cmd> Telescope grep_string search=" . input("Grep For > ") . "<CR>"
-nmap <expr> <plug>(Telescope-Vimgrep-files) "<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj " . input("In what files? > ") . "<cr><cmd>Telescope quickfix<cr>"
-nmap <expr> <plug>(Telescope-Vimgrep-all)   "<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>Telescope quickfix<cr>"
-nmap <expr> <plug>(Telescope-locate)        "<cmd> Clocate! " . input("What would you like to locate? ")  . "<cr><cmd>Telescope quickfix<cr>"
-nmap <expr> <plug>(Telescope-find)          "<cmd> Cfind! " . input("What would you like to find? ")  . "<cr><cmd>Telescope quickfix<cr>"
-nmap <expr> <plug>(Telescope-relevant)      "<cmd> Telescope fd default_text=" . split(expand("%:t:r"), '_')[0] . " prompt_prefix= <cr>"
-nmap <expr> <plug>(Quickfix-find)           "<cmd> Cfind! " . input("What would you like to find? ")  . "<cr><cmd>Trouble quickfix<cr>"
-nmap <expr> <plug>(Quickfix-locate)         "<cmd> Clocate! " . input("What would you like to locate? ")  . "<cr><cmd>Trouble quickfix<cr>"
-nmap <expr> <plug>(Quickfix-vimgrep-files)  "<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>Trouble quickfix<cr>"
-nmap <expr> <plug>(Quickfix-vimgrep-all)    "<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj " . input("In what files? > ") . "<cr><cmd>Trouble quickfix<cr>"
-nmap <expr> <plug>(Loclist-find)            "<cmd> Lfind! " . input("What would you like to find? ")  . "<cr><cmd>Trouble loclist<cr>"
-nmap <expr> <plug>(Loclist-locate)          "<cmd> Llocate! " . input("What would you like to locate? ")  . "<cr><cmd>Trouble loclist<cr>"
-nmap <expr> <plug>(Loclist-vimgrep-files)   "<cmd> noautocmd lvimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>Trouble loclist<cr>"
-nmap <expr> <plug>(Loclist-vimgrep-all)     "<cmd> noautocmd lvimgrep /" . input("What would you like to vimgrep? > ") . "/gj " . input("In what files? > ") . "<cr><cmd>Trouble loclist<cr>"
-nmap <expr> <plug>(Julia-precompile)        "<cmd> TermExec cmd='clear'<cr><cmd>TermExec cmd=\"julia\ --project\ -e\ 'using Pkg;\ Pkg.precompile()'\"<cr>"
-nmap <expr> <plug>(Julia-test)              "<cmd> TermExec cmd='clear'<cr><cmd>TermExec cmd=\"julia\ --project\ -e\ 'using Pkg;\ Pkg.test()'\"<cr>"
-
+"List Clearing mappings
 command! CClear cexpr []
 command! LClear lexpr []
 
@@ -531,10 +515,6 @@ else
   lua require("which-key").register({["<leader>f"]={f = {"<cmd>Telescope fd<cr>", "Find Files"}}})
 endif
 
-" TODO: Move to Latex File
-
-" autocmd BufNewFile,BufRead *.jl set filetype=julia
-" autocmd FileType julia set commentstring=#%s
 
 let g:haskell_enable_quantification = 1
 let g:haskell_enable_recursivedo = 1
