@@ -704,6 +704,9 @@ myKeys conf = let
     , ("M-C-j"           , addName "Move Down"                   $ sequence_ [windowSwap D True, warpCursor])
     , ("M-C-k"           , addName "Move Up"                     $ sequence_ [windowSwap U True, warpCursor])
     , ("M-C-l"           , addName "Move Right"                  $ sequence_ [windowSwap R True, warpCursor])
+
+    , ("M-u"             , addName "Scroll Up"                   $ spawn "xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4")
+    , ("M-d"             , addName "Scroll Down"                 $ spawn "xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5")
     ] ^++^
 
     subKeys "SubLayouts"
@@ -712,9 +715,9 @@ myKeys conf = let
     , ("M-M1-<D>"        , addName "SubLayout combine down"      $ withFocused (sendMessage . mergeDir W.focusDown'))
     , ("M-M1-<U>"        , addName "SubLayout combine up"        $ withFocused (sendMessage . mergeDir W.focusUp'))
 
-    , ("M-u"             , addName "Un-merge from sublayout"     $ withFocused (sendMessage . UnMerge))
-    , ("M-C-u"           , addName "Unmerge all from sublayout"  $ withFocused (sendMessage . UnMergeAll))
-    , ("M-M1-u"          , addName "Unmerge all from sublayout"  $ withFocused (sendMessage . UnMergeAll))
+    , ("M-i"             , addName "Un-merge from sublayout"     $ withFocused (sendMessage . UnMerge))
+    , ("M-C-i"           , addName "Unmerge all from sublayout"  $ withFocused (sendMessage . UnMergeAll))
+    , ("M-M1-i"          , addName "Unmerge all from sublayout"  $ withFocused (sendMessage . UnMergeAll))
 
     , ("M-M1-h"          , addName "Merge Left"                  $ sequence_ [sendMessage $ pullGroup L, warpCursor])
     , ("M-M1-j"          , addName "Merge Down"                  $ sequence_ [sendMessage $ pullGroup D, warpCursor])

@@ -49,7 +49,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'junegunn/vim-slash'
 
     " Normal Commands
-    Plug 'tpope/vim-surround'
+    Plug 'blackCauldron7/surround.nvim'
     Plug 'tommcdo/vim-nowchangethat'
     Plug 'terrortylor/nvim-comment'
     Plug 'arthurxavierx/vim-caser'
@@ -291,6 +291,9 @@ augroup LuaHighlight
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup END
 
+" Surround
+let g:surround_mappings_style="surround"
+
 " Leader key remap
 set timeoutlen=500
 nnoremap <SPACE> <Nop>
@@ -426,14 +429,13 @@ augroup panelMappings
   au filetype toggleterm map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
 augroup END
 
-" Vim Hop
-map s <cmd>lua require'hop'.hint_char1()<cr>
-map S <cmd>ISwapWith<cr>
-omap s <cmd> lua require'hop'.hint_char1()<cr>
-
-" Treesitter Hint Text Objects
-omap     <silent> m :<C-U>lua require('tsht').nodes()<CR>
-vnoremap <silent> m :lua require('tsht').nodes()<CR>
+" Vim Hop, ISwap and TS hint object
+nmap s <cmd>lua require'hop'.hint_char1()<cr>
+omap ss <cmd>lua require'hop'.hint_char1()<cr>
+vmap ss <cmd>lua require'hop'.hint_char1()<cr>
+nmap S <cmd>ISwapWith<cr>
+omap <silent> S :<C-U>lua require('tsht').nodes()<CR>
+vmap <silent> S :lua require('tsht').nodes()<CR>
 
 " Word Motion Command
 let g:wordmotion_prefix = '$'

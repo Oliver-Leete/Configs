@@ -160,7 +160,7 @@ require("which-key").register({
                 m = {[["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr=true},
             },
         },
-        [">"] = {"<cmd>Telescope spell_suggest<cr>", "Spelling Suggestions"},
+        [">"] = {"<cmd>Telescope spell_suggest theme=get_cursor<cr>", "Spelling Suggestions"},
         o = {
             name = "Open",
             f = {"gf", "Open File"},
@@ -397,6 +397,7 @@ require("which-key").register({
         r = {
             name = "Refactor",
             s = {"<Plug>(ScalpelVisual)", "Rename (Scalpel)"},
+            v = {"<plug>(ExtractVarVis)", "Extract Variable"},
         },
     },
     g = {

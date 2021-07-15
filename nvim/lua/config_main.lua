@@ -179,10 +179,6 @@ require("nvim-biscuits").setup({
         }
     }
 })
-
-require('iswap').setup{
-    keys = 'tnseriaodhgjplfuwy',
-}
 -- Compleation Setup
 
 vim.o.completeopt = "menuone,noselect"
@@ -291,11 +287,11 @@ local custom_attach = function(client, bufnr)
     }
     require("which-key").register({
         ["<leader>"] = {
-            ["."] = {"<cmd>Lspsaga code_action<CR>", "Code Actions"},
+            ["."] = {"<cmd>Telescope lsp_code_actions theme=get_cursor<CR>", "Code Actions"},
             o = {
                 d = {"<cmd>Telescope lsp_definitions<cr>", "Definitions"},
                 r = {"<cmd>Telescope lsp_references<cr>", "References"},
-                i = {"<cmd>lua vim.lsp.buf.implementation()<CR>", "implementations"},
+                i = {"<cmd>Telescope lsp_implementation<CR>", "implementations"},
             },
             f = {
                 s = {"<cmd>Telescope lsp_workspace_symbols<cr>", "Symbols"},
@@ -324,7 +320,7 @@ local custom_attach = function(client, bufnr)
     }, {buffer=bufnr})
     require("which-key").register({
         ["<leader>"] = {
-            ["."] = {"<cmd>Lspsaga range_code_action<CR>", "Code Actions"},
+            ["."] = {"<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR>", "Code Actions"},
         }
     }, {mode="v", buffer=bufnr})
     vim.api.nvim_exec([[
@@ -477,6 +473,7 @@ vim.g.diagnostic_enable_underline = 0
 vim.g.completion_timer_cycle = 200
 
 -- Telescope Setup
+
 
 local actions = require("telescope.actions")
 require("telescope").load_extension("bibtex")
@@ -662,7 +659,10 @@ require("todo-comments").setup({
 })
 
 
-require("hop").setup({keys="tnseriaodhgjplfuwy"})
+require"surround".setup{}
+
+require("hop").setup({keys="tnseriaodhgjplfuwybkvmcxzq"})
+require('iswap').setup{keys="tnseriaodhgjplfuwybkvmcxzq"}
 require("tsht").config.hint_keys = {"t", "n", "s", "e", "r", "i", "a", "o", "d", "h", "g", "j", "p", "l", "f", "u", "w", "y"}
 require("numb").setup()
 require("foldsigns").setup()

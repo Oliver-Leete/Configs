@@ -1,6 +1,6 @@
 require("which-key").register({
     ["<localleader>"] = {
-        r = {"<cmd>Telescope bibtex bibtex<cr>", "References"},
+        r = {"<cmd>Telescope bibtex bibtex theme=get_cursor<cr>", "References"},
         x = {"<cmd>VimtexTocToggle<cr>", "Open TOC"},
         v = {"<cmd>VimtexView<cr>", "View Document"},
         c = {"<cmd>VimtexCountWord<cr>", "Word Count"},
