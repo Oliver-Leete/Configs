@@ -213,7 +213,7 @@ projects =
                 }
 
     , Project   { projectName       = wsSIM
-                , projectDirectory  = "~/Projects/JuliaPowderModel"
+                , projectDirectory  = "~/Projects/PowderModel"
                 , projectStartHook  = Just $ do spawnOn wsSIM (myTerminal ++ " --session=/home/oleete/.config/kitty/sim.conf")
                                                 spawnOn wsSIM ("sleep .2; " ++ myBrowser)
                 }

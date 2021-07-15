@@ -149,6 +149,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-treesitter/playground'
     Plug 'RRethy/nvim-treesitter-textsubjects'
     Plug 'mizlan/iswap.nvim'
+    Plug 'mfussenegger/nvim-ts-hint-textobject'
 call plug#end()
 
 " !!THEMES!!
@@ -430,6 +431,9 @@ map s <cmd>lua require'hop'.hint_char1()<cr>
 map S <cmd>ISwapWith<cr>
 omap s <cmd> lua require'hop'.hint_char1()<cr>
 
+" Treesitter Hint Text Objects
+omap     <silent> m :<C-U>lua require('tsht').nodes()<CR>
+vnoremap <silent> m :lua require('tsht').nodes()<CR>
 
 " Word Motion Command
 let g:wordmotion_prefix = '$'

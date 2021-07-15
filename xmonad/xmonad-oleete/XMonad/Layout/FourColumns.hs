@@ -29,12 +29,11 @@ import XMonad
     ( fromMessage,
       splitHorizontally,
       splitVertically,
-      splitHorizontallyBy,
       splitVerticallyBy,
       Rectangle(Rectangle),
       LayoutClass(pureLayout, description, handleMessage),
       IncMasterN(IncMasterN),
-      Resize(Expand, Shrink) , tile, Typeable)
+      Resize(Expand, Shrink) , Typeable)
 import qualified XMonad.StackSet as W
 import XMonad.Core (Message)
 

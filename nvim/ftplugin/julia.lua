@@ -28,3 +28,5 @@ require("which-key").register({
         }
     }
 }, {buffer=0})
+
+vim.cmd([[let g:projectionist_heuristics={"src/*.jl":{"src/*.jl":{"type":"source","alternate":"test/{}_tests.jl","related":["benckmark/{}_benchmarks.jl","test/{}_tests.jl","docs/src/{}.md"]},"benchmark/*_benchmarks.jl":{"type":"bench","alternate":"src/{}.jl","related":["src/{}.jl","test/{}_tests.jl","docs/src/{}.md"]},"test/*_tests.jl":{"type":"test","alternate":"src/{}.jl","related":["benckmark/{}_benchmarks.jl","src/{}.jl","docs/src/{}.md"]},"docs/src/*.md":{"type":"doc","alternate":"src/{}.jl","related":["benckmark/{}_benchmarks.jl","test/{}_tests.jl","src/{}.jl"]},"README.md":{"type":"readme"},"Project.toml":{"type":"deps"},}}]])

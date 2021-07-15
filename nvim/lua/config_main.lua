@@ -600,10 +600,10 @@ end
 function _G.git_bcommits()
     require("telescope.builtin").git_bcommits({
         attach_mappings = function(_, map)
-            map('n', '<c-o>', open_dif)
-            map('i', '<c-o>', open_dif)
-            map('n', '<c-d>', open_single_dif)
-            map('i', '<c-d>', open_single_dif)
+            map('n', '<c-d>', open_dif)
+            map('i', '<c-d>', open_dif)
+            map('n', '<c-o>', open_single_dif)
+            map('i', '<c-o>', open_single_dif)
             return true
         end
     })
@@ -612,10 +612,10 @@ end
 function _G.git_commits()
     require("telescope.builtin").git_commits({
         attach_mappings = function(_, map)
-            map('n', '<c-o>', open_dif)
-            map('i', '<c-o>', open_dif)
-            map('n', '<c-d>', open_single_dif)
-            map('i', '<c-d>', open_single_dif)
+            map('n', '<c-d>', open_dif)
+            map('i', '<c-d>', open_dif)
+            map('n', '<c-o>', open_single_dif)
+            map('i', '<c-o>', open_single_dif)
             return true
         end
     })
@@ -624,10 +624,10 @@ end
 function _G.git_branch()
     require("telescope.builtin").git_branches({
         attach_mappings = function(_, map)
-            map('n', '<c-o>', open_dif)
-            map('i', '<c-o>', open_dif)
-            map('n', '<c-d>', open_single_dif)
-            map('i', '<c-d>', open_single_dif)
+            map('n', '<c-d>', open_dif)
+            map('i', '<c-d>', open_dif)
+            map('n', '<c-o>', open_single_dif)
+            map('i', '<c-o>', open_single_dif)
             return true
         end
     })
@@ -663,6 +663,7 @@ require("todo-comments").setup({
 
 
 require("hop").setup({keys="tnseriaodhgjplfuwy"})
+require("tsht").config.hint_keys = {"t", "n", "s", "e", "r", "i", "a", "o", "d", "h", "g", "j", "p", "l", "f", "u", "w", "y"}
 require("numb").setup()
 require("foldsigns").setup()
 require("range-highlight").setup()

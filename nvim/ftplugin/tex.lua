@@ -27,25 +27,9 @@ require("which-key").register({
     },
 }, {buffer=0, mode = "v"})
 
-vim.api.nvim_command("let g:vimtex_quickfix_mode=0")
-vim.api.nvim_command("let g:vimtex_quickfix_mode=0")
-
--- vim.api.nvim_command([[let g:vimtex_view_method='zathura'
---     let g:vimtex_view_automatic=1
---     let g:vimtex_view_forward_search_on_start=1
-
---     let b:compe_latex_insert_code = v:true
---     let g:vimtex_compiler_latexmk = {
---         \ 'build_dir' : '',
---         \ 'callback' : 1,
---         \ 'continuous' : 0,
---         \ 'executable' : 'latexmk',
---         \ 'hooks' : [],
---         \ 'options' : [
---         \   '-verbose',
---         \   '-file-line-error',
---         \   '-synctex=1',
---         \   '-interaction=nonstopmode',
---         \ ],
---         \}
--- ]])
+vim.cmd([[let g:vimtex_quickfix_mode=0]])
+vim.cmd([[let g:vimtex_view_method='zathura']])
+vim.cmd([[let g:vimtex_view_automatic=1]])
+vim.cmd([[let g:vimtex_view_forward_search_on_start=1]])
+vim.cmd([[let b:compe_latex_insert_code = v:true]])
+vim.cmd([[let g:vimtex_compiler_latexmk = { 'build_dir' : '', 'callback' : 1, 'continuous' : 0, 'executable' : 'latexmk', 'hooks' : [], 'options' : [ '-verbose', '-file-line-error', '-synctex=1', '-interaction=nonstopmode', ] }]])
