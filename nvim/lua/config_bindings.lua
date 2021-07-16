@@ -108,7 +108,7 @@ require("which-key").register({
         ["/"] = {
             name = "Related Files",
             ["/"] = {"<cmd>A<cr>", "Alternate File"},
-            f = {[["<cmd> Telescope fd default_text=" . split(expand("%:t:r"), '_')[0] . " prompt_prefix= <cr>"]], "Search", expr=true},
+            f = {[["<cmd>lua require'telescope.builtin'.find_files({find_command={'fd', \"" . split(expand("%:t:r"), '_')[0] . "\"}})<cr>"]], "Search", expr=true},
             d = {"<cmd>Edoc<cr>", "Documentation"},
             s = {"<cmd>Esource<cr>", "Source"},
             b = {"<cmd>Ebench<cr>", "Benchmark"},
