@@ -107,6 +107,7 @@ require("which-key").register({
         ["<leader>"] = {"<c-^>", "Last File"},
         ["/"] = {
             name = "Related Files",
+            ["<leader>"] = {"<c-^>", "Last File"},
             ["/"] = {"<cmd>A<cr>", "Alternate File"},
             f = {[["<cmd>lua require'telescope.builtin'.find_files({find_command={'fd', \"" . split(expand("%:t:r"), '_')[0] . "\"}})<cr>"]], "Search", expr=true},
             d = {"<cmd>Edoc<cr>", "Documentation"},
@@ -115,9 +116,9 @@ require("which-key").register({
             t = {"<cmd>Etest<cr>", "Test"},
             p = {"<cmd>Edeps<cr>", "Project Dependencies"},
             r = {"<cmd>Ereadme<cr>", "Readme"},
-            m = {[["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr=true},
             v = {
                 name = "Vertical Split",
+                ["<leader>"] = {"<cmd>vsplit #<cr>", "Last File"},
                 ["/"] = {"<cmd>AV<cr>", "Alternate File"},
                 d = {"<cmd>Vdoc<cr>", "Documentation"},
                 s = {"<cmd>Vsource<cr>", "Source"},
@@ -125,10 +126,10 @@ require("which-key").register({
                 t = {"<cmd>Vtest<cr>", "Test"},
                 p = {"<cmd>Vdeps<cr>", "Project Dependencies"},
                 r = {"<cmd>Vreadme<cr>", "Readme"},
-                m = {[["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr=true},
             },
             x = {
                 name = "Horizontal Split",
+                ["<leader>"] = {"<cmd>split #<cr>", "Last File"},
                 ["/"] = {"<cmd>AS<cr>", "Alternate File"},
                 d = {"<cmd>Sdoc<cr>", "Documentation"},
                 s = {"<cmd>Ssource<cr>", "Source"},
@@ -136,10 +137,10 @@ require("which-key").register({
                 t = {"<cmd>Stest<cr>", "Test"},
                 p = {"<cmd>Sdeps<cr>", "Project Dependencies"},
                 r = {"<cmd>Sreadme<cr>", "Readme"},
-                m = {[["<cmd>Ssource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr=true},
             },
             T = {
                 name = "New Tab",
+                ["<leader>"] = {"<cmd>tabedit #<cr>", "Last File"},
                 ["/"] = {"<cmd>AT<cr>", "Alternate File"},
                 d = {"<cmd>Tdoc<cr>", "Documentation"},
                 s = {"<cmd>Tsource<cr>", "Source"},
@@ -147,7 +148,6 @@ require("which-key").register({
                 t = {"<cmd>Ttest<cr>", "Test"},
                 p = {"<cmd>Tdeps<cr>", "Project Dependencies"},
                 r = {"<cmd>Treadme<cr>", "Readme"},
-                m = {[["<cmd>Ssource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr=true},
             },
             n = {
                 name = "New File",
@@ -157,7 +157,6 @@ require("which-key").register({
                 t = {[["<cmd>Etest " . input('File Name > ') . "<cr>"]], "Test", expr=true},
                 p = {[[<cmd>Edeps<cr>]], "Project Dependencies"},
                 r = {[[<cmd>Ereadme<cr>]], "Readme"},
-                m = {[["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr=true},
             },
         },
         [">"] = {"<cmd>Telescope spell_suggest theme=get_cursor<cr>", "Spelling Suggestions"},
@@ -170,6 +169,7 @@ require("which-key").register({
             name = "Find",
             ["/"] = {"<cmd>Telescope search_history<cr>", "Search History"},
             [":"] = {"<cmd>Telescope command_history<cr>", "Search History"},
+            ["*"] = {[[<cmd>lua require'telescope.builtin'.find_files({find_command={'rg', vim.fn.expand("<cword>")}})<cr>]], "Grep Word Under Cursor"},
             B = {"<cmd>Telescope buffers only_cwd=true show_all_buffers=true<cr>", "Buffers (cwd)"},
             b = {"<cmd>Telescope buffers show_all_buffers=true<cr>", "Buffers"},
             C = {"<cmd>call v:lua.git_bcommits()<cr>", "Commits (buffer)"},
@@ -220,6 +220,9 @@ require("which-key").register({
             S = {"<cmd>Gitsigns stage_buffer<CR>", "Stage File"},
             s = {"<cmd>Gitsigns stage_hunk<CR>", "Hunk Stage"},
             v = {"<cmd>Gitsigns select_hunk<CR>", "Select Current Hunk"},
+            [","] = {
+                name = "Settings",
+            }
         },
         p = {
             name = "Preview",

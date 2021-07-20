@@ -13,6 +13,21 @@ end
 
 require("which-key").register({
     ["<leader>"] = {
+        ["/"] = {
+            m = {[["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr=true},
+            v = {
+                m = {[["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr=true},
+            },
+            x = {
+                m = {[["<cmd>Ssource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr=true},
+            },
+            T = {
+                m = {[["<cmd>Ssource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr=true},
+            },
+            n = {
+                m = {[["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr=true},
+            },
+        },
         v = {
             i = {"<cmd>lua _juliaREPL_toggle()<cr>", "Julia Terminal"}
         },

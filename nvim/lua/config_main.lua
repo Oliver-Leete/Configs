@@ -231,19 +231,118 @@ require("nvim-autopairs").setup({
 -- Lsp Settup
 
 local nvim_lsp = require("lspconfig")
-local saga = require("lspsaga")
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-vim.fn.sign_define( "LspDiagnosticsSignError", {texthl = "LspDiagnosticsSignError", text = "", numhl = "LspDiagnosticsSignError"})
-vim.fn.sign_define( "LspDiagnosticsSignWarning", {texthl = "LspDiagnosticsSignWarning", text = "", numhl = "LspDiagnosticsSignWarning"})
-vim.fn.sign_define( "LspDiagnosticsSignHint", {texthl = "LspDiagnosticsSignHint", text = "", numhl = "LspDiagnosticsSignHint"})
-vim.fn.sign_define( "LspDiagnosticsSignInformation", {texthl = "LspDiagnosticsSignInformation", text = "", numhl = "LspDiagnosticsSignInformation"})
+local function preview_location_callback(_, _, result)
+  if result == nil or vim.tbl_isempty(result) then
+    return nil
+  end
+  vim.lsp.util.preview_location(result[1], {border="single"})
+end
+
+function PeekDefinition()
+  local params = vim.lsp.util.make_position_params()
+  return vim.lsp.buf_request(0, 'textDocument/definition', params, preview_location_callback)
+end
+
+local signs = { Error = " ", Warning = "", Hint = " ", Information = " " }
+for type, icon in pairs(signs) do
+  local hl = "LspDiagnosticsSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+end
+
+-- Capture real implementation of function that sets signs
+local orig_set_signs = vim.lsp.diagnostic.set_signs
+local set_signs_limited = function(diagnostics, bufnr, client_id, sign_ns, opts)
+    -- original func runs some checks, which I think is worth doing
+    -- but maybe overkill
+    if not diagnostics then
+        diagnostics = diagnostic_cache[bufnr][client_id]
+    end
+
+    -- early escape
+    if not diagnostics then
+        return
+    end
+
+    -- Work out max severity diagnostic per line
+    local max_severity_per_line = {}
+    for _,d in pairs(diagnostics) do
+        if max_severity_per_line[d.range.start.line] then
+            local current_d = max_severity_per_line[d.range.start.line]
+            if d.severity < current_d.severity then
+                max_severity_per_line[d.range.start.line] = d
+            end
+        else
+            max_severity_per_line[d.range.start.line] = d
+        end
+    end
+
+    -- map to list
+    local filtered_diagnostics = {}
+    for _,v in pairs(max_severity_per_line) do
+        table.insert(filtered_diagnostics, v)
+    end
+
+    -- call original function
+    orig_set_signs(filtered_diagnostics, bufnr, client_id, sign_ns, opts)
+end
+vim.lsp.diagnostic.set_signs = set_signs_limited
 
 local custom_attach = function(client, bufnr)
-	-- print("LSP started.");
+    print("LSP: " .. client.name .. " Started")
     capabilities = capabilities
+
+    vim.lsp.handlers["textDocument/publishDiagnostics"] =
+        function(_, _, params, client_id, _)
+            local config = {
+                underline = true,
+                virtual_text = {
+                    prefix = " ",
+                    spacing = 4,
+                },
+                signs = true,
+                update_in_insert = false,
+            }
+            local uri = params.uri
+            local bufnr2 = vim.uri_to_bufnr(uri)
+
+            if not bufnr2 then
+                return
+            end
+
+            local diagnostics = params.diagnostics
+
+            for i, v in ipairs(diagnostics) do
+                diagnostics[i].message = string.format("%s: %s", v.source, v.message)
+            end
+
+            vim.lsp.diagnostic.save(diagnostics, bufnr2, client_id)
+
+            if not vim.api.nvim_buf_is_loaded(bufnr2) then
+                return
+            end
+
+            vim.lsp.diagnostic.display(diagnostics, bufnr2, client_id, config)
+        end
+
+    vim.lsp.handlers["textDocument/hover"] =
+        vim.lsp.with(
+        vim.lsp.handlers.hover,
+        {
+            border = "single"
+        }
+    )
+    vim.lsp.handlers["textDocument/signatureHelp"] =
+        vim.lsp.with(
+        vim.lsp.handlers.signature_help,
+        {
+            border = "single"
+        }
+    )
+
     require("lsp_signature").on_attach({
         bind = true,
         doc_lines = 10,
@@ -260,31 +359,9 @@ local custom_attach = function(client, bufnr)
             border = "single"
         },
     })
+
     require("illuminate").on_attach(client)
-    saga.init_lsp_saga {
-        use_saga_diagnostic_sign = true,
-        error_sign = '',
-        warn_sign = '',
-        hint_sign = '',
-        infor_sign = '',
-        dianostic_header_icon = ' ',
-        code_action_icon = '',
-        code_action_prompt = {
-            enable = true,
-            sign = false,
-            sign_priority = 20,
-            virtual_text = true,
-        },
-        finder_definition_icon = '  ',
-        finder_reference_icon = '  ',
-        max_preview_lines = 10,
-        finder_action_keys = { open = '<cr>', vsplit = 's',split = 'i',quit = '<esc>',scroll_down = '<C-f>', scroll_up = '<C-b>'},
-        code_action_keys = { quit = '<esc>',exec = '<CR>' },
-        rename_action_keys = { quit = '<esc>',exec = '<CR>' },
-        definition_preview_icon = '  ',
-        border_style = "single",
-        rename_prompt_prefix = '➤',
-    }
+
     require("which-key").register({
         ["<leader>"] = {
             ["."] = {"<cmd>Telescope lsp_code_actions theme=get_cursor<CR>", "Code Actions"},
@@ -299,23 +376,22 @@ local custom_attach = function(client, bufnr)
             },
             p = {
                 name = "preview",
-                p = {"<Cmd>Lspsaga hover_doc<CR>", "Documentation"},
-                s = {"<cmd>Lspsaga signature_help<CR>", "Signature"},
-                d = {"<cmd>Lspsaga preview_definition<CR>", "Definition"},
-                e = {"<cmd>Lspsaga show_line_diagnostics<CR>", "Diagnostics"},
-                a = {"<cmd>Lspsaga lsp_finder<CR>", "All"},
+                p = {"<Cmd>lua vim.lsp.buf.hover({ focusable = false})<CR>", "Documentation"},
+                s = {"<cmd>lua vim.lsp.buf.signature_help({ focusable = false})<CR>", "Signature"},
+                d = {"<cmd>lua PeekDefinition()<CR>", "Definition"},
+                e = {"<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false, popup_opts = {border='single'}})<CR>", "Diagnostics"},
                 l = {"<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory"},
             },
             r = {
-                r = {"<cmd>Lspsaga rename<CR>", "Rename (LSP)"},
+                r = {"<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)"},
                 ["="] = {"<cmd>lua vim.lsp.buf.formatting()<CR>", "Format"},
             },
         },
         ["["] = {
-            e = {"<cmd>Lspsaga diagnostic_jump_prev<CR>", "Error"},
+            e = {"<cmd>lua vim.lsp.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>", "Error"},
         },
         ["]"] = {
-            e = {"<cmd>Lspsaga diagnostic_jump_next<CR>", "Error"},
+            e = {"<cmd>lua vim.lsp.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>", "Error"},
         },
     }, {buffer=bufnr})
     require("which-key").register({
@@ -323,9 +399,13 @@ local custom_attach = function(client, bufnr)
             ["."] = {"<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR>", "Code Actions"},
         }
     }, {mode="v", buffer=bufnr})
-    vim.api.nvim_exec([[
-        autocmd CursorHold * :Lspsaga show_cursor_diagnostics
-    ]], false)
+
+    vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb({sign={priority=7}})]]
+
+    -- vim.api.nvim_exec([[
+    --     autocmd CursorHold * :lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false , popup_opts = { border = 'single' }})
+    -- ]], false)
+
     if client.resolved_capabilities.document_formatting then
         require("which-key").register({
             ["<leader>"] = {
@@ -338,6 +418,7 @@ local custom_attach = function(client, bufnr)
             }
         }, {mode="v", buffer=bufnr})
     end
+
     if client.resolved_capabilities.document_highlight then
         vim.api.nvim_exec([[
             augroup lsp_document_highlight
@@ -350,7 +431,7 @@ local custom_attach = function(client, bufnr)
 end
 require("lspconfig").julials.setup({
     on_attach=custom_attach,
-    root_dir = nvim_lsp.util.root_pattern('Project.toml', 'git', vim.fn.getcwd());
+    flags = {debounce_text_changes=500},
 })
 
 require("lspinstall").setup()
@@ -359,13 +440,9 @@ for _, server in pairs(servers) do
     if server == 'texlab' then
         require("lspconfig").texlab.setup{
             on_attach=custom_attach,
+            flags = {debounce_text_changes=500},
             settings = {
-                bibtex = {
-                    formatting = {
-                        lineLength = 120
-                    }
-                },
-                latex = {
+                texlab = {
                     build = {
                         args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
                         executable = "latexmk",
@@ -377,15 +454,17 @@ for _, server in pairs(servers) do
                         args = {"--synctex-forward", "%l:1:%f", "%p"},
                         onSave = false
                     },
-                    lint = {
-                        onChange = true
+                    chktex = {
+                        onEdit = true
+
                     }
                 }
             }
-         }
+        }
     elseif (server == 'lua') then
         require("lspconfig").lua.setup {
             on_attach=custom_attach,
+            flags = {debounce_text_changes=500},
             cmd = {
                 "/home/oleete/.local/share/nvim/lspinstall/lua/sumneko-lua-language-server",
                 "-E",
@@ -393,7 +472,6 @@ for _, server in pairs(servers) do
             },
             root_dir = nvim_lsp.util.root_pattern("init.vim", "init.lua"),
             settings = {
-                on_attach=custom_attach,
                 Lua = {
                     runtime = {
                         -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
@@ -422,13 +500,14 @@ for _, server in pairs(servers) do
     elseif server == 'diagnosticls' then
 
     else
-        require("lspconfig")[server].setup{on_attach=custom_attach}
+        require("lspconfig")[server].setup{on_attach=custom_attach, flags={debounce_text_changes=500}}
     end
 end
 
 
 require("lspconfig").hls.setup({
     on_attach=custom_attach,
+    flags = {debounce_text_changes=500},
     cmd = { "haskell-language-server-wrapper", "--lsp" },
     filetypes = { "haskell", "lhaskell" },
     root_dir = nvim_lsp.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml", ".git"),
@@ -658,6 +737,9 @@ require("todo-comments").setup({
     },
 })
 
+require('lint').linters_by_ft = {
+  tex = {'compiler'},
+}
 
 require"surround".setup{}
 

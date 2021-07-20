@@ -169,8 +169,8 @@ require("bqf").setup({
         stogglevm = '<c-space>',
         tab = '<c-t>',
         split = '<c-x>',
-        prevfile = 'k',
-        nextfile = 'j',
+        prevfile = '<left>',
+        nextfile = '<right>',
         vsplit = '<c-v>',
     },
 })

@@ -6,14 +6,70 @@ require("which-key").register({
         c = {"<cmd>VimtexCountWord<cr>", "Word Count"},
         C = {"<cmd>VimtexCountWord!<cr>", "Word Count Report"},
         m = {"<cmd>VimtexToggleMain<cr>", "Toggle the Main File"},
+        g = {"<cmd>compiler textidote<cr><cmd>lmake!<cr><cmd>Trouble loclist<cr>", "Grammer Checking"},
     },
     ["<leader>"] = {
+        ["/"] = {
+            ["1"] = {"<cmd>EchapOneMain<cr>", "Chapter 1"},
+            ["2"] = {"<cmd>EchapTwoMain<cr>", "Chapter 2"},
+            ["3"] = {"<cmd>EchapThreeMain<cr>", "Chapter 3"},
+            ["4"] = {"<cmd>EchapFourMain<cr>", "Chapter 4"},
+            ["5"] = {"<cmd>EchapFiveMain<cr>", "Chapter 5"},
+            ["6"] = {"<cmd>EchapSixMain<cr>", "Chapter 6"},
+            ["7"] = {"<cmd>EchapSevenMain<cr>", "Chapter 7"},
+            c = {"<cmd>Ecitations<cr>", "Citations"},
+            m = {"<cmd>Emain<cr>", "Main File"},
+            v = {
+                ["1"] = {"<cmd>VchapOneMain<cr>", "Chapter 1"},
+                ["2"] = {"<cmd>VchapTwoMain<cr>", "Chapter 2"},
+                ["3"] = {"<cmd>VchapThreeMain<cr>", "Chapter 3"},
+                ["4"] = {"<cmd>VchapFourMain<cr>", "Chapter 4"},
+                ["5"] = {"<cmd>VchapFiveMain<cr>", "Chapter 5"},
+                ["6"] = {"<cmd>VchapSixMain<cr>", "Chapter 6"},
+                ["7"] = {"<cmd>VchapSevenMain<cr>", "Chapter 7"},
+                c = {"<cmd>Vcitations<cr>", "Citations"},
+                m = {"<cmd>Vmain<cr>", "Main File"},
+            },
+            x = {
+                ["1"] = {"<cmd>SchapOneMain<cr>", "Chapter 1"},
+                ["2"] = {"<cmd>SchapTwoMain<cr>", "Chapter 2"},
+                ["3"] = {"<cmd>SchapThreeMain<cr>", "Chapter 3"},
+                ["4"] = {"<cmd>SchapFourMain<cr>", "Chapter 4"},
+                ["5"] = {"<cmd>SchapFiveMain<cr>", "Chapter 5"},
+                ["6"] = {"<cmd>SchapSixMain<cr>", "Chapter 6"},
+                ["7"] = {"<cmd>SchapSevenMain<cr>", "Chapter 7"},
+                c = {"<cmd>Scitations<cr>", "Citations"},
+                m = {"<cmd>Smain<cr>", "Main File"},
+            },
+            T = {
+                ["1"] = {"<cmd>TchapOneMain<cr>", "Chapter 1"},
+                ["2"] = {"<cmd>TchapTwoMain<cr>", "Chapter 2"},
+                ["3"] = {"<cmd>TchapThreeMain<cr>", "Chapter 3"},
+                ["4"] = {"<cmd>TchapFourMain<cr>", "Chapter 4"},
+                ["5"] = {"<cmd>TchapFiveMain<cr>", "Chapter 5"},
+                ["6"] = {"<cmd>TchapSixMain<cr>", "Chapter 6"},
+                ["7"] = {"<cmd>TchapSevenMain<cr>", "Chapter 7"},
+                c = {"<cmd>Tcitations<cr>", "Citations"},
+                m = {"<cmd>Tmain<cr>", "Main File"},
+            },
+            n = {
+                ["1"] = {[["<cmd>EchapOne" . input('File Name') . "<cr>"]], "Chapter 1"},
+                ["2"] = {[["<cmd>EchapTwo" . input('File Name') . "<cr>"]], "Chapter 2"},
+                ["3"] = {[["<cmd>EchapThree" . input('File Name') . "<cr>"]], "Chapter 3"},
+                ["4"] = {[["<cmd>EchapFour" . input('File Name') . "<cr>"]], "Chapter 4"},
+                ["5"] = {[["<cmd>EchapFive" . input('File Name') . "<cr>"]], "Chapter 5"},
+                ["6"] = {[["<cmd>EchapSix" . input('File Name') . "<cr>"]], "Chapter 6"},
+                ["7"] = {[["<cmd>EchapSeven" . input('File Name') . "<cr>"]], "Chapter 7"},
+                u = {[["<cmd>Escripts" . input('File Name') . "<cr>"]], "Scripts"},
+            },
+        },
         M = {[[<cmd>2TermExec cmd="latexmk -verbose -file-line-error -synctex=1 -interaction=nonstopmode"<cr>]], "Build in Terminal"},
         m = {
             m = {"<cmd>VimtexCompileSS<cr>", "Build Once"},
             o = {"<cmd>VimtexCompile<cr>", "Toggle Continuous Building"},
             c = {"<cmd>VimtexClean<cr>", "Clear Build Files"},
         },
+
     },
 }, {buffer=0})
 
@@ -29,7 +85,12 @@ require("which-key").register({
 
 vim.cmd([[let g:vimtex_quickfix_mode=0]])
 vim.cmd([[let g:vimtex_view_method='zathura']])
-vim.cmd([[let g:vimtex_view_automatic=1]])
 vim.cmd([[let g:vimtex_view_forward_search_on_start=1]])
 vim.cmd([[let b:compe_latex_insert_code = v:true]])
 vim.cmd([[let g:vimtex_compiler_latexmk = { 'build_dir' : '', 'callback' : 1, 'continuous' : 0, 'executable' : 'latexmk', 'hooks' : [], 'options' : [ '-verbose', '-file-line-error', '-synctex=1', '-interaction=nonstopmode', ] }]])
+vim.cmd([[let g:vimtex_grammar_textidote={'jar':'~/.local/bin/textidote.jar', 'args':''}]])
+vim.cmd([["set errorformat="]])
+vim.cmd([["set errorformat+=%f(L%lC%c-L%\\d%\\+C%\\d%\\+):\ %m"]])
+vim.cmd([["set errorformat+=%-G%.%#"]])
+
+vim.cmd([[let g:projectionist_heuristics={"OML-Thesis.tex":{ "*.tex":{"type":"chapMain","alternate":"OML-Thesis.tex"}, "Scripts/*.tex":{"type":"scripts","alternate":"OML-Thesis.tex"}, "1/*.tex":{"type":"chapOne","alternate":"IntroductiontoAM.tex"}, "2/*.tex":{"type":"chapTwo","alternate":"PowderBedFusion.tex"}, "3/*.tex":{"type":"chapThree","alternate":"ModellingofAM.tex"}, "4/*.tex":{"type":"chapFour","alternate":"PowderCharacterisation.tex"}, "5/*.tex":{"type":"chapFive","alternate":"PowderModel.tex"}, "6/*.tex":{"type":"chapSix","alternate":"MachineModel.tex"}, "7/*.tex":{"type":"chapSeven","alternate":"ProcessModel.tex"}, "Scripts/Packages.tex":{"type":"deps"}, "IntroductiontoAM.tex":{"type":"chapOneMain"}, "PowderBedFusion.tex":{"type":"chapTwoMain"}, "ModellingofAM.tex":{"type":"chapThreeMain"}, "PowderCharacterisation.tex":{"type":"chapFourMain"}, "PowderModel.tex":{"type":"chapFiveMain"}, "MachineModel.tex":{"type":"chapSixMain"}, "ProcessModel.tex":{"type":"chapSevenMain"}, "OML-Thesis.tex":{"type":"main"}, "Citations.bib":{"type":"citations"} }}]])

@@ -117,10 +117,11 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'neovim/nvim-lspconfig'
     Plug 'kabouzeid/nvim-lspinstall'
     Plug 'onsails/lspkind-nvim'
-    Plug 'glepnir/lspsaga.nvim'
     Plug 'ray-x/lsp_signature.nvim'
     Plug 'folke/lsp-colors.nvim'
     Plug 'RRethy/vim-illuminate'
+    Plug 'kosayoda/nvim-lightbulb'
+    Plug 'mfussenegger/nvim-lint'
 
     " Completion
     Plug 'hrsh7th/nvim-compe'
@@ -224,7 +225,7 @@ augroup END
 set shortmess=Iflmnrwxt
 
 " Line Numbering
-set signcolumn=yes:1
+set signcolumn=yes:2
 set number
 set relativenumber
 
@@ -426,6 +427,7 @@ augroup panelMappings
   au filetype juliadoc map <buffer> <esc> <cmd>q<cr>
   au filetype LvimHelper map <buffer> <esc> <cmd>q<cr>
   au filetype NeogitStatus map <buffer> <esc> <cmd>tabclose<cr>
+  au filetype NeogitPopup map <buffer> <esc> <cmd>q<cr>
   au filetype toggleterm map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
 augroup END
 
