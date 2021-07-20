@@ -130,6 +130,7 @@ require("toggleterm").setup({
     shell           = 'fish',
 })
 
+
 -- Neogit Setup
 
 require("neogit").setup({

@@ -140,6 +140,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-telescope/telescope-bibtex.nvim'
     Plug 'nvim-telescope/telescope-github.nvim'
     Plug 'crispgm/telescope-heading.nvim'
+    Plug 'nvim-telescope/telescope-hop.nvim'
 
     " Treesitter
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 

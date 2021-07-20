@@ -172,15 +172,16 @@ require("which-key").register({
             ["*"] = {[[<cmd>lua require'telescope.builtin'.find_files({find_command={'rg', vim.fn.expand("<cword>")}})<cr>]], "Grep Word Under Cursor"},
             B = {"<cmd>Telescope buffers only_cwd=true show_all_buffers=true<cr>", "Buffers (cwd)"},
             b = {"<cmd>Telescope buffers show_all_buffers=true<cr>", "Buffers"},
-            C = {"<cmd>call v:lua.git_bcommits()<cr>", "Commits (buffer)"},
-            c = {"<cmd>call v:lua.git_commits()<cr>", "Git Commits"},
+            C = {"<cmd>Telescope git_bcommits<cr>", "Commits (buffer)"},
+            c = {"<cmd>Telescope git_commits<cr>", "Git Commits"},
             E = {"<cmd>Telescope lsp_document_diagnostics<cr>", "Errors (buffer)"},
             e = {"<cmd>Telescope lsp_workspace_diagnostics<cr>", "Errors"},
             F = {"<cmd>lua require('telescope.builtin').find_files({find_command={'fd', '-I'}})<cr>", "Files (non git)"},
             -- G = {"<cmd>Git! difftool<cr><cmd>cclose<cr><cmd>Telescope quickfix<cr>", "Git Chunks"},
             g = {"<cmd>Telescope git_status<cr>", "Git Status"},
             j = {"<cmd>Telescope jumplist<cr>", "Jumps"},
-            l = {"<cmd>Telescope current_buffer_fuzzy_find<cr>", "Line"},
+            l = {"<cmd>Telescope current_buffer_fuzzy_find<cr>", "Fuzzy Line"},
+            L = {"<cmd>Telescope grep_string only_sort_text=true search=\"\"<cr>", "Fuzzy Line (Project)"},
             m = {"<cmd>Telescope marks<cr>", "Marks"},
             n = {"<cmd>TodoTelescope<cr>", "Todo Items"},
             i = {"<cmd>Telescope media_files<cr>", "Images (and other media)"},
@@ -211,8 +212,14 @@ require("which-key").register({
             b = {"<cmd>Telescope git_branches<cr>", "Branches"},
             C = {"<cmd>Telescope git_bcommits<cr>", "Commits (buffer)"},
             c = {"<cmd>Telescope git_commits<cr>", "Commits"},
-            -- d = {"<cmd>Gitsigns diffthis", "Diff View of Signs"},
-            d = {"<cmd>call PMToggleView('gitdiff')<CR>", "Git Diff Viewer"},
+            d = {
+                d = {"<cmd>call PMToggleView('gitdiff')<CR>", "Git Diff Viewer"},
+                D = {"<cmd>Gitsigns diffthis", "Diff View of Signs"},
+                c = {"<cmd>call v:lua.git_commits_again()<cr>", "View The Diff of a Commit"},
+                C = {"<cmd>call v:lua.git_commits_compe()<cr>", "Diff Against a Commit"},
+                b = {"<cmd>call v:lua.git_branch_again()<cr>", "View The Diff of a Branch"},
+                B = {"<cmd>call v:lua.git_branch_compe()<cr>", "Diff Against a Branch"},
+            },
             g = {"<cmd>Neogit<cr>", "Neogit Status"},
             p = {"<cmd>Gitsigns preview_hunk<CR>", "Hunk Preview"},
             r = {"<cmd>Gitsigns reset_hunk<CR>", "Hunk Reset"},
@@ -222,6 +229,8 @@ require("which-key").register({
             v = {"<cmd>Gitsigns select_hunk<CR>", "Select Current Hunk"},
             [","] = {
                 name = "Settings",
+                b = {"<cmd>call v:lua.gitsign_change_base()<cr>", "Change Gitsigns Base"},
+                B = {"<cmd>call v:lua.gitsign_bchange_base()<cr>", "Change Gitsigns Base"},
             }
         },
         p = {
@@ -314,6 +323,7 @@ require("which-key").register({
             name = "buffers",
             o = {"<cmd>Bdelete hidden<cr>", "Close All Hidden Buffers"},
             d = {"<cmd>bdelete!<cr>", "Delete the current buffer"},
+            c = {"<cmd>q<cr>", "Close the current buffer"},
         },
         w = {
             name = "Window Managment",
@@ -399,7 +409,6 @@ require("which-key").register({
     ["<leader>"] = {
         r = {
             name = "Refactor",
-            s = {"<Plug>(ScalpelVisual)", "Rename (Scalpel)"},
             v = {"<plug>(ExtractVarVis)", "Extract Variable"},
         },
     },
