@@ -437,16 +437,17 @@ require("lspconfig").julials.setup({
 require("lspinstall").setup()
 local servers = require("lspinstall").installed_servers()
 for _, server in pairs(servers) do
-    if server == 'texlab' then
+    if server == 'latex' then
         require("lspconfig").texlab.setup{
             on_attach=custom_attach,
             flags = {debounce_text_changes=500},
+            root_dir = nvim_lsp.util.root_pattern(".git"),
             settings = {
                 texlab = {
                     build = {
                         args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
                         executable = "latexmk",
-                        onSave = true,
+                        onSave = false,
                         forwardSearchAfter = true
                     },
                     forwardSearch = {
@@ -455,7 +456,8 @@ for _, server in pairs(servers) do
                         onSave = false
                     },
                     chktex = {
-                        onEdit = true
+                        onEdit = true,
+                        onOpenAndSave = true,
 
                     }
                 }
@@ -923,20 +925,23 @@ configs.ltex = {
     default_config = {
         cmd = {"/home/oleete/Downloads/ltex-ls-12.3.0/bin/ltex-ls"};
         filetypes = {'tex', 'bib', 'markdown'};
-        dictionary_files = { ["en"] = {vim.fn.getcwd() .. "dictionary.ltex"} };
-        disabledrules_files = { ["en"] = {vim.fn.getcwd() .. "disable.ltex"} };
-        falsepositive_files = { ["en"] = {vim.fn.getcwd() .. "false.ltex"}};
+        dictionary_files = { ["en-GB"] = {vim.fn.getcwd() .. "/dictionary.ltex"} };
+        disabledrules_files = { ["en-GB"] = {vim.fn.getcwd() .. "/disable.ltex"} };
+        falsepositive_files = { ["en-GB"] = {vim.fn.getcwd() .. "/false.ltex"}};
         settings = {
             ltex = {
                 enabled= {"latex", "tex", "bib", "markdown"},
                 checkFrequency="save",
-                language="en",
-                diagnosticSeverity="information",
+                language="en-GB",
                 setenceCacheSize=2000,
+                diagnosticSeverity = "hint",
                 additionalRules = {
-                    enablePickyRules = true,
-                    motherTongue= "en",
+                    enablePickyRules = false,
+                    motherTongue= "en-GB",
                 };
+                latex = {
+                    environments = {Fortran = "ignore", jllisting= "ignore"},
+                },
                 dictionary = {};
                 disabledRules = {};
                 hiddenFalsePositives = {};

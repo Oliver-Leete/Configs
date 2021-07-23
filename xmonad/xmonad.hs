@@ -36,6 +36,7 @@ import XMonad.Actions.ConditionalKeys
 import XMonad.Actions.CycleWS
 import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
+import XMonad.Actions.EasyMotion
 import XMonad.Actions.Navigation2D
 import XMonad.Actions.PerWindowKeys
 import XMonad.Actions.Promote
@@ -86,7 +87,7 @@ import XMonad.Layout.WindowNavigation
 import XMonad.Prompt
 import XMonad.Prompt.ConfirmPrompt
 import XMonad.Prompt.FuzzyMatch
-import XMonad.Prompt.Window
+-- import XMonad.Prompt.Window
 
 import XMonad.Util.EZConfig
 import XMonad.Util.Hacks
@@ -204,12 +205,12 @@ projects =
 
     , Project   { projectName       = wsPER
                 , projectDirectory  = "~/PersonalDrive"
-                , projectStartHook  = Just $    spawnOn wsPER myBrowser
+                , projectStartHook  = Just $    spawnOn wsPER "google-chrome-stable --user-data-dir=/home/oleete/.config/browser/google-chrome-stable --new-window 'github.com' 'feedly.com/i/latest' 'youtube.com' 'coinbase.com'"
                 }
 
     , Project   { projectName       = wsWRK
                 , projectDirectory  = "~/UniDrive"
-                , projectStartHook  = Just $    spawnOn wsWRK myBrowser
+                , projectStartHook  = Just $    spawnOn wsWRK "google-chrome-stable --user-data-dir=/home/oleete/.config/browser/google-chrome-stable-wrk --new-window 'sheffield.ac.uk' 'gmail.com' 'calendar.google.com' 'chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html' 'keep.google.com' 'drive.google.com' 'github.com/Oliver-Leete/ThesisLatex' 'feedly.com/i/latest' 'paperpile.com/app'"
                 }
 
     , Project   { projectName       = wsSIM
@@ -330,7 +331,7 @@ alert      = "#f7768e"
 
 -- sizes
 gap    = 4
-reSize = 1/40
+reSize = 1/20
 
 topbar   = 8
 tabsh    = 20
@@ -419,6 +420,15 @@ myShowWNameTheme = def
     , swn_fade              = 0.3
     , swn_bgcolor           = active
     , swn_color             = background
+    }
+easymotionConfig = def
+    { overlayF = proportional (0.3 :: Double) 
+      , bgCol = background
+      , txtCol = foreground
+      , borderCol = active
+      , cancelKey = xK_Escape
+      , sKeys = AnyKeys [xK_t, xK_n, xK_s, xK_e, xK_r, xK_i, xK_a, xK_o, xK_d, xK_h, xK_g, xK_j
+                , xK_p, xK_l, xK_f, xK_u, xK_w, xK_y, xK_b, xK_k, xK_v, xK_m, xK_c, xK_x, xK_z, xK_q]
     }
 
 ----------------------------------------------------------------------------------------------------
@@ -639,8 +649,8 @@ myKeys conf = let
     (
     [ ("M-a"             , addName "Launcher"                    $ spawn myLauncher)
 
-    , ("<F8>"            , addName "prompt select window"        $ windowPrompt myPromptTheme Goto allWindows)
-    , ("C-<F8>"          , addName "prompt fetch window"         $ windowPrompt myPromptTheme Bring allWindows)
+    -- , ("<F8>"            , addName "prompt select window"        $ windowPrompt myPromptTheme Goto allWindows)
+    -- , ("C-<F8>"          , addName "prompt fetch window"         $ windowPrompt myPromptTheme Bring allWindows)
     , ("M-w"             , addName "prompt select ws"            $ switchProjectPrompt myPromptTheme)
     , ("M-C-w"           , addName "prompt send to ws"           $ shiftToProjectPrompt myPromptTheme)
     ]                                                          
@@ -660,6 +670,8 @@ myKeys conf = let
     , ("M-C-m"           , addName "Promote to main"             $ sequence_ [promote, warpCursor])
 
     , ("M-<Escape>"      , addName "Spawn next window in main"   $ toggleHookNext "Main" >> runLogHook)
+
+    , ("<F8>"            , addName "Hop to Window"               $ sequence_ [selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow), warpCursor])
 
     , ("M-<Space>"       , addName "Swap monitor workspaces"     swapNextScreen)
     , ("M-C-<Space>"     , addName "Send window to next monitor" shiftNextScreen)
@@ -694,6 +706,7 @@ myKeys conf = let
 
     , ("M-c"             , addName "Center Focus"                $ sequence_ [ withFocused $ windows . W.sink
                                                                  , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLCENTER])
+
 
     , ("M-h"             , addName "Navigate Left"               $ sequence_ [windowGo L True, warpCursor])
     , ("M-j"             , addName "Navigate Down"               $ sequence_ [windowGo D True, warpCursor])

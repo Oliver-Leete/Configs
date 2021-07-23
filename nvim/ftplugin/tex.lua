@@ -1,12 +1,14 @@
 require("which-key").register({
     ["<localleader>"] = {
+        ["<localleader>"] = {"<cmd>TexlabForward<cr>", "Forward Search", silent=true},
         r = {"<cmd>Telescope bibtex bibtex theme=get_cursor<cr>", "References"},
         x = {"<cmd>VimtexTocToggle<cr>", "Open TOC"},
         v = {"<cmd>VimtexView<cr>", "View Document"},
         c = {"<cmd>VimtexCountWord<cr>", "Word Count"},
         C = {"<cmd>VimtexCountWord!<cr>", "Word Count Report"},
         m = {"<cmd>VimtexToggleMain<cr>", "Toggle the Main File"},
-        g = {"<cmd>compiler textidote<cr><cmd>lmake!<cr><cmd>Trouble loclist<cr>", "Grammer Checking"},
+        g = {"<cmd>TexlabForward<cr>", "Forward Search"},
+        i = {"A% chktex ", "Chktex Ignore"},
     },
     ["<leader>"] = {
         ["/"] = {
@@ -68,6 +70,7 @@ require("which-key").register({
             m = {"<cmd>VimtexCompileSS<cr>", "Build Once"},
             o = {"<cmd>VimtexCompile<cr>", "Toggle Continuous Building"},
             c = {"<cmd>VimtexClean<cr>", "Clear Build Files"},
+            g = {"<cmd>compiler textidote<cr><cmd>lmake!<cr><cmd>Trouble loclist<cr>", "Grammer Checking"},
         },
 
     },
@@ -84,6 +87,7 @@ require("which-key").register({
 }, {buffer=0, mode = "v"})
 
 vim.cmd([[let g:vimtex_quickfix_mode=0]])
+vim.cmd([[let g:vimtex_automatic_xwin=0]])
 vim.cmd([[let g:vimtex_view_method='zathura']])
 vim.cmd([[let g:vimtex_view_forward_search_on_start=1]])
 vim.cmd([[let b:compe_latex_insert_code = v:true]])
