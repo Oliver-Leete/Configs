@@ -67,7 +67,8 @@ require("which-key").register({
         },
         M = {[[<cmd>2TermExec cmd="latexmk -verbose -file-line-error -synctex=1 -interaction=nonstopmode"<cr>]], "Build in Terminal"},
         m = {
-            m = {"<cmd>VimtexCompileSS<cr>", "Build Once"},
+            M = {"<cmd>VimtexCompileSS<cr>", "Build Once"},
+            m = {"<cmd>ProjectDo TexlabBuild<cr>", "Build Project"},
             o = {"<cmd>VimtexCompile<cr>", "Toggle Continuous Building"},
             c = {"<cmd>VimtexClean<cr>", "Clear Build Files"},
             g = {"<cmd>compiler textidote<cr><cmd>lmake!<cr><cmd>Trouble loclist<cr>", "Grammer Checking"},

@@ -163,6 +163,7 @@ require("which-key").register({
         o = {
             name = "Open",
             f = {"gf", "Open File"},
+            D = {"gd", "Open Tag Deffinition"},
         },
         F = {"<cmd>Telescope commands<cr>", "Commands"},
         f = {
@@ -177,7 +178,6 @@ require("which-key").register({
             E = {"<cmd>Telescope lsp_document_diagnostics<cr>", "Errors (buffer)"},
             e = {"<cmd>Telescope lsp_workspace_diagnostics<cr>", "Errors"},
             F = {"<cmd>lua require('telescope.builtin').find_files({find_command={'fd', '-I'}})<cr>", "Files (non git)"},
-            -- G = {"<cmd>Git! difftool<cr><cmd>cclose<cr><cmd>Telescope quickfix<cr>", "Git Chunks"},
             g = {"<cmd>Telescope git_status<cr>", "Git Status"},
             j = {"<cmd>Telescope jumplist<cr>", "Jumps"},
             l = {"<cmd>Telescope current_buffer_fuzzy_find<cr>", "Fuzzy Line"},
@@ -247,7 +247,7 @@ require("which-key").register({
             m = {"<cmd>2ToggleTerm<cr>", "Build Terminal"},
             l = {"<cmd>call PMToggleView('loclist')<CR>", "Location List"},
             q = {"<cmd>call PMToggleView('quickfix')<CR>", "QuickFix List"},
-            s = {"<cmd>call PMToggleView('symbols')<CR>", "Symbol List"},
+            o = {"<cmd>call PMToggleView('symbols')<CR>", "Symbol List"},
             x = {"<cmd>call PMToggleView('nvim-tree')<CR>", "File Tree"},
             T = {"<cmd>call PMToggleView('term')<CR>", "All Terminals"},
             t = {"<cmd>1ToggleTerm<cr>", "Terminal"},
@@ -268,7 +268,6 @@ require("which-key").register({
             v = {[["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj " . input("In what files? > ") . "<cr><cmd>Trouble quickfix<cr>"]], "Populate With VimGrep", expr=true},
             w = {[["<cmd> Cfind! " . input("What would you like to find? ")  . "<cr><cmd>Trouble quickfix<cr>"]], "Populate With find", expr=true},
             W = {[["<cmd> Clocate! " . input("What would you like to locate? ")  . "<cr><cmd>Trouble quickfix<cr>"]], "Populate With Locate", expr=true},
-            -- s = {"<cmd>SpellCheck!<cr>", "Populate With Spelling Errors"},
         },
         L = {"<cmd>LClear<cr><cmd>lgetbuffer<cr><cmd>TroubleRefresh<cr>", "Populater LocList With Buffer Errors "},
         l = {
@@ -283,7 +282,6 @@ require("which-key").register({
             v = {[["<cmd> noautocmd lvimgrep /" . input("What would you like to vimgrep? > ") . "/gj " . input("In what files? > ") . "<cr><cmd>Trouble loclist<cr>"]], "Populate With VimGrep", expr=true},
             w = {[["<cmd> Lfind! " . input("What would you like to find? ")  . "<cr><cmd>Trouble loclist<cr>"]], "Populate With find", expr=true},
             W = {[["<cmd> Llocate! " . input("What would you like to locate? ")  . "<cr><cmd>Trouble loclist<cr>"]], "Populate With Locate", expr=true},
-            -- s = {"<cmd>SpellLCheck!<cr>", "Populate With Spelling Errors"},
         },
         E = {"<cmd>CClear<cr><cmd>cgetbuffer<cr><cmd>TroubleRefresh<cr>", "Open Buffre Errors in Touble"},
         e = {
@@ -319,14 +317,10 @@ require("which-key").register({
             name = "Explorer",
             t = {"<cmd>call PMToggleView('nvim-tree')<cr>", "Open Explorer"},
         },
-        b = {
-            name = "buffers",
-            o = {"<cmd>Bdelete hidden<cr>", "Close All Hidden Buffers"},
-            d = {"<cmd>bdelete!<cr>", "Delete the current buffer"},
-            c = {"<cmd>q<cr>", "Close the current buffer"},
-        },
         w = {
             name = "Window Managment",
+            O = {"<cmd>Bdelete hidden<cr>", "Close All Hidden Buffers"},
+            d = {"<cmd>bdelete!<cr>", "Delete the current buffer"},
             w = {"<cmd>ZenMode<cr>", "Zen Mode"},
             o = {"<c-w>o", "Clean Up Windows"},
             ["<bs>"] = {"<c-w>c", "Close Window"},

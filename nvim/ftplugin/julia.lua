@@ -40,6 +40,9 @@ require("which-key").register({
         m = {
             m = {[[<cmd>2TermExec cmd="~/.config/nvim/filetype/julia/precompile"<cr>]], "Precompile"},
             t = {[[<cmd>2TermExec cmd="~/.config/nvim/filetype/julia/test"<cr>]], "Test Package"},
+            c = {[[<cmd>2TermExec cmd="~/.config/nvim/filetype/julia/testCov"<cr>]], "Coverage Check Package"},
+            b = {[[<cmd>2TermExec cmd="~/.config/nvim/filetype/julia/benchmark"<cr>]], "Benckmark Package"},
+            d = {[[<cmd>2TermExec cmd="~/.config/nvim/filetype/julia/docBuild"<cr>]], "Build Package Documentation"},
         }
     }
 }, {buffer=0})

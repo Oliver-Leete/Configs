@@ -44,6 +44,7 @@ call plug#begin('~/.config/nvim/pluged')
     " Movement Commands
     Plug 'unblevable/quick-scope'
     Plug 'phaazon/hop.nvim'
+    " Plug 'ggandor/lightspeed.nvim'
     Plug 'andymass/vim-matchup'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
@@ -122,6 +123,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'RRethy/vim-illuminate'
     Plug 'kosayoda/nvim-lightbulb'
     Plug 'mfussenegger/nvim-lint'
+    Plug 'jose-elias-alvarez/null-ls.nvim'
 
     " Completion
     Plug 'hrsh7th/nvim-compe'
@@ -186,6 +188,8 @@ set backspace=indent,eol,start
 set diffopt=internal,filler,closeoff,iwhite,context:100000000
 set pumheight=20
 set spelllang=en_gb
+set wildmode=longest,full
+set lazyredraw
 
 
 " Search

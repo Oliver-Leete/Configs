@@ -11,6 +11,32 @@
 -- https://github.com/oliver-leete                                                                 --
 ----------------------------------------------------------------------------------------------------
 
+-- Disable builtins
+local disabled_built_ins = {
+    "netrw",
+    "netrwPlugin",
+    "netrwSettings",
+    "netrwFileHandlers",
+    "gzip",
+    "zip",
+    "zipPlugin",
+    "tar",
+    "tarPlugin",
+    "getscript",
+    "getscriptPlugin",
+    "vimball",
+    "vimballPlugin",
+    "2html_plugin",
+    "logipat",
+    "rrhelper",
+    "spellfile_plugin",
+    "matchit"
+}
+
+for _, plugin in pairs(disabled_built_ins) do
+    vim.g["loaded_" .. plugin] = 1
+end
+
 -- Auto Sessions
 
 require("auto-session").setup({
@@ -380,7 +406,8 @@ local custom_attach = function(client, bufnr)
                 s = {"<cmd>lua vim.lsp.buf.signature_help({ focusable = false})<CR>", "Signature"},
                 d = {"<cmd>lua PeekDefinition()<CR>", "Definition"},
                 e = {"<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false, popup_opts = {border='single'}})<CR>", "Diagnostics"},
-                l = {"<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory"},
+                L = {"<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory"},
+                l = {"<cmd>LspInfo<cr>", "Lsp Infomation"},
             },
             r = {
                 r = {"<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)"},
@@ -805,6 +832,7 @@ require("colorizer").setup({'*'}, {
         mode     = 'background';
 })
 
+-- LTEX
 local configs = require 'lspconfig/configs'
 local util = require 'lspconfig/util'
 
@@ -924,7 +952,7 @@ end
 configs.ltex = {
     default_config = {
         cmd = {"/home/oleete/Downloads/ltex-ls-12.3.0/bin/ltex-ls"};
-        filetypes = {'tex', 'bib', 'markdown'};
+        filetypes = {'tex', 'markdown'};
         dictionary_files = { ["en-GB"] = {vim.fn.getcwd() .. "/dictionary.ltex"} };
         disabledrules_files = { ["en-GB"] = {vim.fn.getcwd() .. "/disable.ltex"} };
         falsepositive_files = { ["en-GB"] = {vim.fn.getcwd() .. "/false.ltex"}};
@@ -991,7 +1019,21 @@ vim.lsp.buf.execute_command = function(command)
         orig_execute_command(command)
     end
 end
+
 require("lspconfig").ltex.setup({
     on_attach = custom_attach,
     root_dir = nvim_lsp.util.root_pattern(".git"),
+})
+
+-- Null LS
+local null_ls = require("null-ls")
+require("null-ls").config({
+    sources = {
+        -- null_ls.builtins.code_actions.gitsigns.with({filetype = {"*"}}),
+        null_ls.builtins.formatting.trim_whitespace.with({ filetypes = {"*"} }),
+        null_ls.builtins.diagnostics.markdownlint,
+    }
+})
+require("lspconfig")["null-ls"].setup({
+    on_attach = custom_attach,
 })
