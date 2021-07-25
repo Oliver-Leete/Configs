@@ -72,9 +72,10 @@ require("bufferline").setup({
         enforce_regular_tabs = true,
         always_show_bufferline = true,
         offsets = {{filetype = "NvimTree", text = "File Explorer", text_align="center"},
+                   {filetype = "DiffviewFiles", text = "Git Changes", text_align="center"},
                    {filetype = "help", text = "Help", text_align="center"},
                    {filetype = "Outline", text = "Symbols", text_align="center"},
-                   {filetype = "Outline", text = "Symbols", text_align="center"},
+                   {filetype = "vim-plug", text = "Plugins", text_align="center"},
                    {filetype = "undotree", text = "Undo Tree", text_align="center"}}
     }
 })

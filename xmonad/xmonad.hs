@@ -205,7 +205,7 @@ projects =
 
     , Project   { projectName       = wsPER
                 , projectDirectory  = "~/PersonalDrive"
-                , projectStartHook  = Just $    spawnOn wsPER "google-chrome-stable --user-data-dir=/home/oleete/.config/browser/google-chrome-stable --new-window 'github.com' 'feedly.com/i/latest' 'youtube.com' 'coinbase.com'"
+                , projectStartHook  = Just $    spawnOn wsPER "google-chrome-stable --user-data-dir=/home/oleete/.config/browser/google-chrome-stable --new-window 'github.com' 'feedly.com/i/latest' 'youtube.com/feed/subscriptions' 'coinbase.com'"
                 }
 
     , Project   { projectName       = wsWRK
@@ -596,10 +596,10 @@ myKeys conf = let
     subKeys "Apps"
     [ ("M-<Return>"      , addName "Terminal"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Return)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Return)
-                                                                             ,(pure True, sequence_ [runOrRaise myTerminal (className =? "kitty"), warpCursor, P.sendKey (controlMask .|. shiftMask) xK_Return])])
+                                                                             ,(pure True, sequence_ [runOrRaise myTerminal (className =? "kitty"), warpCursor])]) -- P.sendKey (controlMask .|. shiftMask) xK_Return])])
     , ("M-C-<Return>"    , addName "Force Terminal"              $ spawn myTerminal) 
     , ("M-b"             , addName "Browser"                     $ bindFirst [(className =? "Google-chrome", P.sendKey controlMask xK_t)
-                                                                             ,(pure True, sequence_ [runOrRaise myBrowser (className =? "Google-chrome"), warpCursor, P.sendKey controlMask xK_t])])
+                                                                             ,(pure True, sequence_ [runOrRaise myBrowser (className =? "Google-chrome"), warpCursor])]) -- P.sendKey controlMask xK_t])])
     , ("M-C-b"           , addName "Force Browser"               $ spawn myBrowser)
     , ("M-M1-b"          , addName "Work Browser"                $ bindOn WS [(wsTMP2,   spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
                                                                              ,(wsTMP,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")

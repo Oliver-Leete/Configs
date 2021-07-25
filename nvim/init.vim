@@ -122,7 +122,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/lsp-colors.nvim'
     Plug 'RRethy/vim-illuminate'
     Plug 'kosayoda/nvim-lightbulb'
-    Plug 'mfussenegger/nvim-lint'
     Plug 'jose-elias-alvarez/null-ls.nvim'
 
     " Completion
@@ -188,7 +187,6 @@ set backspace=indent,eol,start
 set diffopt=internal,filler,closeoff,iwhite,context:100000000
 set pumheight=20
 set spelllang=en_gb
-set wildmode=longest,full
 set lazyredraw
 
 
