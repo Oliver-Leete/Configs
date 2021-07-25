@@ -109,14 +109,11 @@ require("nvim-treesitter.configs").setup({
 	highlight = { enable = true },
 	indent = { enable = true },
 	rainbow = { enable = true },
-	matchup = {
-		enable = true,
-	},
+	matchup = { enable = true },
 	textobjects = {
 		select = {
 			enable = true,
 			keymaps = {
-				-- You can use the capture groups defined in textobjects.scm
                 ["aa"] = "@parameter.outer",
                 ["ia"] = "@parameter.inner",
 				["ao"] = "@class.outer",
@@ -131,27 +128,19 @@ require("nvim-treesitter.configs").setup({
 				["ic"] = "@comment.inner",
 				["aL"] = "@loop.outer",
 				["il"] = "@loop.inner",
-				["iB"] = "@block.inner",
 				["aB"] = "@block.outer",
+				["iB"] = "@block.inner",
 			},
 		},
 		move = {
-			enable = false,
+			enable = true,
 			goto_next_start = {
-				["]o"] = "@class.outer",
-				["]f"] = "@function.outer",
 			},
 			goto_next_end = {
-				["]O"] = "@class.outer",
-				["]F"] = "@function.outer",
 			},
 			goto_previous_start = {
-				["[o"] = "@class.outer",
-				["[f"] = "@function.outer",
 			},
 			goto_previous_end = {
-				["[O"] = "@class.outer",
-				["[F"] = "@function.outer",
 			},
 		},
 		lsp_interop = {

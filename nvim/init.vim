@@ -80,7 +80,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'lervag/vimtex'
     Plug 'JuliaEditorSupport/julia-vim'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-    Plug 'neovimhaskell/haskell-vim'
+    " Plug 'neovimhaskell/haskell-vim'
 
     " UI Stuff
     Plug 'folke/zen-mode.nvim'
@@ -462,10 +462,10 @@ xmap <c-_> gc
 " Arrows
 nmap <silent> <right>   <cmd>BufferLineCycleNext<cr>
 nmap <silent> <left>    <cmd>BufferLineCyclePrev<cr>
-nmap <silent> <S-right> <nop>
-nmap <silent> <S-left>  <nop>
-nmap <silent> <C-right> <nop>
-nmap <silent> <C-left>  <nop>
+nmap <silent> <S-right> <cmd>tabnext<cr>
+nmap <silent> <S-left>  <cmd>tabprevious<cr>
+nmap <silent> <C-right> <cmd>tabnext<cr>
+nmap <silent> <C-left>  <cmd>tabprevious<cr>
 nmap <silent> <C-up>    <cmd>try <bar> cnext     <bar> catch /E553/ <bar> cfirst <bar> endtry<CR>
 nmap <silent> <C-down>  <cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast  <bar> endtry<CR>
 nmap <silent> <S-up>    <cmd>try <bar> lnext     <bar> catch /E553/ <bar> lfirst <bar> endtry<CR>
@@ -532,13 +532,13 @@ else
 endif
 
 
-let g:haskell_enable_quantification = 1
-let g:haskell_enable_recursivedo = 1
-let g:haskell_enable_arrowsyntax = 1
-let g:haskell_enable_pattern_synonyms = 1
-let g:haskell_enable_typeroles = 1
-let g:haskell_enable_static_pointers = 1
-let g:haskell_backpack = 1
+" let g:haskell_enable_quantification = 1
+" let g:haskell_enable_recursivedo = 1
+" let g:haskell_enable_arrowsyntax = 1
+" let g:haskell_enable_pattern_synonyms = 1
+" let g:haskell_enable_typeroles = 1
+" let g:haskell_enable_static_pointers = 1
+" let g:haskell_backpack = 1
 
 
 redraw
