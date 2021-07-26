@@ -715,6 +715,14 @@ local open_dif = function()
 	local cmd = "DiffviewOpen " .. value
 	vim.cmd(cmd)
 end
+local open_dif_mergebase = function()
+	local selected_entry = action_state.get_selected_entry()
+	local value = selected_entry["value"]
+	-- close Telescope window properly prior to switching windows
+	vim.api.nvim_win_close(0, true)
+	local cmd = "DiffviewOpen ..." .. value
+	vim.cmd(cmd)
+end
 local open_single_dif = function()
 	local selected_entry = action_state.get_selected_entry()
 	local value = selected_entry["value"]
@@ -750,7 +758,7 @@ function _G.gitsign_bchange_base()
 	})
 end
 
-function _G.git_commits_again()
+function _G.git_commits_againsthead()
 	require("telescope.builtin").git_commits({
 		attach_mappings = function(_, map)
 			map("n", "<cr>", open_dif)
@@ -759,7 +767,7 @@ function _G.git_commits_again()
 		end,
 	})
 end
-function _G.git_commits_compe()
+function _G.git_commits_onechange()
 	require("telescope.builtin").git_commits({
 		attach_mappings = function(_, map)
 			map("n", "<cr>", open_single_dif)
@@ -769,7 +777,7 @@ function _G.git_commits_compe()
 	})
 end
 
-function _G.git_branch_again()
+function _G.git_branch_dif()
 	require("telescope.builtin").git_branches({
 		attach_mappings = function(_, map)
 			map("n", "<cr>", open_dif)
@@ -778,11 +786,11 @@ function _G.git_branch_again()
 		end,
 	})
 end
-function _G.git_branch_comp()
+function _G.git_branch_mergebase()
 	require("telescope.builtin").git_branches({
 		attach_mappings = function(_, map)
-			map("n", "<cr>", open_single_dif)
-			map("i", "<cr>", open_single_dif)
+			map("n", "<cr>", open_dif_mergebase)
+			map("i", "<cr>", open_dif_mergebase)
 			return true
 		end,
 	})

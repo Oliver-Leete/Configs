@@ -669,26 +669,28 @@ myKeys conf = let
     , ("M-m"             , addName "Swap with main"              $ sequence_ [swapPromote' False, warpCursor])
     , ("M-C-m"           , addName "Promote to main"             $ sequence_ [promote, warpCursor])
 
-    , ("M-<Escape>"      , addName "Spawn next window in main"   $ toggleHookNext "Main" >> runLogHook)
-
     , ("<F8>"            , addName "Hop to Window"               $ sequence_ [selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow), warpCursor])
 
     , ("M-<Space>"       , addName "Swap monitor workspaces"     swapNextScreen)
     , ("M-C-<Space>"     , addName "Send window to next monitor" shiftNextScreen)
 
-    , ("M-<D>"           , addName "Focus down"                  $ sequence_ [windows W.focusDown, warpCursor])
-    , ("M-<U>"           , addName "Focus up"                    $ sequence_ [windows W.focusUp, warpCursor])
+    , ("M-<D>"           , addName "Focus down"                  $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Down)
+                                                                             ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Down)
+                                                                             ,(className =? "Google-chrome", P.sendKey controlMask xK_Tab)
+                                                                             ,(pure True, sequence_ [windows W.focusDown, warpCursor])])
+    , ("M-<U>"           , addName "Focus up"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Up)
+                                                                             ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Up)
+                                                                             ,(className =? "Google-chrome", P.sendKey (controlMask .|. shiftMask) xK_Tab)
+                                                                             ,(pure True, sequence_ [windows W.focusUp, warpCursor])])
     , ("M-C-<D>"         , addName "Shift down"                  $ sequence_ [windows W.swapDown, warpCursor])
     , ("M-C-<U>"         , addName "Shift up"                    $ sequence_ [windows W.swapUp, warpCursor])
 
     , ("M-<R>"           , addName "Cycle up"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Right)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Right)
-                                                                             ,(className =? "Google-chrome", P.sendKey controlMask xK_Tab)
                                                                              ,(pure True, bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("Maximized", windows W.focusDown), ("Centred Max", windows W.focusDown), ("", onGroup W.focusDown')])])
 
     , ("M-<L>"           , addName "Cycle down"                  $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Left)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Left)
-                                                                             ,(className =? "Google-chrome", P.sendKey (controlMask .|. shiftMask) xK_Tab)
                                                                              ,(pure True, bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("Maximized", windows W.focusUp), ("Centred Max", windows W.focusUp), ("", onGroup W.focusDown')])])
     , ("M-C-<R>"         , addName "Force Cycle up"              $ bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("Maximized", windows W.focusDown), ("Centred Max", windows W.focusDown), ("", onGroup W.focusDown')])
     , ("M-C-<L>"         , addName "Force Cycle down"            $ bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("Maximized", windows W.focusUp), ("Centred Max", windows W.focusUp), ("", onGroup W.focusDown')])
@@ -857,7 +859,7 @@ myManageHook :: ManageHook
 myManageHook =
         manageSpecific
     <+> manageDocks
-    <+> toggleHook' "Main" doMain tileBelow
+    <+> doMain
     <+> namedScratchpadManageHook scratchpads
     <+> manageSpawn
     where
@@ -881,24 +883,21 @@ myManageHook =
             , className =? "Chromewrknsp" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
             , className =? "Zenity" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
             , resource =? youtubeMusicResource -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
-            , resource =? discordResource -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
+            , resource =? discordResource -?> doCenterFloat
             , transience
             , isBrowserDialog -?> forceCenterFloat
-            -- , isConsole -?> forceCenterFloat
             , isRole =? gtkFile  -?> forceCenterFloat
-            , isDialog -?> doCenterFloat
             , isRole =? "pop-up" -?> doCenterFloat
             , isInProperty "_NET_WM_WINDOW_TYPE"
-                           "_NET_WM_WINDOW_TYPE_SPLASH" -?> doCenterFloat]
-            -- , resource =? "console" -?> tileBelowNoFocus]
-            -- , isFullscreen -?> doFullFloat
-            -- , pure True -?> tileBelow ]
+                           "_NET_WM_WINDOW_TYPE_SPLASH" -?> doCenterFloat
+            , isFullscreen -?> doFullFloat
+            , fmap not isDialog -?> insertPosition End Newer
+            ]
         isBrowserDialog = isDialog <&&> className =? myBrowserClass
         gtkFile = "GtkFileChooserDialog"
         isRole = stringProperty "WM_WINDOW_ROLE"
         -- insert WHERE and focus WHAT
         doMain = insertPosition Master Newer
-        tileBelow = insertPosition End Newer
 
 ----------------------------------------------------------------------------------------------------
 -- X Event Actions                                                                                --

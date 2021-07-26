@@ -172,6 +172,7 @@ require("gitsigns").setup({
         interval = 1000
     },
     current_line_blame_position = 'eol',
+    numhl = true,
     current_line_blame = false,
     sign_priority = 6,
     update_debounce = 100,

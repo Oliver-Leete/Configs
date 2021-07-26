@@ -70,7 +70,8 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'wellle/line-targets.vim'
     Plug 'michaeljsmith/vim-indent-object'
     Plug 'tommcdo/vim-ninja-feet'
-    Plug 'junegunn/vim-after-object'
+    " Plug 'junegunn/vim-after-object'
+    Plug 'romgrk/equal.operator'
 
     " Insert Mode
     Plug 'Konfekt/vim-CtrlXA'
@@ -166,7 +167,7 @@ let g:tokyonight_sidebars = [ "qf", "Outline", "terminal", "vim-plug", "undotree
 let g:tokyonight_hide_inactive_statusline=1
 colorscheme tokyonight
 
-" Indent Blankline Settings
+" " Indent Blankline Settings
 let g:indent_blankline_char_list = ['│']
 let g:indent_blankline_char_highlight_list = ['rainbowcol7', 'rainbowcol6', 'rainbowcol5', 'rainbowcol4', 'rainbowcol3', 'rainbowcol2', 'rainbowcol1']
 
@@ -274,18 +275,15 @@ function! g:committia_hooks.edit_open(info)
     imap <buffer><C-p> <Plug>(committia-scroll-diff-up-half)
 endfunction
 
-
 " Wellle Tagets settings
 autocmd User targets#mappings#user call targets#mappings#extend({
-    \ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': '[,;]'}]},
+    \ 'A': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': '[,;]'}]},
     \ 'x': {'line': [{'c': 1}]},
     \ '$': {},
     \ })
 let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
 " let g:targets_nl = 'nl'
 let g:targets_gracious = 1
-
-autocmd VimEnter * call after_object#enable(['a', 'A'], '=', ':', '-', '#', ' ')
 
 let g:loaded_matchit = 1
 let g:matchup_override_vimtex = 1
@@ -454,6 +452,12 @@ onoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1, 1, 0, [line("."), 
 vnoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0, 1, 1, [line("'<"), line("'>"), col("'<"), col("'>")])<CR><Esc>gv
 vnoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1, 1, 1, [line("'<"), line("'>"), col("'<"), col("'>")])<CR><Esc>gv
 
+let equal_operator_default_mappings = 0
+omap a= <Plug>(operator-rhs)
+omap i= <Plug>(operator-lhs)
+vmap a= <Plug>(operator-rhs)
+vmap i= <Plug>(operator-lhs)
+
 " Nvim Comment
 lua require('nvim_comment').setup({comment_empty = false})
 nmap <c-_> gcc
@@ -462,10 +466,10 @@ xmap <c-_> gc
 " Arrows
 nmap <silent> <right>   <cmd>BufferLineCycleNext<cr>
 nmap <silent> <left>    <cmd>BufferLineCyclePrev<cr>
-nmap <silent> <S-right> <cmd>tabnext<cr>
-nmap <silent> <S-left>  <cmd>tabprevious<cr>
 nmap <silent> <C-right> <cmd>tabnext<cr>
 nmap <silent> <C-left>  <cmd>tabprevious<cr>
+nmap <silent> <S-right> <cmd>tabnext<cr>
+nmap <silent> <S-left>  <cmd>tabprevious<cr>
 nmap <silent> <C-up>    <cmd>try <bar> cnext     <bar> catch /E553/ <bar> cfirst <bar> endtry<CR>
 nmap <silent> <C-down>  <cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast  <bar> endtry<CR>
 nmap <silent> <S-up>    <cmd>try <bar> lnext     <bar> catch /E553/ <bar> lfirst <bar> endtry<CR>
@@ -539,6 +543,5 @@ endif
 " let g:haskell_enable_typeroles = 1
 " let g:haskell_enable_static_pointers = 1
 " let g:haskell_backpack = 1
-
 
 redraw
