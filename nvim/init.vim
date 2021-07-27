@@ -127,8 +127,9 @@ call plug#begin('~/.config/nvim/pluged')
 
     " Completion
     Plug 'hrsh7th/nvim-compe'
-    Plug 'hrsh7th/vim-vsnip'
-    Plug 'hrsh7th/vim-vsnip-integ'
+    " Plug 'hrsh7th/vim-vsnip'
+    Plug 'L3MON4D3/LuaSnip'
+    " Plug 'hrsh7th/vim-vsnip-integ'
     Plug 'rafamadriz/friendly-snippets'
     Plug 'windwp/nvim-autopairs'
     Plug 'tzachar/compe-tabnine', { 'do': './install.sh' }
@@ -154,6 +155,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'RRethy/nvim-treesitter-textsubjects'
     Plug 'mizlan/iswap.nvim'
     Plug 'mfussenegger/nvim-ts-hint-textobject'
+    Plug 'abecodes/tabout.nvim'
 call plug#end()
 
 " !!THEMES!!
@@ -284,6 +286,7 @@ autocmd User targets#mappings#user call targets#mappings#extend({
 let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
 " let g:targets_nl = 'nl'
 let g:targets_gracious = 1
+let targets_nl = 'nN'
 
 let g:loaded_matchit = 1
 let g:matchup_override_vimtex = 1
@@ -404,18 +407,18 @@ vnoremap < <gv
 vnoremap > >gv
 
 
-" Instert Mode
+" Insert Mode
 inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 
-
-imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : "<S-Tab>"
-imap <expr> <Tab>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : "<Tab>"
+" imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>' 
+" inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
+" imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
 
 inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
 inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-inoremap <silent><expr> <C-Space> compe#complete()
+" inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+" inoremap <silent><expr> <C-Space> compe#complete()
 
 "
 " Terminal

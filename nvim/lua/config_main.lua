@@ -113,9 +113,10 @@ require("nvim-treesitter.configs").setup({
 	textobjects = {
 		select = {
 			enable = true,
+            lookahead = true,
 			keymaps = {
-                ["aa"] = "@parameter.outer",
-                ["ia"] = "@parameter.inner",
+				["aa"] = "@parameter.outer",
+				["ia"] = "@parameter.inner",
 				["ao"] = "@class.outer",
 				["io"] = "@class.inner",
 				["af"] = "@function.outer",
@@ -125,7 +126,6 @@ require("nvim-treesitter.configs").setup({
 				["aC"] = "@conditional.outer",
 				["iC"] = "@conditional.inner",
 				["ac"] = "@comment.outer",
-				["ic"] = "@comment.inner",
 				["aL"] = "@loop.outer",
 				["il"] = "@loop.inner",
 				["aB"] = "@block.outer",
@@ -134,21 +134,19 @@ require("nvim-treesitter.configs").setup({
 		},
 		move = {
 			enable = true,
-			goto_next_start = {
-			},
-			goto_next_end = {
-			},
-			goto_previous_start = {
-			},
-			goto_previous_end = {
-			},
+            set_jumps = true,
 		},
 		lsp_interop = {
 			enable = true,
+            border = 'single',
 			peek_definition_code = {
-				["<leader>pD"] = "@function.outer",
+				["<leader>pf"] = "@function.outer",
+                ["<leader>po"] = "@class.outer",
 			},
 		},
+        swap = {
+            enable = true,
+        },
 	},
 	refactor = {
 		highlight_current_scope = { enable = false },
@@ -159,7 +157,16 @@ require("nvim-treesitter.configs").setup({
 				smart_rename = "<leader>rt",
 			},
 		},
-		navigation = { enable = false },
+		navigation = {
+			enable = true,
+            keymaps = {
+                list_definitions_toc = '<nop>',
+                goto_definitions = '<nop>',
+                list_definitions = '<nop>',
+                goto_next_usage = "]*",
+                goto_previous_usage = "[*",
+            },
+		},
 	},
 	playground = {
 		enable = true,
@@ -203,7 +210,7 @@ require("nvim-biscuits").setup({
 	},
 })
 -- Compleation Setup
-
+require("luasnip/loaders/from_vscode").load({ paths = { "/home/oleete/.config/nvim/snippets", "/home/oleete/.config/nvim/pluged/friendly-snippets/snippets" }})
 vim.o.completeopt = "menuone,noselect"
 require("compe").setup({
 	enabled = true,
@@ -233,13 +240,52 @@ require("compe").setup({
 		nvim_lsp = true,
 		nvim_lua = true,
 		nvim_treesitter = false,
-		vsnip = true,
+		vsnip = false,
+        luasnip = true,
 		omni = {
 			filetypes = { "tex" },
 		},
 		tabnine = true,
 	},
 })
+
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+local check_back_space = function()
+  local col = vim.fn.col '.' - 1
+  if col == 0 or vim.fn.getline('.'):sub(col, col):match '%s' then
+    return true
+  else
+    return false
+  end
+end
+local luasnip = require 'luasnip'
+_G.tab_complete = function()
+  -- if vim.fn.pumvisible() == 1 then
+  --   return t '<C-n>'
+  if luasnip.expand_or_jumpable() then
+    return t '<Plug>luasnip-expand-or-jump'
+  else check_back_space()
+    return t '<cmd>Tabout<cr>'
+  end
+end
+
+_G.s_tab_complete = function()
+  -- if vim.fn.pumvisible() == 1 then
+  --   return t '<C-p>'
+  if luasnip.jumpable(-1) then
+    return t '<Plug>luasnip-jump-prev'
+  else
+    return t '<S-Tab>'
+  end
+end
+
+-- Map tab to the above tab complete functions
+vim.api.nvim_set_keymap('i', '<Tab>', 'v:lua.tab_complete()', { expr = true })
+vim.api.nvim_set_keymap('i', '<S-Tab>', 'v:lua.s_tab_complete()', { expr = true })
+vim.api.nvim_set_keymap('i', '<cr>', 'compe#confirm("<cr>")', { expr = true })
+vim.api.nvim_set_keymap('i', '<c-space>', 'compe#complete()', { expr = true })
 
 -- AutoPairs Setup
 
@@ -315,7 +361,6 @@ vim.lsp.diagnostic.set_signs = set_signs_limited
 
 local custom_attach = function(client, bufnr)
 	print("LSP: " .. client.name .. " Started")
-	capabilities = capabilities
 
 	vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, _, params, client_id, _)
 		local config = {
@@ -465,6 +510,7 @@ local custom_attach = function(client, bufnr)
 end
 require("lspconfig").julials.setup({
 	on_attach = custom_attach,
+	capabilities = capabilities,
 	flags = { debounce_text_changes = 500 },
 })
 
@@ -474,6 +520,7 @@ for _, server in pairs(servers) do
 	if server == "latex" then
 		require("lspconfig").texlab.setup({
 			on_attach = custom_attach,
+            capabilities = capabilities,
 			flags = { debounce_text_changes = 500 },
 			root_dir = nvim_lsp.util.root_pattern(".git"),
 			settings = {
@@ -499,6 +546,7 @@ for _, server in pairs(servers) do
 	elseif server == "lua" then
 		require("lspconfig").lua.setup({
 			on_attach = custom_attach,
+            capabilities = capabilities,
 			flags = { debounce_text_changes = 500 },
 			cmd = {
 				"/home/oleete/.local/share/nvim/lspinstall/lua/sumneko-lua-language-server",
@@ -535,16 +583,18 @@ for _, server in pairs(servers) do
 	elseif server == "diagnosticls" then
 		-- require("lspconfig").diagnosticls.setup({
 		--     on_attach=custom_attach,
+            -- capabilities = capabilities,
 		--     filetypes = {"tex"},
 		--     initializationOptions = {},
 		-- })
 	else
-		require("lspconfig")[server].setup({ on_attach = custom_attach, flags = { debounce_text_changes = 500 } })
+		require("lspconfig")[server].setup({ on_attach = custom_attach, capabilities = capabilities, flags = { debounce_text_changes = 500 } })
 	end
 end
 
 require("lspconfig").hls.setup({
 	on_attach = custom_attach,
+	capabilities = capabilities,
 	flags = { debounce_text_changes = 500 },
 	cmd = { "haskell-language-server-wrapper", "--lsp" },
 	filetypes = { "haskell", "lhaskell" },
@@ -687,7 +737,7 @@ require("telescope").setup({
 			global_files = { "/home/oleete/UniDrive/1_Thesis/0.1_LaTeX/Citations.bib" },
 		},
 		fzf = {
-			override_generic_sorter = false, -- override the generic sorter
+			override_generic_sorter = true, -- override the generic sorter
 			override_file_sorter = true, -- override the file sorter
 			case_mode = "smart_case", -- or "ignore_case" or "respect_case"
 		},
@@ -860,6 +910,24 @@ require("colorizer").setup({ "*" }, {
 	css_fn = false,
 	mode = "background",
 })
+
+require('tabout').setup {
+    tabkey = '<nop>',
+    act_as_tab = true,
+    completion = false,
+    tabouts = {
+        {open = "'", close = "'"},
+        {open = '"', close = '"'},
+        {open = '`', close = '`'},
+        {open = '(', close = ')'},
+        {open = '[', close = ']'},
+        {open = '{', close = '}'},
+        {open = '<', close = '>'},
+    },
+    ignore_beginning = false,
+    exclude = {}
+}
+
 
 -- LTEX
 local configs = require("lspconfig/configs")
@@ -1049,6 +1117,7 @@ end
 
 require("lspconfig").ltex.setup({
 	on_attach = custom_attach,
+	capabilities = capabilities,
 	root_dir = nvim_lsp.util.root_pattern(".git"),
 })
 
@@ -1064,4 +1133,5 @@ require("null-ls").config({
 })
 require("lspconfig")["null-ls"].setup({
 	on_attach = custom_attach,
+	capabilities = capabilities,
 })

@@ -18,7 +18,14 @@ abbr vidir "vidir -v"
 abbr ns "n -S"
 abbr mv "mv -iv"
 abbr cp "cp -riv"
-abbr mkdir "mkdir -vp"
+
+abbr -a bk "backup"
+abbr -a re "restore"
+abbr -a mc "mkdir-cd -vp"
+abbr -a unzip "unzip-cd"
+
+
+
 # abbr  code "code-insiders"
 # abbr  lcd "exa -1"
 # abbr  ls "exa -a -l --git"
@@ -63,6 +70,8 @@ abbr gloga "g log --all"
 abbr glogg "g log --oneline --graph --decorate --all "
 abbr gmt "g mergetool"
 abbr gmt2 "g mergetool --tool nvimdiff"
+abbr gclone "clone-cd"
+abbr gwip "wip"
 abbr lzg "lazygit"
 
 
@@ -101,6 +110,28 @@ end
 function restore --argument file
     mv $file (echo $file | sed s/.bak//)
 end
+function mkdir-cd
+    mkdir $argv && cd $argv
+end
+
+function clean-unzip --argument zipfile
+    if not test (echo $zipfile | string sub --start=-4) = .zip
+        echo (status function): argument must be a zipfile
+        return 1
+    end
+
+    if is-clean-zip $zipfile
+        unzip $zipfile
+    else
+        set zipname (echo $zipfile | trim-right '.zip')
+        mkdir $zipname || return 1
+        unzip $zipfile -d $zipname
+    end
+end
+function unzip-cd --argument zipfile
+    clean-unzip $zipfile && cd (echo $zipfile | trim-right .zip)
+end
+
 function clean-unzip --argument zipfile
     if not test (echo $zipfile | string sub --start=-4) = .zip
         echo (status function): argument must be a zipfile
@@ -128,6 +159,22 @@ function unsymlink --argument _file
 end
 function isodate
     date +%Y-%m-%d
+end
+
+function clone-cd --argument repo _destination
+    set destination (default $_destination (basename $repo | trim-right .git))
+    if file-exists $destination
+      cd $destination && git pull
+      return
+    end
+
+    git clone --depth=1 $repo $destination && cd $destination
+end
+function wip
+    if git diff --cached --quiet
+      git add .
+    end
+    git commit --no-verify -m "wip $argv"
 end
 
 clear
