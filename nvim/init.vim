@@ -7,7 +7,7 @@
 "                      |_| \_| |______|  \____/      \/     |_____| |_|  |_|                       "
 "                                                                                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Oliver Leete <oliverleete@gmail.com>                                                             " 
+" Oliver Leete <oliverleete@gmail.com>                                                             "
 " https://github.com/oliver-leete                                                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -146,7 +146,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-telescope/telescope-hop.nvim'
 
     " Treesitter
-    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'code-biscuits/nvim-biscuits'
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-treesitter/nvim-treesitter-refactor'
@@ -222,7 +222,7 @@ set splitbelow
 set splitright
 augroup windowPositioning
   autocmd FileType help wincmd H
-  autocmd FileType juliadoc wincmd H 
+  autocmd FileType juliadoc wincmd H
   " autocmd FileType gitcommit wincmd H
   autocmd FileType qf wincmd J
 augroup END
@@ -322,33 +322,33 @@ wk.setup {
         },
         presets = {
             operators = true,
-            motions = true, 
-            text_objects = true, 
-            windows = true, 
-            nav = true, 
-            z = true, 
-            g = true, 
+            motions = true,
+            text_objects = true,
+            windows = true,
+            nav = true,
+            z = true,
+            g = true,
         },
     },
     operators = { gc = "Comments" },
     icons = {
-        breadcrumb = "»", 
-        separator = "➜", 
-        group = "+", 
+        breadcrumb = "»",
+        separator = "➜",
+        group = "+",
     },
     window = {
-        border = "none", 
-        position = "bottom", 
-        margin = { 1, 0, 1, 0 }, 
-        padding = { 2, 2, 2, 2 }, 
+        border = "none",
+        position = "bottom",
+        margin = { 1, 0, 1, 0 },
+        padding = { 2, 2, 2, 2 },
     },
     layout = {
-        height = { min = 4, max = 30 }, 
-        width = { min = 20, max = 50 }, 
-        spacing = 3, 
+        height = { min = 4, max = 30 },
+        width = { min = 20, max = 50 },
+        spacing = 3,
     },
-    hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ "}, 
-    show_help = true 
+    hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ "},
+    show_help = true
 }
 EOF
 
@@ -411,7 +411,7 @@ vnoremap > >gv
 inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 
-" imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>' 
+" imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
 " inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
 " imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
 
@@ -515,7 +515,7 @@ function CloseAllPanels()
   ToggleTermCloseAll
   NvimTreeClose
   TroubleClose
-  TroubleClose 
+  TroubleClose
   SymbolsOutlineClose
   DiffviewClose
   windo if &filetype == "help" | q | endif
@@ -523,6 +523,8 @@ function CloseAllPanels()
   windo if &filetype == "juliadoc" | q | endif
 endfunction
 
+au BufNewFile,BufRead *.fish set filetype=fish
+au BufNewFile,BufRead *.jl set filetype=julia
 
 lua << EOF
 require('config_main')

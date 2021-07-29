@@ -23,3 +23,8 @@ rofi/
 !/xmobar/*
 !/deadd/deadd.conf
 !/deadd/deadd.css
+
+/xmonad/xmonad
+/xmonad/xmonad-contribs
+/nvim/neovim
+

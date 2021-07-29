@@ -10,8 +10,8 @@ set -gx PATH /home/oleete/.cargo/bin /home/oleete/.yarn/bin /home/oleete/go/bin 
 export BAT_PAGER="less -R"
 # aliases
 alias exa "exa --colour=always --group-directories-first"
-alias nvim "neovim"
-alias n "neovim"
+alias neovim nvim
+alias n nvim
 alias shutdown "sudo ~/.local/bin/shutdownupdate shutdown now"
 alias reboot "sudo ~/.local/bin/shutdownupdate reboot now"
 abbr vidir "vidir -v"
@@ -19,10 +19,10 @@ abbr ns "n -S"
 abbr mv "mv -iv"
 abbr cp "cp -riv"
 
-abbr -a bk "backup"
-abbr -a re "restore"
+abbr -a bk backup
+abbr -a re restore
 abbr -a mc "mkdir-cd -vp"
-abbr -a unzip "unzip-cd"
+abbr -a unzip unzip-cd
 
 
 
@@ -56,7 +56,7 @@ alias lazyconf 'lazygit --git-dir=$HOME/dotfiles --work-tree=$HOME'
 # abbr  watch "batwatch"
 
 # Git abbreviations
-alias g "git"
+alias g git
 abbr gc "g checkout"
 abbr gcm "g commit"
 abbr ga "g add"
@@ -70,38 +70,39 @@ abbr gloga "g log --all"
 abbr glogg "g log --oneline --graph --decorate --all "
 abbr gmt "g mergetool"
 abbr gmt2 "g mergetool --tool nvimdiff"
-abbr gclone "clone-cd"
-abbr gwip "wip"
-abbr lzg "lazygit"
+abbr gclone clone-cd
+abbr gwip wip
+abbr lzg lazygit
 
 
 function bind_bang
-  switch (commandline -t)
-  case "!"
-    commandline -t $history[1]; commandline -f repaint
-  case "*"
-    commandline -i !
-  end
+    switch (commandline -t)
+        case "!"
+            commandline -t $history[1]
+            commandline -f repaint
+        case "*"
+            commandline -i !
+    end
 end
 
 function bind_dollar
-  switch (commandline -t)
-  case "!"
-    commandline -t ""
-    commandline -f history-token-search-backward
-  case "*"
-    commandline -i '$'
-  end
+    switch (commandline -t)
+        case "!"
+            commandline -t ""
+            commandline -f history-token-search-backward
+        case "*"
+            commandline -i '$'
+    end
 end
 
 function fish_user_key_bindings
-  bind ! bind_bang
-  bind '$' bind_dollar
+    bind ! bind_bang
+    bind '$' bind_dollar
 end
 
 function take
-  mkdir -p $argv;
-  cd $argv
+    mkdir -p $argv
+    cd $argv
 end
 
 function backup --argument filename
@@ -164,15 +165,15 @@ end
 function clone-cd --argument repo _destination
     set destination (default $_destination (basename $repo | trim-right .git))
     if file-exists $destination
-      cd $destination && git pull
-      return
+        cd $destination && git pull
+        return
     end
 
     git clone --depth=1 $repo $destination && cd $destination
 end
 function wip
     if git diff --cached --quiet
-      git add .
+        git add .
     end
     git commit --no-verify -m "wip $argv"
 end
@@ -180,38 +181,38 @@ end
 clear
 # ghcup-env
 set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME
-test -f /home/oleete/.ghcup/env ; and set -gx PATH $HOME/.cabal/bin /home/oleete/.ghcup/bin $PATH
+test -f /home/oleete/.ghcup/env; and set -gx PATH $HOME/.cabal/bin /home/oleete/.ghcup/bin $PATH
 
-    # TokyoNight Color Palette
-    set -l foreground c0caf5
-    set -l selection 33467C
-    set -l comment 565f89
-    set -l red f7768e
-    set -l orange ff9e64
-    set -l yellow e0af68
-    set -l green 9ece6a
-    set -l purple 9d7cd8
-    set -l cyan 7dcfff
-    set -l pink bb9af7
-    
-    # Syntax Highlighting Colors
-    set -g fish_color_normal $foreground
-    set -g fish_color_command $cyan
-    set -g fish_color_keyword $pink
-    set -g fish_color_quote $yellow
-    set -g fish_color_redirection $foreground
-    set -g fish_color_end $orange
-    set -g fish_color_error $red
-    set -g fish_color_param $purple
-    set -g fish_color_comment $comment
-    set -g fish_color_selection --background=$selection
-    set -g fish_color_search_match --background=$selection
-    set -g fish_color_operator $green
-    set -g fish_color_escape $pink
-    set -g fish_color_autosuggestion $comment
-    
-    # Completion Pager Colors
-    set -g fish_pager_color_progress $comment
-    set -g fish_pager_color_prefix $cyan
-    set -g fish_pager_color_completion $foreground
-    set -g fish_pager_color_description $comment
+# TokyoNight Color Palette
+set -l foreground c0caf5
+set -l selection 33467C
+set -l comment 565f89
+set -l red f7768e
+set -l orange ff9e64
+set -l yellow e0af68
+set -l green 9ece6a
+set -l purple 9d7cd8
+set -l cyan 7dcfff
+set -l pink bb9af7
+
+# Syntax Highlighting Colors
+set -g fish_color_normal $foreground
+set -g fish_color_command $cyan
+set -g fish_color_keyword $pink
+set -g fish_color_quote $yellow
+set -g fish_color_redirection $foreground
+set -g fish_color_end $orange
+set -g fish_color_error $red
+set -g fish_color_param $purple
+set -g fish_color_comment $comment
+set -g fish_color_selection --background=$selection
+set -g fish_color_search_match --background=$selection
+set -g fish_color_operator $green
+set -g fish_color_escape $pink
+set -g fish_color_autosuggestion $comment
+
+# Completion Pager Colors
+set -g fish_pager_color_progress $comment
+set -g fish_pager_color_prefix $cyan
+set -g fish_pager_color_completion $foreground
+set -g fish_pager_color_description $comment

@@ -14,18 +14,18 @@ end
 require("which-key").register({
 	["<leader>"] = {
 		["/"] = {
-			m = { [["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr = true },
+			S = { [["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Main Source", expr = true },
 			v = {
-				m = { [["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr = true },
+				S = { [["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Main Source", expr = true },
 			},
 			x = {
-				m = { [["<cmd>Ssource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr = true },
+				S = { [["<cmd>Ssource " . split(getcwd(), '/')[-1] . "<cr>"]], "Main Source", expr = true },
 			},
 			T = {
-				m = { [["<cmd>Ssource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr = true },
+				S = { [["<cmd>Ssource " . split(getcwd(), '/')[-1] . "<cr>"]], "Main Source", expr = true },
 			},
 			n = {
-				m = { [["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Project Main File", expr = true },
+				S = { [["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Main Source", expr = true },
 			},
 		},
 		v = {
@@ -53,6 +53,4 @@ require("which-key").register({
 	buffer = 0,
 })
 
-vim.cmd(
-	[[let g:projectionist_heuristics={"src/*.jl":{"src/*.jl":{"type":"source","alternate":"test/{}_tests.jl","related":["benckmark/{}_benchmarks.jl","test/{}_tests.jl","docs/src/{}.md"]},"benchmark/*_benchmarks.jl":{"type":"bench","alternate":"src/{}.jl","related":["src/{}.jl","test/{}_tests.jl","docs/src/{}.md"]},"test/*_tests.jl":{"type":"test","alternate":"src/{}.jl","related":["benckmark/{}_benchmarks.jl","src/{}.jl","docs/src/{}.md"]},"docs/src/*.md":{"type":"doc","alternate":"src/{}.jl","related":["benckmark/{}_benchmarks.jl","test/{}_tests.jl","src/{}.jl"]},"README.md":{"type":"readme"},"Project.toml":{"type":"deps"},}}]]
-)
+vim.cmd( [[let g:projectionist_heuristics=({ "src/*.jl":{ "src/*.jl":{"type":"source","alternate":"test/{}_tests.jl","related":["benckmark/{}_benchmarks.jl","test/{}_tests.jl","docs/src/{}.md"]}, "benchmark/*_benchmarks.jl":{"type":"bench","alternate":"src/{}.jl","related":["src/{}.jl","test/{}_tests.jl","docs/src/{}.md"]}, "test/*_tests.jl":{"type":"test","alternate":"src/{}.jl","related":["benckmark/{}_benchmarks.jl","src/{}.jl","docs/src/{}.md"]}, "docs/src/*.md":{"type":"doc","alternate":"src/{}.jl","related":["benckmark/{}_benchmarks.jl","test/{}_tests.jl","src/{}.jl"]}, "README.md":{"type":"readme"}, "Project.toml":{"type":"deps"}, "test/runtests.jl":{"type":"mainTest"}, "benchmark/benchmarks.jl":{"type":"mainBench"}, "docs/src/index.md":{"type":"mainDoc"}, }})]])
