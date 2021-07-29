@@ -25,6 +25,6 @@ rofi/
 !/deadd/deadd.css
 
 /xmonad/xmonad
-/xmonad/xmonad-contribs
+/xmonad/xmonad-contrib
 /nvim/neovim
 
