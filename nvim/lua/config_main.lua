@@ -484,16 +484,16 @@ local custom_attach = function(client, bufnr)
 	if client.resolved_capabilities.document_formatting then
 		require("which-key").register({
 			["<leader>"] = {
-                r = {
-                    ["="] = { "<cmd>lua vim.lsp.buf.formatting()<CR>", "Format" },
-                },
+				r = {
+					["="] = { "<cmd>lua vim.lsp.buf.formatting()<CR>", "Format" },
+				},
 			},
 		})
 		require("which-key").register({
 			["<leader>"] = {
-                r = {
-                    ["="] = { "<cmd>lua vim.lsp.buf.range_formatting()<CR>", "Format" },
-                },
+				r = {
+					["="] = { "<cmd>lua vim.lsp.buf.range_formatting()<CR>", "Format" },
+				},
 			},
 		}, {
 			mode = "v",
