@@ -1,4 +1,5 @@
 ----------------------------------------------------------------------------------------------------
+--
 --                      _   _   ______    ____   __      __  _____   __  __                       --
 --                     | \ | | |  ____|  / __ \  \ \    / / |_   _| |  \/  |                      --
 --                     |  \| | | |__    | |  | |  \ \  / /    | |   | \  / |                      --
@@ -115,17 +116,17 @@ require("nvim-treesitter.configs").setup({
 			enable = true,
 			lookahead = true,
 			keymaps = {
-				["aa"] = "@parameter.outer",
-				["ia"] = "@parameter.inner",
+				["a,"] = "@parameter.outer",
+				["i,"] = "@parameter.inner",
 				["ao"] = "@class.outer",
 				["io"] = "@class.inner",
 				["af"] = "@function.outer",
 				["if"] = "@function.inner",
 				["aF"] = "@call.outer",
 				["iF"] = "@call.inner",
-				["aC"] = "@conditional.outer",
-				["iC"] = "@conditional.inner",
-				["ac"] = "@comment.outer",
+				["ac"] = "@conditional.outer",
+				["ic"] = "@conditional.inner",
+				["aC"] = "@comment.outer",
 				["aL"] = "@loop.outer",
 				["il"] = "@loop.inner",
 				["aB"] = "@block.outer",
@@ -163,8 +164,8 @@ require("nvim-treesitter.configs").setup({
 				list_definitions_toc = "<nop>",
 				goto_definitions = "<nop>",
 				list_definitions = "<nop>",
-				goto_next_usage = "]*",
-				goto_previous_usage = "[*",
+				goto_next_usage = "]#",
+				goto_previous_usage = "[#",
 			},
 		},
 	},
@@ -280,7 +281,7 @@ _G.s_tab_complete = function()
 	if luasnip.jumpable(-1) then
 		return t("<Plug>luasnip-jump-prev")
 	else
-		return t("<S-Tab>")
+		return t("<cmd>TaboutBack<cr>")
 	end
 end
 
@@ -365,13 +366,10 @@ vim.lsp.diagnostic.set_signs = set_signs_limited
 local custom_attach = function(client, bufnr)
 	print("LSP: " .. client.name .. " Started")
 
-	vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, _, params, client_id, _)
+    vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, _, params, client_id, _)
 		local config = {
-			underline = true,
-			virtual_text = {
-				prefix = " ",
-				spacing = 4,
-			},
+			underline = false,
+            virtual_text = false,
 			signs = true,
 			update_in_insert = false,
 		}
@@ -436,10 +434,10 @@ local custom_attach = function(client, bufnr)
 				S = { "<cmd>Telescope lsp_document_symbols<cr>", "Symbols (buffer)" },
 			},
 			p = {
-				name = "preview",
 				p = { "<Cmd>lua vim.lsp.buf.hover({ focusable = false})<CR>", "Documentation" },
 				s = { "<cmd>lua vim.lsp.buf.signature_help({ focusable = false})<CR>", "Signature" },
 				d = { "<cmd>lua PeekDefinition()<CR>", "Definition" },
+                E = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown"},
 				e = {
 					"<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false, popup_opts = {border='single'}})<CR>",
 					"Diagnostics",
@@ -447,19 +445,22 @@ local custom_attach = function(client, bufnr)
 				L = { "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory" },
 				l = { "<cmd>LspInfo<cr>", "Lsp Infomation" },
 			},
+            e = {
+                p = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown"},
+            },
 			r = {
 				r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)" },
 			},
 		},
 		["["] = {
 			e = {
-				"<cmd>lua vim.lsp.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>",
+				"<cmd>lua vim.lsp.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>zz",
 				"Error",
 			},
 		},
 		["]"] = {
 			e = {
-				"<cmd>lua vim.lsp.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>",
+				"<cmd>lua vim.lsp.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>zz",
 				"Error",
 			},
 		},
@@ -544,8 +545,8 @@ for _, server in pairs(servers) do
 						onSave = false,
 					},
 					chktex = {
-						onEdit = true,
-						onOpenAndSave = true,
+						onEdit = false,
+						onOpenAndSave = false,
 					},
 				},
 			},
@@ -925,8 +926,9 @@ require("colorizer").setup({ "*" }, {
 
 require("tabout").setup({
 	tabkey = "<nop>",
-	act_as_tab = true,
+	act_as_tab = false,
 	completion = false,
+    enable_backwards = true,
 	tabouts = {
 		{ open = "'", close = "'" },
 		{ open = '"', close = '"' },
@@ -1132,15 +1134,87 @@ require("lspconfig").ltex.setup({
 	root_dir = nvim_lsp.util.root_pattern(".git"),
 })
 
+-- Toggle Lsp
+vim.g.diagnostics_active = false
+function _G.toggle_diagnostics()
+  if vim.g.diagnostics_active then
+    vim.g.diagnostics_active = false
+    vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, _, params, client_id, _)
+		local config = {
+			underline = false,
+            virtual_text = false,
+			signs = true,
+			update_in_insert = false,
+		}
+		local uri = params.uri
+		local bufnr2 = vim.uri_to_bufnr(uri)
+
+		if not bufnr2 then
+			return
+		end
+
+		local diagnostics = params.diagnostics
+
+		for i, v in ipairs(diagnostics) do
+			diagnostics[i].message = string.format("%s: %s", v.source, v.message)
+		end
+
+		vim.lsp.diagnostic.save(diagnostics, bufnr2, client_id)
+
+		if not vim.api.nvim_buf_is_loaded(bufnr2) then
+			return
+		end
+
+		vim.lsp.diagnostic.display(diagnostics, bufnr2, client_id, config)
+	end
+    vim.lsp.diagnostic.redraw()
+  else
+    vim.g.diagnostics_active = true
+    vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, _, params, client_id, _)
+		local config = {
+			underline = true,
+			virtual_text = {
+				prefix = " ",
+				spacing = 4,
+			},
+			signs = true,
+			update_in_insert = false,
+		}
+		local uri = params.uri
+		local bufnr2 = vim.uri_to_bufnr(uri)
+
+		if not bufnr2 then
+			return
+		end
+
+		local diagnostics = params.diagnostics
+
+		for i, v in ipairs(diagnostics) do
+			diagnostics[i].message = string.format("%s: %s", v.source, v.message)
+		end
+
+		vim.lsp.diagnostic.save(diagnostics, bufnr2, client_id)
+
+		if not vim.api.nvim_buf_is_loaded(bufnr2) then
+			return
+		end
+
+		vim.lsp.diagnostic.display(diagnostics, bufnr2, client_id, config)
+	end
+    vim.lsp.diagnostic.redraw()
+  end
+end
+
 -- Null LS
 local null_ls = require("null-ls")
 require("null-ls").config({
 	sources = {
-		null_ls.builtins.code_actions.gitsigns.with({ filetype = { "julia" } }),
+		-- null_ls.builtins.code_actions.gitsigns.with({ filetype = { "jl" } }),
 		null_ls.builtins.formatting.trim_whitespace.with({ filetypes = { "*" } }),
 		null_ls.builtins.formatting.stylua,
 		null_ls.builtins.diagnostics.markdownlint,
 		null_ls.builtins.formatting.fish_indent,
+        null_ls.builtins.diagnostics.chktex
 	},
 })
 require("lspconfig")["null-ls"].setup({

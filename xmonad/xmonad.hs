@@ -147,7 +147,7 @@ myConfig p = def
 wsTMP    = "tmp"
 wsTMP2   = "tmp2"
 wsPRO1   = "3DPrint - home"
-wsPRO2   = "extension - home"
+wsPRO2   = "Notes - home"
 wsPRO3   = "dnd - home"
 wsCON    = "configs - home"
 wsPER    = "home"
@@ -182,14 +182,14 @@ projects =
                 }
 
     , Project   { projectName       = wsPRO1
-                , projectDirectory  = "~/Projects/Prints"
+                , projectDirectory  = "~/Projects/Printing"
                 , projectStartHook  = Just $ do spawnOn wsPRO1 "prusaslicer"
                                                 spawnOn wsPRO1 ("sleep 2; " ++ myBrowser)
                 }
     , Project   { projectName       = wsPRO2
-                , projectDirectory  = "~/Projects/julia-vscode"
-                , projectStartHook  = Just $ do spawnOn wsPRO2 (myTerminal ++ " .")
-                                                spawnOn wsPRO2 ("sleep .3; " ++ myBrowser)
+                , projectDirectory  = "~/Projects/ProjectLogs"
+                , projectStartHook  = Just $ do spawnOn wsPRO2 (myTerminal ++ " --session=/home/oleete/.config/kitty/logs.conf")
+                                                spawnOn wsPRO2 ("sleep .2; " ++ myBrowser)
                 }
 
     , Project   { projectName       = wsPRO3
@@ -200,7 +200,7 @@ projects =
     , Project   { projectName       = wsCON
                 , projectDirectory  = "~/.config"
                 , projectStartHook  = Just $ do spawnOn wsCON (myTerminal ++ " --session=/home/oleete/.config/kitty/config.conf")
-                                                spawnOn wsCON ("sleep 1.5; " ++ myBrowser)
+                                                spawnOn wsCON ("sleep .5; " ++ myBrowser)
                 }
 
     , Project   { projectName       = wsPER

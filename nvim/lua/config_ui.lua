@@ -30,9 +30,13 @@ require("zen-mode").setup({
 	},
 	on_open = function()
 		vim.api.nvim_command("IndentBlanklineDisable")
+        vim.g.diagnostics_active = true
+        toggle_diagnostics()
 	end,
 	on_close = function()
 		vim.api.nvim_command("IndentBlanklineEnable")
+        vim.g.diagnostics_active = false
+        toggle_diagnostics()
 	end,
 })
 require("twilight").setup({
@@ -166,8 +170,8 @@ require("gitsigns").setup({
 		noremap = true,
 		buffer = true,
 
-		["n ]h"] = { expr = true, "&diff ? ']c' : '<cmd>lua require\"gitsigns\".next_hunk()<CR>'" },
-		["n [h"] = { expr = true, "&diff ? '[c' : '<cmd>lua require\"gitsigns\".prev_hunk()<CR>'" },
+		["n ]h"] = { expr = true, "&diff ? ']c' : '<cmd>lua require\"gitsigns\".next_hunk()<cr>zz'" },
+		["n [h"] = { expr = true, "&diff ? '[c' : '<cmd>lua require\"gitsigns\".prev_hunk()<cr>zz'" },
 
 		-- Text objects
 		["o ih"] = ':<C-U>lua require"gitsigns".select_hunk()<CR>',

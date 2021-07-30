@@ -279,7 +279,7 @@ endfunction
 
 " Wellle Tagets settings
 autocmd User targets#mappings#user call targets#mappings#extend({
-    \ 'A': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': '[,;]'}]},
+    \ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': '[,;]'}]},
     \ 'x': {'line': [{'c': 1}]},
     \ '$': {},
     \ })
@@ -406,10 +406,20 @@ xnoremap ' `
 vnoremap < <gv
 vnoremap > >gv
 
+" Visual Moving
+vnoremap J :move '>+1<cr>gv=gv
+vnoremap K :move '<-2<cr>gv=gv
+
 
 " Insert Mode
 inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
+
+" Undo breakpoints
+inoremap , ,<c-g>u
+inoremap . .<c-g>u
+inoremap ! !<c-g>u
+inoremap ? ?<c-g>u
 
 " imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
 " inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
@@ -420,21 +430,21 @@ inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
 " inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 " inoremap <silent><expr> <C-Space> compe#complete()
 
-"
+
 " Terminal
 tnoremap <Esc> <C-\><C-n>
 
 " Panel Specific Mappings
 augroup panelMappings
-  au filetype Outline map <buffer> o <cmd>lua require('symbols-outline')._goto_location(true)<cr><cmd>sleep 2<cr><cmd>SymbolsOutlineClose<cr>
-  au filetype qf map <buffer> <esc> <cmd>q<cr>
-  au filetype help map <buffer> <esc> <cmd>q<cr>
-  au filetype vim-plug map <buffer> <esc> <cmd>q<cr>
-  au filetype juliadoc map <buffer> <esc> <cmd>q<cr>
-  au filetype LvimHelper map <buffer> <esc> <cmd>q<cr>
-  au filetype NeogitStatus map <buffer> <esc> <cmd>tabclose<cr>
-  au filetype NeogitPopup map <buffer> <esc> <cmd>q<cr>
-  au filetype toggleterm map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
+    au filetype Outline map <buffer> o <cmd>lua require('symbols-outline')._goto_location(true)<cr><cmd>sleep 2<cr><cmd>SymbolsOutlineClose<cr>
+    au filetype qf map <buffer> <esc> <cmd>q<cr>
+    au filetype help map <buffer> <esc> <cmd>q<cr>
+    au filetype vim-plug map <buffer> <esc> <cmd>q<cr>
+    au filetype juliadoc map <buffer> <esc> <cmd>q<cr>
+    au filetype LvimHelper map <buffer> <esc> <cmd>q<cr>
+    au filetype NeogitStatus map <buffer> <esc> <cmd>tabclose<cr>
+    au filetype NeogitPopup map <buffer> <esc> <cmd>q<cr>
+    au filetype toggleterm map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
 augroup END
 
 " Vim Hop, ISwap and TS hint object

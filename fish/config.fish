@@ -3,8 +3,8 @@
 
 starship init fish | source
 
-set -Ux EDITOR neovim
-set -Ux VISUAL neovim
+set -Ux EDITOR nvim
+set -Ux VISUAL nvim
 set -gx PATH /home/oleete/.cargo/bin /home/oleete/.yarn/bin /home/oleete/go/bin /home/oleete/.config/nvim/node_modules/tree-sitter-cli $PATH
 
 export BAT_PAGER="less -R"

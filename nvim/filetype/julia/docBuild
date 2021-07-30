@@ -4,4 +4,4 @@ projectDir=$(pwd)
 docsBuild="$(pwd)/docs/make.jl"
 docsFile="$(pwd)/docs/build/index.html"
 
-julia --project ~/.config/nvim/filetype/julia/task_docbuild.jl $projectDir $projectName $docsFile
+julia --project ~/.config/nvim/filetype/julia/task_docbuild.jl $docsBuild $docsFile
