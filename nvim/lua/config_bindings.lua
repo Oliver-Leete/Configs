@@ -286,9 +286,6 @@ require("which-key").register({
 			S = { "<cmd>Gitsigns stage_buffer<CR>", "Stage File" },
 			s = { "<cmd>Gitsigns stage_hunk<CR>", "Hunk Stage" },
 			v = { "<cmd>Gitsigns select_hunk<CR>", "Select Current Hunk" },
-			["["] = { "<cmd>diffget LOCAL<cr>", "Take Local Change" },
-			["]"] = { "<cmd>diffget REMOTE<cr>", "Take Remote Change" },
-			["<leader>"] = { "<cmd>diffget BASE<cr>", "Take Base" },
 			[","] = {
 				name = "Settings",
 				b = { "<cmd>call v:lua.gitsign_change_base()<cr>", "Change Gitsigns Base" },
@@ -428,7 +425,9 @@ require("which-key").register({
 		},
 		w = {
 			name = "Window Managment",
+            ["<leader>"] = {"<c-w>p", "Jump To Last Split"},
 			O = { "<cmd>Bdelete hidden<cr>", "Close All Hidden Buffers" },
+            f = {"<cmd>vsplit<cr>gf", "Split Open Under Cursor"},
 			d = { "<cmd>bdelete!<cr>", "Delete the current buffer" },
 			w = { "<cmd>ZenMode<cr>", "Zen Mode" },
 			o = { "<c-w>o", "Clean Up Windows" },
@@ -436,15 +435,14 @@ require("which-key").register({
 			["<cr>"] = { "<c-w>v", "Open Window" },
 			x = { "<c-w>s", "Horizontal Split" },
 			v = { "<c-w>v", "Vertical Split" },
-			n = { "<C-W>w", "Next Window" },
-			p = { "<C-W>W", "Previous Window" },
+			n = { "<C-W>n", "Open New Window" },
 			N = { "<C-W>r", "Move Window Next" },
 			P = { "<C-W>R", "Move Window Previous" },
 			["]"] = { "<cmd>vertical resize +5<cr>", "Vertical Resize" },
 			["["] = { "<cmd>vertical resize -5<cr>", "Vertical Resize" },
 			["}"] = { "<cmd>resize +5<cr>", "Horizontal Resize" },
 			["{"] = { "<cmd>resize -5<cr>", "Horizontal Resize" },
-			["="] = { "<c-w>_<c-w>=", "Equal Size" },
+			["="] = { "<c-w>=", "Equal Size" },
 			h = { "<c-w>h", "Left Windown" },
 			j = { "<c-w>j", "Below Window" },
 			k = { "<c-w>k", "Above Window" },
@@ -564,3 +562,13 @@ require("which-key").register({
 }, {
 	mode = "v",
 })
+
+if vim.api.nvim_win_get_option(0, "diff") then
+    require("which-key").register({
+        ["<leader>"] = {
+			["["] = { "<cmd>diffget LOCAL<cr>", "Take Local Change" },
+			["]"] = { "<cmd>diffget REMOTE<cr>", "Take Remote Change" },
+			["<leader>"] = { "<cmd>diffget BASE<cr>", "Take Base" },
+        },
+})
+end

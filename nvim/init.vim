@@ -459,7 +459,6 @@ vmap <silent> S :lua require('tsht').nodes()<CR>
 let g:wordmotion_prefix = '$'
 
 " Text Object Mappings
-
 onoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0, 1, 0, [line("."), line("."), col("."), col(".")])<CR>
 onoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1, 1, 0, [line("."), line("."), col("."), col(".")])<CR>
 vnoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0, 1, 1, [line("'<"), line("'>"), col("'<"), col("'>")])<CR><Esc>gv
@@ -541,6 +540,7 @@ require('config_main')
 require('config_ui')
 require('config_panels')
 require('config_bindings')
+require('config_lsp')
 EOF
 
 silent! !git rev-parse --is-inside-work-tree
