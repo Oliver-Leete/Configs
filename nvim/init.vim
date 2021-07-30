@@ -541,6 +541,9 @@ require('config_ui')
 require('config_panels')
 require('config_bindings')
 require('config_lsp')
+require('config_treesitter')
+require('config_telescope')
+require('config_git')
 EOF
 
 silent! !git rev-parse --is-inside-work-tree

@@ -562,13 +562,3 @@ require("which-key").register({
 }, {
 	mode = "v",
 })
-
-if vim.api.nvim_win_get_option(0, "diff") then
-    require("which-key").register({
-        ["<leader>"] = {
-			["["] = { "<cmd>diffget LOCAL<cr>", "Take Local Change" },
-			["]"] = { "<cmd>diffget REMOTE<cr>", "Take Remote Change" },
-			["<leader>"] = { "<cmd>diffget BASE<cr>", "Take Base" },
-        },
-})
-end
