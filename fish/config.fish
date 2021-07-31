@@ -60,6 +60,8 @@ alias g git
 abbr gc "g checkout"
 abbr gcm "g commit"
 abbr ga "g add"
+abbr gp "g pull"
+abbr gP "g push"
 abbr gb "g branch"
 abbr gs "g status -sb"
 abbr gr "g remote -v"
