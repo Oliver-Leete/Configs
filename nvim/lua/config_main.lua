@@ -37,33 +37,18 @@ for _, plugin in pairs(disabled_built_ins) do
 	vim.g["loaded_" .. plugin] = 1
 end
 
--- -- Auto Sessions
--- require("auto-session").setup({
--- 	log_level = "info",
--- 	auto_session_enable_last_session = false,
--- 	auto_session_enabled = true,
--- 	auto_save_enabled = nil,
--- 	auto_restore_enabled = nil,
--- 	auto_session_suppress_dirs = nil,
--- })
+-- Close Buffers Setup
+require('close_buffers').setup({
+  preserve_window_layout = { 'this' },
+  next_buffer_cmd = function(windows)
+    require('bufferline').cycle(1)
+    local bufnr = vim.api.nvim_get_current_buf()
 
--- Autosave Setup
-
--- require("autosave").setup({
---     verbosity = 0,
---     enabled = true,
---     execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
---     events = {"InsertLeave", "TextChanged"},
---     conditions = {
---         exists = true,
---         filetype_is_not = {},
---         modifiable = true
---     },
---     write_all_buffers = true,
---     on_off_commands = true,
---     clean_command_line_interval = 2500
--- })
-
+    for _, window in ipairs(windows) do
+      vim.api.nvim_win_set_buf(window, bufnr)
+    end
+  end,
+})
 
 require("surround").setup({})
 

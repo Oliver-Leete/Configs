@@ -23,12 +23,9 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'winston0410/cmd-parser.nvim'
 
     " Project Management
-    " Plug 'rmagatti/auto-session'
-    " Plug 'rmagatti/session-lens'
     Plug 'tpope/vim-projectionist'
     Plug 'farmergreg/vim-lastplace'
     Plug '907th/vim-auto-save'
-    " Plug 'Pocco81/AutoSave.nvim'
 
     " Git
     Plug 'TimUntersberger/neogit'
@@ -43,8 +40,6 @@ call plug#begin('~/.config/nvim/pluged')
 
     " Movement Commands
     Plug 'unblevable/quick-scope'
-    Plug 'phaazon/hop.nvim'
-    " Plug 'ggandor/lightspeed.nvim'
     Plug 'andymass/vim-matchup'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
@@ -57,24 +52,23 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'junegunn/vim-easy-align'
     Plug 'AndrewRadev/splitjoin.vim'
     Plug 'fvictorio/vim-extract-variable'
+    Plug 'Konfekt/vim-CtrlXA'
 
     " Command Mode
     Plug 'tpope/vim-abolish'
     Plug 'tpope/vim-eunuch'
     Plug 'nacro90/numb.nvim'
     Plug 'winston0410/range-highlight.nvim'
-    Plug 'Asheq/close-buffers.vim'
+    Plug 'kazhala/close-buffers.nvim'
 
     " Text Objects
     Plug 'wellle/targets.vim'
     Plug 'wellle/line-targets.vim'
     Plug 'michaeljsmith/vim-indent-object'
     Plug 'tommcdo/vim-ninja-feet'
-    " Plug 'junegunn/vim-after-object'
     Plug 'romgrk/equal.operator'
 
     " Insert Mode
-    Plug 'Konfekt/vim-CtrlXA'
     Plug 'tpope/vim-rsi'
 
     " LANGUAGE
@@ -89,7 +83,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'lewis6991/foldsigns.nvim'
     Plug 'lukas-reineke/indent-blankline.nvim',
     Plug 'norcalli/nvim-colorizer.lua'
-    Plug 'sunjon/shade.nvim'
     Plug 'folke/twilight.nvim'
 
     " Panels
@@ -103,13 +96,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/todo-comments.nvim'
     Plug 'lvim-tech/lvim-helper'
     Plug 'jpalardy/vim-slime'
-
-    " File Manager
-    Plug 'tpope/vim-vinegar'
-
-    " Quickfix
     Plug 'kevinhwang91/nvim-bqf'
-    Plug 'tommcdo/vim-lister'
 
     " Themes
     Plug 'folke/tokyonight.nvim'
@@ -117,21 +104,19 @@ call plug#begin('~/.config/nvim/pluged')
     " LSP
     Plug 'neovim/nvim-lspconfig'
     Plug 'kabouzeid/nvim-lspinstall'
-    Plug 'onsails/lspkind-nvim'
-    Plug 'ray-x/lsp_signature.nvim'
-    Plug 'folke/lsp-colors.nvim'
-    Plug 'RRethy/vim-illuminate'
-    Plug 'kosayoda/nvim-lightbulb'
     Plug 'jose-elias-alvarez/null-ls.nvim'
+    Plug 'RRethy/vim-illuminate'
+    Plug 'ray-x/lsp_signature.nvim'
+    Plug 'onsails/lspkind-nvim'
+    Plug 'kosayoda/nvim-lightbulb'
 
     " Completion
     Plug 'hrsh7th/nvim-compe'
-    " Plug 'hrsh7th/vim-vsnip'
     Plug 'L3MON4D3/LuaSnip'
-    " Plug 'hrsh7th/vim-vsnip-integ'
     Plug 'rafamadriz/friendly-snippets'
     Plug 'windwp/nvim-autopairs'
     Plug 'tzachar/compe-tabnine', { 'do': './install.sh' }
+    Plug 'abecodes/tabout.nvim'
 
     " Telescope
     Plug 'nvim-lua/popup.nvim'
@@ -142,19 +127,23 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-telescope/telescope-bibtex.nvim'
     Plug 'nvim-telescope/telescope-github.nvim'
     Plug 'crispgm/telescope-heading.nvim'
-    Plug 'nvim-telescope/telescope-hop.nvim'
+
 
     " Treesitter
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-    Plug 'code-biscuits/nvim-biscuits'
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-treesitter/nvim-treesitter-refactor'
-    Plug 'p00f/nvim-ts-rainbow'
     Plug 'nvim-treesitter/playground'
+    Plug 'p00f/nvim-ts-rainbow'
+    Plug 'code-biscuits/nvim-biscuits'
     Plug 'RRethy/nvim-treesitter-textsubjects'
+
+    " Hop, Skip And Jump
+    Plug 'phaazon/hop.nvim'
+    Plug 'nvim-telescope/telescope-hop.nvim'
     Plug 'mizlan/iswap.nvim'
     Plug 'mfussenegger/nvim-ts-hint-textobject'
-    Plug 'abecodes/tabout.nvim'
+    
 call plug#end()
 
 " !!THEMES!!
@@ -163,9 +152,11 @@ set noshowmode
 set termguicolors
 
 let g:tokyonight_style='night'
-let g:tokyonight_terminal_colors=1
+let g:tokyonight_terminal_colors=v:true
+let g:tokyonight_dark_float=v:true
+let g:tokyonight_dark_sidebar=v:true
 let g:tokyonight_sidebars = [ "qf", "Outline", "terminal", "vim-plug", "undotree", "help", "DiffviewFiles", "juliadoc"]
-let g:tokyonight_hide_inactive_statusline=1
+let g:tokyonight_hide_inactive_statusline=v:true
 colorscheme tokyonight
 
 " " Indent Blankline Settings
@@ -401,7 +392,7 @@ augroup panelMappings
     au filetype toggleterm map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
 augroup END
 
-" Vim Hop, ISwap and TS hint object
+" Hop, Skip And Jump
 nmap s <cmd>lua require'hop'.hint_char1()<cr>
 omap ss <cmd>lua require'hop'.hint_char1()<cr>
 vmap ss <cmd>lua require'hop'.hint_char1()<cr>

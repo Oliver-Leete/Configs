@@ -16,6 +16,7 @@
 require("luasnip/loaders/from_vscode").load({
 	paths = { "/home/oleete/.config/nvim/snippets", "/home/oleete/.config/nvim/pluged/friendly-snippets/snippets" },
 })
+
 vim.o.completeopt = "menuone,noselect"
 require("compe").setup({
 	enabled = true,

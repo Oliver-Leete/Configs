@@ -70,7 +70,7 @@ abbr gloga "g log --all"
 abbr glogg "g log --oneline --graph --decorate --all "
 abbr gmt "g mergetool"
 abbr gmt2 "g mergetool --tool nvimdiff"
-abbr gclone clone-cd
+abbr gclone clone
 abbr gwip wip
 abbr lzg lazygit
 
@@ -112,7 +112,7 @@ function restore --argument file
     mv $file (echo $file | sed s/.bak//)
 end
 function mkdir-cd
-    mkdir $argv && cd $argv
+    mkdir $argv && cd
 end
 
 function clean-unzip --argument zipfile
@@ -162,15 +162,6 @@ function isodate
     date +%Y-%m-%d
 end
 
-function clone-cd --argument repo _destination
-    set destination (default $_destination (basename $repo | trim-right .git))
-    if file-exists $destination
-        cd $destination && git pull
-        return
-    end
-
-    git clone --depth=1 $repo $destination && cd $destination
-end
 function wip
     if git diff --cached --quiet
         git add .

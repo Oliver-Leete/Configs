@@ -301,6 +301,7 @@ require("which-key").register({
 		},
 		G = {
 			name = "GitHub",
+            e = { [["<cmd>RepoEdit git@github.com:" . input("What repo would you like to browse > ") . "<cr>"]], "Browse Repo", expr = true},
 			i = { "<cmd>Telescope gh issues<cr>", "Search Issues" },
 			p = { "<cmd>Telescope gh pull_request<cr>", "Search Pull Requests" },
 			g = { "<cmd>Telescope gh gist<cr>", "Search Gists" },
@@ -468,9 +469,9 @@ require("which-key").register({
 		w = {
 			name = "Window Managment",
 			["<leader>"] = { "<c-w>p", "Jump To Last Split" },
-			O = { "<cmd>Bdelete hidden<cr>", "Close All Hidden Buffers" },
+			O = { "<cmd>BDelete hidden<cr>", "Close All Hidden Buffers" },
 			f = { "<cmd>vsplit<cr>gf", "Split Open Under Cursor" },
-			d = { "<cmd>bdelete!<cr>", "Delete the current buffer" },
+			d = { "<cmd>BDelete! this<cr>", "Delete the current buffer" },
 			w = { "<cmd>ZenMode<cr>", "Zen Mode" },
 			o = { "<c-w>o", "Clean Up Windows" },
 			["<bs>"] = { "<c-w>c", "Close Window" },
