@@ -10,6 +10,48 @@
 -- Oliver Leete <oliverleete@gmail.com>                                                            --
 -- https://github.com/oliver-leete                                                                 --
 ----------------------------------------------------------------------------------------------------
+
+-- Whichkey setup
+require("which-key").setup({
+	plugins = {
+		marks = true,
+		registers = true,
+		spelling = {
+			enabled = true,
+			suggestions = 20,
+		},
+		presets = {
+			operators = true,
+			motions = true,
+			text_objects = true,
+			windows = true,
+			nav = true,
+			z = true,
+			g = true,
+		},
+	},
+	operators = { gc = "Comments" },
+	icons = {
+		breadcrumb = "»",
+		separator = "➜",
+		group = "+",
+	},
+	window = {
+		border = "none",
+		position = "bottom",
+		margin = { 1, 0, 1, 0 },
+		padding = { 2, 2, 2, 2 },
+	},
+	layout = {
+		height = { min = 4, max = 30 },
+		width = { min = 20, max = 50 },
+		spacing = 3,
+	},
+	hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ " },
+	show_help = true,
+})
+
+-- Normal Bindings
 require("which-key").register({
 	g = {
 		J = { "<cmd>SplitjoinJoin<cr>", "Smart Join" },
@@ -202,7 +244,7 @@ require("which-key").register({
 		o = {
 			name = "Open",
 			f = { "gf", "Open File" },
-			D = { "gd", "Open Tag Deffinition" },
+			t = { "gd", "Open Tag Deffinition" },
 		},
 		F = { "<cmd>Telescope commands<cr>", "Commands" },
 		f = {
@@ -255,7 +297,7 @@ require("which-key").register({
 				expr = true,
 			},
 			y = { "<cmd>Telescope registers<cr>", "Registers" },
-			z = { "<cmd>Telescope session-lens search_session<cr>", "Session Search" },
+			-- z = { "<cmd>Telescope session-lens search_session<cr>", "Session Search" },
 		},
 		G = {
 			name = "GitHub",
@@ -296,7 +338,7 @@ require("which-key").register({
 			name = "Preview",
 			g = { "<cmd>lua require'gitsigns'.preview_hunk()<CR>", "Hunk Preview" },
 			w = { "<cmd>MatchupWhereAmI??<cr>", "Preview Location" },
-            E = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown"},
+			E = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
 		},
 		v = {
 			name = "View",
@@ -425,9 +467,9 @@ require("which-key").register({
 		},
 		w = {
 			name = "Window Managment",
-            ["<leader>"] = {"<c-w>p", "Jump To Last Split"},
+			["<leader>"] = { "<c-w>p", "Jump To Last Split" },
 			O = { "<cmd>Bdelete hidden<cr>", "Close All Hidden Buffers" },
-            f = {"<cmd>vsplit<cr>gf", "Split Open Under Cursor"},
+			f = { "<cmd>vsplit<cr>gf", "Split Open Under Cursor" },
 			d = { "<cmd>bdelete!<cr>", "Delete the current buffer" },
 			w = { "<cmd>ZenMode<cr>", "Zen Mode" },
 			o = { "<c-w>o", "Clean Up Windows" },
@@ -484,9 +526,9 @@ require("which-key").register({
 		q = { "<cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast <bar> endtry<cr>zz", "QuickFix Entry" },
 		h = { "Hunk" },
 		s = { "[szz", "Spelling Mistake" },
-		["["] = { "[[zz", "Section (end)" , noremap = false},
+		["["] = { "[[zz", "Section (end)", noremap = false },
 		["]"] = { "[]zz", "Section", noremap = false },
-		["*"] = { "[#zz","Function Call", noremap = false},
+		["*"] = { "[#zz", "Function Call", noremap = false },
 		o = { "<cmd>TSTextobjectGotoPreviousStart @class.outer<cr>zz", "Class" },
 		f = { "<cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Function" },
 		[","] = { "<cmd>TSTextobjectGotoPreviousStart @parameter.inner<cr>zz", "Parameter" },
@@ -506,9 +548,9 @@ require("which-key").register({
 		q = { "<cmd>try <bar> cnext <bar> catch /E553/ <bar> cfirst <bar> endtry<cr>zz", "QuickFix Entry" },
 		h = { "Hunk" },
 		s = { "]szz", "Spelling Mistake" },
-		["["] = { "][zz", "Section (end)" , noremap = false},
+		["["] = { "][zz", "Section (end)", noremap = false },
 		["]"] = { "]]zz", "Section", noremap = false },
-		["*"] = { "]#zz","Function Call", noremap = false},
+		["*"] = { "]#zz", "Function Call", noremap = false },
 		o = { "<cmd>TSTextobjectGotoNextStart @class.outer<cr>zz", "Class" },
 		f = { "<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Function" },
 		[","] = { "<cmd>TSTextobjectGotoNextStart @parameter.inner<cr>zz", "Parameter" },
@@ -526,6 +568,9 @@ require("which-key").register({
 		name = "Local Leader",
 	},
 })
+
+-- Visual Bindings
+
 require("which-key").register({
 	["<leader>"] = {
 		r = {

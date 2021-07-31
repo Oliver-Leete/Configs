@@ -1,3 +1,16 @@
+----------------------------------------------------------------------------------------------------
+--                      _   _   ______    ____   __      __  _____   __  __                       --
+--                     | \ | | |  ____|  / __ \  \ \    / / |_   _| |  \/  |                      --
+--                     |  \| | | |__    | |  | |  \ \  / /    | |   | \  / |                      --
+--                     | . ` | |  __|   | |  | |   \ \/ /     | |   | |\/| |                      --
+--                     | |\  | | |____  | |__| |    \  /     _| |_  | |  | |                      --
+--                     |_| \_| |______|  \____/      \/     |_____| |_|  |_|                      --
+--                                                                                                --
+----------------------------------------------------------------------------------------------------
+-- Oliver Leete <oliverleete@gmail.com>                                                            --
+-- https://github.com/oliver-leete                                                                 --
+----------------------------------------------------------------------------------------------------
+
 -- Telescope Setup
 
 local actions = require("telescope.actions")
@@ -5,7 +18,7 @@ local extensions = require("telescope").extensions
 require("telescope").load_extension("bibtex")
 require("telescope").load_extension("gh")
 require("telescope").load_extension("media_files")
-require("telescope").load_extension("session-lens")
+-- require("telescope").load_extension("session-lens")
 require("telescope").load_extension("heading")
 local trouble = require("trouble.providers.telescope")
 

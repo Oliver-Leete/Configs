@@ -23,8 +23,8 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'winston0410/cmd-parser.nvim'
 
     " Project Management
-    Plug 'rmagatti/auto-session'
-    Plug 'rmagatti/session-lens'
+    " Plug 'rmagatti/auto-session'
+    " Plug 'rmagatti/session-lens'
     Plug 'tpope/vim-projectionist'
     Plug 'farmergreg/vim-lastplace'
     Plug '907th/vim-auto-save'
@@ -81,7 +81,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'lervag/vimtex'
     Plug 'JuliaEditorSupport/julia-vim'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-    " Plug 'neovimhaskell/haskell-vim'
 
     " UI Stuff
     Plug 'folke/zen-mode.nvim'
@@ -171,7 +170,12 @@ colorscheme tokyonight
 
 " " Indent Blankline Settings
 let g:indent_blankline_char_list = ['│']
-let g:indent_blankline_char_highlight_list = ['rainbowcol7', 'rainbowcol6', 'rainbowcol5', 'rainbowcol4', 'rainbowcol3', 'rainbowcol2', 'rainbowcol1']
+" let g:indent_blankline_char_highlight_list = ['rainbowcol7', 'rainbowcol6', 'rainbowcol5', 'rainbowcol4', 'rainbowcol3', 'rainbowcol2', 'rainbowcol1']
+let g:indent_blankline_use_treesitter= v:true
+let g:indent_blankline_show_first_indent_level = v:false
+let g:indent_blankline_indent_level = 5
+let g:indent_blankline_filetype_exclude = ["qf", "outline", "terminal", "vimplug", "undotree", "help", "DiffviewFiles", "juliadoc"]
+let g:indent_blankline_show_current_context = v:true
 
 " Vim Slime Settings
 let g:slime_target = "neovim"
@@ -271,10 +275,10 @@ function! g:committia_hooks.edit_open(info)
 
     " Scroll the diff window from insert mode
     " Map <C-n> and <C-p>
-    nmap <buffer><C-n> <Plug>(committia-scroll-diff-down-half)
-    nmap <buffer><C-p> <Plug>(committia-scroll-diff-up-half)
-    imap <buffer><C-n> <Plug>(committia-scroll-diff-down-half)
-    imap <buffer><C-p> <Plug>(committia-scroll-diff-up-half)
+    nmap <buffer><C-down> <Plug>(committia-scroll-diff-down-half)
+    nmap <buffer><C-up> <Plug>(committia-scroll-diff-up-half)
+    imap <buffer><C-down> <Plug>(committia-scroll-diff-down-half)
+    imap <buffer><C-up> <Plug>(committia-scroll-diff-up-half)
 endfunction
 
 " Wellle Tagets settings
@@ -309,48 +313,6 @@ xnoremap <SPACE> <Nop>
 xnoremap <BackSPACE> <Nop>
 let mapleader = "\<space>"
 let maplocalleader = "\\"
-
-lua << EOF
-local wk = require("which-key")
-wk.setup {
-    plugins = {
-        marks = true,
-        registers = true,
-        spelling = {
-            enabled = true,
-            suggestions = 20,
-        },
-        presets = {
-            operators = true,
-            motions = true,
-            text_objects = true,
-            windows = true,
-            nav = true,
-            z = true,
-            g = true,
-        },
-    },
-    operators = { gc = "Comments" },
-    icons = {
-        breadcrumb = "»",
-        separator = "➜",
-        group = "+",
-    },
-    window = {
-        border = "none",
-        position = "bottom",
-        margin = { 1, 0, 1, 0 },
-        padding = { 2, 2, 2, 2 },
-    },
-    layout = {
-        height = { min = 4, max = 30 },
-        width = { min = 20, max = 50 },
-        spacing = 3,
-    },
-    hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ "},
-    show_help = true
-}
-EOF
 
 " !!MAPPINGS!!
 nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
@@ -421,15 +383,7 @@ inoremap . .<c-g>u
 inoremap ! !<c-g>u
 inoremap ? ?<c-g>u
 
-" imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
-" inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
-" imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
-
-inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
-inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-" inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-" inoremap <silent><expr> <C-Space> compe#complete()
-
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 
 " Terminal
 tnoremap <Esc> <C-\><C-n>
@@ -537,6 +491,7 @@ au BufNewFile,BufRead *.jl set filetype=julia
 
 lua << EOF
 require('config_main')
+require('config_compleation')
 require('config_ui')
 require('config_panels')
 require('config_bindings')
@@ -544,6 +499,7 @@ require('config_lsp')
 require('config_treesitter')
 require('config_telescope')
 require('config_git')
+
 EOF
 
 silent! !git rev-parse --is-inside-work-tree
@@ -552,14 +508,5 @@ if v:shell_error == 0
 else
   lua require("which-key").register({["<leader>f"]={f = {"<cmd>Telescope fd<cr>", "Find Files"}}})
 endif
-
-
-" let g:haskell_enable_quantification = 1
-" let g:haskell_enable_recursivedo = 1
-" let g:haskell_enable_arrowsyntax = 1
-" let g:haskell_enable_pattern_synonyms = 1
-" let g:haskell_enable_typeroles = 1
-" let g:haskell_enable_static_pointers = 1
-" let g:haskell_backpack = 1
 
 redraw
