@@ -115,7 +115,7 @@ instance LayoutClass Notebook a where
                   resize Expand = l { notebookFrac = max 1 $ f-d }
                   mresize MirrorShrink = l { notebookMirrorFrac = max (-0.5) $ mf-d }
                   mresize MirrorExpand = l { notebookMirrorFrac = min 1 $ mf+d }
-                  incmastern (IncColumnN x) = l { notebookMaster = max 1 $ min c (n+x) }
+                  incmastern (IncColumnN x) = l { notebookMaster = max 0 $ min c (n+x) }
                   inccolumnn (IncMasterN x) = l { notebookColumn = max n (c+x) }
                   togglemiddle ToggleMiddle = l { notebookMiddle = not mid}
                   toggleside ToggleSide = l { notebookSide = not s}
@@ -173,6 +173,7 @@ tileSlim middle f mf r nmain nmaster n
 
 newWide ::Bool -> Bool -> Bool -> Int -> Int -> Int -> Rational -> Rational -> Rectangle -> [Rectangle]
 newWide m s d n c nwin f mf r
+    | c == 0 = splitHorizontally nwin r
     | nwin <= ncol + nmain = map fst listCols
     | otherwise = listWithStack
     where startPoint
@@ -185,10 +186,12 @@ newWide m s d n c nwin f mf r
             | otherwise                                     = toInteger width
 
           width
+            | n == 0 = floor (rect_width r % fromIntegral ncol)
             | c <= 1 = rect_width r
             | ncol == 0 = floor (rect_width r % fromIntegral nmain)
             | otherwise = 2 * floor (toRational (rect_width r) / (toRational ncol + (f * toRational nmain)))
           colWidth
+            | n == 0 = fromIntegral width
             | c <= 1 = 0
             | ncol == 0 = floor (toRational width/2)
             | otherwise = floor (toRational (toRational (rect_width r) - (toRational width*toRational nmain)) / toRational ncol)
@@ -196,6 +199,7 @@ newWide m s d n c nwin f mf r
           minWidth = colWidth * nstack
 
           nmain
+            | n == 0 = 0
             | n < nwin = n
             | n > c = c
             | otherwise = nwin

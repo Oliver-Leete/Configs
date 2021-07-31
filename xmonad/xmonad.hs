@@ -505,7 +505,9 @@ myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
                    $ Notebook 1920 True True True 1 3 reSize 2 (2/3))
 
     threeCol  = renamed [Replace "Three Col"] $ subLayout [] Simplest (FourCol True 1 reSize (51/100))
-    columns   = renamed [Replace "Columns"] $ subLayout [] Simplest (Mirror $ Column 1)
+    -- columns   = renamed [Replace "Columns"] $ subLayout [] Simplest (Mirror $ Column 1)
+    columns   = renamed [Replace "Columns"] $ subLayout [] Simplest
+              $ Notebook 1920 False True True 3 3 reSize 2 (2/3)
     colLayout = ifWider smallMonResWidth (threeCol ||| columns) (columns ||| threeCol)
 
     tallTabs   = renamed [Replace "Tall Tabs"] (mastered (1/100) (1/2) Simplest)
