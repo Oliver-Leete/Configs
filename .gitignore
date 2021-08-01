@@ -18,6 +18,7 @@ rofi/
 !/nvim/ftplugin/*
 !/nvim/filetype/*/*
 !/nvim/docstring/*
+!/nvim/queries/**/*
 !/xmonad/xmonad.hs
 !/xmonad/xmonad-oleete/XMonad/**/*.hs
 !/xmobar/*

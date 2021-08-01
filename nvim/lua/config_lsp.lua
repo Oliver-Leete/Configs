@@ -631,8 +631,8 @@ require("null-ls").config({
 		-- null_ls.builtins.code_actions.gitsigns.with({ filetype = { "jl" } }),
 		null_ls.builtins.formatting.trim_whitespace.with({ filetypes = { "*" } }),
 		null_ls.builtins.formatting.stylua,
-		null_ls.builtins.diagnostics.markdownlint,
 		null_ls.builtins.formatting.fish_indent,
+		null_ls.builtins.diagnostics.markdownlint,
         null_ls.builtins.diagnostics.chktex
 	},
 })
