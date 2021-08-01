@@ -120,23 +120,6 @@ require("nvim-biscuits").setup({
 	},
 })
 
-require("tabout").setup({
-	tabkey = "<c-`>",
-	act_as_tab = false,
-	completion = false,
-    enable_backwards = true,
-	tabouts = {
-		{ open = "'", close = "'" },
-		{ open = '"', close = '"' },
-		{ open = "`", close = "`" },
-		{ open = "(", close = ")" },
-		{ open = "[", close = "]" },
-		{ open = "{", close = "}" },
-		{ open = "<", close = ">" },
-	},
-	ignore_beginning = false,
-	exclude = {},
-})
 
 require("iswap").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
 require("tsht").config.hint_keys = {

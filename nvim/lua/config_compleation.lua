@@ -136,3 +136,22 @@ require("todo-comments").setup({
 		default = { "Identifier", "#7C3AED" },
 	},
 })
+
+require("tabout").setup({
+	tabkey = "",
+    backwards_tabkey = "",
+	act_as_tab = false,
+	completion = false,
+    enable_backwards = true,
+	tabouts = {
+		{ open = "'", close = "'" },
+		{ open = '"', close = '"' },
+		{ open = "`", close = "`" },
+		{ open = "(", close = ")" },
+		{ open = "[", close = "]" },
+		{ open = "{", close = "}" },
+		{ open = "<", close = ">" },
+	},
+	ignore_beginning = false,
+	exclude = {},
+})

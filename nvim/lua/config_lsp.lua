@@ -22,7 +22,7 @@ local function preview_location_callback(_, _, result)
 	if result == nil or vim.tbl_isempty(result) then
 		return nil
 	end
-	vim.lsp.util.preview_location(result[1], { border = "single" })
+	vim.lsp.util.preview_location(result[1], { focusable = false, border = "single" })
 end
 
 function PeekDefinition()
@@ -39,12 +39,6 @@ end
 -- Capture real implementation of function that sets signs
 local orig_set_signs = vim.lsp.diagnostic.set_signs
 local set_signs_limited = function(diagnostics, bufnr, client_id, sign_ns, opts)
-	-- original func runs some checks, which I think is worth doing
-	-- but maybe overkill
-	if not diagnostics then
-		diagnostics = diagnostic_cache[bufnr][client_id]
-	end
-
 	-- early escape
 	if not diagnostics then
 		return
@@ -108,9 +102,11 @@ local custom_attach = function(client, bufnr)
 
 	vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
 		border = "single",
+        focusable = false,
 	})
 	vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
 		border = "single",
+        focusable = false,
 	})
 
 	require("lsp_signature").on_attach({
@@ -150,7 +146,7 @@ local custom_attach = function(client, bufnr)
 				d = { "<cmd>lua PeekDefinition()<CR>", "Definition" },
                 E = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown"},
 				e = {
-					"<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false, popup_opts = {border='single'}})<CR>",
+					"<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false, border='single'})<CR>",
 					"Diagnostics",
 				},
 				L = { "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory" },
@@ -189,9 +185,6 @@ local custom_attach = function(client, bufnr)
 
 	vim.cmd([[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb({sign={priority=7}})]])
 
-	-- vim.api.nvim_exec([[
-	--     autocmd CursorHold * :lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false , popup_opts = { border = 'single' }})
-	-- ]], false)
 
 	if client.resolved_capabilities.document_formatting then
 		require("which-key").register({
@@ -361,7 +354,6 @@ require("lspkind").init({
 
 -- LTEX
 local configs = require("lspconfig/configs")
-local util = require("lspconfig/util")
 
 local function readFiles(files)
 	local dict = {}
@@ -501,7 +493,7 @@ configs.ltex = {
 				hiddenFalsePositives = {},
 			},
 		},
-		on_attach = function(client, bufnr)
+		on_attach = function(client)
 			-- local lang = client.config.settings.ltex.language
 			for lang, _ in ipairs(client.config.dictionary_files) do --
 				updateConfig(lang, "dictionary")
@@ -584,6 +576,11 @@ function _G.toggle_diagnostics()
 
 		vim.lsp.diagnostic.display(diagnostics, bufnr2, client_id, config)
 	end
+	vim.api.nvim_exec([[
+        augroup ErrorHover
+            autocmd!
+        augroup END
+	]], false)
     vim.lsp.diagnostic.redraw()
   else
     vim.g.diagnostics_active = true
@@ -618,6 +615,11 @@ function _G.toggle_diagnostics()
 
 		vim.lsp.diagnostic.display(diagnostics, bufnr2, client_id, config)
 	end
+	vim.api.nvim_exec([[
+        augroup ErrorHover
+            autocmd CursorHold * :lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false ,  border = 'single' })
+        augroup END
+	]], false)
     vim.lsp.diagnostic.redraw()
   end
 end

@@ -43,6 +43,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'andymass/vim-matchup'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
+    Plug 'caenrique/swap-buffers.nvim'
 
     " Normal Commands
     Plug 'blackCauldron7/surround.nvim'
