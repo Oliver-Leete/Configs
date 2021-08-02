@@ -368,14 +368,11 @@ vnoremap K :move '<-2<cr>gv=gv
 " Insert Mode
 inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
-
 " Undo breakpoints
 inoremap , ,<c-g>u
 inoremap . .<c-g>u
 inoremap ! !<c-g>u
 inoremap ? ?<c-g>u
-
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 
 " Terminal
 tnoremap <Esc> <C-\><C-n>

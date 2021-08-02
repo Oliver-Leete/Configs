@@ -55,41 +55,27 @@ require("compe").setup({
 	},
 })
 
-local t = function(str)
-	return vim.api.nvim_replace_termcodes(str, true, true, true)
+-- Compe and luasnip mappings
+local function replace_keycodes(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
-local check_back_space = function()
-	local col = vim.fn.col(".") - 1
-	if col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
-		return true
-	else
-		return false
-	end
-end
+
 local luasnip = require("luasnip")
 _G.tab_complete = function()
-	-- if vim.fn.pumvisible() == 1 then
-	--   return t '<C-n>'
-	if luasnip.expand_or_jumpable() then
-		return t("<Plug>luasnip-expand-or-jump")
+	if luasnip and luasnip.expand_or_jumpable() then
+		return replace_keycodes("<Plug>luasnip-expand-or-jump")
 	else
-		check_back_space()
-		return t("<cmd>Tabout<cr>")
+		return replace_keycodes("<plug>(TaboutMulti)")
 	end
 end
 
 _G.s_tab_complete = function()
-	-- if vim.fn.pumvisible() == 1 then
-	--   return t '<C-p>'
-	if luasnip.jumpable(-1) then
-		return t("<Plug>luasnip-jump-prev")
+	if luasnip and luasnip.jumpable(-1) then
+		return replace_keycodes("<Plug>luasnip-jump-prev")
 	else
-		return t("<cmd>TaboutBack<cr>")
+		return replace_keycodes("<plug>(TaboutBackMulti)")
 	end
 end
-
--- Compe and luasnip mappings
-
 vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", { expr = true })
 vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true })
 vim.api.nvim_set_keymap("i", "<cr>", [[compe#confirm(luaeval("require 'nvim-autopairs'.autopairs_cr()"))]], { expr = true })
@@ -140,7 +126,6 @@ require("todo-comments").setup({
 require("tabout").setup({
 	tabkey = "",
     backwards_tabkey = "",
-	act_as_tab = false,
 	completion = false,
     enable_backwards = true,
 	tabouts = {
