@@ -160,14 +160,6 @@ let g:tokyonight_sidebars = [ "qf", "Outline", "terminal", "vim-plug", "undotree
 let g:tokyonight_hide_inactive_statusline=v:true
 colorscheme tokyonight
 
-" " Indent Blankline Settings
-let g:indent_blankline_char_list = ['│']
-" let g:indent_blankline_char_highlight_list = ['rainbowcol7', 'rainbowcol6', 'rainbowcol5', 'rainbowcol4', 'rainbowcol3', 'rainbowcol2', 'rainbowcol1']
-let g:indent_blankline_use_treesitter= v:true
-let g:indent_blankline_show_first_indent_level = v:false
-let g:indent_blankline_indent_level = 5
-let g:indent_blankline_filetype_exclude = ["qf", "outline", "terminal", "vimplug", "undotree", "help", "DiffviewFiles", "juliadoc"]
-let g:indent_blankline_show_current_context = v:true
 
 " Vim Slime Settings
 let g:slime_target = "neovim"

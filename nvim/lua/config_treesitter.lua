@@ -15,10 +15,13 @@
 
 require("nvim-treesitter.configs").setup({
 	autopairs = { enable = true },
-	highlight = { enable = true },
 	indent = { enable = true },
 	rainbow = { enable = true },
 	matchup = { enable = true },
+	highlight = {
+        enable = true,
+        addditional_vim_regex_highlighting = false,
+    },
 	textobjects = {
 		select = {
 			enable = true,

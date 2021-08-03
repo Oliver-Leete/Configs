@@ -66,7 +66,15 @@ require("telescope").setup({
 		file_previewer = require("telescope.previewers").vim_buffer_cat.new,
 		grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
 		qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
-
+        pickers = {
+            buffers = {
+                show_all_buffers = true,
+                sort_mru = true,
+            },
+            grep_string = {
+                use_regex = true,
+            },
+        },
 		mappings = {
 			i = {
 				["<C-q>"] = actions.smart_send_to_qflist,

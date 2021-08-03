@@ -205,19 +205,6 @@ local custom_attach = function(client, bufnr)
 			buffer = bufnr,
 		})
 	end
-
-	-- if client.resolved_capabilities.document_highlight then
-	-- 	vim.api.nvim_exec(
-	-- 		[[
-	--             augroup lsp_document_highlight
-	--                 autocmd! * <buffer>
-	--                 autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-	--                 autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-	--             augroup END
-	--         ]],
-	-- 		false
-	-- 	)
-	-- end
 end
 
 require("lspconfig").julials.setup({
@@ -269,17 +256,14 @@ for _, server in pairs(servers) do
 			settings = {
 				Lua = {
 					runtime = {
-						-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
 						version = "LuaJIT",
-						-- Setup your lua path
 						path = vim.split(package.path, ";"),
 					},
 					diagnostics = {
-						-- Get the language server to recognize the `vim` global
+                        -- enable = false,
 						globals = { "vim" },
 					},
 					workspace = {
-						-- Make the server aware of Neovim runtime files
 						library = {
 							[vim.fn.expand("$VIMRUNTIME/lua")] = true,
 							[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
@@ -287,7 +271,6 @@ for _, server in pairs(servers) do
 						maxPreload = 2000,
 						preloadFileSize = 500,
 					},
-					-- Do not send telemetry data containing a randomized but unique identifier
 					telemetry = {
 						enable = false,
 					},
@@ -576,11 +559,11 @@ function _G.toggle_diagnostics()
 
 		vim.lsp.diagnostic.display(diagnostics, bufnr2, client_id, config)
 	end
-	vim.api.nvim_exec([[
+	vim.cmd([[
         augroup ErrorHover
             autocmd!
         augroup END
-	]], false)
+	]])
     vim.lsp.diagnostic.redraw()
   else
     vim.g.diagnostics_active = true
@@ -615,25 +598,25 @@ function _G.toggle_diagnostics()
 
 		vim.lsp.diagnostic.display(diagnostics, bufnr2, client_id, config)
 	end
-	vim.api.nvim_exec([[
+	vim.cmd([[
         augroup ErrorHover
             autocmd CursorHold * :lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false ,  border = 'single' })
         augroup END
-	]], false)
+	]])
     vim.lsp.diagnostic.redraw()
   end
 end
 
 -- Null LS
-local null_ls = require("null-ls")
 require("null-ls").config({
 	sources = {
-		-- null_ls.builtins.code_actions.gitsigns.with({ filetype = { "jl" } }),
-		null_ls.builtins.formatting.trim_whitespace.with({ filetypes = { "*" } }),
-		null_ls.builtins.formatting.stylua,
-		null_ls.builtins.formatting.fish_indent,
-		null_ls.builtins.diagnostics.markdownlint,
-        null_ls.builtins.diagnostics.chktex
+		-- require("null-ls").builtins.code_actions.gitsigns.with({ filetype = { "jl" } }),
+		require("null-ls").builtins.formatting.trim_whitespace.with({ filetypes = { "*" } }),
+		require("null-ls").builtins.formatting.stylua,
+		require("null-ls").builtins.formatting.fish_indent,
+		require("null-ls").builtins.diagnostics.markdownlint,
+        require("null-ls").builtins.diagnostics.chktex,
+        -- require("null-ls").builtins.diagnostics.selene,
 	},
 })
 require("lspconfig")["null-ls"].setup({
