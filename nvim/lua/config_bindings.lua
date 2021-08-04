@@ -534,6 +534,10 @@ require("which-key").register({
 			i = { "<cmd>LvimHelper<cr>", "Insert Mode Mappings" },
 			k = { "K", "Documentation" },
 		},
+        z = {
+            d = {[[<cmd>%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces"},
+            w = {"<cmd>%!par w80<cr>", "Wrap File to 80 Characters"},
+        },
 	},
 	["["] = {
 		name = "Backward Leader",
@@ -592,6 +596,10 @@ require("which-key").register({
 			name = "Refactor",
 			v = { "<plug>(ExtractVarVis)", "Extract Variable" },
 		},
+        z = {
+            w = {"!par w80<cr>", "Wrap to 80 Characters"},
+            d = {[[:%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces"},
+        },
 	},
 	g = {
 		R = { "<plug>(SubversiveSubstituteToEndOfLine)", "Substitute to EOL" },

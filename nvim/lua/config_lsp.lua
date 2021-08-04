@@ -615,7 +615,7 @@ require("null-ls").config({
 		require("null-ls").builtins.formatting.stylua,
 		require("null-ls").builtins.formatting.fish_indent,
 		require("null-ls").builtins.diagnostics.markdownlint,
-        require("null-ls").builtins.diagnostics.chktex,
+        -- require("null-ls").builtins.diagnostics.chktex,
         -- require("null-ls").builtins.diagnostics.selene,
 	},
 })

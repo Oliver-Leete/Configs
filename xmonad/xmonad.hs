@@ -467,7 +467,7 @@ barFull = renamed [Replace "Maximized"]
         $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True 
           Simplest
 
--- To make a toggle pure Zen. Centres the active window and hides everything else except the bar. 
+-- To make a toggle for Zen. Centres the active window and hides everything else except the bar. 
 -- Also sets the top bar to warning to remind me that other programs are probably still open.
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
@@ -478,7 +478,7 @@ centerFull = renamed [Replace "Centred Max"]
            $ avoidStruts
            $ addTabs shrinkText myTabTheme
            $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
-           $ SimpleFocus (1/2) reSize
+           $ SimpleFocus (1/2) (reSize/2)
 
 -- cf http://xmonad.org/xmonad-docs/xmonad-contrib/src/XMonad-Config-Droundy.html
 
@@ -602,6 +602,7 @@ myKeys conf = let
     , ("M-C-<Return>"    , addName "Force Terminal"              $ spawn myTerminal) 
     , ("M-b"             , addName "Browser"                     $ bindFirst [(className =? "Google-chrome", P.sendKey controlMask xK_t)
                                                                              ,(pure True, sequence_ [runOrRaise myBrowser (className =? "Google-chrome"), warpCursor])]) -- P.sendKey controlMask xK_t])])
+    , ("M-v"             , addName "PDF Viewer"                  $ sequence_ [runOrRaise "zathura" (className =? "Zathura"), warpCursor])
     , ("M-C-b"           , addName "Force Browser"               $ spawn myBrowser)
     , ("M-M1-b"          , addName "Work Browser"                $ bindOn WS [(wsTMP2,   spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
                                                                              ,(wsTMP,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
