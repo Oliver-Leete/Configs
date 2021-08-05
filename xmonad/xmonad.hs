@@ -49,7 +49,7 @@ import XMonad.Actions.WithAll
 import XMonad.Actions.WindowGoLocal
 
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.DynamicProperty
+-- import XMonad.Hooks.DynamicProperty
 import XMonad.Hooks.EwmhDesktops ( ewmhDesktopsLogHook, ewmh )
 import XMonad.Hooks.FadeWindows
 import XMonad.Hooks.InsertPosition
@@ -58,7 +58,7 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.ToggleHook
 
 import XMonad.Layout.BorderResize
-import XMonad.Layout.Column
+-- import XMonad.Layout.Column
 import XMonad.Layout.DraggingVisualizer
 import XMonad.Layout.FourColumns
 import XMonad.Layout.LayoutCombinators
@@ -454,6 +454,9 @@ myNav2DConf = def
     , unmappedWindowRect        = [("Full", singleWindowRect)]
     }
 
+-- This was in all the layout functions, might as well have it in one place
+mySpacing = spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
+
 -- To make a toggle for full-screening a program but leaving the bar in place. Also changes the top
 -- bar to warning to remind me that there are probably other programs open.
 data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
@@ -464,7 +467,7 @@ barFull = renamed [Replace "Maximized"]
         $ noFrillsDeco shrinkText topBarTheme
         $ avoidStruts
         $ addTabs shrinkText myTabTheme
-        $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True 
+        $ mySpacing
           Simplest
 
 -- To make a toggle for Zen. Centres the active window and hides everything else except the bar. 
@@ -478,7 +481,9 @@ centerFull = renamed [Replace "Centred Max"]
            $ avoidStruts
            $ addTabs shrinkText myTabTheme
            $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
-           $ SimpleFocus (1/2) (reSize/2)
+           $ mySpacing
+           $ onWorkspaces [wsTHESIS] (SimpleFocus (1/4) (reSize/2) 1000)
+           $ SimpleFocus (1/2) (reSize/2) 1500
 
 -- cf http://xmonad.org/xmonad-docs/xmonad-contrib/src/XMonad-Config-Droundy.html
 
@@ -514,10 +519,10 @@ myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
     allTabs    = renamed [Replace "Tabs"] Simplest
     tabsLayout = ifWider smallMonResWidth (toggleLayouts allTabs tallTabs) (toggleLayouts tallTabs allTabs)
 
-    oneBigLayout = renamed [Replace "One Big"] $ subLayout [] Simplest (Mirror (OneBig (2/4) (2/4)))
+    oneBigLayout   = renamed [Replace "One Big"] $ subLayout [] Simplest (Mirror (OneBig (2/4) (2/4)))
+    floatWorkSpace = renamed [Replace "Float"] (borderResize $ addFloatTopBar positionStoreFloat)
 
     -- Other Layout Stuff
-    floatWorkSpace      = renamed [Replace "Float"] (borderResize $ addFloatTopBar positionStoreFloat)
     fullBarToggle       = mkToggle (single FULLBAR)
     fullCenterToggle    = mkToggle (single FULLCENTER)
     fullScreenToggle    = mkToggle (single FULL)
@@ -525,7 +530,6 @@ myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
     reflectToggle       = mkToggle (single REFLECTX)
     smallMonResWidth    = 2560
     showWorkspaceName   = showWName' myShowWNameTheme
-    mySpacing           = spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
     addFloatTopBar      = noFrillsDeco shrinkText topFloatBarTheme
 
 ----------------------------------------------------------------------------------------------------
@@ -533,10 +537,10 @@ myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
 ----------------------------------------------------------------------------------------------------
 
 -- The general philosophy was that all WM bindings would be on the Super key, and no other bindings
--- would go there. Some exceptions have been made. F8 is used as my keyboard is set up so that
--- a tap of the Super key actually sends the F8 key (It can't do modified key presses with that
--- function). And also some more keys are creeping onto the Super layer in the form of 'magic'
--- bindings. Bindings that try to bridge the gap between the XMonad and the window management within
+-- would go there. Some exceptions have been made. F8 is used as my keyboard is set up so that a tap
+-- of the Super key actually sends the F8 key (It can't do modified key presses with that function).
+-- And also some more keys are creeping onto the Super layer in the form of 'magic' bindings.
+-- Bindings that try to bridge the gap between the XMonad and the window and tab management within
 -- certain programs.
 
 myModMask :: KeyMask
@@ -561,7 +565,8 @@ myKeys :: XConfig Layout -> [((KeyMask, KeySym), NamedAction)]
 myKeys conf = let
 
     subKeys str ks = subtitle str : mkNamedKeymap conf ks
-    -- added home and end for the two starting workspaces (This makes sense on my batshit keyboard layout)
+    -- Added home and end for the two starting workspaces 
+    -- (This makes sense on my batshit keyboard layout)
     wsKeys = ["<Home>", "<End>", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
     zipM  m nm ks as f = zipWith (\k d -> (m ++ k, addName nm $ f d)) ks as
@@ -870,13 +875,12 @@ myManageHook =
             [ resource =? "desktop_window" -?> doIgnore
             , resource =? "stalonetray"    -?> doIgnore
             , className =? "Zenity" -?> doRectFloat (W.RationalRect (3 / 8) (1 / 16) (1 / 4) (7 / 8))
-            -- , resource =? "vlc"    -?> doFloat
-            -- , resource =? "Steam"    -?> doFloat
             , resource =? "gnome-calculator" -?> doCenterFloat
             , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect ((3840-500-9)/3840) (30/2160) (500/3840) (700/2160))
             , resource =? "nm-connection-editor" -?> doRectFloat (W.RationalRect ((3840-500-9)/3840) (30/2160) (500/3840) (700/2160))
             , resource =? "galendae" -?> doRectFloat (W.RationalRect ((3840-300-16)/3840) (30/2160) (300/3840) (300/2160))
             , resource =? "nitrogen" -?> doCenterFloat
+
             , resource =? "Tasks" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
             , resource =? "WrkTasks" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
             , className =? "Keep" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
@@ -884,6 +888,7 @@ myManageHook =
             , resource =? "kittyconsole" -?> doRectFloat (W.RationalRect (3 / 5) (3 / 5) (1 / 3) (1 / 3))
             , className =? "Chromensp" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
             , className =? "Chromewrknsp" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
+
             , className =? "Zenity" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
             , resource =? youtubeMusicResource -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
             , resource =? discordResource -?> doCenterFloat
@@ -902,6 +907,8 @@ myManageHook =
         -- insert WHERE and focus WHAT
         doMain = insertPosition Master Newer
 
+-- All comments below were here when I got here
+
 ----------------------------------------------------------------------------------------------------
 -- X Event Actions                                                                                --
 ----------------------------------------------------------------------------------------------------
@@ -914,13 +921,8 @@ myManageHook =
 myHandleEventHook :: Event -> X All
 myHandleEventHook = docksEventHook
                 <+> fadeWindowsEventHook
-                <+> dynamicTitle myDynHook
                 <+> handleEventHook def
                 <+> XMonad.Util.Hacks.windowedFullscreenFixEventHook
-    where
-        myDynHook = composeAll
-            [ isDiscord --> forceCenterFloat
-            ]
 
 ----------------------------------------------------------------------------------------------------
 -- Custom hook helpers                                                                            --

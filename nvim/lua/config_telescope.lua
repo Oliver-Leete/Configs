@@ -12,6 +12,7 @@
 ----------------------------------------------------------------------------------------------------
 
 -- Telescope Setup
+local M = {}
 
 local actions = require("telescope.actions")
 local extensions = require("telescope").extensions
@@ -73,6 +74,12 @@ require("telescope").setup({
             },
             grep_string = {
                 use_regex = true,
+            },
+            lsp_definitions = {
+                jump_type = "vsplit",
+            },
+            lsp_implementations = {
+                jump_type = "vsplit",
             },
         },
 		mappings = {
@@ -227,3 +234,12 @@ end
 
 require("telescope").load_extension("fzf")
 require("telescope").load_extension("bibtex")
+
+
+M.project_files = function()
+  local opts = {} -- define here if you want to define something
+  local ok = pcall(require'telescope.builtin'.git_files, opts)
+  if not ok then require'telescope.builtin'.find_files(opts) end
+end
+
+return M

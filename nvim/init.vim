@@ -198,7 +198,7 @@ set expandtab
 set linebreak
 set breakindent
 set breakindentopt=shift:2
-call matchadd('TabLine', '\%101v', 203)
+call matchadd('TabLine', '\%101v', 203) "Colour Column
 
 " Folding
 set foldmethod=expr
@@ -371,15 +371,16 @@ tnoremap <Esc> <C-\><C-n>
 
 " Panel Specific Mappings
 augroup panelMappings
-    au filetype Outline map <buffer> o <cmd>lua require('symbols-outline')._goto_location(true)<cr><cmd>sleep 2<cr><cmd>SymbolsOutlineClose<cr>
-    au filetype qf map <buffer> <esc> <cmd>q<cr>
-    au filetype help map <buffer> <esc> <cmd>q<cr>
-    au filetype vim-plug map <buffer> <esc> <cmd>q<cr>
-    au filetype juliadoc map <buffer> <esc> <cmd>q<cr>
-    au filetype LvimHelper map <buffer> <esc> <cmd>q<cr>
+    au filetype Outline      map <buffer> o     <cmd>lua require('symbols-outline')._goto_location(true)<cr><cmd>sleep 2<cr><cmd>SymbolsOutlineClose<cr>
+    au filetype qf           map <buffer> <esc> <cmd>q<cr>
+    au filetype help         map <buffer> <esc> <cmd>q<cr>
+    au filetype vim-plug     map <buffer> <esc> <cmd>q<cr>
+    au filetype juliadoc     map <buffer> <esc> <cmd>q<cr>
+    au filetype LvimHelper   map <buffer> <esc> <cmd>q<cr>
     au filetype NeogitStatus map <buffer> <esc> <cmd>tabclose<cr>
-    au filetype NeogitPopup map <buffer> <esc> <cmd>q<cr>
-    au filetype toggleterm map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
+    au filetype NeogitPopup  map <buffer> <esc> <cmd>q<cr>
+    au filetype toggleterm   map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
+    au filetype undotree     map <buffer> <esc> <cmd>UndotreeHide<cr>
 augroup END
 
 " Hop, Skip And Jump
@@ -459,7 +460,6 @@ function CloseAllPanels()
   ToggleTermCloseAll
   NvimTreeClose
   TroubleClose
-  TroubleClose
   SymbolsOutlineClose
   DiffviewClose
   windo if &filetype == "help" | q | endif
@@ -482,12 +482,5 @@ require('config_telescope')
 require('config_git')
 
 EOF
-
-silent! !git rev-parse --is-inside-work-tree
-if v:shell_error == 0
-  lua require("which-key").register({["<leader>f"]={f = {"<cmd>Telescope git_files<cr>", "Find Files"}}})
-else
-  lua require("which-key").register({["<leader>f"]={f = {"<cmd>Telescope fd<cr>", "Find Files"}}})
-endif
 
 redraw

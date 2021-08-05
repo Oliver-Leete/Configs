@@ -21,8 +21,7 @@ module XMonad.Layout.SimpleFocus
 import XMonad
 import qualified XMonad.StackSet as S
 import Data.Ratio
-import XMonad.Core (Message)
-import Control.Monad ( msum, ap )
+import Control.Monad ( msum)
 -- $usage
 -- You can use this module with the following in your
 -- @~\/.xmonad\/xmonad.hs@:
@@ -38,22 +37,22 @@ import Control.Monad ( msum, ap )
 --
 -- "XMonad.Doc.Extending#Editing_the_layout_hook"
 
-data SimpleFocus a = SimpleFocus {focusFrac :: !Rational, focusDelta :: !Rational} deriving (Show, Read)
+data SimpleFocus a = SimpleFocus {focusFrac :: !Rational, focusDelta :: !Rational, sizeLimit:: !Integer} deriving (Show, Read)
 instance LayoutClass SimpleFocus a where
-    pureLayout (SimpleFocus f d) rec (S.Stack w l r) = zip (w : reverse l ++ r) (repeat r1)
-      where (r1, r2, r3) = split3HorizontallyBy (if f<0 then 1+2*f else f) rec
-    handleMessage l m = 
+    pureLayout (SimpleFocus f _ limit) rec (S.Stack w l r) = zip (w : reverse l ++ r) (repeat midRect)
+      where midRect = centreRect (if f<0 then 1+2*f else f) limit rec
+    handleMessage l m =
       return $ msum [fmap resize (fromMessage m)]
       where resize Shrink = l { focusFrac = max (-0.5) $ f-d}
             resize Expand = l { focusFrac = min 1 $ f+d}
             f = focusFrac l
             d = focusDelta l
 
-split3HorizontallyBy :: Rational -> Rectangle -> (Rectangle, Rectangle, Rectangle)
-split3HorizontallyBy f (Rectangle sx sy sw sh) =
-    ( Rectangle (sx + fromIntegral r3w) sy r1w sh
-    , Rectangle sx sy r3w sh
-    , Rectangle (sx + fromIntegral r3w + fromIntegral r1w) sy r2w sh )
-        where r1w = ceiling $ fromIntegral sw * f
-              r2w = ceiling ( (sw - r1w) % 2 )
-              r3w = sw - r1w - r2w
+centreRect :: Rational -> Integer -> Rectangle -> Rectangle
+centreRect f limit (Rectangle sx sy sw sh) =
+        if width > fromIntegral limit
+        then Rectangle (sx + gap) sy width sh
+        else Rectangle (sx + limitGap) sy (fromIntegral limit) sh
+        where width = ceiling $ fromIntegral sw * f
+              gap = ceiling ( (sw - width) % 2 )
+              limitGap = ceiling ( (sw - fromIntegral limit) % 2 )

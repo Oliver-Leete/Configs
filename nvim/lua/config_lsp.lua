@@ -132,13 +132,15 @@ local custom_attach = function(client, bufnr)
 		["<leader>"] = {
 			["."] = { "<cmd>Telescope lsp_code_actions theme=get_cursor<CR>", "Code Actions" },
 			o = {
-				d = { "<cmd>Telescope lsp_definitions<cr>", "Definitions" },
+				d = { "<cmd>lua require('telescope.builtin').lsp_definitions({jump_type='vsplit'})<cr>", "Definitions" },
 				r = { "<cmd>Telescope lsp_references<cr>", "References" },
-				i = { "<cmd>Telescope lsp_implementation<CR>", "implementations" },
+				i = { "<cmd>lua require('telescope.builtin').lsp_implementations({jump_type='vsplit'})<CR>", "Implementations" },
 			},
 			f = {
 				s = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Symbols" },
 				S = { "<cmd>Telescope lsp_document_symbols<cr>", "Symbols (buffer)" },
+                E = { "<cmd>Telescope lsp_document_diagnostics<cr>", "Errors (buffer)" },
+                e = { "<cmd>Telescope lsp_workspace_diagnostics<cr>", "Errors" },
 			},
 			p = {
 				p = { "<Cmd>lua vim.lsp.buf.hover({ focusable = false})<CR>", "Documentation" },
