@@ -482,5 +482,6 @@ require('config_telescope')
 require('config_git')
 
 EOF
+let g:julia_blocks=0
 
 redraw

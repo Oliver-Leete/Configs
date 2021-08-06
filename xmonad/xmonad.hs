@@ -96,6 +96,7 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.Paste as P
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
+import XMonad.Util.ClickableWorkspaces
 
 
 ----------------------------------------------------------------------------------------------------
@@ -144,28 +145,28 @@ myConfig p = def
 -- again without closing programs (it's nice to set the second monitor to a pretty picture instead
 -- of just being surrounded by applications)
 
-wsTMP    = "tmp"
-wsTMP2   = "tmp2"
+wsTMP    = "Tmp"
+wsTMP2   = "Tmp2"
 wsPRO1   = "3DPrint - home"
-wsPRO2   = "Notes - home"
-wsPRO3   = "dnd - home"
-wsCON    = "configs - home"
-wsPER    = "home"
-wsFLOAT  = "flt"
-wsWRK    = "wrk"
-wsSIM    = "sim - wrk"
-wsTHESIS = "thesis - wrk"
-wsEXP    = "experiments - wrk"
+wsPRO2   = "notes - home"
+wsPRO3   = "Dnd - home"
+wsCON    = "Configs - home"
+wsPER    = "Home"
+wsFLOAT  = "Flt"
+wsWRK    = "Wrk"
+wsSIM    = "Sim - wrk"
+wsTHESIS = "Thesis - wrk"
+wsEXP    = "Experiments - wrk"
 wsWRK4   = "wrk4"
 
 myWorkspaces :: [[Char]]
 myWorkspaces = [wsTMP, wsTMP2, wsPRO1, wsPRO2, wsPRO3, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsWRK4, wsFLOAT]
 
 myWorkspaceIndices :: M.Map [Char] [Char]
-myWorkspaceIndices = M.fromList $ zip myWorkspaces ["<Home>", "<End>", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"] -- (,) == \x y -> (x,y)
+myWorkspaceIndices = M.fromList $ zip myWorkspaces ["Home", "End", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"] -- (,) == \x y -> (x,y)
 
 clickable :: [Char] -> [Char]
-clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
+clickable ws = "<action=`xdotool key super+"++show i++"`>"++ws++"</action>"
     where i = fromJust $ M.lookup ws myWorkspaceIndices
 
 projects :: [Project]
@@ -324,6 +325,7 @@ myClickJustFocuses   = True
 
 background = "#1a1b26"
 foreground = "#a9b1d6"
+dull       = "#565f89"
 active     = "#7595E0"
 visible    = "#9ece6a"
 warning    = "#e0af68"
@@ -825,14 +827,15 @@ myLogHook h = do
     fadeWindowsLogHook myFadeHook
     ewmhDesktopsLogHook
     masterHistoryHook
-    dynamicLogWithPP . filterOutWsPP ["NSP", wsTMP, wsTMP2] $ def
+    dynamicLogWithPP . filterOutWsPP ["NSP"] $ def
         { ppCurrent             = xmobarColor active "" . wrap "[" "]" . clickable
         , ppTitle               = xmobarColor foreground "" . wrap "<action=xdotool key Super+s>" "</action>" . shorten 40
         , ppVisible             = xmobarColor visible  "" . clickable
         , ppUrgent              = xmobarColor alert    "" . wrap "!" "!"
+        , ppHidden              = xmobarColor dull  "" . clickable
         , ppHiddenNoWindows     = const ""
         , ppSep                 = "  :  "
-        , ppWsSep               = " "
+        , ppWsSep               = " | "
         , ppLayout              = xmobarColor foreground "" . wrap "<action=xdotool key Super+Tab>" "</action>"
         , ppOrder               = id
         , ppOutput              = hPutStrLn h

@@ -163,13 +163,13 @@ local custom_attach = function(client, bufnr)
 		},
 		["["] = {
 			e = {
-				"<cmd>lua vim.lsp.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>zz",
+				"<cmd>lua vim.lsp.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>",
 				"Error",
 			},
 		},
 		["]"] = {
 			e = {
-				"<cmd>lua vim.lsp.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>zz",
+				"<cmd>lua vim.lsp.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>",
 				"Error",
 			},
 		},

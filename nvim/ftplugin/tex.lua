@@ -77,6 +77,28 @@ require("which-key").register({
 			g = { "<cmd>compiler textidote<cr><cmd>lmake!<cr><cmd>Trouble loclist<cr>", "Grammer Checking" },
 		},
 	},
+    ["["] = {
+		s = { "<cmd>let g:dirJumps='s'<cr><plug>(vimtex-[[)zz", "Tex Section End", noremap = false},
+		S = { "<cmd>let g:dirJumps='S'<cr><plug>(vimtex-[])zz", "Tex Section Start", noremap = false},
+		m = { "<cmd>let g:dirJumps='m'<cr><plug>(vimtex-[m)zz", "EnviroMent Start", noremap = false},
+		M = { "<cmd>let g:dirJumps='M'<cr><plug>(vimtex-[M)zz", "EnviroMent End", noremap = false},
+		n = { "<cmd>let g:dirJumps='n'<cr><plug>(vimtex-[n)zz", "Number Start", noremap = false},
+		N = { "<cmd>let g:dirJumps='N'<cr><plug>(vimtex-[N)zz", "Number End", noremap = false},
+		r = { "<cmd>let g:dirJumps='r'<cr><plug>(vimtex-[r)zz", "Frame Start", noremap = false},
+		R = { "<cmd>let g:dirJumps='R'<cr><plug>(vimtex-[R)zz", "Frame End", noremap = false},
+		C = { "<cmd>let g:dirJumps='C'<cr><plug>(vimtex-[/)zz", "Comment Start", noremap = false},
+    },
+    ["]"] = {
+		s = { "<cmd>let g:dirJumps='s'<cr><plug>(vimtex-]])zz", "Tex Section Start", noremap = false},
+		S = { "<cmd>let g:dirJumps='S'<cr><plug>(vimtex-][)zz", "Tex Section End", noremap = false},
+		m = { "<cmd>let g:dirJumps='m'<cr><plug>(vimtex-]m)zz", "EnviroMent Start", noremap = false},
+		M = { "<cmd>let g:dirJumps='M'<cr><plug>(vimtex-]M)zz", "EnviroMent End", noremap = false},
+		n = { "<cmd>let g:dirJumps='n'<cr><plug>(vimtex-]n)zz", "Number Start", noremap = false},
+		N = { "<cmd>let g:dirJumps='N'<cr><plug>(vimtex-]N)zz", "Number End", noremap = false},
+		r = { "<cmd>let g:dirJumps='r'<cr><plug>(vimtex-]r)zz", "Frame Start", noremap = false},
+		R = { "<cmd>let g:dirJumps='R'<cr><plug>(vimtex-]R)zz", "Frame End", noremap = false},
+		C = { "<cmd>let g:dirJumps='C'<cr><plug>(vimtex-]/)zz", "Comment Start", noremap = false},
+    },
 }, {
 	buffer = 0,
 })
@@ -92,6 +114,10 @@ require("which-key").register({
 	buffer = 0,
 	mode = "v",
 })
+
+if vim.api.nvim_get_var("dirJumps") == "f" then
+   vim.api.nvim_set_var("dirJumps", "s")
+end
 
 vim.cmd([[let g:vimtex_quickfix_mode=0]])
 vim.cmd([[let g:vimtex_automatic_xwin=0]])

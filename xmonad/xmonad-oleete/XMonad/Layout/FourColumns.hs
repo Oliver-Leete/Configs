@@ -98,9 +98,9 @@ doL m n f r = ap zip (tile3 m f r n . length) . W.integrate
 -- | tile3.  Compute window positions using 3 panes
 tile3 :: Bool -> Rational -> Rectangle -> Int -> Int -> [Rectangle]
 tile3 middle f r nmaster n
-    | n <= nmaster || nmaster == 0 = splitHorizontally n r
-    | middle && n <= nmaster+1 = splitHorizontally nmaster s1 ++ [s2]
-    | not middle && n <= nmaster+1 = splitHorizontally nmaster s1 ++ [s2]
+    | n <= nmaster || nmaster == 0 = map (`modY` r) (splitHorizontally n r)
+    | middle && n <= nmaster+1 = map (`modY` r) (splitHorizontally nmaster s1 ++ [s2])
+    | not middle && n <= nmaster+1 = map (`modY` r) (splitHorizontally nmaster s1 ++ [s2])
     | n <= nmaster+4 = splitHorizontally nmaster r1 ++ [r2] ++ splitVertically (n-nmaster-1) r3
     | n <= nmaster+6 = splitHorizontally nmaster r1 ++ [r21, r22] ++ splitVertically (n-nmaster-2) r3
     | n <= nmaster+7 = splitHorizontally nmaster r1 ++ [r23] ++ splitVertically 2 r24 ++ splitVertically (n-nmaster-3) r3
@@ -116,22 +116,31 @@ tile3 middle f r nmaster n
 split2HorizontallyBy :: Bool -> Rational -> Rectangle -> (Rectangle, Rectangle)
 split2HorizontallyBy middle f (Rectangle sx sy sw sh) =
     if middle
-    then ( Rectangle (sx + fromIntegral r2w) sy r1w sh
-         , Rectangle sx sy r2w sh)
-    else ( Rectangle sx sy r1w sh
-         , Rectangle (sx + fromIntegral r1w) sy r2w sh)
+    then ( modY (Rectangle (sx + fromIntegral r2w) sy r1w sh) (Rectangle sx sy sw sh)
+         , modY (Rectangle sx sy r2w sh) (Rectangle sx sy sw sh))
+    else ( modY (Rectangle sx sy r1w sh) (Rectangle sx sy sw sh)
+         , modY (Rectangle (sx + fromIntegral r1w) sy r2w sh) (Rectangle sx sy sw sh))
         where r1w = ceiling $ fromIntegral sw * f
               r2w = sw - r1w
 
 split3HorizontallyBy :: Bool -> Rational -> Rectangle -> (Rectangle, Rectangle, Rectangle)
 split3HorizontallyBy middle f (Rectangle sx sy sw sh) =
     if middle
-    then ( Rectangle (sx + fromIntegral r3w) sy r1w sh
-         , Rectangle sx sy r3w sh
-         , Rectangle (sx + fromIntegral r3w + fromIntegral r1w) sy r2w sh )
-    else ( Rectangle sx sy r1w sh
-         , Rectangle (sx + fromIntegral r1w) sy r2w sh
-         , Rectangle (sx + fromIntegral r1w + fromIntegral r2w) sy r3w sh )
+    then ( modY (Rectangle (sx + fromIntegral r3w) sy r1w sh) (Rectangle sx sy sw sh)
+         , modY (Rectangle sx sy r3w sh) (Rectangle sx sy sw sh)
+         , modY (Rectangle (sx + fromIntegral r3w + fromIntegral r1w) sy r2w sh ) (Rectangle sx sy sw sh))
+    else ( modY (Rectangle sx sy r1w sh) (Rectangle sx sy sw sh)
+         , modY (Rectangle (sx + fromIntegral r1w) sy r2w sh) (Rectangle sx sy sw sh)
+         , modY (Rectangle (sx + fromIntegral r1w + fromIntegral r2w) sy r3w sh) (Rectangle sx sy sw sh))
         where r1w = ceiling $ fromIntegral sw * f
               r2w = ceiling ( (sw - r1w) % 2 )
               r3w = sw - r1w - r2w
+
+modY :: Rectangle -> Rectangle -> Rectangle
+modY (Rectangle sx sy sw sh) (Rectangle bx by bw bh)= 
+    Rectangle sx y sw h
+    where mod = if ((toInteger (fromIntegral sx + sw - 30)) < (toInteger $ bx + ceiling (1/4 * toRational bw))) || ((toInteger (20 + sx)) > (toInteger $ bx + ceiling (3/4 * toRational bw)))
+              then 31
+              else 0
+          y = sy - mod
+          h = sh + fromIntegral mod

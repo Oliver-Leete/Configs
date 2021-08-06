@@ -173,8 +173,8 @@ tileSlim middle f mf r nmain nmaster n
 
 newWide ::Bool -> Bool -> Bool -> Int -> Int -> Int -> Rational -> Rational -> Rectangle -> [Rectangle]
 newWide m s d n c nwin f mf r
-    | c == 0 = splitHorizontally nwin r
-    | nwin <= ncol + nmain = map fst listCols
+    | c == 0 = map (`modY` r) (splitHorizontally nwin r)
+    | nwin <= ncol + nmain = map (`modY` r) (map fst listCols)
     | otherwise = listWithStack
     where startPoint
             | m && s     && even (nmain+ncol)               = toInteger (rect_x r) + (floor (nmain%2) * fromIntegral width) + (ceiling (ncol%2) * fromIntegral colWidth)
@@ -216,8 +216,8 @@ newWide m s d n c nwin f mf r
             | otherwise = splitRightMaster (fromInteger startPoint) (fromIntegral width) colWidth 1 nmain ncol f r
 
           listAll
-            | d     = splitColumns (sortByXLocation listCols) (fromIntegral minWidth - 10) initStackRect mf d
-            | otherwise = splitColumns (sortByRevXLocation listCols) (fromIntegral minWidth - 10) initStackRect mf d
+            | d     = splitColumns (sortByXLocation listCols) (fromIntegral minWidth - 10) initStackRect mf d r
+            | otherwise = splitColumns (sortByRevXLocation listCols) (fromIntegral minWidth - 10) initStackRect mf d r
 
           listWithStack
             | d     = map fst (sortByIndex $ init listAll) ++ splitHorizontally nstack (fst $ last listAll)
@@ -281,18 +281,37 @@ splitRightMiddleMaster sign xpos width colWidth count main colu f rect
               else xpos + (sign * ((colWidth * (count - main)) + (width * main)))
           xposNNN = xpos + (sign * ((colWidth * (count - main)) + (width * main)))
 
-splitColumns :: [(Rectangle, Int)] -> Int -> Rectangle -> Rational -> Bool -> [(Rectangle, Int)]
-splitColumns list minWidth stackRect mf d
-  | not (null list) && rect_width stackRect <= fromIntegral minWidth = (masterRect, index) : splitColumns listN minWidth stackRectN mf d
-  | not (null list) = (rect, index) : splitColumns listN minWidth stackRect mf d
+splitColumns :: [(Rectangle, Int)] -> Int -> Rectangle -> Rational -> Bool -> Rectangle -> [(Rectangle, Int)]
+splitColumns list minWidth stackRect mf d bigRect
+  | not (null list) && rect_width stackRect <= fromIntegral minWidth = (modMastRect, index) : splitColumns listN minWidth stackRectN mf d bigRect
+  | not (null list) = (modRect, index) : splitColumns listN minWidth stackRect mf d bigRect
   | otherwise = [(stackRect, 0)]
   where rect = fst $ head list
         index = snd $ head list
         listN = tail list
+        bigW = toRational (rect_width bigRect)
+        -- modMastRect = if (toInteger (20 + rect_x rect) > (toInteger $ ceiling (3/4 * bigW))) || (toInteger (rect_x rect + rect_width rect))
+        --               then modY masterRect
+        --               else masterRect
+        -- modRect = if (toInteger (20 + rect_x rect) > (toInteger $ ceiling (3/4 * bigW)))
+        --               then modY rect
+        --               else rect
+        modMastRect = modY masterRect bigRect
+        modRect = modY rect bigRect
         (masterRect, stackRectAdd) = splitVerticallyBy mf rect
         stackRectN
           | d     = rectangleDiff stackRect stackRectAdd
           | otherwise = rectangleDiff stackRectAdd stackRect
+
+modY :: Rectangle -> Rectangle -> Rectangle
+modY (Rectangle sx sy sw sh) (Rectangle bx by bw bh) = 
+    Rectangle sx y sw h
+    where mod = if ((toInteger (fromIntegral sx + sw - 30)) < (toInteger $ bx + ceiling (1/4 * toRational bw))) || ((toInteger (20 + sx)) > (toInteger $ bx + ceiling (3/4 * toRational bw)))
+              then 31
+              else 0
+          y = sy - mod
+          h = sh + fromIntegral mod
+    
 
 
 sortByXLocation :: [(Rectangle, Int)] -> [(Rectangle, Int)]
