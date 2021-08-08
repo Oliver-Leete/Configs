@@ -8,55 +8,48 @@ set -Ux VISUAL nvim
 set -gx PATH /home/oleete/.cargo/bin /home/oleete/.yarn/bin /home/oleete/go/bin /home/oleete/.config/nvim/node_modules/tree-sitter-cli $PATH
 
 export BAT_PAGER="less -R"
+
 # aliases
-alias exa "exa --colour=always --group-directories-first"
 alias neovim nvim
 alias n nvim
 alias shutdown "sudo ~/.local/bin/shutdownupdate shutdown now"
 alias reboot "sudo ~/.local/bin/shutdownupdate reboot now"
+
+alias exa "exa --colour=always --group-directories-first"
+alias cat "batcat"
+
 abbr vidir "vidir -v"
 abbr ns "n -S"
 abbr mv "mv -iv"
 abbr cp "cp -riv"
+abbr rm "rm -i"
+
+abbr  fd "fd -H -L -I -c=always"
+
+abbr  lcd "exa -1"
+abbr  ls "exa -a -l --git"
+abbr  lt "exa -a -l -T --level=2 --git"
+abbr  lg "exa -a -l -T --level=2 --git --git-ignore"
 
 abbr -a bk backup
 abbr -a re restore
 abbr -a mc "mkdir-cd -vp"
 abbr -a unzip unzip-cd
 
+alias .. "cd .."
+alias ... "cd ../.."
+alias .... "cd ../../.."
+alias ..... "cd ../../../.."
 
-
-# abbr  code "code-insiders"
-# abbr  lcd "exa -1"
-# abbr  ls "exa -a -l --git"
-# abbr  lt "exa -a -l -T --level=2 --git"
-# abbr  lg "exa -a -l -T --level=2 --git --git-ignore"
-# abbr  cat "batcat"
-# abbr  fd "fd -H -L -I -c=always"
-# abbr  fdg "fd -g"
-# abbr  sed "sed -E"
-# abbr
-# abbr  .. "cd .."
-# abbr  grep rg
-# abbr  cp "cp -i"
-# abbr  mv "mv -i"
-# abbr  rm "rm -i"
-# abbr  df "df -h"
-# abbr  free "free -m"
-# abbr  psmem 'ps auxf | sort -nr -k 4 | head -10'
-# abbr  pscpu 'ps auxf | sort -nr -k 3 | head -10'
-# abbr  htop 'htop -t'
-# abbr
-alias conf '/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
-alias lazyconf 'lazygit --git-dir=$HOME/dotfiles --work-tree=$HOME'
-# abbr
-# abbr  fzf "fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}'"
-# abbr  man "batman"
-# abbr  rb "batgrep"
-# abbr  watch "batwatch"
+abbr  code "code-insiders"
+abbr  htop 'htop -t'
+abbr  man "batman"
+abbr  rb "batgrep"
+abbr  watch "batwatch"
 
 # Git abbreviations
 alias g git
+alias lzg lazygit
 abbr gc "g checkout"
 abbr gcm "g commit"
 abbr ga "g add"
@@ -74,8 +67,6 @@ abbr gmt "g mergetool"
 abbr gmt2 "g mergetool --tool nvimdiff"
 abbr gclone clone
 abbr gwip wip
-abbr lzg lazygit
-
 
 function bind_bang
     switch (commandline -t)

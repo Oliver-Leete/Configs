@@ -137,10 +137,10 @@ split3HorizontallyBy middle f (Rectangle sx sy sw sh) =
               r3w = sw - r1w - r2w
 
 modY :: Rectangle -> Rectangle -> Rectangle
-modY (Rectangle sx sy sw sh) (Rectangle bx by bw bh)= 
+modY (Rectangle sx sy sw sh) (Rectangle bx _ bw _)=
     Rectangle sx y sw h
-    where mod = if ((toInteger (fromIntegral sx + sw - 30)) < (toInteger $ bx + ceiling (1/4 * toRational bw))) || ((toInteger (20 + sx)) > (toInteger $ bx + ceiling (3/4 * toRational bw)))
+    where ymoddifier = if (toInteger (fromIntegral sx + sw - 8) < toInteger ( bx + ceiling (1/3 * toRational bw))) || (toInteger (8 + sx) > toInteger ( bx + ceiling (2/3 * toRational bw)))
               then 31
               else 0
-          y = sy - mod
-          h = sh + fromIntegral mod
+          y = sy - ymoddifier
+          h = sh + fromIntegral ymoddifier

@@ -9,6 +9,7 @@ require("which-key").register({
 		m = { "<cmd>VimtexToggleMain<cr>", "Toggle the Main File" },
 		g = { "<cmd>TexlabForward<cr>", "Forward Search" },
 		i = { "A% chktex ", "Chktex Ignore" },
+        s = { "<cmd>lua require'telescope.builtin'.symbols{sources={'latex'}}<cr>", "Insert Symbols"},
 	},
 	["<leader>"] = {
 		["/"] = {

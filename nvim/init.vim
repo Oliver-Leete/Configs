@@ -381,6 +381,7 @@ augroup panelMappings
     au filetype NeogitPopup  map <buffer> <esc> <cmd>q<cr>
     au filetype toggleterm   map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
     au filetype undotree     map <buffer> <esc> <cmd>UndotreeHide<cr>
+    au BufWinEnter * if &l:buftype == 'nofile' | exe  "map <buffer> <esc> <cmd>q<cr>"
 augroup END
 
 " Hop, Skip And Jump

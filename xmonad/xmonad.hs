@@ -28,6 +28,7 @@ import Data.Maybe
 import Data.Monoid
 import System.Exit
 import System.IO
+import Graphics.X11.Types
 
 import XMonad hiding ( (|||) )
 import qualified XMonad.StackSet as W
@@ -60,7 +61,7 @@ import XMonad.Hooks.ToggleHook
 import XMonad.Layout.BorderResize
 -- import XMonad.Layout.Column
 import XMonad.Layout.DraggingVisualizer
-import XMonad.Layout.FourColumns
+-- import XMonad.Layout.FourColumns
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.Master
 import XMonad.Layout.MultiToggle
@@ -68,7 +69,7 @@ import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.NoBorders
 import XMonad.Layout.NoFrillsDecoration
 import XMonad.Layout.Notebook
-import XMonad.Layout.OneBig
+-- import XMonad.Layout.OneBig
 import XMonad.Layout.PerScreen
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.PositionStoreFloat
@@ -96,7 +97,6 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.Paste as P
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
-import XMonad.Util.ClickableWorkspaces
 
 
 ----------------------------------------------------------------------------------------------------
@@ -147,16 +147,16 @@ myConfig p = def
 
 wsTMP    = "Tmp"
 wsTMP2   = "Tmp2"
-wsPRO1   = "3DPrint - home"
-wsPRO2   = "notes - home"
-wsPRO3   = "Dnd - home"
-wsCON    = "Configs - home"
+wsPRO1   = "Print"
+wsPRO2   = "Notes"
+wsPRO3   = "Dnd"
+wsCON    = "Configs"
 wsPER    = "Home"
 wsFLOAT  = "Flt"
 wsWRK    = "Wrk"
-wsSIM    = "Sim - wrk"
-wsTHESIS = "Thesis - wrk"
-wsEXP    = "Experiments - wrk"
+wsSIM    = "Sim wrk"
+wsTHESIS = "PhD wrk"
+wsEXP    = "Exp wrk"
 wsWRK4   = "wrk4"
 
 myWorkspaces :: [[Char]]
@@ -504,24 +504,17 @@ myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
             $ mySpacing
             $ mirrorToggle
             $ reflectToggle
-            $ onWorkspaces [wsPER, wsWRK, wsWRK4] (oneBigLayout   ||| notebookLayout ||| colLayout      ||| tabsLayout)
-            $ onWorkspaces [wsTMP, wsTMP2]        (colLayout      ||| tabsLayout     ||| oneBigLayout   ||| notebookLayout)
-            $                                      notebookLayout ||| colLayout      ||| tabsLayout     ||| oneBigLayout
+            $ notebookLayout  ||| tabsLayout 
     where
-    notebookLayout = renamed [Replace "Notebook"] (subLayout [] Simplest
-                   $ Notebook 1920 True True True 1 3 reSize 2 (2/3))
+    notebookMulti   = subLayout [] Simplest $ Notebook 1920 True True True 1 3 reSize 2 (2/3)
+    notebookColumns = subLayout [] Simplest $ Notebook 1920 False True True 3 3 reSize 2 (2/3)
 
-    threeCol  = renamed [Replace "Three Col"] $ subLayout [] Simplest (FourCol True 1 reSize (51/100))
-    -- columns   = renamed [Replace "Columns"] $ subLayout [] Simplest (Mirror $ Column 1)
-    columns   = renamed [Replace "Columns"] $ subLayout [] Simplest
-              $ Notebook 1920 False True True 3 3 reSize 2 (2/3)
-    colLayout = ifWider smallMonResWidth (threeCol ||| columns) (columns ||| threeCol)
+    notebookLayout = renamed [Replace "Normal"] $ onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns notebookMulti 
 
     tallTabs   = renamed [Replace "Tall Tabs"] (mastered (1/100) (1/2) Simplest)
     allTabs    = renamed [Replace "Tabs"] Simplest
     tabsLayout = ifWider smallMonResWidth (toggleLayouts allTabs tallTabs) (toggleLayouts tallTabs allTabs)
 
-    oneBigLayout   = renamed [Replace "One Big"] $ subLayout [] Simplest (Mirror (OneBig (2/4) (2/4)))
     floatWorkSpace = renamed [Replace "Float"] (borderResize $ addFloatTopBar positionStoreFloat)
 
     -- Other Layout Stuff
@@ -654,7 +647,6 @@ myKeys conf = let
                                                                              ,("", namedScratchpadAction scratchpads "keepNsp")])
     ] ^++^
 
-
     subKeys "Workspaces and Projects"
     (
     [ ("M-a"             , addName "Launcher"                    $ spawn myLauncher)
@@ -679,7 +671,7 @@ myKeys conf = let
     , ("M-m"             , addName "Swap with main"              $ sequence_ [swapPromote' False, warpCursor])
     , ("M-C-m"           , addName "Promote to main"             $ sequence_ [promote, warpCursor])
 
-    , ("<F8>"            , addName "Hop to Window"               $ sequence_ [selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow), warpCursor])
+    , ( "<F8>"           , addName "Hop to Window"               $ sequence_ [selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow), warpCursor])
 
     , ("M-<Space>"       , addName "Swap monitor workspaces"     swapNextScreen)
     , ("M-C-<Space>"     , addName "Send window to next monitor" shiftNextScreen)
@@ -759,7 +751,7 @@ myKeys conf = let
     [ ("M-<Tab>"         , addName "Cycle all layouts"           $ sendMessage NextLayout)
     , ("M-S-<Tab>"       , addName "Reset layout"                $ setLayout $ XMonad.layoutHook conf)
     , ("M-C-<Tab>"       , addName "Toggle sublayout"            $ bindOn LD [("Notebook", sendMessage ToggleMiddle)
-                                                                             ,("Three Col", sendMessage ToggleMid)
+                                                                             ,("Columns", sendMessage ToggleMiddle)
                                                                              ,("", sendMessage ToggleLayout)])
 
     , ("M-y"             , addName "Toggle window floating"      $ withFocused toggleFloat)
@@ -829,14 +821,14 @@ myLogHook h = do
     masterHistoryHook
     dynamicLogWithPP . filterOutWsPP ["NSP"] $ def
         { ppCurrent             = xmobarColor active "" . wrap "[" "]" . clickable
-        , ppTitle               = xmobarColor foreground "" . wrap "<action=xdotool key Super+s>" "</action>" . shorten 40
+        , ppTitle               = xmobarColor active "" . wrap "<action=xdotool key Super+s>" "</action>" . shorten 20
         , ppVisible             = xmobarColor visible  "" . clickable
         , ppUrgent              = xmobarColor alert    "" . wrap "!" "!"
         , ppHidden              = xmobarColor dull  "" . clickable
         , ppHiddenNoWindows     = const ""
-        , ppSep                 = "  :  "
+        , ppSep                 = " | "
         , ppWsSep               = " | "
-        , ppLayout              = xmobarColor foreground "" . wrap "<action=xdotool key Super+Tab>" "</action>"
+        , ppLayout              = xmobarColor warning "" . wrap "<action=xdoforegroundtool key Super+Tab>" "</action>"
         , ppOrder               = id
         , ppOutput              = hPutStrLn h
         , ppSort                = ppSort def
@@ -879,8 +871,8 @@ myManageHook =
             , resource =? "stalonetray"    -?> doIgnore
             , className =? "Zenity" -?> doRectFloat (W.RationalRect (3 / 8) (1 / 16) (1 / 4) (7 / 8))
             , resource =? "gnome-calculator" -?> doCenterFloat
-            , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect ((3840-500-9)/3840) (30/2160) (500/3840) (700/2160))
-            , resource =? "nm-connection-editor" -?> doRectFloat (W.RationalRect ((3840-500-9)/3840) (30/2160) (500/3840) (700/2160))
+            , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect ((2880-500-8)/3840) (31/2160) (500/3840) (700/2160))
+            , resource =? "nm-connection-editor" -?> doRectFloat (W.RationalRect ((2880-500-8)/3840) (31/2160) (500/3840) (700/2160))
             , resource =? "galendae" -?> doRectFloat (W.RationalRect ((3840-300-16)/3840) (30/2160) (300/3840) (300/2160))
             , resource =? "nitrogen" -?> doCenterFloat
 

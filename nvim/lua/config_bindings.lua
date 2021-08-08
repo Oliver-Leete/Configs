@@ -166,7 +166,7 @@ require("which-key").register({
 		},
 	},
 	["<leader>"] = {
-		["<leader>"] = { "<c-^>", "Last File" },
+		["<leader>"] = { "<cmd>e #<cr>", "Last File" },
 		["/"] = {
 			name = "Related Files",
 			["<leader>"] = { "<c-^>", "Last File" },
@@ -260,7 +260,7 @@ require("which-key").register({
 			C = { "<cmd>Telescope git_bcommits<cr>", "Commits (buffer)" },
 			c = { "<cmd>Telescope git_commits<cr>", "Git Commits" },
 			F = { "<cmd>lua require('telescope.builtin').find_files({find_command={'fd', '-I'}})<cr>", "Files (non git)" },
-            f = {"<cmd>lua require'config_telescope'.project_files()<cr>", "Find Files"},
+			f = { "<cmd>lua require'config_telescope'.project_files()<cr>", "Find Files" },
 			G = { "<cmd>Gitsigns setqflist<cr><cmd>Telescope quickfix<cr>", "Git Changes" },
 			g = { "<cmd>Telescope git_status<cr>", "Git Status" },
 			j = { "<cmd>Telescope jumplist<cr>", "Jumps" },
@@ -300,6 +300,8 @@ require("which-key").register({
 				expr = true,
 			},
 			y = { "<cmd>Telescope registers<cr>", "Registers" },
+			x = { "<cmd>Telescope file_browser<cr>", "File Browser" },
+			I = { "<cmd>lua require'telescope.builtin'.symbols{sources={'julia'}}<cr>", "Insert Symbols" },
 			-- z = { "<cmd>Telescope session-lens search_session<cr>", "Session Search" },
 		},
 		G = {
@@ -373,7 +375,7 @@ require("which-key").register({
 			["<down>"] = { "<cmd>cnewer<cr>", "Newer List" },
 			["<up>"] = { "<cmd>colder<cr>", "Older List" },
 			q = { "<cmd>call PMToggleView('quickfix')<CR>", "Open" },
-            n = { "<cmd>TodoQuickFix<cr>", "Populate With Todo Comments"},
+			n = { "<cmd>TodoQuickFix<cr>", "Populate With Todo Comments" },
 			f = { "<cmd>call PMToggleView('quickfixFilter')<CR>", "Filter List" },
 			V = {
 				[["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>Trouble quickfix<cr>"]],
@@ -406,7 +408,7 @@ require("which-key").register({
 			g = { "<cmd>Gitsigns setloclist<cr><cmd>Trouble quickfix<cr>", "Populate With Diffs" },
 			["<up>"] = { "<cmd>lnewer<cr>", "Newer List" },
 			["<down>"] = { "<cmd>lolder<cr>", "Older List" },
-            n = { "<cmd>TodoLocList<cr>", "Populate With Todo Comments"},
+			n = { "<cmd>TodoLocList<cr>", "Populate With Todo Comments" },
 			V = {
 				[["<cmd> noautocmd lvimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>Trouble loclist<cr>"]],
 				"Populate With VimGrep (file select)",
@@ -535,58 +537,78 @@ require("which-key").register({
 			i = { "<cmd>LvimHelper<cr>", "Insert Mode Mappings" },
 			k = { "K", "Documentation" },
 		},
-        z = {
-            d = {[[<cmd>%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces"},
-            w = {"<cmd>%!par w80<cr>", "Wrap File to 80 Characters"},
-        },
+		z = {
+			d = { [[<cmd>%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces" },
+			w = { "<cmd>%!par w80<cr>", "Wrap File to 80 Characters" },
+		},
 	},
 	["["] = {
-		name  = "Backward Leader",
-		["["] = { "v:lua.jump_repeat('[')", "Repeat Last", expr=true, noremap = false},
-		h     = { [["<cmd>let g:dirJumps='h'<cr>" . &diff ? "[c" : "<cmd>lua require'gitsigns'.prev_hunk()<cr>" . "zz"]], "Hunk", expr = true},
-		Q     = { "<cmd>let g:dirJumps='Q'<cr><cmd>try <bar> cpfile <bar> catch /E553/ <bar> clast <bar> endtry<cr>zz", "QuickFix File" },
-		q     = { "<cmd>let g:dirJumps='q'<cr><cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast <bar> endtry<cr>zz", "QuickFix Entry" },
-		s     = { "<cmd>let g:dirJumps='s'<cr>[szz", "Spelling Mistake" },
+		name = "Backward Leader",
+		["["] = { "v:lua.jump_repeat('[')", "Repeat Last", expr = true, noremap = false },
+		h = {
+			[["<cmd>let g:dirJumps='h'<cr>" . &diff ? "[c" : "<cmd>lua require'gitsigns'.prev_hunk()<cr>" . "zz"]],
+			"Hunk",
+			expr = true,
+		},
+		Q = {
+			"<cmd>let g:dirJumps='Q'<cr><cmd>try <bar> cpfile <bar> catch /E553/ <bar> clast <bar> endtry<cr>zz",
+			"QuickFix File",
+		},
+		q = {
+			"<cmd>let g:dirJumps='q'<cr><cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast <bar> endtry<cr>zz",
+			"QuickFix Entry",
+		},
+		s = { "<cmd>let g:dirJumps='s'<cr>[szz", "Spelling Mistake" },
 		["]"] = { "<cmd>let g:dirJumps=']'<cr>[]zz", "Section End", noremap = false },
 		["{"] = { "<cmd>let g:dirJumps='{'<cr>[[zz", "Section Start" },
 		["}"] = { "<cmd>let g:dirJumps='{'<cr>[[zz", "Section Start" },
 		["*"] = { "<cmd>let g:dirJumps='*'<cr>[#zz", "Function Call", noremap = false },
-		o     = { "<cmd>let g:dirJumps='o'<cr><cmd>TSTextobjectGotoPreviousStart @class.outer<cr>zz", "Class" },
-		f     = { "<cmd>let g:dirJumps='f'<cr><cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Function" },
+		o = { "<cmd>let g:dirJumps='o'<cr><cmd>TSTextobjectGotoPreviousStart @class.outer<cr>zz", "Class" },
+		f = { "<cmd>let g:dirJumps='f'<cr><cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Function" },
 		[","] = { "<cmd>let g:dirJumps=','<cr><cmd>TSTextobjectGotoPreviousStart @parameter.inner<cr>zz", "Parameter" },
-		c     = { "<cmd>let g:dirJumps='c'<cr><cmd>TSTextobjectGotoPreviousStart @conditional.inner<cr>zz", "Conditional" },
-		C     = { "<cmd>let g:dirJumps='C'<cr><cmd>TSTextobjectGotoPreviousStart @comment.outer<cr>zz", "Comment" },
-		l     = { "<cmd>let g:dirJumps='l'<cr><cmd>TSTextobjectGotoPreviousStart @loop.outer<cr>zz", "Loop" },
-		b     = { "<cmd>let g:dirJumps='b'<cr><cmd>TSTextobjectGotoPreviousStart @block.outer<cr>zz", "Block" },
-		O     = { "<cmd>let g:dirJumps='O'<cr><cmd>TSTextobjectGotoPreviousEnd @class.outer<cr>zz", "Class" },
-		F     = { "<cmd>let g:dirJumps='F'<cr><cmd>TSTextobjectGotoPreviousEnd @function.outer<cr>zz", "Function" },
+		c = { "<cmd>let g:dirJumps='c'<cr><cmd>TSTextobjectGotoPreviousStart @conditional.inner<cr>zz", "Conditional" },
+		C = { "<cmd>let g:dirJumps='C'<cr><cmd>TSTextobjectGotoPreviousStart @comment.outer<cr>zz", "Comment" },
+		l = { "<cmd>let g:dirJumps='l'<cr><cmd>TSTextobjectGotoPreviousStart @loop.outer<cr>zz", "Loop" },
+		b = { "<cmd>let g:dirJumps='b'<cr><cmd>TSTextobjectGotoPreviousStart @block.outer<cr>zz", "Block" },
+		O = { "<cmd>let g:dirJumps='O'<cr><cmd>TSTextobjectGotoPreviousEnd @class.outer<cr>zz", "Class" },
+		F = { "<cmd>let g:dirJumps='F'<cr><cmd>TSTextobjectGotoPreviousEnd @function.outer<cr>zz", "Function" },
 		["<"] = { "<cmd>let g:dirJumps='<'<cr><cmd>TSTextobjectGotoPreviousEnd @parameter.inner<cr>zz", "Parameter" },
-		L     = { "<cmd>let g:dirJumps='L'<cr><cmd>TSTextobjectGotoPreviousEnd @loop.outer<cr>zz", "Loop" },
-		B     = { "<cmd>let g:dirJumps='B'<cr><cmd>TSTextobjectGotoPreviousEnd @block.outer<cr>zz", "Block" },
+		L = { "<cmd>let g:dirJumps='L'<cr><cmd>TSTextobjectGotoPreviousEnd @loop.outer<cr>zz", "Loop" },
+		B = { "<cmd>let g:dirJumps='B'<cr><cmd>TSTextobjectGotoPreviousEnd @block.outer<cr>zz", "Block" },
 	},
 	["]"] = {
-		name  = "Forward Leader",
-		["]"] = { "v:lua.jump_repeat(']')", "Repeat Last", expr=true, noremap = false},
-		h     = { [["<cmd>let g:dirJumps='h'<cr>" . &diff ? "]c" : "<cmd>lua require'gitsigns'.next_hunk()<cr>" . "zz"]], "Hunk", expr = true},
-		Q     = { "<cmd>let g:dirJumps='Q'<cr><cmd>try <bar> cnfile <bar> catch /E553/ <bar> cfirst <bar> endtry<cr>zz", "QuickFix File" },
-		q     = { "<cmd>let g:dirJumps='q'<cr><cmd>try <bar> cnext <bar> catch /E553/ <bar> cfirst <bar> endtry<cr>zz", "QuickFix Entry" },
-		s     = { "<cmd>let g:dirJumps='s'<cr>]szz", "Spelling Mistake" },
+		name = "Forward Leader",
+		["]"] = { "v:lua.jump_repeat(']')", "Repeat Last", expr = true, noremap = false },
+		h = {
+			[["<cmd>let g:dirJumps='h'<cr>" . &diff ? "]c" : "<cmd>lua require'gitsigns'.next_hunk()<cr>" . "zz"]],
+			"Hunk",
+			expr = true,
+		},
+		Q = {
+			"<cmd>let g:dirJumps='Q'<cr><cmd>try <bar> cnfile <bar> catch /E553/ <bar> cfirst <bar> endtry<cr>zz",
+			"QuickFix File",
+		},
+		q = {
+			"<cmd>let g:dirJumps='q'<cr><cmd>try <bar> cnext <bar> catch /E553/ <bar> cfirst <bar> endtry<cr>zz",
+			"QuickFix Entry",
+		},
+		s = { "<cmd>let g:dirJumps='s'<cr>]szz", "Spelling Mistake" },
 		["["] = { "<cmd>let g:dirJumps='['<cr>][zz", "Section End", noremap = false },
-		["}"] = { "<cmd>let g:dirJumps='}'<cr>]]zz", "Section Start", noremap = true},
-		["{"] = { "<cmd>let g:dirJumps='}'<cr>]]zz", "Section Start", noremap = true},
+		["}"] = { "<cmd>let g:dirJumps='}'<cr>]]zz", "Section Start", noremap = true },
+		["{"] = { "<cmd>let g:dirJumps='}'<cr>]]zz", "Section Start", noremap = true },
 		["*"] = { "<cmd>let g:dirJumps='*'<cr>]#zz", "Function Call", noremap = false },
-		o     = { "<cmd>let g:dirJumps='o'<cr><cmd>TSTextobjectGotoNextStart @class.outer<cr>zz", "Class" },
-		f     = { "<cmd>let g:dirJumps='f'<cr><cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Function" },
+		o = { "<cmd>let g:dirJumps='o'<cr><cmd>TSTextobjectGotoNextStart @class.outer<cr>zz", "Class" },
+		f = { "<cmd>let g:dirJumps='f'<cr><cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Function" },
 		[","] = { "<cmd>let g:dirJumps=','<cr><cmd>TSTextobjectGotoNextStart @parameter.inner<cr>zz", "Parameter" },
-		c     = { "<cmd>let g:dirJumps='c'<cr><cmd>TSTextobjectGotoNextStart @conditional.inner<cr>zz", "Conditional" },
-		C     = { "<cmd>let g:dirJumps='C'<cr><cmd>TSTextobjectGotoNextStart @comment.outer<cr>zz", "Comment" },
-		l     = { "<cmd>let g:dirJumps='l'<cr><cmd>TSTextobjectGotoNextStart @loop.outer<cr>zz", "Loop" },
-		b     = { "<cmd>let g:dirJumps='b'<cr><cmd>TSTextobjectGotoNextStart @block.outer<cr>zz", "Block" },
-		O     = { "<cmd>let g:dirJumps='O'<cr><cmd>TSTextobjectGotoNextEnd @class.outer<cr>zz", "Class" },
-		F     = { "<cmd>let g:dirJumps='F'<cr><cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Function" },
+		c = { "<cmd>let g:dirJumps='c'<cr><cmd>TSTextobjectGotoNextStart @conditional.inner<cr>zz", "Conditional" },
+		C = { "<cmd>let g:dirJumps='C'<cr><cmd>TSTextobjectGotoNextStart @comment.outer<cr>zz", "Comment" },
+		l = { "<cmd>let g:dirJumps='l'<cr><cmd>TSTextobjectGotoNextStart @loop.outer<cr>zz", "Loop" },
+		b = { "<cmd>let g:dirJumps='b'<cr><cmd>TSTextobjectGotoNextStart @block.outer<cr>zz", "Block" },
+		O = { "<cmd>let g:dirJumps='O'<cr><cmd>TSTextobjectGotoNextEnd @class.outer<cr>zz", "Class" },
+		F = { "<cmd>let g:dirJumps='F'<cr><cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Function" },
 		["<"] = { "<cmd>let g:dirJumps='<'<cr><cmd>TSTextobjectGotoNextEnd @parameter.inner<cr>zz", "Parameter" },
-		L     = { "<cmd>let g:dirJumps='L'<cr><cmd>TSTextobjectGotoNextEnd @loop.outer<cr>zz", "Loop" },
-		B     = { "<cmd>let g:dirJumps='B'<cr><cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block" },
+		L = { "<cmd>let g:dirJumps='L'<cr><cmd>TSTextobjectGotoNextEnd @loop.outer<cr>zz", "Loop" },
+		B = { "<cmd>let g:dirJumps='B'<cr><cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block" },
 	},
 	["<localleader>"] = {
 		name = "Local Leader",
@@ -601,10 +623,10 @@ require("which-key").register({
 			name = "Refactor",
 			v = { "<plug>(ExtractVarVis)", "Extract Variable" },
 		},
-        z = {
-            w = {"!par w80<cr>", "Wrap to 80 Characters"},
-            d = {[[:%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces"},
-        },
+		z = {
+			w = { "!par w80<cr>", "Wrap to 80 Characters" },
+			d = { [[:%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces" },
+		},
 	},
 	g = {
 		R = { "<plug>(SubversiveSubstituteToEndOfLine)", "Substitute to EOL" },
@@ -636,12 +658,11 @@ require("which-key").register({
 	mode = "v",
 })
 
-
 -- set default movement
 vim.api.nvim_set_var("dirJumps", "f")
 
 function _G.jump_repeat(direction)
-    local jump = vim.api.nvim_get_var("dirJumps")
-    -- print(direction .. jump)
-    return vim.api.nvim_replace_termcodes(direction .. jump, true, true, true)
+	local jump = vim.api.nvim_get_var("dirJumps")
+	-- print(direction .. jump)
+	return vim.api.nvim_replace_termcodes(direction .. jump, true, true, true)
 end

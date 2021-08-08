@@ -14,7 +14,7 @@
 -- Compleation (compe) and Snippet (luasnip) Setup
 
 require("luasnip/loaders/from_vscode").load({
-	paths = { "/home/oleete/.config/nvim/snippets", "/home/oleete/.config/nvim/pluged/friendly-snippets/snippets" },
+	paths = { "/home/oleete/.config/nvim/snippets"},
 })
 
 vim.o.completeopt = "menuone,noselect"
@@ -91,6 +91,11 @@ require("nvim-autopairs").setup({
 	map_cr = true, --  map <CR> on insert mode
 	map_complete = true, -- it will auto insert `(` after select function or method item
 	enable_check_bracket_line = true,
+})
+
+require("nvim-autopairs.completion.compe").setup({
+  map_cr = true,
+  map_complete = true,
 })
 
 vim.g.diagnostic_auto_popup_while_jump = 0
