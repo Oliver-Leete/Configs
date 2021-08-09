@@ -592,6 +592,9 @@ myKeys conf = let
     , ("M-M1-C-S-s"      , addName "Capture selection"           $ spawn "screencapt area" )
     , ("M-M1-C-S-w"      , addName "Record screen"               $ spawn "screencast" )
     , ("M-M1-C-S-r"      , addName "Record area"                 $ spawn "screencast area" )
+    , ("M-M1-C-S-<Space>", addName "Play/Pause"                  $ spawn "playerctl play-pause" )
+    , ("M-M1-C-S-<Up>"   , addName "Skip Song"                   $ spawn "playerctl previous" )
+    , ("M-M1-C-S-<Down>" , addName "Prev Song"                   $ spawn "playerctl next" )
     , ("M-;"             , addName "Warp Cursor"                 $ warpToWindow (1/2) (1/2))
     ] ^++^
 
@@ -871,10 +874,7 @@ myManageHook =
             , resource =? "stalonetray"    -?> doIgnore
             , className =? "Zenity" -?> doRectFloat (W.RationalRect (3 / 8) (1 / 16) (1 / 4) (7 / 8))
             , resource =? "gnome-calculator" -?> doCenterFloat
-            , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect ((2880-500-8)/3840) (31/2160) (500/3840) (700/2160))
-            , resource =? "nm-connection-editor" -?> doRectFloat (W.RationalRect ((2880-500-8)/3840) (31/2160) (500/3840) (700/2160))
-            , resource =? "galendae" -?> doRectFloat (W.RationalRect ((3840-300-16)/3840) (30/2160) (300/3840) (300/2160))
-            , resource =? "nitrogen" -?> doCenterFloat
+            , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect ((1285)/3840) (31/2160) (500/3840) (700/2160))
 
             , resource =? "Tasks" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
             , resource =? "WrkTasks" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
