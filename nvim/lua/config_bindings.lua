@@ -304,18 +304,7 @@ require("which-key").register({
 			I = { "<cmd>lua require'telescope.builtin'.symbols{sources={'julia'}}<cr>", "Insert Symbols" },
 			-- z = { "<cmd>Telescope session-lens search_session<cr>", "Session Search" },
 		},
-		G = {
-			name = "GitHub",
-			e = {
-				[["<cmd>RepoEdit git@github.com:" . input("What repo would you like to browse > ") . "<cr>"]],
-				"Browse Repo",
-				expr = true,
-			},
-			i = { "<cmd>Telescope gh issues<cr>", "Search Issues" },
-			p = { "<cmd>Telescope gh pull_request<cr>", "Search Pull Requests" },
-			g = { "<cmd>Telescope gh gist<cr>", "Search Gists" },
-			r = { "<cmd>Telescope gh run<cr>", "Search GH Runs" },
-		},
+		G = { "v:lua.commandRepeat('<leader>g', 'gitRepeat')", noremap = false, expr = true},
 		g = {
 			name = "Git",
 			a = { "<cmd>Gitsigns blame_line<CR>", "Blame Line" },
@@ -324,7 +313,7 @@ require("which-key").register({
 			C = { "<cmd>Telescope git_bcommits<cr>", "Commits (buffer)" },
 			c = { "<cmd>Telescope git_commits<cr>", "Commits" },
 			d = {
-				d = { "<cmd>call PMToggleView('gitdiff')<CR>", "Git Diff Viewer" },
+				d = { "<cmd>DiffviewOpen<CR>", "Git Diff Viewer" },
 				D = { "<cmd>Gitsigns diffthis", "Diff View Based On Signs" },
 				c = { "<cmd>call v:lua.git_commits_againsthead()<cr>", "View The Diff of a Commit" },
 				C = { "<cmd>call v:lua.git_commits_onechange()<cr>", "Diff Against a Commit" },
@@ -338,6 +327,18 @@ require("which-key").register({
 			S = { "<cmd>Gitsigns stage_buffer<CR>", "Stage File" },
 			s = { "<cmd>Gitsigns stage_hunk<CR>", "Hunk Stage" },
 			v = { "<cmd>Gitsigns select_hunk<CR>", "Select Current Hunk" },
+            h = {
+                name = "GitHub",
+                e = {
+                    [["<cmd>RepoEdit git@github.com:" . input("What repo would you like to browse > ") . "<cr>"]],
+                    "Browse Repo",
+                    expr = true,
+                },
+                i = { "<cmd>Telescope gh issues<cr>", "Search Issues" },
+                p = { "<cmd>Telescope gh pull_request<cr>", "Search Pull Requests" },
+                g = { "<cmd>Telescope gh gist<cr>", "Search Gists" },
+                r = { "<cmd>Telescope gh run<cr>", "Search GH Runs" },
+            },
 			[","] = {
 				name = "Git Settings",
 				b = { "<cmd>call v:lua.gitsign_change_base()<cr>", "Change Gitsigns Base" },
@@ -350,21 +351,26 @@ require("which-key").register({
 			w = { "<cmd>MatchupWhereAmI??<cr>", "Preview Location" },
 			E = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
 		},
+        V = { "v:lua.commandRepeat('<leader>v', 'panelRepeat')", "Repeat Panel", expr = true, noremap = false },
 		v = {
 			name = "View",
-			e = { "<cmd>call PMToggleView('errorlist')<CR>", "Error List" },
-			E = { "<cmd>call PMToggleView('errorlistdoc')<CR>", "Error List (buffer)" },
-			g = { "<cmd>call PMToggleView('gitdiff')<CR>", "Git" },
-			i = { "<cmd>3ToggleTerm<cr>", "REPL Terminal" },
-			m = { "<cmd>2ToggleTerm<cr>", "Build Terminal" },
-			l = { "<cmd>call PMToggleView('loclist')<CR>", "Location List" },
-			q = { "<cmd>call PMToggleView('quickfix')<CR>", "QuickFix List" },
-			o = { "<cmd>call PMToggleView('symbols')<CR>", "Symbol List" },
-			x = { "<cmd>call PMToggleView('nvim-tree')<CR>", "File Tree" },
-			T = { "<cmd>call PMToggleView('term')<CR>", "All Terminals" },
-			t = { "<cmd>1ToggleTerm<cr>", "Terminal" },
-			u = { "<cmd>call PMToggleView('undotree')<CR>", "Undo Tree" },
-			v = { "<cmd>call CloseAllPanels()<cr>", "Close All Panels" },
+		    v = { "<cmd>call CloseAllPanel()<cr>", "Close All Panels"},
+			e = { "<cmd>let g:panelRepeat='e'<cr><cmd>Trouble lsp_workspace_diagnostics<CR>", "Error List" },
+			E = { "<cmd>let g:panelRepeat='E'<cr><cmd>Trouble lsp_document_diagnostics<CR>", "Error List (buffer)" },
+			q = { "<cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfixlist<CR>", "QuickFix List" },
+			l = { "<cmd>let g:panelRepeat='l'<cr><cmd>Trouble loclist<CR>", "Location List" },
+			f = { "<cmd>let g:panelRepeat='f'<cr><cmd>Trouble telescope<CR>", "Telescope List" },
+			n = { "<cmd>let g:panelRepeat='n'<cr><cmd>TodoTrouble<cr>", "Todo List" },
+			g = { "<cmd>let g:panelRepeat='g'<cr><cmd>DiffviewOpen<CR>", "Git" },
+			i = { "<cmd>let g:panelRepeat='i'<cr><cmd>3ToggleTerm<cr>", "REPL Terminal" },
+			m = { "<cmd>let g:panelRepeat='m'<cr><cmd>2ToggleTerm<cr>", "Build Terminal" },
+			L = { "<cmd>let g:panelRepeat='L'<cr><cmd>lopen<CR>", "Better Location List" },
+			Q = { "<cmd>let g:panelRepeat='Q'<cr><cmd>copen<CR>", "Better QuickFix List" },
+			o = { "<cmd>let g:panelRepeat='o'<cr><cmd>SymbolsOutlineOpen<CR>", "Symbol List" },
+			x = { "<cmd>let g:panelRepeat='x'<cr><cmd>NvimTreeOpen<CR>", "File Tree" },
+			T = { "<cmd>let g:panelRepeat='T'<cr><cmd>ToggleTermOpenAll<CR>", "All Terminals" },
+			t = { "<cmd>let g:panelRepeat='t'<cr><cmd>1ToggleTerm<cr>", "Terminal" },
+			u = { "<cmd>let g:panelRepeat='u'<cr><cmd>UndotreeShow<CR>", "Undo Tree" },
 		},
 		Q = { "<cmd>CClear<cr><cmd>cgetbuffer<cr><cmd>TroubleRefresh<cr>", "Populater QF List With Buffer Errors " },
 		q = {
@@ -374,9 +380,9 @@ require("which-key").register({
 			g = { "<cmd>Gitsigns setqflist<cr><cmd>Trouble quickfix<cr>", "Populate With Diffs" },
 			["<down>"] = { "<cmd>cnewer<cr>", "Newer List" },
 			["<up>"] = { "<cmd>colder<cr>", "Older List" },
-			q = { "<cmd>call PMToggleView('quickfix')<CR>", "Open" },
+			q = { "<cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfixlist<CR>", "QuickFix List" },
 			n = { "<cmd>TodoQuickFix<cr>", "Populate With Todo Comments" },
-			f = { "<cmd>call PMToggleView('quickfixFilter')<CR>", "Filter List" },
+			f = { "<cmd>let g:panelRepeat='Q'<cr><cmd>copen<CR>", "Better QuickFix List" },
 			V = {
 				[["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>Trouble quickfix<cr>"]],
 				"Populate With VimGrep (file select)",
@@ -403,8 +409,8 @@ require("which-key").register({
 			name = "Location List",
 			a = { "<cmd>laddbuffer<cr><cmd>TroubleRefresh<cr>", "Add Buffer Errrors to LocList" },
 			c = { "<cmd>LClear<cr><cmd>TroubleRefresh<cr>", "Clear The List" },
-			l = { "<cmd>call PMToggleView('loclist')<CR>", "Open Location List" },
-			f = { "<cmd>call PMToggleView('loclistFilter')<CR>", "Filter List" },
+			l = { "<cmd>let g:panelRepeat='l'<cr><cmd>Trouble loclist<CR>", "Location List" },
+			f = { "<cmd>let g:panelRepeat='L'<cr><cmd>lopen<CR>", "Better Location List" },
 			g = { "<cmd>Gitsigns setloclist<cr><cmd>Trouble quickfix<cr>", "Populate With Diffs" },
 			["<up>"] = { "<cmd>lnewer<cr>", "Newer List" },
 			["<down>"] = { "<cmd>lolder<cr>", "Older List" },
@@ -433,11 +439,11 @@ require("which-key").register({
 		E = { "<cmd>CClear<cr><cmd>cgetbuffer<cr><cmd>TroubleRefresh<cr>", "Open Buffre Errors in Touble" },
 		e = {
 			name = "Errors",
-			e = { "<cmd>call PMToggleView('errorlist')<CR>", "Open Errors" },
-			E = { "<cmd>call PMToggleView('errorlistdoc')<CR>", "Open Errors (buffer)" },
-			n = { "<cmd>call PMToggleView('Todo-Trouble')<cr>", "Todo Items" },
-			f = { "<cmd>call PMToggleView('troubleTelescope')<CR>", "Open Telescope List" },
 			r = { "<cmd>TroubleRefresh<cr>", "Refresh Errors" },
+			e = { "<cmd>let g:panelRepeat='e'<cr><cmd>Trouble lsp_workspace_diagnostics<CR>", "Error List" },
+			E = { "<cmd>let g:panelRepeat='E'<cr><cmd>Trouble lsp_document_diagnostics<CR>", "Error List (buffer)" },
+			f = { "<cmd>let g:panelRepeat='f'<cr><cmd>Trouble telescope<CR>", "Telescope List" },
+			n = { "<cmd>let g:panelRepeat='n'<cr><cmd>TodoTrouble<cr>", "Todo List" },
 		},
 		t = {
 			name = "Terminal",
@@ -475,7 +481,7 @@ require("which-key").register({
 		},
 		x = {
 			name = "Explorer",
-			t = { "<cmd>call PMToggleView('nvim-tree')<cr>", "Open Explorer" },
+			x = { "<cmd>let g:panelRepeat='x'<cr><cmd>NvimTreeOpen<CR>", "File Tree" },
 		},
 		w = {
 			name = "Window Managment",
@@ -510,6 +516,7 @@ require("which-key").register({
 			K = { "<c-w>K", "Move Far Up" },
 			L = { "<c-w>L", "Move Far Right" },
 			c = { "<c-w>c", "Close Window" },
+			q = { "<c-w>c", "Close Window" },
 			["/"] = { "<c-w>^", "Open Alternate File" },
 			[","] = { "<cmd>BufferLineCyclePrev<cr>", "Previous Buffer" },
 			["."] = { "<cmd>BufferLineCycleNext<cr>", "Next Buffer" },
@@ -544,7 +551,7 @@ require("which-key").register({
 	},
 	["["] = {
 		name = "Backward Leader",
-		["["] = { "v:lua.jump_repeat('[')", "Repeat Last", expr = true, noremap = false },
+		["["] = { "v:lua.commandRepeat('[', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
 		h = {
 			[["<cmd>let g:dirJumps='h'<cr>" . &diff ? "[c" : "<cmd>lua require'gitsigns'.prev_hunk()<cr>" . "zz"]],
 			"Hunk",
@@ -578,7 +585,7 @@ require("which-key").register({
 	},
 	["]"] = {
 		name = "Forward Leader",
-		["]"] = { "v:lua.jump_repeat(']')", "Repeat Last", expr = true, noremap = false },
+		["]"] = { "v:lua.commandRepeat(']', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
 		h = {
 			[["<cmd>let g:dirJumps='h'<cr>" . &diff ? "]c" : "<cmd>lua require'gitsigns'.next_hunk()<cr>" . "zz"]],
 			"Hunk",
@@ -660,9 +667,11 @@ require("which-key").register({
 
 -- set default movement
 vim.api.nvim_set_var("dirJumps", "f")
+vim.api.nvim_set_var("panelRepeat", "x")
+vim.api.nvim_set_var("gitRepeat", "g")
 
-function _G.jump_repeat(direction)
-	local jump = vim.api.nvim_get_var("dirJumps")
+function _G.commandRepeat(leader, varName)
+	local jump = vim.api.nvim_get_var(varName)
 	-- print(direction .. jump)
-	return vim.api.nvim_replace_termcodes(direction .. jump, true, true, true)
+	return vim.api.nvim_replace_termcodes(leader .. jump, true, true, true)
 end

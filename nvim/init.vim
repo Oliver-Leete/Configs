@@ -87,7 +87,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/twilight.nvim'
 
     " Panels
-    Plug 'mipmip/panelmanager.vim'
+    " Plug 'mipmip/panelmanager.vim'
     Plug 'mbbill/undotree'
     Plug 'kyazdani42/nvim-tree.lua'
     Plug 'simrat39/symbols-outline.nvim'
@@ -435,25 +435,6 @@ command! CClear cexpr []
 command! LClear lexpr []
 
 " Panels
-
-" REGISTER PLUGIN AND THEIR PANEL POSITION
-call panelmanager#init()
-
-"                         POSITION  IDENTIFIER          OPEN COMMAND                            CLOSE COMMAND
-call  PMRegisterPanelView('left',   'undotree',         'UndotreeShow',                         'UndotreeHide')
-call  PMRegisterPanelView('left',   'nvim-tree',        'NvimTreeOpen',                         'NvimTreeClose')
-call  PMRegisterPanelView('bottom', 'quickfix',         'Trouble quickfix',                     'TroubleClose')
-call  PMRegisterPanelView('bottom', 'loclist',          'Trouble loclist',                      'TroubleClose')
-call  PMRegisterPanelView('bottom', 'errorlistdoc',     'Trouble lsp_document_diagnostics',     'TroubleClose')
-call  PMRegisterPanelView('bottom', 'errorlist',        'Trouble lsp_workspace_diagnostics',    'TroubleClose')
-call  PMRegisterPanelView('bottom', 'troubleTelescope', 'Trouble telescope',                    'TroubleClose')
-call  PMRegisterPanelView('bottom', 'Todo-Trouble',     'TodoTrouble',                          'TroubleClose')
-call  PMRegisterPanelView('bottom', 'loclistFilter',    'lopen',                                'windo if &buftype == "quickfix" || &buftype == "locationlist" | q | endif')
-call  PMRegisterPanelView('bottom', 'quickfixFilter',   'copen',                                'windo if &buftype == "quickfix" || &buftype == "locationlist" | q | endif')
-call  PMRegisterPanelView('bottom', 'term',             'ToggleTermOpenAll',                    'ToggleTermCloseAll')
-call  PMRegisterPanelView('right',  'symbols',          'SymbolsOutlineOpen',                   'SymbolsOutlineClose')
-call  PMRegisterPanelView('top',    'gitdiff',          'DiffviewOpen',                         'DiffviewClose')
-
 function CloseAllPanels()
   UndotreeHide
   windo if &buftype == "quickfix" || &buftype == "locationlist" | q | endif

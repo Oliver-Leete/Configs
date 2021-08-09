@@ -2,10 +2,10 @@ require("which-key").register({
 	["<localleader>"] = {
 		["<localleader>"] = { "<cmd>TexlabForward<cr>", "Forward Search", silent = true },
 		r = { "<cmd>Telescope bibtex bibtex theme=get_cursor<cr>", "References" },
-		x = { "<cmd>VimtexTocToggle<cr>", "Open TOC" },
+		c = { "<cmd>VimtexTocToggle<cr>", "Open TOC" },
 		v = { "<cmd>VimtexView<cr>", "View Document" },
-		c = { "<cmd>VimtexCountWord<cr>", "Word Count" },
-		C = { "<cmd>VimtexCountWord!<cr>", "Word Count Report" },
+		w = { "<cmd>VimtexCountWord<cr>", "Word Count" },
+		W = { "<cmd>VimtexCountWord!<cr>", "Word Count Report" },
 		m = { "<cmd>VimtexToggleMain<cr>", "Toggle the Main File" },
 		g = { "<cmd>TexlabForward<cr>", "Forward Search" },
 		i = { "A% chktex ", "Chktex Ignore" },
@@ -77,6 +77,9 @@ require("which-key").register({
 			c = { "<cmd>VimtexClean<cr>", "Clear Build Files" },
 			g = { "<cmd>compiler textidote<cr><cmd>lmake!<cr><cmd>Trouble loclist<cr>", "Grammer Checking" },
 		},
+        v = {
+            c = { "<cmd>let panelRepeat='c'<cr><cmd>VimtexTocToggle<cr>", "Open TOC" },
+        },
 	},
     ["["] = {
 		s = { "<cmd>let g:dirJumps='s'<cr><plug>(vimtex-[[)zz", "Tex Section End", noremap = false},
@@ -119,7 +122,11 @@ require("which-key").register({
 if vim.api.nvim_get_var("dirJumps") == "f" then
    vim.api.nvim_set_var("dirJumps", "s")
 end
+if vim.api.nvim_get_var("panelRepeat") == "x" then
+   vim.api.nvim_set_var("panelRepeat", "c")
+end
 
+vim.cmd([[let g:vimtex_index_split_width=60]])
 vim.cmd([[let g:vimtex_quickfix_mode=0]])
 vim.cmd([[let g:vimtex_automatic_xwin=0]])
 vim.cmd([[let g:vimtex_view_method='zathura']])
