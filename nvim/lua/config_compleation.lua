@@ -14,88 +14,93 @@
 -- Compleation (compe) and Snippet (luasnip) Setup
 
 require("luasnip/loaders/from_vscode").load({
-	paths = { "/home/oleete/.config/nvim/snippets"},
+    paths = { "/home/oleete/.config/nvim/snippets" },
 })
 
 vim.o.completeopt = "menuone,noselect"
 require("compe").setup({
-	enabled = true,
-	autocomplete = true,
-	debug = false,
-	min_length = 1,
-	preselect = "enable",
-	throttle_time = 80,
-	source_timeout = 200,
-	incomplete_delay = 400,
-	max_abbr_width = 100,
-	max_kind_width = 100,
-	max_menu_width = 100,
-	documentation = {
-		border = { "", "", "", " ", "", "", "", " " },
-		winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
-		max_width = 120,
-		min_width = 60,
-		max_height = math.floor(vim.o.lines * 0.3),
-		min_height = 1,
-	},
+    enabled = true,
+    autocomplete = true,
+    debug = false,
+    min_length = 1,
+    preselect = "enable",
+    throttle_time = 80,
+    source_timeout = 200,
+    incomplete_delay = 400,
+    max_abbr_width = 100,
+    max_kind_width = 100,
+    max_menu_width = 100,
+    documentation = {
+        border = { "", "", "", " ", "", "", "", " " },
+        winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
+        max_width = 120,
+        min_width = 60,
+        max_height = math.floor(vim.o.lines * 0.3),
+        min_height = 1,
+    },
 
-	source = {
-		path = true,
-		buffer = true,
-		calc = true,
-		nvim_lsp = true,
-		nvim_lua = true,
-		nvim_treesitter = false,
-		vsnip = false,
-		luasnip = true,
-		omni = {
-			filetypes = { "tex" },
-		},
-		tabnine = true,
-	},
+    source = {
+        path = true,
+        buffer = true,
+        calc = true,
+        nvim_lsp = true,
+        nvim_lua = true,
+        nvim_treesitter = false,
+        vsnip = false,
+        luasnip = true,
+        omni = {
+            filetypes = { "tex" },
+        },
+        tabnine = true,
+    },
 })
 
 -- Compe and luasnip mappings
 local function replace_keycodes(str)
-  return vim.api.nvim_replace_termcodes(str, true, true, true)
+    return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 
 local luasnip = require("luasnip")
 _G.tab_complete = function()
-	if luasnip and luasnip.expand_or_jumpable() then
-		return replace_keycodes("<Plug>luasnip-expand-or-jump")
-	else
-		return replace_keycodes("<plug>(TaboutMulti)")
-	end
+    if luasnip and luasnip.expand_or_jumpable() then
+        return replace_keycodes("<Plug>luasnip-expand-or-jump")
+    else
+        return replace_keycodes("<plug>(TaboutMulti)")
+    end
 end
 
 _G.s_tab_complete = function()
-	if luasnip and luasnip.jumpable(-1) then
-		return replace_keycodes("<Plug>luasnip-jump-prev")
-	else
-		return replace_keycodes("<plug>(TaboutBackMulti)")
-	end
+    if luasnip and luasnip.jumpable(-1) then
+        return replace_keycodes("<Plug>luasnip-jump-prev")
+    else
+        return replace_keycodes("<plug>(TaboutBackMulti)")
+    end
 end
 vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", { expr = true })
 vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true })
-vim.api.nvim_set_keymap("i", "<cr>", [[compe#confirm(luaeval("require 'nvim-autopairs'.autopairs_cr()"))]], { expr = true })
+vim.api.nvim_set_keymap(
+    "i",
+    "<cr>",
+    [[compe#confirm(luaeval("require 'nvim-autopairs'.autopairs_cr()"))]],
+    { expr = true }
+)
 vim.api.nvim_set_keymap("i", "<c-space>", "compe#complete()", { expr = true })
-vim.api.nvim_set_keymap("i", "<C-d>", "compe#scroll({ 'delta': -4 })", { expr = true})
-vim.api.nvim_set_keymap("i", "<C-f>", "compe#scroll({ 'delta': +4 })", { expr = true})
-vim.api.nvim_set_keymap("i", "<C-e>", "compe#close('<C-e>')", { expr = true})
+vim.api.nvim_set_keymap("i", "<C-d>", "compe#scroll({ 'delta': -4 })", { expr = true })
+vim.api.nvim_set_keymap("i", "<C-f>", "compe#scroll({ 'delta': +4 })", { expr = true })
+vim.api.nvim_set_keymap("i", "<C-e>", "compe#close('<C-e>')", { expr = true })
 
 -- AutoPairs Setup
 
 require("nvim-autopairs").setup({
-	check_ts = true,
-	map_cr = true, --  map <CR> on insert mode
-	map_complete = true, -- it will auto insert `(` after select function or method item
-	enable_check_bracket_line = true,
+    check_ts = true,
+    map_cr = true, --  map <CR> on insert mode
+    map_complete = true, -- it will auto insert `(` after select function or method item
+    enable_check_bracket_line = true,
 })
 
 require("nvim-autopairs.completion.compe").setup({
-  map_cr = true,
-  map_complete = true,
+    map_cr = true,
+    map_complete = true,
 })
 
 vim.g.diagnostic_auto_popup_while_jump = 0
@@ -103,45 +108,44 @@ vim.g.diagnostic_enable_virtual_text = 0
 vim.g.diagnostic_enable_underline = 0
 vim.g.completion_timer_cycle = 200
 
-
 require("todo-comments").setup({
-	signs = true,
-	keywords = {
-		FIX = { icon = " ", color = "error", alt = { "FIXME", "BUG", "FIXIT", "FIX", "ISSUE" } },
-		TODO = { icon = " ", color = "info" },
-		HACK = { icon = " ", color = "warning", alt = { "JANK", "WORKAROUND" } },
-		WARN = { icon = " ", color = "warning", alt = { "WARNING" } },
-		PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-		NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
-	},
-	highlight = {
-		before = "fg",
-		keyword = "wide",
-		after = "fg",
-	},
-	colors = {
-		error = { "LspDiagnosticsDefaultError", "ErrorMsg", "#DC2626" },
-		warning = { "LspDiagnosticsDefaultWarning", "WarningMsg", "#FBBF24" },
-		info = { "LspDiagnosticsDefaultInformation", "#2563EB" },
-		hint = { "LspDiagnosticsDefaultHint", "#10B981" },
-		default = { "Identifier", "#7C3AED" },
-	},
+    signs = true,
+    keywords = {
+        FIX = { icon = " ", color = "error", alt = { "FIXME", "BUG", "FIXIT", "FIX", "ISSUE" } },
+        TODO = { icon = " ", color = "info" },
+        HACK = { icon = " ", color = "warning", alt = { "JANK", "WORKAROUND" } },
+        WARN = { icon = " ", color = "warning", alt = { "WARNING" } },
+        PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+    },
+    highlight = {
+        before = "fg",
+        keyword = "wide",
+        after = "fg",
+    },
+    colors = {
+        error = { "LspDiagnosticsDefaultError", "ErrorMsg", "#DC2626" },
+        warning = { "LspDiagnosticsDefaultWarning", "WarningMsg", "#FBBF24" },
+        info = { "LspDiagnosticsDefaultInformation", "#2563EB" },
+        hint = { "LspDiagnosticsDefaultHint", "#10B981" },
+        default = { "Identifier", "#7C3AED" },
+    },
 })
 
 require("tabout").setup({
-	tabkey = "",
+    tabkey = "",
     backwards_tabkey = "",
-	completion = false,
+    completion = false,
     enable_backwards = true,
-	tabouts = {
-		{ open = "'", close = "'" },
-		{ open = '"', close = '"' },
-		{ open = "`", close = "`" },
-		{ open = "(", close = ")" },
-		{ open = "[", close = "]" },
-		{ open = "{", close = "}" },
-		{ open = "<", close = ">" },
-	},
-	ignore_beginning = false,
-	exclude = {},
+    tabouts = {
+        { open = "'", close = "'" },
+        { open = '"', close = '"' },
+        { open = "`", close = "`" },
+        { open = "(", close = ")" },
+        { open = "[", close = "]" },
+        { open = "{", close = "}" },
+        { open = "<", close = ">" },
+    },
+    ignore_beginning = false,
+    exclude = {},
 })

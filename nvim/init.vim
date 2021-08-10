@@ -408,7 +408,6 @@ vmap a= <Plug>(operator-rhs)
 vmap i= <Plug>(operator-lhs)
 
 " Nvim Comment
-lua require('nvim_comment').setup({comment_empty = false})
 nmap <c-_> gcc
 xmap <c-_> gc
 
@@ -434,21 +433,7 @@ let g:caser_no_mappings	= 1
 command! CClear cexpr []
 command! LClear lexpr []
 
-" Panels
-function CloseAllPanels()
-  UndotreeHide
-  windo if &buftype == "quickfix" || &buftype == "locationlist" | q | endif
-  " windo if &filetype == "toggleterm" | q | endif
-  ToggleTermCloseAll
-  NvimTreeClose
-  TroubleClose
-  SymbolsOutlineClose
-  DiffviewClose
-  windo if &filetype == "help" | q | endif
-  windo if &filetype == "LvimHelper" | q | endif
-  windo if &filetype == "juliadoc" | q | endif
-endfunction
-
+" Set Filetypes
 au BufNewFile,BufRead *.fish set filetype=fish
 au BufNewFile,BufRead *.jl set filetype=julia
 
@@ -465,5 +450,9 @@ require('config_git')
 
 EOF
 let g:julia_blocks=0
+
+" This shouldn't be needed, but it doesn't work without for some reason
+" vnoremap  g <Cmd>lua require("which-key").show("g", {mode = "v", auto = true})<CR>
+" nnoremap  g <Cmd>lua require("which-key").show("g", {mode = "n", auto = true})<CR>
 
 redraw
