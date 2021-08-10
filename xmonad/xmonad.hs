@@ -70,7 +70,7 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.NoFrillsDecoration
 import XMonad.Layout.Notebook
 -- import XMonad.Layout.OneBig
-import XMonad.Layout.PerScreen
+-- import XMonad.Layout.PerScreen
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.PositionStoreFloat
 import XMonad.Layout.Reflect
@@ -506,14 +506,12 @@ myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
             $ reflectToggle
             $ notebookLayout  ||| tabsLayout
     where
-    notebookMulti   = subLayout [] Simplest $ Notebook 1920 True True True 1 3 reSize 2 (2/3)
+    notebookMulti   = subLayout [] Simplest $ Notebook 2560 True True True 1 3 reSize 2 (2/3)
     notebookColumns = subLayout [] Simplest $ Notebook 1920 False True True 3 3 reSize 2 (2/3)
 
     notebookLayout = renamed [Replace "Normal"] $ onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns notebookMulti
 
-    tallTabs   = renamed [Replace "Tall Tabs"] (mastered (1/100) (1/2) Simplest)
-    allTabs    = renamed [Replace "Tabs"] Simplest
-    tabsLayout = ifWider smallMonResWidth (toggleLayouts allTabs tallTabs) (toggleLayouts tallTabs allTabs)
+    tabsLayout = renamed [Replace "Tall Tabs"] (mastered (1/100) (1/2) Simplest)
 
     floatWorkSpace = renamed [Replace "Float"] (borderResize $ addFloatTopBar positionStoreFloat)
 
@@ -523,7 +521,6 @@ myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
     fullScreenToggle    = mkToggle (single FULL)
     mirrorToggle        = mkToggle (single MIRROR)
     reflectToggle       = mkToggle (single REFLECTX)
-    smallMonResWidth    = 2560
     showWorkspaceName   = showWName' myShowWNameTheme
     addFloatTopBar      = noFrillsDeco shrinkText topFloatBarTheme
 
@@ -674,28 +671,31 @@ myKeys conf = let
     , ("M-m"             , addName "Swap with main"              $ sequence_ [swapPromote' False, warpCursor])
     , ("M-C-m"           , addName "Promote to main"             $ sequence_ [promote, warpCursor])
 
-    , ( "<F8>"           , addName "Hop to Window"               $ sequence_ [selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow), warpCursor])
+    , ("<F8>"            , addName "Hop to Window"               $ sequence_ [selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow), warpCursor])
 
     , ("M-<Space>"       , addName "Swap monitor workspaces"     swapNextScreen)
     , ("M-C-<Space>"     , addName "Send window to next monitor" shiftNextScreen)
 
     , ("M-<D>"           , addName "Focus down"                  $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Down)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Down)
-                                                                             ,(className =? "Google-chrome", P.sendKey controlMask xK_Tab)
                                                                              ,(pure True, sequence_ [windows W.focusDown, warpCursor])])
     , ("M-<U>"           , addName "Focus up"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Up)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Up)
-                                                                             ,(className =? "Google-chrome", P.sendKey (controlMask .|. shiftMask) xK_Tab)
                                                                              ,(pure True, sequence_ [windows W.focusUp, warpCursor])])
-    , ("M-C-<D>"         , addName "Shift down"                  $ sequence_ [windows W.swapDown, warpCursor])
-    , ("M-C-<U>"         , addName "Shift up"                    $ sequence_ [windows W.swapUp, warpCursor])
+    , ("M-C-<D>"         , addName "Force Focus down"            $ sequence_ [windows W.focusDown, warpCursor])
+    , ("M-C-<U>"         , addName "Force Focus up"              $ sequence_ [windows W.focusUp, warpCursor])
+
+    , ("M-S-<D>"         , addName "Shift down"                  $ sequence_ [windows W.swapDown, warpCursor])
+    , ("M-S-<U>"         , addName "Shift up"                    $ sequence_ [windows W.swapUp, warpCursor])
 
     , ("M-<R>"           , addName "Cycle up"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Right)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Right)
+                                                                             ,(className =? "Google-chrome", P.sendKey controlMask xK_Tab)
                                                                              ,(pure True, bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("Maximized", windows W.focusDown), ("Centred Max", windows W.focusDown), ("", onGroup W.focusDown')])])
 
     , ("M-<L>"           , addName "Cycle down"                  $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Left)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Left)
+                                                                             ,(className =? "Google-chrome", P.sendKey (controlMask .|. shiftMask) xK_Tab)
                                                                              ,(pure True, bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("Maximized", windows W.focusUp), ("Centred Max", windows W.focusUp), ("", onGroup W.focusDown')])])
     , ("M-C-<R>"         , addName "Force Cycle up"              $ bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("Maximized", windows W.focusDown), ("Centred Max", windows W.focusDown), ("", onGroup W.focusDown')])
     , ("M-C-<L>"         , addName "Force Cycle down"            $ bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("Maximized", windows W.focusUp), ("Centred Max", windows W.focusUp), ("", onGroup W.focusDown')])
@@ -714,16 +714,6 @@ myKeys conf = let
     , ("M-c"             , addName "Center Focus"                $ sequence_ [ withFocused $ windows . W.sink
                                                                  , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLCENTER])
 
-
-    , ("M-h"             , addName "Navigate Left"               $ sequence_ [windowGo L True, warpCursor])
-    , ("M-j"             , addName "Navigate Down"               $ sequence_ [windowGo D True, warpCursor])
-    , ("M-k"             , addName "Navigate Up"                 $ sequence_ [windowGo U True, warpCursor])
-    , ("M-l"             , addName "Navigate Right"              $ sequence_ [windowGo R True, warpCursor])
-
-    , ("M-C-h"           , addName "Move Left"                   $ sequence_ [windowSwap L True, warpCursor])
-    , ("M-C-j"           , addName "Move Down"                   $ sequence_ [windowSwap D True, warpCursor])
-    , ("M-C-k"           , addName "Move Up"                     $ sequence_ [windowSwap U True, warpCursor])
-    , ("M-C-l"           , addName "Move Right"                  $ sequence_ [windowSwap R True, warpCursor])
 
     , ("M-u"             , addName "Scroll Up"                   $ spawn "xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4")
     , ("M-d"             , addName "Scroll Down"                 $ spawn "xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5")
@@ -753,7 +743,7 @@ myKeys conf = let
     subKeys "Layout Management"
     [ ("M-<Tab>"         , addName "Cycle all layouts"           $ sendMessage NextLayout)
     , ("M-S-<Tab>"       , addName "Reset layout"                $ setLayout $ XMonad.layoutHook conf)
-    , ("M-C-<Tab>"       , addName "Toggle sublayout"            $ bindOn LD [("Notebook", sendMessage ToggleMiddle)
+    , ("M-C-<Tab>"       , addName "Toggle sublayout"            $ bindOn LD [("Normal", sendMessage ToggleMiddle)
                                                                              ,("Columns", sendMessage ToggleMiddle)
                                                                              ,("", sendMessage ToggleLayout)])
 
@@ -770,7 +760,7 @@ myKeys conf = let
     , ("M-C-["           , addName "Shrink height"               $ sendMessage MirrorShrink)
     , ("M-C-]"           , addName "Expand height"               $ sendMessage MirrorExpand)
 
-    , ("M-r"             , addName "Reflect"                     $ bindOn LD [("Notebook",sendMessage ToggleSide)
+    , ("M-r"             , addName "Reflect"                     $ bindOn LD [("Normal",sendMessage ToggleSide)
                                                                              ,("", sendMessage (XMonad.Layout.MultiToggle.Toggle REFLECTX))])
     , ("M-C-r"           , addName "Reflect Stack"               $ sendMessage ToggleStackDir)
     ]

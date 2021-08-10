@@ -487,7 +487,7 @@ require("which-key").register({
             ["<leader>"] = { "<c-w>p", "Jump To Last Split" },
             O = { "<cmd>BDelete hidden<cr>", "Close All Hidden Buffers" },
             f = { "<cmd>vsplit<cr>gf", "Split Open Under Cursor" },
-            d = { "<cmd>BDelete! this<cr>", "Delete the current buffer" },
+            d = { "<cmd>BDelete this<cr>", "Delete the current buffer" },
             D = { "<cmd>tabclose<cr>", "Close the Current Tab" },
             w = { "<cmd>ZenMode<cr>", "Zen Mode" },
             o = { "<c-w>o", "Clean Up Windows" },
