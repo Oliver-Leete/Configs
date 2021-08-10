@@ -138,6 +138,9 @@ local custom_attach = function(client, bufnr)
                     "<cmd>lua require('telescope.builtin').lsp_implementations({jump_type='vsplit'})<CR>",
                     "Implementations",
                 },
+                D = {"<cmd>let g:panelRepeat='zd'<cr><cmd>TroubleToggle lsp_definitions<cr>", "List Definitions" },
+                I = {"<cmd>let g:panelRepeat='zi'<cr><cmd>TroubleToggle lsp_implementations<cr>", "List Implementations"},
+                R = {"<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References"},
             },
             f = {
                 s = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Symbols" },
@@ -159,6 +162,13 @@ local custom_attach = function(client, bufnr)
             },
             e = {
                 p = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
+            },
+            v = { 
+                z = {
+                d = {"<cmd>let g:panelRepeat='zd'<cr><cmd>TroubleToggle lsp_definitions<cr>", "List Definitions" },
+                i = {"<cmd>let g:panelRepeat='zi'<cr><cmd>TroubleToggle lsp_implementations<cr>", "List Implementations"},
+                r = {"<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References"},
+                },
             },
             r = {
                 r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)" },
@@ -194,7 +204,7 @@ local custom_attach = function(client, bufnr)
         require("which-key").register({
             ["<leader>"] = {
                 r = {
-                    ["="] = { "<cmd>lua vim.lsp.buf.formatting()<CR>", "Format" },
+                    ["="] = { "<cmd>lua vim.lsp.buf.formatting_sync()<CR>", "Format" },
                 },
             },
         })
@@ -210,6 +220,22 @@ local custom_attach = function(client, bufnr)
         })
     end
 end
+
+require("lspconfig").hls.setup({
+    on_attach = custom_attach,
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 500 },
+    cmd = { "haskell-language-server-wrapper", "--lsp" },
+    filetypes = { "haskell", "lhaskell" },
+    root_dir = nvim_lsp.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml", ".git"),
+    lspinfo = function(cfg)
+        -- return "specific"
+        if cfg.settings.languageServerHaskell.logFile or false then
+            return "logfile: " .. cfg.settings.languageServerHaskell.logFile
+        end
+        return ""
+    end,
+})
 
 require("lspconfig").julials.setup({
     on_attach = custom_attach,
@@ -296,22 +322,6 @@ for _, server in pairs(servers) do
         })
     end
 end
-
-require("lspconfig").hls.setup({
-    on_attach = custom_attach,
-    capabilities = capabilities,
-    flags = { debounce_text_changes = 500 },
-    cmd = { "haskell-language-server-wrapper", "--lsp" },
-    filetypes = { "haskell", "lhaskell" },
-    root_dir = nvim_lsp.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml", ".git"),
-    lspinfo = function(cfg)
-        -- return "specific"
-        if cfg.settings.languageServerHaskell.logFile or false then
-            return "logfile: " .. cfg.settings.languageServerHaskell.logFile
-        end
-        return ""
-    end,
-})
 
 require("lspkind").init({
     with_text = true,
@@ -619,7 +629,7 @@ require("null-ls").config({
         require("null-ls").builtins.formatting.stylua,
         require("null-ls").builtins.formatting.fish_indent,
         require("null-ls").builtins.diagnostics.markdownlint,
-        -- require("null-ls").builtins.diagnostics.chktex,
+        require("null-ls").builtins.diagnostics.chktex,
         -- require("null-ls").builtins.diagnostics.selene,
     },
 })

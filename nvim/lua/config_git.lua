@@ -45,7 +45,7 @@ require("gitsigns").setup({
         noremap = true,
         buffer = true,
 
-        -- ["n ]h"] = { expr = true, [[&diff ? "[czz<cmd>let g:dirJumps='h'<cr>" : "<cmd>lua require'gitsigns'.next_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>"]] },
+        -- ["n ]h"] = { expr = true, [[&diff ? "]czz<cmd>let g:dirJumps='h'<cr>" : "<cmd>lua require'gitsigns'.next_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>"]] },
         -- ["n [h"] = { expr = true, [[&diff ? "[czz<cmd>let g:dirJumps='h'<cr>" : "<cmd>lua require'gitsigns'.prev_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>"]] },
 
         -- Text objects

@@ -126,7 +126,7 @@ if vim.api.nvim_get_var("panelRepeat") == "x" then
     vim.api.nvim_set_var("panelRepeat", "c")
 end
 
-vim.cmd([[let g:vimtex_index_split_width=60]])
+-- vim.cmd([[let g:vimtex_toc_config=[{"mode":3, "split_width":60}]]])
 vim.cmd([[let g:vimtex_quickfix_mode=0]])
 vim.cmd([[let g:vimtex_automatic_xwin=0]])
 vim.cmd([[let g:vimtex_view_method='zathura']])

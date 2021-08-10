@@ -98,6 +98,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'lvim-tech/lvim-helper'
     Plug 'jpalardy/vim-slime'
     Plug 'kevinhwang91/nvim-bqf'
+    Plug 'Valloric/ListToggle'
 
     " Themes
     Plug 'folke/tokyonight.nvim'
