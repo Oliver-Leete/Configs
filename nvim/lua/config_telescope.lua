@@ -143,12 +143,15 @@ require("telescope").load_extension("hop")
 
 local action_state = require("telescope.actions.state")
 
+vim.api.nvim_set_var("DiffviewLast", "DiffviewOpen")
+
 local open_dif = function()
     local selected_entry = action_state.get_selected_entry()
     local value = selected_entry["value"]
     -- close Telescope window properly prior to switching windows
     vim.api.nvim_win_close(0, true)
     local cmd = "DiffviewOpen " .. value
+    vim.api.nvim_set_var("DiffviewLast", cmd)
     vim.cmd(cmd)
 end
 local open_dif_mergebase = function()
@@ -157,6 +160,7 @@ local open_dif_mergebase = function()
     -- close Telescope window properly prior to switching windows
     vim.api.nvim_win_close(0, true)
     local cmd = "DiffviewOpen ..." .. value
+    vim.api.nvim_set_var("DiffviewLast", cmd)
     vim.cmd(cmd)
 end
 local open_single_dif = function()
@@ -165,6 +169,7 @@ local open_single_dif = function()
     -- close Telescope window properly prior to switching windows
     vim.api.nvim_win_close(0, true)
     local cmd = "DiffviewOpen " .. value .. "~1.." .. value
+    vim.api.nvim_set_var("DiffviewLast", cmd)
     vim.cmd(cmd)
 end
 local change_gitsign_base = function()

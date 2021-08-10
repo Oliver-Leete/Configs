@@ -112,7 +112,7 @@ require("nvim-treesitter.configs").setup({
 })
 
 require("nvim-biscuits").setup({
-    on_events = { "InsertLeave", "CursorHoldI" },
+    on_events = { "InsertLeave", "CursorHold" },
     default_config = {
         min_distance = 10,
     },

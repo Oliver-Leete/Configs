@@ -47,7 +47,6 @@ call plug#begin('~/.config/nvim/pluged')
 
     " Normal Commands
     Plug 'blackCauldron7/surround.nvim'
-    Plug 'tommcdo/vim-nowchangethat'
     Plug 'terrortylor/nvim-comment'
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
@@ -155,8 +154,10 @@ set termguicolors
 
 let g:tokyonight_style='night'
 let g:tokyonight_terminal_colors=v:true
-let g:tokyonight_dark_float=v:true
+let g:tokyonight_dark_float=v:false
 let g:tokyonight_dark_sidebar=v:true
+let g:tokyonight_italic_comments=v:true
+let g:tokyonight_italic_keywords=v:false
 let g:tokyonight_sidebars = [ "qf", "Outline", "terminal", "vim-plug", "undotree", "help", "DiffviewFiles", "juliadoc"]
 let g:tokyonight_hide_inactive_statusline=v:true
 colorscheme tokyonight
@@ -372,17 +373,18 @@ tnoremap <Esc> <C-\><C-n>
 
 " Panel Specific Mappings
 augroup panelMappings
-    au filetype Outline      map <buffer> o     <cmd>lua require('symbols-outline')._goto_location(true)<cr><cmd>sleep 2<cr><cmd>SymbolsOutlineClose<cr>
-    au filetype qf           map <buffer> <esc> <cmd>q<cr>
-    au filetype help         map <buffer> <esc> <cmd>q<cr>
-    au filetype vim-plug     map <buffer> <esc> <cmd>q<cr>
-    au filetype juliadoc     map <buffer> <esc> <cmd>q<cr>
-    au filetype LvimHelper   map <buffer> <esc> <cmd>q<cr>
-    au filetype NeogitStatus map <buffer> <esc> <cmd>tabclose<cr>
-    au filetype NeogitPopup  map <buffer> <esc> <cmd>q<cr>
-    au filetype toggleterm   map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
-    au filetype undotree     map <buffer> <esc> <cmd>UndotreeHide<cr>
-    au BufWinEnter * if &l:buftype == 'nofile' | exe  "map <buffer> <esc> <cmd>q<cr>"
+    au filetype Outline       map <buffer> o     <cmd>lua require('symbols-outline')._goto_location(true)<cr><cmd>sleep 2<cr><cmd>SymbolsOutlineClose<cr>
+    au filetype qf            map <buffer> <esc> <cmd>q<cr>
+    au filetype help          map <buffer> <esc> <cmd>q<cr>
+    au filetype vim-plug      map <buffer> <esc> <cmd>q<cr>
+    au filetype juliadoc      map <buffer> <esc> <cmd>q<cr>
+    au filetype LvimHelper    map <buffer> <esc> <cmd>q<cr>
+    au filetype NeogitStatus  map <buffer> <esc> <cmd>tabclose<cr>
+    au filetype NeogitPopup   map <buffer> <esc> <cmd>q<cr>
+    au filetype toggleterm    map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
+    au filetype undotree      map <buffer> <esc> <cmd>UndotreeHide<cr>
+    au filetype lspinfo       map <buffer> <esc> <cmd>q<cr>
+    au filetype DiffviewFiles map <buffer> <esc> <cmd>DiffviewClose<cr>
 augroup END
 
 " Hop, Skip And Jump
@@ -419,10 +421,10 @@ nmap <silent> <C-right> <cmd>tabnext<cr>
 nmap <silent> <C-left>  <cmd>tabprevious<cr>
 nmap <silent> <S-right> <cmd>tabnext<cr>
 nmap <silent> <S-left>  <cmd>tabprevious<cr>
-nmap <silent> <C-up>    <cmd>try <bar> cnext     <bar> catch /E553/ <bar> cfirst <bar> endtry<CR>
-nmap <silent> <C-down>  <cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast  <bar> endtry<CR>
-nmap <silent> <S-up>    <cmd>try <bar> lnext     <bar> catch /E553/ <bar> lfirst <bar> endtry<CR>
-nmap <silent> <S-down>  <cmd>try <bar> lprevious <bar> catch /E553/ <bar> llast  <bar> endtry<CR>
+nmap <silent> <C-down>  <cmd>try <bar> cnext     <bar> catch /E553/ <bar> cfirst <bar> endtry<CR>
+nmap <silent> <C-up>    <cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast  <bar> endtry<CR>
+nmap <silent> <S-down>  <cmd>try <bar> lnext     <bar> catch /E553/ <bar> lfirst <bar> endtry<CR>
+nmap <silent> <S-up>    <cmd>try <bar> lprevious <bar> catch /E553/ <bar> llast  <bar> endtry<CR>
 
 " Unmap Pluggins
 let g:splitjoin_split_mapping = ''
@@ -451,9 +453,5 @@ require('config_git')
 
 EOF
 let g:julia_blocks=0
-
-" This shouldn't be needed, but it doesn't work without for some reason
-" vnoremap  g <Cmd>lua require("which-key").show("g", {mode = "v", auto = true})<CR>
-" nnoremap  g <Cmd>lua require("which-key").show("g", {mode = "n", auto = true})<CR>
 
 redraw

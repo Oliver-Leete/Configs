@@ -424,7 +424,7 @@ myShowWNameTheme = def
     , swn_color             = background
     }
 easymotionConfig = def
-    { overlayF = proportional (0.3 :: Double) 
+    { overlayF = proportional (0.3 :: Double)
       , bgCol = background
       , txtCol = foreground
       , borderCol = active
@@ -497,19 +497,19 @@ myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
             $ fullCenterToggle
             $ renamed [CutWordsLeft 4]
             $ showWorkspaceName
-            $ windowSwitcherDecoration shrinkText topBarTheme 
+            $ windowSwitcherDecoration shrinkText topBarTheme
             $ draggingVisualizer
             $ addTabs shrinkText myTabTheme
             $ avoidStruts
             $ mySpacing
             $ mirrorToggle
             $ reflectToggle
-            $ notebookLayout  ||| tabsLayout 
+            $ notebookLayout  ||| tabsLayout
     where
     notebookMulti   = subLayout [] Simplest $ Notebook 1920 True True True 1 3 reSize 2 (2/3)
     notebookColumns = subLayout [] Simplest $ Notebook 1920 False True True 3 3 reSize 2 (2/3)
 
-    notebookLayout = renamed [Replace "Normal"] $ onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns notebookMulti 
+    notebookLayout = renamed [Replace "Normal"] $ onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns notebookMulti
 
     tallTabs   = renamed [Replace "Tall Tabs"] (mastered (1/100) (1/2) Simplest)
     allTabs    = renamed [Replace "Tabs"] Simplest
@@ -584,7 +584,7 @@ myKeys conf = let
     , ("M-x"             , addName "notification panel"          $ spawn "toggle notif")
     ] ^++^
 
-    subKeys "Utilities"  
+    subKeys "Utilities"
     [ ("M-M1-C-S-z"      , addName "Colour picker"               $ spawn myColorPicker) -- kill picom before use
     , ("M-M1-C-S-o"      , addName "On-screen keys"              $ spawn "killall screenkey || screenkey")
     , ("M-M1-C-S-/"      , addName "On-screen keys settings"     $ spawn "screenkey --show-settings")
@@ -602,7 +602,7 @@ myKeys conf = let
     [ ("M-<Return>"      , addName "Terminal"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Return)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Return)
                                                                              ,(pure True, sequence_ [runOrRaise myTerminal (className =? "kitty"), warpCursor])]) -- P.sendKey (controlMask .|. shiftMask) xK_Return])])
-    , ("M-C-<Return>"    , addName "Force Terminal"              $ spawn myTerminal) 
+    , ("M-C-<Return>"    , addName "Force Terminal"              $ spawn myTerminal)
     , ("M-b"             , addName "Browser"                     $ bindFirst [(className =? "Google-chrome", P.sendKey controlMask xK_t)
                                                                              ,(pure True, sequence_ [runOrRaise myBrowser (className =? "Google-chrome"), warpCursor])]) -- P.sendKey controlMask xK_t])])
     , ("M-v"             , addName "PDF Viewer"                  $ sequence_ [runOrRaise "zathura" (className =? "Zathura"), warpCursor])
@@ -658,7 +658,7 @@ myKeys conf = let
     -- , ("C-<F8>"          , addName "prompt fetch window"         $ windowPrompt myPromptTheme Bring allWindows)
     , ("M-w"             , addName "prompt select ws"            $ switchProjectPrompt myPromptTheme)
     , ("M-C-w"           , addName "prompt send to ws"           $ shiftToProjectPrompt myPromptTheme)
-    ]                                                          
+    ]
     ++ zipM "M-"         "View ws"                               wsKeys [0..] (withNthWorkspace W.greedyView)
     ++ zipM "M-C-"       "Move w to ws"                          wsKeys [0..] (withNthWorkspace W.shift)
     ) ^++^
@@ -874,7 +874,7 @@ myManageHook =
             , resource =? "stalonetray"    -?> doIgnore
             , className =? "Zenity" -?> doRectFloat (W.RationalRect (3 / 8) (1 / 16) (1 / 4) (7 / 8))
             , resource =? "gnome-calculator" -?> doCenterFloat
-            , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect ((1285)/3840) (31/2160) (500/3840) (700/2160))
+            , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect (1285/3840) (31/2160) (600/3840) (800/2160))
 
             , resource =? "Tasks" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
             , resource =? "WrkTasks" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))

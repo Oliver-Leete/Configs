@@ -10,6 +10,7 @@
 -- Oliver Leete <oliverleete@gmail.com>                                                            --
 -- https://github.com/oliver-leete                                                                 --
 ----------------------------------------------------------------------------------------------------
+
 -- Whichkey setup
 require("which-key").setup({
     plugins = {
@@ -60,7 +61,7 @@ require("which-key").register({
         rR = { "<plug>(SubversiveSubstitute)^", "Substitute to SOL" },
         rr = { "<plug>(SubversiveSubstituteLine)", "Substitute Line" },
         [":"] = { "Q", "Ex Mode" },
-        ["<"] = {
+        [","] = {
             name = "Swap With Previous",
             a = { "<cmd>TSTextobjectSwapPrevious @parameter.inner<cr>", "Parameter" },
             o = { "<cmd>TSTextobjectSwapPrevious @class.outer<cr>", "Class" },
@@ -303,7 +304,6 @@ require("which-key").register({
             I = { "<cmd>lua require'telescope.builtin'.symbols{sources={'julia'}}<cr>", "Insert Symbols" },
             -- z = { "<cmd>Telescope session-lens search_session<cr>", "Session Search" },
         },
-        G = { "v:lua.commandRepeat('<leader>g', 'gitRepeat')", noremap = false, expr = true },
         g = {
             name = "Git",
             a = { "<cmd>Gitsigns blame_line<CR>", "Blame Line" },
@@ -314,10 +314,11 @@ require("which-key").register({
             d = {
                 d = { "<cmd>DiffviewOpen<CR>", "Git Diff Viewer" },
                 D = { "<cmd>Gitsigns diffthis", "Diff View Based On Signs" },
-                c = { "<cmd>call v:lua.git_commits_againsthead()<cr>", "View The Diff of a Commit" },
-                C = { "<cmd>call v:lua.git_commits_onechange()<cr>", "Diff Against a Commit" },
-                b = { "<cmd>call v:lua.git_branch_dif()<cr>", "View The Diff of a Branch" },
-                B = { "<cmd>call v:lua.git_branch_mergebase()<cr>", "Diff Against a Branch" },
+                c = { "<cmd>call v:lua.git_commits_onechange()<cr>", "View The Diff of a Commit" },
+                C = { "<cmd>call v:lua.git_commits_againsthead()<cr>", "Diff Against a Commit" },
+                b = { "<cmd>call v:lua.git_branch_dif()<cr>", "Diff Against a Branch" },
+                B = { "<cmd>call v:lua.git_branch_mergebase()<cr>", "View The Diff of a Branch" },
+                l = { "<cmd>call v:lua.diff_repeat()<cr>", "Repeat Last Diff"}, 
             },
             g = { "<cmd>Neogit<cr>", "Neogit Status" },
             p = { "<cmd>Gitsigns preview_hunk<CR>", "Hunk Preview" },
@@ -487,6 +488,7 @@ require("which-key").register({
             O = { "<cmd>BDelete hidden<cr>", "Close All Hidden Buffers" },
             f = { "<cmd>vsplit<cr>gf", "Split Open Under Cursor" },
             d = { "<cmd>BDelete! this<cr>", "Delete the current buffer" },
+            D = { "<cmd>tabclose<cr>", "Close the Current Tab" },
             w = { "<cmd>ZenMode<cr>", "Zen Mode" },
             o = { "<c-w>o", "Clean Up Windows" },
             ["<bs>"] = { "<c-w>c", "Close Window" },
@@ -674,4 +676,9 @@ function _G.commandRepeat(leader, varName)
     local jump = vim.api.nvim_get_var(varName)
     -- print(direction .. jump)
     return vim.api.nvim_replace_termcodes(leader .. jump, true, true, true)
+end
+
+function _G.diff_repeat()
+    local cmd = vim.api.nvim_get_var("DiffviewLast")
+    vim.cmd(cmd)
 end

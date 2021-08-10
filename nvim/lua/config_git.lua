@@ -89,15 +89,19 @@ require("diffview").setup({
             ["<down>"] = cb("next_entry"),
             ["k"] = cb("prev_entry"), -- Bring the cursor to the previous file entry.
             ["<up>"] = cb("prev_entry"),
-            ["<cr>"] = cb("select_entry"), -- Open the diff for the selected entry.
+            ["<cr>"] = cb("select_entry"),
             ["o"] = "<cmd>lua require('diffview').on_keypress('select_entry')<cr><cmd>sleep 100m<cr><cmd>DiffviewToggleFiles<cr>",
             ["p"] = "<cmd>lua require('diffview').on_keypress('select_entry')<cr><cmd>DiffviewFocusFiles<cr>",
-            ["R"] = cb("refresh_files"), -- Update stats and entries in the file list.
-            ["<tab>"] = cb("select_next_entry"),
+            ["<2-LeftMouse>"] = cb("select_entry"),
+            ["-"] = cb("toggle_stage_entry"), -- Stage / unstage the selected entry.
+            ["S"] = cb("stage_all"), -- Stage all entries.
+            ["U"] = cb("unstage_all"), -- Unstage all entries.
+            ["XX"] = cb("restore_entry"), -- Restore entry to the state on the left side.
+            ["R"] = cb("refresh_files"), -- Update stats and entries in the file list.      ["<tab>"] = cb("select_next_entry"),
             ["<s-tab>"] = cb("select_prev_entry"),
             ["<leader>t"] = cb("focus_files"),
-            ["<leader>b"] = cb("toggle_files"),
-            ["<esc>"] = "<cmd>tabclose<cr>",
+            ["<leader>x"] = cb("toggle_files"),
+            ["<esc>"] = "<cmd>DiffviewClose<cr>",
         },
     },
 })
