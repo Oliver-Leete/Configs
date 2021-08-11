@@ -13,8 +13,6 @@
 
 -- Compleation (compe) and Snippet (luasnip) Setup
 
-require("luasnip/loaders/from_vscode").load()
-
 vim.o.completeopt = "menuone,noselect"
 require("compe").setup({
     enabled = true,
@@ -74,18 +72,38 @@ _G.s_tab_complete = function()
         return replace_keycodes("<plug>(TaboutBackMulti)")
     end
 end
+
+_G.enter_complete = function()
+    if vim.fn.pumvisible() == 1 then
+        if luasnip and luasnip.expandable() then
+            return replace_keycodes("<plug>luasnip-expand-snippet")
+        else
+            return replace_keycodes("<cr>")
+        end
+    elseif luasnip and luasnip.choice_active() then
+        return replace_keycodes("<plug>luasnip-next-choice")
+    else
+        return require('nvim-autopairs').autopairs_cr()
+    end
+end
+
+_G.compe_toggle = function()
+    if vim.fn.pumvisible() == 1 then
+        -- return replace_keycodes("<esc>:call compe#close()<cr>a")
+        return replace_keycodes("<plug>(compe-close)")
+    else
+        return replace_keycodes("<cmd>call compe#complete()<cr>")
+    end
+end
+
 vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", { expr = true })
+vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", { expr = true })
 vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true })
-vim.api.nvim_set_keymap(
-    "i",
-    "<cr>",
-    [[compe#confirm(luaeval("require 'nvim-autopairs'.autopairs_cr()"))]],
-    { expr = true }
-)
-vim.api.nvim_set_keymap("i", "<c-space>", "compe#complete()", { expr = true })
-vim.api.nvim_set_keymap("i", "<C-d>", "compe#scroll({ 'delta': -4 })", { expr = true })
-vim.api.nvim_set_keymap("i", "<C-f>", "compe#scroll({ 'delta': +4 })", { expr = true })
-vim.api.nvim_set_keymap("i", "<C-e>", "compe#close('<C-e>')", { expr = true })
+vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true })
+vim.api.nvim_set_keymap("i", "<c-space>", "v:lua.compe_toggle()", {expr = true})
+vim.api.nvim_set_keymap("s", "<c-space>", "v:lua.compe_toggle()", {expr = true})
+vim.api.nvim_set_keymap("i", "<cr>", "v:lua.enter_complete()", { expr = true })
+vim.api.nvim_set_keymap("s", "<cr>", "v:lua.enter_complete()", { expr = true })
 
 -- AutoPairs Setup
 require("nvim-autopairs").setup({
@@ -107,7 +125,7 @@ require("nvim-autopairs").add_rules({
 })
 
 require("nvim-autopairs.completion.compe").setup({
-    map_cr = true,
+    map_cr = false,
     map_complete = true,
 })
 

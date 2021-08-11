@@ -211,7 +211,7 @@ set foldlevel=20
 set splitbelow
 set splitright
 augroup windowPositioning
-  autocmd FileType help wincmd H
+  autocmd FileType help :wincmd H | vertical resize 90<cr>
   autocmd FileType juliadoc wincmd H
   " autocmd FileType gitcommit wincmd H
   autocmd FileType qf wincmd J
@@ -351,22 +351,28 @@ xnoremap ` '
 xnoremap ' `
 
 " Stop The Deselecting
-vnoremap < <gv
-vnoremap > >gv
+xnoremap < <gv
+xnoremap > >gv
 
 " Visual Moving
-vnoremap J :move '>+1<cr>gv=gv
-vnoremap K :move '<-2<cr>gv=gv
+xnoremap J :move '>+1<cr>gv=gv
+xnoremap K :move '<-2<cr>gv=gv
 
 
 " Insert Mode
 inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
+snoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
+snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
+
 " Undo breakpoints
 inoremap , ,<c-g>u
 inoremap . .<c-g>u
 inoremap ! !<c-g>u
 inoremap ? ?<c-g>u
+
+inoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
+snoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 
 " Terminal
 tnoremap <Esc> <C-\><C-n>
@@ -390,10 +396,10 @@ augroup END
 " Hop, Skip And Jump
 nmap s <cmd>lua require'hop'.hint_char1()<cr>
 omap ss <cmd>lua require'hop'.hint_char1()<cr>
-vmap ss <cmd>lua require'hop'.hint_char1()<cr>
+xmap ss <cmd>lua require'hop'.hint_char1()<cr>
 nmap S <cmd>ISwapWith<cr>
 omap <silent> S :<C-U>lua require('tsht').nodes()<CR>
-vmap <silent> S :lua require('tsht').nodes()<CR>
+xmap <silent> S :lua require('tsht').nodes()<CR>
 
 " Word Motion Command
 let g:wordmotion_prefix = '$'
@@ -401,14 +407,14 @@ let g:wordmotion_prefix = '$'
 " Text Object Mappings
 onoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0, 1, 0, [line("."), line("."), col("."), col(".")])<CR>
 onoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1, 1, 0, [line("."), line("."), col("."), col(".")])<CR>
-vnoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0, 1, 1, [line("'<"), line("'>"), col("'<"), col("'>")])<CR><Esc>gv
-vnoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1, 1, 1, [line("'<"), line("'>"), col("'<"), col("'>")])<CR><Esc>gv
+xnoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0, 1, 1, [line("'<"), line("'>"), col("'<"), col("'>")])<CR><Esc>gv
+xnoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1, 1, 1, [line("'<"), line("'>"), col("'<"), col("'>")])<CR><Esc>gv
 
 let equal_operator_default_mappings = 0
 omap a= <Plug>(operator-rhs)
 omap i= <Plug>(operator-lhs)
-vmap a= <Plug>(operator-rhs)
-vmap i= <Plug>(operator-lhs)
+xmap a= <Plug>(operator-rhs)
+xmap i= <Plug>(operator-lhs)
 
 " Nvim Comment
 nmap <c-_> gcc
@@ -450,6 +456,7 @@ require('config_lsp')
 require('config_treesitter')
 require('config_telescope')
 require('config_git')
+require('config_snippets')
 
 EOF
 let g:julia_blocks=0
