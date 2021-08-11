@@ -13,9 +13,7 @@
 
 -- Compleation (compe) and Snippet (luasnip) Setup
 
-require("luasnip/loaders/from_vscode").load({
-    paths = { "/home/oleete/.config/nvim/snippets" },
-})
+require("luasnip/loaders/from_vscode").load()
 
 vim.o.completeopt = "menuone,noselect"
 require("compe").setup({
@@ -90,12 +88,22 @@ vim.api.nvim_set_keymap("i", "<C-f>", "compe#scroll({ 'delta': +4 })", { expr = 
 vim.api.nvim_set_keymap("i", "<C-e>", "compe#close('<C-e>')", { expr = true })
 
 -- AutoPairs Setup
-
 require("nvim-autopairs").setup({
     check_ts = true,
-    map_cr = true, --  map <CR> on insert mode
-    map_complete = true, -- it will auto insert `(` after select function or method item
     enable_check_bracket_line = true,
+    fast_wrap = {
+      map = '<C-e>',
+      chars = { '{', '[', '(', '"', "'" , "`"},
+      pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], '%s+', ''),
+      end_key = 'L',
+      keys = 'tnseriaodhgjplfuwybkvmcxzq',
+    },
+})
+
+local Rule = require('nvim-autopairs.rule')
+require("nvim-autopairs").add_rules({
+    Rule('"""', '"""', 'julia'),
+    Rule("$", "$", "tex"),
 })
 
 require("nvim-autopairs.completion.compe").setup({
@@ -144,6 +152,11 @@ require("tabout").setup({
         { open = "(", close = ")" },
         { open = "[", close = "]" },
         { open = "{", close = "}" },
+        { open = "$", close = "$" },
+        { open = "$$", close = "$$" },
+        { open = "[[", close = "]]" },
+        { open = '"""', close = '"""' },
+        { open = '"""', close = '"""' },
         { open = "<", close = ">" },
     },
     ignore_beginning = false,

@@ -12,12 +12,9 @@
 ----------------------------------------------------------------------------------------------------
 
 -- Nvim Tree
-vim.g.nvim_tree_disable_netrw = 0
-vim.g.nvim_tree_hijack_netrw = 0
+vim.g.nvim_tree_quit_on_open = 1
 vim.g.nvim_tree_git_hl = 1
 vim.g.nvim_tree_lsp_diagnostics = 1
-vim.g.netrw_liststyle = 3
-vim.g.netrw_preview = 1
 vim.g.nvim_tree_width = 40
 vim.g.nvim_tree_disable_window_picker = 1
 

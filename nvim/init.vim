@@ -71,7 +71,7 @@ call plug#begin('~/.config/nvim/pluged')
     " Insert Mode
     Plug 'tpope/vim-rsi'
 
-    " LANGUAGE
+    " Language
     Plug 'lervag/vimtex'
     Plug 'JuliaEditorSupport/julia-vim'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
