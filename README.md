@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD013 -->
 # Oliver's Config
 
 I'll slowly go through and document some of this stuff I'm not going to go over
@@ -6,12 +7,12 @@ I haven't seen elsewhere (or not as much as I think I should be). I'll try and
 give credit to others where it's due, but there's stuff that I can't remember
 where it came from.
 
-## NEOVIM
+## Neovim
 
 ## Repeat Mappings
 
 OK, I love this one. I use a lot of jumping around mappings, bound to ] and [
-for forward and backward jumps respectively. Especially treesitter textobject
+for forward and backward jumps respectively. Especially treesitter text objects
 movements. I have my shift keys bound to send the brackets on a press (but
 still send the shift key when held) in my keyboard firmware. Only problem is I
 hate having to keep pressing the letters after, makes jumping through a load
@@ -35,15 +36,15 @@ end
     }
 ```
 
-I then realized that I could use the same funcion for all kinds of repeats. I've
+Realizing that I could use the same function for all kinds of repeats. I've
 already added it to my panel opening mappings (all bound under \<leader\>v) so
 that \<leader\>vv will open the last panel, or close it if it's still open. This
 is just done by having another variable to store the window command in.
 
 All of these also have a default command that is used if nothing has been
 called yet (can't repeat what hasn't been done). For jumping the default is to
-the next treesitter function. This doesn't make sense for some filetypes, like
-latex, so this is used to set a different default for tex files to jump by
+the next treesitter function. This doesn't make sense for some file types, like
+latex, so this is used to set a different default for Tex files to jump by
 section and to open the table of contents instead of the file browser.
 
 ``` lua
@@ -59,7 +60,7 @@ end
 
 I have a few commands to let me pick what to diff against in diffview, so I
 added a variation of the above to give me a mapping of reopening diffview using
-the last command. The teleescope commands come from someone from the neovim
+the last command. The telescope commands come from someone from the Neovim
 subreddit, the only extra bit is the bit that stores the command (and in the
 actual config there are more of them, for picking things like branches).
 
@@ -126,7 +127,7 @@ vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true 
 ```
 
 Next up is toggling of the completion pop-up. I didn't want two separate
-mappings for opening and closing, so this makes ^space a toggle instaed. This
+mappings for opening and closing, so this makes control space a toggle instead. This
 uses a bit of a hacky approach of first making the compe close command a plug
 mapping, but I couldn't get it to work any other way.
 
@@ -179,10 +180,60 @@ vim.api.nvim_set_keymap("s", "<cr>", "v:lua.enter_complete()", { expr = true })
 This mapping takes the word from above (c-y) or below (c-l) the cursor. Credit
 goes to someone online for the control y mapping, I've simply extended it to
 work from below as well.
- 
+
 ``` vim
 inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 snoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 ```
+
+## XMonad
+
+### Notebook Layout
+
+OK, so this has a bit of a weird name, it came from the original use case and I
+just can't be bothered to think of a better one. So the original use case, I
+wanted to have source code in the middle, a browser on the left and an output
+window on the right (often a Jupyter notebook, hence the name, or a PDF reader).
+These main three programs need to stay as tall as possible. Any other program
+that I opened after this wasn't as important, so it's fine to just be squashed
+to the bottom. After a couple of rewrites and much feature creep, this layout
+now handles 90% of my uses (9.99% are dealt with the toggleable layouts, I
+basically don't use the tab one).
+
+So the basic explanation is that there are three window types, main, column and
+stack. The main and column windows share the horizontal space, with a weighting
+towards the main windows (I default to having them 2x the width). When more
+windows are opened, the start to fill the stack. The stack pushes up the column
+and main windows one by one as the stack runs out of space, using the assuming
+that the width of a stack window can't be less than the width of a column
+window. Once the stack has filled up the width of the screen, it just keeps
+splitting that one width between any new windows (but that's like 10+ windows,
+only time it ever comes up is running D&D sessions with each NPC character sheet
+in its own window).
+
+The main and column windows have a bit of customization on how they share the
+top. They can either start at the edge and go across or start in the middle and
+stagger out. On top of this the direction can be flipped, so they can start from
+the right side or from the middle but with a right bias. The number of main and
+column windows and the ratio of their sizes can be set. The direction that the
+stack comes in (and swallows up precious space) from can be flipped as well,
+along with the percentage height of the screen that they take up. And of course
+all of these can be done with key-bindings.
+
+The last bit of feature creep is still in the works, dynamic layouts based on
+resolution. This can be done in XMonad normally, but by keeping it in the layout
+it means it can keep using the same variables for number of different types of
+windows, and directions. The idea behind this is that the main windows can all
+be tabbed on top of each other, and so on for the column and tabbed windows. My
+motivation to work on this right now is low as it is only used on my second
+monitor, but if I ever move to a laptop then it will be killer. I'll have to get
+my head around the logic of the persistent two pane layouts and try and nick that.
+
+I've also got it set up with sub-layout, so I can have tabs on the main layout
+for those D&D games (keep character sheets that won't appear at the same time
+in a tab group to save a bit of space), but it also works nicely when changing
+screens.
+
+### 'Magic' keys
