@@ -236,16 +236,58 @@ function _G.git_branch_mergebase()
         end,
     })
 end
+function _G.find_file_and_symbol()
+  require("telescope.builtin").find_files {
+    -- if I read it correctly, this `on_input_filter_cb` is evaluated before finding/sorting, so any char should be safe to hook into here
+    on_input_filter_cb = function(prompt)
+      if prompt:sub(#prompt) == "@" then
+        vim.schedule(function()
+          -- schedule is required as actions otherwise don't work in async
+          local prompt_bufnr = vim.api.nvim_get_current_buf()
+          require("telescope.actions").select_default(prompt_bufnr)
+          require("telescope.builtin").lsp_document_symbols()
+          -- hack as otherwise picker doesn't go into insert mode
+          vim.cmd [[normal! A]]
+        end)
+      end
+    end,
+  }
+end
+function _G.find_git_file_and_symbol()
+  require("telescope.builtin").git_files {
+    -- if I read it correctly, this `on_input_filter_cb` is evaluated before finding/sorting, so any char should be safe to hook into here
+    on_input_filter_cb = function(prompt)
+      if prompt:sub(#prompt) == "@" then
+        vim.schedule(function()
+          -- schedule is required as actions otherwise don't work in async
+          local prompt_bufnr = vim.api.nvim_get_current_buf()
+          require("telescope.actions").select_default(prompt_bufnr)
+          require("telescope.builtin").lsp_document_symbols()
+          -- hack as otherwise picker doesn't go into insert mode
+          vim.cmd [[normal! A]]
+        end)
+      end
+    end,
+  }
+end
+
+M.project_files = function()
+    local opts = {} -- define here if you want to define something
+    local ok = pcall(_G.find_git_file_and_symbol(), opts)
+    if not ok then
+        _G.find_file_and_symbol()
+    end
+end
 
 require("telescope").load_extension("fzf")
 require("telescope").load_extension("bibtex")
 
-M.project_files = function()
-    local opts = {} -- define here if you want to define something
-    local ok = pcall(require("telescope.builtin").git_files, opts)
-    if not ok then
-        require("telescope.builtin").find_files(opts)
-    end
-end
+-- M.project_files = function()
+--     local opts = {} -- define here if you want to define something
+--     local ok = pcall(require("telescope.builtin").git_files, opts)
+--     if not ok then
+--         require("telescope.builtin").find_files(opts)
+--     end
+-- end
 
 return M
