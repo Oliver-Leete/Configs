@@ -20,9 +20,10 @@ of spelling mistakes to correct them all very tedious. So I came up with this
 little function. Then in all my mappings for the jumps themselves I add a bit
 to overwrite the dirJumps variable like in the example below (note that it's in
 which-key.nvim format). I also have all my jump mappings include zz at the end
-for that nice screen centeringness.
+for that nice screen centeringness and m\` to add it to the jump list (I think
+it should be m', but that doesn't seem to work)
 
-``` lua
+```lua
 vim.api.nvim_set_var("dirJumps", "f")
 
 function _G.commandRepeat(leader, varName)
@@ -47,7 +48,7 @@ the next treesitter function. This doesn't make sense for some file types, like
 latex, so this is used to set a different default for Tex files to jump by
 section and to open the table of contents instead of the file browser.
 
-``` lua
+```lua
 if vim.api.nvim_get_var("dirJumps") == "f" then
     vim.api.nvim_set_var("dirJumps", "s")
 end
@@ -64,7 +65,7 @@ the last command. The telescope commands come from someone from the Neovim
 subreddit, the only extra bit is the bit that stores the command (and in the
 actual config there are more of them, for picking things like branches).
 
-``` lua
+```lua
 vim.api.nvim_set_var("DiffviewLast", "DiffviewOpen")
 
 function _G.diff_repeat()
@@ -102,7 +103,7 @@ First up is the usual multi-purpose tab mappings. Nothing too special here, I
 don't use tab for scrolling completions (my arrow keys are just too easy to get
 to) but I do use it for tabbing out of brackets.
 
-``` lua
+```lua
 local luasnip = require("luasnip")
 _G.tab_complete = function()
     if luasnip and luasnip.expand_or_jumpable() then
@@ -131,7 +132,7 @@ mappings for opening and closing, so this makes control space a toggle instead. 
 uses a bit of a hacky approach of first making the compe close command a plug
 mapping, but I couldn't get it to work any other way.
 
-``` lua
+```lua
 _G.compe_toggle = function()
     if vim.fn.pumvisible() == 1 then
         -- return replace_keycodes("<esc>:call compe#close()<cr>a")
@@ -145,7 +146,7 @@ vim.api.nvim_set_keymap("i", "<c-space>", "v:lua.compe_toggle()", {expr = true})
 vim.api.nvim_set_keymap("s", "<c-space>", "v:lua.compe_toggle()", {expr = true})
 ```
 
-``` vim
+```vim
 inoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 snoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 ```
@@ -156,7 +157,7 @@ autopairs deal with most of it, just adding in a check for luasnip changeability
 (and now an extra check for luasnip expandability). I think this might cause
 some issues in some snippets, but none that I've used so far.
 
-``` lua
+```lua
 _G.enter_complete = function()
     if vim.fn.pumvisible() == 1 then
         if luasnip and luasnip.expandable() then
@@ -181,7 +182,7 @@ This mapping takes the word from above (c-y) or below (c-l) the cursor. Credit
 goes to someone online for the control y mapping, I've simply extended it to
 work from below as well.
 
-``` vim
+```vim
 inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 snoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
@@ -237,3 +238,18 @@ in a tab group to save a bit of space), but it also works nicely when changing
 screens.
 
 ### 'Magic' keys
+
+There are so many things that need shortcuts, and so few keys, especially on my
+tiny keyboard. I try and keep OS level shortcuts all only on the Super key. But
+it can be a bit restrictive sometimes. It's also super annoying when different
+programs have different shortcuts to do the same thing (why doesn't every
+program let me customise shortcuts???). These key bindings try and help with
+that by changing based on context. So Super+T always opens a new tab, be it in
+chrome or in my terminal. Super+left and super+right always swap tabs backward
+and forward, in programs or in layouts with tabs. These can be forced to os
+versions of the shortcut by addind control. So Super+Control+right will always
+go to the next OS tab, even if I'm focused on chrome or my terminal.
+
+I would like to take this a step further by adding moving by direction, so it
+will move through window windows, terminal windows and neovim windows, but I
+will need to learn how to extend Kitty first.

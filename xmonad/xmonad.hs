@@ -482,7 +482,6 @@ centerFull = renamed [Replace "Centred Max"]
            $ noFrillsDeco shrinkText topBarTheme
            $ avoidStruts
            $ addTabs shrinkText myTabTheme
-           $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
            $ mySpacing
            $ onWorkspaces [wsTHESIS] (SimpleFocus (1/4) (reSize/2) 1000)
            $ SimpleFocus (1/2) (reSize/2) 1500
@@ -855,31 +854,30 @@ myManageHook :: ManageHook
 myManageHook =
         manageSpecific
     <+> manageDocks
-    <+> doMain
+    <+> insertPosition Master Newer
     <+> namedScratchpadManageHook scratchpads
     <+> manageSpawn
     where
         manageSpecific = composeOne
             [ resource =? "desktop_window" -?> doIgnore
             , resource =? "stalonetray"    -?> doIgnore
-            , className =? "Zenity" -?> doRectFloat (W.RationalRect (3 / 8) (1 / 16) (1 / 4) (7 / 8))
+
             , resource =? "gnome-calculator" -?> doCenterFloat
             , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect (1285/3840) (31/2160) (600/3840) (800/2160))
 
-            , resource =? "Tasks" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
-            , resource =? "WrkTasks" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
-            , className =? "Keep" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
-            , className =? "WrkKeep" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
+            , resource =? "Tasks" -?> doRectFloat halfNhalf
+            , resource =? "WrkTasks" -?> doRectFloat halfNhalf
+            , className =? "Keep" -?> doRectFloat halfNhalf
+            , className =? "WrkKeep" -?> doRectFloat halfNhalf
             , resource =? "kittyconsole" -?> doRectFloat (W.RationalRect (3 / 5) (3 / 5) (1 / 3) (1 / 3))
             , className =? "Chromensp" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
             , className =? "Chromewrknsp" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
+            , resource =? youtubeMusicResource -?> doRectFloat halfNhalf
+            , resource =? discordResource -?> doRectFloat halfNhalf
 
-            , className =? "Zenity" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
-            , resource =? youtubeMusicResource -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (1 / 2) (1 / 2))
-            , resource =? discordResource -?> doCenterFloat
             , transience
             , isBrowserDialog -?> forceCenterFloat
-            , isRole =? gtkFile  -?> forceCenterFloat
+            , isRole =? "GtkFileChooserDialog" -?> forceCenterFloat
             , isRole =? "pop-up" -?> doCenterFloat
             , isInProperty "_NET_WM_WINDOW_TYPE"
                            "_NET_WM_WINDOW_TYPE_SPLASH" -?> doCenterFloat
@@ -887,10 +885,8 @@ myManageHook =
             , fmap not isDialog -?> insertPosition End Newer
             ]
         isBrowserDialog = isDialog <&&> className =? myBrowserClass
-        gtkFile = "GtkFileChooserDialog"
         isRole = stringProperty "WM_WINDOW_ROLE"
-        -- insert WHERE and focus WHAT
-        doMain = insertPosition Master Newer
+        halfNhalf = W.RationalRect (1/4) (1/4) (1/2) (1/2)
 
 -- All comments below were here when I got here
 

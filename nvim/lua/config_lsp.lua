@@ -138,9 +138,9 @@ local custom_attach = function(client, bufnr)
                     "<cmd>lua require('telescope.builtin').lsp_implementations({jump_type='vsplit'})<CR>",
                     "Implementations",
                 },
-                D = {"<cmd>let g:panelRepeat='zd'<cr><cmd>TroubleToggle lsp_definitions<cr>", "List Definitions" },
-                I = {"<cmd>let g:panelRepeat='zi'<cr><cmd>TroubleToggle lsp_implementations<cr>", "List Implementations"},
-                R = {"<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References"},
+                D = { "<cmd>let g:panelRepeat='zd'<cr><cmd>TroubleToggle lsp_definitions<cr>", "List Definitions" },
+                I = { "<cmd>let g:panelRepeat='zi'<cr><cmd>TroubleToggle lsp_implementations<cr>", "List Implementations" },
+                R = { "<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References" },
             },
             f = {
                 s = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Symbols" },
@@ -157,17 +157,21 @@ local custom_attach = function(client, bufnr)
                     "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false, border='single'})<CR>",
                     "Diagnostics",
                 },
-                L = { "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory" },
+                W = { "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory" },
                 l = { "<cmd>LspInfo<cr>", "Lsp Infomation" },
+                L = { "<cmd>NullLsInfo<cr>", "Null Ls  Info" },
             },
             e = {
                 p = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
             },
-            v = { 
+            v = {
                 z = {
-                d = {"<cmd>let g:panelRepeat='zd'<cr><cmd>TroubleToggle lsp_definitions<cr>", "List Definitions" },
-                i = {"<cmd>let g:panelRepeat='zi'<cr><cmd>TroubleToggle lsp_implementations<cr>", "List Implementations"},
-                r = {"<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References"},
+                    d = { "<cmd>let g:panelRepeat='zd'<cr><cmd>TroubleToggle lsp_definitions<cr>", "List Definitions" },
+                    i = {
+                        "<cmd>let g:panelRepeat='zi'<cr><cmd>TroubleToggle lsp_implementations<cr>",
+                        "List Implementations",
+                    },
+                    r = { "<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References" },
                 },
             },
             r = {
@@ -176,13 +180,13 @@ local custom_attach = function(client, bufnr)
         },
         ["["] = {
             e = {
-                "<cmd>lua vim.lsp.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>",
+                "<cmd>lua vim.lsp.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
                 "Error",
             },
         },
         ["]"] = {
             e = {
-                "<cmd>lua vim.lsp.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>",
+                "<cmd>lua vim.lsp.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
                 "Error",
             },
         },
@@ -194,7 +198,7 @@ local custom_attach = function(client, bufnr)
             ["."] = { "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR>", "Code Actions" },
         },
     }, {
-        mode = "v",
+        mode = "x",
         buffer = bufnr,
     })
 
@@ -215,7 +219,7 @@ local custom_attach = function(client, bufnr)
                 },
             },
         }, {
-            mode = "v",
+            mode = "x",
             buffer = bufnr,
         })
     end
@@ -239,8 +243,8 @@ require("lspconfig").hls.setup({
 
 require("lspconfig").julials.setup({
     on_attach = custom_attach,
-    capabilities = capabilities,
-    flags = { debounce_text_changes = 500 },
+    -- capabilities = capabilities,
+    -- flags = { debounce_text_changes = 500 },
 })
 
 require("lspinstall").setup()
@@ -577,7 +581,7 @@ function _G.toggle_diagnostics()
         augroup ErrorHover
             autocmd!
         augroup END
-	]])
+        ]])
         vim.lsp.diagnostic.redraw()
     else
         vim.g.diagnostics_active = true
@@ -625,7 +629,7 @@ end
 require("null-ls").config({
     sources = {
         -- require("null-ls").builtins.code_actions.gitsigns.with({ filetype = { "jl" } }),
-        require("null-ls").builtins.formatting.trim_whitespace.with({ filetypes = { "*" } }),
+        require("null-ls").builtins.formatting.trim_whitespace.with({ filetypes = { "markdown", "tex" } }),
         require("null-ls").builtins.formatting.stylua,
         require("null-ls").builtins.formatting.fish_indent,
         require("null-ls").builtins.diagnostics.markdownlint,

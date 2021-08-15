@@ -73,20 +73,6 @@ _G.s_tab_complete = function()
     end
 end
 
-_G.enter_complete = function()
-    if vim.fn.pumvisible() == 1 then
-        if luasnip and luasnip.expandable() then
-            return replace_keycodes("<plug>luasnip-expand-snippet")
-        else
-            return replace_keycodes("<cr>")
-        end
-    elseif luasnip and luasnip.choice_active() then
-        return replace_keycodes("<plug>luasnip-next-choice")
-    else
-        return require('nvim-autopairs').autopairs_cr()
-    end
-end
-
 _G.compe_toggle = function()
     if vim.fn.pumvisible() == 1 then
         -- return replace_keycodes("<esc>:call compe#close()<cr>a")
@@ -95,6 +81,27 @@ _G.compe_toggle = function()
         return replace_keycodes("<cmd>call compe#complete()<cr>")
     end
 end
+
+_G.enter_complete = function()
+    if vim.fn.pumvisible() == 1 then
+        if luasnip and luasnip.expandable() then
+            return replace_keycodes("<plug>luasnip-expand-snippet")
+        else
+            return vim.fn['compe#confirm'](require('nvim-autopairs').esc('<cr>'))
+        end
+    elseif luasnip and luasnip.choice_active() then
+        return replace_keycodes("<plug>luasnip-next-choice")
+    else
+        return require('nvim-autopairs').autopairs_cr()
+    end
+end
+
+vim.cmd([[
+    augroup autopairs_compe
+    autocmd!
+    autocmd User CompeConfirmDone call v:lua.MPairs.completion_done()
+    augroup end
+]])
 
 vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", { expr = true })
 vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", { expr = true })

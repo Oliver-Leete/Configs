@@ -53,6 +53,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'AndrewRadev/splitjoin.vim'
     Plug 'fvictorio/vim-extract-variable'
     Plug 'Konfekt/vim-CtrlXA'
+    Plug 'rhysd/clever-f.vim'
 
     " Command Mode
     Plug 'tpope/vim-abolish'
@@ -75,6 +76,9 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'lervag/vimtex'
     Plug 'JuliaEditorSupport/julia-vim'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+    Plug 'kana/vim-textobj-user'
+    Plug 'coachshea/vim-textobj-markdown'
+    Plug 'fladson/vim-kitty'
 
     " UI Stuff
     Plug 'folke/zen-mode.nvim'
@@ -91,13 +95,16 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'kyazdani42/nvim-tree.lua'
     Plug 'simrat39/symbols-outline.nvim'
     Plug 'folke/trouble.nvim'
-    Plug 'akinsho/nvim-toggleterm.lua'
     Plug 'folke/which-key.nvim'
     Plug 'folke/todo-comments.nvim'
     Plug 'lvim-tech/lvim-helper'
     Plug 'jpalardy/vim-slime'
     Plug 'kevinhwang91/nvim-bqf'
     Plug 'Valloric/ListToggle'
+
+    " Terminal Stuff
+    Plug 'akinsho/nvim-toggleterm.lua'
+    Plug 'michaelb/sniprun', {'do': 'bash install.sh 1'}
 
     " Themes
     Plug 'folke/tokyonight.nvim'
@@ -149,6 +156,7 @@ call plug#end()
 
 " !!THEMES!!
 highlight link BiscuitColor TSComment
+highlight link CleverFDefaultLabel MatchParen 
 set noshowmode
 set termguicolors
 
@@ -241,6 +249,7 @@ augroup ActiveWindowBufferCursorline
 augroup END
 
 " Saving and Backup
+set confirm
 set noswapfile
 set undodir=~/.vim/undo//
 set undofile
@@ -346,9 +355,16 @@ nnoremap cC c^
 " Make Marks Easier To Reach
 nnoremap ` '
 nnoremap ' `
+onoremap ` '
 onoremap ' `
 xnoremap ` '
 xnoremap ' `
+
+" Make command easier to reach (requires clever-f)
+nnoremap ; :
+xnoremap ; :
+nnoremap : <nop>
+xnoremap : <nop>
 
 " Stop The Deselecting
 xnoremap < <gv
@@ -357,7 +373,6 @@ xnoremap > >gv
 " Visual Moving
 xnoremap J :move '>+1<cr>gv=gv
 xnoremap K :move '<-2<cr>gv=gv
-
 
 " Insert Mode
 inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
@@ -401,6 +416,10 @@ nmap S <cmd>ISwapWith<cr>
 omap <silent> S :<C-U>lua require('tsht').nodes()<CR>
 xmap <silent> S :lua require('tsht').nodes()<CR>
 
+" Clever-f
+let g:clever_f_across_no_line=1
+let g:clever_f_smart_case=1
+
 " Word Motion Command
 let g:wordmotion_prefix = '$'
 
@@ -437,6 +456,7 @@ let g:splitjoin_split_mapping = ''
 let g:splitjoin_join_mapping = ''
 let g:UnconditionalPaste_no_mappings = 1
 let g:caser_no_mappings	= 1
+let g:textobj_markdown_no_default_key_mappings=1
 
 "List Clearing mappings
 command! CClear cexpr []

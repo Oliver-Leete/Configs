@@ -50,6 +50,17 @@ require("close_buffers").setup({
     end,
 })
 
+require("sniprun").setup({
+    selected_interpreters = { "Julia_jupyter"},
+    display = {
+        "VirtualTextOk",
+        "VirtualTextErr",
+        "LongTempFloatingWindow",
+        "Terminal"
+    }
+})
+
+
 require("surround").setup({})
 
 require("nvim_comment").setup({ comment_empty = false })

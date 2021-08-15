@@ -70,7 +70,8 @@ require("nvim-treesitter.configs").setup({
             },
         },
         navigation = {
-            enable = true,
+            -- FIXME: Figure out why this causes issues
+            enable = false,
             keymaps = {
                 list_definitions_toc = "<nop>",
                 list_definitions = "<nop>",
