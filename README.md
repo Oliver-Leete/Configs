@@ -92,7 +92,32 @@ function _G.git_commits_againsthead()
 end
 ```
 
-### Insert Mappings
+## Some Other Mappings
+
+These two make j and k respect wrapped lines, unless a count is given, in which
+case j and k act on true lines. This means that normally they make the cursor
+go where you'd expect (if you've ever used any other editor), but relative line
+numbers can still be used for fast jumping. In addition they also add to the
+jump list if a count greater than 5 is given.
+
+```vim
+nnoremap <expr> j v:count?(v:count>5?"m'".v:count:'').'j':'gj'
+nnoremap <expr> k v:count?(v:count>5?"m'".v:count:'').'k':'gk'
+```
+
+It makes sense to me to have 'big' h and l do a bigger version of he h or
+l movement. So this mapping makes H and L go to the start and end of the
+line respectively. It's a little more than that though, they go to the first
+or last non-whitespace character. If the cursor is already on the first or
+last non-whitespace character then it instead gos to the true first or last
+character.
+
+```vim
+nnoremap <expr> H getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^'
+nnoremap <expr> L getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_'
+```
+
+## Insert Mappings
 
 #### Snippets and Completion
 
@@ -237,19 +262,40 @@ for those D&D games (keep character sheets that won't appear at the same time
 in a tab group to save a bit of space), but it also works nicely when changing
 screens.
 
+I love this layout so much that not only is it basically all I use, but I also
+use it twice. In that I have two different layouts defined that use the notebook
+layout just with different default settings.
+
+### Toggleable layouts
+
+The only non notebook layouts I actually use are the three toggleable layouts
+I have set up. The first one is toggleable full-screen. A fairly standard one
+that lets me have the best of both worlds for full-screening, allowing me to have
+a contained maximize within a window and then choose to make it actually full
+screen.
+
+Fullbar takes all the windows on a workspace and tabs them, so that it's kind of
+full screen but keeping the status bar and also having a way of seeing what's
+open. Centre focus is the same, but with big gaps on the sides. This is great
+for big monitors, being able to keep the thing you're looking at right in front
+of you instead of way off to one side. I have this set up per workspace, so
+normally it defaults to half the screen width, but on my thesis workspace it
+instead uses roughly the width of 100 character columns in my terminal. For that
+extra focused writing experience.
+
 ### 'Magic' keys
 
 There are so many things that need shortcuts, and so few keys, especially on my
 tiny keyboard. I try and keep OS level shortcuts all only on the Super key. But
 it can be a bit restrictive sometimes. It's also super annoying when different
 programs have different shortcuts to do the same thing (why doesn't every
-program let me customise shortcuts???). These key bindings try and help with
+program let me customize shortcuts???). These key bindings try and help with
 that by changing based on context. So Super+T always opens a new tab, be it in
 chrome or in my terminal. Super+left and super+right always swap tabs backward
-and forward, in programs or in layouts with tabs. These can be forced to os
-versions of the shortcut by addind control. So Super+Control+right will always
+and forward, in programs or in layouts with tabs. These can be forced to OS
+versions of the shortcut by adding control. So Super+Control+right will always
 go to the next OS tab, even if I'm focused on chrome or my terminal.
 
 I would like to take this a step further by adding moving by direction, so it
-will move through window windows, terminal windows and neovim windows, but I
+will move through window windows, terminal windows and Neovim windows, but I
 will need to learn how to extend Kitty first.

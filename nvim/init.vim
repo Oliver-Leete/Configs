@@ -24,7 +24,6 @@ call plug#begin('~/.config/nvim/pluged')
 
     " Project Management
     Plug 'tpope/vim-projectionist'
-    Plug 'farmergreg/vim-lastplace'
     Plug '907th/vim-auto-save'
 
     " Git
@@ -68,6 +67,8 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'michaeljsmith/vim-indent-object'
     Plug 'tommcdo/vim-ninja-feet'
     Plug 'romgrk/equal.operator'
+    Plug 'kana/vim-textobj-user'
+    Plug 'kana/vim-textobj-entire'
 
     " Insert Mode
     Plug 'tpope/vim-rsi'
@@ -76,7 +77,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'lervag/vimtex'
     Plug 'JuliaEditorSupport/julia-vim'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-    Plug 'kana/vim-textobj-user'
     Plug 'coachshea/vim-textobj-markdown'
     Plug 'fladson/vim-kitty'
 
@@ -310,22 +310,22 @@ let mapleader = "\<space>"
 let maplocalleader = "\\"
 
 " !!MAPPINGS!!
-nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
-nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
+nnoremap <expr> j v:count?(v:count>5?"m'".v:count:'').'j':'gj'
+nnoremap <expr> k v:count?(v:count>5?"m'".v:count:'').'k':'gk'
 
-xnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
-xnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
+xnoremap <expr> j v:count?(v:count>5?"m'".v:count:'').'j':'gj'
+xnoremap <expr> k v:count?(v:count>5?"m'".v:count:'').'k':'gk'
 
-onoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
-onoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
+onoremap <expr> j v:count?(v:count>5?"m'".v:count:'').'j':'gj'
+onoremap <expr> k v:count?(v:count>5?"m'".v:count:'').'k':'gk'
 
-nnoremap <expr> H getline('.')[0 : col('.') - 2] =~# '^\s\+$' ? '0' : '^'
-xnoremap <expr> H getline('.')[0 : col('.') - 2] =~# '^\s\+$' ? '0' : '^'
-onoremap <expr> H getline('.')[0 : col('.') - 2] =~# '^\s\+$' ? '0' : '^'
+nnoremap <expr> H getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^'
+xnoremap <expr> H getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^'
+onoremap <expr> H getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^'
 
-nnoremap <expr> L getline('.')[col('.') : -1] =~# '^\s\+$' ? '$' : 'g_'
-xnoremap <expr> L getline('.')[col('.') : -1] =~# '^\s\+$' ? '$' : 'g_'
-onoremap <expr> L getline('.')[col('.') : -1] =~# '^\s\+$' ? '$' : 'g_'
+nnoremap <expr> L getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_'
+xnoremap <expr> L getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_'
+onoremap <expr> L getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_'
 
 nnoremap <C-j> H
 nnoremap <C-h> M
@@ -365,6 +365,8 @@ nnoremap ; :
 xnoremap ; :
 nnoremap : <nop>
 xnoremap : <nop>
+nnoremap q; q:
+xnoremap q; q:
 
 " Stop The Deselecting
 xnoremap < <gv
@@ -375,10 +377,10 @@ xnoremap J :move '>+1<cr>gv=gv
 xnoremap K :move '<-2<cr>gv=gv
 
 " Insert Mode
-inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
-inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
-snoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
-snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
+inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')
+inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')
+snoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')
+snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')
 
 " Undo breakpoints
 inoremap , ,<c-g>u
@@ -394,18 +396,19 @@ tnoremap <Esc> <C-\><C-n>
 
 " Panel Specific Mappings
 augroup panelMappings
-    au filetype Outline       map <buffer> o     <cmd>lua require('symbols-outline')._goto_location(true)<cr><cmd>sleep 2<cr><cmd>SymbolsOutlineClose<cr>
-    au filetype qf            map <buffer> <esc> <cmd>q<cr>
-    au filetype help          map <buffer> <esc> <cmd>q<cr>
-    au filetype vim-plug      map <buffer> <esc> <cmd>q<cr>
-    au filetype juliadoc      map <buffer> <esc> <cmd>q<cr>
-    au filetype LvimHelper    map <buffer> <esc> <cmd>q<cr>
-    au filetype NeogitStatus  map <buffer> <esc> <cmd>tabclose<cr>
-    au filetype NeogitPopup   map <buffer> <esc> <cmd>q<cr>
-    au filetype toggleterm    map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
-    au filetype undotree      map <buffer> <esc> <cmd>UndotreeHide<cr>
-    au filetype lspinfo       map <buffer> <esc> <cmd>q<cr>
-    au filetype DiffviewFiles map <buffer> <esc> <cmd>DiffviewClose<cr>
+    autocmd filetype Outline       map <buffer> o     <cmd>lua require('symbols-outline')._goto_location(true)<cr><cmd>sleep 2<cr><cmd>SymbolsOutlineClose<cr>
+    autocmd filetype qf            map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype help          map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype vim-plug      map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype juliadoc      map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype LvimHelper    map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype NeogitStatus  map <buffer> <esc> <cmd>tabclose<cr>
+    autocmd filetype NeogitPopup   map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype toggleterm    map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
+    autocmd filetype undotree      map <buffer> <esc> <cmd>UndotreeHide<cr>
+    autocmd filetype lspinfo       map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype DiffviewFiles map <buffer> <esc> <cmd>DiffviewClose<cr>
+    autocmd filetype tsplayground  map <buffer> <esc> <cmd>q<cr>
 augroup END
 
 " Hop, Skip And Jump
@@ -424,10 +427,10 @@ let g:clever_f_smart_case=1
 let g:wordmotion_prefix = '$'
 
 " Text Object Mappings
-onoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0, 1, 0, [line("."), line("."), col("."), col(".")])<CR>
-onoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1, 1, 0, [line("."), line("."), col("."), col(".")])<CR>
-xnoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0, 1, 1, [line("'<"), line("'>"), col("'<"), col("'>")])<CR><Esc>gv
-xnoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1, 1, 1, [line("'<"), line("'>"), col("'<"), col("'>")])<CR><Esc>gv
+onoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0,1,0,[line("."),line("."),col("."),col(".")])<CR>
+onoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1,1,0,[line("."),line("."),col("."),col(".")])<CR>
+xnoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0,1,1,[line("'<"),line("'>"),col("'<"),col("'>")])<CR><Esc>gv
+xnoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1,1,1,[line("'<"),line("'>"),col("'<"),col("'>")])<CR><Esc>gv
 
 let equal_operator_default_mappings = 0
 omap a= <Plug>(operator-rhs)
@@ -446,10 +449,10 @@ nmap <silent> <C-right> <cmd>tabnext<cr>
 nmap <silent> <C-left>  <cmd>tabprevious<cr>
 nmap <silent> <S-right> <cmd>tabnext<cr>
 nmap <silent> <S-left>  <cmd>tabprevious<cr>
-nmap <silent> <C-down>  <cmd>try <bar> cnext     <bar> catch /E553/ <bar> cfirst <bar> endtry<CR>
-nmap <silent> <C-up>    <cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast  <bar> endtry<CR>
-nmap <silent> <S-down>  <cmd>try <bar> lnext     <bar> catch /E553/ <bar> lfirst <bar> endtry<CR>
-nmap <silent> <S-up>    <cmd>try <bar> lprevious <bar> catch /E553/ <bar> llast  <bar> endtry<CR>
+nmap <silent> <C-down>  <cmd>try<bar>cnext<bar>catch/E553/<bar>cfirst<bar>endtry<CR>
+nmap <silent> <C-up>    <cmd>try<bar>cprevious<bar>catch/E553/<bar>clast<bar>endtry<CR>
+nmap <silent> <S-down>  <cmd>try<bar>lnext<bar>catch/E553/<bar>lfirst<bar>endtry<CR>
+nmap <silent> <S-up>    <cmd>try<bar>lprevious<bar>catch/E553/<bar>llast<bar>endtry<CR>
 
 " Unmap Pluggins
 let g:splitjoin_split_mapping = ''
@@ -459,26 +462,44 @@ let g:caser_no_mappings	= 1
 let g:textobj_markdown_no_default_key_mappings=1
 
 "List Clearing mappings
-command! CClear cexpr []
-command! LClear lexpr []
+command! CClear cexpr[]
+command! LClear lexpr[]
 
 " Set Filetypes
 au BufNewFile,BufRead *.fish set filetype=fish
 au BufNewFile,BufRead *.jl set filetype=julia
 
-lua << EOF
-require('config_main')
-require('config_compleation')
-require('config_ui')
-require('config_panels')
-require('config_bindings')
-require('config_lsp')
-require('config_treesitter')
-require('config_telescope')
-require('config_git')
-require('config_snippets')
+" Save a single (but small) plugin
+let g:lastplace_ignore = "gitcommit,gitrebase,svn,hgcommit"
+let g:lastplace_open_folds = 1
+let g:lastplace_ignore_buftype = "quickfix,nofile,help"
 
+fu! s:lastplace()
+	if index(split(g:lastplace_ignore_buftype, ","), &buftype) != -1  | return | endif
+	if index(split(g:lastplace_ignore, ","), &filetype) != -1 | return | endif
+	try | 
+		if empty(glob(@%)) | return | endif
+	catch | return | endtry
+	if line("'\"") > 0 && line("'\"") <= line("$") | execute "normal! g`\"zz" | endif
+endf
+augroup lastplace_notplugin
+	autocmd!
+	autocmd BufWinEnter * call s:lastplace()
+augroup END
+
+lua << EOF
+require('main_config')
+require('compleation_config')
+require('ui_config')
+require('panels_config')
+require('bindings_config')
+require('lsp_config')
+require('treesitter_config')
+require('telescope_config')
+require('git_config')
+require('snippets_config')
 EOF
+
 let g:julia_blocks=0
 
 redraw

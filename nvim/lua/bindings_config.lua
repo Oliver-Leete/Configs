@@ -60,7 +60,7 @@ require("which-key").register({
         r = { "<plug>(SubversiveSubstitute)", "Substitute" },
         rR = { "<plug>(SubversiveSubstitute)^", "Substitute to SOL" },
         rr = { "<plug>(SubversiveSubstituteLine)", "Substitute Line" },
-        [":"] = { "Q", "Ex Mode" },
+        [";"] = { "Q", "Ex Mode" },
         [","] = {
             name = "Swap With Previous",
             a = { "<cmd>TSTextobjectSwapPrevious @parameter.inner<cr>", "Parameter" },
@@ -263,7 +263,7 @@ require("which-key").register({
             C = { "<cmd>Telescope git_bcommits<cr>", "Commits (buffer)" },
             c = { "<cmd>Telescope git_commits<cr>", "Git Commits" },
             F = { "<cmd>lua require('telescope.builtin').find_files({find_command={'fd', '-I'}})<cr>", "Files (non git)" },
-            f = { "<cmd>lua require'config_telescope'.project_files()<cr>", "Find Files" },
+            f = { "<cmd>lua require'telescope_config'.project_files()<cr>", "Find Files" },
             G = { "<cmd>Gitsigns setqflist<cr><cmd>Telescope quickfix<cr>", "Git Changes" },
             g = { "<cmd>Telescope git_status<cr>", "Git Status" },
             j = { "<cmd>Telescope jumplist<cr>", "Jumps" },
