@@ -302,7 +302,8 @@ require("which-key").register({
                 "Locate",
                 expr = true,
             },
-            y = { "<cmd>Telescope registers<cr>", "Registers" },
+            y = { "<cmd>lua require('telescope').extensions.neoclip.default()<cr>", "Yank History" },
+            Y = { "<cmd>Telescope registers<cr>", "All Registers" },
             x = { "<cmd>Telescope file_browser<cr>", "File Browser" },
             I = { "<cmd>lua require'telescope.builtin'.symbols{sources={'julia'}}<cr>", "Insert Symbols" },
             -- z = { "<cmd>Telescope session-lens search_session<cr>", "Session Search" },
@@ -688,4 +689,3 @@ function _G.diff_repeat()
     local cmd = vim.api.nvim_get_var("DiffviewLast")
     vim.cmd(cmd)
 end
-

@@ -24,7 +24,7 @@ abbr mv "mv -iv"
 abbr cp "cp -riv"
 abbr rm "rm -i"
 
-abbr  fd "fd -H -L -I -c=always"
+abbr  fd "fd -H -L -I"
 
 abbr  lcd "exa -1"
 abbr  ls "exa -a -l --git"

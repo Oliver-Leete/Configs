@@ -16,15 +16,18 @@ set shell=/bin/zsh
 
 call plug#begin('~/.config/nvim/pluged')
     " Misc and Dependencies
-    Plug 'lambdalisue/suda.vim'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'tpope/vim-repeat'
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'winston0410/cmd-parser.nvim'
 
+    " Saving
+    Plug 'lambdalisue/suda.vim'
+    Plug '907th/vim-auto-save'
+    Plug 'jghauser/mkdir.nvim'
+
     " Project Management
     Plug 'tpope/vim-projectionist'
-    Plug '907th/vim-auto-save'
 
     " Git
     Plug 'TimUntersberger/neogit'
@@ -36,6 +39,7 @@ call plug#begin('~/.config/nvim/pluged')
     " Registers
     Plug 'svermeulen/vim-subversive'
     Plug 'inkarkat/vim-unconditionalpaste'
+    Plug 'AckslD/nvim-neoclip.lua'
 
     " Movement Commands
     Plug 'unblevable/quick-scope'
@@ -62,16 +66,13 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'kazhala/close-buffers.nvim'
 
     " Text Objects
+    Plug 'tommcdo/vim-ninja-feet'
     Plug 'wellle/targets.vim'
     Plug 'wellle/line-targets.vim'
     Plug 'michaeljsmith/vim-indent-object'
-    Plug 'tommcdo/vim-ninja-feet'
     Plug 'romgrk/equal.operator'
     Plug 'kana/vim-textobj-user'
     Plug 'kana/vim-textobj-entire'
-
-    " Insert Mode
-    Plug 'tpope/vim-rsi'
 
     " Language
     Plug 'lervag/vimtex'
@@ -367,6 +368,8 @@ nnoremap : <nop>
 xnoremap : <nop>
 nnoremap q; q:
 xnoremap q; q:
+nnoremap @; @:
+xnoremap @; @:
 
 " Stop The Deselecting
 xnoremap < <gv
@@ -390,6 +393,25 @@ inoremap ? ?<c-g>u
 
 inoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 snoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
+
+inoremap <c-g> <plug>(matchup-c_g%)
+inoremap <c-s> <cmd>lua require('lsp_signature').toggle_float_win()<CR>
+
+" RSI, without the RSI
+inoremap        <c-a> <C-O>^
+cnoremap        <c-a> <Home>
+inoremap        <c-e> <End>
+cnoremap        <c-e> <End>
+
+function TargetFunc(count)
+    exe "normal " . repeat("]f", a:count). "vif"
+endfunction
+function TargetFuncBack(count)
+    exe "normal " . repeat("[F", a:count). "[fvif"
+endfunction
+
+onoremap inf :<c-u>call TargetFunc(v:count1)<cr>
+onoremap iNf :<c-u>call TargetFuncBack(v:count1)<cr>
 
 " Terminal
 tnoremap <Esc> <C-\><C-n>

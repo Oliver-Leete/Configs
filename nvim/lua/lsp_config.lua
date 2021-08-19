@@ -121,6 +121,7 @@ local custom_attach = function(client, bufnr)
         hi_parameter = "IncSearch",
         max_height = 12,
         max_width = 120,
+        extra_trigger_chars = {";"},
         handler_opts = {
             border = "single",
         },

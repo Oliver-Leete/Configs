@@ -46,6 +46,7 @@ require("compe").setup({
         luasnip = true,
         omni = {
             filetypes = { "tex" },
+            dup = false,
         },
         tabnine = true,
     },
@@ -117,10 +118,10 @@ require("nvim-autopairs").setup({
     check_ts = true,
     enable_check_bracket_line = true,
     fast_wrap = {
-      map = '<C-e>',
+      map = '<C-p>',
       chars = { '{', '[', '(', '"', "'" , "`"},
       pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], '%s+', ''),
-      end_key = 'L',
+      end_key = 'l',
       keys = 'tnseriaodhgjplfuwybkvmcxzq',
     },
 })

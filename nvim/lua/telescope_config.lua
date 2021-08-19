@@ -14,13 +14,14 @@
 -- Telescope Setup
 local M = {}
 
-local actions = require("telescope.actions")
-local extensions = require("telescope").extensions
 require("telescope").load_extension("bibtex")
 require("telescope").load_extension("gh")
 require("telescope").load_extension("media_files")
 -- require("telescope").load_extension("session-lens")
 require("telescope").load_extension("heading")
+
+local actions = require("telescope.actions")
+local extensions = require("telescope").extensions
 local trouble = require("trouble.providers.telescope")
 
 require("telescope").setup({

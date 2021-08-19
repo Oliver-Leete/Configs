@@ -291,7 +291,7 @@ ls.snippets = {
                     c(4, {
                         t(""),
                         sn(nil, {
-                            t({"# Examples", "", "```jldoctest", "julia> "}),
+                            t({"# Examples", "```jldoctest", "julia> "}),
                             i(1, "command"), t({"",""}),
                             i(2, "return"), t({"",""}), d(3, rec_exam, {}),
                             t({"", "```"})
@@ -299,7 +299,7 @@ ls.snippets = {
                     }),
                 }),
                 sn(nil, {
-                        t({"# Examples", "", "```jldoctest", "julia> "}),
+                        t({"", "# Examples", "", "```jldoctest", "julia> "}),
                         i(1, "command"), t({"",""}),
                         i(2, "return"), t({"",""}), d(3, rec_exam, {}),
                         t({"", "", "```"})

@@ -63,6 +63,8 @@ require("sniprun").setup({
 
 require("surround").setup({})
 
+require('mkdir')
+require("neoclip").setup()
 require("nvim_comment").setup({ comment_empty = false })
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
 require("numb").setup()
