@@ -394,7 +394,7 @@ inoremap ? ?<c-g>u
 inoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 snoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 
-inoremap <c-g> <plug>(matchup-c_g%)
+imap <c-g> <plug>(matchup-c_g%)
 inoremap <c-s> <cmd>lua require('lsp_signature').toggle_float_win()<CR>
 
 " RSI, without the RSI
@@ -403,15 +403,47 @@ cnoremap        <c-a> <Home>
 inoremap        <c-e> <End>
 cnoremap        <c-e> <End>
 
-function TargetFunc(count)
-    exe "normal " . repeat("]f", a:count). "vif"
-endfunction
-function TargetFuncBack(count)
-    exe "normal " . repeat("[F", a:count). "[fvif"
+
+" Treesitter textobjects targets
+function TSTarget(count, object)
+    exe repeat("exe 'TSTextobjectGotoNextStart " . a:object . "' | ", a:count)
+    exe "TSTextobjectSelect" . a:object
 endfunction
 
-onoremap inf :<c-u>call TargetFunc(v:count1)<cr>
-onoremap iNf :<c-u>call TargetFuncBack(v:count1)<cr>
+function TSTargetBack(count, object)
+    exe repeat("exe 'TSTextobjectGotoPreviousEnd " . a:object . "' | ", a:count)
+    exe "TSTextobjectGotoPreviousStart " . a:object
+    exe "TSTextobjectSelect " . a:object
+endfunction
+
+" onoremap inf :<c-u>call TSTarget(v:count1,    '@function.inner')<cr>
+" onoremap iNf :<c-u>call TSTargetBack(v:count, '@function.inner')<cr>
+" onoremap anf :<c-u>call TSTarget(v:count1,    '@function.outer')<cr>
+" onoremap aNf :<c-u>call TSTargetBack(v:count, '@function.outer')<cr>
+" onoremap ino :<c-u>call TSTarget(v:count1,    '@class.inner')<cr>
+" onoremap iNo :<c-u>call TSTargetBack(v:count, '@class.inner')<cr>
+" onoremap ano :<c-u>call TSTarget(v:count1,    '@class.outer')<cr>
+" onoremap aNo :<c-u>call TSTargetBack(v:count, '@class.outer')<cr>
+" onoremap inc :<c-u>call TSTarget(v:count1,    '@conditional.inner')<cr>
+" onoremap iNc :<c-u>call TSTargetBack(v:count, '@conditional.inner')<cr>
+" onoremap anc :<c-u>call TSTarget(v:count1,    '@conditional.outer')<cr>
+" onoremap aNc :<c-u>call TSTargetBack(v:count, '@conditional.outer')<cr>
+" onoremap inl :<c-u>call TSTarget(v:count1,    '@loop.inner')<cr>
+" onoremap iNl :<c-u>call TSTargetBack(v:count, '@loop.inner')<cr>
+" onoremap anl :<c-u>call TSTarget(v:count1,    '@loop.outer')<cr>
+" onoremap aNl :<c-u>call TSTargetBack(v:count, '@loop.outer')<cr>
+" onoremap inb :<c-u>call TSTarget(v:count1,    '@block.inner')<cr>
+" onoremap iNb :<c-u>call TSTargetBack(v:count, '@block.inner')<cr>
+" onoremap anb :<c-u>call TSTarget(v:count1,    '@block.outer')<cr>
+" onoremap aNb :<c-u>call TSTargetBack(v:count, '@block.outer')<cr>
+" onoremap in, :<c-u>call TSTarget(v:count1,    '@parameter.inner')<cr>
+" onoremap iN, :<c-u>call TSTargetBack(v:count, '@parameter.inner')<cr>
+" onoremap an, :<c-u>call TSTarget(v:count1,    '@parameter.outer')<cr>
+" onoremap aN, :<c-u>call TSTargetBack(v:count, '@parameter.outer')<cr>
+" onoremap ind :<c-u>call TSTarget(v:count1,    '@comment.outer')<cr>
+" onoremap iNd :<c-u>call TSTargetBack(v:count, '@comment.outer')<cr>
+" onoremap and :<c-u>call TSTarget(v:count1,    '@comment.outer')<cr>
+" onoremap aNd :<c-u>call TSTargetBack(v:count, '@comment.outer')<cr>
 
 " Terminal
 tnoremap <Esc> <C-\><C-n>

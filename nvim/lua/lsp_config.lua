@@ -471,7 +471,7 @@ end
 
 configs.ltex = {
     default_config = {
-        cmd = { "/home/oleete/Downloads/ltex-ls-12.3.0/bin/ltex-ls" },
+        cmd = { "/home/oleete/.local/ltex-ls-13.0.0/bin/ltex-ls" },
         filetypes = { "tex", "markdown" },
         dictionary_files = { ["en-GB"] = { vim.fn.getcwd() .. "/dictionary.ltex" } },
         disabledrules_files = { ["en-GB"] = { vim.fn.getcwd() .. "/disable.ltex" } },
@@ -482,7 +482,7 @@ configs.ltex = {
                 checkFrequency = "save",
                 language = "en-GB",
                 setenceCacheSize = 2000,
-                diagnosticSeverity = "hint",
+                diagnosticSeverity = {MORFOLOGIK_RULE_EN_GB = "error", default = "hint"},
                 additionalRules = {
                     enablePickyRules = false,
                     motherTongue = "en-GB",

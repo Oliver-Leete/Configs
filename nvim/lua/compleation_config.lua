@@ -90,9 +90,9 @@ _G.enter_complete = function()
         else
             return vim.fn['compe#confirm'](require('nvim-autopairs').esc('<cr>'))
         end
-    elseif luasnip and luasnip.choice_active() then
-        return replace_keycodes("<plug>luasnip-next-choice")
-    else
+    -- elseif luasnip and luasnip.choice_active() then
+    --     return replace_keycodes("<plug>luasnip-next-choice")
+    -- else
         return require('nvim-autopairs').autopairs_cr()
     end
 end
@@ -103,7 +103,6 @@ vim.cmd([[
     autocmd User CompeConfirmDone call v:lua.MPairs.completion_done()
     augroup end
 ]])
-
 vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", { expr = true })
 vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", { expr = true })
 vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true })
@@ -112,6 +111,8 @@ vim.api.nvim_set_keymap("i", "<c-space>", "v:lua.compe_toggle()", {expr = true})
 vim.api.nvim_set_keymap("s", "<c-space>", "v:lua.compe_toggle()", {expr = true})
 vim.api.nvim_set_keymap("i", "<cr>", "v:lua.enter_complete()", { expr = true })
 vim.api.nvim_set_keymap("s", "<cr>", "v:lua.enter_complete()", { expr = true })
+vim.api.nvim_set_keymap("i", "<c-]>", "<plug>luasnip-next-choice", {})
+vim.api.nvim_set_keymap("s", "<c-]>", "<plug>luasnip-next-choice", {})
 
 -- AutoPairs Setup
 require("nvim-autopairs").setup({
@@ -130,6 +131,7 @@ local Rule = require('nvim-autopairs.rule')
 require("nvim-autopairs").add_rules({
     Rule('"""', '"""', 'julia'),
     Rule("$", "$", "tex"),
+    Rule('```', '```'),
 })
 
 require("nvim-autopairs.completion.compe").setup({
@@ -181,7 +183,7 @@ require("tabout").setup({
         { open = "$", close = "$" },
         { open = "$$", close = "$$" },
         { open = "[[", close = "]]" },
-        { open = '"""', close = '"""' },
+        { open = '```', close = '```' },
         { open = '"""', close = '"""' },
         { open = "<", close = ">" },
     },

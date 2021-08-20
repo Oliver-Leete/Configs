@@ -92,7 +92,7 @@ require("which-key").register({
         a = { "<Plug>(ninja-insertend)", "Append to Object" },
         c = { "Comment" },
         cc = { "Comment Line" },
-        z = { "!ippar w80<cr>", "Wrap Paragraph to 80 Characters" },
+        z = { "mz!ippar w80<cr>`z", "Wrap Paragraph to 80 Characters" },
         P = {
             name = "Paste Before",
             b = { "<Plug>UnconditionalPasteBlockBefore", "Paste Block" },
@@ -610,18 +610,19 @@ require("which-key").register({
         ["}"] = { "<cmd>let g:dirJumps='}'<cr>m`]]zz", "Section Start", noremap = true },
         ["{"] = { "<cmd>let g:dirJumps='}'<cr>m`]]zz", "Section Start", noremap = true },
         -- ["*"] = { "<cmd>let g:dirJumps='*'<cr>m`]#zz", "Function Call", noremap = false },
+        d = { "<cmd>let g:dirJumps='D'<cr>m`<cmd>TSTextobjectGotoNextStart @comment.outer<cr>zz", "Comment" },
         o = { "<cmd>let g:dirJumps='o'<cr>m`<cmd>TSTextobjectGotoNextStart @class.outer<cr>zz", "Class" },
         f = { "<cmd>let g:dirJumps='f'<cr>m`<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Function" },
-        [","] = { "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoNextStart @parameter.inner<cr>zz", "Parameter" },
         c = { "<cmd>let g:dirJumps='c'<cr>m`<cmd>TSTextobjectGotoNextStart @conditional.inner<cr>zz", "Conditional" },
-        C = { "<cmd>let g:dirJumps='C'<cr>m`<cmd>TSTextobjectGotoNextStart @comment.outer<cr>zz", "Comment" },
+        [","] = { "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoNextStart @parameter.inner<cr>zz", "Parameter" },
         l = { "<cmd>let g:dirJumps='l'<cr>m`<cmd>TSTextobjectGotoNextStart @loop.outer<cr>zz", "Loop" },
         b = { "<cmd>let g:dirJumps='b'<cr>m`<cmd>TSTextobjectGotoNextStart @block.outer<cr>zz", "Block" },
-        O = { "<cmd>let g:dirJumps='O'<cr>m`<cmd>TSTextobjectGotoNextEnd @class.outer<cr>zz", "Class" },
-        F = { "<cmd>let g:dirJumps='F'<cr>m`<cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Function" },
-        ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoNextEnd @parameter.inner<cr>zz", "Parameter" },
-        L = { "<cmd>let g:dirJumps='L'<cr>m`<cmd>TSTextobjectGotoNextEnd @loop.outer<cr>zz", "Loop" },
-        B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block" },
+        O = { "<cmd>let g:dirJumps='O'<cr>m`<cmd>TSTextobjectGotoNextEnd @class.outer<cr>zz", "Class (end)" },
+        F = { "<cmd>let g:dirJumps='F'<cr>m`<cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Function (end)" },
+        C = { "<cmd>let g:dirJumps='C'<cr>m`<cmd>TSTextobjectGotoNextEnd @conditional.inner<cr>zz", "Conditional (end)" },
+        ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoNextEnd @parameter.inner<cr>zz", "Parameter (end)" },
+        L = { "<cmd>let g:dirJumps='L'<cr>m`<cmd>TSTextobjectGotoNextEnd @loop.outer<cr>zz", "Loop (end)" },
+        B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block (end)" },
         E = { "<cmd>let g:dirJumps='E'<cr>m`<cmd>lua require'trouble'.next({skip_groups=false, jump=true})<cr>zz", "Trouble Item"},
         m = { "<cmd>let g:dirJumps='m'<cr>m`]`zz", "File Marks"},
     },
@@ -674,6 +675,77 @@ require("which-key").register({
     mode = "x",
 })
 
+require("which-key").register({
+    a = {
+        name = "around",
+        b = {":<c-u>TSTextobjectSelect @block.outer<cr>", "Block"},
+        c = {":<c-u>TSTextobjectSelect @conditional.outer<cr>", "Conditional"},
+        [","] = {":<c-u>TSTextobjectSelect @parameter.outer<cr>", "Parameter"},
+        d = {":<c-u>TSTextobjectSelect @comment.outer<cr>", "Comment"},
+        f = {":<c-u>TSTextobjectSelect @function.outer<cr>", "Function"},
+        F = {":<c-u>TSTextobjectSelect @call.outer<cr>", "Function"},
+        l = {":<c-u>TSTextobjectSelect @loop.outer<cr>", "Loop"},
+        o = {":<c-u>TSTextobjectSelect @class.outer<cr>", "Class"},
+        n = {
+            name = "Next",
+            b = {":<c-u>call v:lua.ts_target(v:count, '@block.outer')<cr>", "Block"},
+            c = {":<c-u>call v:lua.ts_target(v:count, '@conditional.outer')<cr>", "Conditional"},
+            [","] = {":<c-u>call v:lua.ts_target(v:count, '@parameter.outer')<cr>", "Parameter"},
+            d = {":<c-u>call v:lua.ts_target(v:count, '@comment.outer')<cr>", "Comment"},
+            f = {":<c-u>call v:lua.ts_target(v:count, '@function.outer')<cr>", "Function"},
+            F = {":<c-u>call v:lua.ts_target(v:count, '@call.outer')<cr>", "Function"},
+            l = {":<c-u>call v:lua.ts_target(v:count, '@loop.outer')<cr>", "Loop"},
+            o = {":<c-u>call v:lua.ts_target(v:count, '@class.outer')<cr>", "Class"},
+        },
+        N = {
+            name = "Previous",
+            b = {":<c-u>call v:lua.ts_target_back(v:count, '@block.outer')<cr>", "Block"},
+            c = {":<c-u>call v:lua.ts_target_back(v:count, '@conditional.outer')<cr>", "Conditional"},
+            [","] = {":<c-u>call v:lua.ts_target_back(v:count, '@parameter.outer')<cr>", "Parameter"},
+            d = {":<c-u>call v:lua.ts_target_back(v:count, '@comment.outer')<cr>", "Comment"},
+            f = {":<c-u>call v:lua.ts_target_back(v:count, '@function.outer')<cr>", "Function"},
+            F = {":<c-u>call v:lua.ts_target_back(v:count, '@call.outer')<cr>", "Function"},
+            l = {":<c-u>call v:lua.ts_target_back(v:count, '@loop.outer')<cr>", "Loop"},
+            o = {":<c-u>call v:lua.ts_target_back(v:count, '@class.outer')<cr>", "Class"},
+        },
+    },
+    i = {
+        name = "inside",
+        b = {":<c-u>TSTextobjectSelect @block.inner<cr>", "Block"},
+        c = {":<c-u>TSTextobjectSelect @conditional.inner<cr>", "Conditional"},
+        [","] = {":<c-u>TSTextobjectSelect @parameter.inner<cr>", "Parameter"},
+        d = {":<c-u>TSTextobjectSelect @comment.outer<cr>", "Comment"},
+        f = {":<c-u>TSTextobjectSelect @function.inner<cr>", "Function"},
+        F = {":<c-u>TSTextobjectSelect @call.inner<cr>", "Function"},
+        l = {":<c-u>TSTextobjectSelect @loop.inner<cr>", "Loop"},
+        o = {":<c-u>TSTextobjectSelect @class.inner<cr>", "Class"},
+        n = {
+            name = "Next",
+            b = {":<c-u>call v:lua.ts_target(v:count, '@block.inner')<cr>", "Block"},
+            c = {":<c-u>call v:lua.ts_target(v:count, '@conditional.inner')<cr>", "Conditional"},
+            [","] = {":<c-u>call v:lua.ts_target(v:count, '@parameter.inner')<cr>", "Parameter"},
+            d = {":<c-u>call v:lua.ts_target(v:count, '@comment.outer')<cr>", "Comment"},
+            f = {":<c-u>call v:lua.ts_target(v:count, '@function.inner')<cr>", "Function"},
+            F = {":<c-u>call v:lua.ts_target(v:count, '@call.inner')<cr>", "Function"},
+            l = {":<c-u>call v:lua.ts_target(v:count, '@loop.inner')<cr>", "Loop"},
+            o = {":<c-u>call v:lua.ts_target(v:count, '@class.inner')<cr>", "Class"},
+        },
+        N = {
+            name = "Previous",
+            b = {":<c-u>call v:lua.ts_target_back(v:count, '@block.inner')<cr>", "Block"},
+            c = {":<c-u>call v:lua.ts_target_back(v:count, '@conditional.inner')<cr>", "Conditional"},
+            [","] = {":<c-u>call v:lua.ts_target_back(v:count, '@parameter.inner')<cr>", "Parameter"},
+            d = {":<c-u>call v:lua.ts_target_back(v:count, '@comment.outer')<cr>", "Comment"},
+            f = {":<c-u>call v:lua.ts_target_back(v:count, '@function.inner')<cr>", "Function"},
+            F = {":<c-u>call v:lua.ts_target_back(v:count, '@call.inner')<cr>", "Function"},
+            l = {":<c-u>call v:lua.ts_target_back(v:count, '@loop.inner')<cr>", "Loop"},
+            o = {":<c-u>call v:lua.ts_target_back(v:count, '@class.inner')<cr>", "Class"},
+        },
+    },
+},{
+    mode = "o"
+})
+
 -- set default movement
 vim.api.nvim_set_var("dirJumps", "f")
 vim.api.nvim_set_var("panelRepeat", "x")
@@ -681,11 +753,33 @@ vim.api.nvim_set_var("gitRepeat", "g")
 
 function _G.commandRepeat(leader, varName)
     local jump = vim.api.nvim_get_var(varName)
-    -- print(direction .. jump)
     return vim.api.nvim_replace_termcodes(leader .. jump, true, true, true)
 end
 
 function _G.diff_repeat()
     local cmd = vim.api.nvim_get_var("DiffviewLast")
     vim.cmd(cmd)
+end
+
+function _G.ts_target(count, object)
+    vim.cmd("TSTextobjectGotoNextStart " .. object)
+    count = count-1
+    while(count>0)
+    do
+        vim.cmd("TSTextobjectGotoNextStart " .. object)
+        count = count-1
+    end
+    vim.cmd("TSTextobjectSelect " .. object)
+end
+
+function _G.ts_target_back(count, object)
+    vim.cmd("TSTextobjectGotoPreviousEnd " .. object)
+    count = count-1
+    while(count>0)
+    do
+        vim.cmd("TSTextobjectGotoPreviousEnd " .. object)
+        count = count-1
+    end
+    vim.cmd("TSTextobjectGotoPreviousStart " .. object)
+    vim.cmd("TSTextobjectSelect " .. object)
 end

@@ -16,7 +16,7 @@
 require("zen-mode").setup({
     window = {
         backdrop = 0.9, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
-        width = 100,
+        width = 85,
         height = 1,
         options = {
             signcolumn = "no",

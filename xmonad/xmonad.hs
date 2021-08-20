@@ -591,6 +591,8 @@ myKeys conf = let
     , ("M-M1-C-S-<Space>", addName "Play/Pause"                  $ spawn "playerctl play-pause" )
     , ("M-M1-C-S-<Up>"   , addName "Skip Song"                   $ spawn "playerctl previous" )
     , ("M-M1-C-S-<Down>" , addName "Prev Song"                   $ spawn "playerctl next" )
+    , ("M-M1-C-S-<Left>" , addName "Skip Song"                   $ spawn "playerctl previous" )
+    , ("M-M1-C-S-<Right>", addName "Prev Song"                   $ spawn "playerctl next" )
     , ("M-;"             , addName "Warp Cursor"                 $ warpToWindow (1/2) (1/2))
     ] ^++^
 
