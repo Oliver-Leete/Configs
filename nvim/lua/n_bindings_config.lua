@@ -53,6 +53,10 @@ require("which-key").setup({
 
 -- Normal Bindings
 require("which-key").register({
+    j = {[[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], "down", expr=true},
+    k = {[[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], "up", expr=true},
+    H = {[[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], "Start of Line", expr=true},
+    L = {[[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], "End of Line", expr=true},
     g = {
         J = { "<cmd>SplitjoinJoin<cr>", "Smart Join" },
         K = { "<cmd>SplitjoinSplit<cr>", "Smart Split" },
@@ -61,7 +65,7 @@ require("which-key").register({
         rR = { "<plug>(SubversiveSubstitute)^", "Substitute to SOL" },
         rr = { "<plug>(SubversiveSubstituteLine)", "Substitute Line" },
         [";"] = { "Q", "Ex Mode" },
-        [","] = {
+        ["<"] = {
             name = "Swap With Previous",
             a = { "<cmd>TSTextobjectSwapPrevious @parameter.inner<cr>", "Parameter" },
             o = { "<cmd>TSTextobjectSwapPrevious @class.outer<cr>", "Class" },
@@ -72,7 +76,7 @@ require("which-key").register({
             l = { "<cmd>TSTextobjectSwapPrevious @loop.outer<cr>", "Loop" },
             b = { "<cmd>TSTextobjectSwapPrevious @block.outer<cr>", "Block" },
         },
-        ["."] = {
+        [">"] = {
             name = "Swap With Next",
             a = { "<cmd>TSTextobjectSwapNext @parameter.inner<cr>", "Parameter" },
             o = { "<cmd>TSTextobjectSwapNext @class.outer<cr>", "Class" },
@@ -170,6 +174,7 @@ require("which-key").register({
     },
     ["<leader>"] = {
         ["<leader>"] = { "<cmd>e #<cr>", "Last File" },
+        ["."] = { "<cmd>Telescope lsp_code_actions theme=get_cursor<CR>", "Code Actions" },
         ["/"] = {
             name = "Related Files",
             ["<leader>"] = { "<c-^>", "Last File" },
@@ -248,6 +253,15 @@ require("which-key").register({
             name = "Open",
             f = { "gf", "Open File" },
             t = { "gd", "Open Tag Deffinition" },
+            d = { "<cmd>lua require('telescope.builtin').lsp_definitions({jump_type='vsplit'})<cr>", "Definitions" },
+            r = { "<cmd>Telescope lsp_references<cr>", "References" },
+            i = {
+                "<cmd>lua require('telescope.builtin').lsp_implementations({jump_type='vsplit'})<CR>",
+                "Implementations",
+            },
+            D = { "<cmd>let g:panelRepeat='zd'<cr><cmd>TroubleToggle lsp_definitions<cr>", "List Definitions" },
+            I = { "<cmd>let g:panelRepeat='zi'<cr><cmd>TroubleToggle lsp_implementations<cr>", "List Implementations" },
+            R = { "<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References" },
         },
         F = { "<cmd>Telescope commands<cr>", "Commands" },
         f = {
@@ -258,12 +272,16 @@ require("which-key").register({
                 [[<cmd>lua require'telescope.builtin'.find_files({find_command={'rg', vim.fn.expand("<cword>")}})<cr>]],
                 "Grep Word Under Cursor",
             },
+            s = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Symbols" },
+            S = { "<cmd>Telescope lsp_document_symbols<cr>", "Symbols (buffer)" },
+            E = { "<cmd>Telescope lsp_document_diagnostics<cr>", "Errors (buffer)" },
+            e = { "<cmd>Telescope lsp_workspace_diagnostics<cr>", "Errors" },
             B = { "<cmd>Telescope buffers only_cwd=true<cr>", "Buffers (cwd)" },
             b = { "<cmd>Telescope buffers<cr>", "Buffers" },
             C = { "<cmd>Telescope git_bcommits<cr>", "Commits (buffer)" },
             c = { "<cmd>Telescope git_commits<cr>", "Git Commits" },
             F = { "<cmd>lua require('telescope.builtin').find_files({find_command={'fd', '-I'}})<cr>", "Files (non git)" },
-            f = { "<cmd>lua require'telescope_config'.project_files()<cr>", "Find Files" },
+            f = { "<cmd>call v:lua.project_files()<cr>", "Find Files" },
             G = { "<cmd>Gitsigns setqflist<cr><cmd>Telescope quickfix<cr>", "Git Changes" },
             g = { "<cmd>Telescope git_status<cr>", "Git Status" },
             j = { "<cmd>Telescope jumplist<cr>", "Jumps" },
@@ -322,7 +340,7 @@ require("which-key").register({
                 C = { "<cmd>call v:lua.git_commits_againsthead()<cr>", "Diff Against a Commit" },
                 b = { "<cmd>call v:lua.git_branch_dif()<cr>", "Diff Against a Branch" },
                 B = { "<cmd>call v:lua.git_branch_mergebase()<cr>", "View The Diff of a Branch" },
-                l = { "<cmd>call v:lua.diff_repeat()<cr>", "Repeat Last Diff"}, 
+                l = { "<cmd>call v:lua.diff_repeat()<cr>", "Repeat Last Diff"},
             },
             g = { "<cmd>Neogit<cr>", "Neogit Status" },
             p = { "<cmd>Gitsigns preview_hunk<CR>", "Hunk Preview" },
@@ -351,9 +369,19 @@ require("which-key").register({
         },
         p = {
             name = "Preview",
+            p = { "<Cmd>lua vim.lsp.buf.hover({ focusable = false})<CR>", "Documentation" },
+            s = { "<cmd>lua vim.lsp.buf.signature_help({ focusable = false})<CR>", "Signature" },
+            d = { "<cmd>lua PeekDefinition()<CR>", "Definition" },
+            E = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
+            e = {
+                "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false, border='single'})<CR>",
+                "Diagnostics",
+            },
+            W = { "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory" },
+            l = { "<cmd>LspInfo<cr>", "Lsp Infomation" },
+            L = { "<cmd>NullLsInfo<cr>", "Null Ls  Info" },
             g = { "<cmd>lua require'gitsigns'.preview_hunk()<CR>", "Hunk Preview" },
             w = { "<cmd>MatchupWhereAmI??<cr>", "Preview Location" },
-            E = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
         },
         v = {
             name = "View",
@@ -374,6 +402,14 @@ require("which-key").register({
             T = { "<cmd>let g:panelRepeat='T'<cr><cmd>ToggleTermOpenAll<CR>", "All Terminals" },
             t = { "<cmd>let g:panelRepeat='t'<cr><cmd>1ToggleTerm<cr>", "Terminal" },
             u = { "<cmd>let g:panelRepeat='u'<cr><cmd>UndotreeToggle<CR>", "Undo Tree" },
+            z = {
+                d = { "<cmd>let g:panelRepeat='zd'<cr><cmd>TroubleToggle lsp_definitions<cr>", "List Definitions" },
+                i = {
+                    "<cmd>let g:panelRepeat='zi'<cr><cmd>TroubleToggle lsp_implementations<cr>",
+                    "List Implementations",
+                },
+                r = { "<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References" },
+            },
         },
         Q = { "<cmd>CClear<cr><cmd>cgetbuffer<cr><cmd>TroubleRefresh<cr>", "Populater QF List With Buffer Errors " },
         q = {
@@ -442,6 +478,7 @@ require("which-key").register({
         E = { "<cmd>CClear<cr><cmd>cgetbuffer<cr><cmd>TroubleRefresh<cr>", "Open Buffre Errors in Touble" },
         e = {
             name = "Errors",
+            p = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
             r = { "<cmd>TroubleRefresh<cr>", "Refresh Errors" },
             e = { "<cmd>let g:panelRepeat='e'<cr><cmd>TroubleToggle lsp_workspace_diagnostics<CR>", "Error List" },
             E = { "<cmd>let g:panelRepeat='E'<cr><cmd>TroubleToggle lsp_document_diagnostics<CR>", "Error List (buffer)" },
@@ -481,6 +518,8 @@ require("which-key").register({
             name = "Refactor",
             t = { "Rename (Treesitter)" },
             v = { "<plug>(ExtractVar)", "Extract Variable" },
+            r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)" },
+            ["="] = { "<cmd>lua vim.lsp.buf.formatting_sync()<CR>", "Format" },
         },
         x = {
             name = "Explorer",
@@ -588,6 +627,10 @@ require("which-key").register({
         B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @block.outer<cr>zz", "Block" },
         E = { "<cmd>let g:dirJumps='E'<cr>m`<cmd>lua require'trouble'.previous({skip_groups=false, jump=true})<cr>zz", "Trouble Item"},
         m = { "<cmd>let g:dirJumps='m'<cr>m`[`zz", "File Marks"},
+        e = {
+            "<cmd>lua vim.lsp.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
+            "Error",
+        },
     },
     ["]"] = {
         name = "Forward Leader",
@@ -625,161 +668,23 @@ require("which-key").register({
         B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block (end)" },
         E = { "<cmd>let g:dirJumps='E'<cr>m`<cmd>lua require'trouble'.next({skip_groups=false, jump=true})<cr>zz", "Trouble Item"},
         m = { "<cmd>let g:dirJumps='m'<cr>m`]`zz", "File Marks"},
+        e = {
+            "<cmd>lua vim.lsp.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
+            "Error",
+        },
     },
     ["<localleader>"] = {
         name = "Local Leader",
     },
 })
 
--- Visual Bindings
-
-require("which-key").register({
-    ["<leader>"] = {
-        r = {
-            name = "Refactor",
-            v = { "<plug>(ExtractVarVis)", "Extract Variable" },
+-- Git Diff Bindings
+if vim.api.nvim_win_get_option(0, "diff") then
+    require("which-key").register({
+        ["<leader>"] = {
+            ["["] = { "<cmd>diffget LOCAL<cr>", "Take From Local Change" },
+            ["]"] = { "<cmd>diffget REMOTE<cr>", "Take From Remote Change" },
+            ["<leader>"] = { "<cmd>diffget BASE<cr>", "Take From Base" },
         },
-        z = {
-            w = { "!par w80<cr>", "Wrap to 80 Characters" },
-            d = { [[:%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces" },
-        },
-    },
-    g = {
-        R = { "<plug>(SubversiveSubstituteToEndOfLine)", "Substitute to EOL" },
-        r = { "<plug>(SubversiveSubstitute)", "Substitute" },
-        rr = { "<plug>(SubversiveSubstituteLine)", "Substitute Line" },
-        rR = { "<plug>(SubversiveSubstitute)H", "Substitute to SOL" },
-        j = { "J", "Join" },
-        k = { "c<cr><esc>", "Split" },
-        t = { "<Plug>(EasyAlign)", "Align" },
-        s = {
-            name = "Change Case",
-            p = { "<Plug>CaserVMixedCase", "Pascal Case" },
-            c = { "<Plug>CaserVCamelCase", "Camel Case" },
-            ["_"] = { "<Plug>CaserVSnakeCase", "Snake Case" },
-            u = { "<Plug>CaserVUpperCase", "Upper Case" },
-            t = { "<Plug>CaserVTitleCase", "Title Case" },
-            s = { "<Plug>CaserVSentenceCase", "Sentance Case" },
-            ["<space>"] = { "<Plug>CaserVSpaceCase", "Space Case" },
-            ["-"] = { "<Plug>CaserVKebabCase", "Kebab Case" },
-            k = { "<Plug>CaserVTitleKebabCase", "Title Case" },
-            ["."] = { "<Plug>CaserVDotCase", "Dot Case" },
-        },
-        z = { "!par w80<cr>", "Wrap to 80 Characters" },
-    },
-    z = {
-        i = { "I", "Insert" },
-        a = { "A", "Append" },
-    },
-}, {
-    mode = "x",
-})
-
-require("which-key").register({
-    a = {
-        name = "around",
-        b = {":<c-u>TSTextobjectSelect @block.outer<cr>", "Block"},
-        c = {":<c-u>TSTextobjectSelect @conditional.outer<cr>", "Conditional"},
-        [","] = {":<c-u>TSTextobjectSelect @parameter.outer<cr>", "Parameter"},
-        d = {":<c-u>TSTextobjectSelect @comment.outer<cr>", "Comment"},
-        f = {":<c-u>TSTextobjectSelect @function.outer<cr>", "Function"},
-        F = {":<c-u>TSTextobjectSelect @call.outer<cr>", "Function"},
-        l = {":<c-u>TSTextobjectSelect @loop.outer<cr>", "Loop"},
-        o = {":<c-u>TSTextobjectSelect @class.outer<cr>", "Class"},
-        n = {
-            name = "Next",
-            b = {":<c-u>call v:lua.ts_target(v:count, '@block.outer')<cr>", "Block"},
-            c = {":<c-u>call v:lua.ts_target(v:count, '@conditional.outer')<cr>", "Conditional"},
-            [","] = {":<c-u>call v:lua.ts_target(v:count, '@parameter.outer')<cr>", "Parameter"},
-            d = {":<c-u>call v:lua.ts_target(v:count, '@comment.outer')<cr>", "Comment"},
-            f = {":<c-u>call v:lua.ts_target(v:count, '@function.outer')<cr>", "Function"},
-            F = {":<c-u>call v:lua.ts_target(v:count, '@call.outer')<cr>", "Function"},
-            l = {":<c-u>call v:lua.ts_target(v:count, '@loop.outer')<cr>", "Loop"},
-            o = {":<c-u>call v:lua.ts_target(v:count, '@class.outer')<cr>", "Class"},
-        },
-        N = {
-            name = "Previous",
-            b = {":<c-u>call v:lua.ts_target_back(v:count, '@block.outer')<cr>", "Block"},
-            c = {":<c-u>call v:lua.ts_target_back(v:count, '@conditional.outer')<cr>", "Conditional"},
-            [","] = {":<c-u>call v:lua.ts_target_back(v:count, '@parameter.outer')<cr>", "Parameter"},
-            d = {":<c-u>call v:lua.ts_target_back(v:count, '@comment.outer')<cr>", "Comment"},
-            f = {":<c-u>call v:lua.ts_target_back(v:count, '@function.outer')<cr>", "Function"},
-            F = {":<c-u>call v:lua.ts_target_back(v:count, '@call.outer')<cr>", "Function"},
-            l = {":<c-u>call v:lua.ts_target_back(v:count, '@loop.outer')<cr>", "Loop"},
-            o = {":<c-u>call v:lua.ts_target_back(v:count, '@class.outer')<cr>", "Class"},
-        },
-    },
-    i = {
-        name = "inside",
-        b = {":<c-u>TSTextobjectSelect @block.inner<cr>", "Block"},
-        c = {":<c-u>TSTextobjectSelect @conditional.inner<cr>", "Conditional"},
-        [","] = {":<c-u>TSTextobjectSelect @parameter.inner<cr>", "Parameter"},
-        d = {":<c-u>TSTextobjectSelect @comment.outer<cr>", "Comment"},
-        f = {":<c-u>TSTextobjectSelect @function.inner<cr>", "Function"},
-        F = {":<c-u>TSTextobjectSelect @call.inner<cr>", "Function"},
-        l = {":<c-u>TSTextobjectSelect @loop.inner<cr>", "Loop"},
-        o = {":<c-u>TSTextobjectSelect @class.inner<cr>", "Class"},
-        n = {
-            name = "Next",
-            b = {":<c-u>call v:lua.ts_target(v:count, '@block.inner')<cr>", "Block"},
-            c = {":<c-u>call v:lua.ts_target(v:count, '@conditional.inner')<cr>", "Conditional"},
-            [","] = {":<c-u>call v:lua.ts_target(v:count, '@parameter.inner')<cr>", "Parameter"},
-            d = {":<c-u>call v:lua.ts_target(v:count, '@comment.outer')<cr>", "Comment"},
-            f = {":<c-u>call v:lua.ts_target(v:count, '@function.inner')<cr>", "Function"},
-            F = {":<c-u>call v:lua.ts_target(v:count, '@call.inner')<cr>", "Function"},
-            l = {":<c-u>call v:lua.ts_target(v:count, '@loop.inner')<cr>", "Loop"},
-            o = {":<c-u>call v:lua.ts_target(v:count, '@class.inner')<cr>", "Class"},
-        },
-        N = {
-            name = "Previous",
-            b = {":<c-u>call v:lua.ts_target_back(v:count, '@block.inner')<cr>", "Block"},
-            c = {":<c-u>call v:lua.ts_target_back(v:count, '@conditional.inner')<cr>", "Conditional"},
-            [","] = {":<c-u>call v:lua.ts_target_back(v:count, '@parameter.inner')<cr>", "Parameter"},
-            d = {":<c-u>call v:lua.ts_target_back(v:count, '@comment.outer')<cr>", "Comment"},
-            f = {":<c-u>call v:lua.ts_target_back(v:count, '@function.inner')<cr>", "Function"},
-            F = {":<c-u>call v:lua.ts_target_back(v:count, '@call.inner')<cr>", "Function"},
-            l = {":<c-u>call v:lua.ts_target_back(v:count, '@loop.inner')<cr>", "Loop"},
-            o = {":<c-u>call v:lua.ts_target_back(v:count, '@class.inner')<cr>", "Class"},
-        },
-    },
-},{
-    mode = "o"
-})
-
--- set default movement
-vim.api.nvim_set_var("dirJumps", "f")
-vim.api.nvim_set_var("panelRepeat", "x")
-vim.api.nvim_set_var("gitRepeat", "g")
-
-function _G.commandRepeat(leader, varName)
-    local jump = vim.api.nvim_get_var(varName)
-    return vim.api.nvim_replace_termcodes(leader .. jump, true, true, true)
-end
-
-function _G.diff_repeat()
-    local cmd = vim.api.nvim_get_var("DiffviewLast")
-    vim.cmd(cmd)
-end
-
-function _G.ts_target(count, object)
-    vim.cmd("TSTextobjectGotoNextStart " .. object)
-    count = count-1
-    while(count>0)
-    do
-        vim.cmd("TSTextobjectGotoNextStart " .. object)
-        count = count-1
-    end
-    vim.cmd("TSTextobjectSelect " .. object)
-end
-
-function _G.ts_target_back(count, object)
-    vim.cmd("TSTextobjectGotoPreviousEnd " .. object)
-    count = count-1
-    while(count>0)
-    do
-        vim.cmd("TSTextobjectGotoPreviousEnd " .. object)
-        count = count-1
-    end
-    vim.cmd("TSTextobjectGotoPreviousStart " .. object)
-    vim.cmd("TSTextobjectSelect " .. object)
+    })
 end

@@ -121,109 +121,14 @@ local custom_attach = function(client, bufnr)
         hi_parameter = "IncSearch",
         max_height = 12,
         max_width = 120,
-        extra_trigger_chars = {";"},
+        extra_trigger_chars = { ";" },
         handler_opts = {
             border = "single",
         },
     })
 
     require("illuminate").on_attach(client)
-
-    require("which-key").register({
-        ["<leader>"] = {
-            ["."] = { "<cmd>Telescope lsp_code_actions theme=get_cursor<CR>", "Code Actions" },
-            o = {
-                d = { "<cmd>lua require('telescope.builtin').lsp_definitions({jump_type='vsplit'})<cr>", "Definitions" },
-                r = { "<cmd>Telescope lsp_references<cr>", "References" },
-                i = {
-                    "<cmd>lua require('telescope.builtin').lsp_implementations({jump_type='vsplit'})<CR>",
-                    "Implementations",
-                },
-                D = { "<cmd>let g:panelRepeat='zd'<cr><cmd>TroubleToggle lsp_definitions<cr>", "List Definitions" },
-                I = { "<cmd>let g:panelRepeat='zi'<cr><cmd>TroubleToggle lsp_implementations<cr>", "List Implementations" },
-                R = { "<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References" },
-            },
-            f = {
-                s = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Symbols" },
-                S = { "<cmd>Telescope lsp_document_symbols<cr>", "Symbols (buffer)" },
-                E = { "<cmd>Telescope lsp_document_diagnostics<cr>", "Errors (buffer)" },
-                e = { "<cmd>Telescope lsp_workspace_diagnostics<cr>", "Errors" },
-            },
-            p = {
-                p = { "<Cmd>lua vim.lsp.buf.hover({ focusable = false})<CR>", "Documentation" },
-                s = { "<cmd>lua vim.lsp.buf.signature_help({ focusable = false})<CR>", "Signature" },
-                d = { "<cmd>lua PeekDefinition()<CR>", "Definition" },
-                E = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
-                e = {
-                    "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false, border='single'})<CR>",
-                    "Diagnostics",
-                },
-                W = { "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory" },
-                l = { "<cmd>LspInfo<cr>", "Lsp Infomation" },
-                L = { "<cmd>NullLsInfo<cr>", "Null Ls  Info" },
-            },
-            e = {
-                p = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
-            },
-            v = {
-                z = {
-                    d = { "<cmd>let g:panelRepeat='zd'<cr><cmd>TroubleToggle lsp_definitions<cr>", "List Definitions" },
-                    i = {
-                        "<cmd>let g:panelRepeat='zi'<cr><cmd>TroubleToggle lsp_implementations<cr>",
-                        "List Implementations",
-                    },
-                    r = { "<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References" },
-                },
-            },
-            r = {
-                r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)" },
-            },
-        },
-        ["["] = {
-            e = {
-                "<cmd>lua vim.lsp.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
-                "Error",
-            },
-        },
-        ["]"] = {
-            e = {
-                "<cmd>lua vim.lsp.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
-                "Error",
-            },
-        },
-    }, {
-        buffer = bufnr,
-    })
-    require("which-key").register({
-        ["<leader>"] = {
-            ["."] = { "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR>", "Code Actions" },
-        },
-    }, {
-        mode = "x",
-        buffer = bufnr,
-    })
-
     vim.cmd([[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb({sign={priority=7}})]])
-
-    if client.resolved_capabilities.document_formatting then
-        require("which-key").register({
-            ["<leader>"] = {
-                r = {
-                    ["="] = { "<cmd>lua vim.lsp.buf.formatting_sync()<CR>", "Format" },
-                },
-            },
-        })
-        require("which-key").register({
-            ["<leader>"] = {
-                r = {
-                    ["="] = { "<cmd>lua vim.lsp.buf.range_formatting()<CR>", "Format" },
-                },
-            },
-        }, {
-            mode = "x",
-            buffer = bufnr,
-        })
-    end
 end
 
 require("lspconfig").hls.setup({
@@ -482,7 +387,7 @@ configs.ltex = {
                 checkFrequency = "save",
                 language = "en-GB",
                 setenceCacheSize = 2000,
-                diagnosticSeverity = {MORFOLOGIK_RULE_EN_GB = "error", default = "hint"},
+                diagnosticSeverity = { MORFOLOGIK_RULE_EN_GB = "error", default = "hint" },
                 additionalRules = {
                     enablePickyRules = false,
                     motherTongue = "en-GB",

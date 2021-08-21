@@ -128,13 +128,3 @@ require("neogit").setup({
         },
     },
 })
-
-if vim.api.nvim_win_get_option(0, "diff") then
-    require("which-key").register({
-        ["<leader>"] = {
-            ["["] = { "<cmd>diffget LOCAL<cr>", "Take From Local Change" },
-            ["]"] = { "<cmd>diffget REMOTE<cr>", "Take From Remote Change" },
-            ["<leader>"] = { "<cmd>diffget BASE<cr>", "Take From Base" },
-        },
-    })
-end

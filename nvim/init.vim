@@ -69,8 +69,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'tommcdo/vim-ninja-feet'
     Plug 'wellle/targets.vim'
     Plug 'wellle/line-targets.vim'
-    Plug 'michaeljsmith/vim-indent-object'
-    Plug 'romgrk/equal.operator'
+    " Plug 'michaeljsmith/vim-indent-object'
     Plug 'kana/vim-textobj-user'
     Plug 'kana/vim-textobj-entire'
 
@@ -311,22 +310,6 @@ let mapleader = "\<space>"
 let maplocalleader = "\\"
 
 " !!MAPPINGS!!
-nnoremap <expr> j v:count?(v:count>5?"m'".v:count:'').'j':'gj'
-nnoremap <expr> k v:count?(v:count>5?"m'".v:count:'').'k':'gk'
-
-xnoremap <expr> j v:count?(v:count>5?"m'".v:count:'').'j':'gj'
-xnoremap <expr> k v:count?(v:count>5?"m'".v:count:'').'k':'gk'
-
-onoremap <expr> j v:count?(v:count>5?"m'".v:count:'').'j':'gj'
-onoremap <expr> k v:count?(v:count>5?"m'".v:count:'').'k':'gk'
-
-nnoremap <expr> H getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^'
-xnoremap <expr> H getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^'
-onoremap <expr> H getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^'
-
-nnoremap <expr> L getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_'
-xnoremap <expr> L getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_'
-onoremap <expr> L getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_'
 
 nnoremap <C-j> H
 nnoremap <C-h> M
@@ -403,48 +386,6 @@ cnoremap        <c-a> <Home>
 inoremap        <c-e> <End>
 cnoremap        <c-e> <End>
 
-
-" Treesitter textobjects targets
-function TSTarget(count, object)
-    exe repeat("exe 'TSTextobjectGotoNextStart " . a:object . "' | ", a:count)
-    exe "TSTextobjectSelect" . a:object
-endfunction
-
-function TSTargetBack(count, object)
-    exe repeat("exe 'TSTextobjectGotoPreviousEnd " . a:object . "' | ", a:count)
-    exe "TSTextobjectGotoPreviousStart " . a:object
-    exe "TSTextobjectSelect " . a:object
-endfunction
-
-" onoremap inf :<c-u>call TSTarget(v:count1,    '@function.inner')<cr>
-" onoremap iNf :<c-u>call TSTargetBack(v:count, '@function.inner')<cr>
-" onoremap anf :<c-u>call TSTarget(v:count1,    '@function.outer')<cr>
-" onoremap aNf :<c-u>call TSTargetBack(v:count, '@function.outer')<cr>
-" onoremap ino :<c-u>call TSTarget(v:count1,    '@class.inner')<cr>
-" onoremap iNo :<c-u>call TSTargetBack(v:count, '@class.inner')<cr>
-" onoremap ano :<c-u>call TSTarget(v:count1,    '@class.outer')<cr>
-" onoremap aNo :<c-u>call TSTargetBack(v:count, '@class.outer')<cr>
-" onoremap inc :<c-u>call TSTarget(v:count1,    '@conditional.inner')<cr>
-" onoremap iNc :<c-u>call TSTargetBack(v:count, '@conditional.inner')<cr>
-" onoremap anc :<c-u>call TSTarget(v:count1,    '@conditional.outer')<cr>
-" onoremap aNc :<c-u>call TSTargetBack(v:count, '@conditional.outer')<cr>
-" onoremap inl :<c-u>call TSTarget(v:count1,    '@loop.inner')<cr>
-" onoremap iNl :<c-u>call TSTargetBack(v:count, '@loop.inner')<cr>
-" onoremap anl :<c-u>call TSTarget(v:count1,    '@loop.outer')<cr>
-" onoremap aNl :<c-u>call TSTargetBack(v:count, '@loop.outer')<cr>
-" onoremap inb :<c-u>call TSTarget(v:count1,    '@block.inner')<cr>
-" onoremap iNb :<c-u>call TSTargetBack(v:count, '@block.inner')<cr>
-" onoremap anb :<c-u>call TSTarget(v:count1,    '@block.outer')<cr>
-" onoremap aNb :<c-u>call TSTargetBack(v:count, '@block.outer')<cr>
-" onoremap in, :<c-u>call TSTarget(v:count1,    '@parameter.inner')<cr>
-" onoremap iN, :<c-u>call TSTargetBack(v:count, '@parameter.inner')<cr>
-" onoremap an, :<c-u>call TSTarget(v:count1,    '@parameter.outer')<cr>
-" onoremap aN, :<c-u>call TSTargetBack(v:count, '@parameter.outer')<cr>
-" onoremap ind :<c-u>call TSTarget(v:count1,    '@comment.outer')<cr>
-" onoremap iNd :<c-u>call TSTargetBack(v:count, '@comment.outer')<cr>
-" onoremap and :<c-u>call TSTarget(v:count1,    '@comment.outer')<cr>
-" onoremap aNd :<c-u>call TSTargetBack(v:count, '@comment.outer')<cr>
-
 " Terminal
 tnoremap <Esc> <C-\><C-n>
 
@@ -467,10 +408,10 @@ augroup END
 
 " Hop, Skip And Jump
 nmap s <cmd>lua require'hop'.hint_char1()<cr>
-omap ss <cmd>lua require'hop'.hint_char1()<cr>
-xmap ss <cmd>lua require'hop'.hint_char1()<cr>
 nmap S <cmd>ISwapWith<cr>
+
 omap <silent> S :<C-U>lua require('tsht').nodes()<CR>
+
 xmap <silent> S :lua require('tsht').nodes()<CR>
 
 " Clever-f
@@ -480,17 +421,11 @@ let g:clever_f_smart_case=1
 " Word Motion Command
 let g:wordmotion_prefix = '$'
 
-" Text Object Mappings
-onoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0,1,0,[line("."),line("."),col("."),col(".")])<CR>
-onoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1,1,0,[line("."),line("."),col("."),col(".")])<CR>
-xnoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0,1,1,[line("'<"),line("'>"),col("'<"),col("'>")])<CR><Esc>gv
-xnoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1,1,1,[line("'<"),line("'>"),col("'<"),col("'>")])<CR><Esc>gv
-
-let equal_operator_default_mappings = 0
-omap a= <Plug>(operator-rhs)
-omap i= <Plug>(operator-lhs)
-xmap a= <Plug>(operator-rhs)
-xmap i= <Plug>(operator-lhs)
+" " Text Object Mappings
+" onoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0,1,0,[line("."),line("."),col("."),col(".")])<CR>
+" onoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1,1,0,[line("."),line("."),col("."),col(".")])<CR>
+" xnoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0,1,1,[line("'<"),line("'>"),col("'<"),col("'>")])<CR><Esc>gv
+" xnoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1,1,1,[line("'<"),line("'>"),col("'<"),col("'>")])<CR><Esc>gv
 
 " Nvim Comment
 nmap <c-_> gcc
@@ -546,7 +481,11 @@ require('main_config')
 require('compleation_config')
 require('ui_config')
 require('panels_config')
-require('bindings_config')
+require('n_bindings_config')
+require('x_bindings_config')
+require('o_bindings_config')
+require('i_bindings_config')
+require('myfuncs_config')
 require('lsp_config')
 require('treesitter_config')
 require('telescope_config')

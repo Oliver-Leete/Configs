@@ -30,12 +30,15 @@ require("zen-mode").setup({
     },
     on_open = function()
         vim.api.nvim_command("IndentBlanklineDisable")
+        vim.api.nvim_set_var("ZenDiagStore", vim.g.diagnostics_active)
+        print(vim.g.diagnostics_active)
         vim.g.diagnostics_active = true
         toggle_diagnostics()
     end,
     on_close = function()
         vim.api.nvim_command("IndentBlanklineEnable")
-        vim.g.diagnostics_active = false
+        print(vim.api.nvim_get_var("ZenDiagStore"))
+        vim.g.diagnostics_active = not vim.api.nvim_get_var("ZenDiagStore")
         toggle_diagnostics()
     end,
 })

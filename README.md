@@ -297,5 +297,5 @@ versions of the shortcut by adding control. So Super+Control+right will always
 go to the next OS tab, even if I'm focused on chrome or my terminal.
 
 I would like to take this a step further by adding moving by direction, so it
-will move through window windows, terminal windows and Neovim windows, but I
+will move through XMonad windows, terminal windows and Neovim windows, but I
 will need to learn how to extend Kitty first.
