@@ -1,4 +1,3 @@
-
 -- Repaets
 -- set defaults
 vim.api.nvim_set_var("dirJumps", "f")
@@ -18,25 +17,39 @@ end
 -- Text object targets
 function _G.ts_target(count, object)
     vim.cmd("TSTextobjectGotoNextStart " .. object)
-    count = count-1
-    while(count>0)
-    do
+    count = count - 1
+    while count > 0 do
         vim.cmd("TSTextobjectGotoNextStart " .. object)
-        count = count-1
+        count = count - 1
     end
     vim.cmd("TSTextobjectSelect " .. object)
 end
 
 function _G.ts_target_back(count, object)
     vim.cmd("TSTextobjectGotoPreviousEnd " .. object)
-    count = count-1
-    while(count>0)
-    do
+    count = count - 1
+    while count > 0 do
         vim.cmd("TSTextobjectGotoPreviousEnd " .. object)
-        count = count-1
+        count = count - 1
     end
     vim.cmd("TSTextobjectGotoPreviousStart " .. object)
     vim.cmd("TSTextobjectSelect " .. object)
+end
+
+function _G.git_target(count, forward)
+    local move_cmd
+    if forward == 'true' then
+        move_cmd = "Gitsigns next_hunk"
+    else
+        move_cmd = "Gitsigns prev_hunk"
+    end
+    vim.cmd(move_cmd)
+    count = count - 1
+    while count > 0 do
+        vim.cmd(move_cmd)
+        count = count - 1
+    end
+    vim.cmd("Gitsigns select_hunk")
 end
 
 -- Telescope
@@ -143,3 +156,82 @@ function _G.project_files()
     end
 end
 
+-- Compleation functions
+local function replace_keycodes(str)
+    return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local luasnip = require("luasnip")
+_G.tab_complete = function()
+    if luasnip and luasnip.expand_or_jumpable() then
+        return replace_keycodes("<Plug>luasnip-expand-or-jump")
+    else
+        return replace_keycodes("<plug>(TaboutMulti)")
+    end
+end
+
+_G.s_tab_complete = function()
+    if luasnip and luasnip.jumpable(-1) then
+        return replace_keycodes("<Plug>luasnip-jump-prev")
+    else
+        return replace_keycodes("<plug>(TaboutBackMulti)")
+    end
+end
+
+_G.compe_toggle = function()
+    if vim.fn.pumvisible() == 1 then
+        -- return replace_keycodes("<esc>:call compe#close()<cr>a")
+        return replace_keycodes("<plug>(compe-close)")
+    else
+        return replace_keycodes("<cmd>call compe#complete()<cr>")
+    end
+end
+
+_G.enter_complete = function()
+    if vim.fn.pumvisible() == 1 then
+        if luasnip and luasnip.expandable() then
+            return replace_keycodes("<plug>luasnip-expand-snippet")
+        else
+            return vim.fn["compe#confirm"](require("nvim-autopairs").esc("<cr>"))
+        end
+        -- elseif luasnip and luasnip.choice_active() then
+        --     return replace_keycodes("<plug>luasnip-next-choice")
+    else
+        return require("nvim-autopairs").autopairs_cr()
+    end
+end
+
+vim.cmd([[
+    augroup autopairs_compe
+    autocmd!
+    autocmd User CompeConfirmDone call v:lua.MPairs.completion_done()
+    augroup end
+]])
+
+-- Toggle Quickfix list
+function _G.toggle_qflist()
+    local qf_open = false
+    for _, win in pairs(vim.fn.getwininfo()) do
+        if win["quickfix"] == 1 then
+            qf_open = true
+        end
+    end
+    if qf_open == true then
+        vim.cmd("cclose")
+    elseif not vim.tbl_isempty(vim.fn.getqflist()) then
+        vim.cmd("copen")
+    end
+end
+function _G.toggle_loclist()
+    local loc_open = false
+    for _, win in pairs(vim.fn.getwininfo()) do
+        if win["loclist"] == 1 then
+            loc_open = true
+        end
+    end
+    if loc_open == true then
+        vim.cmd("lclose")
+    else
+        vim.cmd("lopen")
+    end
+end

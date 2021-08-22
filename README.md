@@ -57,10 +57,49 @@ if vim.api.nvim_get_var("panelRepeat") == "x" then
 end
 ```
 
-## Diffview Mappings
+## Target Mappings
 
-I have a few commands to let me pick what to diff against in diffview, so I
-added a variation of the above to give me a mapping of reopening diffview using
+Ok, so I'm a massive fan of the next/last operators provided by the targets
+extension. Only problem is that they don't work with every text object. I've
+started to make some bindings for that will fill in the gaps, so far I've got
+this to add target mappings for treesitter text objects:
+
+```lua
+function _G.ts_target(count, object)
+    vim.cmd("TSTextobjectGotoNextStart " .. object)
+    count = count - 1
+    while count > 0 do
+        vim.cmd("TSTextobjectGotoNextStart " .. object)
+        count = count - 1
+    end
+    vim.cmd("TSTextobjectSelect " .. object)
+end
+
+function _G.ts_target_back(count, object)
+    vim.cmd("TSTextobjectGotoPreviousEnd " .. object)
+    count = count - 1
+    while count > 0 do
+        vim.cmd("TSTextobjectGotoPreviousEnd " .. object)
+        count = count - 1
+    end
+    vim.cmd("TSTextobjectGotoPreviousStart " .. object)
+    vim.cmd("TSTextobjectSelect " .. object)
+end
+```
+
+These use the functions provided by the TS Text Object plugin to define two
+new commands. They move forward or backward a count number of the desired text
+object and then select said object. This can be used in addition to a c-u
+mapping to make an operator pending mapping (examples can be seen in my operator
+pending mappings). I have also made a similar function for git hunks, using the
+git signs plugin. This is slightly simpler, due to the way the git signs function
+works, only one function is needed, with one command swapped out depending on
+direction.
+
+## Diff View Mappings
+
+I have a few commands to let me pick what to diff against in diff view, so I
+added a variation of the above to give me a mapping of reopening diff view using
 the last command. The telescope commands come from someone from the Neovim
 subreddit, the only extra bit is the bit that stores the command (and in the
 actual config there are more of them, for picking things like branches).

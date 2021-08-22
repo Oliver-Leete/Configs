@@ -5,6 +5,7 @@ require("which-key").register({
     L = {[[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], "End of Line", expr=true},
     a = {
         name = "around",
+        h = {":<c-u>Gitsigns selct_hunk<cr>", "Git Hunk"},
         B = {":<c-u>TSTextobjectSelect @block.outer<cr>", "Block"},
         c = {":<c-u>TSTextobjectSelect @conditional.outer<cr>", "Conditional"},
         [","] = {":<c-u>TSTextobjectSelect @parameter.outer<cr>", "Parameter"},
@@ -15,6 +16,7 @@ require("which-key").register({
         o = {":<c-u>TSTextobjectSelect @class.outer<cr>", "Class"},
         n = {
             name = "Next",
+            h = {":<c-u>call v:lua.git_target(v:count, 'true')<cr>", "Git Hunk"},
             B = {":<c-u>call v:lua.ts_target(v:count, '@block.outer')<cr>", "Block"},
             c = {":<c-u>call v:lua.ts_target(v:count, '@conditional.outer')<cr>", "Conditional"},
             [","] = {":<c-u>call v:lua.ts_target(v:count, '@parameter.outer')<cr>", "Parameter"},
@@ -26,6 +28,7 @@ require("which-key").register({
         },
         N = {
             name = "Previous",
+            h = {":<c-u>call v:lua.git_target(v:count, 'false')<cr>", "Git Hunk"},
             B = {":<c-u>call v:lua.ts_target_back(v:count, '@block.outer')<cr>", "Block"},
             c = {":<c-u>call v:lua.ts_target_back(v:count, '@conditional.outer')<cr>", "Conditional"},
             [","] = {":<c-u>call v:lua.ts_target_back(v:count, '@parameter.outer')<cr>", "Parameter"},
@@ -38,6 +41,7 @@ require("which-key").register({
     },
     i = {
         name = "inside",
+        h = {":<c-u>Gitsigns selct_hunk<cr>", "Git Hunk"},
         B = {":<c-u>TSTextobjectSelect @block.inner<cr>", "Block"},
         c = {":<c-u>TSTextobjectSelect @conditional.inner<cr>", "Conditional"},
         [","] = {":<c-u>TSTextobjectSelect @parameter.inner<cr>", "Parameter"},
@@ -48,6 +52,7 @@ require("which-key").register({
         o = {":<c-u>TSTextobjectSelect @class.inner<cr>", "Class"},
         n = {
             name = "Next",
+            h = {":<c-u>call v:lua.git_target(v:count, 'true')<cr>", "Git Hunk"},
             B = {":<c-u>call v:lua.ts_target(v:count, '@block.inner')<cr>", "Block"},
             c = {":<c-u>call v:lua.ts_target(v:count, '@conditional.inner')<cr>", "Conditional"},
             [","] = {":<c-u>call v:lua.ts_target(v:count, '@parameter.inner')<cr>", "Parameter"},
@@ -59,6 +64,7 @@ require("which-key").register({
         },
         N = {
             name = "Previous",
+            h = {":<c-u>call v:lua.git_target(v:count, 'false')<cr>", "Git Hunk"},
             B = {":<c-u>call v:lua.ts_target_back(v:count, '@block.inner')<cr>", "Block"},
             c = {":<c-u>call v:lua.ts_target_back(v:count, '@conditional.inner')<cr>", "Conditional"},
             [","] = {":<c-u>call v:lua.ts_target_back(v:count, '@parameter.inner')<cr>", "Parameter"},

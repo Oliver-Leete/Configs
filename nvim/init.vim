@@ -42,7 +42,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'AckslD/nvim-neoclip.lua'
 
     " Movement Commands
-    Plug 'unblevable/quick-scope'
+    " Plug 'unblevable/quick-scope'
     Plug 'andymass/vim-matchup'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
@@ -53,10 +53,12 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'terrortylor/nvim-comment'
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
-    Plug 'AndrewRadev/splitjoin.vim'
-    Plug 'fvictorio/vim-extract-variable'
     Plug 'Konfekt/vim-CtrlXA'
     Plug 'rhysd/clever-f.vim'
+
+    " Refactoring
+    Plug 'AndrewRadev/splitjoin.vim'
+    Plug 'fvictorio/vim-extract-variable'
 
     " Command Mode
     Plug 'tpope/vim-abolish'
@@ -100,7 +102,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'lvim-tech/lvim-helper'
     Plug 'jpalardy/vim-slime'
     Plug 'kevinhwang91/nvim-bqf'
-    Plug 'Valloric/ListToggle'
 
     " Terminal Stuff
     Plug 'akinsho/nvim-toggleterm.lua'
