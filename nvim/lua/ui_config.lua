@@ -114,6 +114,7 @@ require("lualine").setup({
                 color_info = "#1abc9c",
                 { error = "", warn = "", info = "" },
             },
+            { require("nvim-gps").get_location, condition = require("nvim-gps").is_available },
         },
         lualine_x = {
             {

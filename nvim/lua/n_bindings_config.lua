@@ -581,6 +581,7 @@ require("which-key").register({
                 b = { "<cmd>call v:lua.gitsign_change_base()<cr>", "Change Gitsigns Base" },
                 B = { "<cmd>call v:lua.gitsign_bchange_base()<cr>", "Change Gitsigns Base" },
             },
+            ["/"] = { "<cmd>let @/=''<cr>", "Clear Search"},
         },
         h = {
             h = { "<cmd>Telescope help_tags<cr>", "Search Help Tags" },

@@ -144,7 +144,7 @@ nnoremap <expr> j v:count?(v:count>5?"m'".v:count:'').'j':'gj'
 nnoremap <expr> k v:count?(v:count>5?"m'".v:count:'').'k':'gk'
 ```
 
-It makes sense to me to have 'big' h and l do a bigger version of he h or
+It makes sense to me to have 'big' h and l do a bigger version of the h or
 l movement. So this mapping makes H and L go to the start and end of the
 line respectively. It's a little more than that though, they go to the first
 or last non-whitespace character. If the cursor is already on the first or
@@ -219,7 +219,9 @@ Enter is possibly the most used key, used for line breaks, nvim-autopairs
 splitting, completion confirmation and changing the choices in luasnip. I've let
 autopairs deal with most of it, just adding in a check for luasnip changeability
 (and now an extra check for luasnip expandability). I think this might cause
-some issues in some snippets, but none that I've used so far.
+some issues in some snippets, but none that I've used so far. I'm currently
+trying out this without the snippet choice part, to try and limit the amount of
+accedental snippet overwriting I do.
 
 ```lua
 _G.enter_complete = function()

@@ -125,6 +125,9 @@ require("nvim-biscuits").setup({
     },
 })
 
+require("nvim-gps").setup({
+})
+
 require("iswap").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
 require("tsht").config.hint_keys = {
     "t",

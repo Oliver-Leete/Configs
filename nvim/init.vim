@@ -146,6 +146,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'p00f/nvim-ts-rainbow'
     Plug 'code-biscuits/nvim-biscuits'
     Plug 'RRethy/nvim-treesitter-textsubjects'
+    Plug 'SmiteshP/nvim-gps'
 
     " Hop, Skip And Jump
     Plug 'phaazon/hop.nvim'
