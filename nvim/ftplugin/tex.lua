@@ -90,7 +90,8 @@ require("which-key").register({
         N = { "<cmd>let g:dirJumps='N'<cr>m`<plug>(vimtex-[N)zz", "Number End", noremap = false },
         r = { "<cmd>let g:dirJumps='r'<cr>m`<plug>(vimtex-[r)zz", "Frame Start", noremap = false },
         R = { "<cmd>let g:dirJumps='R'<cr>m`<plug>(vimtex-[R)zz", "Frame End", noremap = false },
-        C = { "<cmd>let g:dirJumps='C'<cr>m`<plug>(vimtex-[/)zz", "Comment Start", noremap = false },
+        d = { "<cmd>let g:dirJumps='d'<cr>m`<plug>(vimtex-[/)zz", "Comment Start", noremap = false },
+        D = { "<cmd>let g:dirJumps='D'<cr>m`<plug>(vimtex-[star)zz", "Comment End", noremap = false },
     },
     ["]"] = {
         s = { "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-]])zz", "Tex Section Start", noremap = false },
@@ -101,7 +102,8 @@ require("which-key").register({
         N = { "<cmd>let g:dirJumps='N'<cr>m`<plug>(vimtex-]N)zz", "Number End", noremap = false },
         r = { "<cmd>let g:dirJumps='r'<cr>m`<plug>(vimtex-]r)zz", "Frame Start", noremap = false },
         R = { "<cmd>let g:dirJumps='R'<cr>m`<plug>(vimtex-]R)zz", "Frame End", noremap = false },
-        C = { "<cmd>let g:dirJumps='C'<cr>m`<plug>(vimtex-]/)zz", "Comment Start", noremap = false },
+        d = { "<cmd>let g:dirJumps='d'<cr>m`<plug>(vimtex-]/)zz", "Comment Start", noremap = false },
+        D = { "<cmd>let g:dirJumps='D'<cr>m`<plug>(vimtex-]star)zz", "Comment End", noremap = false },
     },
 }, {
     buffer = 0,

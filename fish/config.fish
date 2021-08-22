@@ -3,8 +3,8 @@
 
 starship init fish | source
 
-set -Ux EDITOR nvim
-set -Ux VISUAL nvim
+set -Ux EDITOR "nvr --remote-tab-wait"
+set -Ux VISUAL "nvr --remote-tab-wait"
 set -gx PATH /home/oleete/.cargo/bin /home/oleete/.yarn/bin /home/oleete/go/bin /home/oleete/.config/nvim/node_modules/tree-sitter-cli $PATH
 
 export BAT_PAGER="less -R"
