@@ -2,7 +2,7 @@
 **/*/
 !*/
 /nvim/pluged/**
-kak/
+/kak/plugins
 zsh/
 rofi/
 
@@ -26,6 +26,8 @@ rofi/
 !/xmobar/*
 !/deadd/deadd.conf
 !/deadd/deadd.css
+!/vis/visrc.lua
+!/kak/kakrc
 
 /xmonad/xmonad
 /xmonad/xmonad-contrib

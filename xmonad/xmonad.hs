@@ -487,7 +487,6 @@ centerFull = renamed [Replace "Centred Max"]
            $ SimpleFocus (1/2) (reSize/2) 1500
 
 -- cf http://xmonad.org/xmonad-docs/xmonad-contrib/src/XMonad-Config-Droundy.html
-
 myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
             $ noBorders
             $ windowNavigation
@@ -558,7 +557,7 @@ myKeys conf = let
     subKeys str ks = subtitle str : mkNamedKeymap conf ks
     -- Added home and end for the two starting workspaces 
     -- (This makes sense on my batshit keyboard layout)
-    wsKeys = ["<Home>", "<End>", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+    wsKeys = ["S-#", "#", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
     zipM  m nm ks as f = zipWith (\k d -> (m ++ k, addName nm $ f d)) ks as
 

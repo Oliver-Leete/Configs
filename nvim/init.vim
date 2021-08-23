@@ -21,6 +21,9 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'winston0410/cmd-parser.nvim'
 
+    " The Glory
+    Plug 'alexherbo2/kakoune.vim'
+
     " Saving
     Plug 'lambdalisue/suda.vim'
     Plug '907th/vim-auto-save'
@@ -106,6 +109,7 @@ call plug#begin('~/.config/nvim/pluged')
     " Terminal Stuff
     Plug 'akinsho/nvim-toggleterm.lua'
     Plug 'michaelb/sniprun', {'do': 'bash install.sh 1'}
+    Plug 'dccsillag/magma-nvim', {'do': ':UpdateRemotePlugins'}
 
     " Themes
     Plug 'folke/tokyonight.nvim'
