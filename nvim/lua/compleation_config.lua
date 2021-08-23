@@ -125,6 +125,6 @@ require("tabout").setup({
         { open = '"""', close = '"""' },
         { open = "<", close = ">" },
     },
-    ignore_beginning = false,
+    ignore_beginning = true,
     exclude = {},
 })

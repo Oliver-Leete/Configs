@@ -3,6 +3,10 @@ require("which-key").register({
     k = {[[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], "up", expr=true},
     H = {[[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], "Start of Line", expr=true},
     L = {[[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], "End of Line", expr=true},
+    ["<c-j>"] = {"H", "Top of Window"},
+    ["<c-h>"] = {"M", "Top of Window"},
+    ["<c-k>"] = {"L", "Top of Window"},
+    ["S"] = {":<c-u>lua require('tsht').nodes()<cr>", "TS Hop Target"},
     a = {
         name = "around",
         h = {":<c-u>Gitsigns selct_hunk<cr>", "Git Hunk"},

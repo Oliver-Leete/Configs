@@ -33,7 +33,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'tpope/vim-projectionist'
 
     " Git
-    Plug 'TimUntersberger/neogit'
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'drzel/vim-repo-edit'
     Plug 'rhysd/committia.vim'
@@ -150,7 +149,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'p00f/nvim-ts-rainbow'
     Plug 'code-biscuits/nvim-biscuits'
     Plug 'RRethy/nvim-treesitter-textsubjects'
-    Plug 'SmiteshP/nvim-gps'
 
     " Hop, Skip And Jump
     Plug 'phaazon/hop.nvim'
@@ -317,56 +315,56 @@ let maplocalleader = "\\"
 
 " !!MAPPINGS!!
 
-nnoremap <C-j> H
-nnoremap <C-h> M
-nnoremap <C-k> L
+" nnoremap <C-j> H
+" nnoremap <C-h> M
+" nnoremap <C-k> L
 
-xnoremap <C-j> H
-xnoremap <C-h> M
-xnoremap <C-k> L
+" xnoremap <C-j> H
+" xnoremap <C-h> M
+" xnoremap <C-k> L
 
-onoremap <C-j> H
-onoremap <C-h> M
-onoremap <C-k> L
+" onoremap <C-j> H
+" onoremap <C-h> M
+" onoremap <C-k> L
 
 " Jump back to where you were
-nnoremap J gi
+" nnoremap J gi
 
 " Some Sensible Changes
-nnoremap U <c-r>
-nnoremap Y y$
-nnoremap Q @q
+" nnoremap U <c-r>
+" nnoremap Y y$
+" nnoremap Q @q
 
 " Mappings for left actions
-nnoremap dD d^
-nnoremap yY y^
-nnoremap cC c^
+" nnoremap dD d^
+" nnoremap yY y^
+" nnoremap cC c^
 
 " Make Marks Easier To Reach
-nnoremap ` '
-nnoremap ' `
-onoremap ` '
-onoremap ' `
-xnoremap ` '
-xnoremap ' `
+" nnoremap ` '
+" nnoremap ' `
+" onoremap ` '
+" onoremap ' `
+" xnoremap ` '
+" xnoremap ' `
 
 " Make command easier to reach (requires clever-f)
-nnoremap ; :
-xnoremap ; :
-nnoremap : <nop>
-xnoremap : <nop>
-nnoremap q; q:
-xnoremap q; q:
-nnoremap @; @:
-xnoremap @; @:
+" nnoremap ; :
+" nnoremap : <nop>
+" nnoremap q; q:
+" nnoremap @; @:
+" xnoremap ; :
+" xnoremap : <nop>
+" xnoremap q; q:
+" xnoremap @; @:
 
 " Stop The Deselecting
-xnoremap < <gv
-xnoremap > >gv
+" xnoremap < <gv
+" xnoremap > >gv
 
 " Visual Moving
-xnoremap J :move '>+1<cr>gv=gv
-xnoremap K :move '<-2<cr>gv=gv
+" xnoremap J :move '>+1<cr>gv=gv
+" xnoremap K :move '<-2<cr>gv=gv
 
 " Insert Mode
 inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')
@@ -383,14 +381,14 @@ inoremap ? ?<c-g>u
 inoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 snoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 
-imap <c-g> <plug>(matchup-c_g%)
+imap <c-g> <c-o>%
 inoremap <c-s> <cmd>lua require('lsp_signature').toggle_float_win()<CR>
 
 " RSI, without the RSI
-inoremap        <c-a> <C-O>^
-cnoremap        <c-a> <Home>
-inoremap        <c-e> <End>
-cnoremap        <c-e> <End>
+" inoremap        <c-a> <C-O>^
+" cnoremap        <c-a> <Home>
+" inoremap        <c-e> <End>
+" cnoremap        <c-e> <End>
 
 " Terminal
 tnoremap <Esc> <C-\><C-n>
@@ -403,8 +401,8 @@ augroup panelMappings
     autocmd filetype vim-plug      map <buffer> <esc> <cmd>q<cr>
     autocmd filetype juliadoc      map <buffer> <esc> <cmd>q<cr>
     autocmd filetype LvimHelper    map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype NeogitStatus  map <buffer> <esc> <cmd>tabclose<cr>
-    autocmd filetype NeogitPopup   map <buffer> <esc> <cmd>q<cr>
+    " autocmd filetype NeogitStatus  map <buffer> <esc> <cmd>tabclose<cr>
+    " autocmd filetype NeogitPopup   map <buffer> <esc> <cmd>q<cr>
     autocmd filetype toggleterm    map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
     autocmd filetype undotree      map <buffer> <esc> <cmd>UndotreeHide<cr>
     autocmd filetype lspinfo       map <buffer> <esc> <cmd>q<cr>
@@ -413,12 +411,9 @@ augroup panelMappings
 augroup END
 
 " Hop, Skip And Jump
-nmap s <cmd>lua require'hop'.hint_char1()<cr>
-nmap S <cmd>ISwapWith<cr>
+" nmap s <cmd>lua require'hop'.hint_char1()<cr>
+" nmap S <cmd>ISwapWith<cr>
 
-omap <silent> S :<C-U>lua require('tsht').nodes()<CR>
-
-xmap <silent> S :lua require('tsht').nodes()<CR>
 
 " Clever-f
 let g:clever_f_across_no_line=1
@@ -438,16 +433,6 @@ nmap <c-_> gcc
 xmap <c-_> gc
 
 " Arrows
-nmap <silent> <right>   <cmd>BufferLineCycleNext<cr>
-nmap <silent> <left>    <cmd>BufferLineCyclePrev<cr>
-nmap <silent> <C-right> <cmd>tabnext<cr>
-nmap <silent> <C-left>  <cmd>tabprevious<cr>
-nmap <silent> <S-right> <cmd>tabnext<cr>
-nmap <silent> <S-left>  <cmd>tabprevious<cr>
-nmap <silent> <C-down>  <cmd>try<bar>cnext<bar>catch/E553/<bar>cfirst<bar>endtry<CR>
-nmap <silent> <C-up>    <cmd>try<bar>cprevious<bar>catch/E553/<bar>clast<bar>endtry<CR>
-nmap <silent> <S-down>  <cmd>try<bar>lnext<bar>catch/E553/<bar>lfirst<bar>endtry<CR>
-nmap <silent> <S-up>    <cmd>try<bar>lprevious<bar>catch/E553/<bar>llast<bar>endtry<CR>
 
 " Unmap Pluggins
 let g:splitjoin_split_mapping = ''

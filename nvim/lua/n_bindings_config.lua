@@ -51,12 +51,38 @@ require("which-key").setup({
     show_help = true,
 })
 
+vim.api.nvim_set_keymap("n", ";", ":", {noremap = true})
+vim.api.nvim_set_keymap("n", ":", "<nop>", {noremap = true})
+
 -- Normal Bindings
 require("which-key").register({
     j = {[[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], "down", expr=true},
     k = {[[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], "up", expr=true},
     H = {[[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], "Start of Line", expr=true},
     L = {[[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], "End of Line", expr=true},
+    J = {"gi", "Goto Last Insert"},
+    ["<c-j>"] = {"H", "Top of Window"},
+    ["<c-h>"] = {"M", "Top of Window"},
+    ["<c-k>"] = {"L", "Top of Window"},
+    U = {"<c-r>", "Redo"},
+    Q = {"@q", "Play The Temp Macro"},
+    ["dD"] = {"d^", "Delete to Start of Line"},
+    ["yY"] = {"y^", "Yank to Start of Line"},
+    ["cC"] = {"c^", "Change to Start of Line"},
+    ["q;"] = {"q:", "Ex Mode"},
+    ["@;"] = {"@:", "Command Register"},
+    ["s"] = {"<cmd>lua require'hop'.hint_char1()<cr>", "Hop Char"},
+    ["S"] = {"<cmd>ISwapWith<cr>", "Swap Things"},
+    ["<right>"] = {"  <cmd>BufferLineCycleNext<cr>", "Next Buffer"},
+    ["<left>"] = {"   <cmd>BufferLineCyclePrev<cr>", "Prev Buffer"},
+    ["<C-right>"] = {"<cmd>tabnext<cr>", "Next Tab"},
+    ["<C-left>"] = {" <cmd>tabprevious<cr>", "Prev Tab"},
+    ["<S-right>"] = {"<cmd>tabnext<cr>", "Next Tab"},
+    ["<S-left>"] = {" <cmd>tabprevious<cr>", "Prev Tab"},
+    ["<C-down>"] = {" <cmd>try<bar>cnext<bar>catch/E553/<bar>cfirst<bar>endtry<CR>", "Next Quickfix"},
+    ["<C-up>"] = {"   <cmd>try<bar>cprevious<bar>catch/E553/<bar>clast<bar>endtry<CR>", "Prev Quickfix"},
+    ["<S-down>"] = {" <cmd>try<bar>lnext<bar>catch/E553/<bar>lfirst<bar>endtry<CR>", "Next Loclist"},
+    ["<S-up>"] = {"   <cmd>try<bar>lprevious<bar>catch/E553/<bar>llast<bar>endtry<CR>", "Prev Loclist"},
     g = {
         J = { "<cmd>SplitjoinJoin<cr>", "Smart Join" },
         K = { "<cmd>SplitjoinSplit<cr>", "Smart Split" },
@@ -328,7 +354,7 @@ require("which-key").register({
         },
         g = {
             name = "Git",
-            a = { "<cmd>Gitsigns blame_line<CR>", "Blame Line" },
+            a = { "<cmd>lua require'gitsigns'.blame_line({full=true})<CR>", "Blame Line" },
             A = { "<cmd>Gitsigns toggle_current_line_blame<CR>", "Blame Toggle" },
             b = { "<cmd>Telescope git_branches<cr>", "Branches" },
             C = { "<cmd>Telescope git_bcommits<cr>", "Commits (buffer)" },
@@ -369,6 +395,7 @@ require("which-key").register({
         },
         p = {
             name = "Preview",
+            a = { "<cmd>lua require'gitsigns'.blame_line({full=true})<CR>", "Blame Line" },
             p = { "<Cmd>lua vim.lsp.buf.hover({ focusable = false})<CR>", "Documentation" },
             s = { "<cmd>lua vim.lsp.buf.signature_help({ focusable = false})<CR>", "Signature" },
             d = { "<cmd>lua PeekDefinition()<CR>", "Definition" },

@@ -40,29 +40,15 @@ require("gitsigns").setup({
     --         numhl      = true,
     --         linehl     = false,
     --     },
-    keymaps = {
-        -- Default keymap options
-        noremap = true,
-        buffer = true,
-
-        -- ["n ]h"] = { expr = true, [[&diff ? "]czz<cmd>let g:dirJumps='h'<cr>m`" : "<cmd>lua require'gitsigns'.next_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>m'm`"]] },
-        -- ["n [h"] = { expr = true, [[&diff ? "[czz<cmd>let g:dirJumps='h'<cr>m`" : "<cmd>lua require'gitsigns'.prev_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>m'm`"]] },
-
-        -- Text objects
-        ["o ih"] = ':<C-U>lua require"gitsigns".select_hunk()<CR>',
-        ["x ih"] = ':<C-U>lua require"gitsigns".select_hunk()<CR>',
-    },
+    keymaps = {},
     watch_index = {
         interval = 1000,
+        follow_files = true
     },
-    current_line_blame_position = "eol",
     numhl = true,
-    current_line_blame = false,
     sign_priority = 6,
-    update_debounce = 100,
     status_formatter = nil,
     use_internal_diff = true,
-    -- staged_signs = true,
 })
 -- DiffView.nvim
 
@@ -101,30 +87,6 @@ require("diffview").setup({
             ["<leader>t"] = cb("focus_files"),
             ["<leader>x"] = cb("toggle_files"),
             ["<esc>"] = "<cmd>DiffviewClose<cr>",
-        },
-    },
-})
-
--- Neogit Setup
-
-require("neogit").setup({
-    disable_signs = false,
-    disable_context_highlighting = false,
-    -- customize displayed signs
-    signs = {
-        -- { CLOSED, OPENED }
-        section = { ">", "v" },
-        item = { ">", "v" },
-        hunk = { "", "" },
-    },
-    integrations = {
-        diffview = true,
-    },
-    -- override/add mappings
-    mappings = {
-        -- modify status buffer mappings
-        status = {
-            ["B"] = "BranchPopup",
         },
     },
 })

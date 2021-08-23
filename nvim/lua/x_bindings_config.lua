@@ -4,12 +4,28 @@ require("which-key").register({
     k = {[[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], "up", expr=true},
     H = {[[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], "Start of Line", expr=true},
     L = {[[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], "End of Line", expr=true},
+    ["<c-j>"] = {"H", "Top of Window"},
+    ["<c-h>"] = {"M", "Top of Window"},
+    ["<c-k>"] = {"L", "Top of Window"},
+    [";"] = {":", "Command Mode"},
+    [":"] = {"<nop>", "Nothing at the moment"},
+    ["q;"] = {"q:", "Ex Mode"},
+    ["@;"] = {"@:", "Command Register"},
+    ["<"] = {"<gv", "Dedent"},
+    [">"] = {">gv", "Indent"},
+    ["J"] = {":move '>+1<cr>gv=gv", "Move Line Down"},
+    ["K"] = {":move '<-2<cr>gv=gv", "Move Line Up"},
+    ["S"] = {":lua require('tsht').nodes()<CR>", "Move Line Up"},
     ["<leader>"] = {
         ["."] = { "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR>", "Code Actions" },
         r = {
             name = "Refactor",
             v = { "<plug>(ExtractVarVis)", "Extract Variable" },
             ["="] = { "<cmd>lua vim.lsp.buf.range_formatting()<CR>", "Format" },
+        },
+        g = {
+            s = {"<cmd>lua require'gitsigns'.stage_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Stage Hunks in Range"},
+            r = {"<cmd>lua require'gitsigns'.reset_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Reset Hunks in Range"},
         },
         z = {
             w = { "!par w80<cr>", "Wrap to 80 Characters" },
