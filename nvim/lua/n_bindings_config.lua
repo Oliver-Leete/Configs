@@ -73,6 +73,8 @@ require("which-key").register({
     ["@;"] = { "@:", "Command Register" },
     ["s"] = { "<cmd>lua require'hop'.hint_char1()<cr>", "Hop Char" },
     ["S"] = { "<cmd>ISwapWith<cr>", "Swap Things" },
+    ["'"] = { "`", "Jump to mark location"},
+    ["`"] = { "'", "Jump to mark line"},
     ["<right>"] = { "<cmd>BufferLineCycleNext<cr>", "Next Buffer" },
     ["<left>"] = { "<cmd>BufferLineCyclePrev<cr>", "Prev Buffer" },
     ["<C-right>"] = { "<cmd>tabnext<cr>", "Next Tab" },
@@ -532,32 +534,40 @@ require("which-key").register({
         },
         t = {
             name = "Terminal",
-            t = { "<cmd>1ToggleTerm<cr>", "Open Terminal" },
             q = { [[<cmd>1TermExec cmd="exit"<CR>]], "Exit Terminal" },
             Q = {
                 [[<cmd>1TermExec cmd="exit"<CR><cmd>2TermExec cmd="exit"<CR><cmd>3TermExec cmd="exit"<cr>]],
                 "Exit All Terminals",
             },
-            i = {
-                "<cmd>1ToggleTerm<cr><cmd>2ToggleTerm<cr><cmd>3ToggleTerm<cr><cmd>ToggleTermCloseAll<cr>",
+            I = {
+                "<cmd>1ToggleTerm<cr>" ..
+                "<cmd>2ToggleTerm<cr>" ..
+                "<cmd>3ToggleTerm<cr>" ..
+                "<cmd>4ToggleTerm<cr>" ..
+                "<cmd>5ToggleTerm<cr>" ..
+                "<cmd>ToggleTermCloseAll<cr>",
                 "Initialize Terminals",
             },
-        },
-        i = {
-            name = "REPL Terminal",
-            i = { "<cmd>3ToggleTerm<CR>", "Open REPL" },
-            q = { [[<cmd>3TermExec cmd="exit"<CR>]], "Exit REPL" },
+            t = { "<cmd>1ToggleTerm<cr>", "General Terminal" },
+            m = { "<cmd>2ToggleTerm<cr>", "Make Terminal"},
+            i = { "<cmd>3ToggleTerm<cr>", "REPL Terminal"},
+            d = { "<cmd>4ToggleTerm<cr>", "Debug Terminal"},
+            u = { "<cmd>5ToggleTerm<cr>", "Tests Terminal"},
         },
         m = {
-            name = "Make Terminal",
+            name = "Make Things",
             q = { [[<cmd>2TermExec cmd="exit"<cr>]], "Exit Make Terminal" },
         },
         u = {
-            name = "tests",
-            u = { "<cmd>4ToggleTerm<cr>", "Open Test Terminal" },
+            name = "Unit Tests",
+            q = { [[<cmd>5TermExec cmd="exit"<cr>]], "Exit Make Terminal" },
         },
         d = {
             name = "Debugging",
+            q = { [[<cmd>4TermExec cmd="exit"<cr>]], "Exit Make Terminal" },
+        },
+        i = {
+            name = "Interactive Running",
         },
         r = {
             name = "Refactor",

@@ -50,15 +50,15 @@ require("close_buffers").setup({
     end,
 })
 
-require("sniprun").setup({
-    selected_interpreters = { "Julia_jupyter" },
-    display = {
-        "VirtualTextOk",
-        "VirtualTextErr",
-        "LongTempFloatingWindow",
-        "Terminal",
-    },
-})
+-- require("sniprun").setup({
+--     selected_interpreters = { "Julia_jupyter" },
+--     display = {
+--         "VirtualTextOk",
+--         "VirtualTextErr",
+--         "LongTempFloatingWindow",
+--         "Terminal",
+--     },
+-- })
 
 require("surround").setup({})
 
@@ -79,5 +79,3 @@ require("colorizer").setup({ "*" }, {
     css_fn = false,
     mode = "background",
 })
-
-vim.fn["textobj#sentence#init"]()

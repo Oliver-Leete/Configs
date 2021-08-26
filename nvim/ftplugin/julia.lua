@@ -12,6 +12,7 @@ function _juliaREPL_toggle()
 end
 
 require("which-key").register({
+    ["<cr>"] = { "<cmd>MagmaEvaluateOperator<cr>", "Evaluate Line"},
     ["<leader>"] = {
         ["/"] = {
             S = { [["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Main Source", expr = true },
@@ -28,11 +29,17 @@ require("which-key").register({
                 S = { [["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Main Source", expr = true },
             },
         },
-        v = {
-            i = { "<cmd>lua _juliaREPL_toggle()<cr>", "Julia Terminal" },
+        t = {
+            i = { "<cmd>lua _juliaREPL_toggle()<cr>", "REPL Terminal" },
         },
+        I = { "<cmd>MagmaInit<cr>", "Start Jupyter"},
         i = {
-            i = { "<cmd>lua _juliaREPL_toggle()<cr>", "Julia Terminal" },
+            i = { "<cmd>MagmaEvaluateLine<cr>", "Evaluate Line"},
+            r = { "<cmd>MagmaReevaluateCell<cr>", "Re-Evaluate Cell"},
+            d = { "<cmd>MagmaDelete<cr>", "Delete Cell"},
+        },
+        v = {
+            i = { "<cmd>MagmaShowOutput<cr>", "Evaluate Line"},
         },
         r = {
             d = {
@@ -52,7 +59,17 @@ require("which-key").register({
 }, {
     buffer = 0,
 })
-
+require("which-key").register({
+    ["<cr>"] = { ":<c-u>MagmaEvaluateVisual<cr>", "Evaluate Selction"},
+    ["<leader>"] = {
+        i = {
+            i = { ":<c-u>MagmaEvaluateVisual<cr>", "Evaluate Selction"},
+        }
+    },
+}, {
+    buffer = 0,
+    mode = "x",
+})
 -- vim.cmd(
 --     [[let g:projectionist_heuristics=({ "src/*.jl":{ "src/*.jl":{"type":"source","alternate":"test/{}_tests.jl","related":["benckmark/{}_benchmarks.jl","test/{}_tests.jl","docs/src/{}.md"]}, "benchmark/*_benchmarks.jl":{"type":"bench","alternate":"src/{}.jl","related":["src/{}.jl","test/{}_tests.jl","docs/src/{}.md"]}, "test/*_tests.jl":{"type":"test","alternate":"src/{}.jl","related":["benckmark/{}_benchmarks.jl","src/{}.jl","docs/src/{}.md"]}, "docs/src/*.md":{"type":"doc","alternate":"src/{}.jl","related":["benckmark/{}_benchmarks.jl","test/{}_tests.jl","src/{}.jl"]}, "README.md":{"type":"readme"}, "Project.toml":{"type":"deps"}, "test/runtests.jl":{"type":"mainTest"}, "benchmark/benchmarks.jl":{"type":"mainBench"}, "docs/src/index.md":{"type":"mainDoc"}, }})]]
 -- )
@@ -85,3 +102,5 @@ vim.g.projectionist_heuristics = {
         ["docs/src/index.md"] = { type = "mainDoc" },
     }
 }
+
+vim.fn["textobj#sentence#init"]()

@@ -20,7 +20,51 @@ require("which-key").register({
     buffer = 0,
 })
 require("which-key").register({
-    ["<leader>"] = {},
+    i = {
+        n = {
+            f = { ":<c-u>call v:lua.plug_targets(v:count, '(textobj-markdown-chunk-n)', '(textobj-markdown-chunk-i)')<cr>", "Code Fence" },
+            t = { ":<c-u>call v:lua.plug_targets(v:count, '(textobj-markdown-text-n)', '(textobj-markdown-text-i)')<cr>", "Text" },
+        },
+        N = {
+            f = { ":<c-u>call v:lua.plug_targets_back(v:count, '(textobj-markdown-chunk-p)', '(textobj-markdown-chunk-P)', '(textobj-markdown-chunk-i)')<cr>", "Code Fence" },
+            t = { ":<c-u>call v:lua.plug_targets_back(v:count, '(textobj-markdown-text-p)', '(textobj-markdown-text-P)', '(textobj-markdown-text-i)')<cr>", "Text" },
+        },
+    },
+    a = {
+        n = {
+            f = { ":<c-u>call v:lua.plug_targets(v:count, '(textobj-markdown-chunk-n)', '(textobj-markdown-chunk-a)')<cr>", "Code Fence" },
+            t = { ":<c-u>call v:lua.plug_targets(v:count, '(textobj-markdown-text-n)', '(textobj-markdown-text-a)')<cr>", "Text" },
+        },
+        N = {
+            f = { ":<c-u>call v:lua.plug_targets_back(v:count, '(textobj-markdown-chunk-p)', '(textobj-markdown-chunk-P)', '(textobj-markdown-chunk-a)')<cr>", "Code Fence" },
+            t = { ":<c-u>call v:lua.plug_targets_back(v:count, '(textobj-markdown-text-p)', '(textobj-markdown-text-P)', '(textobj-markdown-text-a)')<cr>", "Text" },
+        },
+    },
+}, {
+    mode = "o",
+    buffer = 0,
+})
+require("which-key").register({
+    i = {
+        n = {
+            f = { ":<c-u>call v:lua.plug_targets(v:count, '(textobj-markdown-chunk-n)', '(textobj-markdown-chunk-i)')<cr>", "Code Fence" },
+            t = { ":<c-u>call v:lua.plug_targets(v:count, '(textobj-markdown-text-n)', '(textobj-markdown-text-i)')<cr>", "Text" },
+        },
+        N = {
+            f = { ":<c-u>call v:lua.plug_targets_back(v:count, '(textobj-markdown-chunk-p)', '(textobj-markdown-chunk-P)', '(textobj-markdown-chunk-i)')<cr>", "Code Fence" },
+            t = { ":<c-u>call v:lua.plug_targets_back(v:count, '(textobj-markdown-text-p)', '(textobj-markdown-text-P)', '(textobj-markdown-text-i)')<cr>", "Text" },
+        },
+    },
+    a = {
+        n = {
+            f = { ":<c-u>call v:lua.plug_targets(v:count, '(textobj-markdown-chunk-n)', '(textobj-markdown-chunk-a)')<cr>", "Code Fence" },
+            t = { ":<c-u>call v:lua.plug_targets(v:count, '(textobj-markdown-text-n)', '(textobj-markdown-text-a)')<cr>", "Text" },
+        },
+        N = {
+            f = { ":<c-u>call v:lua.plug_targets_back(v:count, '(textobj-markdown-chunk-p)', '(textobj-markdown-chunk-P)', '(textobj-markdown-chunk-a)')<cr>", "Code Fence" },
+            t = { ":<c-u>call v:lua.plug_targets_back(v:count, '(textobj-markdown-text-p)', '(textobj-markdown-text-P)', '(textobj-markdown-text-a)')<cr>", "Text" },
+        },
+    },
 }, {
     mode = "x",
     buffer = 0,
@@ -32,3 +76,5 @@ end
 if vim.api.nvim_get_var("panelRepeat") == "x" then
     vim.api.nvim_set_var("panelRepeat", "o")
 end
+
+vim.fn["textobj#sentence#init"]()

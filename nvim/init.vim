@@ -106,7 +106,7 @@ call plug#begin('~/.config/nvim/pluged')
 
     " Terminal Stuff
     Plug 'akinsho/nvim-toggleterm.lua'
-    Plug 'michaelb/sniprun', {'do': 'bash install.sh 1'}
+    " Plug 'michaelb/sniprun', {'do': 'bash install.sh 1'}
     Plug 'dccsillag/magma-nvim', {'do': ':UpdateRemotePlugins'}
 
     " Themes
@@ -437,7 +437,16 @@ let g:clever_f_across_no_line=1
 let g:clever_f_smart_case=1
 
 " Word Motion Command
-let g:wordmotion_prefix = '$'
+" let g:wordmotion_prefix = '$'
+let g:wordmotion_mappings = {
+\ 'w' : '<M-w>',
+\ 'b' : '<M-b>',
+\ 'e' : '<M-e>',
+\ 'ge' : 'g<M-e>',
+\ 'aw' : 'a<M-w>',
+\ 'iw' : 'i<M-w>',
+\ '<C-R><C-W>' : '<M-w>'
+\ }
 
 " " Text Object Mappings
 " onoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0,1,0,[line("."),line("."),col("."),col(".")])<CR>
