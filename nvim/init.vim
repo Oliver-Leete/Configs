@@ -437,22 +437,7 @@ let g:clever_f_across_no_line=1
 let g:clever_f_smart_case=1
 
 " Word Motion Command
-" let g:wordmotion_prefix = '$'
-let g:wordmotion_mappings = {
-\ 'w' : '<M-w>',
-\ 'b' : '<M-b>',
-\ 'e' : '<M-e>',
-\ 'ge' : 'g<M-e>',
-\ 'aw' : 'a<M-w>',
-\ 'iw' : 'i<M-w>',
-\ '<C-R><C-W>' : '<M-w>'
-\ }
-
-" " Text Object Mappings
-" onoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0,1,0,[line("."),line("."),col("."),col(".")])<CR>
-" onoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1,1,0,[line("."),line("."),col("."),col(".")])<CR>
-" xnoremap <silent>Ai :<C-u>cal <Sid>HandleTextObjectMapping(0,1,1,[line("'<"),line("'>"),col("'<"),col("'>")])<CR><Esc>gv
-" xnoremap <silent>Ii :<C-u>cal <Sid>HandleTextObjectMapping(1,1,1,[line("'<"),line("'>"),col("'<"),col("'>")])<CR><Esc>gv
+let g:wordmotion_prefix = '$'
 
 " Nvim Comment
 nmap <c-_> gcc
