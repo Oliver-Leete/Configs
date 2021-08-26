@@ -51,19 +51,18 @@ require("close_buffers").setup({
 })
 
 require("sniprun").setup({
-    selected_interpreters = { "Julia_jupyter"},
+    selected_interpreters = { "Julia_jupyter" },
     display = {
         "VirtualTextOk",
         "VirtualTextErr",
         "LongTempFloatingWindow",
-        "Terminal"
-    }
+        "Terminal",
+    },
 })
-
 
 require("surround").setup({})
 
-require('mkdir')
+require("mkdir")
 require("neoclip").setup()
 require("nvim_comment").setup({ comment_empty = false })
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
@@ -80,3 +79,5 @@ require("colorizer").setup({ "*" }, {
     css_fn = false,
     mode = "background",
 })
+
+vim.fn["textobj#sentence#init"]()

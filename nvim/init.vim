@@ -73,9 +73,9 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'tommcdo/vim-ninja-feet'
     Plug 'wellle/targets.vim'
     Plug 'wellle/line-targets.vim'
-    " Plug 'michaeljsmith/vim-indent-object'
     Plug 'kana/vim-textobj-user'
     Plug 'kana/vim-textobj-entire'
+    Plug 'preservim/vim-textobj-sentence'
 
     " Language
     Plug 'lervag/vimtex'
@@ -94,7 +94,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/twilight.nvim'
 
     " Panels
-    " Plug 'mipmip/panelmanager.vim'
     Plug 'mbbill/undotree'
     Plug 'kyazdani42/nvim-tree.lua'
     Plug 'simrat39/symbols-outline.nvim'
@@ -282,12 +281,30 @@ endfunction
 
 " Wellle Tagets settings
 autocmd User targets#mappings#user call targets#mappings#extend({
+    \ '.': { 'separator': [{'d':','}, {'d':'.'}, {'d':';'}, {'d':':'}, {'d':'+'}, {'d':'-'},
+    \                      {'d':'='}, {'d':'~'}, {'d':'_'}, {'d':'*'}, {'d':'#'}, {'d':'/'},
+    \                      {'d':'\'}, {'d':'|'}, {'d':'&'}, {'d':'$'}] },
+    \ ',': {},
+    \ ';': {},
+    \ ':': {},
+    \ '+': {},
+    \ '-': {},
+    \ '=': {},
+    \ '~': {},
+    \ '_': {},
+    \ '*': {},
+    \ '#': {},
+    \ '/': {},
+    \ '\': {},
+    \ '|': {},
+    \ '&': {},
+    \ '$': {},
     \ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': '[,;]'}]},
     \ 'x': {'line': [{'c': 1}]},
-    \ '$': {},
     \ })
-let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
-" let g:targets_nl = 'nl'
+" let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab rr rb bb ll al aa'
+let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA'
 let g:targets_gracious = 1
 let targets_nl = 'nN'
 

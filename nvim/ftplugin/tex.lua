@@ -82,8 +82,8 @@ require("which-key").register({
         },
     },
     ["["] = {
-        s = { "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-[[)zz", "Tex Section End", noremap = false },
-        S = { "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-[])zz", "Tex Section Start", noremap = false },
+        p = { "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-[[)zz", "Tex Section End", noremap = false },
+        P = { "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-[])zz", "Tex Section Start", noremap = false },
         m = { "<cmd>let g:dirJumps='m'<cr>m`<plug>(vimtex-[m)zz", "EnviroMent Start", noremap = false },
         M = { "<cmd>let g:dirJumps='M'<cr>m`<plug>(vimtex-[M)zz", "EnviroMent End", noremap = false },
         n = { "<cmd>let g:dirJumps='n'<cr>m`<plug>(vimtex-[n)zz", "Number Start", noremap = false },
@@ -94,8 +94,8 @@ require("which-key").register({
         D = { "<cmd>let g:dirJumps='D'<cr>m`<plug>(vimtex-[star)zz", "Comment End", noremap = false },
     },
     ["]"] = {
-        s = { "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-]])zz", "Tex Section Start", noremap = false },
-        S = { "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-][)zz", "Tex Section End", noremap = false },
+        p = { "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-]])zz", "Tex Section Start", noremap = false },
+        P = { "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-][)zz", "Tex Section End", noremap = false },
         m = { "<cmd>let g:dirJumps='m'<cr>m`<plug>(vimtex-]m)zz", "EnviroMent Start", noremap = false },
         M = { "<cmd>let g:dirJumps='M'<cr>m`<plug>(vimtex-]M)zz", "EnviroMent End", noremap = false },
         n = { "<cmd>let g:dirJumps='n'<cr>m`<plug>(vimtex-]n)zz", "Number Start", noremap = false },
@@ -108,7 +108,6 @@ require("which-key").register({
 }, {
     buffer = 0,
 })
-
 require("which-key").register({
     ["<localleader>"] = {},
     ["<leader>"] = {
@@ -116,13 +115,91 @@ require("which-key").register({
             m = { "<cmd>VimtexCompileSelected<cr>", "Build Selected" },
         },
     },
+    i = {
+        n = {
+            P = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-iP)')<cr>", "Section" },
+            m = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ie)')<cr>", "Environment" },
+            n = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-i$)')<cr>", "Maths" },
+        },
+        N = {
+            P = {
+                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-iP)')<cr>",
+                "Section",
+            },
+            m = {
+                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ie)')<cr>",
+                "Environment",
+            },
+            n = { ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-i$)')<cr>", "Maths" },
+        },
+    },
+    a = {
+        n = {
+            P = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-aP)')<cr>", "Section" },
+            m = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ae)')<cr>", "Environment" },
+            n = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-a$)')<cr>", "Maths" },
+        },
+        N = {
+            P = {
+                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-aP)')<cr>",
+                "Section",
+            },
+            m = {
+                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ae)')<cr>",
+                "Environment",
+            },
+            n = { ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-a$)')<cr>", "Maths" },
+        },
+    },
 }, {
     buffer = 0,
     mode = "x",
 })
 
+require("which-key").register({
+    i = {
+        n = {
+            P = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-iP)')<cr>", "Section" },
+            m = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ie)')<cr>", "Environment" },
+            n = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-i$)')<cr>", "Maths" },
+        },
+        N = {
+            P = {
+                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-iP)')<cr>",
+                "Section",
+            },
+            m = {
+                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ie)')<cr>",
+                "Environment",
+            },
+            n = { ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-i$)')<cr>", "Maths" },
+        },
+    },
+    a = {
+        n = {
+            P = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-aP)')<cr>", "Section" },
+            m = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ae)')<cr>", "Environment" },
+            n = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-a$)')<cr>", "Maths" },
+        },
+        N = {
+            P = {
+                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-aP)')<cr>",
+                "Section",
+            },
+            m = {
+                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ae)')<cr>",
+                "Environment",
+            },
+            n = { ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-a$)')<cr>", "Maths" },
+        },
+    },
+}, {
+    buffer = 0,
+    mode = "o",
+})
+
 if vim.api.nvim_get_var("dirJumps") == "f" then
-    vim.api.nvim_set_var("dirJumps", "s")
+    vim.api.nvim_set_var("dirJumps", "p")
 end
 if vim.api.nvim_get_var("panelRepeat") == "x" then
     vim.api.nvim_set_var("panelRepeat", "c")
@@ -193,3 +270,5 @@ vim.g.projectionist_heuristics = {
         ["Citations.bib"] = { type = "citations" },
     },
 }
+
+vim.fn["textobj#sentence#init"]()

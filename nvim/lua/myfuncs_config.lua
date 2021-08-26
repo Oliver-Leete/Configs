@@ -1,3 +1,7 @@
+local function replace_keycodes(str)
+    return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
 -- Repaets
 -- set defaults
 vim.api.nvim_set_var("dirJumps", "f")
@@ -24,7 +28,6 @@ function _G.ts_target(count, object)
     end
     vim.cmd("TSTextobjectSelect " .. object)
 end
-
 function _G.ts_target_back(count, object)
     vim.cmd("TSTextobjectGotoPreviousEnd " .. object)
     count = count - 1
@@ -38,7 +41,7 @@ end
 
 function _G.git_target(count, forward)
     local move_cmd
-    if forward == 'true' then
+    if forward == "true" then
         move_cmd = "Gitsigns next_hunk"
     else
         move_cmd = "Gitsigns prev_hunk"
@@ -52,6 +55,49 @@ function _G.git_target(count, forward)
     vim.cmd("Gitsigns select_hunk")
 end
 
+function _G.mapped_targets(count, movement, selection)
+    local cmd = movement
+    count = count - 1
+    while count > 0 do
+        cmd = cmd .. movement
+        count = count - 1
+    end
+    cmd = cmd .. "v" .. selection
+    vim.cmd([[normal ]] .. cmd)
+end
+function _G.mapped_targets_back(count, movement, end_movement, selection)
+    local cmd = movement
+    count = count - 1
+    while count > 0 do
+        cmd = cmd .. movement
+        count = count - 1
+    end
+    cmd = cmd .. end_movement
+    cmd = cmd .. "v" .. selection
+    vim.cmd([[normal ]] .. cmd)
+end
+
+function _G.plug_targets(count, movement, selection)
+    local cmd = [[\<plug>]] .. movement
+    count = count - 1
+    while count > 0 do
+        cmd = cmd .. [[\<plug>]] .. movement
+        count = count - 1
+    end
+    cmd = cmd .. [[v\<plug>]] .. selection
+    vim.cmd([[exe "normal ]] .. cmd .. [["]])
+end
+function _G.plug_targets_back(count, movement, end_movement, selection)
+    local cmd = [[\<plug>]] .. movement
+    count = count - 1
+    while count > 0 do
+        cmd = cmd .. [[\<plug>]] .. movement
+        count = count - 1
+    end
+    cmd = [[\<plug>]] .. end_movement
+    cmd = cmd .. [[v\<plug>]] .. selection
+    vim.cmd([[exe "normal ]] .. cmd .. [["]])
+end
 -- Telescope
 
 local action_state = require("telescope.actions.state")
@@ -61,7 +107,7 @@ local open_dif = function()
     local value = selected_entry["value"]
     -- close Telescope window properly prior to switching windows
     vim.api.nvim_win_close(0, true)
-    local cmd = "DiffviewOpen " .. value
+    local cmd = "Dif fviewOpen " .. value
     vim.api.nvim_set_var("DiffviewLast", cmd)
     vim.cmd(cmd)
 end
@@ -157,9 +203,6 @@ function _G.project_files()
 end
 
 -- Compleation functions
-local function replace_keycodes(str)
-    return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
 
 local luasnip = require("luasnip")
 _G.tab_complete = function()

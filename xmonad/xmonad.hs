@@ -428,7 +428,7 @@ easymotionConfig = def
       , bgCol = background
       , txtCol = foreground
       , borderCol = active
-      , cancelKey = xK_Escape
+      , cancelKey = xK_F8
       , sKeys = AnyKeys [xK_t, xK_n, xK_s, xK_e, xK_r, xK_i, xK_a, xK_o, xK_d, xK_h, xK_g, xK_j
                 , xK_p, xK_l, xK_f, xK_u, xK_w, xK_y, xK_b, xK_k, xK_v, xK_m, xK_c, xK_x, xK_z, xK_q]
     }

@@ -1,4 +1,6 @@
 -- Visual Bindings
+vim.api.nvim_set_keymap("x", ";", ":", {noremap = true})
+vim.api.nvim_set_keymap("x", ":", "<nop>", {noremap = true})
 require("which-key").register({
     j = {[[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], "down", expr=true},
     k = {[[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], "up", expr=true},
@@ -7,8 +9,6 @@ require("which-key").register({
     ["<c-j>"] = {"H", "Top of Window"},
     ["<c-h>"] = {"M", "Top of Window"},
     ["<c-k>"] = {"L", "Top of Window"},
-    [";"] = {":", "Command Mode"},
-    [":"] = {"<nop>", "Nothing at the moment"},
     ["q;"] = {"q:", "Ex Mode"},
     ["@;"] = {"@:", "Command Register"},
     ["<"] = {"<gv", "Dedent"},
@@ -72,6 +72,9 @@ require("which-key").register({
         o = {":<c-u>TSTextobjectSelect @class.outer<cr>", "Class"},
         n = {
             name = "Next",
+            s = {":<c-u>call v:lua.mapped_targets(v:count, ')', 'as')<cr>", "Sentance"},
+            w = {":<c-u>call v:lua.mapped_targets(v:count, 'w', 'aw')<cr>", "Word"},
+            W = {":<c-u>call v:lua.mapped_targets(v:count, 'W', 'aW')<cr>", "WORD"},
             h = {":<c-u>call v:lua.git_target(v:count, 'true')<cr>", "Git Hunk"},
             B = {":<c-u>call v:lua.ts_target(v:count, '@block.outer')<cr>", "Block"},
             c = {":<c-u>call v:lua.ts_target(v:count, '@conditional.outer')<cr>", "Conditional"},
@@ -84,6 +87,9 @@ require("which-key").register({
         },
         N = {
             name = "Previous",
+            s = {":<c-u>call v:lua.mapped_targets_back(v:count, '(', 'g(', 'as')<cr>", "Sentance"},
+            w = {":<c-u>call v:lua.mapped_targets_back(v:count, 'b', 'ge', 'aw')<cr>", "Word"},
+            W = {":<c-u>call v:lua.mapped_targets_back(v:count, 'B', 'gE', 'aW')<cr>", "WORD"},
             h = {":<c-u>call v:lua.git_target(v:count, 'false')<cr>", "Git Hunk"},
             B = {":<c-u>call v:lua.ts_target_back(v:count, '@block.outer')<cr>", "Block"},
             c = {":<c-u>call v:lua.ts_target_back(v:count, '@conditional.outer')<cr>", "Conditional"},
@@ -108,6 +114,9 @@ require("which-key").register({
         o = {":<c-u>TSTextobjectSelect @class.inner<cr>", "Class"},
         n = {
             name = "Next",
+            s = {":<c-u>call v:lua.mapped_targets(v:count, ')', 'is')<cr>", "Sentance"},
+            w = {":<c-u>call v:lua.mapped_targets(v:count, 'w', 'iw')<cr>", "Word"},
+            W = {":<c-u>call v:lua.mapped_targets(v:count, 'W', 'iW')<cr>", "WORD"},
             h = {":<c-u>call v:lua.git_target(v:count, 'true')<cr>", "Git Hunk"},
             B = {":<c-u>call v:lua.ts_target(v:count, '@block.inner')<cr>", "Block"},
             c = {":<c-u>call v:lua.ts_target(v:count, '@conditional.inner')<cr>", "Conditional"},
@@ -120,6 +129,9 @@ require("which-key").register({
         },
         N = {
             name = "Previous",
+            s = {":<c-u>call v:lua.mapped_targets_back(v:count, '(', 'g(', 'is')<cr>", "Sentance"},
+            w = {":<c-u>call v:lua.mapped_targets_back(v:count, 'b', 'ge', 'iw')<cr>", "Word"},
+            W = {":<c-u>call v:lua.mapped_targets_back(v:count, 'B', 'gE', 'iW')<cr>", "WORD"},
             h = {":<c-u>call v:lua.git_target(v:count, 'false')<cr>", "Git Hunk"},
             B = {":<c-u>call v:lua.ts_target_back(v:count, '@block.inner')<cr>", "Block"},
             c = {":<c-u>call v:lua.ts_target_back(v:count, '@conditional.inner')<cr>", "Conditional"},

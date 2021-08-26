@@ -37,6 +37,8 @@ end
     }
 ```
 
+
+
 Realizing that I could use the same function for all kinds of repeats. I've
 already added it to my panel opening mappings (all bound under \<leader\>v) so
 that \<leader\>vv will open the last panel, or close it if it's still open. This
@@ -95,6 +97,15 @@ pending mappings). I have also made a similar function for git hunks, using the
 git signs plugin. This is slightly simpler, due to the way the git signs function
 works, only one function is needed, with one command swapped out depending on
 direction.
+
+Just made some more functions and mappings for this. Mapped targets allows
+for the creation of target mappings using already existing mapped motions and
+selections. Plug targets instead uses the plug mapping provided by plugins.
+Examples of all of these functions can be seen in my o_bindings_config.lua and
+tex.lua config files. Combind with the targets plugin this allows for almost
+any text object to be targeted from afar (still need to implement a function
+for paragraphs, the default mappings aren't good enough for the mapped target
+function)
 
 ## Diff View Mappings
 
@@ -300,12 +311,23 @@ my head around the logic of the persistent two pane layouts and try and nick tha
 
 I've also got it set up with sub-layout, so I can have tabs on the main layout
 for those D&D games (keep character sheets that won't appear at the same time
-in a tab group to save a bit of space), but it also works nicely when changing
-screens.
+in a tab group to save a bit of space). It also works nicely when changing
+to a lower resolution screen (see above).
 
 I love this layout so much that not only is it basically all I use, but I also
 use it twice. In that I have two different layouts defined that use the notebook
 layout just with different default settings.
+
+### Layout Bar Avoidance
+
+Inspired by a Reddit post, I have made a little function that does some
+hardcoded checks for the location of window columns, and extends them if they
+don't interfere with the XMobar. I've added this to my Notebook and Four column
+layout. Basically, I have the xmobar take up the centre third of the top of the
+screen, on those layouts there are checks to see if a column is in the centre
+third of the screen horizontally. If not, it will extend the column hight by the
+height of my XMobar, it's only a little bit of screen space that I gain back,
+but it's still nice.
 
 ### Toggleable layouts
 
