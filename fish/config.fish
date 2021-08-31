@@ -12,11 +12,14 @@ export BAT_PAGER="less -R"
 # aliases
 alias neovim nvim
 alias n nvim
+alias k kak
 alias shutdown "sudo ~/.local/bin/shutdownupdate shutdown now"
 alias reboot "sudo ~/.local/bin/shutdownupdate reboot now"
 
 alias exa "exa --colour=always --group-directories-first"
 alias cat "batcat"
+
+abbr nt "nvr --servername nvimsynctex"
 
 abbr vidir "vidir -v"
 abbr ns "n -S"

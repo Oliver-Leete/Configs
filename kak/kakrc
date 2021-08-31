@@ -1,1 +1,66 @@
+source "%val{config}/plugins/plug.kak/rc/plug.kak"
+
+plug "andreyorst/plug.kak" noload
+plug "evanrelf/number-toggle.kak" config %{
+      require-module "number-toggle"
+}
+plug 'delapouite/kakoune-auto-percent'
+
+plug 'alexherbo2/auto-pairs.kak'
+set-option global auto_pairs ( ) { } [ ] '"' '"' "'" "'" ` ` “ ” ‘ ’ « » ‹ ›
+enable-auto-pairs
+
+plug 'h-youhei/kakoune-surround'
+
+plug 'andreyorst/fzf.kak'
+
+plug 'occivink/kakoune-phantom-selection'
+plug 'occivink/kakoune-sort-selections'
+
+plug 'Delapouite/kakoune-buffers'
+plug 'greenfork/active-window.kak'
+
+plug 'danr/kakoune-easymotion'
+
+plug 'lePerdu/kakboard' %{
+    hook global WinCreate .* %{ kakboard-enable }
+}
+
+plug 'delapouite/kakoune-text-objects'
+map global normal <\> ': enter-user-mode selectors<ret>' -docstring 'selectors'
+
+plug 'occivink/kakoune-vertical-selection'
+
+plug 'delapouite/kakoune-select-view' %{
+  # Suggested mappings
+  map global normal <a-%> ': select-view<ret>' -docstring 'select view'
+  map global view s '<esc>: select-view<ret>' -docstring 'select view'
+}
+
+plug 'delapouite/kakoune-mirror' %{
+  # Suggested mapping
+  map global normal "'" ': enter-user-mode -lock mirror<ret>'
+}
+
+plug 'Delapouite/kakoune-expand-region'
+map global normal + :expand<ret>
+
+
+map global normal \; :
+map global normal : \;
+map global normal <c-]> <a-)>
+map global normal <c-[> <a-(>
+
+hook global NormalIdle .* %{ wa }
+
 colorscheme tomorrow-night
+def ide %{
+    rename-client main
+    set global jumpclient main
+
+    new rename-client tools
+    set global toolsclient tools
+
+    new rename-client docs
+    set global docsclient docs
+}

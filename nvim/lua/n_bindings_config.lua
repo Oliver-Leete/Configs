@@ -370,7 +370,7 @@ require("which-key").register({
                 B = { "<cmd>call v:lua.git_branch_mergebase()<cr>", "View The Diff of a Branch" },
                 l = { "<cmd>call v:lua.diff_repeat()<cr>", "Repeat Last Diff" },
             },
-            g = { "<cmd>Neogit<cr>", "Neogit Status" },
+            g = { "<cmd>!kitty @ launch --type=tab --tab-title 'git' lazygit<cr>", "Neogit Status" },
             p = { "<cmd>Gitsigns preview_hunk<CR>", "Hunk Preview" },
             r = { "<cmd>Gitsigns reset_hunk<CR>", "Hunk Reset" },
             R = { "<cmd>Gitsigns reset_buffer<CR>", "Reset Buffer" },
@@ -647,6 +647,7 @@ require("which-key").register({
             d = { [[<cmd>%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces" },
             w = { "<cmd>%!par w80<cr>", "Wrap File to 80 Characters" },
         },
+        k = { [[":!kitty @ launch --type=tab --tab-title 'Kak %:t' kak %:p +" . line(".") . ":" . col(".") . "<cr>"]], "Open file in Kak", expr = true},
     },
     ["["] = {
         name = "Backward Leader",

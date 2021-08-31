@@ -387,7 +387,7 @@ configs.ltex = {
                 checkFrequency = "save",
                 language = "en-GB",
                 setenceCacheSize = 2000,
-                diagnosticSeverity = { MORFOLOGIK_RULE_EN_GB = "error", default = "hint" },
+                diagnosticSeverity = { MORFOLOGIK_RULE_EN_GB = "hint", default = "info" },
                 additionalRules = {
                     enablePickyRules = false,
                     motherTongue = "en-GB",

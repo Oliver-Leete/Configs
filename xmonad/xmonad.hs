@@ -588,8 +588,8 @@ myKeys conf = let
     , ("M-M1-C-S-w"      , addName "Record screen"               $ spawn "screencast" )
     , ("M-M1-C-S-r"      , addName "Record area"                 $ spawn "screencast area" )
     , ("M-M1-C-S-<Space>", addName "Play/Pause"                  $ spawn "playerctl play-pause" )
-    , ("M-M1-C-S-<Up>"   , addName "Skip Song"                   $ spawn "playerctl previous" )
-    , ("M-M1-C-S-<Down>" , addName "Prev Song"                   $ spawn "playerctl next" )
+    -- , ("M-M1-C-S-<Up>"   , addName "Skip Song"                   $ spawn "playerctl previous" )
+    -- , ("M-M1-C-S-<Down>" , addName "Prev Song"                   $ spawn "playerctl next" )
     , ("M-M1-C-S-<Left>" , addName "Skip Song"                   $ spawn "playerctl previous" )
     , ("M-M1-C-S-<Right>", addName "Prev Song"                   $ spawn "playerctl next" )
     , ("M-;"             , addName "Warp Cursor"                 $ warpToWindow (1/2) (1/2))
@@ -673,8 +673,9 @@ myKeys conf = let
 
     , ("<F8>"            , addName "Hop to Window"               $ sequence_ [selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow), warpCursor])
 
-    , ("M-<Space>"       , addName "Swap monitor workspaces"     swapNextScreen)
-    , ("M-C-<Space>"     , addName "Send window to next monitor" shiftNextScreen)
+    -- , ("M-<Space>"       , addName "Swap monitor workspaces"     swapNextScreen)
+    -- , ("M-C-<Space>"     , addName "Send window to next monitor" shiftNextScreen)
+    , ("M-<Space>"       , addName "Swap with last workspace"    toggleWS)
 
     , ("M-<D>"           , addName "Focus down"                  $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Down)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Down)

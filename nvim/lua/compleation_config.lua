@@ -93,8 +93,8 @@ require("todo-comments").setup({
         NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
     },
     highlight = {
-        before = "fg",
-        keyword = "wide",
+        before = "",
+        keyword = "bg",
         after = "fg",
     },
     colors = {

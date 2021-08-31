@@ -49,6 +49,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
     Plug 'caenrique/swap-buffers.nvim'
+    Plug 'rhysd/clever-f.vim'
 
     " Normal Commands
     Plug 'blackCauldron7/surround.nvim'
@@ -56,7 +57,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
     Plug 'Konfekt/vim-CtrlXA'
-    Plug 'rhysd/clever-f.vim'
 
     " Refactoring
     Plug 'AndrewRadev/splitjoin.vim'
@@ -222,12 +222,13 @@ set foldlevel=20
 set splitbelow
 set splitright
 augroup windowPositioning
-  autocmd FileType help :wincmd H | vertical resize 90<cr>
-  autocmd FileType juliadoc wincmd H
-  " autocmd FileType gitcommit wincmd H
-  autocmd FileType qf wincmd J
+    autocmd!
+    autocmd FileType help :wincmd H | vertical resize 90<cr>
+    autocmd FileType juliadoc wincmd H
+    " autocmd FileType gitcommit wincmd H
+    autocmd FileType qf wincmd J
+    " autocmd VimResized * exe "normal \<c-w>="
 augroup END
-" autocmd VimResized * exe "normal \<c-w>="
 
 set shortmess=Iflmnrwxt
 
@@ -280,28 +281,31 @@ function! g:committia_hooks.edit_open(info)
 endfunction
 
 " Wellle Tagets settings
-autocmd User targets#mappings#user call targets#mappings#extend({
-    \ '.': { 'separator': [{'d':','}, {'d':'.'}, {'d':';'}, {'d':':'}, {'d':'+'}, {'d':'-'},
-    \                      {'d':'='}, {'d':'~'}, {'d':'_'}, {'d':'*'}, {'d':'#'}, {'d':'/'},
-    \                      {'d':'\'}, {'d':'|'}, {'d':'&'}, {'d':'$'}] },
-    \ ',': {},
-    \ ';': {},
-    \ ':': {},
-    \ '+': {},
-    \ '-': {},
-    \ '=': {},
-    \ '~': {},
-    \ '_': {},
-    \ '*': {},
-    \ '#': {},
-    \ '/': {},
-    \ '\': {},
-    \ '|': {},
-    \ '&': {},
-    \ '$': {},
-    \ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': '[,;]'}]},
-    \ 'x': {'line': [{'c': 1}]},
-    \ })
+augroup mywellle
+    autocmd!
+    autocmd User targets#mappings#user call targets#mappings#extend({
+        \ '.': { 'separator': [{'d':','}, {'d':'.'}, {'d':';'}, {'d':':'}, {'d':'+'}, {'d':'-'},
+        \                      {'d':'='}, {'d':'~'}, {'d':'_'}, {'d':'*'}, {'d':'#'}, {'d':'/'},
+        \                      {'d':'\'}, {'d':'|'}, {'d':'&'}, {'d':'$'}] },
+        \ ',': {},
+        \ ';': {},
+        \ ':': {},
+        \ '+': {},
+        \ '-': {},
+        \ '=': {},
+        \ '~': {},
+        \ '_': {},
+        \ '*': {},
+        \ '#': {},
+        \ '/': {},
+        \ '\': {},
+        \ '|': {},
+        \ '&': {},
+        \ '$': {},
+        \ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': '[,;]'}]},
+        \ 'x': {'line': [{'c': 1}]},
+        \ })
+augroup end
 " let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
 let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab rr rb bb ll al aa'
 let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA'
@@ -314,7 +318,7 @@ let g:matchup_matchparen_offscreen = {'method': 'popup'}
 
 " highlight Yank
 augroup LuaHighlight
-  autocmd!
+    autocmd!
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup END
 
@@ -330,6 +334,8 @@ xnoremap <BackSPACE> <Nop>
 let mapleader = "\<space>"
 let maplocalleader = "\\"
 
+
+" NOTE: _, +, -, =, |, $, ^, ¬ and # are free to map
 " !!MAPPINGS!!
 
 " nnoremap <C-j> H
@@ -412,6 +418,7 @@ tnoremap <Esc> <C-\><C-n>
 
 " Panel Specific Mappings
 augroup panelMappings
+    autocmd!
     autocmd filetype Outline       map <buffer> o     <cmd>lua require('symbols-outline')._goto_location(true)<cr><cmd>sleep 2<cr><cmd>SymbolsOutlineClose<cr>
     autocmd filetype qf            map <buffer> <esc> <cmd>q<cr>
     autocmd filetype help          map <buffer> <esc> <cmd>q<cr>
@@ -431,6 +438,9 @@ augroup END
 " nmap s <cmd>lua require'hop'.hint_char1()<cr>
 " nmap S <cmd>ISwapWith<cr>
 
+    
+
+noremap <silent> £ :silent :exe "let @/='" . expand("<cWORD>") . "'"<cr>
 
 " Clever-f
 let g:clever_f_across_no_line=1
@@ -457,8 +467,11 @@ command! CClear cexpr[]
 command! LClear lexpr[]
 
 " Set Filetypes
-au BufNewFile,BufRead *.fish set filetype=fish
-au BufNewFile,BufRead *.jl set filetype=julia
+augroup myfiletypes
+    autocmd!
+    au BufNewFile,BufRead *.fish set filetype=fish
+    au BufNewFile,BufRead *.jl set filetype=julia
+augroup end
 
 " Save a single (but small) plugin
 let g:lastplace_ignore = "gitcommit,gitrebase,svn,hgcommit"
