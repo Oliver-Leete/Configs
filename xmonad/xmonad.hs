@@ -247,7 +247,7 @@ projects =
 -- anything.
 
 myTerminal     = "kitty"
-myBrowser      = "browser"
+myBrowser      = "/home/oleete/.config/bin/browser"
 myBrowserClass = "google-chrome-stable"
 myStatusBar    = "/home/oleete/.config/xmobar/init-xmobars"
 myTray         = "trayer --edge top --align center --distance 5 --heighttype pixel --height 18 --widthtype request --transparent true --alpha 0 --tint 0x1a1b26"
@@ -706,7 +706,10 @@ myKeys conf = let
                                                                              ,(className =? "Google-chrome", P.sendKey controlMask xK_t)])
 
 
-    , ("M-f"             , addName "Fullscreen"                  $ sequence_ [ withFocused $ windows . W.sink
+    , ("M-f"             , addName "Fullscreen"                  $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_f)
+                                                                             ,(pure True, sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle FULL ])])
+
+    , ("M-C-f"           , addName "Fullscreen"                  $ sequence_ [ withFocused $ windows . W.sink
                                                                  , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULL ])
 
     , ("M-s"             , addName "Maximize"                    $ sequence_ [ withFocused $ windows . W.sink
@@ -718,6 +721,12 @@ myKeys conf = let
 
     , ("M-u"             , addName "Scroll Up"                   $ spawn "xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4")
     , ("M-d"             , addName "Scroll Down"                 $ spawn "xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5")
+
+    , ("M-h"             , addName "Navigate Left"               $ sequence_ [windowGo L True, warpCursor])
+    , ("M-j"             , addName "Navigate Down"               $ sequence_ [windowGo D True, warpCursor])
+    , ("M-k"             , addName "Navigate Up"                 $ sequence_ [windowGo U True, warpCursor])
+    , ("M-l"             , addName "Navigate Right"              $ sequence_ [windowGo R True, warpCursor])
+
     ] ^++^
 
     subKeys "SubLayouts"
@@ -730,10 +739,6 @@ myKeys conf = let
     , ("M-C-i"           , addName "Unmerge all from sublayout"  $ withFocused (sendMessage . UnMergeAll))
     , ("M-M1-i"          , addName "Unmerge all from sublayout"  $ withFocused (sendMessage . UnMergeAll))
 
-    , ("M-h"             , addName "Navigate Left"               $ sequence_ [windowGo L True, warpCursor])
-    , ("M-j"             , addName "Navigate Down"               $ sequence_ [windowGo D True, warpCursor])
-    , ("M-k"             , addName "Navigate Up"                 $ sequence_ [windowGo U True, warpCursor])
-    , ("M-l"             , addName "Navigate Right"              $ sequence_ [windowGo R True, warpCursor])
 
     , ("M-M1-h"          , addName "Merge Left"                  $ sequence_ [sendMessage $ pullGroup L, warpCursor])
     , ("M-M1-j"          , addName "Merge Down"                  $ sequence_ [sendMessage $ pullGroup D, warpCursor])

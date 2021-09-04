@@ -1,0 +1,43 @@
+#!/bin/sh
+
+changes=false
+cd /home/oleete/.config/xmonad/xmonad
+su -c 'git fetch' oleete
+if [ $(su -c 'git log ..origin/master --oneline' oleete | wc -l) -gt 0 ]
+then
+    su -c 'git pull --no-rebase' oleete
+
+    echo -n "Would you like to update XMonad [y/n] ? "
+    read reply
+
+    if [ "$reply" = y -o "$reply" = Y ]
+    then
+        changes=true
+    fi
+else
+    echo no changes to XMonad
+fi
+
+cd /home/oleete/.config/xmonad/xmonad-contrib
+su -c 'git fetch' oleete
+if [ $(su -c 'git log ..origin/master --oneline' oleete | wc -l) -gt 0 ]
+then
+    su -c 'git pull --no-rebase' oleete
+
+    echo -n "Would you like to update XMonad Contribs [y/n] ? "
+    read reply
+
+    if [ "$reply" = y -o "$reply" = Y ]
+    then
+        changes=true
+    fi
+else
+    echo no changes to XMonad-Contribs
+fi
+
+if $changes
+then
+    cd /home/oleete/.config/xmonad
+    su -c 'stack install' oleete
+    su -c 'xmonad --recompile && xmonad --restart' oleete
+fi

@@ -29,6 +29,7 @@ rofi/
 !/vis/visrc.lua
 !/kak/kakrc
 !/zathura/zathurarc
+!/bin/*
 
 /xmonad/xmonad
 /xmonad/xmonad-contrib

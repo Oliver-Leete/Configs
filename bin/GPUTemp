@@ -1,0 +1,6 @@
+#!/bin/sh
+
+temp=$(nvidia-smi -q -d temperature | rg "GPU.Current" | awk '{print $5}')
+util=$(nvidia-settings --query=GPUUtilization | sed -E 's/^.*graphics=([0-9]*).*$/\1/' | tr -d '\n')
+
+echo "$util% $temp"

@@ -1,0 +1,40 @@
+#!/bin/sh
+sound () {
+	if pgrep pavucontrol
+	then
+		pkill pavucontrol
+	else
+    pavucontrol &
+	fi
+}
+
+network () {
+	if pgrep nm.connection.e
+	then
+		pkill nm.connection.e
+	else
+	  nm-connection-editor &
+	fi
+}
+
+cal () {
+	if pgrep galendae
+	then
+		pkill galendae
+	else
+	  galendae &
+	fi
+}
+
+notif () {
+	kill -s USR1 $(pidof deadd-notification-center)
+}
+
+case ${1:-} in
+	sound) sound ;;
+	network) network ;;
+	cal) cal ;;
+	notif) notif ;;
+	*) ;;
+esac
+exit

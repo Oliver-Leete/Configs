@@ -1,0 +1,9 @@
+#!/bin/sh
+# uses playerctl
+
+artist=$(playerctl metadata | grep artist | cut -d' ' -f 3- | awk -v len=25 '{ if (length($0) > len) print substr($0, 1, len-3) "..."; else print; }' | xargs)
+title=$(playerctl metadata | grep title | cut -d' ' -f 3- | awk -v len=35 '{ if (length($0) > len) print substr($0, 1, len-3) "..."; else print; }' | xargs)
+
+[ -z "$title"] && echo "" || echo "<fc=#78dce8> $title - $artist </fc> : "
+
+# awk -v len=20 '{ if (length($0) > len) print substr($0, 1, len-3) "..."; else print; }'

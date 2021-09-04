@@ -68,7 +68,7 @@ require("which-key").register({
             },
         },
         M = {
-            [[<cmd>2TermExec cmd="latexmk -verbose -file-line-error -synctex=1 -interaction=nonstopmode"<cr>]],
+            [[<cmd>silent !kittymake "latexmk -verbose -file-line-error -synctex=1 -interaction=nonstopmode"<cr>]],
             "Build in Terminal",
         },
         m = {

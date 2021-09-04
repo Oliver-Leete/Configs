@@ -1,0 +1,66 @@
+#!/bin/sh
+
+# SEE: http://stackoverflow.com/questions/6766333/capture-windows-screen-with-ffmpeg
+
+set -eu
+
+SCRIPTNAME=$(basename $0)
+FILETYPE=png
+
+main () {
+	case ${1:-} in
+		stat*) status ;;
+		slop|area|select|region) GETAREA=true; capture ;;
+		window) GETWINDOW=true; capture;;
+		*) capture ;;
+	esac
+}
+
+capture () {
+	FILENAME="/home/oleete/Pictures/captures/$(date +'%Y-%m-%d-%H-%M-%S').$FILETYPE"
+
+	getarea # sets W H X Y
+  scrot -a ${X},${Y},${W},${H} $FILENAME
+  xclip -selection clipboard -t image/png -i $FILENAME
+
+	# notify-send "scrot -a ${X}x${Y}x${W}x${H} $FILENAME'"
+	notify-send "Screen capture taken\n$(basename $FILENAME)"
+}
+
+getarea () {
+	if ${GETAREA:-false}
+	then # use slop to select window or region
+		x=$(slop)
+		set -- $(echo $x | sed 's/[^0-9]/ /g')
+		W=$1
+		H=$2
+		X=$3
+		Y=$4
+	elif ${GETWINDOW:-false}
+		then
+	  x=$(xwininfo)
+		echo $(echo $x | awk '{print $NF}' | sed 's/[^0-9]/ /g')
+		set -- $(echo $x | awk '{print $NF}' | sed 's/[^0-9]/ /g')
+		W=$1
+		H=$2
+		X=$3
+		Y=$4
+		echo $W
+		echo $H
+		echo $X
+		echo $Y
+	else # use full screen resolution
+		x="$(xrandr | head -n1)"
+		x="${x#*current }"
+		x="${x%%, maximum*}"
+		set -- $x
+		#current_desktop_res=$1$2$3
+		#echo $current_desktop_res
+		W=$1
+		H=$3
+    X=0
+		Y=0
+fi
+}
+
+main ${1:-}

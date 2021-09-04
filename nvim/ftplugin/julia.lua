@@ -24,7 +24,8 @@ require("which-key").register({
             },
         },
         t = {
-            i = { "<cmd>silent !kitty @ launch --type=window --window-title='REPL' --keep-focus<cr><cmd>SlimeSend1 julia<cr>", "REPL Terminal" },
+            i = { "<cmd>silent !echo using Revise | kittyrepl julia<cr>", "REPL Terminal" },
+            d = { "<cmd>silent !echo using Revise, Debugger | kittyrepl julia<cr>", "REPL Terminal" },
         },
         I = { "<cmd>MagmaInit<cr>", "Start Jupyter"},
         i = {

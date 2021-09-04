@@ -25,6 +25,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'knubie/vim-kitty-navigator'
     Plug 'jpalardy/vim-slime'
     Plug 'vim-test/vim-test'
+    Plug 'rcarriga/vim-ultest'
 
     " Saving
     Plug 'lambdalisue/suda.vim'
@@ -106,9 +107,9 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'lvim-tech/lvim-helper'
     Plug 'kevinhwang91/nvim-bqf'
 
+
     " Terminal Stuff
     Plug 'akinsho/nvim-toggleterm.lua'
-    " Plug 'michaelb/sniprun', {'do': 'bash install.sh 1'}
     Plug 'dccsillag/magma-nvim', {'do': ':UpdateRemotePlugins'}
 
     " Themes
@@ -335,6 +336,7 @@ let gaplocalleader = "\\"
 " Kitty
 let g:slime_no_mappings = 1
 let g:slime_target = "kitty"
+let test#strategy = "kitty"
 
 " NOTE: _, +, -, =, |, $, ^, ¬ and # are free to map
 " !!MAPPINGS!!

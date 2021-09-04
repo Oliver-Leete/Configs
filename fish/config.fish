@@ -5,7 +5,7 @@ starship init fish | source
 
 set -Ux EDITOR "nvr --remote-tab-wait"
 set -Ux VISUAL "nvr --remote-tab-wait"
-set -gx PATH /home/oleete/.cargo/bin /home/oleete/.yarn/bin /home/oleete/go/bin /home/oleete/.config/nvim/node_modules/tree-sitter-cli $PATH
+set -gx PATH /home/oleete/.cargo/bin /home/oleete/.yarn/bin /home/oleete/go/bin /home/oleete/.config/nvim/node_modules/tree-sitter-cli /home/oleete/.config/bin $PATH
 
 export BAT_PAGER="less -R"
 
@@ -13,8 +13,8 @@ export BAT_PAGER="less -R"
 alias neovim nvim
 alias n nvim
 alias k kak
-alias shutdown "sudo ~/.local/bin/shutdownupdate shutdown now"
-alias reboot "sudo ~/.local/bin/shutdownupdate reboot now"
+alias shutdown "sudo ~/.config/bin/shutdownupdate shutdown now"
+alias reboot "sudo ~/.config/bin/shutdownupdate reboot now"
 
 alias exa "exa --colour=always --group-directories-first"
 alias cat "batcat"
