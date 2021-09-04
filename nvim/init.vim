@@ -21,8 +21,10 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'winston0410/cmd-parser.nvim'
 
-    " The Glory
-    Plug 'alexherbo2/kakoune.vim'
+    "Kitty
+    Plug 'knubie/vim-kitty-navigator'
+    Plug 'jpalardy/vim-slime'
+    Plug 'vim-test/vim-test'
 
     " Saving
     Plug 'lambdalisue/suda.vim'
@@ -65,7 +67,7 @@ call plug#begin('~/.config/nvim/pluged')
     " Command Mode
     Plug 'tpope/vim-abolish'
     Plug 'tpope/vim-eunuch'
-    Plug 'nacro90/numb.nvim'
+    " Plug 'nacro90/numb.nvim'
     Plug 'winston0410/range-highlight.nvim'
     Plug 'kazhala/close-buffers.nvim'
 
@@ -83,6 +85,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
     Plug 'coachshea/vim-textobj-markdown'
     Plug 'fladson/vim-kitty'
+    Plug 'anufrievroman/vim-angry-reviewer'
 
     " UI Stuff
     Plug 'folke/zen-mode.nvim'
@@ -101,7 +104,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/which-key.nvim'
     Plug 'folke/todo-comments.nvim'
     Plug 'lvim-tech/lvim-helper'
-    Plug 'jpalardy/vim-slime'
     Plug 'kevinhwang91/nvim-bqf'
 
     " Terminal Stuff
@@ -169,13 +171,9 @@ let g:tokyonight_dark_float=v:false
 let g:tokyonight_dark_sidebar=v:true
 let g:tokyonight_italic_comments=v:true
 let g:tokyonight_italic_keywords=v:false
-let g:tokyonight_sidebars = [ "qf", "Outline", "terminal", "vim-plug", "undotree", "help", "DiffviewFiles", "juliadoc"]
+let g:tokyonight_sidebars = [ "qf", "Outline", "terminal", "vim-plug", "undotree", "help", "DiffviewFiles", "DiffviewFileHistory", "juliadoc"]
 let g:tokyonight_hide_inactive_statusline=v:true
 colorscheme tokyonight
-
-
-" Vim Slime Settings
-let g:slime_target = "neovim"
 
 " !!SETTINGS!!
 set nrformats-=octal
@@ -332,8 +330,11 @@ nnoremap <BackSPACE> <Nop>
 xnoremap <SPACE> <Nop>
 xnoremap <BackSPACE> <Nop>
 let mapleader = "\<space>"
-let maplocalleader = "\\"
+let gaplocalleader = "\\"
 
+" Kitty
+let g:slime_no_mappings = 1
+let g:slime_target = "kitty"
 
 " NOTE: _, +, -, =, |, $, ^, ¬ and # are free to map
 " !!MAPPINGS!!
@@ -419,19 +420,20 @@ tnoremap <Esc> <C-\><C-n>
 " Panel Specific Mappings
 augroup panelMappings
     autocmd!
-    autocmd filetype Outline       map <buffer> o     <cmd>lua require('symbols-outline')._goto_location(true)<cr><cmd>sleep 2<cr><cmd>SymbolsOutlineClose<cr>
-    autocmd filetype qf            map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype help          map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype vim-plug      map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype juliadoc      map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype LvimHelper    map <buffer> <esc> <cmd>q<cr>
-    " autocmd filetype NeogitStatus  map <buffer> <esc> <cmd>tabclose<cr>
-    " autocmd filetype NeogitPopup   map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype toggleterm    map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
-    autocmd filetype undotree      map <buffer> <esc> <cmd>UndotreeHide<cr>
-    autocmd filetype lspinfo       map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype DiffviewFiles map <buffer> <esc> <cmd>DiffviewClose<cr>
-    autocmd filetype tsplayground  map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype Outline             map <buffer> o     <cmd>lua require('symbols-outline')._goto_location(true)<cr><cmd>sleep 2<cr><cmd>SymbolsOutlineClose<cr>
+    autocmd filetype qf                  map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype help                map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype vim-plug            map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype juliadoc            map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype LvimHelper          map <buffer> <esc> <cmd>q<cr>
+    " autocmd filetype NeogitStatus      map <buffer> <esc> <cmd>tabclose<cr>
+    " autocmd filetype NeogitPopup       map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype toggleterm          map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
+    autocmd filetype undotree            map <buffer> <esc> <cmd>UndotreeHide<cr>
+    autocmd filetype lspinfo             map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype DiffviewFiles       map <buffer> <esc> <cmd>DiffviewClose<cr>
+    autocmd filetype DiffviewFileHistory map <buffer> <esc> <cmd>DiffviewClose<cr>
+    autocmd filetype tsplayground        map <buffer> <esc> <cmd>q<cr>
 augroup END
 
 " Hop, Skip And Jump

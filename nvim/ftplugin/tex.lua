@@ -10,6 +10,7 @@ require("which-key").register({
         g = { "<cmd>TexlabForward<cr>", "Forward Search" },
         i = { "A% chktex ", "Chktex Ignore" },
         s = { "<cmd>lua require'telescope.builtin'.symbols{sources={'latex'}}<cr>", "Insert Symbols" },
+        a = { "<cmd>AngryReviewer<cr>", "Bring Forth The Angry One"}
     },
     ["<leader>"] = {
         ["/"] = {
@@ -217,6 +218,8 @@ vim.cmd([[let g:vimtex_grammar_textidote={'jar':'~/.local/bin/textidote.jar', 'a
 vim.cmd([[set errorformat=]])
 vim.cmd([[set errorformat+=%f(L%lC%c-L%\\d%\\+C%\\d%\\+):\ %m]])
 vim.cmd([[set errorformat+=%-G%.%#]])
+
+vim.g.AngryReviewerEnglish = {'british'}
 
 -- vim.cmd( [[let g:projectionist_heuristics={"OML-Thesis.tex":{ "*.tex":{"type":"chapMain","alternate":"OML-Thesis.tex"}, "Scripts/*.tex":{"type":"scripts","alternate":"OML-Thesis.tex"}, "1/*.tex":{"type":"chapOne","alternate":"IntroductiontoAM.tex"}, "2/*.tex":{"type":"chapTwo","alternate":"PowderBedFusion.tex"}, "3/*.tex":{"type":"chapThree","alternate":"ModellingofAM.tex"}, "4/*.tex":{"type":"chapFour","alternate":"PowderCharacterisation.tex"}, "5/*.tex":{"type":"chapFive","alternate":"PowderModel.tex"}, "6/*.tex":{"type":"chapSix","alternate":"MachineModel.tex"}, "7/*.tex":{"type":"chapSeven","alternate":"ProcessModel.tex"}, "Scripts/Packages.tex":{"type":"deps"}, "IntroductiontoAM.tex":{"type":"chapOneMain"}, "PowderBedFusion.tex":{"type":"chapTwoMain"}, "ModellingofAM.tex":{"type":"chapThreeMain"}, "PowderCharacterisation.tex":{"type":"chapFourMain"}, "PowderModel.tex":{"type":"chapFiveMain"}, "MachineModel.tex":{"type":"chapSixMain"}, "ProcessModel.tex":{"type":"chapSevenMain"}, "OML-Thesis.tex":{"type":"main"}, "Citations.bib":{"type":"citations"} }}]])
 

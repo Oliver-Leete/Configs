@@ -675,7 +675,7 @@ myKeys conf = let
 
     -- , ("M-<Space>"       , addName "Swap monitor workspaces"     swapNextScreen)
     -- , ("M-C-<Space>"     , addName "Send window to next monitor" shiftNextScreen)
-    , ("M-<Space>"       , addName "Swap with last workspace"    toggleWS)
+    , ("M-<Space>"       , addName "Swap with last workspace"    $ toggleWS' ["NSP"])
 
     , ("M-<D>"           , addName "Focus down"                  $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Down)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Down)
@@ -729,6 +729,11 @@ myKeys conf = let
     , ("M-i"             , addName "Un-merge from sublayout"     $ withFocused (sendMessage . UnMerge))
     , ("M-C-i"           , addName "Unmerge all from sublayout"  $ withFocused (sendMessage . UnMergeAll))
     , ("M-M1-i"          , addName "Unmerge all from sublayout"  $ withFocused (sendMessage . UnMergeAll))
+
+    , ("M-h"             , addName "Navigate Left"               $ sequence_ [windowGo L True, warpCursor])
+    , ("M-j"             , addName "Navigate Down"               $ sequence_ [windowGo D True, warpCursor])
+    , ("M-k"             , addName "Navigate Up"                 $ sequence_ [windowGo U True, warpCursor])
+    , ("M-l"             , addName "Navigate Right"              $ sequence_ [windowGo R True, warpCursor])
 
     , ("M-M1-h"          , addName "Merge Left"                  $ sequence_ [sendMessage $ pullGroup L, warpCursor])
     , ("M-M1-j"          , addName "Merge Down"                  $ sequence_ [sendMessage $ pullGroup D, warpCursor])

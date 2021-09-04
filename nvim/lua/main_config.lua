@@ -66,7 +66,7 @@ require("mkdir")
 require("neoclip").setup()
 require("nvim_comment").setup({ comment_empty = false })
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
-require("numb").setup()
+-- require("numb").setup()
 require("foldsigns").setup()
 require("range-highlight").setup()
 require("colorizer").setup({ "*" }, {
