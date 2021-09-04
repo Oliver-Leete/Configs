@@ -33,6 +33,9 @@ require("which-key").register({
             w = { "!par w80<cr>", "Wrap to 80 Characters" },
             d = { [[:%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces" },
         },
+        j = {
+            j = { ":<c-u>MagmaEvaluateVisual<cr>", "Evaluate Selction"},
+        },
     },
     g = {
         R = { "<plug>(SubversiveSubstituteToEndOfLine)", "Substitute to EOL" },

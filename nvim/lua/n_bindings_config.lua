@@ -449,6 +449,7 @@ require("which-key").register({
                 },
                 r = { "<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References" },
             },
+            j = { "<cmd>MagmaShowOutput<cr>", "Evaluate Line"},
         },
         Q = { "<cmd>CClear<cr><cmd>cgetbuffer<cr><cmd>TroubleRefresh<cr>", "Populater QF List With Buffer Errors " },
         q = {
@@ -558,18 +559,19 @@ require("which-key").register({
         },
         m = {
             name = "Make Things",
-            q = { [[<cmd>2TermExec cmd="exit"<cr>]], "Exit Make Terminal" },
         },
         u = {
             name = "Unit Tests",
-            q = { [[<cmd>5TermExec cmd="exit"<cr>]], "Exit Make Terminal" },
         },
         d = {
             name = "Debugging",
-            q = { [[<cmd>4TermExec cmd="exit"<cr>]], "Exit Make Terminal" },
         },
-        i = {
-            name = "Interactive Running",
+        J = { "<cmd>MagmaInit<cr>", "Start Jupyter"},
+        j = {
+            name = "Jupyter",
+            j = { "<cmd>MagmaEvaluateLine<cr>", "Evaluate Line"},
+            r = { "<cmd>MagmaReevaluateCell<cr>", "Re-Evaluate Cell"},
+            d = { "<cmd>MagmaDelete<cr>", "Delete Cell"},
         },
         r = {
             name = "Refactor",

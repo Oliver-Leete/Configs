@@ -6,4 +6,6 @@ if ! [[ "$TITLES" =~ \"debugterm\" ]]
 then
    kitty @ launch --type=window --window-title="debugterm" --keep-focus $1
 fi
-cat - | kitty @ send-text --match title:debugterm --stdin
+
+shift
+kitty @ send-text --match title:debugterm $@\\r

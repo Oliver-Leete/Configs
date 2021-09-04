@@ -25,7 +25,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'knubie/vim-kitty-navigator'
     Plug 'jpalardy/vim-slime'
     Plug 'vim-test/vim-test'
-    Plug 'rcarriga/vim-ultest'
 
     " Saving
     Plug 'lambdalisue/suda.vim'

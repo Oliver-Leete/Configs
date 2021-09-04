@@ -27,15 +27,6 @@ require("which-key").register({
             i = { "<cmd>silent !echo using Revise | kittyrepl julia<cr>", "REPL Terminal" },
             d = { "<cmd>silent !echo using Revise, Debugger | kittyrepl julia<cr>", "REPL Terminal" },
         },
-        I = { "<cmd>MagmaInit<cr>", "Start Jupyter"},
-        i = {
-            i = { "<cmd>MagmaEvaluateLine<cr>", "Evaluate Line"},
-            r = { "<cmd>MagmaReevaluateCell<cr>", "Re-Evaluate Cell"},
-            d = { "<cmd>MagmaDelete<cr>", "Delete Cell"},
-        },
-        v = {
-            i = { "<cmd>MagmaShowOutput<cr>", "Evaluate Line"},
-        },
         r = {
             d = {
                 [[[fyyO<esc><cmd>.!cat ~/.config/nvim/filetype/julia/func_docstring.txt<cr>pdw>>/TODO:<cr>]],
@@ -50,6 +41,26 @@ require("which-key").register({
             b = { [[<cmd>silent !kittymake "~/.config/nvim/filetype/julia/benchmark"<cr>]], "Benckmark Package" },
             d = { [[<cmd>silent !kittymake "~/.config/nvim/filetype/julia/docBuild"<cr>]], "Build Package Documentation" },
         },
+        d = {
+            d = {"<cmd>silent !kittydebug juliadebug<cr>", "Open Debug Terminal"},
+            n = {"<cmd>silent !kittydebug juliadebug n<cr>", "Step to the Next Line"},
+            N = {"<cmd>silent !kittydebug juliadebug c<cr>", "Step to the Next Breakpoint"},
+            s = {"<cmd>silent !kittydebug juliadebug s<cr>", "Step In"},
+            S = {"<cmd>silent !kittydebug juliadebug so<cr>", "Step Out"},
+            t = {"<cmd>silent !kittydebug juliadebug bt<cr>", "Backtrace"},
+            v = {"<cmd>silent !kittydebug juliadebug fr<cr>", "Variables"},
+            l = {"<cmd>silent !kittydebug juliadebug st<cr>", "Status"},
+            w = {"<cmd>silent !kittydebug juliadebug w<cr>", "Watchlist"},
+            W = {[["<cmd>silent !kittydebug juliadebug 'w add" . input("Expression > ") . "'<cr>"]], "Add to Watchlist", expr=true},
+            q = {"<cmd>silent !kittydebug juliadebug q<cr>", "Quit"},
+            i = {"mzO@bp<esc>`z", "Insert Breakpoint Macro"},
+            I = {"mzO@infiltrate # cond = <esc>`z", "Insert Infiltration Macro"},
+            o = {"<cmd>silent !kittydebug juliadebug o<cr>", "Jump to Line in Editor"},
+            ["+"] = {"<cmd>silent !kittydebug juliadebug +<cr>", "Increase Lines of Source Code"},
+            ["-"] = {"<cmd>silent !kittydebug juliadebug -<cr>", "Decrease Lines of Source Code"},
+            b = {[["<cmd>silent !kittydebug juliadebug 'bp add \"%:t\"\:" . line(".") . "'<cr>"]], "Set Breakpoint", expr = true},
+            B = {[["<cmd>silent !kittydebug juliadebug 'bp add \"%:t\"\:" . line(".") . input("Condition > ") . "'<cr>"]], "Set Conditional Breakpoint", expr = true},
+        }
     },
 }, {
     buffer = 0,
@@ -57,9 +68,6 @@ require("which-key").register({
 require("which-key").register({
     ["<cr>"] = { ":<c-u>MagmaEvaluateVisual<cr>", "Evaluate Selction"},
     ["<leader>"] = {
-        i = {
-            i = { ":<c-u>MagmaEvaluateVisual<cr>", "Evaluate Selction"},
-        }
     },
 }, {
     buffer = 0,
