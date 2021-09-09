@@ -124,11 +124,16 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'kosayoda/nvim-lightbulb'
 
     " Completion
-    Plug 'hrsh7th/nvim-compe'
+    Plug 'hrsh7th/nvim-cmp'
+    Plug 'hrsh7th/cmp-buffer'
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/cmp-nvim-lua'
+    Plug 'hrsh7th/cmp-nvim-lsp'
+    Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
     Plug 'L3MON4D3/LuaSnip'
+    Plug 'saadparwaiz1/cmp_luasnip'
     Plug 'rafamadriz/friendly-snippets'
     Plug 'windwp/nvim-autopairs'
-    Plug 'tzachar/compe-tabnine', { 'do': './install.sh' }
     Plug 'abecodes/tabout.nvim'
 
     " Telescope
@@ -339,6 +344,20 @@ let test#strategy = "kitty"
 
 " NOTE: _, +, -, =, |, $, ^, ¬ and # are free to map
 " !!MAPPINGS!!
+
+" slowly move to kak mappings
+nnoremap x V
+nnoremap X V
+nnoremap C <c-v>
+nnoremap <m-C> <c-v>
+
+xnoremap x j
+xnoremap X k
+xnoremap C j
+xnoremap <m-C> <esc>`<k<c-v>`>
+xnoremap <M-x> v
+xnoremap <M-;> o
+
 
 " nnoremap <C-j> H
 " nnoremap <C-h> M

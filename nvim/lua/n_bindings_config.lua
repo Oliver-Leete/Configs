@@ -51,9 +51,6 @@ require("which-key").setup({
     show_help = true,
 })
 
-vim.api.nvim_set_keymap("n", ";", ":", { noremap = true })
-vim.api.nvim_set_keymap("n", ":", "<nop>", { noremap = true })
-
 -- Normal Bindings
 require("which-key").register({
     j = { [[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], "down", expr = true },
@@ -69,8 +66,6 @@ require("which-key").register({
     ["dD"] = { "d^", "Delete to Start of Line" },
     ["yY"] = { "y^", "Yank to Start of Line" },
     ["cC"] = { "c^", "Change to Start of Line" },
-    ["q;"] = { "q:", "Ex Mode" },
-    ["@;"] = { "@:", "Command Register" },
     ["s"] = { "<cmd>lua require'hop'.hint_char1()<cr>", "Hop Char" },
     ["S"] = { "<cmd>ISwapWith<cr>", "Swap Things" },
     ["'"] = { "`", "Jump to mark location"},
@@ -212,67 +207,27 @@ require("which-key").register({
                 "Search",
                 expr = true,
             },
-            d = { "<cmd>Edoc<cr>", "Documentation" },
-            D = { "<cmd>EmainDoc<cr>", "Main Documentation" },
-            s = { "<cmd>Esource<cr>", "Source" },
-            b = { "<cmd>Ebench<cr>", "Benchmark" },
-            B = { "<cmd>EmainBench<cr>", "Main Benchmark" },
-            t = { "<cmd>Etest<cr>", "Test" },
-            T = { "<cmd>EmainTest<cr>", "Main Test" },
-            p = { "<cmd>Edeps<cr>", "Project Dependencies" },
             r = { "<cmd>Ereadme<cr>", "Readme" },
             v = {
                 name = "Vertical Split",
                 ["<leader>"] = { "<cmd>vsplit #<cr>", "Last File" },
                 ["/"] = { "<cmd>AV<cr>", "Alternate File" },
-                d = { "<cmd>Vdoc<cr>", "Documentation" },
-                D = { "<cmd>VmainDoc<cr>", "Main Documentation" },
-                s = { "<cmd>Vsource<cr>", "Source" },
-                b = { "<cmd>Vbench<cr>", "Benchmark" },
-                B = { "<cmd>VmainBench<cr>", "Main Benchmark" },
-                t = { "<cmd>Vtest<cr>", "Test" },
-                T = { "<cmd>VmainTest<cr>", "Main Test" },
-                p = { "<cmd>Vdeps<cr>", "Project Dependencies" },
                 r = { "<cmd>Vreadme<cr>", "Readme" },
             },
             x = {
                 name = "Horizontal Split",
                 ["<leader>"] = { "<cmd>split #<cr>", "Last File" },
                 ["/"] = { "<cmd>AS<cr>", "Alternate File" },
-                d = { "<cmd>Sdoc<cr>", "Documentation" },
-                D = { "<cmd>SmainDoc<cr>", "Main Documentation" },
-                s = { "<cmd>Ssource<cr>", "Source" },
-                b = { "<cmd>Sbench<cr>", "Benchmark" },
-                B = { "<cmd>SmainBench<cr>", "Main Benchmark" },
-                t = { "<cmd>Stest<cr>", "Test" },
-                T = { "<cmd>SmainTest<cr>", "Main Test" },
-                p = { "<cmd>Sdeps<cr>", "Project Dependencies" },
                 r = { "<cmd>Sreadme<cr>", "Readme" },
             },
             O = {
                 name = "New Tab",
                 ["<leader>"] = { "<cmd>tabedit #<cr>", "Last File" },
                 ["/"] = { "<cmd>AT<cr>", "Alternate File" },
-                d = { "<cmd>Tdoc<cr>", "Documentation" },
-                D = { "<cmd>TmainDoc<cr>", "Main Documentation" },
-                s = { "<cmd>Tsource<cr>", "Source" },
-                b = { "<cmd>Tbench<cr>", "Benchmark" },
-                B = { "<cmd>TmainBench<cr>", "Main Benchmark" },
-                t = { "<cmd>Ttest<cr>", "Test" },
-                T = { "<cmd>TmainTest<cr>", "Main Test" },
-                p = { "<cmd>Tdeps<cr>", "Project Dependencies" },
                 r = { "<cmd>Treadme<cr>", "Readme" },
             },
             n = {
                 name = "New File",
-                d = { [["<cmd>Edoc " . input('File Name > ') . "<cr>"]], "Documentation", expr = true },
-                D = { [[<cmd>EmainDoc<cr>]], "Main Documentation" },
-                s = { [["<cmd>Esource " . input('File Name > ') . "<cr>"]], "Source", expr = true },
-                b = { [["<cmd>Ebench " . input('File Name > ') . "<cr>"]], "Benchmark", expr = true },
-                B = { [[<cmd>EmainBench<cr>]], "Main Benchmarks" },
-                t = { [["<cmd>Etest " . input('File Name > ') . "<cr>"]], "Test", expr = true },
-                T = { [[<cmd>EmainTest<cr>]], "Main Tests" },
-                p = { [[<cmd>Edeps<cr>]], "Project Dependencies" },
                 r = { [[<cmd>Ereadme<cr>]], "Readme" },
             },
         },
@@ -424,8 +379,6 @@ require("which-key").register({
             f = { "<cmd>let g:panelRepeat='f'<cr><cmd>TroubleToggle telescope<CR>", "Telescope List" },
             n = { "<cmd>let g:panelRepeat='n'<cr><cmd>TodoTrouble<cr>", "Todo List" },
             g = { "<cmd>let g:panelRepeat='g'<cr><cmd>DiffviewOpen<CR>", "Git" },
-            i = { "<cmd>let g:panelRepeat='i'<cr><cmd>3ToggleTerm<cr>", "REPL Terminal" },
-            m = { "<cmd>let g:panelRepeat='m'<cr><cmd>2ToggleTerm<cr>", "Build Terminal" },
             L = {
                 "<cmd>let g:panelRepeat='L'<cr><cmd>call v:lua.toggle_loclist()<cr>",
                 "BQF Location List",
@@ -438,8 +391,6 @@ require("which-key").register({
             },
             o = { "<cmd>let g:panelRepeat='o'<cr><cmd>SymbolsOutline<CR>", "Symbol List" },
             x = { "<cmd>let g:panelRepeat='x'<cr><cmd>NvimTreeToggle<CR>", "File Tree" },
-            T = { "<cmd>let g:panelRepeat='T'<cr><cmd>ToggleTermOpenAll<CR>", "All Terminals" },
-            t = { "<cmd>let g:panelRepeat='t'<cr><cmd>1ToggleTerm<cr>", "Terminal" },
             u = { "<cmd>let g:panelRepeat='u'<cr><cmd>UndotreeToggle<CR>", "Undo Tree" },
             z = {
                 d = { "<cmd>let g:panelRepeat='zd'<cr><cmd>TroubleToggle lsp_definitions<cr>", "List Definitions" },
@@ -537,25 +488,10 @@ require("which-key").register({
         },
         t = {
             name = "Terminal",
-            q = { [[<cmd>1TermExec cmd="exit"<CR>]], "Exit Terminal" },
-            Q = {
-                [[<cmd>1TermExec cmd="exit"<CR><cmd>2TermExec cmd="exit"<CR><cmd>3TermExec cmd="exit"<cr>]],
-                "Exit All Terminals",
-            },
-            I = {
-                "<cmd>1ToggleTerm<cr>" ..
-                "<cmd>2ToggleTerm<cr>" ..
-                "<cmd>3ToggleTerm<cr>" ..
-                "<cmd>4ToggleTerm<cr>" ..
-                "<cmd>5ToggleTerm<cr>" ..
-                "<cmd>ToggleTermCloseAll<cr>",
-                "Initialize Terminals",
-            },
-            t = { "<cmd>1ToggleTerm<cr>", "General Terminal" },
-            m = { "<cmd>2ToggleTerm<cr>", "Make Terminal"},
-            i = { "<cmd>3ToggleTerm<cr>", "REPL Terminal"},
-            d = { "<cmd>4ToggleTerm<cr>", "Debug Terminal"},
-            u = { "<cmd>5ToggleTerm<cr>", "Tests Terminal"},
+            t = { "<cmd>silent !kittyterm normterm<cr>", "Normal Terminal"},
+            i = { [[<cmd>silent exe "!kittyrepl replterm " . b:replCommand<cr>]], "REPL Terminal" },
+            d = { [[<cmd>silent exe "!kittycommand debugterm " . b:debugCommand<cr>]], "Debug Terminal" },
+            m = { "<cmd>silent !kittyterm maketerm<cr>", "Building Terminal" },
         },
         m = {
             name = "Make Things",

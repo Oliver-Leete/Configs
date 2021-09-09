@@ -1,13 +1,19 @@
 #!/bin/bash
 
 WINTITLE=$1
+shift
 
 TITLES=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[].title")
 
 if ! [[ "$TITLES" =~ \"$WINTITLE\" ]]; then
-    kitty @ launch --type=window --window-title="$WINTITLE" --keep-focus $2
+    kitty @ launch --type=window --window-title="$WINTITLE" --keep-focus $1
 fi
+shift
 
 ID=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.title==\"$WINTITLE\") | .id")
 
-cat - | pee "ifne -n kitty @ focus-window --match id:$ID" "kitty @ send-text --match id:$ID --stdin"
+if [ "$#" -eq 0 ]; then
+    kitty @ focus-window --match id:$ID
+else
+    kitty @ send-text --match id:$ID $@\\r
+fi

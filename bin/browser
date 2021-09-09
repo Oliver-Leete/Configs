@@ -10,8 +10,8 @@
 # this script also initializes control ports for each browser instance
 
 BROWSER="google-chrome-stable"
-WSTAG=$(ws)
-WSPORT=$(ws port)
+WSTAG=$(/home/oleete/.config/bin/ws)
+WSPORT=$(/home/oleete/.config/bin/ws port)
 
 CONFIGDIR=${XDG_CONFIG_HOME:-${HOME}/.config/browser}
 CACHEDIR=${XDG_CACHE_HOME:-${HOME}/.cache/browser}

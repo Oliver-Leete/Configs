@@ -98,6 +98,7 @@ function _G.plug_targets_back(count, movement, end_movement, selection)
     cmd = cmd .. [[v\<plug>]] .. selection
     vim.cmd([[exe "normal ]] .. cmd .. [["]])
 end
+
 -- Telescope
 
 local action_state = require("telescope.actions.state")
@@ -221,12 +222,11 @@ _G.s_tab_complete = function()
     end
 end
 
-_G.compe_toggle = function()
+_G.cmp_toggle = function()
     if vim.fn.pumvisible() == 1 then
-        -- return replace_keycodes("<esc>:call compe#close()<cr>a")
-        return replace_keycodes("<plug>(compe-close)")
+        return replace_keycodes([[<cmd>lua require("cmp").close()<cr>]])
     else
-        return replace_keycodes("<cmd>call compe#complete()<cr>")
+        return replace_keycodes([[<cmd>lua require("cmp").complete()<cr>]])
     end
 end
 
@@ -235,21 +235,14 @@ _G.enter_complete = function()
         if luasnip and luasnip.expandable() then
             return replace_keycodes("<plug>luasnip-expand-snippet")
         else
-            return vim.fn["compe#confirm"](require("nvim-autopairs").esc("<cr>"))
+            return replace_keycodes([[<cmd>lua require("cmp").confirm({ })<cr>]])
         end
         -- elseif luasnip and luasnip.choice_active() then
         --     return replace_keycodes("<plug>luasnip-next-choice")
     else
-        return require("nvim-autopairs").autopairs_cr()
+        return replace_keycodes([[<cmd>lua require("nvim-autopairs").autopairs_cr()<cr>]])
     end
 end
-
-vim.cmd([[
-    augroup autopairs_compe
-    autocmd!
-    autocmd User CompeConfirmDone call v:lua.MPairs.completion_done()
-    augroup end
-]])
 
 -- Toggle Quickfix list
 function _G.toggle_qflist()
@@ -278,3 +271,5 @@ function _G.toggle_loclist()
         vim.cmd("lopen")
     end
 end
+
+-- Send to Terminal

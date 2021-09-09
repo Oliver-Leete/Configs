@@ -1,6 +1,4 @@
 -- Visual Bindings
-vim.api.nvim_set_keymap("x", ";", ":", {noremap = true})
-vim.api.nvim_set_keymap("x", ":", "<nop>", {noremap = true})
 require("which-key").register({
     j = {[[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], "down", expr=true},
     k = {[[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], "up", expr=true},
@@ -9,8 +7,6 @@ require("which-key").register({
     -- ["<c-j>"] = {"H", "Top of Window"},
     -- ["<c-h>"] = {"M", "Top of Window"},
     -- ["<c-k>"] = {"L", "Top of Window"},
-    ["q;"] = {"q:", "Ex Mode"},
-    ["@;"] = {"@:", "Command Register"},
     ["<"] = {"<gv", "Dedent"},
     [">"] = {">gv", "Indent"},
     ["J"] = {":move '>+1<cr>gv=gv", "Move Line Down"},

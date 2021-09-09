@@ -58,8 +58,6 @@ plug 'danr/kakoune-easymotion' %{
 
 plug 'https://gitlab.com/Screwtapello/kakoune-inc-dec'
 
-map global normal \; :
-map global normal : \;
 map global normal <c-]> <a-)>
 map global normal <c-[> <a-(>
 

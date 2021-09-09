@@ -11,44 +11,42 @@
 -- https://github.com/oliver-leete                                                                 --
 ----------------------------------------------------------------------------------------------------
 
--- Compleation (compe) and Snippet (luasnip) Setup
+-- Compleation (cmp) and Snippet (luasnip) Setup
 
 vim.o.completeopt = "menuone,noselect"
-require("compe").setup({
-    enabled = true,
-    autocomplete = true,
-    debug = false,
-    min_length = 1,
-    preselect = "enable",
-    throttle_time = 80,
-    source_timeout = 200,
-    incomplete_delay = 400,
-    max_abbr_width = 100,
-    max_kind_width = 100,
-    max_menu_width = 100,
-    documentation = {
-        border = "single",
-        winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
-        max_width = 120,
-        min_width = 60,
-        max_height = math.floor(vim.o.lines * 0.3),
-        min_height = 1,
-    },
 
-    source = {
-        path = true,
-        buffer = true,
-        calc = true,
-        nvim_lsp = true,
-        nvim_lua = true,
-        nvim_treesitter = false,
-        vsnip = false,
-        luasnip = true,
-        omni = {
-            filetypes = { "tex" },
-            dup = false,
-        },
-        tabnine = true,
+cmp = require("cmp")
+require("cmp").setup({
+    snippet = {
+        expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+        end,
+    },
+    mapping = {},
+    sources = {
+        { name = "luasnip" },
+        { name = "cmp_tabnine" },
+        { name = "nvim_lsp" },
+        { name = "path" },
+        { name = "nvim_lua" },
+        { name = "buffer" },
+    },
+    formatting = {
+        format = function(entry, vim_item)
+            -- fancy icons and a name of kind
+            vim_item.kind = require("lspkind").presets.default[vim_item.kind] .. " " .. vim_item.kind
+
+            -- set a name for each source
+            vim_item.menu = ({
+                buffer = "[Buffer]",
+                path = "[Path]",
+                nvim_lsp = "[LSP]",
+                luasnip = "[LuaSnip]",
+                nvim_lua = "[Lua]",
+                cmp_tabnine = "[TN]",
+            })[entry.source.name]
+            return vim_item
+        end,
     },
 })
 
@@ -57,22 +55,22 @@ require("nvim-autopairs").setup({
     check_ts = true,
     enable_check_bracket_line = true,
     fast_wrap = {
-      map = '<C-p>',
-      chars = { '{', '[', '(', '"', "'" , "`"},
-      pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], '%s+', ''),
-      end_key = 'l',
-      keys = 'tnseriaodhgjplfuwybkvmcxzq',
+        map = "<C-p>",
+        chars = { "{", "[", "(", '"', "'", "`" },
+        pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], "%s+", ""),
+        end_key = "l",
+        keys = "tnseriaodhgjplfuwybkvmcxzq",
     },
 })
 
-local Rule = require('nvim-autopairs.rule')
+local Rule = require("nvim-autopairs.rule")
 require("nvim-autopairs").add_rules({
-    Rule('"""', '"""', 'julia'),
+    Rule('"""', '"""', "julia"),
     Rule("$", "$", "tex"),
-    Rule('```', '```'),
+    Rule("```", "```"),
 })
 
-require("nvim-autopairs.completion.compe").setup({
+require("nvim-autopairs.completion.cmp").setup({
     map_cr = false,
     map_complete = true,
 })
@@ -121,7 +119,7 @@ require("tabout").setup({
         { open = "$", close = "$" },
         { open = "$$", close = "$$" },
         { open = "[[", close = "]]" },
-        { open = '```', close = '```' },
+        { open = "```", close = "```" },
         { open = '"""', close = '"""' },
         { open = "<", close = ">" },
     },

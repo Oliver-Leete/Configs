@@ -246,7 +246,7 @@ projects =
 -- what I put here. Either I should only be putting things used regularly, or I should be putting
 -- anything.
 
-myTerminal     = "kitty"
+myTerminal     = "kitty --single-instance"
 myBrowser      = "/home/oleete/.config/bin/browser"
 myBrowserClass = "google-chrome-stable"
 myStatusBar    = "/home/oleete/.config/xmobar/init-xmobars"
@@ -309,7 +309,7 @@ scratchpads =
     ,   NS "youtubeMusic"  youtubeMusicCommand isYoutubeMusic nonFloating
     ,   NS "calc"  "gnome-calculator --class=calcu" (className =? "calcu") nonFloating
 
-    ,   NS "console"  "kitty --class=kittyconsole" (className =? "kittyconsole") nonFloating
+    ,   NS "console"  "kitty -1 --class=kittyconsole" (className =? "kittyconsole") nonFloating
     ]
 
 ----------------------------------------------------------------------------------------------------

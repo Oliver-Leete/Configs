@@ -17,6 +17,7 @@ local nvim_lsp = require("lspconfig")
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
 local function preview_location_callback(_, _, result)
     if result == nil or vim.tbl_isempty(result) then
@@ -71,33 +72,33 @@ vim.lsp.diagnostic.set_signs = set_signs_limited
 local custom_attach = function(client, bufnr)
     print("LSP: " .. client.name .. " Started")
 
-    vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, _, params, client_id, _)
+    vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, results, ctx)
         local config = {
             underline = false,
             virtual_text = false,
             signs = true,
             update_in_insert = false,
         }
-        local uri = params.uri
+        local uri = results.uri
         local bufnr2 = vim.uri_to_bufnr(uri)
 
         if not bufnr2 then
             return
         end
 
-        local diagnostics = params.diagnostics
+        local diagnostics = results.diagnostics
 
         for i, v in ipairs(diagnostics) do
             diagnostics[i].message = string.format("%s: %s", v.source, v.message)
         end
 
-        vim.lsp.diagnostic.save(diagnostics, bufnr2, client_id)
+        vim.lsp.diagnostic.save(diagnostics, bufnr2, ctx.client_id)
 
         if not vim.api.nvim_buf_is_loaded(bufnr2) then
             return
         end
 
-        vim.lsp.diagnostic.display(diagnostics, bufnr2, client_id, config)
+        vim.lsp.diagnostic.display(diagnostics, bufnr2, ctx.client_id, config)
     end
 
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
@@ -455,33 +456,33 @@ vim.g.diagnostics_active = false
 function _G.toggle_diagnostics()
     if vim.g.diagnostics_active then
         vim.g.diagnostics_active = false
-        vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, _, params, client_id, _)
+        vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, result, ctx)
             local config = {
                 underline = false,
                 virtual_text = false,
                 signs = true,
                 update_in_insert = false,
             }
-            local uri = params.uri
+            local uri = result.uri
             local bufnr2 = vim.uri_to_bufnr(uri)
 
             if not bufnr2 then
                 return
             end
 
-            local diagnostics = params.diagnostics
+            local diagnostics = result.diagnostics
 
             for i, v in ipairs(diagnostics) do
                 diagnostics[i].message = string.format("%s: %s", v.source, v.message)
             end
 
-            vim.lsp.diagnostic.save(diagnostics, bufnr2, client_id)
+            vim.lsp.diagnostic.save(diagnostics, bufnr2, ctx.client_id)
 
             if not vim.api.nvim_buf_is_loaded(bufnr2) then
                 return
             end
 
-            vim.lsp.diagnostic.display(diagnostics, bufnr2, client_id, config)
+            vim.lsp.diagnostic.display(diagnostics, bufnr2, ctx.client_id, config)
         end
         vim.cmd([[
         augroup ErrorHover
@@ -491,7 +492,7 @@ function _G.toggle_diagnostics()
         vim.lsp.diagnostic.redraw()
     else
         vim.g.diagnostics_active = true
-        vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, _, params, client_id, _)
+        vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, result, ctx)
             local config = {
                 underline = true,
                 virtual_text = {
@@ -501,26 +502,26 @@ function _G.toggle_diagnostics()
                 signs = true,
                 update_in_insert = false,
             }
-            local uri = params.uri
+            local uri = result.uri
             local bufnr2 = vim.uri_to_bufnr(uri)
 
             if not bufnr2 then
                 return
             end
 
-            local diagnostics = params.diagnostics
+            local diagnostics = result.diagnostics
 
             for i, v in ipairs(diagnostics) do
                 diagnostics[i].message = string.format("%s: %s", v.source, v.message)
             end
 
-            vim.lsp.diagnostic.save(diagnostics, bufnr2, client_id)
+            vim.lsp.diagnostic.save(diagnostics, bufnr2, ctx.client_id)
 
             if not vim.api.nvim_buf_is_loaded(bufnr2) then
                 return
             end
 
-            vim.lsp.diagnostic.display(diagnostics, bufnr2, client_id, config)
+            vim.lsp.diagnostic.display(diagnostics, bufnr2, ctx.client_id, config)
         end
         vim.cmd([[
         augroup ErrorHover
