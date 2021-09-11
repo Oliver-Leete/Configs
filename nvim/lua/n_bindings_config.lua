@@ -389,7 +389,7 @@ require("which-key").register({
                     expr = true,
                 },
             },
-            g = { "<cmd>!kitty @ launch --type=tab --tab-title 'git' lazygit<cr>", "Neogit Status" },
+            g = { "<cmd>!kitty @ launch --type=window --window-title 'git' lazygit<cr>", "Neogit Status" },
             p = { "<cmd>Gitsigns preview_hunk<CR>", "Hunk Preview" },
             r = { "<cmd>Gitsigns reset_hunk<CR>", "Hunk Reset" },
             R = { "<cmd>Gitsigns reset_buffer<CR>", "Reset Buffer" },
