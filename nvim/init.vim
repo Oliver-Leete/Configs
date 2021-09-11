@@ -246,12 +246,16 @@ augroup numbertoggle
 augroup END
 
 set cursorline
-augroup ActiveWindowBufferCursorline
+augroup DeclutterSleepyWins
     autocmd!
     autocmd WinEnter * setlocal cursorline
     autocmd BufEnter * setlocal cursorline
     autocmd WinLeave * setlocal nocursorline
     autocmd BufLeave * setlocal nocursorline
+    autocmd WinEnter * setlocal signcolumn=yes:2
+    autocmd BufEnter * setlocal signcolumn=yes:2
+    autocmd WinLeave * setlocal signcolumn=no
+    autocmd BufLeave * setlocal signcolumn=no
 augroup END
 
 " Saving and Backup

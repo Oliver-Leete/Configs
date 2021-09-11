@@ -1,0 +1,4 @@
+#!/bin/bash
+
+tabID=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .id")
+nvr -s --servername /tmp/nvr-server-$tabID $@

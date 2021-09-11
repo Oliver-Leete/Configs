@@ -8,6 +8,24 @@ vim.api.nvim_buf_set_var(0, "debugCommand", "juliadebug")
 require("which-key").register({
     -- ["<cr>"] = { "<cmd>MagmaEvaluateOperator<cr>", "Evaluate Line"},
     ["<cr>"] = { "<cmd>SlimeSendCurrentLine<cr>", "Send Line to Repl"},
+    ["<localleader>"] = {
+        ["<cr>"] = { "<cmd>MagmaEvaluateOperator<cr>", "Evaluate Line"},
+        i = {
+            i = {"<cmd>silent !kittycommand infilterm juliainfil<cr>", "Open Debug Terminal"},
+            n = {"<cmd>silent !kittycommand infilterm juliainfil @continue<cr>", "Continue to Next Breakpoint"},
+            b = {"mzO@infiltrate<esc>`z", "Insert Breakpoint"},
+            B = {"mzO@infiltrate # cond = ", "Insert Conditional Breakpoint"},
+            I = {"<cmd>silent !kittycommand infilterm juliainfil @toggle<cr>", "Toggle Breakpoint"},
+            t = {"<cmd>silent !kittycommand infilterm juliainfil @trace<cr>", "Backtrace"},
+            v = {"<cmd>silent !kittycommand infilterm juliainfil @locals<cr>", "Variables"},
+            V = {"<cmd>silent !kittycommand infilterm juliainfil @exfiltrate<cr>", "Save Variables"},
+            d = {[["<cmd>silent !kittycommand infilterm juliainfil '@descend " . input("Descend Into? > ") . "'<cr>"]], "Cthulu's Madness"},
+            D = {[["<cmd>silent !kittycommand infilterm juliainfil '@descend " . getline(".") . "'<cr>"]], "Cthulu's Madness (Line)"},
+            w = {[["<cmd>silent !kittycommand infilterm juliainfil '@descend_code_warntype " . input("Descend Into ? ") . "'<cr>"]], "Cthulu's Warning"},
+            W = {[["<cmd>silent !kittycommand infilterm juliainfil '@descend_code_warntype " . getline(".") . "'<cr>"]], "Cthulu's Warning (Line)"},
+            q = {"<cmd>silent !kittycommand infilterm juliainfil @exit<cr>", "Quit"},
+        },
+    },
     ["<leader>"] = {
         ["/"] = {
             d = { "<cmd>Edoc<cr>", "Documentation" },
@@ -80,6 +98,8 @@ require("which-key").register({
         },
         d = {
             d = {"<cmd>silent !kittycommand debugterm juliadebug<cr>", "Open Debug Terminal"},
+            e = {[["<cmd>silent !kittycommand debugterm juliadebug '@enter . input("Debug? > ") . <cr>"]], "Enter Function"},
+            E = {[["<cmd>silent !kittycommand debugterm juliadebug '@enter . getline(".") . <cr>"]], "Enter Function (Line)"},
             n = {"<cmd>silent !kittycommand debugterm juliadebug n<cr>", "Step to the Next Line"},
             N = {"<cmd>silent !kittycommand debugterm juliadebug c<cr>", "Step to the Next Breakpoint"},
             s = {"<cmd>silent !kittycommand debugterm juliadebug s<cr>", "Step In"},
@@ -88,15 +108,20 @@ require("which-key").register({
             v = {"<cmd>silent !kittycommand debugterm juliadebug fr<cr>", "Variables"},
             l = {"<cmd>silent !kittycommand debugterm juliadebug st<cr>", "Status"},
             w = {"<cmd>silent !kittycommand debugterm juliadebug w<cr>", "Watchlist"},
-            W = {[["<cmd>silent !kittycommand debugterm juliadebug 'w add" . input("Expression > ") . "'<cr>"]], "Add to Watchlist", expr=true},
+            c = {"<cmd>silent !kittycommand debugterm juliadebug C<cr>", "Switch to Compiled Mode"},
+            W = {[["<cmd>silent !kittycommand debugterm juliadebug 'w add " . input("Expression > ") . "'<cr>"]], "Add to Watchlist", expr=true},
             q = {"<cmd>silent !kittycommand debugterm juliadebug q<cr>", "Quit"},
             i = {"mzO@bp<esc>`z", "Insert Breakpoint Macro"},
-            I = {"mzO@infiltrate # cond = <esc>`z", "Insert Infiltration Macro"},
             o = {"<cmd>silent !kittycommand debugterm juliadebug o<cr>", "Jump to Line in Editor"},
             ["+"] = {"<cmd>silent !kittycommand debugterm juliadebug +<cr>", "Increase Lines of Source Code"},
             ["-"] = {"<cmd>silent !kittycommand debugterm juliadebug -<cr>", "Decrease Lines of Source Code"},
             b = {[["<cmd>silent !kittycommand debugterm juliadebug 'bp add \"%:t\"\:" . line(".") . "'<cr>"]], "Set Breakpoint", expr = true},
-            B = {[["<cmd>silent !kittycommand debugterm juliadebug 'bp add \"%:t\"\:" . line(".") . input("Condition > ") . "'<cr>"]], "Set Conditional Breakpoint", expr = true},
+            B = {[["<cmd>silent !kittycommand debugterm juliadebug 'bp add \"%:t\"\:" . line(".") . " " . input("Condition > ") . "'<cr>"]], "Set Conditional Breakpoint", expr = true},
+            r = {
+                r = {"<cmd>silent !kittycommand debugterm juliadebug bp<cr>", "List Breakpoints"},
+                b = {[["<cmd>silent !kittycommand debugterm juliadebug bp rm " . input("Point to Remove > ") . "<cr>"]], "Remove Breapoint"},
+                w = {[["<cmd>silent !kittycommand debugterm juliadebug w rm " . input("Item to Remove > ") . "<cr>"]], "Remove Watchlist"},
+            },
         }
     },
 }, {

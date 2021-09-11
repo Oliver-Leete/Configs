@@ -1,0 +1,5 @@
+#!/bin/bash
+
+project="${PWD##*/}"
+
+julia -i -e "using Revise, Cthulhu, $project"

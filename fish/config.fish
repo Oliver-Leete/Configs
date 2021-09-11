@@ -11,7 +11,7 @@ export BAT_PAGER="less -R"
 
 # aliases
 alias neovim nvim
-alias n nvrTab
+alias n nvrStart
 alias k kak
 alias shutdown "sudo ~/.config/bin/shutdownupdate shutdown now"
 alias reboot "sudo ~/.config/bin/shutdownupdate reboot now"
