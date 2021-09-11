@@ -204,6 +204,7 @@ set hlsearch
 set incsearch hl
 set inccommand=split
 noremap <plug>(slash-after) zz
+set gdefault " NOTE : Might break some things
 
 " Indenting
 set tabstop=4
@@ -342,22 +343,47 @@ let g:slime_no_mappings = 1
 let g:slime_target = "kitty"
 let test#strategy = "kitty"
 
-" NOTE: _, +, -, =, |, $, ^, ¬ and # are free to map
+" NOTE: _, =, |, $, ^, ¬ and # are free to map
 " !!MAPPINGS!!
+nnoremap v <nop>
+nnoremap V <nop>
+nnoremap <c-v> <nop>
+nnoremap q <nop>
+
+xnoremap q <nop>
+
+nnoremap ; :
+nnoremap : ;
+xnoremap ; :
+xnoremap : ;
+onoremap ; :
+onoremap : ;
+
+nnoremap + <c-a>
+nnoremap - <c-x>
+xnoremap + g<c-a>
+xnoremap - g<c-x>
 
 " slowly move to kak mappings
 nnoremap x V
 nnoremap X V
-nnoremap C <c-v>
-nnoremap <m-C> <c-v>
+nnoremap C <c-v>j
+nnoremap <m-C> <c-v>k
 
-xnoremap x j
-xnoremap X k
+xnoremap x j$
+xnoremap X <esc>`<kV`>
 xnoremap C j
 xnoremap <m-C> <esc>`<k<c-v>`>
 xnoremap <M-x> v
 xnoremap <M-;> o
 
+nnoremap <m-c> "_c
+nnoremap <m-d> "_d
+xnoremap <m-c> "_c
+xnoremap <m-d> "_d
+
+nnoremap , <cmd>WhichKey g,<cr>
+xnoremap , <cmd>WhichKey g,<cr>
 
 " nnoremap <C-j> H
 " nnoremap <C-h> M
@@ -472,8 +498,8 @@ let g:clever_f_smart_case=1
 let g:wordmotion_prefix = '$'
 
 " Nvim Comment
-nmap <c-_> gcc
-xmap <c-_> gc
+nmap <c-_> g,cc
+xmap <c-_> g,c
 
 " Arrows
 

@@ -22,7 +22,8 @@ require("cmp").setup({
             require("luasnip").lsp_expand(args.body)
         end,
     },
-    mapping = {},
+    mapping = {
+    },
     sources = {
         { name = "luasnip" },
         { name = "cmp_tabnine" },
@@ -70,10 +71,10 @@ require("nvim-autopairs").add_rules({
     Rule("```", "```"),
 })
 
-require("nvim-autopairs.completion.cmp").setup({
-    map_cr = false,
-    map_complete = true,
-})
+-- require("nvim-autopairs.completion.cmp").setup({
+--     map_cr = false,
+--     map_complete = true,
+-- })
 
 vim.g.diagnostic_auto_popup_while_jump = 0
 vim.g.diagnostic_enable_virtual_text = 0

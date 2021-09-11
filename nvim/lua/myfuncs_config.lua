@@ -99,6 +99,64 @@ function _G.plug_targets_back(count, movement, end_movement, selection)
     vim.cmd([[exe "normal ]] .. cmd .. [["]])
 end
 
+function _G.paragraph_targets(count, around)
+    vim.fn.search([[\v^$\n^\zs.+$]], "W")
+    count = count - 1
+    while count > 0 do
+        vim.fn.search([[\v^$\n^\zs.+$]], "W")
+        count = count - 1
+    end
+    local line_diff
+    if around == 1 then
+        line_diff = vim.fn.search([[\v(^$\n^.+$|\%$)]], "Wnc") - vim.fn.line(".")
+    else
+        line_diff = vim.fn.search([[\v(^.+$\n^$|\%$)]], "Wnc") - vim.fn.line(".")
+    end
+    if line_diff > 0 then
+        vim.cmd([[normal! V]] .. line_diff .. "j")
+    else
+        vim.cmd([[normal! V]])
+    end
+end
+
+function _G.paragraph_targets_back(count, around)
+    vim.fn.search([[\v^.+\zs$\n^$]], "Wb")
+    count = count - 1
+    while count > 0 do
+        vim.fn.search([[\v^.+\zs$\n^$]], "Wb")
+        count = count - 1
+    end
+    local line_diff
+    if around == 1 then
+        line_diff = vim.fn.line(".") - vim.fn.search([[\v(^.+$\n^$|\%^)]], "bWnc")
+    else
+        line_diff = vim.fn.line(".") - vim.fn.search([[\v(^$\n^\zs.+$|\%^)]], "bWnc")
+    end
+    if line_diff > 0 then
+        vim.cmd([[normal! V]] .. line_diff .. "k")
+    else
+        vim.cmd([[normal! V]])
+    end
+end
+
+-- Distant Pasting
+
+function _G.pre_paste_away(register, paste)
+    local direction
+    if string.find(paste, "p") then
+        direction = "]"
+    else
+        direction = "["
+    end
+    Paste_away_direction = direction
+    Paste_away_register = register
+    Paste_away_paste = paste
+end
+
+function _G.paste_away()
+    vim.cmd([[normal ']] .. Paste_away_direction .. '"' .. Paste_away_register .. Paste_away_paste)
+end
+
 -- Telescope
 
 local action_state = require("telescope.actions.state")
@@ -108,7 +166,7 @@ local open_dif = function()
     local value = selected_entry["value"]
     -- close Telescope window properly prior to switching windows
     vim.api.nvim_win_close(0, true)
-    local cmd = "Dif fviewOpen " .. value
+    local cmd = "DiffviewOpen " .. value
     vim.api.nvim_set_var("DiffviewLast", cmd)
     vim.cmd(cmd)
 end
@@ -240,7 +298,9 @@ _G.enter_complete = function()
         -- elseif luasnip and luasnip.choice_active() then
         --     return replace_keycodes("<plug>luasnip-next-choice")
     else
-        return replace_keycodes([[<cmd>lua require("nvim-autopairs").autopairs_cr()<cr>]])
+        -- FIX : Fix this
+        -- return replace_keycodes([[<cmd>lua require("nvim-autopairs").autopairs_cr()<cr>]])
+        return replace_keycodes([[<cr>]])
     end
 end
 
@@ -273,3 +333,5 @@ function _G.toggle_loclist()
 end
 
 -- Send to Terminal
+--
+--

@@ -16,6 +16,6 @@ then
     /home/oleete/.config/bin/kak-update
     /home/oleete/.config/bin/confirm $@
 else
-    /home/oleete/.local/bin/confirm $@
+    /home/oleete/.config/bin/confirm $@
 fi
 

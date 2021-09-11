@@ -64,7 +64,7 @@ require("surround").setup({})
 
 require("mkdir")
 require("neoclip").setup()
-require("nvim_comment").setup({ comment_empty = false })
+require("nvim_comment").setup({ comment_empty = false, line_mapping="g,cc", operator_mapping="g,c"})
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
 -- require("numb").setup()
 require("foldsigns").setup()

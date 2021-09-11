@@ -48,7 +48,6 @@ require("gitsigns").setup({
     numhl = true,
     sign_priority = 6,
     status_formatter = nil,
-    use_internal_diff = true,
 })
 -- DiffView.nvim
 

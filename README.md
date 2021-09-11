@@ -9,6 +9,23 @@ where it came from.
 
 ## Neovim
 
+## Multiple Leaders
+
+I am slowly moving things over to a system of having a few top level leaders,
+each with it's own use. Space, the actual leader key set, is used for all
+'program level commands', things like fuzzy finding, running code, debugging,
+etc. Comma, the user command key, is used for additional editing commands,
+like aligning things, changing case, and special pasting. Backslash, the local
+leader key, is used for very language specific things. Such as viewing a tex
+file's PDF, or using the vimtex word count function. 
+
+Square brackets are used as directional leaders (covered more in the Repeat
+section), for all manner of jumping about. I am trying to limit g to just be
+goto commands (goto paste works kinda), I'll hopefully remove all the normal
+extra crap it's used for at some point. v will be a view related key (thanks
+Kakoune for the inspiration) as soon as I have a way of locking the leader key
+on (think sub modes).
+
 ## Repeat Mappings
 
 OK, I love this one. I use a lot of jumping around mappings, bound to ] and [
@@ -102,10 +119,38 @@ Just made some more functions and mappings for this. Mapped targets allows
 for the creation of target mappings using already existing mapped motions and
 selections. Plug targets instead uses the plug mapping provided by plugins.
 Examples of all of these functions can be seen in my o_bindings_config.lua and
-tex.lua config files. Combind with the targets plugin this allows for almost
-any text object to be targeted from afar (still need to implement a function
-for paragraphs, the default mappings aren't good enough for the mapped target
-function)
+tex.lua config files. Combined with the targets plugin this allows for almost
+any text object to be targeted from afar. The one remaining object has been
+conquered, paragraphs. This had to have two functions all to itself, but it now
+works how I want it to.
+
+## Targeted Paste
+
+This is something I've wanted for a while, a simple little pair of functions
+that lets you paste from afar. This is useful for putting the thing you just
+yanked at the end of the paragraph (or any other text object you could think of).
+
+The first is the setup function, followed by the function that can be set as the
+opfunc (for whatever reason the opfunc can't take arguments, hence the setup
+function).
+
+```lua
+function _G.pre_paste_away(register, paste)
+    local direction
+    if string.find(paste, "p") then
+        direction = "]"
+    else
+        direction = "["
+    end
+    Paste_away_direction = direction
+    Paste_away_register = register
+    Paste_away_paste = paste
+end
+
+function _G.paste_away()
+    vim.cmd([[normal ']] .. Paste_away_direction .. '"' .. Paste_away_register .. Paste_away_paste)
+end
+```
 
 ## Diff View Mappings
 
@@ -147,7 +192,7 @@ end
 These two make j and k respect wrapped lines, unless a count is given, in which
 case j and k act on true lines. This means that normally they make the cursor
 go where you'd expect (if you've ever used any other editor), but relative line
-numbers can still be used for fast jumping. In addition they also add to the
+numbers can still be used for fast jumping. In addition, they also add to the
 jump list if a count greater than 5 is given.
 
 ```vim
@@ -159,13 +204,54 @@ It makes sense to me to have 'big' h and l do a bigger version of the h or
 l movement. So this mapping makes H and L go to the start and end of the
 line respectively. It's a little more than that though, they go to the first
 or last non-whitespace character. If the cursor is already on the first or
-last non-whitespace character then it instead gos to the true first or last
+last non-whitespace character then it instead goes to the true first or last
 character.
 
 ```vim
 nnoremap <expr> H getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^'
 nnoremap <expr> L getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_'
 ```
+
+## The Slow Road To Kak
+
+I really like the ideas behind Kakoune, and will at some point have another try
+at moving to it. But for the mean time I'm just taking a few ideas from it.
+
+### Kak Mappings
+
+I don't actually know how I would get to normal visual mode at the moment, I
+have unmapped all the v key functionality and instead split line and column
+based stuff to x and C, inspired by the Kak mappings. These mappings also allow
+for quickly expanding the selections (Why would you go into column mode if you
+aren't going to select another column?)
+
+```vim
+nnoremap x V
+nnoremap X V
+nnoremap C <c-v>j
+nnoremap <m-C> <c-v>k
+
+
+xnoremap x j$
+xnoremap X <esc>`<kV`>
+xnoremap C j
+xnoremap <m-C> <esc>`<k<c-v>`>
+xnoremap <M-x> v
+xnoremap <M-;> o
+```
+
+### Remote Terminal Tasks
+
+I tried for ages to get a system for running terminal tasks set up in NVim that
+I was happy with, closest I got was using toggle term, but I still had some
+issues. When I looked back into Kakoune I thought about the idea of keeping the
+editor for editing only, and started looking into running terminal tasks in my
+actual terminal. Using Kitty's remote functionality I was able to set up some
+shortcuts for running repls, debug and build tools.
+
+For when I actually want the full powers of Kakoune I have a shortcut that uses
+kitty's remote control to open a new tab with Kak running. This tab is opened to
+the same cursor position in the same file as I ran the shortcut from.
 
 ## Insert Mappings
 
