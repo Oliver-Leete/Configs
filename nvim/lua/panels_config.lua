@@ -114,20 +114,6 @@ vim.g.symbols_outline = {
     lsp_blacklist = {},
 }
 
--- Toggle Terminal
-
-require("toggleterm").setup({
-    size = 25,
-    open_mapping = [[<c-\>]],
-    hide_numbers = true,
-    shade_filetypes = {},
-    shade_terminals = false,
-    shading_factor = "1",
-    start_in_insert = false,
-    persist_size = true,
-    direction = "horizontal",
-    shell = "fish",
-})
 
 -- BQF Settup
 

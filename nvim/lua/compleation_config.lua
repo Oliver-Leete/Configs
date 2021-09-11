@@ -15,7 +15,7 @@
 
 vim.o.completeopt = "menuone,noselect"
 
-cmp = require("cmp")
+local cmp = require("cmp")
 require("cmp").setup({
     snippet = {
         expand = function(args)
@@ -23,6 +23,12 @@ require("cmp").setup({
         end,
     },
     mapping = {
+        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-f>"] = cmp.mapping.scroll_docs(4),
+        ["<CR>"] = cmp.mapping.confirm({
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+        }),
     },
     sources = {
         { name = "luasnip" },
@@ -71,10 +77,10 @@ require("nvim-autopairs").add_rules({
     Rule("```", "```"),
 })
 
--- require("nvim-autopairs.completion.cmp").setup({
---     map_cr = false,
---     map_complete = true,
--- })
+require("nvim-autopairs.completion.cmp").setup({
+    map_cr = true,
+    map_complete = true,
+})
 
 vim.g.diagnostic_auto_popup_while_jump = 0
 vim.g.diagnostic_enable_virtual_text = 0

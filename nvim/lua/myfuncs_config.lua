@@ -153,8 +153,15 @@ function _G.pre_paste_away(register, paste)
     Paste_away_paste = paste
 end
 
-function _G.paste_away()
-    vim.cmd([[normal ']] .. Paste_away_direction .. '"' .. Paste_away_register .. Paste_away_paste)
+function _G.paste_away(type)
+    local last_thing 
+    if type == "line" then
+        last_thing = "L"
+    else
+        last_thing = ""
+    end
+
+    vim.cmd([[normal ']] .. Paste_away_direction .. last_thing .. '"' .. Paste_away_register .. Paste_away_paste)
 end
 
 -- Telescope
@@ -285,22 +292,6 @@ _G.cmp_toggle = function()
         return replace_keycodes([[<cmd>lua require("cmp").close()<cr>]])
     else
         return replace_keycodes([[<cmd>lua require("cmp").complete()<cr>]])
-    end
-end
-
-_G.enter_complete = function()
-    if vim.fn.pumvisible() == 1 then
-        if luasnip and luasnip.expandable() then
-            return replace_keycodes("<plug>luasnip-expand-snippet")
-        else
-            return replace_keycodes([[<cmd>lua require("cmp").confirm({ })<cr>]])
-        end
-        -- elseif luasnip and luasnip.choice_active() then
-        --     return replace_keycodes("<plug>luasnip-next-choice")
-    else
-        -- FIX : Fix this
-        -- return replace_keycodes([[<cmd>lua require("nvim-autopairs").autopairs_cr()<cr>]])
-        return replace_keycodes([[<cr>]])
     end
 end
 

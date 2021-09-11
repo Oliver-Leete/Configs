@@ -64,7 +64,7 @@ require("surround").setup({})
 
 require("mkdir")
 require("neoclip").setup()
-require("nvim_comment").setup({ comment_empty = false, line_mapping="g,cc", operator_mapping="g,c"})
+require("nvim_comment").setup({ comment_empty = false, line_mapping = "g,cc", operator_mapping = "g,c" })
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
 -- require("numb").setup()
 require("foldsigns").setup()
@@ -78,4 +78,8 @@ require("colorizer").setup({ "*" }, {
     hsl_fn = true,
     css_fn = false,
     mode = "background",
+})
+require("bufjump").setup({
+    forward = "<c-n>",
+    backward = "<c-p>",
 })

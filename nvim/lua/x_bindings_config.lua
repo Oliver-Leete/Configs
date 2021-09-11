@@ -60,9 +60,20 @@ require("which-key").register({
         },
         z = { "!par w80<cr>", "Wrap to 80 Characters" },
     },
-    z = {
-        i = { "I", "Insert" },
-        a = { "A", "Append" },
+    v = {
+        name = "View",
+        v = {"zz", "Centre Cursor (Vertically)"},
+        m = {"<cmd>set sidescrolloff=999<cr><cmd>set sidescrolloff=0<cr>", "Centre Cursor (Horizontally)"},
+        b = {"zb", "Cursor On Bottom"},
+        t = {"zt", "Cursor On Top"},
+        e = {"ze", "Cursor At Right"},
+        s = {"zs", "Cursor At Left"},
+        h = {"zh", "Scroll Left"},
+        l = {"zl", "Scroll Right"},
+        j = {"<c-e>", "Scroll Down"},
+        k = {"<c-y>", "Scroll Up"},
+        o = {"za", "Open Fold"},
+        c = {"zc", "Close Fold"},
     },
     a = {
         name = "around",

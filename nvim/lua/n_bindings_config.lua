@@ -134,6 +134,7 @@ require("which-key").register({
         -- R = { "<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References" },
     },
     v = {
+        name = "View",
         v = {"zz", "Centre Cursor (Vertically)"},
         m = {"<cmd>set sidescrolloff=999<cr><cmd>set sidescrolloff=0<cr>", "Centre Cursor (Horizontally)"},
         b = {"zb", "Cursor On Bottom"},

@@ -312,6 +312,10 @@ inoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 snoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 ```
 
+This next bit is depreciated since moving to compe. I just use the standard cmp
+and autopairs mappings. Ctrl+] is used for next snippet selection, and expanding
+is just done with the completion menu.
+
 Enter is possibly the most used key, used for line breaks, nvim-autopairs
 splitting, completion confirmation and changing the choices in luasnip. I've let
 autopairs deal with most of it, just adding in a check for luasnip changeability

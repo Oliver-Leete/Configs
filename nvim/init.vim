@@ -106,9 +106,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'lvim-tech/lvim-helper'
     Plug 'kevinhwang91/nvim-bqf'
 
-
     " Terminal Stuff
-    Plug 'akinsho/nvim-toggleterm.lua'
     Plug 'dccsillag/magma-nvim', {'do': ':UpdateRemotePlugins'}
 
     " Themes
@@ -146,7 +144,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-telescope/telescope-github.nvim'
     Plug 'crispgm/telescope-heading.nvim'
 
-
     " Treesitter
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
@@ -161,6 +158,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-telescope/telescope-hop.nvim'
     Plug 'mizlan/iswap.nvim'
     Plug 'mfussenegger/nvim-ts-hint-textobject'
+    Plug 'kwkarlwang/bufjump.nvim'
     
 call plug#end()
 
@@ -364,6 +362,9 @@ nnoremap - <c-x>
 xnoremap + g<c-a>
 xnoremap - g<c-x>
 
+xnoremap y myy`y
+xnoremap Y myY`y
+
 " slowly move to kak mappings
 nnoremap x V
 nnoremap X V
@@ -474,7 +475,6 @@ augroup panelMappings
     autocmd filetype LvimHelper          map <buffer> <esc> <cmd>q<cr>
     " autocmd filetype NeogitStatus      map <buffer> <esc> <cmd>tabclose<cr>
     " autocmd filetype NeogitPopup       map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype toggleterm          map <buffer> <esc> <cmd>ToggleTermCloseAll<cr>
     autocmd filetype undotree            map <buffer> <esc> <cmd>UndotreeHide<cr>
     autocmd filetype lspinfo             map <buffer> <esc> <cmd>q<cr>
     autocmd filetype DiffviewFiles       map <buffer> <esc> <cmd>DiffviewClose<cr>

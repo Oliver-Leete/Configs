@@ -88,9 +88,6 @@ require("bufferline").setup({
 })
 
 -- LuaLine Status Line
-local function toggleTermNum()
-    return vim.api.nvim_eval('&ft == "toggleterm" ? "TERM ".b:toggle_number."" : ""')
-end
 
 require("lualine").setup({
     options = {
@@ -101,7 +98,7 @@ require("lualine").setup({
     },
     sections = {
         lualine_a = { { "mode" } },
-        lualine_b = { { toggleTermNum }, { "branch" }, { "filename", file_status = true } },
+        lualine_b = { { "branch" }, { "filename", file_status = true } },
         lualine_c = {
             {
                 "diagnostics",
