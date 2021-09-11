@@ -3,15 +3,15 @@
 
 starship init fish | source
 
-set -Ux EDITOR "nvr --remote-tab-wait"
-set -Ux VISUAL "nvr --remote-tab-wait"
+set -Ux EDITOR "nvrTab --remote-tab-wait"
+set -Ux VISUAL "nvrTab --remote-tab-wait"
 set -gx PATH /home/oleete/.cargo/bin /home/oleete/.yarn/bin /home/oleete/go/bin /home/oleete/.config/nvim/node_modules/tree-sitter-cli /home/oleete/.config/bin $PATH
 
 export BAT_PAGER="less -R"
 
 # aliases
 alias neovim nvim
-alias n nvim
+alias n nvrTab
 alias k kak
 alias shutdown "sudo ~/.config/bin/shutdownupdate shutdown now"
 alias reboot "sudo ~/.config/bin/shutdownupdate reboot now"
