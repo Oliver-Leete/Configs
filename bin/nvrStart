@@ -2,7 +2,6 @@
 
 TITLES=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[].title")
 tabID=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .id")
-echo $TITLES
 
 if ! [[ "$TITLES" =~ \"MainEditor\" ]]; then
     kitty @ set-window-title "MainEditor"

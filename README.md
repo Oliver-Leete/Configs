@@ -17,14 +17,14 @@ each with it's own use. Space, the actual leader key set, is used for all
 etc. Comma, the user command key, is used for additional editing commands,
 like aligning things, changing case, and special pasting. Backslash, the local
 leader key, is used for very language specific things. Such as viewing a tex
-file's PDF, or using the vimtex word count function. 
+file's PDF, or using the vimtex word count function.
 
 Square brackets are used as directional leaders (covered more in the Repeat
 section), for all manner of jumping about. I am trying to limit g to just be
 goto commands (goto paste works kinda), I'll hopefully remove all the normal
-extra crap it's used for at some point. v will be a view related key (thanks
-Kakoune for the inspiration) as soon as I have a way of locking the leader key
-on (think sub modes).
+extra crap it's used for at some point. v is a view related key (thanks Kakoune
+for the inspiration). Now I just need a way of locking the leader key on (think
+sub modes).
 
 ## Repeat Mappings
 
@@ -53,8 +53,6 @@ end
         f = { "<cmd>let g:dirJumps='f'<cr><cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Function" },
     }
 ```
-
-
 
 Realizing that I could use the same function for all kinds of repeats. I've
 already added it to my panel opening mappings (all bound under \<leader\>v) so
@@ -255,7 +253,7 @@ the same cursor position in the same file as I ran the shortcut from.
 
 ## Insert Mappings
 
-#### Snippets and Completion
+### Snippets and Completion
 
 With a bunch of completion stuff comes a lot of mapping overlaps.
 This is how I've tried to fix them.

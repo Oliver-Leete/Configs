@@ -248,14 +248,10 @@ augroup END
 set cursorline
 augroup DeclutterSleepyWins
     autocmd!
-    autocmd WinEnter * setlocal cursorline
-    autocmd BufEnter * setlocal cursorline
-    autocmd WinLeave * setlocal nocursorline
-    autocmd BufLeave * setlocal nocursorline
-    autocmd WinEnter * setlocal signcolumn=yes:2
-    autocmd BufEnter * setlocal signcolumn=yes:2
-    autocmd WinLeave * setlocal signcolumn=no
-    autocmd BufLeave * setlocal signcolumn=no
+    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * setlocal cursorline
+    autocmd BufLeave,FocusLost,InsertEnter,WinLeave * setlocal nocursorline
+    " autocmd BufEnter,FocusGained,WinEnter * setlocal signcolumn=yes:2
+    " autocmd BufLeave,FocusLost,WinLeave * setlocal signcolumn=no
 augroup END
 
 " Saving and Backup
@@ -310,13 +306,19 @@ augroup mywellle
         \ '$': {},
         \ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': '[,;]'}]},
         \ 'x': {'line': [{'c': 1}]},
+        \ 't': {'tag': [{}]},
+        \ '<': {'pair': [{'o': '<', 'c': '>'}]},
+        \ '>': {'pair': [{'o': '>', 'c': '<'}]},
+        \ 'b': {'pair': [{'o':'(', 'c':')'}, {'o':'[', 'c':']'}, {'o':'{', 'c':'}'}]},
+        \ 'q': {'quote': [{'d':"'"}, {'d':'"'}, {'d':'`'}]},
         \ })
 augroup end
 " let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
-let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab rr rb bb ll al aa'
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al'
 let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA'
 let g:targets_gracious = 1
 let targets_nl = 'nN'
+let g:targets_mapped_aiAI = ['a', 'i', '<nop>', '<nop>']
 
 let g:loaded_matchit = 1
 let g:matchup_override_vimtex = 1
@@ -329,7 +331,9 @@ augroup LuaHighlight
 augroup END
 
 " Surround
-let g:surround_mappings_style="surround"
+" let g:surround_mappings_style="sandwich"
+" let g:surround_prefix="g,h"
+let g:surround_load_keymaps=0
 
 " Leader key remap
 set timeoutlen=500
@@ -374,12 +378,13 @@ nnoremap x V
 nnoremap X V
 nnoremap C <c-v>j
 nnoremap <m-C> <c-v>k
+nnoremap <M-v> v
 
 xnoremap x j$
 xnoremap X <esc>`<kV`>
 xnoremap C j
 xnoremap <m-C> <esc>`<k<c-v>`>
-xnoremap <M-x> v
+xnoremap <M-v> v
 xnoremap <M-;> o
 
 nnoremap <m-c> "_c
@@ -387,8 +392,44 @@ nnoremap <m-d> "_d
 xnoremap <m-c> "_c
 xnoremap <m-d> "_d
 
-nnoremap , <cmd>WhichKey g,<cr>
-xnoremap , <cmd>WhichKey g,<cr>
+nnoremap <m-o> mzo<esc>`z
+nnoremap <m-O> mzO<esc>`z
+
+nnoremap , <cmd>WhichKey g, n<cr>
+xnoremap , <cmd>WhichKey g, x<cr>
+
+" Kak style always selecting, still needs lots of work
+" nnoremap h vh
+" nnoremap H vh
+" nnoremap j vj
+" nnoremap J vj
+" nnoremap k vk
+" nnoremap K vk
+" nnoremap l vl
+" nnoremap L vl
+
+" nnoremap w vwh
+" nnoremap W vw
+" nnoremap b hvb
+" nnoremap B vb
+" nnoremap e ve
+" nnoremap E ve
+
+" xnoremap h <esc>vh
+" xnoremap H h
+" xnoremap j <esc>vj
+" xnoremap J j
+" xnoremap k <esc>vk
+" xnoremap K k
+" xnoremap l <esc>vl
+" xnoremap L l
+
+" xnoremap w <esc>vwh
+" xnoremap W w
+" xnoremap b <esc>hvb
+" xnoremap B b
+" xnoremap e <esc>ve
+" xnoremap E e
 
 " nnoremap <C-j> H
 " nnoremap <C-h> M
