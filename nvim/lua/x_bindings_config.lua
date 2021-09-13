@@ -4,6 +4,7 @@ require("which-key").register({
     k = { [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], "up", expr = true },
     H = { [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], "Start of Line", expr = true },
     L = { [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], "End of Line", expr = true },
+    Q = { "@q", "Play The Temp Macro" },
     -- ["<c-j>"] = {"H", "Top of Window"},
     -- ["<c-h>"] = {"M", "Top of Window"},
     -- ["<c-k>"] = {"L", "Top of Window"},
@@ -12,6 +13,16 @@ require("which-key").register({
     ["J"] = { ":move '>+1<cr>gv=gv", "Move Line Down" },
     ["K"] = { ":move '<-2<cr>gv=gv", "Move Line Up" },
     ["S"] = { ":lua require('tsht').nodes()<CR>", "Move Line Up" },
+    s = {
+        name = "Select Mode",
+        s = { "<cmd>lua require'hop'.hint_char1()<cr>", "Hop Char" },
+        n = { "v[a", "Left Outside", noremap=false},
+        e = { "v[i", "Left Inside", noremap=false},
+        i = { "v]i", "Right Inside", noremap=false},
+        o = { "v]a", "Right Outside", noremap=false},
+        l = { "vi", "Inside", noremap=false},
+        u = { "va", "Outside", noremap=false},
+    },
     ["'"] = { "`", "Jump to mark location" },
     ["`"] = { "'", "Jump to mark line" },
     ["<leader>"] = {
@@ -26,7 +37,7 @@ require("which-key").register({
             r = { "<cmd>lua require'gitsigns'.reset_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Reset Hunks in Range" },
         },
         z = {
-            w = { "!par w80<cr>", "Wrap to 80 Characters" },
+            w = { [["!par w" . &textwidth . "<cr>"]], "Wrap to Textwidth", expr=true },
             d = { [[:%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces" },
         },
         j = {
@@ -35,8 +46,6 @@ require("which-key").register({
     },
     ["g,"] = {
         name = "User Commands",
-        q = { "q", "Macros" },
-        Q = { "@q", "Play The Temp Macro" },
         [";"] = { "q:", "Command Buffer" },
         R = { "<plug>(SubversiveSubstituteToEndOfLine)", "Substitute to EOL" },
         r = { "<plug>(SubversiveSubstitute)", "Substitute" },
@@ -59,7 +68,7 @@ require("which-key").register({
             k = { "<Plug>CaserVTitleKebabCase", "Title Case" },
             ["."] = { "<Plug>CaserVDotCase", "Dot Case" },
         },
-        z = { "!par w80<cr>", "Wrap to 80 Characters" },
+        z = { [["!par w" . &textwidth . "<cr>"]], "Wrap to Textwidth", expr=true },
     },
     v = {
         name = "View",

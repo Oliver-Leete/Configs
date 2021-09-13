@@ -1,43 +1,38 @@
 <!-- markdownlint-disable MD013 -->
 # Oliver's Config
 
-I'll slowly go through and document some of this stuff I'm not going to go over
-every bit of my configs, but it might be worth some of the things I'm doing that
-I haven't seen elsewhere (or not as much as I think I should be). I'll try and
-give credit to others where it's due, but there's stuff that I can't remember
-where it came from.
+I'll slowly go through and document some of this stuff I'm not going to go over every bit of my
+configs, but it might be worth some of the things I'm doing that I haven't seen elsewhere (or not as
+much as I think I should be). I'll try and give credit to others where it's due, but there's stuff
+that I can't remember where it came from.
 
 ## Neovim
 
 ## Multiple Leaders
 
-I am slowly moving things over to a system of having a few top level leaders,
-each with it's own use. Space, the actual leader key set, is used for all
-'program level commands', things like fuzzy finding, running code, debugging,
-etc. Comma, the user command key, is used for additional editing commands,
-like aligning things, changing case, and special pasting. Backslash, the local
-leader key, is used for very language specific things. Such as viewing a tex
-file's PDF, or using the vimtex word count function.
+I am slowly moving things over to a system of having a few top level leaders, each with it's own
+use. Space, the actual leader key set, is used for all 'program level commands', things like fuzzy
+finding, running code, debugging, etc. Comma, the user command key, is used for additional editing
+commands, like aligning things, changing case, and special pasting. Backslash, the local leader key,
+is used for very language specific things. Such as viewing a tex file's PDF, or using the vimtex
+word count function.
 
-Square brackets are used as directional leaders (covered more in the Repeat
-section), for all manner of jumping about. I am trying to limit g to just be
-goto commands (goto paste works kinda), I'll hopefully remove all the normal
-extra crap it's used for at some point. v is a view related key (thanks Kakoune
-for the inspiration). Now I just need a way of locking the leader key on (think
-sub modes).
+Square brackets are used as directional leaders (covered more in the Repeat section), for all manner
+of jumping about. I am trying to limit g to just be goto commands (goto paste works kinda), I'll
+hopefully remove all the normal extra crap it's used for at some point. v is a view related key
+(thanks Kakoune for the inspiration). Now I just need a way of locking the leader key on (think sub
+modes).
 
 ## Repeat Mappings
 
-OK, I love this one. I use a lot of jumping around mappings, bound to ] and [
-for forward and backward jumps respectively. Especially treesitter text objects
-movements. I have my shift keys bound to send the brackets on a press (but
-still send the shift key when held) in my keyboard firmware. Only problem is I
-hate having to keep pressing the letters after, makes jumping through a load
-of spelling mistakes to correct them all very tedious. So I came up with this
-little function. Then in all my mappings for the jumps themselves I add a bit
-to overwrite the dirJumps variable like in the example below (note that it's in
-which-key.nvim format). I also have all my jump mappings include zz at the end
-for that nice screen centeringness and m\` to add it to the jump list (I think
+OK, I love this one. I use a lot of jumping around mappings, bound to ] and [ for forward and
+backward jumps respectively. Especially treesitter text objects movements. I have my shift keys
+bound to send the brackets on a press (but still send the shift key when held) in my keyboard
+firmware. Only problem is I hate having to keep pressing the letters after, makes jumping through a
+load of spelling mistakes to correct them all very tedious. So I came up with this little function.
+Then in all my mappings for the jumps themselves I add a bit to overwrite the dirJumps variable like
+in the example below (note that it's in which-key.nvim format). I also have all my jump mappings
+include zz at the end for that nice screen centeringness and m\` to add it to the jump list (I think
 it should be m', but that doesn't seem to work)
 
 ```lua
@@ -54,16 +49,15 @@ end
     }
 ```
 
-Realizing that I could use the same function for all kinds of repeats. I've
-already added it to my panel opening mappings (all bound under \<leader\>v) so
-that \<leader\>vv will open the last panel, or close it if it's still open. This
-is just done by having another variable to store the window command in.
+Realizing that I could use the same function for all kinds of repeats. I've already added it to my
+panel opening mappings (all bound under \<leader\>v) so that \<leader\>vv will open the last panel,
+or close it if it's still open. This is just done by having another variable to store the window
+command in.
 
-All of these also have a default command that is used if nothing has been
-called yet (can't repeat what hasn't been done). For jumping the default is to
-the next treesitter function. This doesn't make sense for some file types, like
-latex, so this is used to set a different default for Tex files to jump by
-section and to open the table of contents instead of the file browser.
+All of these also have a default command that is used if nothing has been called yet (can't repeat
+what hasn't been done). For jumping the default is to the next treesitter function. This doesn't
+make sense for some file types, like latex, so this is used to set a different default for Tex files
+to jump by section and to open the table of contents instead of the file browser.
 
 ```lua
 if vim.api.nvim_get_var("dirJumps") == "f" then
@@ -76,10 +70,9 @@ end
 
 ## Target Mappings
 
-Ok, so I'm a massive fan of the next/last operators provided by the targets
-extension. Only problem is that they don't work with every text object. I've
-started to make some bindings for that will fill in the gaps, so far I've got
-this to add target mappings for treesitter text objects:
+Ok, so I'm a massive fan of the next/last operators provided by the targets extension. Only problem
+is that they don't work with every text object. I've started to make some bindings for that will
+fill in the gaps, so far I've got this to add target mappings for treesitter text objects:
 
 ```lua
 function _G.ts_target(count, object)
@@ -104,33 +97,28 @@ function _G.ts_target_back(count, object)
 end
 ```
 
-These use the functions provided by the TS Text Object plugin to define two
-new commands. They move forward or backward a count number of the desired text
-object and then select said object. This can be used in addition to a c-u
-mapping to make an operator pending mapping (examples can be seen in my operator
-pending mappings). I have also made a similar function for git hunks, using the
-git signs plugin. This is slightly simpler, due to the way the git signs function
-works, only one function is needed, with one command swapped out depending on
-direction.
+These use the functions provided by the TS Text Object plugin to define two new commands. They move
+forward or backward a count number of the desired text object and then select said object. This can
+be used in addition to a c-u mapping to make an operator pending mapping (examples can be seen in my
+operator pending mappings). I have also made a similar function for git hunks, using the git signs
+plugin. This is slightly simpler, due to the way the git signs function works, only one function is
+needed, with one command swapped out depending on direction.
 
-Just made some more functions and mappings for this. Mapped targets allows
-for the creation of target mappings using already existing mapped motions and
-selections. Plug targets instead uses the plug mapping provided by plugins.
-Examples of all of these functions can be seen in my o_bindings_config.lua and
-tex.lua config files. Combined with the targets plugin this allows for almost
-any text object to be targeted from afar. The one remaining object has been
-conquered, paragraphs. This had to have two functions all to itself, but it now
-works how I want it to.
+Just made some more functions and mappings for this. Mapped targets allows for the creation
+of target mappings using already existing mapped motions and selections. Plug targets instead
+uses the plug mapping provided by plugins. Examples of all of these functions can be seen in my
+o_bindings_config.lua and tex.lua config files. Combined with the targets plugin this allows for
+almost any text object to be targeted from afar. The one remaining object has been conquered,
+paragraphs. This had to have two functions all to itself, but it now works how I want it to.
 
 ## Targeted Paste
 
-This is something I've wanted for a while, a simple little pair of functions
-that lets you paste from afar. This is useful for putting the thing you just
-yanked at the end of the paragraph (or any other text object you could think of).
+This is something I've wanted for a while, a simple little pair of functions that lets you paste
+from afar. This is useful for putting the thing you just yanked at the end of the paragraph (or any
+other text object you could think of).
 
-The first is the setup function, followed by the function that can be set as the
-opfunc (for whatever reason the opfunc can't take arguments, hence the setup
-function).
+The first is the setup function, followed by the function that can be set as the opfunc (for
+whatever reason the opfunc can't take arguments, hence the setup function).
 
 ```lua
 function _G.pre_paste_away(register, paste)
@@ -152,11 +140,10 @@ end
 
 ## Diff View Mappings
 
-I have a few commands to let me pick what to diff against in diff view, so I
-added a variation of the above to give me a mapping of reopening diff view using
-the last command. The telescope commands come from someone from the Neovim
-subreddit, the only extra bit is the bit that stores the command (and in the
-actual config there are more of them, for picking things like branches).
+I have a few commands to let me pick what to diff against in diff view, so I added a variation of
+the above to give me a mapping of reopening diff view using the last command. The telescope commands
+come from someone from the Neovim subreddit, the only extra bit is the bit that stores the command
+(and in the actual config there are more of them, for picking things like branches).
 
 ```lua
 vim.api.nvim_set_var("DiffviewLast", "DiffviewOpen")
@@ -187,23 +174,20 @@ end
 
 ## Some Other Mappings
 
-These two make j and k respect wrapped lines, unless a count is given, in which
-case j and k act on true lines. This means that normally they make the cursor
-go where you'd expect (if you've ever used any other editor), but relative line
-numbers can still be used for fast jumping. In addition, they also add to the
-jump list if a count greater than 5 is given.
+These two make j and k respect wrapped lines, unless a count is given, in which case j and k act on
+true lines. This means that normally they make the cursor go where you'd expect (if you've ever used
+any other editor), but relative line numbers can still be used for fast jumping. In addition, they
+also add to the jump list if a count greater than 5 is given.
 
 ```vim
 nnoremap <expr> j v:count?(v:count>5?"m'".v:count:'').'j':'gj'
 nnoremap <expr> k v:count?(v:count>5?"m'".v:count:'').'k':'gk'
 ```
 
-It makes sense to me to have 'big' h and l do a bigger version of the h or
-l movement. So this mapping makes H and L go to the start and end of the
-line respectively. It's a little more than that though, they go to the first
-or last non-whitespace character. If the cursor is already on the first or
-last non-whitespace character then it instead goes to the true first or last
-character.
+It makes sense to me to have 'big' h and l do a bigger version of the h or l movement. So this
+mapping makes H and L go to the start and end of the line respectively. It's a little more than that
+though, they go to the first or last non-whitespace character. If the cursor is already on the first
+or last non-whitespace character then it instead goes to the true first or last character.
 
 ```vim
 nnoremap <expr> H getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^'
@@ -212,16 +196,15 @@ nnoremap <expr> L getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_'
 
 ## The Slow Road To Kak
 
-I really like the ideas behind Kakoune, and will at some point have another try
-at moving to it. But for the mean time I'm just taking a few ideas from it.
+I really like the ideas behind Kakoune, and will at some point have another try at moving to it. But
+for the mean time I'm just taking a few ideas from it.
 
 ### Kak Mappings
 
-I don't actually know how I would get to normal visual mode at the moment, I
-have unmapped all the v key functionality and instead split line and column
-based stuff to x and C, inspired by the Kak mappings. These mappings also allow
-for quickly expanding the selections (Why would you go into column mode if you
-aren't going to select another column?)
+I don't actually know how I would get to normal visual mode at the moment, I have unmapped all the
+v key functionality and instead split line and column based stuff to x and C, inspired by the Kak
+mappings. These mappings also allow for quickly expanding the selections (Why would you go into
+column mode if you aren't going to select another column?)
 
 ```vim
 nnoremap x V
@@ -240,27 +223,25 @@ xnoremap <M-;> o
 
 ### Remote Terminal Tasks
 
-I tried for ages to get a system for running terminal tasks set up in NVim that
-I was happy with, closest I got was using toggle term, but I still had some
-issues. When I looked back into Kakoune I thought about the idea of keeping the
-editor for editing only, and started looking into running terminal tasks in my
-actual terminal. Using Kitty's remote functionality I was able to set up some
+I tried for ages to get a system for running terminal tasks set up in NVim that I was happy with,
+closest I got was using toggle term, but I still had some issues. When I looked back into Kakoune
+I thought about the idea of keeping the editor for editing only, and started looking into running
+terminal tasks in my actual terminal. Using Kitty's remote functionality I was able to set up some
 shortcuts for running repls, debug and build tools.
 
-For when I actually want the full powers of Kakoune I have a shortcut that uses
-kitty's remote control to open a new tab with Kak running. This tab is opened to
-the same cursor position in the same file as I ran the shortcut from.
+For when I actually want the full powers of Kakoune I have a shortcut that uses kitty's remote
+control to open a new tab with Kak running. This tab is opened to the same cursor position in the
+same file as I ran the shortcut from.
 
 ## Insert Mappings
 
 ### Snippets and Completion
 
-With a bunch of completion stuff comes a lot of mapping overlaps.
-This is how I've tried to fix them.
+With a bunch of completion stuff comes a lot of mapping overlaps This is how I've tried to fix them.
 
-First up is the usual multi-purpose tab mappings. Nothing too special here, I
-don't use tab for scrolling completions (my arrow keys are just too easy to get
-to) but I do use it for tabbing out of brackets.
+First up is the usual multi-purpose tab mappings. Nothing too special here, I don't use tab for
+scrolling completions (my arrow keys are just too easy to get to) but I do use it for tabbing out of
+brackets.
 
 ```lua
 local luasnip = require("luasnip")
@@ -286,10 +267,9 @@ vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true 
 vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true })
 ```
 
-Next up is toggling of the completion pop-up. I didn't want two separate
-mappings for opening and closing, so this makes control space a toggle instead. This
-uses a bit of a hacky approach of first making the compe close command a plug
-mapping, but I couldn't get it to work any other way.
+Next up is toggling of the completion pop-up. I didn't want two separate mappings for opening and
+closing, so this makes control space a toggle instead. This uses a bit of a hacky approach of first
+making the compe close command a plug mapping, but I couldn't get it to work any other way.
 
 ```lua
 _G.compe_toggle = function()
@@ -310,17 +290,16 @@ inoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 snoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 ```
 
-This next bit is depreciated since moving to compe. I just use the standard cmp
-and autopairs mappings. Ctrl+] is used for next snippet selection, and expanding
-is just done with the completion menu.
+This next bit is depreciated since moving to compe. I just use the standard cmp and autopairs
+mappings. Ctrl+] is used for next snippet selection, and expanding is just done with the completion
+menu.
 
-Enter is possibly the most used key, used for line breaks, nvim-autopairs
-splitting, completion confirmation and changing the choices in luasnip. I've let
-autopairs deal with most of it, just adding in a check for luasnip changeability
-(and now an extra check for luasnip expandability). I think this might cause
-some issues in some snippets, but none that I've used so far. I'm currently
-trying out this without the snippet choice part, to try and limit the amount of
-accedental snippet overwriting I do.
+Enter is possibly the most used key, used for line breaks, nvim-autopairs splitting, completion
+confirmation and changing the choices in luasnip. I've let autopairs deal with most of it, just
+adding in a check for luasnip changeability (and now an extra check for luasnip expandability). I
+think this might cause some issues in some snippets, but none that I've used so far. I'm currently
+trying out this without the snippet choice part, to try and limit the amount of accedental snippet
+overwriting I do.
 
 ```lua
 _G.enter_complete = function()
@@ -343,9 +322,8 @@ vim.api.nvim_set_keymap("s", "<cr>", "v:lua.enter_complete()", { expr = true })
 
 #### Copy from above
 
-This mapping takes the word from above (c-y) or below (c-l) the cursor. Credit
-goes to someone online for the control y mapping, I've simply extended it to
-work from below as well.
+This mapping takes the word from above (c-y) or below (c-l) the cursor. Credit goes to someone
+online for the control y mapping, I've simply extended it to work from below as well.
 
 ```vim
 inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
@@ -358,95 +336,81 @@ snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.'
 
 ### Notebook Layout
 
-OK, so this has a bit of a weird name, it came from the original use case and I
-just can't be bothered to think of a better one. So the original use case, I
-wanted to have source code in the middle, a browser on the left and an output
-window on the right (often a Jupyter notebook, hence the name, or a PDF reader).
-These main three programs need to stay as tall as possible. Any other program
-that I opened after this wasn't as important, so it's fine to just be squashed
-to the bottom. After a couple of rewrites and much feature creep, this layout
-now handles 90% of my uses (9.99% are dealt with the toggleable layouts, I
-basically don't use the tab one).
+OK, so this has a bit of a weird name, it came from the original use case and I just can't be
+bothered to think of a better one. So the original use case, I wanted to have source code in the
+middle, a browser on the left and an output window on the right (often a Jupyter notebook, hence
+the name, or a PDF reader). These main three programs need to stay as tall as possible. Any other
+program that I opened after this wasn't as important, so it's fine to just be squashed to the
+bottom. After a couple of rewrites and much feature creep, this layout now handles 90% of my uses
+(9.99% are dealt with the toggleable layouts, I basically don't use the tab one).
 
-So the basic explanation is that there are three window types, main, column and
-stack. The main and column windows share the horizontal space, with a weighting
-towards the main windows (I default to having them 2x the width). When more
-windows are opened, the start to fill the stack. The stack pushes up the column
-and main windows one by one as the stack runs out of space, using the assuming
-that the width of a stack window can't be less than the width of a column
-window. Once the stack has filled up the width of the screen, it just keeps
-splitting that one width between any new windows (but that's like 10+ windows,
-only time it ever comes up is running D&D sessions with each NPC character sheet
-in its own window).
+So the basic explanation is that there are three window types, main, column and stack. The main and
+column windows share the horizontal space, with a weighting towards the main windows (I default to
+having them 2x the width). When more windows are opened, the start to fill the stack. The stack
+pushes up the column and main windows one by one as the stack runs out of space, using the assuming
+that the width of a stack window can't be less than the width of a column window. Once the stack has
+filled up the width of the screen, it just keeps splitting that one width between any new windows
+(but that's like 10+ windows, only time it ever comes up is running D&D sessions with each NPC
+character sheet in its own window).
 
-The main and column windows have a bit of customization on how they share the
-top. They can either start at the edge and go across or start in the middle and
-stagger out. On top of this the direction can be flipped, so they can start from
-the right side or from the middle but with a right bias. The number of main and
-column windows and the ratio of their sizes can be set. The direction that the
-stack comes in (and swallows up precious space) from can be flipped as well,
-along with the percentage height of the screen that they take up. And of course
-all of these can be done with key-bindings.
+The main and column windows have a bit of customization on how they share the top. They can either
+start at the edge and go across or start in the middle and stagger out. On top of this the direction
+can be flipped, so they can start from the right side or from the middle but with a right bias.
+The number of main and column windows and the ratio of their sizes can be set. The direction that
+the stack comes in (and swallows up precious space) from can be flipped as well, along with the
+percentage height of the screen that they take up. And of course all of these can be done with
+key-bindings.
 
-The last bit of feature creep is still in the works, dynamic layouts based on
-resolution. This can be done in XMonad normally, but by keeping it in the layout
-it means it can keep using the same variables for number of different types of
-windows, and directions. The idea behind this is that the main windows can all
-be tabbed on top of each other, and so on for the column and tabbed windows. My
-motivation to work on this right now is low as it is only used on my second
-monitor, but if I ever move to a laptop then it will be killer. I'll have to get
-my head around the logic of the persistent two pane layouts and try and nick that.
+The last bit of feature creep is still in the works, dynamic layouts based on resolution. This can
+be done in XMonad normally, but by keeping it in the layout it means it can keep using the same
+variables for number of different types of windows, and directions. The idea behind this is that the
+main windows can all be tabbed on top of each other, and so on for the column and tabbed windows. My
+motivation to work on this right now is low as it is only used on my second monitor, but if I ever
+move to a laptop then it will be killer. I'll have to get my head around the logic of the persistent
+two pane layouts and try and nick that.
 
-I've also got it set up with sub-layout, so I can have tabs on the main layout
-for those D&D games (keep character sheets that won't appear at the same time
-in a tab group to save a bit of space). It also works nicely when changing
-to a lower resolution screen (see above).
+I've also got it set up with sub-layout, so I can have tabs on the main layout for those D&D games
+(keep character sheets that won't appear at the same time in a tab group to save a bit of space). It
+also works nicely when changing to a lower resolution screen (see above).
 
-I love this layout so much that not only is it basically all I use, but I also
-use it twice. In that I have two different layouts defined that use the notebook
-layout just with different default settings.
+I love this layout so much that not only is it basically all I use, but I also use it twice. In
+that I have two different layouts defined that use the notebook layout just with different default
+settings.
 
 ### Layout Bar Avoidance
 
-Inspired by a Reddit post, I have made a little function that does some
-hardcoded checks for the location of window columns, and extends them if they
-don't interfere with the XMobar. I've added this to my Notebook and Four column
-layout. Basically, I have the xmobar take up the centre third of the top of the
-screen, on those layouts there are checks to see if a column is in the centre
-third of the screen horizontally. If not, it will extend the column hight by the
-height of my XMobar, it's only a little bit of screen space that I gain back,
-but it's still nice.
+Inspired by a Reddit post, I have made a little function that does some hardcoded checks for the
+location of window columns, and extends them if they don't interfere with the XMobar. I've added
+this to my Notebook and Four column layout. Basically, I have the xmobar take up the centre third of
+the top of the screen, on those layouts there are checks to see if a column is in the centre third
+of the screen horizontally. If not, it will extend the column hight by the height of my XMobar, it's
+only a little bit of screen space that I gain back, but it's still nice.
 
 ### Toggleable layouts
 
-The only non notebook layouts I actually use are the three toggleable layouts
-I have set up. The first one is toggleable full-screen. A fairly standard one
-that lets me have the best of both worlds for full-screening, allowing me to have
-a contained maximize within a window and then choose to make it actually full
-screen.
+The only non notebook layouts I actually use are the three toggleable layouts I have set up. The
+first one is toggleable full-screen. A fairly standard one that lets me have the best of both worlds
+for full-screening, allowing me to have a contained maximize within a window and then choose to make
+it actually full screen.
 
-Fullbar takes all the windows on a workspace and tabs them, so that it's kind of
-full screen but keeping the status bar and also having a way of seeing what's
-open. Centre focus is the same, but with big gaps on the sides. This is great
-for big monitors, being able to keep the thing you're looking at right in front
-of you instead of way off to one side. I have this set up per workspace, so
-normally it defaults to half the screen width, but on my thesis workspace it
-instead uses roughly the width of 100 character columns in my terminal. For that
-extra focused writing experience.
+Fullbar takes all the windows on a workspace and tabs them, so that it's kind of full screen but
+keeping the status bar and also having a way of seeing what's open. Centre focus is the same, but
+with big gaps on the sides. This is great for big monitors, being able to keep the thing you're
+looking at right in front of you instead of way off to one side. I have this set up per workspace,
+so normally it defaults to half the screen width, but on my thesis workspace it instead uses roughly
+the width of 100 character columns in my terminal. For that extra focused writing experience.
 
 ### 'Magic' keys
 
-There are so many things that need shortcuts, and so few keys, especially on my
-tiny keyboard. I try and keep OS level shortcuts all only on the Super key. But
-it can be a bit restrictive sometimes. It's also super annoying when different
-programs have different shortcuts to do the same thing (why doesn't every
-program let me customize shortcuts???). These key bindings try and help with
-that by changing based on context. So Super+T always opens a new tab, be it in
-chrome or in my terminal. Super+left and super+right always swap tabs backward
-and forward, in programs or in layouts with tabs. These can be forced to OS
-versions of the shortcut by adding control. So Super+Control+right will always
-go to the next OS tab, even if I'm focused on chrome or my terminal.
+There are so many things that need shortcuts, and so few keys, especially on my tiny keyboard. I try
+and keep OS level shortcuts all only on the Super key. But it can be a bit restrictive sometimes.
+It's also super annoying when different programs have different shortcuts to do the same thing (why
+doesn't every program let me customize shortcuts???). These key bindings try and help with that by
+changing based on context. So Super+T always opens a new tab, be it in chrome or in my terminal.
+Super+left and super+right always swap tabs backward and forward, in programs or in layouts with
+tabs. These can be forced to OS versions of the shortcut by adding control. So Super+Control+right
+will always go to the next OS tab, even if I'm focused on chrome or my terminal.
 
-I would like to take this a step further by adding moving by direction, so it
-will move through XMonad windows, terminal windows and Neovim windows, but I
-will need to learn how to extend Kitty first.
+I would like to take this a step further by adding moving by direction, so it will move through
+XMonad windows, terminal windows and Neovim windows, but I will need to learn how to extend Kitty
+first.

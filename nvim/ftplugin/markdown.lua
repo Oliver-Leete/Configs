@@ -76,5 +76,6 @@ end
 if vim.api.nvim_get_var("panelRepeat") == "x" then
     vim.api.nvim_set_var("panelRepeat", "o")
 end
+vim.cmd("setlocal textwidth=100")
 
 vim.fn["textobj#sentence#init"]()

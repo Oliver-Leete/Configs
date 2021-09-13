@@ -213,6 +213,7 @@ set expandtab
 set linebreak
 set breakindent
 set breakindentopt=shift:2
+set textwidth=100
 call matchadd('TabLine', '\%101v', 203) "Colour Column
 
 " Folding
@@ -354,9 +355,6 @@ let test#strategy = "kitty"
 nnoremap v <nop>
 nnoremap V <nop>
 nnoremap <c-v> <nop>
-nnoremap q <nop>
-
-xnoremap q <nop>
 
 nnoremap ; :
 nnoremap : ;
@@ -397,6 +395,8 @@ nnoremap <m-O> mzO<esc>`z
 
 nnoremap , <cmd>WhichKey g, n<cr>
 xnoremap , <cmd>WhichKey g, x<cr>
+xnoremap I I
+xnoremap A A
 
 " Kak style always selecting, still needs lots of work
 " nnoremap h vh
