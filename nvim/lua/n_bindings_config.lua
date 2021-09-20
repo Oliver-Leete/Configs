@@ -168,6 +168,11 @@ require("which-key").register({
         e = { "<m-v>)", "Right Inside", noremap = false },
         l = { "<m-v>}", "Right Outside", noremap = false },
 
+        ["{"] = { "<m-v>{", "Left Outside", noremap = false },
+        ["("] = { "<m-v>(", "Left Inside", noremap = false },
+        [")"] = { "<m-v>)", "Right Inside", noremap = false },
+        ["}"] = { "<m-v>}", "Right Outside", noremap = false },
+
         i = { "<m-v>i", "Inside", noremap = false },
         o = { "<m-v>a", "Outside", noremap = false },
     },

@@ -87,6 +87,9 @@ require("trouble").setup({
     auto_close = false,
     auto_preview = false, -- automatically preview the location of the diagnostic. <esc> to close preview and go back
     signs = {
+        error = "",
+        warning = "",
+        information = "",
         hint = "",
     },
     use_lsp_diagnstic_signs = false, -- enabling this will use the s

@@ -562,7 +562,7 @@ myKeys conf = let
     ] ^++^
 
     subKeys "Utilities"
-    [ ("M-M1-C-S-z"      , addName "Colour picker"               $ spawn myColorPicker) -- kill picom before use
+    [ ("M-M1-C-S-z"      , addName "Colour picker"               $ spawn myColorPicker)
     , ("M-M1-C-S-o"      , addName "On-screen keys"              $ spawn "killall screenkey || screenkey")
     , ("M-M1-C-S-/"      , addName "On-screen keys settings"     $ spawn "screenkey --show-settings")
     , ("M-M1-C-S-f"      , addName "Capture screen"              $ spawn "screencapt" )
@@ -570,8 +570,6 @@ myKeys conf = let
     , ("M-M1-C-S-w"      , addName "Record screen"               $ spawn "screencast" )
     , ("M-M1-C-S-r"      , addName "Record area"                 $ spawn "screencast area" )
     , ("M-M1-C-S-<Space>", addName "Play/Pause"                  $ spawn "playerctl play-pause" )
-    -- , ("M-M1-C-S-<Up>"   , addName "Skip Song"                   $ spawn "playerctl previous" )
-    -- , ("M-M1-C-S-<Down>" , addName "Prev Song"                   $ spawn "playerctl next" )
     , ("M-M1-C-S-<Left>" , addName "Skip Song"                   $ spawn "playerctl previous" )
     , ("M-M1-C-S-<Right>", addName "Prev Song"                   $ spawn "playerctl next" )
     , ("M-;"             , addName "Warp Cursor"                 $ warpToWindow (1/2) (1/2))
@@ -650,26 +648,9 @@ myKeys conf = let
     , ("M-C-<Backspace>" , addName "Force kill"                  kill)
     , ("M-S-<Backspace>" , addName "Kill all"                    $ confirmPrompt hotPromptTheme "kill all" killAll)
 
-    , ("M-m"             , addName "Swap with main"              $ sequence_ [swapPromote' False, warpCursor])
-    , ("M-C-m"           , addName "Promote to main"             $ sequence_ [promote, warpCursor])
-
     , ("<F8>"            , addName "Hop to Window"               $ sequence_ [selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow), warpCursor])
 
-    -- , ("M-<Space>"       , addName "Swap monitor workspaces"     swapNextScreen)
-    -- , ("M-C-<Space>"     , addName "Send window to next monitor" shiftNextScreen)
     , ("M-<Space>"       , addName "Swap with last workspace"    $ toggleWS' ["NSP"])
-
-    , ("M-<D>"           , addName "Focus down"                  $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Down)
-                                                                             ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Down)
-                                                                             ,(pure True, sequence_ [windows W.focusDown, warpCursor])])
-    , ("M-<U>"           , addName "Focus up"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Up)
-                                                                             ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Up)
-                                                                             ,(pure True, sequence_ [windows W.focusUp, warpCursor])])
-    , ("M-C-<D>"         , addName "Force Focus down"            $ sequence_ [windows W.focusDown, warpCursor])
-    , ("M-C-<U>"         , addName "Force Focus up"              $ sequence_ [windows W.focusUp, warpCursor])
-
-    , ("M-S-<D>"         , addName "Shift down"                  $ sequence_ [windows W.swapDown, warpCursor])
-    , ("M-S-<U>"         , addName "Shift up"                    $ sequence_ [windows W.swapUp, warpCursor])
 
     , ("M-<Tab>"         , addName "Cycle up"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Right)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Right)
@@ -703,6 +684,13 @@ myKeys conf = let
 
     , ("M-u"             , addName "Scroll Up"                   $ spawn "xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4")
     , ("M-d"             , addName "Scroll Down"                 $ spawn "xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5")
+    ]^++^
+
+    subKeys "Navigation"
+    [ ("M-m"             , addName "Swap with main"             $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_m)
+                                                                            ,(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_m)
+                                                                            ,(pure True, sequence_ [swapPromote' False, warpCursor])])
+    , ("M-C-m"           , addName "Force Swap with main"       $ sequence_ [swapPromote' False, warpCursor])
 
     , ("M-h"             , addName "Navigate Left"               $ sequence_ [bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_h)
                                                                                         ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_h)
@@ -721,6 +709,10 @@ myKeys conf = let
     , ("M-C-j"           , addName "Force Navigate Down"         $ sequence_ [windowGo D True, warpCursor])
     , ("M-C-k"           , addName "Force Navigate Up"           $ sequence_ [windowGo U True, warpCursor])
     , ("M-C-l"           , addName "Force Navigate Right"        $ sequence_ [windowGo R True, warpCursor])
+
+    , ("M-C-<D>"         , addName "Shift down"                  $ sequence_ [windows W.swapDown, warpCursor])
+    , ("M-C-<U>"         , addName "Shift up"                    $ sequence_ [windows W.swapUp, warpCursor])
+
 
     ] ^++^
 

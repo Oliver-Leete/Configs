@@ -602,4 +602,9 @@ EOF
 
 let g:julia_blocks=0
 
+sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticSignError
+sign define DiagnosticSignWarning text= texthl=DiagnosticSignWarning linehl= numhl=DiagnosticSignWarning
+sign define DiagnosticSignInformation text= texthl=DiagnosticSignInformation linehl= numhl=DiagnosticSignInformation
+sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=DiagnosticSignHint
+
 redraw

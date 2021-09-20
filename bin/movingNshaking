@@ -6,6 +6,8 @@ if [ "$#" -ne "4" ]; then
         kitty @ send-text ";$1"
         exit
     fi
+    # TITLES=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .title")
+    # if [[ "$TITLES" =~ \"MainEditor\" ]]; then
         # tabID=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .id")
         # nvr --servername /tmp/nvr-server-$tabID --nostart -c "$1"
     # fi
