@@ -60,27 +60,6 @@ require("nvim-treesitter.configs").setup({
             enable = true,
         },
     },
-    refactor = {
-        highlight_current_scope = { enable = false },
-        highlight_definitions = { enable = false },
-        smart_rename = {
-            enable = true,
-            keymaps = {
-                smart_rename = "<leader>rt",
-            },
-        },
-        navigation = {
-            -- FIXME: Figure out why this causes issues
-            enable = false,
-            keymaps = {
-                list_definitions_toc = "<nop>",
-                list_definitions = "<nop>",
-                goto_definition = "<nop>",
-                goto_next_usage = "]#",
-                goto_previous_usage = "[#",
-            },
-        },
-    },
     playground = {
         enable = true,
         disable = {},
@@ -103,13 +82,6 @@ require("nvim-treesitter.configs").setup({
         enable = true,
         use_virtual_text = true,
         lint_events = { "BufWrite", "CursorHold" },
-    },
-    textsubjects = {
-        enable = true,
-        keymaps = {
-            [":"] = "textsubjects-smart",
-            ['g:'] = 'textsubjects-container-outer',
-        },
     },
 })
 

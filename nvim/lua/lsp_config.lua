@@ -31,75 +31,23 @@ function PeekDefinition()
     return vim.lsp.buf_request(0, "textDocument/definition", params, preview_location_callback)
 end
 
-local signs = { Error = " ", Warning = "", Hint = " ", Information = " " }
-for type, icon in pairs(signs) do
-    local hl = "LspDiagnosticsSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-end
+vim.cmd([[
+    sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticSignError
+    sign define DiagnosticSignWarning text= texthl=DiagnosticSignWarning linehl= numhl=DiagnosticSignWarning
+    sign define DiagnosticSignInformation text= texthl=DiagnosticSignInformation linehl= numhl=DiagnosticSignInformation
+    sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=DiagnosticSignHint
+]])
 
--- Capture real implementation of function that sets signs
-local orig_set_signs = vim.lsp.diagnostic.set_signs
-local set_signs_limited = function(diagnostics, bufnr, client_id, sign_ns, opts)
-    -- early escape
-    if not diagnostics then
-        return
-    end
+vim.diagnostic.config({
+    underline = false,
+    virtual_text = { severity = "Error"},
+   signs = true,
+    update_in_insert = false,
+    severity_sort = true,
+})
 
-    -- Work out max severity diagnostic per line
-    local max_severity_per_line = {}
-    for _, d in pairs(diagnostics) do
-        if max_severity_per_line[d.range.start.line] then
-            local current_d = max_severity_per_line[d.range.start.line]
-            if d.severity < current_d.severity then
-                max_severity_per_line[d.range.start.line] = d
-            end
-        else
-            max_severity_per_line[d.range.start.line] = d
-        end
-    end
-
-    -- map to list
-    local filtered_diagnostics = {}
-    for _, v in pairs(max_severity_per_line) do
-        table.insert(filtered_diagnostics, v)
-    end
-
-    -- call original function
-    orig_set_signs(filtered_diagnostics, bufnr, client_id, sign_ns, opts)
-end
-vim.lsp.diagnostic.set_signs = set_signs_limited
-
-local custom_attach = function(client, bufnr)
+local custom_attach = function(client)
     print("LSP: " .. client.name .. " Started")
-
-    vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, results, ctx)
-        local config = {
-            underline = false,
-            virtual_text = false,
-            signs = true,
-            update_in_insert = false,
-        }
-        local uri = results.uri
-        local bufnr2 = vim.uri_to_bufnr(uri)
-
-        if not bufnr2 then
-            return
-        end
-
-        local diagnostics = results.diagnostics
-
-        for i, v in ipairs(diagnostics) do
-            diagnostics[i].message = string.format("%s: %s", v.source, v.message)
-        end
-
-        vim.lsp.diagnostic.save(diagnostics, bufnr2, ctx.client_id)
-
-        if not vim.api.nvim_buf_is_loaded(bufnr2) then
-            return
-        end
-
-        vim.lsp.diagnostic.display(diagnostics, bufnr2, ctx.client_id, config)
-    end
 
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
         border = "single",
@@ -116,8 +64,6 @@ local custom_attach = function(client, bufnr)
         floating_window = true,
         fixpos = true,
         hint_enable = false,
-        hint_prefix = "🐼 ",
-        hint_scheme = "String",
         use_lspsaga = false,
         hi_parameter = "IncSearch",
         max_height = 12,
@@ -456,79 +402,37 @@ vim.g.diagnostics_active = false
 function _G.toggle_diagnostics()
     if vim.g.diagnostics_active then
         vim.g.diagnostics_active = false
-        vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, result, ctx)
-            local config = {
-                underline = false,
-                virtual_text = false,
-                signs = true,
-                update_in_insert = false,
-            }
-            local uri = result.uri
-            local bufnr2 = vim.uri_to_bufnr(uri)
-
-            if not bufnr2 then
-                return
-            end
-
-            local diagnostics = result.diagnostics
-
-            for i, v in ipairs(diagnostics) do
-                diagnostics[i].message = string.format("%s: %s", v.source, v.message)
-            end
-
-            vim.lsp.diagnostic.save(diagnostics, bufnr2, ctx.client_id)
-
-            if not vim.api.nvim_buf_is_loaded(bufnr2) then
-                return
-            end
-
-            vim.lsp.diagnostic.display(diagnostics, bufnr2, ctx.client_id, config)
-        end
+        vim.diagnostic.config({
+            underline = false,
+            virtual_text = { severity = "Error"},
+            signs = true,
+            update_in_insert = false,
+            severity_sort = true,
+        })
         vim.cmd([[
         augroup ErrorHover
             autocmd!
         augroup END
         ]])
-        vim.lsp.diagnostic.redraw()
+        -- vim.diagnostic.show()
     else
         vim.g.diagnostics_active = true
-        vim.lsp.handlers["textDocument/publishDiagnostics"] = function(_, result, ctx)
-            local config = {
-                underline = true,
+        vim.diagnostic.config({
+            underline = true,
                 virtual_text = {
                     prefix = " ",
                     spacing = 4,
                 },
-                signs = true,
-                update_in_insert = false,
-            }
-            local uri = result.uri
-            local bufnr2 = vim.uri_to_bufnr(uri)
-
-            if not bufnr2 then
-                return
-            end
-
-            local diagnostics = result.diagnostics
-
-            for i, v in ipairs(diagnostics) do
-                diagnostics[i].message = string.format("%s: %s", v.source, v.message)
-            end
-
-            vim.lsp.diagnostic.save(diagnostics, bufnr2, ctx.client_id)
-
-            if not vim.api.nvim_buf_is_loaded(bufnr2) then
-                return
-            end
-
-            vim.lsp.diagnostic.display(diagnostics, bufnr2, ctx.client_id, config)
-        end
+            signs = true,
+            update_in_insert = false,
+            severity_sort = true,
+        })
         vim.cmd([[
         augroup ErrorHover
             autocmd CursorHold * :lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false ,  border = 'single' })
         augroup END
 	]])
-        vim.lsp.diagnostic.redraw()
+        -- vim.diagnostic.show()
     end
 end
 

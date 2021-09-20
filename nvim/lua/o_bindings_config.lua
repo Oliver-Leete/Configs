@@ -20,6 +20,7 @@ require("which-key").register({
         F = { ":<c-u>TSTextobjectSelect @call.outer<cr>", "Function" },
         l = { ":<c-u>TSTextobjectSelect @loop.outer<cr>", "Loop" },
         o = { ":<c-u>TSTextobjectSelect @class.outer<cr>", "Class" },
+        v = { "<cmd>exec 'normal! HVL'<cr>", "Select Viewport"},
         n = {
             name = "Next",
             s = { ":<c-u>call v:lua.mapped_targets(v:count, ')', 'as')<cr>", "Sentance" },
@@ -66,6 +67,7 @@ require("which-key").register({
         F = { ":<c-u>TSTextobjectSelect @call.inner<cr>", "Function" },
         l = { ":<c-u>TSTextobjectSelect @loop.inner<cr>", "Loop" },
         o = { ":<c-u>TSTextobjectSelect @class.inner<cr>", "Class" },
+        v = { "<cmd>exec 'normal! HVL'<cr>", "Select Viewport"},
         n = {
             name = "Next",
             s = { ":<c-u>call v:lua.mapped_targets(v:count, ')', 'is')<cr>", "Sentance" },

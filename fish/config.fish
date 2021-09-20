@@ -13,9 +13,16 @@ export BAT_PAGER="less -R"
 alias neovim nvim
 alias n nvrStart
 alias k kak
-alias shutdown "sudo ~/.config/bin/shutdownupdate shutdown now"
 alias reboot "sudo ~/.config/bin/shutdownupdate reboot now"
 
+function shutdown
+    argparse 'y' -- $argv
+    if set -q _flag_y
+        yes | sudo ~/.config/bin/shutdownupdate shutdown $argv
+    else
+        sudo ~/.config/bin/shutdownupdate shutdown now $argv
+    end
+end
 alias exa "exa --colour=always --group-directories-first"
 alias cat "batcat"
 

@@ -1,2 +1,3 @@
 #!/usr/bin/bash
-tee >(xmobar -x0 $HOME/.config/xmobar/xmobar.conf) | xmobar -x1 $HOME/.config/xmobar/xmobar1.conf
+# tee >(xmobar -x0 $HOME/.config/xmobar/xmobar.conf) | xmobar -x1 $HOME/.config/xmobar/xmobar1.conf
+xmobar -x0 $HOME/.config/xmobar/xmobar.conf 

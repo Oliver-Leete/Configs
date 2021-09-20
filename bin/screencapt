@@ -39,23 +39,16 @@ getarea () {
 	elif ${GETWINDOW:-false}
 		then
 	  x=$(xwininfo)
-		echo $(echo $x | awk '{print $NF}' | sed 's/[^0-9]/ /g')
 		set -- $(echo $x | awk '{print $NF}' | sed 's/[^0-9]/ /g')
 		W=$1
 		H=$2
 		X=$3
 		Y=$4
-		echo $W
-		echo $H
-		echo $X
-		echo $Y
 	else # use full screen resolution
 		x="$(xrandr | head -n1)"
 		x="${x#*current }"
 		x="${x%%, maximum*}"
 		set -- $x
-		#current_desktop_res=$1$2$3
-		#echo $current_desktop_res
 		W=$1
 		H=$3
     X=0

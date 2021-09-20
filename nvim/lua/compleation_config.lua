@@ -80,6 +80,11 @@ require("nvim-autopairs").add_rules({
 require("nvim-autopairs.completion.cmp").setup({
     map_cr = true,
     map_complete = true,
+    map_char = {
+        all = '(',
+        tex = '{',
+        haskell = ' ',
+    }
 })
 
 vim.g.diagnostic_auto_popup_while_jump = 0

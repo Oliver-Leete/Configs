@@ -66,7 +66,7 @@ require("bufferline").setup({
         tab_size = 18,
         diagnostics = "nvim_lsp",
         diagnostics_indicator = function(count, level)
-            local icon = level:match("error") and "" or (level:match("warning") and "" or "")
+            local icon = level:match("error") and "" or (level:match("warning") and "" or "")
             return " " .. icon .. count
         end,
         show_buffer_close_icons = true,

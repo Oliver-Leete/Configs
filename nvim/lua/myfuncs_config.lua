@@ -142,27 +142,22 @@ end
 -- Distant Pasting
 
 function _G.pre_paste_away(register, paste)
-    local direction
     if string.find(paste, "p") then
-        direction = "]"
+        Paste_away_direction= "]"
+        Paste_away_paste = ""
     else
-        direction = "["
+        Paste_away_direction= "["
+        Paste_away_paste = "!"
     end
-    Paste_away_direction = direction
     Paste_away_register = register
-    Paste_away_paste = paste
 end
 
-function _G.paste_away(type)
-    local last_thing 
-    if type == "line" then
-        last_thing = "L"
-    else
-        last_thing = ""
-    end
-
-    vim.cmd([[normal ']] .. Paste_away_direction .. last_thing .. '"' .. Paste_away_register .. Paste_away_paste)
+function _G.paste_away()
+    vim.cmd([[execute "']] .. Paste_away_direction .. " put" .. Paste_away_paste .. " " .. Paste_away_register .. '"')
 end
+
+vim.api.nvim_set_keymap("n", "<Plug>(paste-away-after)", [[:<c-u>call v:lua.pre_paste_away(v:register,'p')<cr>:set opfunc=v:lua.paste_away<cr>g@]], {noremap=true})
+vim.api.nvim_set_keymap("n", "<plug>(paste-away-before)", ":<c-u>call v:lua.pre_paste_away(v:register,'P')<cr>:set opfunc=v:lua.paste_away<cr>g@", {noremap=true})
 
 -- Telescope
 
@@ -323,6 +318,10 @@ function _G.toggle_loclist()
     end
 end
 
--- Send to Terminal
---
---
+function _G.delete_buffer()
+  if #vim.fn.getbufinfo({buflisted = true}) == 1 then
+    vim.cmd([[quit]])
+  else
+    require('close_buffers').delete({type = 'this'})
+  end
+end

@@ -60,15 +60,13 @@ require("close_buffers").setup({
 --     },
 -- })
 
-require("surround").setup({})
+-- require("surround").setup({})
 
 require("mkdir")
-require("neoclip").setup()
 require("nvim_comment").setup({ comment_empty = false, line_mapping = "g,cc", operator_mapping = "g,c" })
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
 -- require("numb").setup()
 require("foldsigns").setup()
-require("range-highlight").setup()
 require("colorizer").setup({ "*" }, {
     RGB = true,
     RRGGBB = true,

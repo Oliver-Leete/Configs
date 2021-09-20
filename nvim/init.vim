@@ -20,6 +20,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'tpope/vim-repeat'
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'winston0410/cmd-parser.nvim'
+    Plug 'nvim-lua/popup.nvim'
 
     "Kitty
     Plug 'knubie/vim-kitty-navigator'
@@ -37,16 +38,14 @@ call plug#begin('~/.config/nvim/pluged')
     " Git
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'drzel/vim-repo-edit'
-    Plug 'rhysd/committia.vim'
+    " Plug 'rhysd/committia.vim'
     Plug 'sindrets/diffview.nvim'
 
     " Registers
     Plug 'svermeulen/vim-subversive'
     Plug 'inkarkat/vim-unconditionalpaste'
-    Plug 'AckslD/nvim-neoclip.lua'
 
     " Movement Commands
-    " Plug 'unblevable/quick-scope'
     Plug 'andymass/vim-matchup'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
@@ -54,7 +53,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'rhysd/clever-f.vim'
 
     " Normal Commands
-    Plug 'blackCauldron7/surround.nvim'
+    " Plug 'blackCauldron7/surround.nvim'
     Plug 'terrortylor/nvim-comment'
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
@@ -67,8 +66,6 @@ call plug#begin('~/.config/nvim/pluged')
     " Command Mode
     Plug 'tpope/vim-abolish'
     Plug 'tpope/vim-eunuch'
-    " Plug 'nacro90/numb.nvim'
-    Plug 'winston0410/range-highlight.nvim'
     Plug 'kazhala/close-buffers.nvim'
 
     " Text Objects
@@ -82,6 +79,7 @@ call plug#begin('~/.config/nvim/pluged')
     " Language
     Plug 'lervag/vimtex'
     Plug 'JuliaEditorSupport/julia-vim'
+    Plug 'dccsillag/magma-nvim', {'do': ':UpdateRemotePlugins'}
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
     Plug 'coachshea/vim-textobj-markdown'
     Plug 'fladson/vim-kitty'
@@ -103,11 +101,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/trouble.nvim'
     Plug 'folke/which-key.nvim'
     Plug 'folke/todo-comments.nvim'
-    Plug 'lvim-tech/lvim-helper'
-    Plug 'kevinhwang91/nvim-bqf'
-
-    " Terminal Stuff
-    Plug 'dccsillag/magma-nvim', {'do': ':UpdateRemotePlugins'}
 
     " Themes
     Plug 'folke/tokyonight.nvim'
@@ -135,8 +128,8 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'abecodes/tabout.nvim'
 
     " Telescope
-    Plug 'nvim-lua/popup.nvim'
     Plug 'nvim-telescope/telescope.nvim'
+    Plug 'nvim-telescope/telescope-hop.nvim'
     Plug 'nvim-telescope/telescope-symbols.nvim'
     Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make'}
     Plug 'nvim-telescope/telescope-media-files.nvim'
@@ -147,15 +140,12 @@ call plug#begin('~/.config/nvim/pluged')
     " Treesitter
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
-    Plug 'nvim-treesitter/nvim-treesitter-refactor'
     Plug 'nvim-treesitter/playground'
     Plug 'p00f/nvim-ts-rainbow'
     Plug 'code-biscuits/nvim-biscuits'
-    Plug 'RRethy/nvim-treesitter-textsubjects'
 
     " Hop, Skip And Jump
-    Plug 'phaazon/hop.nvim'
-    Plug 'nvim-telescope/telescope-hop.nvim'
+    Plug 'IndianBoy42/hop.nvim'
     Plug 'mizlan/iswap.nvim'
     Plug 'mfussenegger/nvim-ts-hint-textobject'
     Plug 'kwkarlwang/bufjump.nvim'
@@ -186,7 +176,7 @@ set mouse=a
 set termguicolors
 set hidden
 set encoding=UTF-8
-set scrolloff=3
+set scrolloff=0
 set updatetime=100
 set backspace=indent,eol,start
 set diffopt=internal,filler,closeoff,iwhite,context:100000000
@@ -194,15 +184,14 @@ set pumheight=20
 set spelllang=en_gb
 set lazyredraw
 
-
 " Search
 set ignorecase
 set smartcase
 set hlsearch
 set incsearch hl
 set inccommand=split
-noremap <plug>(slash-after) zz
 set gdefault " NOTE : Might break some things
+noremap <plug>(slash-after) zz
 
 " Indenting
 set tabstop=4
@@ -213,7 +202,7 @@ set expandtab
 set linebreak
 set breakindent
 set breakindentopt=shift:2
-set textwidth=100
+" set textwidth=100
 call matchadd('TabLine', '\%101v', 203) "Colour Column
 
 " Folding
@@ -264,24 +253,24 @@ let g:auto_save = 1  " enable AutoSave on Vim startup
 let g:auto_save_silent = 1  " do not display the auto-save notification
 
 
-" Git Committia Settings
-let g:committia_hooks = {}
-function! g:committia_hooks.edit_open(info)
-    " Additional settings
-    setlocal spell
+" " Git Committia Settings
+" let g:committia_hooks = {}
+" function! g:committia_hooks.edit_open(info)
+"     " Additional settings
+"     setlocal spell
 
-    " If no commit message, start with insert mode
-    if a:info.vcs ==# 'git' && getline(1) ==# ''
-        startinsert
-    endif
+"     " If no commit message, start with insert mode
+"     if a:info.vcs ==# 'git' && getline(1) ==# ''
+"         startinsert
+"     endif
 
-    " Scroll the diff window from insert mode
-    " Map <C-n> and <C-p>
-    nmap <buffer><C-down> <Plug>(committia-scroll-diff-down-half)
-    nmap <buffer><C-up> <Plug>(committia-scroll-diff-up-half)
-    imap <buffer><C-down> <Plug>(committia-scroll-diff-down-half)
-    imap <buffer><C-up> <Plug>(committia-scroll-diff-up-half)
-endfunction
+"     " Scroll the diff window from insert mode
+"     " Map <C-n> and <C-p>
+"     nmap <buffer><C-down> <Plug>(committia-scroll-diff-down-half)
+"     nmap <buffer><C-up> <Plug>(committia-scroll-diff-up-half)
+"     imap <buffer><C-down> <Plug>(committia-scroll-diff-down-half)
+"     imap <buffer><C-up> <Plug>(committia-scroll-diff-up-half)
+" endfunction
 
 " Wellle Tagets settings
 augroup mywellle
@@ -319,7 +308,6 @@ let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab A
 let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA'
 let g:targets_gracious = 1
 let targets_nl = 'nN'
-let g:targets_mapped_aiAI = ['a', 'i', '<nop>', '<nop>']
 
 let g:loaded_matchit = 1
 let g:matchup_override_vimtex = 1
@@ -331,10 +319,10 @@ augroup LuaHighlight
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup END
 
-" Surround
-" let g:surround_mappings_style="sandwich"
+" " Surround
+" " let g:surround_mappings_style="sandwich"
 " let g:surround_prefix="g,h"
-let g:surround_load_keymaps=0
+" let g:surround_load_keymaps=v:false
 
 " Leader key remap
 set timeoutlen=500
@@ -352,9 +340,20 @@ let test#strategy = "kitty"
 
 " NOTE: _, =, |, $, ^, ¬ and # are free to map
 " !!MAPPINGS!!
-nnoremap v <nop>
-nnoremap V <nop>
-nnoremap <c-v> <nop>
+map <nowait> v <nop>
+map V <nop>
+map <c-v> <nop>
+
+nmap <nowait> z <nop>
+nmap <nowait> dd <nop>
+nmap <nowait> cc <nop>
+nmap <nowait> yy <nop>
+nmap <nowait> z <nop>
+
+map Y <nop>
+map C <nop>
+map D <nop>
+map S <nop>
 
 nnoremap ; :
 nnoremap : ;
@@ -390,6 +389,11 @@ nnoremap <m-d> "_d
 xnoremap <m-c> "_c
 xnoremap <m-d> "_d
 
+nnoremap <m-c><m-c> "_cc
+nnoremap <m-d><m-d> "_dd
+xnoremap <m-c><m-c> "_cc
+xnoremap <m-d><m-d> "_dd
+
 nnoremap <m-o> mzo<esc>`z
 nnoremap <m-O> mzO<esc>`z
 
@@ -397,6 +401,9 @@ nnoremap , <cmd>WhichKey g, n<cr>
 xnoremap , <cmd>WhichKey g, x<cr>
 xnoremap I I
 xnoremap A A
+
+nnoremap [ <cmd>WhichKey [ n<cr>
+nnoremap ] <cmd>WhichKey ] n<cr>
 
 " Kak style always selecting, still needs lots of work
 " nnoremap h vh
@@ -456,14 +463,6 @@ xnoremap A A
 " nnoremap yY y^
 " nnoremap cC c^
 
-" Make Marks Easier To Reach
-" nnoremap ` '
-" nnoremap ' `
-" onoremap ` '
-" onoremap ' `
-" xnoremap ` '
-" xnoremap ' `
-
 " Make command easier to reach (requires clever-f)
 " nnoremap ; :
 " nnoremap : <nop>
@@ -517,7 +516,6 @@ augroup panelMappings
     autocmd filetype help                map <buffer> <esc> <cmd>q<cr>
     autocmd filetype vim-plug            map <buffer> <esc> <cmd>q<cr>
     autocmd filetype juliadoc            map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype LvimHelper          map <buffer> <esc> <cmd>q<cr>
     " autocmd filetype NeogitStatus      map <buffer> <esc> <cmd>tabclose<cr>
     " autocmd filetype NeogitPopup       map <buffer> <esc> <cmd>q<cr>
     autocmd filetype undotree            map <buffer> <esc> <cmd>UndotreeHide<cr>
@@ -549,6 +547,7 @@ xmap <c-_> g,c
 " Arrows
 
 " Unmap Pluggins
+let g:kitty_navigator_no_mappings = 1
 let g:splitjoin_split_mapping = ''
 let g:splitjoin_join_mapping = ''
 let g:UnconditionalPaste_no_mappings = 1

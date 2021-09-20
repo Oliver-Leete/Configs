@@ -87,12 +87,7 @@ require("trouble").setup({
     auto_close = false,
     auto_preview = false, -- automatically preview the location of the diagnostic. <esc> to close preview and go back
     signs = {
-        -- icons / text used for a diagnostic
-        error = "",
-        warning = "",
-        hint = "",
-        information = "",
-        other = "﫠",
+        hint = "",
     },
     use_lsp_diagnstic_signs = false, -- enabling this will use the s
 })
@@ -113,35 +108,3 @@ vim.g.symbols_outline = {
     },
     lsp_blacklist = {},
 }
-
-
--- BQF Settup
-
-require("bqf").setup({
-    auto_enable = true,
-    preview = {
-        win_height = 12,
-        win_vheight = 12,
-        delay_syntax = 80,
-        border_chars = { "│", "│", "─", "─", "╭", "╮", "╰", "╯", "█" },
-    },
-    func_map = {
-        stoggledown = "<c-space>",
-        stogglevm = "<c-space>",
-        tab = "<c-t>",
-        split = "<c-x>",
-        prevfile = "<left>",
-        nextfile = "<right>",
-        vsplit = "<c-v>",
-    },
-})
-
--- Lvim Helper
-local home = os.getenv("HOME")
-require("lvim-helper").setup({
-    files = {
-        home .. "/.config/nvim/insertModeMappings.md",
-    },
-    width = 80,
-    side = "left",
-})

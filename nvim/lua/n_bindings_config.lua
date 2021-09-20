@@ -17,16 +17,16 @@ require("which-key").setup({
         marks = true,
         registers = true,
         spelling = {
-            enabled = true,
+            enabled = false,
             suggestions = 20,
         },
         presets = {
             operators = true,
             motions = true,
             text_objects = true,
-            windows = true,
-            nav = true,
-            z = true,
+            windows = false,
+            nav = false,
+            z = false,
             g = false,
         },
     },
@@ -34,8 +34,27 @@ require("which-key").setup({
         ["g,c"] = "Comments",
         ["g,t"] = "Allign",
         ["g,r"] = "Replace",
+        ["g,hh"] = "Hug Around",
+        ["g,sp"] = "Change to Pascal Case",
+        ["g,sc"] = "Change to Camel Case",
+        ["g,s_"] = "Change to Snake Case",
+        ["g,su"] = "Change to Upper Case",
+        ["g,st"] = "Change to Title Case",
+        ["g,sd"] = "Change to Sentance Case",
+        ["g,s<space>"] = "Change to Space Case",
+        ["g,s-"] = "Change to Kebab Case",
+        ["g,sk"] = "Change to Title Kebab Case",
+        ["g,s."] = "Change to Dot Case",
         ["gp"] = "Paste After",
         ["gP"] = "Paste Before",
+        ["{"] = "Goto Left Outside",
+        ["("] = "Goto Left Inside",
+        [")"] = "Goto Right Inside",
+        ["}"] = "Goto Right Outside",
+        ["g{"] = "Insert Left Outside",
+        ["g("] = "Insert Left Inside",
+        ["g)"] = "Insert Right Inside",
+        ["g}"] = "Insert Right Outside",
     },
     icons = {
         breadcrumb = "»",
@@ -64,40 +83,30 @@ require("which-key").register({
     H = { [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], "Start of Line", expr = true },
     L = { [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], "End of Line", expr = true },
     J = { "gi", "Goto Last Insert" },
-    -- ["<c-j>"] = { "H", "Top of Window" },
-    -- ["<c-h>"] = { "M", "Top of Window" },
-    -- ["<c-k>"] = { "L", "Top of Window" },
     U = { "<c-r>", "Redo" },
     Q = { "@q", "Play The Temp Macro" },
-    ["dD"] = { "d^", "Delete to Start of Line" },
-    ["yY"] = { "y^", "Yank to Start of Line" },
-    ["cC"] = { "c^", "Change to Start of Line" },
-    -- ["s"] = { "<cmd>lua require'hop'.hint_char1()<cr>", "Hop Char" },
     s = { "<cmd>lua require'hop'.hint_char1()<cr>", "Hop Char" },
-    -- s = {
-    --     name = "Select Mode",
-    --     n = { "v[a", "Left Outside", noremap=false},
-    --     e = { "v[i", "Left Inside", noremap=false},
-    --     i = { "v]i", "Right Inside", noremap=false},
-    --     o = { "v]a", "Right Outside", noremap=false},
-    --     l = { "vi", "Inside", noremap=false},
-    --     u = { "va", "Outside", noremap=false},
-    -- },
-    ["S"] = { "<cmd>ISwapWith<cr>", "Swap Things" },
+    S = { "<cmd>ISwapWith<cr>", "Swap Things" },
+
     ["'"] = { "`", "Jump to mark location" },
     ["`"] = { "'", "Jump to mark line" },
+
     ["<right>"] = { "<cmd>BufferLineCycleNext<cr>", "Next Buffer" },
     ["<left>"] = { "<cmd>BufferLineCyclePrev<cr>", "Prev Buffer" },
     ["<C-right>"] = { "<cmd>tabnext<cr>", "Next Tab" },
     ["<C-left>"] = { "<cmd>tabprevious<cr>", "Prev Tab" },
     ["<S-right>"] = { "<cmd>tabnext<cr>", "Next Tab" },
     ["<S-left>"] = { "<cmd>tabprevious<cr>", "Prev Tab" },
+
     ["<C-down>"] = { "<cmd>try<bar>cnext<bar>catch/E553/<bar>cfirst<bar>endtry<CR>", "Next Quickfix" },
     ["<C-up>"] = { "<cmd>try<bar>cprevious<bar>catch/E553/<bar>clast<bar>endtry<CR>", "Prev Quickfix" },
     ["<S-down>"] = { "<cmd>try<bar>lnext<bar>catch/E553/<bar>lfirst<bar>endtry<CR>", "Next Loclist" },
     ["<S-up>"] = { "<cmd>try<bar>lprevious<bar>catch/E553/<bar>llast<bar>endtry<CR>", "Prev Loclist" },
+
     g = {
         name = "Goto",
+
+        g = { "gg", "Buffer Top" },
         j = { "G", "Buffer Bottom" },
         k = { "gg", "Buffer Top" },
         h = { "^", "Line Begining" },
@@ -108,68 +117,89 @@ require("which-key").register({
         b = { "L", "Window Center" },
 
         f = { "gf", "Open File" },
-        F = { "<cmd>vsplit<cr>gf", "Open File" },
-        -- t = { "gd", "Open Tag Deffinition" },
+        F = { "<cmd>vsplit<cr>gf", "Open File in Split" },
+
         d = { "<cmd>lua require('telescope.builtin').lsp_definitions({jump_type='vsplit'})<cr>", "Definitions" },
         r = { "<cmd>Telescope lsp_references<cr>", "References" },
-        I = {
+        i = {
             "<cmd>lua require('telescope.builtin').lsp_implementations({jump_type='vsplit'})<CR>",
             "Implementations",
         },
-        p = {
-            ":<c-u>call v:lua.pre_paste_away(v:register,'p')<cr>:set opfunc=v:lua.paste_away<cr>g@",
-            "Paste After Object",
+        T = {
+            "<cmd>lua require('telescope.builtin').lsp_type_definitions({jump_type='vsplit'})<cr>",
+            "Type Deffinition",
         },
-        P = {
-            ":<c-u>call v:lua.pre_paste_away(v:register,'P')<cr>:set opfunc=v:lua.paste_away<cr>g@",
-            "Paste Before Object",
-        },
-        pL = {
-            ":<c-u>call v:lua.pre_paste_away(v:register,'g,pL')<cr>:set opfunc=v:lua.paste_away<cr>g@",
-            "Paste After Object",
-        },
-        PL = {
-            ":<c-u>call v:lua.pre_paste_away(v:register,'g,PL')<cr>:set opfunc=v:lua.paste_away<cr>g@",
-            "Paste Before Object",
-        },
-        pl = {
-            ":<c-u>call v:lua.pre_paste_away(v:register,'g,pl')<cr>:set opfunc=v:lua.paste_away<cr>g@",
-            "Paste After Object",
-        },
-        Pl = {
-            ":<c-u>call v:lua.pre_paste_away(v:register,'g,Pl')<cr>:set opfunc=v:lua.paste_away<cr>g@",
-            "Paste Before Object",
-        },
-        -- D = { "<cmd>let g:panelRepeat='zd'<cr><cmd>TroubleToggle lsp_definitions<cr>", "List Definitions" },
-        -- I = { "<cmd>let g:panelRepeat='zi'<cr><cmd>TroubleToggle lsp_implementations<cr>", "List Implementations" },
-        -- R = { "<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References" },
+
+        p = { "<plug>(paste-away-after)", "Paste After Object" },
+        P = { "<plug>(paste-away-before)", "Paste Before Object" },
+
+        ["{"] = { "<Plug>(ninja-insert)a", "Go Insert Left Outside" },
+        ["("] = { "<Plug>(ninja-insert)i", "Go Insert Left Inside" },
+        [")"] = { "<Plug>(ninja-append)i", "Go Insert Right Inside" },
+        ["}"] = { "<Plug>(ninja-append)a", "Go Insert Right Outside" },
     },
+
     v = {
         name = "View",
-        v = { "zz", "Centre Cursor (Vertically)" },
-        m = { "<cmd>set sidescrolloff=999<cr><cmd>set sidescrolloff=0<cr>", "Centre Cursor (Horizontally)" },
-        b = { "zb", "Cursor On Bottom" },
+
         t = { "zt", "Cursor On Top" },
-        e = { "ze", "Cursor At Right" },
-        s = { "zs", "Cursor At Left" },
+        v = { "zz", "Centre Cursor (Vertically)" },
+        b = { "zb", "Cursor On Bottom" },
+
+        f = { "zs", "Cursor At First" },
+        m = { "<cmd>set sidescrolloff=999<cr><cmd>set sidescrolloff=0<cr>", "Centre Cursor (Horizontally)" },
+        e = { "ze", "Cursor At End" },
+
         h = { "zh", "Scroll Left" },
         l = { "zl", "Scroll Right" },
         j = { "<c-e>", "Scroll Down" },
         k = { "<c-y>", "Scroll Up" },
+
         o = { "za", "Open Fold" },
         c = { "zc", "Close Fold" },
+        s = { "<cmd>normal! HVL<cr>", "Select Viewport" },
     },
+
+    z = {
+        name = "Select Mode",
+
+        h = { "<m-v>{", "Left Outside", noremap = false },
+        n = { "<m-v>(", "Left Inside", noremap = false },
+        e = { "<m-v>)", "Right Inside", noremap = false },
+        l = { "<m-v>}", "Right Outside", noremap = false },
+
+        i = { "<m-v>i", "Inside", noremap = false },
+        o = { "<m-v>a", "Outside", noremap = false },
+    },
+
     ["g,"] = {
         name = "User Commands",
+
+        [";"] = { "q:", "Command Buffer" },
+
+        j = { "mzJ`z", "Join" },
+        k = { "i<cr><esc>", "Split" },
         J = { "<cmd>SplitjoinJoin<cr>", "Smart Join" },
         K = { "<cmd>SplitjoinSplit<cr>", "Smart Split" },
-        R = { "<plug>(SubversiveSubstituteToEndOfLine)", "Substitute to EOL" },
+
         r = { "<plug>(SubversiveSubstitute)", "Substitute" },
-        rR = { "<plug>(SubversiveSubstitute)^", "Substitute to SOL" },
-        rr = { "<plug>(SubversiveSubstituteLine)", "Substitute Line" },
-        [";"] = { "q:", "Command Buffer" },
+        t = { "<Plug>(EasyAlign)", "Easy Allign" },
+        c = { "Comment" },
+        O = { "O<Esc>", "Insert Blankline Before" },
+        o = { "o<Esc>", "Insert Blankline" },
+
+--         h = {
+--             name = "Hug",
+
+--             h = { "<cmd>set operatorfunc=SurroundAddOperatorMode<cr>g@", "Hug Around" },
+--             H = { "<cmd>lua require'surround'.repeat_last()<cr>", "Hug Repeat" },
+--             r = { "<cmd>lua require'surround'.surround_replace()", "Hug Replace" },
+--             d = { "<cmd>lua require'surround'.surround_delete()<cr>", "Hug Delete" },
+--         },
+
         ["<"] = {
             name = "Swap With Previous",
+
             a = { "<cmd>TSTextobjectSwapPrevious @parameter.inner<cr>", "Parameter" },
             o = { "<cmd>TSTextobjectSwapPrevious @class.outer<cr>", "Class" },
             f = { "<cmd>TSTextobjectSwapPrevious @function.outer<cr>", "Function" },
@@ -179,8 +209,10 @@ require("which-key").register({
             l = { "<cmd>TSTextobjectSwapPrevious @loop.outer<cr>", "Loop" },
             b = { "<cmd>TSTextobjectSwapPrevious @block.outer<cr>", "Block" },
         },
+
         [">"] = {
             name = "Swap With Next",
+
             a = { "<cmd>TSTextobjectSwapNext @parameter.inner<cr>", "Parameter" },
             o = { "<cmd>TSTextobjectSwapNext @class.outer<cr>", "Class" },
             f = { "<cmd>TSTextobjectSwapNext @function.outer<cr>", "Function" },
@@ -190,18 +222,36 @@ require("which-key").register({
             l = { "<cmd>TSTextobjectSwapNext @loop.outer<cr>", "Loop" },
             b = { "<cmd>TSTextobjectSwapNext @block.outer<cr>", "Block" },
         },
-        O = { "O<Esc>", "Insert Blankline Before" },
-        o = { "o<Esc>", "Insert Blankline" },
-        j = { "mzJ`z", "Join" },
-        k = { "i<cr><esc>", "Split" },
-        t = { "<Plug>(EasyAlign)", "Easy Allign" },
-        i = { "<Plug>(ninja-insertstart)", "Insert in Object" },
-        a = { "<Plug>(ninja-insertend)", "Append to Object" },
-        c = { "Comment" },
-        cc = { "Comment Line" },
-        z = { [["mz!ippar w". &textwidth . "<cr>`z"]], "Wrap Paragraph to 80 Characters", expr=true },
+
+        f = {
+            name = "Formatting",
+
+            f = { "<cmd>lua vim.lsp.buf.formatting_sync()<CR>", "Format" },
+            ["<space>"] = { [[<cmd>%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces" },
+            w = { [["mz!ippar w". &textwidth . "<cr>`z"]], "Wrap Paragraph to Textwidth", expr = true },
+            W = { [["<cmd>%!par w" . &textwidth . "<cr>"]], "Wrap File to Textwidth", expr = true },
+
+            l = { "<cmd>left<cr>", "Left Allign" },
+            c = { "<cmd>center<cr>", "Centre Allign" },
+            r = { "<cmd>right<cr>", "Right Allign" },
+        },
+
+        i = {
+            name = "insert",
+
+            H = { "I", "Insert Before Line" },
+            h = { "i", "Insert Before" },
+            l = { "a", "Insert After" },
+            L = { "A", "Insert After Line" },
+            K = { "ggO", "Insert Above File" },
+            k = { "O", "Insert Above" },
+            j = { "o", "Insert Below" },
+            J = { "Go", "Insert Below File" },
+        },
+
         P = {
             name = "Paste Before",
+
             b = { "<Plug>UnconditionalPasteBlockBefore", "Paste Block" },
             B = { "<Plug>UnconditionalPasteJaggedBefore", "Paste Jagged" },
             L = { "<Plug>UnconditionalPasteInlinedBefore", "Paste Inline" },
@@ -210,8 +260,10 @@ require("which-key").register({
             s = { "<Plug>UnconditionalPasteSpacedBefore", "Paste Spaced" },
             u = { "P`]l", "Paste No Move" },
         },
+
         p = {
             name = "Paste After",
+
             b = { "<Plug>UnconditionalPasteBlockAfter", "Paste Block" },
             B = { "<Plug>UnconditionalPasteJaggedAfter", "Paste Jagged" },
             L = { "<Plug>UnconditionalPasteInlinedAfter", "Paste Inline" },
@@ -220,15 +272,10 @@ require("which-key").register({
             s = { "<Plug>UnconditionalPasteSpacedAfter", "Paste Spaced" },
             u = { "p`[h", "Paste No Move" },
         },
-        h = {
-            name = "Hug",
-            h = { "<cmd>lua require'surround'.repeat_last()<cr>", "Hug Repeat" },
-            a = { "<cmd>set operatorfunc=SurroundAddOperatorMode<cr>g@", "Hug Around" },
-            r = { "<cmd>lua require'surround'.surround_replace()", "Hug Replace" },
-            d = { "<cmd>lua require'surround'.surround_delete()<cr>", "Hug Delete" },
-        },
+
         s = {
             name = "Change Case",
+
             p = { "<Plug>CaserMixedCase", "Pascal Case" },
             c = { "<Plug>CaserCamelCase", "Camel Case" },
             ["_"] = { "<Plug>CaserSnakeCase", "Snake Case" },
@@ -239,45 +286,6 @@ require("which-key").register({
             ["-"] = { "<Plug>CaserKebabCase", "Kebab Case" },
             k = { "<Plug>CaserTitleKebabCase", "Title Kebab Case" },
             ["."] = { "<Plug>CaserDotCase", "Dot Case" },
-            s = {
-                name = "Change Case (Line)",
-                p = { "gspix", "Pascal Case", noremap = false },
-                c = { "gscix", "Camel Case", noremap = false },
-                ["_"] = { "gs_ix", "Snake Case", noremap = false },
-                u = { "gsuix", "Upper Case", noremap = false },
-                t = { "gstix", "Title Case", noremap = false },
-                d = { "gssix", "Sentance Case", noremap = false },
-                ["<space>"] = { "gs<space>ix", "Space Case", noremap = false },
-                ["-"] = { "gs-ix", "Kebab Case", noremap = false },
-                k = { "gskix", "Title Kebab Case", noremap = false },
-                ["."] = { "gs.ix", "Dot Case", noremap = false },
-            },
-            S = {
-                name = "Change Case (SOL)",
-                p = { "gspH", "Pascal Case", noremap = false },
-                c = { "gscH", "Camel Case", noremap = false },
-                ["_"] = { "gs_H", "Snake Case", noremap = false },
-                u = { "gsuH", "Upper Case", noremap = false },
-                t = { "gstH", "Title Case", noremap = false },
-                d = { "gssH", "Sentance Case", noremap = false },
-                ["<space>"] = { "gs<space>H", "Space Case", noremap = false },
-                ["-"] = { "gs-H", "Kebab Case", noremap = false },
-                k = { "gskH", "Title Kebab Case", noremap = false },
-                ["."] = { "gs.H", "Dot Case", noremap = false },
-            },
-        },
-        S = {
-            name = "Change Case (EOL)",
-            p = { "gspL", "Pascal Case", noremap = false },
-            c = { "gscL", "Camel Case", noremap = false },
-            ["_"] = { "gs_L", "Snake Case", noremap = false },
-            u = { "gsuL", "Upper Case", noremap = false },
-            t = { "gstL", "Title Case", noremap = false },
-            d = { "gssL", "Sentance Case", noremap = false },
-            ["<space>"] = { "gs<space>L", "Space Case", noremap = false },
-            ["-"] = { "gs-L", "Kebab Case", noremap = false },
-            k = { "gskL", "Title Kebab Case", noremap = false },
-            ["."] = { "gs.L", "Dot Case", noremap = false },
         },
     },
     ["<leader>"] = {
@@ -374,27 +382,32 @@ require("which-key").register({
                 "Locate",
                 expr = true,
             },
-            y = { "<cmd>lua require('telescope').extensions.neoclip.default()<cr>", "Yank History" },
-            Y = { "<cmd>Telescope registers<cr>", "All Registers" },
+            y = { "<cmd>Telescope registers<cr>", "All Registers" },
             x = { "<cmd>Telescope file_browser<cr>", "File Browser" },
             I = { "<cmd>lua require'telescope.builtin'.symbols{sources={'julia'}}<cr>", "Insert Symbols" },
             -- z = { "<cmd>Telescope session-lens search_session<cr>", "Session Search" },
         },
         g = {
             name = "Git",
+            g = { "<cmd>silent !kitty @ launch --type=window --window-title 'Lazygit' lazygit<cr>", "Neogit Status" },
+
             a = { "<cmd>lua require'gitsigns'.blame_line({full=true})<CR>", "Blame Line" },
             A = { "<cmd>Gitsigns toggle_current_line_blame<CR>", "Blame Toggle" },
+
             b = { "<cmd>Telescope git_branches<cr>", "Branches" },
             C = { "<cmd>Telescope git_bcommits<cr>", "Commits (buffer)" },
             c = { "<cmd>Telescope git_commits<cr>", "Commits" },
+
             d = {
+                l = { "<cmd>call v:lua.diff_repeat()<cr>", "Repeat Last Diff" },
                 d = { "<cmd>call v:lua.diff_repeat()<cr>", "Repeat Last Diff" },
+
                 D = { "<cmd>let g:DiffviewLast='DiffviewOpen'<cr><cmd>DiffviewOpen<CR>", "Git Diff Viewer" },
                 c = { "<cmd>call v:lua.git_commits_onechange()<cr>", "View The Diff of a Commit" },
                 C = { "<cmd>call v:lua.git_commits_againsthead()<cr>", "Diff Against a Commit" },
                 b = { "<cmd>call v:lua.git_branch_dif()<cr>", "Diff Against a Branch" },
                 B = { "<cmd>call v:lua.git_branch_mergebase()<cr>", "View The Diff of a Branch" },
-                l = { "<cmd>call v:lua.diff_repeat()<cr>", "Repeat Last Diff" },
+
                 h = {
                     "<cmd>let g:DiffviewLast='DiffviewFileHistory'<cr><cmd>DiffviewFileHistory<CR>",
                     "View File History",
@@ -405,13 +418,15 @@ require("which-key").register({
                     expr = true,
                 },
             },
-            g = { "<cmd>silent !kitty @ launch --type=window --window-title 'Lazygit' lazygit<cr>", "Neogit Status" },
+
             p = { "<cmd>Gitsigns preview_hunk<CR>", "Hunk Preview" },
             r = { "<cmd>Gitsigns reset_hunk<CR>", "Hunk Reset" },
             R = { "<cmd>Gitsigns reset_buffer<CR>", "Reset Buffer" },
             S = { "<cmd>Gitsigns stage_buffer<CR>", "Stage File" },
             s = { "<cmd>Gitsigns stage_hunk<CR>", "Hunk Stage" },
+
             v = { "<cmd>Gitsigns select_hunk<CR>", "Select Current Hunk" },
+
             h = {
                 name = "GitHub",
                 e = {
@@ -432,6 +447,7 @@ require("which-key").register({
         },
         p = {
             name = "Preview",
+
             a = { "<cmd>lua require'gitsigns'.blame_line({full=true})<CR>", "Blame Line" },
             p = { "<Cmd>lua vim.lsp.buf.hover({ focusable = false})<CR>", "Documentation" },
             s = { "<cmd>lua vim.lsp.buf.signature_help({ focusable = false})<CR>", "Signature" },
@@ -457,16 +473,6 @@ require("which-key").register({
             f = { "<cmd>let g:panelRepeat='f'<cr><cmd>TroubleToggle telescope<CR>", "Telescope List" },
             n = { "<cmd>let g:panelRepeat='n'<cr><cmd>TodoTrouble<cr>", "Todo List" },
             g = { "<cmd>let g:panelRepeat='g'<cr><cmd>DiffviewOpen<CR>", "Git" },
-            L = {
-                "<cmd>let g:panelRepeat='L'<cr><cmd>call v:lua.toggle_loclist()<cr>",
-                "BQF Location List",
-                noremap = false,
-            },
-            Q = {
-                "<cmd>let g:panelRepeat='Q'<cr><cmd>call v:lua.toggle_qflist()<cr>",
-                "BQF QuickFix List",
-                noremap = false,
-            },
             o = { "<cmd>let g:panelRepeat='o'<cr><cmd>SymbolsOutline<CR>", "Symbol List" },
             x = { "<cmd>let g:panelRepeat='x'<cr><cmd>NvimTreeToggle<CR>", "File Tree" },
             u = { "<cmd>let g:panelRepeat='u'<cr><cmd>UndotreeToggle<CR>", "Undo Tree" },
@@ -493,7 +499,6 @@ require("which-key").register({
             ["<up>"] = { "<cmd>colder<cr>", "Older List" },
             q = { "<cmd>let g:panelRepeat='q'<cr><cmd>TroubleToggle quickfix<CR>", "QuickFix List", noremap = false },
             n = { "<cmd>TodoQuickFix<cr>", "Populate With Todo Comments" },
-            f = { "<cmd>let g:panelRepeat='Q'<cr><cmd>call v:lua.toggle_qflist()<cr>", "BQF QuickFix List" },
             V = {
                 [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>"]],
                 "Populate With VimGrep (file select)",
@@ -521,11 +526,6 @@ require("which-key").register({
             a = { "<cmd>laddbuffer<cr><cmd>TroubleRefresh<cr>", "Add Buffer Errrors to LocList" },
             c = { "<cmd>LClear<cr><cmd>TroubleRefresh<cr>", "Clear The List" },
             l = { "<cmd>let g:panelRepeat='l'<cr><cmd>TroubleToggle loclist<CR>", "Location List" },
-            f = {
-                "<cmd>let g:panelRepeat='L'<cr><cmd>call v:lua.toggle_loclist()<cr>",
-                "BQF Location List",
-                noremap = false,
-            },
             g = {
                 "<cmd>Gitsigns setloclist<cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>",
                 "Populate With Diffs",
@@ -592,7 +592,6 @@ require("which-key").register({
             t = { "Rename (Treesitter)" },
             v = { "<plug>(ExtractVar)", "Extract Variable" },
             r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)" },
-            ["="] = { "<cmd>lua vim.lsp.buf.formatting_sync()<CR>", "Format" },
         },
         x = {
             name = "Explorer",
@@ -662,16 +661,13 @@ require("which-key").register({
             i = { "<cmd>LvimHelper<cr>", "Insert Mode Mappings" },
             k = { "K", "Documentation" },
         },
-        z = {
-            d = { [[<cmd>%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces" },
-            w = { [["<cmd>%!par w" . &textwidth . "<cr>"]], "Wrap File to Textwidth", expr=true },
-        },
         k = {
-            [[":!kitty @ launch --type=tab --tab-title 'Kak %:t' kak %:p +" . line(".") . ":" . col(".") . "<cr>"]],
+            [[":silent !kitty @ launch --type=tab --tab-title 'Kak %:t' kak %:p +" . line(".") . ":" . col(".") . "<cr>"]],
             "Open file in Kak",
             expr = true,
         },
     },
+
     ["["] = {
         name = "Backward Leader",
         ["["] = { "v:lua.commandRepeat('[', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
@@ -705,16 +701,17 @@ require("which-key").register({
         ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @parameter.inner<cr>zz", "Parameter" },
         L = { "<cmd>let g:dirJumps='L'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @loop.outer<cr>zz", "Loop" },
         B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @block.outer<cr>zz", "Block" },
-        E = {
-            "<cmd>let g:dirJumps='E'<cr>m`<cmd>lua require'trouble'.previous({skip_groups=false, jump=true})<cr>zz",
-            "Trouble Item",
-        },
         m = { "<cmd>let g:dirJumps='m'<cr>m`[`zz", "File Marks" },
         e = {
             "<cmd>lua vim.lsp.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
+            "Diagnostics",
+        },
+        E = {
+            "<cmd>lua vim.lsp.diagnostic.goto_prev({ severity='Error', focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='E'<cr>m`",
             "Error",
         },
     },
+
     ["]"] = {
         name = "Forward Leader",
         ["]"] = { "v:lua.commandRepeat(']', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
@@ -749,16 +746,17 @@ require("which-key").register({
         ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoNextEnd @parameter.inner<cr>zz", "Parameter (end)" },
         L = { "<cmd>let g:dirJumps='L'<cr>m`<cmd>TSTextobjectGotoNextEnd @loop.outer<cr>zz", "Loop (end)" },
         B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block (end)" },
-        E = {
-            "<cmd>let g:dirJumps='E'<cr>m`<cmd>lua require'trouble'.next({skip_groups=false, jump=true})<cr>zz",
-            "Trouble Item",
-        },
         m = { "<cmd>let g:dirJumps='m'<cr>m`]`zz", "File Marks" },
         e = {
             "<cmd>lua vim.lsp.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
+            "Diagnostics",
+        },
+        E = {
+            "<cmd>lua vim.lsp.diagnostic.goto_next({ severity='Error', focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='E'<cr>m`",
             "Error",
         },
     },
+
     ["<localleader>"] = {
         name = "Local Leader",
     },

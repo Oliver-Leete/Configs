@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ "$#" -ne "4" ]; then
+    commands=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .foreground_processes[].cmdline[0]")
+    if [[ "$commands" == *"vim"* ]]; then
+        kitty @ send-text ";$1"
+        exit
+    fi
+        # tabID=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .id")
+        # nvr --servername /tmp/nvr-server-$tabID --nostart -c "$1"
+    # fi
+fi
+
+
+old_id=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .id")
+
+kitty @ $2
+
+new_id=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .id")
+
+if [ "$old_id" = "$new_id" ]; then
+    xdotool key super+$3
+fi

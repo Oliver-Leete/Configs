@@ -31,7 +31,7 @@ status () {
 	red=#ff6188
 	if [ -f $PIDFILE ]
 	then
-		echo "<fc=$red><fn=1></fn> REC</fc>  | "
+		echo "<fc=$red><fn=1></fn> REC</fc> | "
 	fi
 }
 

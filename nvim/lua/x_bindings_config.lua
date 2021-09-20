@@ -4,59 +4,102 @@ require("which-key").register({
     k = { [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], "up", expr = true },
     H = { [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], "Start of Line", expr = true },
     L = { [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], "End of Line", expr = true },
+
     Q = { "@q", "Play The Temp Macro" },
-    -- ["<c-j>"] = {"H", "Top of Window"},
-    -- ["<c-h>"] = {"M", "Top of Window"},
-    -- ["<c-k>"] = {"L", "Top of Window"},
+
     ["<"] = { "<gv", "Dedent" },
     [">"] = { ">gv", "Indent" },
+
     ["J"] = { ":move '>+1<cr>gv=gv", "Move Line Down" },
     ["K"] = { ":move '<-2<cr>gv=gv", "Move Line Up" },
     ["S"] = { ":lua require('tsht').nodes()<CR>", "Move Line Up" },
+
+    ["'"] = { "`", "Jump to mark location" },
+    ["`"] = { "'", "Jump to mark line" },
+
     s = {
         name = "Select Mode",
         s = { "<cmd>lua require'hop'.hint_char1()<cr>", "Hop Char" },
-        n = { "v[a", "Left Outside", noremap=false},
-        e = { "v[i", "Left Inside", noremap=false},
-        i = { "v]i", "Right Inside", noremap=false},
-        o = { "v]a", "Right Outside", noremap=false},
-        l = { "vi", "Inside", noremap=false},
-        u = { "va", "Outside", noremap=false},
+        n = { "v[a", "Left Outside", noremap = false },
+        e = { "v[i", "Left Inside", noremap = false },
+        i = { "v]i", "Right Inside", noremap = false },
+        o = { "v]a", "Right Outside", noremap = false },
+        l = { "vi", "Inside", noremap = false },
+        u = { "va", "Outside", noremap = false },
     },
-    ["'"] = { "`", "Jump to mark location" },
-    ["`"] = { "'", "Jump to mark line" },
-    ["<leader>"] = {
-        ["."] = { "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR>", "Code Actions" },
-        r = {
-            name = "Refactor",
-            v = { "<plug>(ExtractVarVis)", "Extract Variable" },
-            ["="] = { "<cmd>lua vim.lsp.buf.range_formatting()<CR>", "Format" },
-        },
-        g = {
-            s = { "<cmd>lua require'gitsigns'.stage_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Stage Hunks in Range" },
-            r = { "<cmd>lua require'gitsigns'.reset_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Reset Hunks in Range" },
-        },
-        z = {
-            w = { [["!par w" . &textwidth . "<cr>"]], "Wrap to Textwidth", expr=true },
-            d = { [[:%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces" },
-        },
-        j = {
-            j = { ":<c-u>MagmaEvaluateVisual<cr>", "Evaluate Selction" },
-        },
+
+    g = {
+        name = "Goto",
+
+        g = { "gg", "Buffer Top" },
+        j = { "G", "Buffer Bottom" },
+        k = { "gg", "Buffer Top" },
+        h = { "^", "Line Begining" },
+        l = { "$", "Line End" },
+
+        t = { "H", "Window Top" },
+        c = { "M", "Window Bottom" },
+        b = { "L", "Window Center" },
+    },
+    v = {
+        name = "View",
+
+        t = { "zt", "Cursor On Top" },
+        v = { "zz", "Centre Cursor (Vertically)" },
+        b = { "zb", "Cursor On Bottom" },
+
+        f = { "zs", "Cursor At First" },
+        m = { "<cmd>set sidescrolloff=999<cr><cmd>set sidescrolloff=0<cr>", "Centre Cursor (Horizontally)" },
+        e = { "ze", "Cursor At End" },
+
+        h = { "zh", "Scroll Left" },
+        l = { "zl", "Scroll Right" },
+        j = { "<c-e>", "Scroll Down" },
+        k = { "<c-y>", "Scroll Up" },
+
+        o = { "za", "Open Fold" },
+        c = { "zc", "Close Fold" },
+        s = { "<cmd>normal! HVL<cr>", "Select Viewport" },
+    },
+    z = {
+        name = "Select Mode",
+
+        h = { "<esc><m-v>{", "Left Outside", noremap = false },
+        n = { "<esc><m-v>(", "Left Inside", noremap = false },
+        e = { "<esc><m-v>)", "Right Inside", noremap = false },
+        l = { "<esc><m-v>}", "Right Outside", noremap = false },
+
+        i = { "<esc><m-v>i", "Inside", noremap = false },
+        o = { "<esc><m-v>a", "Outside", noremap = false },
     },
     ["g,"] = {
         name = "User Commands",
+
         [";"] = { "q:", "Command Buffer" },
-        R = { "<plug>(SubversiveSubstituteToEndOfLine)", "Substitute to EOL" },
-        r = { "<plug>(SubversiveSubstitute)", "Substitute" },
-        rr = { "<plug>(SubversiveSubstituteLine)", "Substitute Line" },
-        rR = { "<plug>(SubversiveSubstitute)H", "Substitute to SOL" },
+
         j = { "J", "Join" },
         k = { "c<cr><esc>", "Split" },
-        t = { "<Plug>(EasyAlign)", "Align" },
-        h = { "gv<cmd>lua require'surround'.surround_add()<cr>", "Hug" },
+
+        r = { "<plug>(SubversiveSubstitute)", "Substitute" },
+        -- t = { "<Plug>(EasyAlign)", "Align" },
+        c = { "Comment" },
+        -- h = { "gv<cmd>lua require'surround'.surround_add()<cr>", "Hug" },
+
+        f = {
+            name = "Formatting",
+
+            f = { "<cmd>lua vim.lsp.buf.range_formatting()<CR>", "Format" },
+            ["<space>"] = { [[:%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces" },
+            w = { [["!par w" . &textwidth . "<cr>"]], "Wrap to Textwidth", expr = true },
+
+            l = { ":left<cr>", "Left Allign" },
+            c = { ":center<cr>", "Centre Allign" },
+            r = { ":right<cr>", "Right Allign" },
+        },
+
         s = {
             name = "Change Case",
+
             p = { "<Plug>CaserVMixedCase", "Pascal Case" },
             c = { "<Plug>CaserVCamelCase", "Camel Case" },
             ["_"] = { "<Plug>CaserVSnakeCase", "Snake Case" },
@@ -68,22 +111,21 @@ require("which-key").register({
             k = { "<Plug>CaserVTitleKebabCase", "Title Case" },
             ["."] = { "<Plug>CaserVDotCase", "Dot Case" },
         },
-        z = { [["!par w" . &textwidth . "<cr>"]], "Wrap to Textwidth", expr=true },
     },
-    v = {
-        name = "View",
-        v = { "zz", "Centre Cursor (Vertically)" },
-        m = { "<cmd>set sidescrolloff=999<cr><cmd>set sidescrolloff=0<cr>", "Centre Cursor (Horizontally)" },
-        b = { "zb", "Cursor On Bottom" },
-        t = { "zt", "Cursor On Top" },
-        e = { "ze", "Cursor At Right" },
-        s = { "zs", "Cursor At Left" },
-        h = { "zh", "Scroll Left" },
-        l = { "zl", "Scroll Right" },
-        j = { "<c-e>", "Scroll Down" },
-        k = { "<c-y>", "Scroll Up" },
-        o = { "za", "Open Fold" },
-        c = { "zc", "Close Fold" },
+    ["<leader>"] = {
+        ["."] = { "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR>", "Code Actions" },
+        r = {
+            name = "Refactor",
+            v = { "<plug>(ExtractVarVis)", "Extract Variable" },
+        },
+        g = {
+            s = { "<cmd>lua require'gitsigns'.stage_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Stage Hunks in Range" },
+            r = { "<cmd>lua require'gitsigns'.reset_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Reset Hunks in Range" },
+        },
+        z = {},
+        j = {
+            j = { ":<c-u>MagmaEvaluateVisual<cr>", "Evaluate Selction" },
+        },
     },
     a = {
         name = "around",
@@ -96,6 +138,7 @@ require("which-key").register({
         F = { ":<c-u>TSTextobjectSelect @call.outer<cr>", "Function" },
         l = { ":<c-u>TSTextobjectSelect @loop.outer<cr>", "Loop" },
         o = { ":<c-u>TSTextobjectSelect @class.outer<cr>", "Class" },
+        v = { "<cmd>normal! H^oL$<cr>", "Select Viewport"},
         n = {
             name = "Next",
             s = { ":<c-u>call v:lua.mapped_targets(v:count, ')', 'as')<cr>", "Sentance" },
@@ -142,6 +185,7 @@ require("which-key").register({
         F = { ":<c-u>TSTextobjectSelect @call.inner<cr>", "Function" },
         l = { ":<c-u>TSTextobjectSelect @loop.inner<cr>", "Loop" },
         o = { ":<c-u>TSTextobjectSelect @class.inner<cr>", "Class" },
+        v = { "<cmd>normal! H^oL$<cr>", "Select Viewport"},
         n = {
             name = "Next",
             s = { ":<c-u>call v:lua.mapped_targets(v:count, ')', 'is')<cr>", "Sentance" },
@@ -175,6 +219,93 @@ require("which-key").register({
             F = { ":<c-u>call v:lua.ts_target_back(v:count, '@call.inner')<cr>", "Function" },
             l = { ":<c-u>call v:lua.ts_target_back(v:count, '@loop.inner')<cr>", "Loop" },
             o = { ":<c-u>call v:lua.ts_target_back(v:count, '@class.inner')<cr>", "Class" },
+        },
+    },
+    ["["] = {
+        name = "Backward Leader",
+        ["["] = { "v:lua.commandRepeat('[', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
+        h = {
+            [[&diff ? "[czz<cmd>let g:dirJumps='h'<cr>m`" : "<cmd>lua require'gitsigns'.prev_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>m`"]],
+            "Hunk",
+            expr = true,
+        },
+        Q = {
+            "<cmd>let g:dirJumps='Q'<cr>m`<cmd>try <bar> cpfile <bar> catch /E553/ <bar> clast <bar> endtry<cr>zz",
+            "Location Entry",
+        },
+        q = {
+            "<cmd>let g:dirJumps='q'<cr>m`<cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast <bar> endtry<cr>zz",
+            "QuickFix Entry",
+        },
+        s = { "<cmd>let g:dirJumps='s'<cr>m`[szz", "Spelling Mistake" },
+        ["]"] = { "<cmd>let g:dirJumps=']'<cr>m`[]zz", "Section End", noremap = false },
+        ["{"] = { "<cmd>let g:dirJumps='{'<cr>m`[[zz", "Section Start" },
+        ["}"] = { "<cmd>let g:dirJumps='{'<cr>m`[[zz", "Section Start" },
+        -- ["*"] = { "<cmd>let g:dirJumps='*'<cr>m`[#zz", "Function Call", noremap = false },
+        o = { "<cmd>let g:dirJumps='o'<cr>m`<cmd>TSTextobjectGotoPreviousStart @class.outer<cr>zz", "Class" },
+        f = { "<cmd>let g:dirJumps='f'<cr>m`<cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Function" },
+        [","] = { "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoPreviousStart @parameter.inner<cr>zz", "Parameter" },
+        c = { "<cmd>let g:dirJumps='c'<cr>m`<cmd>TSTextobjectGotoPreviousStart @conditional.inner<cr>zz", "Conditional" },
+        C = { "<cmd>let g:dirJumps='C'<cr>m`<cmd>TSTextobjectGotoPreviousStart @comment.outer<cr>zz", "Comment" },
+        l = { "<cmd>let g:dirJumps='l'<cr>m`<cmd>TSTextobjectGotoPreviousStart @loop.outer<cr>zz", "Loop" },
+        b = { "<cmd>let g:dirJumps='b'<cr>m`<cmd>TSTextobjectGotoPreviousStart @block.outer<cr>zz", "Block" },
+        O = { "<cmd>let g:dirJumps='O'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @class.outer<cr>zz", "Class" },
+        F = { "<cmd>let g:dirJumps='F'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @function.outer<cr>zz", "Function" },
+        ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @parameter.inner<cr>zz", "Parameter" },
+        L = { "<cmd>let g:dirJumps='L'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @loop.outer<cr>zz", "Loop" },
+        B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @block.outer<cr>zz", "Block" },
+        E = {
+            "<cmd>let g:dirJumps='E'<cr>m`<cmd>lua require'trouble'.previous({skip_groups=false, jump=true})<cr>zz",
+            "Trouble Item",
+        },
+        m = { "<cmd>let g:dirJumps='m'<cr>m`[`zz", "File Marks" },
+        e = {
+            "<cmd>lua vim.lsp.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
+            "Error",
+        },
+    },
+    ["]"] = {
+        name = "Forward Leader",
+        ["]"] = { "v:lua.commandRepeat(']', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
+        h = {
+            [[&diff ? "]czz<cmd>let g:dirJumps='h'<cr>m`" : "<cmd>lua require'gitsigns'.next_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>m`"]],
+            "Hunk",
+            expr = true,
+        },
+        Q = {
+            "<cmd>let g:dirJumps='Q'<cr>m`<cmd>try <bar> cnfile <bar> catch /E553/ <bar> cfirst <bar> endtry<cr>zz",
+            "Location Entry",
+        },
+        q = {
+            "<cmd>let g:dirJumps='q'<cr>m`<cmd>try <bar> cnext <bar> catch /E553/ <bar> cfirst <bar> endtry<cr>zz",
+            "QuickFix Entry",
+        },
+        s = { "<cmd>let g:dirJumps='s'<cr>m`]szz", "Spelling Mistake" },
+        ["["] = { "<cmd>let g:dirJumps='['<cr>m`][zz", "Section End", noremap = false },
+        ["}"] = { "<cmd>let g:dirJumps='}'<cr>m`]]zz", "Section Start", noremap = true },
+        ["{"] = { "<cmd>let g:dirJumps='}'<cr>m`]]zz", "Section Start", noremap = true },
+        -- ["*"] = { "<cmd>let g:dirJumps='*'<cr>m`]#zz", "Function Call", noremap = false },
+        d = { "<cmd>let g:dirJumps='D'<cr>m`<cmd>TSTextobjectGotoNextStart @comment.outer<cr>zz", "Comment" },
+        o = { "<cmd>let g:dirJumps='o'<cr>m`<cmd>TSTextobjectGotoNextStart @class.outer<cr>zz", "Class" },
+        f = { "<cmd>let g:dirJumps='f'<cr>m`<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Function" },
+        c = { "<cmd>let g:dirJumps='c'<cr>m`<cmd>TSTextobjectGotoNextStart @conditional.inner<cr>zz", "Conditional" },
+        [","] = { "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoNextStart @parameter.inner<cr>zz", "Parameter" },
+        l = { "<cmd>let g:dirJumps='l'<cr>m`<cmd>TSTextobjectGotoNextStart @loop.outer<cr>zz", "Loop" },
+        b = { "<cmd>let g:dirJumps='b'<cr>m`<cmd>TSTextobjectGotoNextStart @block.outer<cr>zz", "Block" },
+        O = { "<cmd>let g:dirJumps='O'<cr>m`<cmd>TSTextobjectGotoNextEnd @class.outer<cr>zz", "Class (end)" },
+        F = { "<cmd>let g:dirJumps='F'<cr>m`<cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Function (end)" },
+        C = { "<cmd>let g:dirJumps='C'<cr>m`<cmd>TSTextobjectGotoNextEnd @conditional.inner<cr>zz", "Conditional (end)" },
+        ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoNextEnd @parameter.inner<cr>zz", "Parameter (end)" },
+        L = { "<cmd>let g:dirJumps='L'<cr>m`<cmd>TSTextobjectGotoNextEnd @loop.outer<cr>zz", "Loop (end)" },
+        B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block (end)" },
+        E = {
+            "<cmd>let g:dirJumps='E'<cr>m`<cmd>lua require'trouble'.next({skip_groups=false, jump=true})<cr>zz",
+            "Trouble Item",
+        },
+        m = { "<cmd>let g:dirJumps='m'<cr>m`]`zz", "File Marks" },
+        e = {
+            "<cmd>lua vim.lsp.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
+            "Error",
         },
     },
 }, {
