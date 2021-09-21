@@ -459,7 +459,7 @@ require("which-key").register({
             d = { "<cmd>lua PeekDefinition()<CR>", "Definition" },
             E = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
             e = {
-                "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false, border='single'})<CR>",
+                "<cmd>lua vim.diagnostic.show_line_diagnostics({ focusable = false, border='single'})<CR>",
                 "Diagnostics",
             },
             W = { "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory" },
@@ -594,9 +594,12 @@ require("which-key").register({
         },
         r = {
             name = "Refactor",
-            t = { "Rename (Treesitter)" },
+            t = {"<cmd>lua require('neogen').generate({type = 'type' })<cr>", "Type Documentation"},
+            c = {"<cmd>lua require('neogen').generate({type = 'class' })<cr>", "Class Documentation"},
+            f = {"<cmd>lua require('neogen').generate({type = 'func' })<cr>", "Function Documentation"},
             v = { "<plug>(ExtractVar)", "Extract Variable" },
             r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)" },
+            R = { "Rename (Treesitter)" },
         },
         x = {
             name = "Explorer",
@@ -708,11 +711,11 @@ require("which-key").register({
         B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @block.outer<cr>zz", "Block" },
         m = { "<cmd>let g:dirJumps='m'<cr>m`[`zz", "File Marks" },
         e = {
-            "<cmd>lua vim.lsp.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
+            "<cmd>lua vim.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
             "Diagnostics",
         },
         E = {
-            "<cmd>lua vim.lsp.diagnostic.goto_prev({ severity='Error', focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='E'<cr>m`",
+            "<cmd>lua vim.diagnostic.goto_prev({ severity='Error', focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='E'<cr>m`",
             "Error",
         },
     },
@@ -753,11 +756,11 @@ require("which-key").register({
         B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block (end)" },
         m = { "<cmd>let g:dirJumps='m'<cr>m`]`zz", "File Marks" },
         e = {
-            "<cmd>lua vim.lsp.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
+            "<cmd>lua vim.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
             "Diagnostics",
         },
         E = {
-            "<cmd>lua vim.lsp.diagnostic.goto_next({ severity='Error', focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='E'<cr>m`",
+            "<cmd>lua vim.diagnostic.goto_next({ severity='Error', focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='E'<cr>m`",
             "Error",
         },
     },

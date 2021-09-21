@@ -39,7 +39,6 @@ import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.EasyMotion
 import XMonad.Actions.Navigation2D
 import XMonad.Actions.PerWindowKeys
-import XMonad.Actions.Promote
 import XMonad.Actions.RotSlaves
 import XMonad.Actions.SinkAll
 import XMonad.Actions.SpawnOn
@@ -670,6 +669,7 @@ myKeys conf = let
 
 
     , ("M-f"             , addName "Fullscreen"                  $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_f)
+                                                                             ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_f)
                                                                              ,(pure True, sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle FULL ])])
 
     , ("M-C-f"           , addName "Fullscreen"                  $ sequence_ [ withFocused $ windows . W.sink
@@ -694,21 +694,21 @@ myKeys conf = let
 
     , ("M-h"             , addName "Navigate Left"               $ sequence_ [bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_h)
                                                                                         ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_h)
-                                                                                        ,(pure True, windowGo L True)], warpCursor])
+                                                                                        ,(pure True, windowGo L False)], warpCursor])
     , ("M-j"             , addName "Navigate Down"               $ sequence_ [bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_j)
                                                                                         ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_j)
-                                                                                        ,(pure True, windowGo D True)], warpCursor])
+                                                                                        ,(pure True, windowGo D False)], warpCursor])
     , ("M-k"             , addName "Navigate Up"                 $ sequence_ [bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_k)
                                                                                         ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_k)
-                                                                                        ,(pure True, windowGo U True)], warpCursor])
+                                                                                        ,(pure True, windowGo U False)], warpCursor])
     , ("M-l"             , addName "Navigate Right"              $ sequence_ [bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_l)
                                                                                         ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_j)
-                                                                                        ,(pure True, windowGo R True)], warpCursor])
+                                                                                        ,(pure True, windowGo R False)], warpCursor])
 
-    , ("M-C-h"           , addName "Force Navigate Left"         $ sequence_ [windowGo L True, warpCursor])
-    , ("M-C-j"           , addName "Force Navigate Down"         $ sequence_ [windowGo D True, warpCursor])
-    , ("M-C-k"           , addName "Force Navigate Up"           $ sequence_ [windowGo U True, warpCursor])
-    , ("M-C-l"           , addName "Force Navigate Right"        $ sequence_ [windowGo R True, warpCursor])
+    , ("M-C-h"           , addName "Force Navigate Left"         $ sequence_ [windowGo L False, warpCursor])
+    , ("M-C-j"           , addName "Force Navigate Down"         $ sequence_ [windowGo D False, warpCursor])
+    , ("M-C-k"           , addName "Force Navigate Up"           $ sequence_ [windowGo U False, warpCursor])
+    , ("M-C-l"           , addName "Force Navigate Right"        $ sequence_ [windowGo R False, warpCursor])
 
     , ("M-C-<D>"         , addName "Shift down"                  $ sequence_ [windows W.swapDown, warpCursor])
     , ("M-C-<U>"         , addName "Shift up"                    $ sequence_ [windows W.swapUp, warpCursor])

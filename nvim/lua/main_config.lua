@@ -39,7 +39,8 @@ end
 
 -- Close Buffers Setup
 require("close_buffers").setup({
-    preserve_window_layout = { "this" },
+    preserve_window_layout = {},
+    -- preserve_window_layout = { "this" },
     next_buffer_cmd = function(windows)
         require("bufferline").cycle(1)
         local bufnr = vim.api.nvim_get_current_buf()
@@ -80,4 +81,8 @@ require("colorizer").setup({ "*" }, {
 require("bufjump").setup({
     forward = "<c-n>",
     backward = "<c-p>",
+})
+
+require("neogen").setup({
+    enabled = true,
 })

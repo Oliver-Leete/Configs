@@ -41,7 +41,7 @@ vim.cmd([[
 vim.diagnostic.config({
     underline = false,
     virtual_text = { severity = "Error"},
-   signs = true,
+    signs = true,
     update_in_insert = false,
     severity_sort = true,
 })

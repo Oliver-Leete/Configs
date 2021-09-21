@@ -144,6 +144,9 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'p00f/nvim-ts-rainbow'
     Plug 'code-biscuits/nvim-biscuits'
 
+    " Refactor and Document
+    Plug 'danymat/neogen'
+
     " Hop, Skip And Jump
     Plug 'IndianBoy42/hop.nvim'
     Plug 'mizlan/iswap.nvim'

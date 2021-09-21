@@ -269,6 +269,8 @@ local luasnip = require("luasnip")
 _G.tab_complete = function()
     if luasnip and luasnip.expand_or_jumpable() then
         return replace_keycodes("<Plug>luasnip-expand-or-jump")
+    elseif neogen.jumpable() then
+        return replace_keycodes("<cmd>lua require('neogen').jump_next()<CR>")
     else
         return replace_keycodes("<plug>(TaboutMulti)")
     end

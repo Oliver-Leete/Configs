@@ -7,7 +7,7 @@ set -Ux EDITOR "nvrTab --remote-tab-wait"
 set -Ux VISUAL "nvrTab --remote-tab-wait"
 set -gx PATH /home/oleete/.cargo/bin /home/oleete/.yarn/bin /home/oleete/go/bin /home/oleete/.config/nvim/node_modules/tree-sitter-cli /home/oleete/.config/bin $PATH
 
-export BAT_PAGER="less -R"
+export BAT_PAGER="nvim +'Man!|set nowrap'"
 
 # aliases
 alias neovim nvim
