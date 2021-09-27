@@ -116,7 +116,11 @@ require("which-key").register({
         ["."] = { "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR>", "Code Actions" },
         r = {
             name = "Refactor",
-            v = { "<plug>(ExtractVarVis)", "Extract Variable" },
+            V = { "<plug>(ExtractVarVis)", "Extract Variable" },
+            f = { "<cmd>lua require('refactoring').refactor('Extract Function')<cr>", "Extract Function"},
+            F = { "<cmd>lua require('refactoring').refactor('Extract Function to File')<cr>", "Extract Function"},
+            v = { "<cmd>lua require('refactoring').refactor('Extract Variable')<cr>", "Extract Variable"},
+            i = { "<cmd>lua require('refactoring').refactor('Inline Variable')<cr>", "Inline Variable"},
         },
         g = {
             s = { "<cmd>lua require'gitsigns'.stage_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Stage Hunks in Range" },

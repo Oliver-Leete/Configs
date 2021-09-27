@@ -594,16 +594,19 @@ require("which-key").register({
         },
         r = {
             name = "Refactor",
+            V = { "<plug>(ExtractVar)", "Extract Variable" },
+            r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)" },
+            R = { "Rename (Treesitter)" },
+            f = { "zib<cmd>lua require('refactoring').refactor('Extract Function')<cr>", "Extract Function", noremap=false},
+            F = { "zib<cmd>lua require('refactoring').refactor('Extract Function to File')<cr>", "Extract Function", noremap=false},
+            v = { "zi,<cmd>lua require('refactoring').refactor('Extract Variable')<cr>", "Extract Variable", noremap=false},
+            i = { "zi,<cmd>lua require('refactoring').refactor('Inline Variable')<cr>", "Inline Variable", noremap=false},
+        },
+        a = {
+            name = "Annotations",
             t = {"<cmd>lua require('neogen').generate({type = 'type' })<cr>", "Type Documentation"},
             c = {"<cmd>lua require('neogen').generate({type = 'class' })<cr>", "Class Documentation"},
             f = {"<cmd>lua require('neogen').generate({type = 'func' })<cr>", "Function Documentation"},
-            v = { "<plug>(ExtractVar)", "Extract Variable" },
-            r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)" },
-            R = { "Rename (Treesitter)" },
-        },
-        x = {
-            name = "Explorer",
-            x = { "<cmd>let g:panelRepeat='x'<cr><cmd>NvimTreeToggle<CR>", "File Tree" },
         },
         w = {
             name = "Window Managment",

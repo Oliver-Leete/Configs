@@ -17,7 +17,7 @@ local nvim_lsp = require("lspconfig")
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
 local function preview_location_callback(_, _, result)
     if result == nil or vim.tbl_isempty(result) then
@@ -33,14 +33,14 @@ end
 
 vim.cmd([[
     sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticSignError
-    sign define DiagnosticSignWarning text= texthl=DiagnosticSignWarning linehl= numhl=DiagnosticSignWarning
-    sign define DiagnosticSignInformation text= texthl=DiagnosticSignInformation linehl= numhl=DiagnosticSignInformation
+    sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=DiagnosticSignWarn
+    sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=DiagnosticSignInfo
     sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=DiagnosticSignHint
 ]])
 
 vim.diagnostic.config({
     underline = false,
-    virtual_text = { severity = "Error"},
+    virtual_text = { severity = "Error" },
     signs = true,
     update_in_insert = false,
     severity_sort = true,
@@ -155,7 +155,7 @@ for _, server in pairs(servers) do
                             [vim.fn.expand("$VIMRUNTIME/lua")] = true,
                             [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
                         },
-                        maxPreload = 2000,
+                        maxPreload = 3000,
                         preloadFileSize = 500,
                     },
                     telemetry = {
@@ -404,7 +404,7 @@ function _G.toggle_diagnostics()
         vim.g.diagnostics_active = false
         vim.diagnostic.config({
             underline = false,
-            virtual_text = { severity = "Error"},
+            virtual_text = { severity = "Error" },
             signs = true,
             update_in_insert = false,
             severity_sort = true,
@@ -419,10 +419,10 @@ function _G.toggle_diagnostics()
         vim.g.diagnostics_active = true
         vim.diagnostic.config({
             underline = true,
-                virtual_text = {
-                    prefix = " ",
-                    spacing = 4,
-                },
+            virtual_text = {
+                prefix = " ",
+                spacing = 4,
+            },
             signs = true,
             update_in_insert = false,
             severity_sort = true,

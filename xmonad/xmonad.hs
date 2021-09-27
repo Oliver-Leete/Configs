@@ -43,7 +43,6 @@ import XMonad.Actions.RotSlaves
 import XMonad.Actions.SinkAll
 import XMonad.Actions.SpawnOn
 import XMonad.Actions.SwapPromote
-import XMonad.Actions.Warp
 import XMonad.Actions.WithAll
 import XMonad.Actions.WindowGoLocal
 
@@ -55,16 +54,12 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.ToggleHook
 
-import XMonad.Layout.BorderResize
-import XMonad.Layout.DraggingVisualizer
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.NoBorders
 import XMonad.Layout.NoFrillsDecoration
 import XMonad.Layout.Notebook
 import XMonad.Layout.PerWorkspace
-import XMonad.Layout.PositionStoreFloat
-import XMonad.Layout.Reflect
 import XMonad.Layout.Renamed
 import XMonad.Layout.ShowWName
 import XMonad.Layout.SimpleFocus
@@ -140,7 +135,6 @@ wsPRO2   = "Notes"
 wsPRO3   = "Dnd"
 wsCON    = "Configs"
 wsPER    = "Home"
-wsFLOAT  = "Flt"
 wsWRK    = "Wrk"
 wsSIM    = "Sim wrk"
 wsTHESIS = "PhD wrk"
@@ -148,7 +142,7 @@ wsEXP    = "Exp wrk"
 wsWRK4   = "wrk4"
 
 myWorkspaces :: [[Char]]
-myWorkspaces = [wsTMP, wsTMP2, wsPRO1, wsPRO2, wsPRO3, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsWRK4, wsFLOAT]
+myWorkspaces = [wsTMP, wsTMP2, wsPRO1, wsPRO2, wsPRO3, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsWRK4]
 
 myWorkspaceIndices :: M.Map [Char] [Char]
 myWorkspaceIndices = M.fromList $ zip myWorkspaces ["Home", "End", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"] -- (,) == \x y -> (x,y)
@@ -230,57 +224,38 @@ projects =
 -- Applications                                                                                   --
 ----------------------------------------------------------------------------------------------------
 
--- Just a general list of all the programs I reference elsewhere. I should be more consistent with
--- what I put here. Either I should only be putting things used regularly, or I should be putting
--- anything.
-
 myTerminal     = "kitty --single-instance"
 myBrowser      = "/home/oleete/.config/bin/browser"
 myBrowserClass = "google-chrome-stable"
 myStatusBar    = "/home/oleete/.config/xmobar/init-xmobars"
--- myTray         = "trayer --edge top --align center --distance 5 --heighttype pixel --height 18 --widthtype request --transparent true --alpha 0 --tint 0x1a1b26"
 myLauncher     = "rofi -matching fuzzy -modi combi -show combi -combi-modi window,drun,run -show-icons"
 myLockscreen   = "slock"
-myExplorer     = "nemo"
 myCompositor   = "picom -b --config ~/.config/picom/picom.conf"
-myColorPicker  = "colorpicker"
--- Lets see if this fixes the below bug
 myWallpaper    = "feh --bg-fill --randomize ~/Pictures/wallpapers/"
 
--- Named scratchpads, using browser script and bindOn to have some of them be workspace based so the
--- work tasks and keep are on the work layouts and the personal on personal.
-
 discordCommand         = "discord"
-discordResource        = "discord"
-isDiscord              = className =? discordResource
+isDiscord              = className =? "discord"
 
 gTasksCommand          = myBrowser ++ " '-tasks --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html --class=Tasks'"
-gTasksResource         = "Tasks"
-isTasks                = className =? gTasksResource
+isTasks                = className =? "Tasks"
 
 gTasksWrkCommand       = myBrowser ++ " 'tasks --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html --class=WrkTasks'"
-gTasksWrkResource      = "WrkTasks"
-isTasksWrk             = className =? gTasksWrkResource
+isTasksWrk             = className =? "WrkTasks"
 
 keepCommand            = myBrowser ++ " '-keep --app=https://keep.google.com/#home --class=Keep'"
-keepResource           = "Keep"
-isKeep                 = className =? keepResource
+isKeep                 = className =? "Keep"
 
 keepWrkCommand         = myBrowser ++ " 'keep --app=https://keep.google.com/#home --class=WrkKeep'"
-keepWrkResource        = "WrkKeep"
-isKeepWrk              = className =? keepWrkResource
+isKeepWrk              = className =? "WrkKeep"
 
 chromenspCommand       = myBrowser ++ " 'float --class=Chromensp'"
-chromenspResource      = "Chromensp"
-isChromensp            = className =? chromenspResource
+isChromensp            = className =? "Chromensp"
 
 chromenspWrkCommand    = myBrowser ++ " 'wrkfloat --class=Chromewrknsp'"
-chromenspWrkResource   = "Chromewrknsp"
-isChromenspWrk         = className =? chromenspWrkResource
+isChromenspWrk         = className =? "Chromewrknsp"
 
 youtubeMusicCommand    = "$HOME/.local/bin/YouTube-Music-Desktop-App-1.13.0.AppImage"
-youtubeMusicResource   = "youtube-music-desktop-app"
-isYoutubeMusic         = className =? youtubeMusicResource
+isYoutubeMusic         = className =? "youtube-music-desktop-app"
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
@@ -304,10 +279,6 @@ scratchpads =
 -- Theme                                                                                     --
 ----------------------------------------------------------------------------------------------------
 
--- At the moment this theme is an attempt at a TokyoNight colour pallet. There might still be some
--- leftovers of my Monokai theme from when I used that. I moved not for looks, but because of the
--- amazing functionality of Folke's Neovim theme.
-
 myFocusFollowsMouse  = True
 myClickJustFocuses   = True
 
@@ -323,7 +294,7 @@ alert      = "#f7768e"
 gap    = 4
 reSize = 1/20
 
-topbar   = 8
+-- topbar   = 8
 tabsh    = 20
 myBorder = 3
 prompt   = 30
@@ -334,40 +305,6 @@ myFocusedBorderColor    = active
 myFont      = "xft:Ubuntu:weight=normal:pixelsize=16:antialias=true:hinting=true"
 myWideFont  = "xft:Eurostar Black Extended:"
             ++ "style=Regular:pixelsize=180:hinting=true"
-
--- This is a "fake title" used as a highlight bar in lieu of full borders I'm not a fan of it, so
--- it's not being used right now I take that back, spent a short time with a border, but now I've
--- moved back to the top bar, it works a lot better without rounded corners although part of me
--- so wishes to return to rounded corners. I think some of these could be cleaned up, especially
--- because I don't use the urgency hooks, so I don't ever get the urgency colours.
-
-topBarTheme :: Theme
-topBarTheme = def
-    { fontName              = myFont
-    , inactiveBorderColor   = background
-    , inactiveColor         = background
-    , inactiveTextColor     = background
-    , activeBorderColor     = active
-    , activeColor           = active
-    , activeTextColor       = active
-    , urgentBorderColor     = alert
-    , urgentTextColor       = warning
-    , decoHeight            = topbar
-    }
-
-topFloatBarTheme :: Theme
-topFloatBarTheme = topBarTheme
-    { fontName              = myFont
-    , inactiveBorderColor   = background
-    , inactiveColor         = background
-    , inactiveTextColor     = foreground
-    , activeBorderColor     = background
-    , activeColor           = background
-    , activeTextColor       = active
-    , urgentBorderColor     = alert
-    , urgentTextColor       = warning
-    , decoHeight            = tabsh
-    }
 
 myTabTheme :: Theme
 myTabTheme = def
@@ -425,16 +362,6 @@ easymotionConfig = def
 -- Layouts                                                                                        --
 ----------------------------------------------------------------------------------------------------
 
--- Honestly just my favourite section. I like things to just be exactly where I want them to, so
--- having custom layouts is what brought me to XMonad it the first place. The Notebook Layout is my
--- baby, it gets it's name from the fact that I originally made it to have a jupyter notebook next
--- to my text editor and browser. Even with that not being a use case for me any more, I still love
--- it so much. It has now been generalised to work for more use cases and can be of much use for
--- very wide monitors.
-
--- Tell X.A.Navigation2D about specific layouts and how to handle them
--- Don't actually know what this does, but removing it breaks things
-
 myNav2DConf :: Navigation2DConfig
 myNav2DConf = def
     { defaultTiledNavigation    = centerNavigation
@@ -444,10 +371,8 @@ myNav2DConf = def
     , unmappedWindowRect        = [("Full", singleWindowRect)]
     }
 
--- This was in all the layout functions, might as well have it in one place
 mySpacing = spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
 
--- To make a toggle for full-screening a program but leaving the bar in place.
 data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
@@ -458,7 +383,6 @@ barFull = renamed [Replace "Maximized"]
         $ mySpacing
           Simplest
 
--- To make a toggle for Zen. Centres the active window and hides everything else except the bar.
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
     transform FULLCENTER x k = k centerFull (const x)
@@ -470,21 +394,16 @@ centerFull = renamed [Replace "Centred Max"]
            $ onWorkspaces [wsTHESIS] (SimpleFocus (1/4) (reSize/2) 1000)
            $ SimpleFocus (1/2) (reSize/2) 1500
 
--- cf http://xmonad.org/xmonad-docs/xmonad-contrib/src/XMonad-Config-Droundy.html
-myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
-            $ smartBorders
+myLayoutHook= smartBorders
             $ windowNavigation
             $ fullScreenToggle
             $ fullBarToggle
             $ fullCenterToggle
             $ renamed [CutWordsLeft 4]
             $ showWorkspaceName
-            $ draggingVisualizer
             $ addTabs shrinkText myTabTheme
             $ avoidStruts
             $ mySpacing
-            $ mirrorToggle
-            $ reflectToggle
               notebookLayout
     where
     notebookMulti   = subLayout [] Simplest $ Notebook 2560 True True True 1 3 reSize 2 (2/3)
@@ -492,33 +411,18 @@ myLayoutHook= onWorkspaces [wsFLOAT] floatWorkSpace
 
     notebookLayout = renamed [Replace "Normal"] $ onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns notebookMulti
 
-    floatWorkSpace = renamed [Replace "Float"] (borderResize $ addFloatTopBar positionStoreFloat)
-
     -- Other Layout Stuff
     fullBarToggle       = mkToggle (single FULLBAR)
     fullCenterToggle    = mkToggle (single FULLCENTER)
     fullScreenToggle    = mkToggle (single FULL)
-    mirrorToggle        = mkToggle (single MIRROR)
-    reflectToggle       = mkToggle (single REFLECTX)
     showWorkspaceName   = showWName' myShowWNameTheme
-    addFloatTopBar      = noFrillsDeco shrinkText topFloatBarTheme
 
 ----------------------------------------------------------------------------------------------------
 -- Keybindings                                                                                    --
 ----------------------------------------------------------------------------------------------------
 
--- The general philosophy was that all WM bindings would be on the Super key, and no other bindings
--- would go there. Some exceptions have been made. F8 is used as my keyboard is set up so that a tap
--- of the Super key actually sends the F8 key (It can't do modified key presses with that function).
--- And also some more keys are creeping onto the Super layer in the form of 'magic' bindings.
--- Bindings that try to bridge the gap between the XMonad and the window and tab management within
--- certain programs.
-
 myModMask :: KeyMask
-myModMask = mod4Mask -- super (and on my system, hyper) keys
-
--- Display keyboard mappings using zenity.
--- from: github.com/thomasf/dotfiles-thomasf-xmonad/blob/master/.xmonad/lib/XMonad/Config/A00001.hs
+myModMask = mod4Mask
 
 showKeybindings :: [((KeyMask, KeySym), NamedAction)] -> NamedAction
 showKeybindings x = addName "Show Keybindings" $ io $ do
@@ -527,24 +431,15 @@ showKeybindings x = addName "Show Keybindings" $ io $ do
     hClose h
     return ()
 
--- some of the structure of the following cribbed from
--- https://github.com/SimSaladin/configs/blob/master/.xmonad/xmonad.hs
--- https://github.com/paul-axe/dotfiles/blob/master/.xmonad/xmonad.hs
--- https://github.com/pjones/xmonadrc (+ all the dyn project stuff)
-
 myKeys :: XConfig Layout -> [((KeyMask, KeySym), NamedAction)]
 myKeys conf = let
 
     subKeys str ks = subtitle str : mkNamedKeymap conf ks
-    -- Added home and end for the two starting workspaces 
-    -- (This makes sense on my batshit keyboard layout)
     wsKeys = ["S-#", "#", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
     zipM  m nm ks as f = zipWith (\k d -> (m ++ k, addName nm $ f d)) ks as
 
     swapMaster' (W.Stack f u d) = W.Stack f [] $ reverse u ++ d
-
-    warpCursor = warpToWindow (1/2) (1/2)
 
     toggleFloat w = windows (\s -> if M.member w (W.floating s)
                     then W.sink w s
@@ -561,7 +456,7 @@ myKeys conf = let
     ] ^++^
 
     subKeys "Utilities"
-    [ ("M-M1-C-S-z"      , addName "Colour picker"               $ spawn myColorPicker)
+    [ ("M-M1-C-S-z"      , addName "Colour picker"               $ spawn "colorpicker")
     , ("M-M1-C-S-o"      , addName "On-screen keys"              $ spawn "killall screenkey || screenkey")
     , ("M-M1-C-S-/"      , addName "On-screen keys settings"     $ spawn "screenkey --show-settings")
     , ("M-M1-C-S-f"      , addName "Capture screen"              $ spawn "screencapt" )
@@ -571,19 +466,18 @@ myKeys conf = let
     , ("M-M1-C-S-<Space>", addName "Play/Pause"                  $ spawn "playerctl play-pause" )
     , ("M-M1-C-S-<Left>" , addName "Skip Song"                   $ spawn "playerctl previous" )
     , ("M-M1-C-S-<Right>", addName "Prev Song"                   $ spawn "playerctl next" )
-    , ("M-;"             , addName "Warp Cursor"                 $ warpToWindow (1/2) (1/2))
     ] ^++^
 
     subKeys "Apps"
     [ ("M-<Return>"      , addName "Terminal"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Return)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Return)
-                                                                             ,(pure True, sequence_ [runOrRaise myTerminal (className =? "kitty"), warpCursor])]) -- P.sendKey (controlMask .|. shiftMask) xK_Return])])
+                                                                             ,(pure True, runOrRaise myTerminal (className =? "kitty"))])
     , ("M-C-<Return>"    , addName "Force Terminal"              $ spawn myTerminal)
     , ("M-b"             , addName "Browser"                     $ bindFirst [(className =? "Google-chrome", P.sendKey controlMask xK_t)
-                                                                             ,(pure True, sequence_ [runOrRaise myBrowser (className =? "Google-chrome"), warpCursor])]) -- P.sendKey controlMask xK_t])])
-    , ("M-v"             , addName "PDF Viewer"                  $ sequence_ [runOrRaise "zathura" (className =? "Zathura"), warpCursor])
+                                                                             ,(pure True, runOrRaise myBrowser (className =? "Google-chrome"))])
+    , ("M-v"             , addName "PDF Viewer"                  $ runOrRaise "zathura" (className =? "Zathura"))
     , ("M-C-b"           , addName "Force Browser"               $ spawn myBrowser)
-    , ("M-M1-b"          , addName "Work Browser"                $ bindOn WS [(wsTMP2,   spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
+    , ("M-M1-b"          , addName "Alternate Browser"           $ bindOn WS [(wsTMP2,   spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
                                                                              ,(wsTMP,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
                                                                              ,(wsWRK,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
                                                                              ,(wsWRK4,   spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
@@ -591,14 +485,6 @@ myKeys conf = let
                                                                              ,(wsEXP,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
                                                                              ,(wsSIM,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
                                                                              ,("",       spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable-wrk'")])
-    , ("M-e"             , addName "Explorer"                    $ bindOn WS [(wsSIM,  spawn (myExplorer ++ " -t ~/Projects/JuliaPowderModel ~/UniDrive/1_Thesis/1.4_PowderModel"))
-                                                                             ,(wsEXP,  spawn (myExplorer ++ " -t ~/Projects/JuliaPlotting ~/UniDrive/1_Thesis/1.4_PowderModel"))
-                                                                             ,(wsPRO2, spawn (myExplorer ++  " -t ~/Projects/julia-vscode ~/Projects/julia-benchmark-example"))
-                                                                             ,(wsCON,  spawn (myExplorer ++  " -t ~/Projects/Configs ~/Projects/ConfigExamples ~/.config"))
-                                                                             ,(wsPRO1,  spawn (myExplorer ++  " -t ~/Projects/Prints/stl ~/Projects/Prints/gcode"))
-                                                                             ,(wsPER,  spawn (myExplorer ++  " -t ~/Downloads ~/PersonalDrive"))
-                                                                             ,(wsWRK,  spawn (myExplorer ++  " -t ~/Downloads ~/UniDrive"))
-                                                                             ,("",     spawn (myExplorer ++ " ."))])
     ] ^++^
 
     subKeys "ScratchPad Apps"
@@ -629,11 +515,9 @@ myKeys conf = let
     subKeys "Workspaces and Projects"
     (
     [ ("M-a"             , addName "Launcher"                    $ spawn myLauncher)
-
-    -- , ("<F8>"            , addName "prompt select window"        $ windowPrompt myPromptTheme Goto allWindows)
-    -- , ("C-<F8>"          , addName "prompt fetch window"         $ windowPrompt myPromptTheme Bring allWindows)
     , ("M-w"             , addName "prompt select ws"            $ switchProjectPrompt myPromptTheme)
     , ("M-C-w"           , addName "prompt send to ws"           $ shiftToProjectPrompt myPromptTheme)
+    , ("M-<Space>"       , addName "Swap with last workspace"    $ toggleWS' ["NSP"])
     ]
     ++ zipM "M-"         "View ws"                               wsKeys [0..] (withNthWorkspace W.greedyView)
     ++ zipM "M-C-"       "Move w to ws"                          wsKeys [0..] (withNthWorkspace W.shift)
@@ -647,21 +531,19 @@ myKeys conf = let
     , ("M-C-<Backspace>" , addName "Force kill"                  kill)
     , ("M-S-<Backspace>" , addName "Kill all"                    $ confirmPrompt hotPromptTheme "kill all" killAll)
 
-    , ("<F8>"            , addName "Hop to Window"               $ sequence_ [selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow), warpCursor])
+    , ("<F8>"            , addName "Hop to Window"               $ selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow))
 
-    , ("M-<Space>"       , addName "Swap with last workspace"    $ toggleWS' ["NSP"])
-
-    , ("M-<Tab>"         , addName "Cycle up"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Right)
+    , ("M-<Tab>"         , addName "Next Tab"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Right)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Right)
                                                                              ,(className =? "Google-chrome", P.sendKey controlMask xK_Tab)
                                                                              ,(pure True, bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("Maximized", windows W.focusDown), ("Centred Max", windows W.focusDown), ("", onGroup W.focusDown')])])
 
-    , ("M-C-<Tab>"       , addName "Cycle down"                  $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Left)
+    , ("M-C-<Tab>"       , addName "Previous Tab"                $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Left)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Left)
                                                                              ,(className =? "Google-chrome", P.sendKey (controlMask .|. shiftMask) xK_Tab)
                                                                              ,(pure True, bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("Maximized", windows W.focusUp), ("Centred Max", windows W.focusUp), ("", onGroup W.focusDown')])])
-    , ("M-S-<Tab>"       , addName "Force Cycle up"              $ bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("Maximized", windows W.focusDown), ("Centred Max", windows W.focusDown), ("", onGroup W.focusDown')])
-    , ("M-S-C-<Tab>"     , addName "Force Cycle down"            $ bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("Maximized", windows W.focusUp), ("Centred Max", windows W.focusUp), ("", onGroup W.focusDown')])
+    , ("M-S-<Tab>"       , addName "Force Next Tab"              $ bindOn LD [("Tall Tabs", rotSlavesUp), ("Tabs", windows W.focusDown), ("Maximized", windows W.focusDown), ("Centred Max", windows W.focusDown), ("", onGroup W.focusDown')])
+    , ("M-S-C-<Tab>"     , addName "Force Previous Tab"          $ bindOn LD [("Tall Tabs", rotSlavesDown), ("Tabs", windows W.focusUp), ("Maximized", windows W.focusUp), ("Centred Max", windows W.focusUp), ("", onGroup W.focusDown')])
 
     , ("M-t"             , addName "New Tab"                     $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_t)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_t)
@@ -671,15 +553,9 @@ myKeys conf = let
     , ("M-f"             , addName "Fullscreen"                  $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_f)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_f)
                                                                              ,(pure True, sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle FULL ])])
-
-    , ("M-C-f"           , addName "Fullscreen"                  $ sequence_ [ withFocused $ windows . W.sink
-                                                                 , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULL ])
-
-    , ("M-s"             , addName "Maximize"                    $ sequence_ [ withFocused $ windows . W.sink
-                                                                 , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLBAR ])
-
-    , ("M-c"             , addName "Center Focus"                $ sequence_ [ withFocused $ windows . W.sink
-                                                                 , sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLCENTER])
+    , ("M-C-f"           , addName "Fullscreen"                  $ sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle FULL ])
+    , ("M-s"             , addName "Maximize"                    $ sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLBAR ])
+    , ("M-c"             , addName "Center Focus"                $ sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLCENTER])
 
 
     , ("M-u"             , addName "Scroll Up"                   $ spawn "xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4")
@@ -689,57 +565,53 @@ myKeys conf = let
     subKeys "Navigation"
     [ ("M-m"             , addName "Swap with main"             $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_m)
                                                                             ,(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_m)
-                                                                            ,(pure True, sequence_ [swapPromote' False, warpCursor])])
-    , ("M-C-m"           , addName "Force Swap with main"       $ sequence_ [swapPromote' False, warpCursor])
+                                                                            ,(pure True, swapPromote' False)])
+    , ("M-C-m"           , addName "Force Swap with main"       $ swapPromote' False)
 
-    , ("M-h"             , addName "Navigate Left"               $ sequence_ [bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_h)
+    , ("M-h"             , addName "Navigate Left"               $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_h)
                                                                                         ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_h)
-                                                                                        ,(pure True, windowGo L False)], warpCursor])
-    , ("M-j"             , addName "Navigate Down"               $ sequence_ [bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_j)
+                                                                                        ,(pure True, windowGo L False)])
+    , ("M-j"             , addName "Navigate Down"               $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_j)
                                                                                         ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_j)
-                                                                                        ,(pure True, windowGo D False)], warpCursor])
-    , ("M-k"             , addName "Navigate Up"                 $ sequence_ [bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_k)
+                                                                                        ,(pure True, windowGo D False)])
+    , ("M-k"             , addName "Navigate Up"                 $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_k)
                                                                                         ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_k)
-                                                                                        ,(pure True, windowGo U False)], warpCursor])
-    , ("M-l"             , addName "Navigate Right"              $ sequence_ [bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_l)
+                                                                                        ,(pure True, windowGo U False)])
+    , ("M-l"             , addName "Navigate Right"              $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_l)
                                                                                         ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_j)
-                                                                                        ,(pure True, windowGo R False)], warpCursor])
+                                                                                        ,(pure True, windowGo R False)])
 
-    , ("M-C-h"           , addName "Force Navigate Left"         $ sequence_ [windowGo L False, warpCursor])
-    , ("M-C-j"           , addName "Force Navigate Down"         $ sequence_ [windowGo D False, warpCursor])
-    , ("M-C-k"           , addName "Force Navigate Up"           $ sequence_ [windowGo U False, warpCursor])
-    , ("M-C-l"           , addName "Force Navigate Right"        $ sequence_ [windowGo R False, warpCursor])
+    , ("M-C-S-h"         , addName "Force Navigate Left"         $ windowGo L False)
+    , ("M-C-S-j"         , addName "Force Navigate Down"         $ windowGo D False)
+    , ("M-C-S-k"         , addName "Force Navigate Up"           $ windowGo U False)
+    , ("M-C-S-l"         , addName "Force Navigate Right"        $ windowGo R False)
 
-    , ("M-C-<D>"         , addName "Shift down"                  $ sequence_ [windows W.swapDown, warpCursor])
-    , ("M-C-<U>"         , addName "Shift up"                    $ sequence_ [windows W.swapUp, warpCursor])
-
-
+    , ("M-C-h"           , addName "Swap Left"                   $ windowSwap L False)
+    , ("M-C-j"           , addName "Swap Down"                   $ windowSwap D False)
+    , ("M-C-k"           , addName "Swap Up"                     $ windowSwap U False)
+    , ("M-C-l"           , addName "Swap Right"                  $ windowSwap R False)
     ] ^++^
 
     subKeys "SubLayouts"
     [ ("M-M1-m"          , addName "SubLayout swapMain"          $ onGroup swapMaster')
-    -- , ("M-M1-<Tab>"      , addName "Cycle sublayout"             $ toSubl NextLayout)
-    , ("M-M1-<D>"        , addName "SubLayout combine down"      $ withFocused (sendMessage . mergeDir W.focusDown'))
-    , ("M-M1-<U>"        , addName "SubLayout combine up"        $ withFocused (sendMessage . mergeDir W.focusUp'))
 
     , ("M-i"             , addName "Un-merge from sublayout"     $ withFocused (sendMessage . UnMerge))
     , ("M-C-i"           , addName "Unmerge all from sublayout"  $ withFocused (sendMessage . UnMergeAll))
     , ("M-M1-i"          , addName "Unmerge all from sublayout"  $ withFocused (sendMessage . UnMergeAll))
 
 
-    , ("M-M1-h"          , addName "Merge Left"                  $ sequence_ [sendMessage $ pullGroup L, warpCursor])
-    , ("M-M1-j"          , addName "Merge Down"                  $ sequence_ [sendMessage $ pullGroup D, warpCursor])
-    , ("M-M1-k"          , addName "Merge Up"                    $ sequence_ [sendMessage $ pullGroup U, warpCursor])
-    , ("M-M1-l"          , addName "Merge Right"                 $ sequence_ [sendMessage $ pullGroup R, warpCursor])
+    , ("M-M1-h"          , addName "Merge Left"                  $ sendMessage $ pullGroup L)
+    , ("M-M1-j"          , addName "Merge Down"                  $ sendMessage $ pullGroup D)
+    , ("M-M1-k"          , addName "Merge Up"                    $ sendMessage $ pullGroup U)
+    , ("M-M1-l"          , addName "Merge Right"                 $ sendMessage $ pullGroup R)
 
-    , ("M-C-M1-h"        , addName "Send Left"                   $ sequence_ [sendMessage $ pushWindow L, warpCursor])
-    , ("M-C-M1-j"        , addName "Send Down"                   $ sequence_ [sendMessage $ pushWindow D, warpCursor])
-    , ("M-C-M1-k"        , addName "Send Up"                     $ sequence_ [sendMessage $ pushWindow U, warpCursor])
-    , ("M-C-M1-l"        , addName "Send Right"                  $ sequence_ [sendMessage $ pushWindow R, warpCursor])
+    , ("M-C-M1-h"        , addName "Send Left"                   $ sendMessage $ pushWindow L)
+    , ("M-C-M1-j"        , addName "Send Down"                   $ sendMessage $ pushWindow D)
+    , ("M-C-M1-k"        , addName "Send Up"                     $ sendMessage $ pushWindow U)
+    , ("M-C-M1-l"        , addName "Send Right"                  $ sendMessage $ pushWindow R)
     ] ^++^
 
     subKeys "Layout Management"
-    -- [ ("M-<Tab>"         , addName "Cycle all layouts"           $ sendMessage NextLayout)
     [ ("M-M1-r"             , addName "Toggle Layout"               $ sendMessage ToggleMiddle)
     , ("M-C-M1-l"           , addName "Reset layout"                $ setLayout $ XMonad.layoutHook conf)
 
@@ -756,14 +628,10 @@ myKeys conf = let
     , ("M-C-["           , addName "Shrink height"               $ sendMessage MirrorShrink)
     , ("M-C-]"           , addName "Expand height"               $ sendMessage MirrorExpand)
 
-    , ("M-r"             , addName "Reflect"                     $ bindOn LD [("Normal",sendMessage ToggleSide)
-                                                                             ,("", sendMessage (XMonad.Layout.MultiToggle.Toggle REFLECTX))])
+    , ("M-r"             , addName "Reflect"                     $ sendMessage ToggleSide)
     , ("M-C-r"           , addName "Reflect Stack"               $ sendMessage ToggleStackDir)
     ]
 
--- Mouse bindings: default actions bound to mouse events. Includes window w/h ratio constraint
--- (square) using X.H.ConstrainedResize. cleared these down a bit as I don't use floating windows
--- often
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {} = M.fromList
     [ ((myModMask,               button1) ,\w -> focus w
@@ -783,9 +651,6 @@ myMouseBindings XConfig {} = M.fromList
 -- Startup                                                                                        --
 ----------------------------------------------------------------------------------------------------
 
--- Things to do on startup. Spawn is used instead of spawnOnce for wallpaper to give a new random on
--- every reset of XMonad.
-
 myStartupHook :: X ()
 myStartupHook = do
     spawnOnce myCompositor
@@ -799,9 +664,6 @@ myStartupHook = do
 ----------------------------------------------------------------------------------------------------
 -- Log                                                                                            --
 ----------------------------------------------------------------------------------------------------
-
--- Here is all the stuff to make my pp look nice. And by this, I mean it's the things used to put
--- the workspace names in xmobar.
 
 myLogHook :: Handle -> X ()
 myLogHook h = do
@@ -840,14 +702,6 @@ myFadeHook = composeAll
 -- New Window Actions                                                                             --
 ----------------------------------------------------------------------------------------------------
 
--- Things to do when a new window is opened. Mostly just making the named scratchpad apps open
--- floating in rectangles. Also adds the main toggle, this one shot toggle puts the next created
--- window in the master spot. This sometimes useful, but I normally like new windows spawning at
--- the bottom of the stack (I often just have the one or two 'main' programs that I want on each
--- workspace, and new windows after that are just supporting windows)
-
--- https://wiki.haskell.org/Xmonad/General_xmonad.hs_config_tips#ManageHook_examples
-
 myManageHook :: ManageHook
 myManageHook =
         manageSpecific
@@ -870,8 +724,8 @@ myManageHook =
             , resource =? "kittyconsole" -?> doRectFloat (W.RationalRect (3 / 5) (3 / 5) (1 / 3) (1 / 3))
             , className =? "Chromensp" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
             , className =? "Chromewrknsp" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
-            , resource =? youtubeMusicResource -?> doRectFloat halfNhalf
-            , resource =? discordResource -?> doRectFloat halfNhalf
+            , resource =? "youtube-music-desktop-app" -?> doRectFloat halfNhalf
+            , resource =? "discord" -?> doRectFloat halfNhalf
 
             , transience
             , isBrowserDialog -?> forceCenterFloat
@@ -892,11 +746,6 @@ myManageHook =
 -- X Event Actions                                                                                --
 ----------------------------------------------------------------------------------------------------
 
--- I'm not really into full screens without my say so... I often like to fullscreen a window but
--- keep it constrained to a window rect (e.g. for videos, etc. without the UI chrome cluttering
--- things up). I can always do that and then full screen the subsequent window if I want. THUS, to
--- cut a long comment short, no fullscreenEventHook
-
 myHandleEventHook :: Event -> X All
 myHandleEventHook = docksEventHook
                 <+> fadeWindowsEventHook
@@ -906,12 +755,6 @@ myHandleEventHook = docksEventHook
 ----------------------------------------------------------------------------------------------------
 -- Custom hook helpers                                                                            --
 ----------------------------------------------------------------------------------------------------
-
--- from:
--- https://github.com/pjones/xmonadrc/blob/master/src/XMonad/Local/Action.hs
---
--- Useful when a floating window requests stupid dimensions. There was a bug in Handbrake that would
--- pop up the file dialog with almost no height due to one of my rotated monitors.
 
 forceCenterFloat :: ManageHook
 forceCenterFloat = doFloatDep move

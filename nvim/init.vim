@@ -146,6 +146,7 @@ call plug#begin('~/.config/nvim/pluged')
 
     " Refactor and Document
     Plug 'danymat/neogen'
+    Plug 'ThePrimeagen/refactoring.nvim'
 
     " Hop, Skip And Jump
     Plug 'IndianBoy42/hop.nvim'
@@ -365,10 +366,16 @@ xnoremap : ;
 onoremap ; :
 onoremap : ;
 
+nnoremap g<c-a> v<c-a>
+nnoremap g<c-x> v<c-x>
 nnoremap + <c-a>
 nnoremap - <c-x>
-xnoremap + g<c-a>
-xnoremap - g<c-x>
+nnoremap g+ v<c-a>
+nnoremap g- v<c-x>
+xnoremap + <c-a>
+xnoremap - <c-x>
+xnoremap g+ g<c-a>
+xnoremap g- g<c-x>
 
 xnoremap y myy`y
 xnoremap Y myY`y
@@ -604,10 +611,5 @@ require('snippets_config')
 EOF
 
 let g:julia_blocks=0
-
-sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticSignError
-sign define DiagnosticSignWarning text= texthl=DiagnosticSignWarning linehl= numhl=DiagnosticSignWarning
-sign define DiagnosticSignInformation text= texthl=DiagnosticSignInformation linehl= numhl=DiagnosticSignInformation
-sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=DiagnosticSignHint
 
 redraw
