@@ -74,8 +74,8 @@ require("diffview").setup({
             ["k"] = cb("prev_entry"), -- Bring the cursor to the previous file entry.
             ["<up>"] = cb("prev_entry"),
             ["<cr>"] = cb("select_entry"),
-            ["o"] = "<cmd>lua require('diffview').on_keypress('select_entry')<cr><cmd>sleep 100m<cr><cmd>DiffviewToggleFiles<cr>",
-            ["p"] = "<cmd>lua require('diffview').on_keypress('select_entry')<cr><cmd>DiffviewFocusFiles<cr>",
+            ["o"] = cb("select_entry") .. "<cmd>sleep 100m<cr><cmd>DiffviewToggleFiles<cr>",
+            ["p"] = cb("select_entry") .. "<cmd>DiffviewFocusFiles<cr>",
             ["<2-LeftMouse>"] = cb("select_entry"),
             ["-"] = cb("toggle_stage_entry"), -- Stage / unstage the selected entry.
             ["S"] = cb("stage_all"), -- Stage all entries.

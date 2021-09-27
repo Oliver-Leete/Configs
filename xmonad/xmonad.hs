@@ -10,12 +10,9 @@
 --                                                                                                --
 ----------------------------------------------------------------------------------------------------
 -- Oliver Leete <oliverleete@gmail.com>                                                           --
--- https://github.com/oliver-leete                                                                 --
+-- https://github.com/oliver-leete                                                                --
 ----------------------------------------------------------------------------------------------------
--- As of May 2021 this should be using github xmonad/xmonad-contrib This is mostly taken from     --
--- Ethan Schoonover's config and from those before him, I have moved a decent bit around but have --
--- tried to keep all credit to others in. I am taking credit for things I'll just say if it looks --
--- like good code, there's no way I wrote it                                                      --
+-- Originally based on Ethan Schoonover's config Since been massively butchered                   --
 
 ----------------------------------------------------------------------------------------------------
 -- Modules                                                                                        --
@@ -60,7 +57,6 @@ import XMonad.Layout.Notebook
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.ShowWName
 import XMonad.Layout.SimpleFocus
-import XMonad.Layout.Simplest
 import XMonad.Layout.Spacing
 import XMonad.Layout.Tabbed
 
@@ -259,7 +255,7 @@ reSize = 1/20
 
 -- topbar   = 8
 tabsh    = 20
-myBorder = 3
+myBorder = 4
 prompt   = 30
 
 myNormalBorderColor     = background
@@ -340,7 +336,7 @@ data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
 
-barFull = avoidStruts $ addTabs shrinkText myTabTheme $ mySpacing Simplest
+barFull = avoidStruts $ addTabs shrinkText myTabTheme $ mySpacing $ SimpleFocus 1 (reSize/2) 0
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
@@ -542,10 +538,7 @@ myKeys conf = let
     ] ^++^
 
     subKeys "Layout Management"
-    [ ("M-M1-r"             , addName "Toggle Layout"               $ sendMessage ToggleMiddle)
-    , ("M-C-M1-l"           , addName "Reset layout"                $ setLayout $ XMonad.layoutHook conf)
-
-    , ("M-y"             , addName "Toggle window floating"      $ withFocused toggleFloat)
+    [ ("M-y"             , addName "Toggle window floating"      $ withFocused toggleFloat)
     , ("M-C-y"           , addName "Tile all floating w"         sinkAll)
 
     , ("M-,"             , addName "Decrease main windows"       $ sendMessage (IncMasterN (-1)))
@@ -557,9 +550,15 @@ myKeys conf = let
     , ("M-]"             , addName "Expand Main"                 $ sendMessage Expand)
     , ("M-C-["           , addName "Shrink height"               $ sendMessage MirrorShrink)
     , ("M-C-]"           , addName "Expand height"               $ sendMessage MirrorExpand)
+    , ("M-M1-["          , addName "Fast Shrink Main"            $ sequence_ [sendMessage Shrink, sendMessage Shrink])
+    , ("M-M1-]"          , addName "Fast Expand Main"            $ sequence_ [sendMessage Expand, sendMessage Expand])
+    , ("M-M1-C-["        , addName "Fast Shrink height"          $ sequence_ [sendMessage MirrorShrink, sendMessage MirrorShrink])
+    , ("M-M1-C-]"        , addName "Fast Expand height"          $ sequence_ [sendMessage MirrorExpand, sendMessage MirrorExpand])
 
     , ("M-r"             , addName "Reflect"                     $ sendMessage ToggleSide)
     , ("M-C-r"           , addName "Reflect Stack"               $ sendMessage ToggleStackDir)
+    , ("M-M1-r"          , addName "Toggle Layout"               $ sendMessage ToggleMiddle)
+    , ("M-C-M1-r"           , addName "Reset layout"             $ setLayout $ XMonad.layoutHook conf)
     ]
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())

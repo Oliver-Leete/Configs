@@ -51,22 +51,9 @@ require("close_buffers").setup({
     end,
 })
 
--- require("sniprun").setup({
---     selected_interpreters = { "Julia_jupyter" },
---     display = {
---         "VirtualTextOk",
---         "VirtualTextErr",
---         "LongTempFloatingWindow",
---         "Terminal",
---     },
--- })
-
--- require("surround").setup({})
-
 require("mkdir")
 require("nvim_comment").setup({ comment_empty = false, line_mapping = "g,cc", operator_mapping = "g,c" })
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
--- require("numb").setup()
 require("foldsigns").setup()
 require("colorizer").setup({ "*" }, {
     RGB = true,
