@@ -29,10 +29,8 @@ local dl = require("luasnip.extras").dynamic_lambda
 
 -- Every unspecified option will be set to the default.
 ls.config.set_config({
-    history = true,
-    -- Update more often, :h events for more info.
+    history = false,
     updateevents = "TextChanged,TextChangedI",
-    enable_autosnippets = true,
 })
 
 -- args is a table, where 1 is the text in Placeholder 1, 2 the text in

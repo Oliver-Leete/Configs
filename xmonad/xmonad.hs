@@ -39,8 +39,8 @@ import XMonad.Actions.PerWindowKeys
 import XMonad.Actions.SinkAll
 import XMonad.Actions.SpawnOn
 import XMonad.Actions.SwapPromote
-import XMonad.Actions.WithAll
 import XMonad.Actions.WindowGoLocal
+import XMonad.Actions.WithAll
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops ( ewmhDesktopsLogHook, ewmh )
@@ -168,7 +168,7 @@ projects =
 
     , Project   { projectName       = wsPER
                 , projectDirectory  = "~/PersonalDrive"
-                , projectStartHook  = Just $    spawnOn wsPER "google-chrome-stable --user-data-dir=/home/oleete/.config/browser/google-chrome-stable --new-window 'github.com' 'feedly.com/i/latest' 'youtube.com/feed/subscriptions' 'coinbase.com'"
+                , projectStartHook  = Just $    spawnOn wsPER "google-chrome-stable --user-data-dir=/home/oleete/.config/browser/google-chrome-stable --new-window 'github.com' 'feedly.com/i/latest' 'youtube.com/feed/subscriptions' 'nebula.app/myshows' 'coinbase.com'"
                 }
 
     , Project   { projectName       = wsWRK
@@ -213,8 +213,6 @@ gTasksCommand          = myBrowser ++ " '-tasks --app=chrome-extension://ndbaejg
 gTasksWrkCommand       = myBrowser ++ " 'tasks --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html --class=WrkTasks'"
 keepCommand            = myBrowser ++ " '-keep --app=https://keep.google.com/#home --class=Keep'"
 keepWrkCommand         = myBrowser ++ " 'keep --app=https://keep.google.com/#home --class=WrkKeep'"
-chromenspCommand       = myBrowser ++ " 'float --class=Chromensp'"
-chromenspWrkCommand    = myBrowser ++ " 'wrkfloat --class=Chromewrknsp'"
 youtubeMusicCommand    = "$HOME/.local/bin/YouTube-Music-Desktop-App-1.13.0.AppImage"
 
 scratchpads :: [NamedScratchpad]
@@ -225,10 +223,7 @@ scratchpads =
     ,   NS "keepNsp" keepCommand (className =? "Keep") nonFloating
     ,   NS "keepWrkNsp"  keepWrkCommand (className =? "WrkKeep") nonFloating
 
-    ,   NS "chromensp"  chromenspCommand (className =? "Chromensp") nonFloating
-    ,   NS "chromenspwrk" chromenspWrkCommand (className =? "Chromewrknsp") nonFloating
-
-    ,   NS "discord"  discordCommand (className =? "") defaultFloating
+    ,   NS "discord"  discordCommand (className =? "discord") defaultFloating
     ,   NS "youtubeMusic"  youtubeMusicCommand (className =? "youtube-music-desktop-app") nonFloating
     ,   NS "calc"  "gnome-calculator --class=calcu" (className =? "calcu") nonFloating
 
@@ -255,7 +250,7 @@ reSize = 1/20
 
 -- topbar   = 8
 tabsh    = 20
-myBorder = 4
+myBorder = 3
 prompt   = 30
 
 myNormalBorderColor     = background
@@ -397,7 +392,6 @@ myKeys conf = let
     , ("M-C-q"           , addName "Rebuild & restart XMonad"    $ spawn "xmonad --recompile && xmonad --restart")
     , ("M-S-q"           , addName "Quit XMonad"                 $ confirmPrompt hotPromptTheme "Quit XMonad" $ io exitSuccess)
     , ("M-M1-C-S-x"      , addName "Lock screen"                 $ spawn "slock")
-    , ("M-x"             , addName "notification panel"          $ spawn "toggle notif")
     ] ^++^
 
     subKeys "Utilities"
@@ -442,12 +436,6 @@ myKeys conf = let
     , ("M-S-<Return>"    , addName "NSP Console"                 $ allNamedScratchpadAction scratchpads "console")
     , ("M-S-d"           , addName "NSP Discord"                 $ allNamedScratchpadAction scratchpads "discord")
     , ("M-S-m"           , addName "NSP Music"                   $ allNamedScratchpadAction scratchpads "youtubeMusic")
-    , ("M-S-b"           , addName "NSP Browser"                 $ bindOn WS [(wsWRK, allNamedScratchpadAction scratchpads "chromenspwrk")
-                                                                             ,(wsSIM, allNamedScratchpadAction scratchpads "chromenspwrk")
-                                                                             ,(wsEXP, allNamedScratchpadAction scratchpads "chromenspwrk")
-                                                                             ,(wsTHESIS, allNamedScratchpadAction scratchpads "chromenspwrk")
-                                                                             ,(wsWRK4, allNamedScratchpadAction scratchpads "chromenspwrk")
-                                                                             ,("", allNamedScratchpadAction scratchpads "chromensp")])
     , ("M-S-t"           , addName "NSP Tasks"                   $ bindOn WS [(wsWRK, allNamedScratchpadAction scratchpads "tasksWork")
                                                                              ,(wsSIM, allNamedScratchpadAction scratchpads "tasksWork")
                                                                              ,(wsEXP, allNamedScratchpadAction scratchpads "tasksWork")
@@ -557,8 +545,9 @@ myKeys conf = let
 
     , ("M-r"             , addName "Reflect"                     $ sendMessage ToggleSide)
     , ("M-C-r"           , addName "Reflect Stack"               $ sendMessage ToggleStackDir)
-    , ("M-M1-r"          , addName "Toggle Layout"               $ sendMessage ToggleMiddle)
-    , ("M-C-M1-r"           , addName "Reset layout"             $ setLayout $ XMonad.layoutHook conf)
+
+    , ("M-x"             , addName "Toggle Layout"               $ sendMessage ToggleMiddle)
+    , ("M-C-x"           , addName "Reset layout"                $ setLayout $ XMonad.layoutHook conf)
     ]
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
@@ -616,13 +605,9 @@ myLogHook h = do
 
 myFadeHook :: FadeHook
 myFadeHook = composeAll
-    [ opaque -- default to opaque
+    [ opaque
     , isUnfocused --> opacity 0.9
-    -- -- , (className =? "kitty") <&&> isUnfocused --> opacity 0.90
-    -- , className =? "deadd-notification-center" --> opaque
-    -- , fmap ("Google" `isPrefixOf`) className <&&> isUnfocused --> opacity 1
     , isDialog --> opaque
-    -- , isFloating  --> opacity 1
     ]
 
 ----------------------------------------------------------------------------------------------------
@@ -649,8 +634,6 @@ myManageHook =
             , className =? "Keep" -?> doRectFloat halfNhalf
             , className =? "WrkKeep" -?> doRectFloat halfNhalf
             , resource =? "kittyconsole" -?> doRectFloat (W.RationalRect (3 / 5) (3 / 5) (1 / 3) (1 / 3))
-            , className =? "Chromensp" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
-            , className =? "Chromewrknsp" -?> doRectFloat (W.RationalRect (1 / 4) (1 / 8) (1 / 2) (3 / 4))
             , resource =? "youtube-music-desktop-app" -?> doRectFloat halfNhalf
             , resource =? "discord" -?> doRectFloat halfNhalf
 

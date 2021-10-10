@@ -20,7 +20,9 @@ require("nvim-tree").setup({
     hijack_netrw = true,
     quit_on_open = true,
     git_hl = true,
-    lsp_diagnostics = true,
+    diagnostics = {
+        enable = true,
+    },
     disable_window_picker = true,
     view = {
         width = 40,

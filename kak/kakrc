@@ -12,10 +12,6 @@ enable-auto-pairs
 
 plug 'h-youhei/kakoune-surround'
 
-plug 'andreyorst/fzf.kak' %{
-    map global user "f" ': fzf-mode<ret>' -docstring 'Fuzzy Find'
-}
-
 plug 'occivink/kakoune-phantom-selection'
 plug 'occivink/kakoune-sort-selections'
 
@@ -24,36 +20,29 @@ plug 'greenfork/active-window.kak'
 
 plug 'danr/kakoune-easymotion'
 
-plug 'lePerdu/kakboard' %{
-    hook global WinCreate .* %{ kakboard-enable }
-}
-
 plug 'occivink/kakoune-vertical-selection' %{
 }
 
 plug 'delapouite/kakoune-text-objects' %{
-    map global normal ': enter-user-mode selectors<ret>' -docstring 'selectors'
-    map global selectors ': if-cursor s s<ret>' -docstring 'auto-percent s' -docstring 'Sub-Selection'
+    map global normal 'z' ': enter-user-mode selectors<ret>' -docstring 'selectors'
 }
 
 plug 'delapouite/kakoune-select-view' %{
   # Suggested mappings
   map global normal <a-%> ': select-view<ret>' -docstring 'select view'
   map global view s '<esc>: select-view<ret>' -docstring 'select view'
+  map global selectors v '<esc>: select-view<ret>' -docstring 'select view'
 }
 
 plug 'delapouite/kakoune-mirror' %{
   # Suggested mapping
-  map global user "m" ': enter-user-mode -lock mirror<ret>' -docstring 'Mirror'
 }
 
 plug 'delapouite/kakoune-hump'
 plug 'https://gitlab.com/FlyingWombat/case.kak' %{
-    map global user 's' ': enter-user-mode case<ret>' -docstring 'change case'
 }
 
 plug 'danr/kakoune-easymotion' %{
-    map global user 'w' ':easy-motion-f<ret>' -docstring 'easy motion'
 }
 
 plug 'https://gitlab.com/Screwtapello/kakoune-inc-dec'
@@ -91,3 +80,35 @@ def -params 1 extend-line-up %{
 }
 map global normal x ':extend-line-down %val{count}<ret>'
 map global normal X ':extend-line-up %val{count}<ret>'
+
+declare-user-mode format
+map global format j '<esc>`'                          -docstring '↓ lowercase'
+map global format k '<esc>~'                          -docstring '↑ uppercase'
+map global format s '<esc><a-`>'                      -docstring '↕ switchcase'
+map global format f ': format<ret>'                   -docstring 'format'
+map global format c ': comment-line<ret>'             -docstring 'comment-line'
+map global format C ': comment-block<ret>'            -docstring 'comment-block'
+map global format t ': set global indentwidth 0<ret>' -docstring 'indent tab'
+map global format 2 ': set global indentwidth 2<ret>' -docstring 'indent space 2'
+map global format 4 ': set global indentwidth 4<ret>' -docstring 'indent space 4'
+
+declare-user-mode enter
+map global enter H '<esc>I' -docstring '⇐ insert before line'
+map global enter h '<esc>i' -docstring '← insert before'
+map global enter j '<esc>o' -docstring '↓ insert below'
+map global enter k '<esc>O' -docstring '↑ insert above'
+map global enter l '<esc>a' -docstring '→ insert after'
+map global enter L '<esc>A' -docstring '⇒ insert after line'
+
+declare-user-mode lint
+map global lint d ': lint-disable<ret>'        -docstring 'disable'
+map global lint e ': lint-enable<ret>'         -docstring 'enable'
+map global lint l ': lint<ret>'                -docstring 'lint'
+map global lint n ': lint-next-error<ret>'     -docstring 'next'
+map global lint p ': lint-previous-error<ret>' -docstring 'prev'
+map global lint b ': b *lint-output*<ret>'     -docstring 'output buffer'
+
+map global user "m" ': enter-user-mode -lock mirror<ret>' -docstring 'Mirror'
+map global user 's' ': enter-user-mode case<ret>' -docstring 'change case'
+map global user 'i' ': enter-user-mode enter<ret>' -docstring 'enter mode'
+map global user 'f' ': enter-user-mode format<ret>' -docstring 'format'

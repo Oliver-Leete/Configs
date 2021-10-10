@@ -73,3 +73,4 @@ require("bufjump").setup({
 require("neogen").setup({
     enabled = true,
 })
+-- require('floatline').setup()

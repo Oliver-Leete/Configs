@@ -285,10 +285,18 @@ _G.s_tab_complete = function()
 end
 
 _G.cmp_toggle = function()
-    if vim.fn.pumvisible() == 1 then
+    if require("cmp").visible() then
         return replace_keycodes([[<cmd>lua require("cmp").close()<cr>]])
     else
         return replace_keycodes([[<cmd>lua require("cmp").complete()<cr>]])
+    end
+end
+
+_G.cmp_esc = function()
+    if require("cmp").visible() then
+        return replace_keycodes([[<cmd>lua require("cmp").close()<cr>]])
+    else
+        return replace_keycodes("<esc>")
     end
 end
 

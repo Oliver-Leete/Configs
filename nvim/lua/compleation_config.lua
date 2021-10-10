@@ -25,6 +25,8 @@ require("cmp").setup({
     mapping = {
         ["<C-b>"] = cmp.mapping.scroll_docs(-4),
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
+        ['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+        ['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
         ["<CR>"] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
@@ -39,21 +41,7 @@ require("cmp").setup({
         { name = "buffer" },
     },
     formatting = {
-        format = function(entry, vim_item)
-            -- fancy icons and a name of kind
-            vim_item.kind = require("lspkind").presets.default[vim_item.kind] .. " " .. vim_item.kind
-
-            -- set a name for each source
-            vim_item.menu = ({
-                buffer = "[Buffer]",
-                path = "[Path]",
-                nvim_lsp = "[LSP]",
-                luasnip = "[LuaSnip]",
-                nvim_lua = "[Lua]",
-                cmp_tabnine = "[TN]",
-            })[entry.source.name]
-            return vim_item
-        end,
+        format = require("lspkind").cmp_format({with_text = false, maxwidth = 50})
     },
 })
 

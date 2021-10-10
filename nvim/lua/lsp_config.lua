@@ -180,31 +180,7 @@ for _, server in pairs(servers) do
     end
 end
 
-require("lspkind").init({
-    with_text = true,
-    symbol_map = {
-        Text = "",
-        Method = "ƒ",
-        Function = "",
-        Constructor = "",
-        Variable = "",
-        Class = "",
-        Interface = "ﰮ",
-        Module = "",
-        Property = "",
-        Unit = "",
-        Value = "",
-        Enum = "了",
-        Keyword = "",
-        Snippet = "﬌",
-        Color = "",
-        File = "",
-        Folder = "",
-        EnumMember = "",
-        Constant = "",
-        Struct = "",
-    },
-})
+require("lspkind").init({})
 
 -- LTEX
 local configs = require("lspconfig/configs")
@@ -440,7 +416,8 @@ end
 require("null-ls").config({
     sources = {
         -- require("null-ls").builtins.code_actions.gitsigns.with({ filetype = { "jl" } }),
-        require("null-ls").builtins.formatting.trim_whitespace.with({ filetypes = { "markdown", "tex" } }),
+        require("null-ls").builtins.formatting.trim_whitespace,
+        require("null-ls").builtins.formatting.trim_newlines,
         require("null-ls").builtins.formatting.stylua,
         require("null-ls").builtins.formatting.fish_indent,
         require("null-ls").builtins.diagnostics.markdownlint,

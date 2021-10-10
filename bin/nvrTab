@@ -1,12 +1,12 @@
 #!/bin/bash
 
-TITLES=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[].title")
-tabID=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .id")
+TITLES=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[].title")
+tabID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .id")
 
 if ! [[ "$TITLES" =~ \"MainEditor\" ]]; then
     kitty @ launch --type=window --window-title="MainEditor" nvrStart
 else
-    ID=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.title==\"MainEditor\") | .id")
+    ID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[] | select(.title==\"MainEditor\") | .id")
     kitty @ focus-window --match id:$ID
     nvr -s --servername /tmp/nvr-server-$tabID $@
 fi

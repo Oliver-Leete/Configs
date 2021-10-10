@@ -1,9 +1,0 @@
-#!/bin/bash
-
-TITLES=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[].title")
-
-if ! [[ "$TITLES" =~ \"intrepl\" ]]
-then
-   kitty @ launch --type=window --window-title="intrepl" --keep-focus $1
-fi
-cat - | kitty @ send-text --match title:intrepl --stdin

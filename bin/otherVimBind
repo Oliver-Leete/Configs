@@ -1,9 +1,9 @@
 #!/bin/bash
 
-commands=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .foreground_processes[].cmdline[0]")
+commands=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .foreground_processes[].cmdline[0]")
 if [[ "$commands" == *"vim"* ]]; then
     kitty @ send-text ";$1"
-    # tabID=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[] | select(.is_focused) | .id")
+    # tabID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .id")
     # nvr --servername /tmp/nvr-server-$tabID --nostart -c "$1"
     exit
 else

@@ -139,6 +139,20 @@ require("which-key").register({
         ["}"] = { "<Plug>(ninja-append)a", "Go Insert Right Outside" },
     },
 
+    G = {
+        name = "Goto (Select)",
+
+        g = { "vgg", "Buffer Top" },
+        j = { "vG", "Buffer Bottom" },
+        k = { "vgg", "Buffer Top" },
+        h = { "v^", "Line Begining" },
+        l = { "v$", "Line End" },
+
+        t = { "vH", "Window Top" },
+        c = { "vM", "Window Bottom" },
+        b = { "vL", "Window Center" },
+    },
+
     v = {
         name = "View",
 
@@ -155,9 +169,36 @@ require("which-key").register({
         j = { "<c-e>", "Scroll Down" },
         k = { "<c-y>", "Scroll Up" },
 
+        u = { "<c-u>", "Half Page Up"},
+        d = { "<c-d>", "Half Page Down"},
+
         o = { "za", "Open Fold" },
         c = { "zc", "Close Fold" },
         s = { "<cmd>normal! HVL<cr>", "Select Viewport" },
+    },
+
+    V = {
+        name = "View (lock)",
+
+        t = { "vt<cmd>WhichKey V<cr>", "Cursor On Top", noremap = false },
+        v = { "vv<cmd>WhichKey V<cr>", "Centre Cursor (Vertically)", noremap = false },
+        b = { "vb<cmd>WhichKey V<cr>", "Cursor On Bottom", noremap = false },
+
+        f = { "vf<cmd>WhichKey V<cr>", "Cursor At First", noremap = false },
+        m = { "vm<cmd>WhichKey V<cr>", "Centre Cursor (Horizontally)", noremap = false },
+        e = { "ve<cmd>WhichKey V<cr>", "Cursor At End", noremap = false },
+
+        h = { "vh<cmd>WhichKey V<cr>", "Scroll Left", noremap = false },
+        l = { "vl<cmd>WhichKey V<cr>", "Scroll Right", noremap = false },
+        j = { "vj<cmd>WhichKey V<cr>", "Scroll Down", noremap = false },
+        k = { "vk<cmd>WhichKey V<cr>", "Scroll Up", noremap = false },
+
+        u = {"vu<cmd>WhichKey V<cr>", "Half Page Up", noremap = false },
+        d = {"vd<cmd>WhichKey V<cr>", "Half Page Down", noremap = false },
+
+        o = { "vo<cmd>WhichKey V<cr>", "Open Fold", noremap = false },
+        c = { "vc<cmd>WhichKey V<cr>", "Close Fold", noremap = false },
+        s = { "vs<cmd>WhichKey V<cr>", "Select Viewport", noremap = false },
     },
 
     z = {
@@ -193,14 +234,14 @@ require("which-key").register({
         O = { "O<Esc>", "Insert Blankline Before" },
         o = { "o<Esc>", "Insert Blankline" },
 
---         h = {
---             name = "Hug",
+        --         h = {
+        --             name = "Hug",
 
---             h = { "<cmd>set operatorfunc=SurroundAddOperatorMode<cr>g@", "Hug Around" },
---             H = { "<cmd>lua require'surround'.repeat_last()<cr>", "Hug Repeat" },
---             r = { "<cmd>lua require'surround'.surround_replace()", "Hug Replace" },
---             d = { "<cmd>lua require'surround'.surround_delete()<cr>", "Hug Delete" },
---         },
+        --             h = { "<cmd>set operatorfunc=SurroundAddOperatorMode<cr>g@", "Hug Around" },
+        --             H = { "<cmd>lua require'surround'.repeat_last()<cr>", "Hug Repeat" },
+        --             r = { "<cmd>lua require'surround'.surround_replace()", "Hug Replace" },
+        --             d = { "<cmd>lua require'surround'.surround_delete()<cr>", "Hug Delete" },
+        --         },
 
         ["<"] = {
             name = "Swap With Previous",
@@ -248,10 +289,16 @@ require("which-key").register({
             h = { "i", "Insert Before" },
             l = { "a", "Insert After" },
             L = { "A", "Insert After Line" },
+
             K = { "ggO", "Insert Above File" },
             k = { "O", "Insert Above" },
             j = { "o", "Insert Below" },
             J = { "Go", "Insert Below File" },
+
+            ["{"] = { "<Plug>(ninja-insert)a", "Go Insert Left Outside" },
+            ["("] = { "<Plug>(ninja-insert)i", "Go Insert Left Inside" },
+            [")"] = { "<Plug>(ninja-append)i", "Go Insert Right Inside" },
+            ["}"] = { "<Plug>(ninja-append)a", "Go Insert Right Outside" },
         },
 
         P = {
@@ -571,10 +618,10 @@ require("which-key").register({
         },
         t = {
             name = "Terminal",
-            t = { "<cmd>silent !kittyterm normterm<cr>", "Normal Terminal" },
+            t = { "<cmd>silent !kittyPersistent normterm<cr>", "Normal Terminal" },
             i = { [[<cmd>silent exe "!kittyrepl replterm " . b:replCommand<cr>]], "REPL Terminal" },
-            d = { [[<cmd>silent exe "!kittycommand debugterm " . b:debugCommand<cr>]], "Debug Terminal" },
-            m = { "<cmd>silent !kittyterm maketerm<cr>", "Building Terminal" },
+            d = { [[<cmd>silent exe "!kittyPersistent debugterm " . b:debugCommand<cr>]], "Debug Terminal" },
+            m = { "<cmd>silent !kittyPersistent maketerm<cr>", "Building Terminal" },
         },
         m = {
             name = "Make Things",
@@ -597,16 +644,28 @@ require("which-key").register({
             V = { "<plug>(ExtractVar)", "Extract Variable" },
             r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)" },
             R = { "Rename (Treesitter)" },
-            f = { "zib<cmd>lua require('refactoring').refactor('Extract Function')<cr>", "Extract Function", noremap=false},
-            F = { "zib<cmd>lua require('refactoring').refactor('Extract Function to File')<cr>", "Extract Function", noremap=false},
-            v = { "zi,<cmd>lua require('refactoring').refactor('Extract Variable')<cr>", "Extract Variable", noremap=false},
-            i = { "zi,<cmd>lua require('refactoring').refactor('Inline Variable')<cr>", "Inline Variable", noremap=false},
+            f = {
+                "zib<cmd>lua require('refactoring').refactor('Extract Function')<cr>",
+                "Extract Function",
+                noremap = false,
+            },
+            F = {
+                "zib<cmd>lua require('refactoring').refactor('Extract Function to File')<cr>",
+                "Extract Function",
+                noremap = false,
+            },
+            v = {
+                "zi,<cmd>lua require('refactoring').refactor('Extract Variable')<cr>",
+                "Extract Variable",
+                noremap = false,
+            },
+            i = { "zi,<cmd>lua require('refactoring').refactor('Inline Variable')<cr>", "Inline Variable", noremap = false },
         },
         a = {
             name = "Annotations",
-            t = {"<cmd>lua require('neogen').generate({type = 'type' })<cr>", "Type Documentation"},
-            c = {"<cmd>lua require('neogen').generate({type = 'class' })<cr>", "Class Documentation"},
-            f = {"<cmd>lua require('neogen').generate({type = 'func' })<cr>", "Function Documentation"},
+            t = { "<cmd>lua require('neogen').generate({type = 'type' })<cr>", "Type Documentation" },
+            c = { "<cmd>lua require('neogen').generate({type = 'class' })<cr>", "Class Documentation" },
+            f = { "<cmd>lua require('neogen').generate({type = 'func' })<cr>", "Function Documentation" },
         },
         w = {
             name = "Window Managment",

@@ -89,6 +89,8 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/zen-mode.nvim'
     Plug 'akinsho/nvim-bufferline.lua'
     Plug 'hoob3rt/lualine.nvim'
+    " Plug 'shadmansaleh/lualine.nvim'
+    " Plug 'windwp/floatline.nvim'
     Plug 'lewis6991/foldsigns.nvim'
     Plug 'lukas-reineke/indent-blankline.nvim',
     Plug 'norcalli/nvim-colorizer.lua'
@@ -203,6 +205,7 @@ set shiftwidth=4
 set expandtab
 
 " Word Wrapping
+set nowrap
 set linebreak
 set breakindent
 set breakindentopt=shift:2
@@ -342,7 +345,7 @@ let g:slime_no_mappings = 1
 let g:slime_target = "kitty"
 let test#strategy = "kitty"
 
-" NOTE: _, =, |, $, ^, ¬ and # are free to map
+" NOTE: _, =, |, ^, ¬ and # are free to map
 " !!MAPPINGS!!
 map <nowait> v <nop>
 map V <nop>
@@ -353,6 +356,9 @@ nmap <nowait> dd <nop>
 nmap <nowait> cc <nop>
 nmap <nowait> yy <nop>
 nmap <nowait> z <nop>
+nmap <nowait> v <nop>
+nmap <nowait> V <nop>
+nmap <nowait> <c-v> <nop>
 
 map Y <nop>
 map C <nop>
@@ -611,5 +617,24 @@ require('snippets_config')
 EOF
 
 let g:julia_blocks=0
+
+function! JumpWithinFile(back, forw)
+    let [n, i] = [bufnr('%'), 1]
+    let p = [n] + getpos('.')[1:]
+    sil! exe 'norm!1' . a:forw
+    while 1
+        let p1 = [bufnr('%')] + getpos('.')[1:]
+        if n == p1[0] | break | endif
+        if p == p1
+            sil! exe 'norm!' . (i-1) . a:back
+            break
+        endif
+        let [p, i] = [p1, i+1]
+        sil! exe 'norm!1' . a:forw
+    endwhile
+endfunction
+
+nnoremap <silent> <c-i> :call JumpWithinFile("\<c-i>", "\<c-o>")<cr>
+nnoremap <silent> <c-o> :call JumpWithinFile("\<c-o>", "\<c-i>")<cr>
 
 redraw

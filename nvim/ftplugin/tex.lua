@@ -68,7 +68,7 @@ require("which-key").register({
             },
         },
         M = {
-            [[<cmd>silent !kittymake "latexmk -verbose -file-line-error -synctex=1 -interaction=nonstopmode"<cr>]],
+            [[<cmd>silent !kittyOneShot buildterm "latexmk -verbose -file-line-error -synctex=1 -interaction=nonstopmode"<cr>]],
             "Build in Terminal",
         },
         m = {
@@ -205,6 +205,8 @@ end
 if vim.api.nvim_get_var("panelRepeat") == "x" then
     vim.api.nvim_set_var("panelRepeat", "c")
 end
+
+vim.api.nvim_buf_set_option(0, "textwidth", 100)
 
 -- vim.cmd([[let g:vimtex_toc_config=[{"mode":3, "split_width":60}]]])
 vim.cmd([[let g:vimtex_quickfix_mode=0]])
