@@ -150,10 +150,10 @@ end
 
 function _G.pre_paste_away(register, paste)
     if string.find(paste, "p") then
-        Paste_away_direction= "]"
+        Paste_away_direction = "]"
         Paste_away_paste = ""
     else
-        Paste_away_direction= "["
+        Paste_away_direction = "["
         Paste_away_paste = "!"
     end
     Paste_away_register = register
@@ -163,8 +163,18 @@ function _G.paste_away()
     vim.cmd([[execute "']] .. Paste_away_direction .. " put" .. Paste_away_paste .. " " .. Paste_away_register .. '"')
 end
 
-vim.api.nvim_set_keymap("n", "<Plug>(paste-away-after)", [[:<c-u>call v:lua.pre_paste_away(v:register,'p')<cr>:set opfunc=v:lua.paste_away<cr>g@]], {noremap=true})
-vim.api.nvim_set_keymap("n", "<plug>(paste-away-before)", ":<c-u>call v:lua.pre_paste_away(v:register,'P')<cr>:set opfunc=v:lua.paste_away<cr>g@", {noremap=true})
+vim.api.nvim_set_keymap(
+    "n",
+    "<Plug>(paste-away-after)",
+    [[:<c-u>call v:lua.pre_paste_away(v:register,'p')<cr>:set opfunc=v:lua.paste_away<cr>g@]],
+    { noremap = true }
+)
+vim.api.nvim_set_keymap(
+    "n",
+    "<plug>(paste-away-before)",
+    ":<c-u>call v:lua.pre_paste_away(v:register,'P')<cr>:set opfunc=v:lua.paste_away<cr>g@",
+    { noremap = true }
+)
 
 -- Telescope
 
@@ -336,9 +346,11 @@ function _G.toggle_loclist()
 end
 
 function _G.delete_buffer()
-  if #vim.fn.getbufinfo({buflisted = true}) == 1 then
-    vim.cmd([[quit]])
-  else
-    require('close_buffers').delete({type = 'this'})
-  end
+    if #vim.fn.getbufinfo({ buflisted = true }) == 1 then
+        vim.cmd([[quit]])
+    elseif vim.fn.winbufnr(2) ~= -1 then
+        vim.cmd([[wincmd c]])
+    else
+        require("close_buffers").delete({ type = "this" })
+    end
 end

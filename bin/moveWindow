@@ -2,16 +2,16 @@
 
 if [ "$#" -ne "3" ]; then
     COMMANDS=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .foreground_processes[].cmdline[0]")
-    TITLES=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .title")
-    if [[ "$TITLES" =~ \"MainEditor\" ]]; then
-        if [[ "$COMMANDS" == *"vim"* ]]; then
+    if [[ "$COMMANDS" == *"vim"* ]]; then
+        TITLES=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .title")
+        if [[ "$TITLES" =~ \"MainEditor\" ]]; then
             tabID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .id")
             nvr --servername /tmp/nvr-server-$tabID --nostart -c "KittyNavigate$1"
             exit
+        else
+            kitty @ send-text ";KittyNavigate$1"
+            exit
         fi
-    elif [[ "$COMMANDS" == *"vim"* ]]; then
-        kitty @ send-text ";KittyNavigate$1"
-        exit
     fi
 fi
 

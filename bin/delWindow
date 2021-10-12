@@ -1,17 +1,16 @@
 #!/bin/bash
 
 COMMANDS=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .foreground_processes[].cmdline[0]")
-TITLES=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .title")
-commands=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .foreground_processes[].cmdline[0]")
-if [[ "$TITLES" =~ \"MainEditor\" ]]; then
-    if [[ "$COMMANDS" == *"vim"* ]]; then
-        tabID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .id")
-        nvr --servername /tmp/nvr-server-$tabID --nostart -c "call v:lua.delete_buffer()"
+if [[ "$COMMANDS" == *"vim"* ]]; then
+    TITLES=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .title")
+    if [[ "$TITLES" =~ \"MainEditor\" ]]; then
+            tabID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .id")
+            nvr --servername /tmp/nvr-server-$tabID --nostart -c "call v:lua.delete_buffer()"
+            exit
+    else
+        kitty @ send-text ";call v:lua.delete_buffer()"
         exit
     fi
-elif [[ "$COMMANDS" == *"vim"* ]]; then
-    kitty @ send-text ";call v:lua.delete_buffer()"
-    exit
 else
     kitty @ close_window
 fi
