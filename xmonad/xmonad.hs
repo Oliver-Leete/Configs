@@ -30,7 +30,7 @@ import XMonad hiding ( (|||) )
 import qualified XMonad.StackSet as W
 
 import XMonad.Actions.ConditionalKeys
-import XMonad.Actions.CycleWS
+import XMonad.Actions.CycleWSLocal
 import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.EasyMotion
@@ -55,6 +55,7 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.NoFrillsDecoration
 import XMonad.Layout.Notebook
 import XMonad.Layout.PerWorkspace
+import XMonad.Layout.Renamed
 import XMonad.Layout.ShowWName
 import XMonad.Layout.SimpleFocus
 import XMonad.Layout.Spacing
@@ -204,7 +205,8 @@ projects =
 -- Applications                                                                                   --
 ----------------------------------------------------------------------------------------------------
 
-myTerminal     = "kitty --single-instance"
+myTerminal     = "kitty --single-instance --listen-on unix:/tmp/mykitty"
+myTerminalRemote = "kitty @ --to unix:/tmp/mykitty launch --type=background"
 myBrowser      = "/home/oleete/.config/bin/browser"
 myBrowserClass = "google-chrome-stable"
 
@@ -331,13 +333,13 @@ data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
 
-barFull = avoidStruts $ addTabs shrinkText myTabTheme $ mySpacing $ SimpleFocus 1 (reSize/2) 0
+barFull = renamed [Replace "Tabs"] $ avoidStruts $ addTabs shrinkText myTabTheme $ mySpacing $ SimpleFocus 1 (reSize/2) 0
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
     transform FULLCENTER x k = k centerFull (const x)
 
-centerFull = avoidStruts $ addTabs shrinkText myTabTheme $ mySpacing
+centerFull = renamed [Replace "Tabs"] $ avoidStruts $ addTabs shrinkText myTabTheme $ mySpacing
            $ onWorkspaces [wsTHESIS] (SimpleFocus (1/4) (reSize/2) 1000)
            $ SimpleFocus (1/2) (reSize/2) 1500
 
@@ -456,6 +458,7 @@ myKeys conf = let
     , ("M-w"             , addName "prompt select ws"            $ switchProjectPrompt myPromptTheme)
     , ("M-C-w"           , addName "prompt send to ws"           $ shiftToProjectPrompt myPromptTheme)
     , ("M-<Space>"       , addName "Swap with last workspace"    $ toggleWS' ["NSP"])
+    , ("M-C-<Space>"     , addName "Send to last workspace"      $ shiftToggleWS' ["NSP"])
     ]
     ++ zipM "M-"         "View ws"                               wsKeys [0..] (withNthWorkspace W.greedyView)
     ++ zipM "M-C-"       "Move w to ws"                          wsKeys [0..] (withNthWorkspace W.shift)
@@ -464,23 +467,23 @@ myKeys conf = let
     subKeys "Windows"
     [ ("<F8>"            , addName "Hop to Window"               $ selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow))
 
-    , ("M-<Backspace>"   , addName "Kill"                        $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_F12)
-                                                                             ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_F12)
+    , ("M-<Backspace>"   , addName "Kill"                        $ bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " delWindow"))
+                                                                             ,(className =? "kittyconsole",  spawn (myTerminalRemote ++ " delWindow"))
                                                                              ,(className =? "Google-chrome", P.sendKey controlMask xK_w)
                                                                              ,(pure True, kill)])
     , ("M-C-<Backspace>" , addName "Force kill"                  kill)
     , ("M-S-<Backspace>" , addName "Kill all"                    $ confirmPrompt hotPromptTheme "kill all" killAll)
 
-    , ("M-<Tab>"         , addName "Next Tab"                    $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Right)
-                                                                             ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Right)
+    , ("M-<Tab>"         , addName "Next Tab"                    $ bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " tabSwap Right Tab"))
+                                                                             ,(className =? "kittyconsole", spawn (myTerminalRemote ++ " tabSwap Right Tab"))
                                                                              ,(className =? "Google-chrome", P.sendKey controlMask xK_Tab)
-                                                                             ,(pure True, windows W.focusDown)])
-    , ("M-S-<Tab>"       , addName "Previous Tab"                $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Left)
-                                                                             ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Left)
+                                                                             ,(pure True, bindOn LD [("Tabs", windows W.focusDown)])])
+    , ("M-S-<Tab>"       , addName "Previous Tab"                $ bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " tabSwap Left shift+Tab"))
+                                                                             ,(className =? "kittyconsole", spawn (myTerminalRemote ++ " tabSwap Left shift+Tab"))
                                                                              ,(className =? "Google-chrome", P.sendKey (controlMask .|. shiftMask) xK_Tab)
-                                                                             ,(pure True, windows W.focusUp)])
-    , ("M-C-<Tab>"       , addName "Force Next Tab"              $ windows W.focusDown)
-    , ("M-C-S-<Tab>"     , addName "Force Previous Tab"          $ windows W.focusUp)
+                                                                             ,(pure True, bindOn LD [("Tabs", windows W.focusUp)])])
+    , ("M-C-<Tab>"       , addName "Force Next Tab"              $  bindOn LD [("Tabs", windows W.focusDown)])
+    , ("M-C-S-<Tab>"     , addName "Force Previous Tab"          $  bindOn LD [("Tabs", windows W.focusUp)])
 
     , ("M-t"             , addName "New Tab"                     $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_t)
                                                                              ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_t)
@@ -496,22 +499,23 @@ myKeys conf = let
     ]^++^
 
     subKeys "Navigation"
-    [ ("M-m"             , addName "Swap with main"             $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_m)
-                                                                            ,(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_m)
+    -- [ ("M-m"             , addName "Swap with main"             $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_F9)
+    [ ("M-m"             , addName "Swap with main"             $ bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " mainMove"))
+                                                                            ,(className =? "kitty", spawn (myTerminalRemote ++ " mainMove"))
                                                                             ,(pure True, swapPromote' False)])
     , ("M-C-m"           , addName "Force Swap with main"       $ swapPromote' False)
 
-    , ("M-h"             , addName "Navigate Left"               $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_h)
-                                                                                        ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_h)
+    , ("M-h"             , addName "Navigate Left"               $ bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " movingNshaking left h"))
+                                                                                        ,(className =? "kittyconsole", spawn (myTerminalRemote ++ " movingNshaking left h"))
                                                                                         ,(pure True, windowGo L False)])
-    , ("M-j"             , addName "Navigate Down"               $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_j)
-                                                                                        ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_j)
+    , ("M-j"             , addName "Navigate Down"               $ bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " movingNshaking bottom j"))
+                                                                                        ,(className =? "kittyconsole", spawn (myTerminalRemote ++ " movingNshaking bottom j"))
                                                                                         ,(pure True, windowGo D False)])
-    , ("M-k"             , addName "Navigate Up"                 $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_k)
-                                                                                        ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_k)
+    , ("M-k"             , addName "Navigate Up"                 $ bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " movingNshaking top k"))
+                                                                                        ,(className =? "kittyconsole", spawn (myTerminalRemote ++ " movingNshaking top k"))
                                                                                         ,(pure True, windowGo U False)])
-    , ("M-l"             , addName "Navigate Right"              $ bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_l)
-                                                                                        ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_j)
+    , ("M-l"             , addName "Navigate Right"              $ bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " movingNshaking right l"))
+                                                                                        ,(className =? "kittyconsole", spawn (myTerminalRemote ++ " movingNshaking right l"))
                                                                                         ,(pure True, windowGo R False)])
 
     , ("M-C-S-h"         , addName "Force Navigate Left"         $ windowGo L False)

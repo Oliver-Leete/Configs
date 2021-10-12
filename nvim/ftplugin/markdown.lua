@@ -70,9 +70,9 @@ require("which-key").register({
     buffer = 0,
 })
 
-if vim.api.nvim_get_var("dirJumps") == "f" then
-    vim.api.nvim_set_var("dirJumps", "s")
-end
+-- if vim.api.nvim_get_var("dirJumps") == "f" then
+--     vim.api.nvim_set_var("dirJumps", "s")
+-- end
 if vim.api.nvim_get_var("panelRepeat") == "x" then
     vim.api.nvim_set_var("panelRepeat", "o")
 end

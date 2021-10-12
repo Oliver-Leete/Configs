@@ -415,7 +415,7 @@ end
 -- Null LS
 require("null-ls").config({
     sources = {
-        -- require("null-ls").builtins.code_actions.gitsigns.with({ filetype = { "jl" } }),
+        require("null-ls").builtins.code_actions.gitsigns.with({ filetype = { "conf" } }),
         require("null-ls").builtins.formatting.trim_whitespace,
         require("null-ls").builtins.formatting.trim_newlines,
         require("null-ls").builtins.formatting.stylua,

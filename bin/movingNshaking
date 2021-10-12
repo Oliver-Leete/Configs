@@ -1,17 +1,16 @@
 #!/bin/bash
 
-if [ "$#" -ne "4" ]; then
+if [ "$#" -ne "3" ]; then
     COMMANDS=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .foreground_processes[].cmdline[0]")
     TITLES=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .title")
     if [[ "$TITLES" =~ \"MainEditor\" ]]; then
         if [[ "$COMMANDS" == *"vim"* ]]; then
             tabID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .id")
-            nvr --servername /tmp/nvr-server-$tabID --nostart -c "$1"
+            nvr --servername /tmp/nvr-server-$tabID --nostart -c "KittyNavigate$1"
             exit
         fi
-    fi
-    if [[ "$COMMANDS" == *"vim"* ]]; then
-        kitty @ send-text ";$1"
+    elif [[ "$COMMANDS" == *"vim"* ]]; then
+        kitty @ send-text ";KittyNavigate$1"
         exit
     fi
 fi
@@ -19,12 +18,12 @@ fi
 
 old_id=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .id")
 
-kitty @ $2
+kitty @ kitten neighboring_window.py $1
 
 new_id=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .id")
 
 if [ "$old_id" -eq "$new_id" ]; then
-    xdotool key super+$3
+    xdotool key super+shift+ctrl+$2
 else
     echo $old_id $new_id
 fi

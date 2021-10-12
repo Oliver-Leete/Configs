@@ -10,11 +10,11 @@ that I can't remember where it came from.
 
 ## Multiple Leaders
 
-I am slowly moving things over to a system of having a few top level leaders, each with it's own
+I am slowly moving things over to a system of having a few top level leaders, each with its own
 use. Space, the actual leader key set, is used for all 'program level commands', things like fuzzy
 finding, running code, debugging, etc. Comma, the user command key, is used for additional editing
 commands, like aligning things, changing case, and special pasting. Backslash, the local leader key,
-is used for very language specific things. Such as viewing a tex file's PDF, or using the vimtex
+is used for very language specific things. Such as viewing a Tex file's PDF, or using the VimTex
 word count function.
 
 Square brackets are used as directional leaders (covered more in the Repeat section), for all manner
@@ -32,7 +32,7 @@ firmware. Only problem is I hate having to keep pressing the letters after, make
 load of spelling mistakes to correct them all very tedious. So I came up with this little function.
 Then in all my mappings for the jumps themselves I add a bit to overwrite the dirJumps variable like
 in the example below (note that it's in which-key.nvim format). I also have all my jump mappings
-include zz at the end for that nice screen centeringness and m\` to add it to the jump list (I think
+include zz at the end for that nice screen centering and m\` to add it to the jump list (I think
 it should be m', but that doesn't seem to work)
 
 ```lua
@@ -70,7 +70,7 @@ end
 
 ## Target Mappings
 
-Ok, so I'm a massive fan of the next/last operators provided by the targets extension. Only problem
+OK, so I'm a massive fan of the next/last operators provided by the targets extension. Only problem
 is that they don't work with every text object. I've started to make some bindings for that will
 fill in the gaps, so far I've got this to add target mappings for treesitter text objects:
 
@@ -107,7 +107,7 @@ needed, with one command swapped out depending on direction.
 Just made some more functions and mappings for this. Mapped targets allows for the creation
 of target mappings using already existing mapped motions and selections. Plug targets instead
 uses the plug mapping provided by plugins. Examples of all of these functions can be seen in my
-o_bindings_config.lua and tex.lua config files. Combined with the targets plugin this allows for
+o_bindings_config.Lua and Tex.Lua config files. Combined with the targets plugin this allows for
 almost any text object to be targeted from afar. The one remaining object has been conquered,
 paragraphs. This had to have two functions all to itself, but it now works how I want it to.
 
@@ -227,7 +227,7 @@ I tried for ages to get a system for running terminal tasks set up in NVim that 
 closest I got was using toggle term, but I still had some issues. When I looked back into Kakoune
 I thought about the idea of keeping the editor for editing only, and started looking into running
 terminal tasks in my actual terminal. Using Kitty's remote functionality I was able to set up some
-shortcuts for running repls, debug and build tools.
+shortcuts for running REPLs, debug and build tools.
 
 For when I actually want the full powers of Kakoune I have a shortcut that uses kitty's remote
 control to open a new tab with Kak running. This tab is opened to the same cursor position in the
@@ -290,16 +290,16 @@ inoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 snoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 ```
 
-This next bit is depreciated since moving to compe. I just use the standard cmp and autopairs
+This next bit is depreciated since moving to compe. I just use the standard CMP and autopairs
 mappings. Ctrl+] is used for next snippet selection, and expanding is just done with the completion
 menu.
 
 Enter is possibly the most used key, used for line breaks, nvim-autopairs splitting, completion
 confirmation and changing the choices in luasnip. I've let autopairs deal with most of it, just
 adding in a check for luasnip changeability (and now an extra check for luasnip expandability). I
-think this might cause some issues in some snippets, but none that I've used so far. I'm currently
-trying out this without the snippet choice part, to try and limit the amount of accedental snippet
-overwriting I do.
+think this might cause some issues in some snippets, but none that I've used so far. Furthermore,
+I'm currently trying out this without the snippet choice part, to try and limit the amount of
+accidental snippet overwriting I do.
 
 ```lua
 _G.enter_complete = function()
@@ -383,8 +383,8 @@ Inspired by a Reddit post, I have made a little function that does some hardcode
 location of window columns, and extends them if they don't interfere with the XMobar. I've added
 this to my Notebook and Four column layout. Basically, I have the xmobar take up the centre third of
 the top of the screen, on those layouts there are checks to see if a column is in the centre third
-of the screen horizontally. If not, it will extend the column hight by the height of my XMobar, it's
-only a little bit of screen space that I gain back, but it's still nice.
+of the screen horizontally. If not, it will extend the column height by the height of my XMobar, it's
+only a little of screen space that I gain back, but it's still nice.
 
 ### Toggleable layouts
 
@@ -400,6 +400,14 @@ looking at right in front of you instead of way off to one side. I have this set
 so normally it defaults to half the screen width, but on my thesis workspace it instead uses roughly
 the width of 100 character columns in my terminal. For that extra focused writing experience.
 
+### Local Modules
+
+ConditionalKeys is from Ethan (where my XMonad config originated from). CycleWSLocal strips out
+everything I don't use and adds a function to send the current window to the previous workspace, I
+use this a lot now that I'm not using multiple monitors any more (I find it a lot easier than using
+numbers to send windows). WindowGoLocal just changes the runOrRaise function to only look on the
+current workspace.
+
 ### 'Magic' keys
 
 There are so many things that need shortcuts, and so few keys, especially on my tiny keyboard. I try
@@ -407,10 +415,28 @@ and keep OS level shortcuts all only on the Super key. But it can be a bit restr
 It's also super annoying when different programs have different shortcuts to do the same thing (why
 doesn't every program let me customize shortcuts???). These key bindings try and help with that by
 changing based on context. So Super+T always opens a new tab, be it in chrome or in my terminal.
-Super+left and super+right always swap tabs backward and forward, in programs or in layouts with
-tabs. These can be forced to OS versions of the shortcut by adding control. So Super+Control+right
+Super+tab and super+shift+tab always swap tabs backward and forward, in programs or in layouts with
+tabs. These can be forced to OS versions of the shortcut by adding control. So Super+Control+tab
 will always go to the next OS tab, even if I'm focused on chrome or my terminal.
 
-I would like to take this a step further by adding moving by direction, so it will move through
-XMonad windows, terminal windows and Neovim windows, but I will need to learn how to extend Kitty
-first.
+Other 'Magic' keys include window movements. When focused on any none terminal window, super+hjkl
+move between window manager windows. If kitty is focused then it will run a script. This script
+sends a command to move within kitty windows, and if the focused window didn't change (the movement
+is in a direction that would take it out of the terminal window) then moves within window manager
+windows instead. It goes a step further by checking if the running process is a Neovim instance and
+moving within that if possible (using a modified version of the vim-kitty-navigator extension). This
+is done using NVR if the vim instance is the main editor, or by sending keypresses if not.
+
+Super+backspace closes Neovim windows, terminal windows, or window manager windows depending on
+what is focused. Super+m moves the window to the master pane, unless the terminal is focused, in
+which case it moves the terminal window to the terminal master. If the terminal window is already in
+the terminal's master window then it will move to the window manager master (this is super hacky,
+relying on the terminal master and stack windows having different dimensions and also relying on a
+sleep in the script, I hope to fix this at some point). The tab key also uses a really hacky way to
+move in terminal tabs unless there are none, in which case it moves in window manager tabs (still
+less hacky than the master moving binding, counting the number of tabs in the focused terminal to
+see if there are any to switch to).
+
+Super+enter opens a new terminal (or it should, not working atm for some reason) if there isn't one
+on the workspace already, it focuses the terminal if there is, and it opens a new terminal window if
+the terminal is already focused. Same for super+b with browsers and browser tabs.

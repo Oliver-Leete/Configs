@@ -1,11 +1,13 @@
 #!/bin/bash
 
-old_id=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[].ids")
 
-xdotool key --clearmodifiers $1
+old_id=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[] | .columns, .lines")
 
-new_id=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused)")
+xdotool key --clearmodifiers "ctrl+shift+m"
+sleep 0.5
+
+new_id=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[] | .columns, .lines")
 
 if [ "$old_id" = "$new_id" ]; then
-    xdotool key --clearmodifiers $2
+    xdotool key "super+ctrl+m"
 fi

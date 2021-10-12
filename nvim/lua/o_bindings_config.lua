@@ -6,9 +6,23 @@ require("which-key").register({
     -- ["<c-j>"] = { "H", "Top of Window" },
     -- ["<c-h>"] = { "M", "Top of Window" },
     -- ["<c-k>"] = { "L", "Top of Window" },
-    ["S"] = { ":<c-u>lua require('tsht').nodes()<cr>", "TS Hop Target" },
+    s = { "<cmd>lua require'hop'.hint_char1()<cr>", "Hop Char" },
+    S = { ":<c-u>lua require('tsht').nodes()<cr>", "TS Hop Target" },
     ["'"] = { "`", "Jump to mark location"},
     ["`"] = { "'", "Jump to mark line"},
+    g = {
+        name = "Goto",
+
+        g = { "gg", "Buffer Top" },
+        j = { "G", "Buffer Bottom" },
+        k = { "gg", "Buffer Top" },
+        h = { "^", "Line Begining" },
+        l = { "$", "Line End" },
+
+        t = { "H", "Window Top" },
+        c = { "M", "Window Bottom" },
+        b = { "L", "Window Center" },
+    },
     a = {
         name = "around",
         h = { ":<c-u>Gitsigns selct_hunk<cr>", "Git Hunk" },

@@ -4,12 +4,19 @@ end
 
 -- Repaets
 -- set defaults
-vim.api.nvim_set_var("dirJumps", "f")
+vim.api.nvim_set_var("dirJumps", "search")
 vim.api.nvim_set_var("panelRepeat", "x")
 vim.api.nvim_set_var("DiffviewLast", "DiffviewOpen")
 
 function _G.commandRepeat(leader, varName)
     local jump = vim.api.nvim_get_var(varName)
+    if jump == "search" then
+        if leader == "]" then
+            return replace_keycodes("n")
+        elseif leader == "[" then
+            return replace_keycodes("N")
+        end
+    end
     return vim.api.nvim_replace_termcodes(leader .. jump, true, true, true)
 end
 

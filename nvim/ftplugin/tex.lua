@@ -199,9 +199,9 @@ require("which-key").register({
     mode = "o",
 })
 
-if vim.api.nvim_get_var("dirJumps") == "f" then
-    vim.api.nvim_set_var("dirJumps", "p")
-end
+-- if vim.api.nvim_get_var("dirJumps") == "f" then
+--     vim.api.nvim_set_var("dirJumps", "p")
+-- end
 if vim.api.nvim_get_var("panelRepeat") == "x" then
     vim.api.nvim_set_var("panelRepeat", "c")
 end

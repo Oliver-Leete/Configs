@@ -98,10 +98,13 @@ require("which-key").register({
     ["<S-right>"] = { "<cmd>tabnext<cr>", "Next Tab" },
     ["<S-left>"] = { "<cmd>tabprevious<cr>", "Prev Tab" },
 
-    ["<C-down>"] = { "<cmd>try<bar>cnext<bar>catch/E553/<bar>cfirst<bar>endtry<CR>", "Next Quickfix" },
-    ["<C-up>"] = { "<cmd>try<bar>cprevious<bar>catch/E553/<bar>clast<bar>endtry<CR>", "Prev Quickfix" },
-    ["<S-down>"] = { "<cmd>try<bar>lnext<bar>catch/E553/<bar>lfirst<bar>endtry<CR>", "Next Loclist" },
-    ["<S-up>"] = { "<cmd>try<bar>lprevious<bar>catch/E553/<bar>llast<bar>endtry<CR>", "Prev Loclist" },
+    ["<C-down>"] = { "<cmd>try<bar>cnext<bar>catch/E553/<bar>cfirst<bar>endtry<CR>zz", "Next Quickfix" },
+    ["<C-up>"] = { "<cmd>try<bar>cprevious<bar>catch/E553/<bar>clast<bar>endtry<CR>zz", "Prev Quickfix" },
+    ["<S-down>"] = { "<cmd>try<bar>lnext<bar>catch/E553/<bar>lfirst<bar>endtry<CR>zz", "Next Loclist" },
+    ["<S-up>"] = { "<cmd>try<bar>lprevious<bar>catch/E553/<bar>llast<bar>endtry<CR>zz", "Prev Loclist" },
+
+    ["n"] = { "v:lua.commandRepeat(']', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
+    ["N"] = { "v:lua.commandRepeat('[', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
 
     g = {
         name = "Goto",

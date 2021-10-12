@@ -38,7 +38,6 @@ call plug#begin('~/.config/nvim/pluged')
     " Git
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'drzel/vim-repo-edit'
-    " Plug 'rhysd/committia.vim'
     Plug 'sindrets/diffview.nvim'
 
     " Registers
@@ -53,7 +52,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'rhysd/clever-f.vim'
 
     " Normal Commands
-    " Plug 'blackCauldron7/surround.nvim'
     Plug 'terrortylor/nvim-comment'
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
@@ -89,8 +87,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/zen-mode.nvim'
     Plug 'akinsho/nvim-bufferline.lua'
     Plug 'hoob3rt/lualine.nvim'
-    " Plug 'shadmansaleh/lualine.nvim'
-    " Plug 'windwp/floatline.nvim'
     Plug 'lewis6991/foldsigns.nvim'
     Plug 'lukas-reineke/indent-blankline.nvim',
     Plug 'norcalli/nvim-colorizer.lua'
@@ -197,7 +193,7 @@ set hlsearch
 set incsearch hl
 set inccommand=split
 set gdefault " NOTE : Might break some things
-noremap <plug>(slash-after) zz
+noremap <plug>(slash-after) <cmd>let g:dirJumps='search'<cr>zz
 
 " Indenting
 set tabstop=4
@@ -224,9 +220,7 @@ augroup windowPositioning
     autocmd!
     autocmd FileType help :wincmd H | vertical resize 90<cr>
     autocmd FileType juliadoc wincmd H
-    " autocmd FileType gitcommit wincmd H
     autocmd FileType qf wincmd J
-    " autocmd VimResized * exe "normal \<c-w>="
 augroup END
 
 set shortmess=Iflmnrwxt
@@ -260,25 +254,6 @@ let g:auto_save = 1  " enable AutoSave on Vim startup
 let g:auto_save_silent = 1  " do not display the auto-save notification
 
 
-" " Git Committia Settings
-" let g:committia_hooks = {}
-" function! g:committia_hooks.edit_open(info)
-"     " Additional settings
-"     setlocal spell
-
-"     " If no commit message, start with insert mode
-"     if a:info.vcs ==# 'git' && getline(1) ==# ''
-"         startinsert
-"     endif
-
-"     " Scroll the diff window from insert mode
-"     " Map <C-n> and <C-p>
-"     nmap <buffer><C-down> <Plug>(committia-scroll-diff-down-half)
-"     nmap <buffer><C-up> <Plug>(committia-scroll-diff-up-half)
-"     imap <buffer><C-down> <Plug>(committia-scroll-diff-down-half)
-"     imap <buffer><C-up> <Plug>(committia-scroll-diff-up-half)
-" endfunction
-
 " Wellle Tagets settings
 augroup mywellle
     autocmd!
@@ -287,19 +262,19 @@ augroup mywellle
         \                      {'d':'='}, {'d':'~'}, {'d':'_'}, {'d':'*'}, {'d':'#'}, {'d':'/'},
         \                      {'d':'\'}, {'d':'|'}, {'d':'&'}, {'d':'$'}] },
         \ ',': {},
-        \ ';': {},
-        \ ':': {},
-        \ '+': {},
-        \ '-': {},
-        \ '=': {},
-        \ '~': {},
-        \ '_': {},
-        \ '*': {},
-        \ '#': {},
-        \ '/': {},
-        \ '\': {},
-        \ '|': {},
-        \ '&': {},
+        " \ ';': {},
+        " \ ':': {},
+        " \ '+': {},
+        " \ '-': {},
+        " \ '=': {},
+        " \ '~': {},
+        " \ '_': {},
+        " \ '*': {},
+        " \ '#': {},
+        " \ '/': {},
+        " \ '\': {},
+        " \ '|': {},
+        " \ '&': {},
         \ '$': {},
         \ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': '[,;]'}]},
         \ 'x': {'line': [{'c': 1}]},
