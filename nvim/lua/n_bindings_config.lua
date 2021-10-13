@@ -743,7 +743,8 @@ require("which-key").register({
 
     ["["] = {
         name = "Backward Leader",
-        ["["] = { "v:lua.commandRepeat('[', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
+        ["["] = { "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Scope" },
+        ["]"] = { "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @function.outer<cr>zz", "Scope" },
         h = {
             [[&diff ? "[czz<cmd>let g:dirJumps='h'<cr>m`" : "<cmd>lua require'gitsigns'.prev_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>m`"]],
             "Hunk",
@@ -757,11 +758,8 @@ require("which-key").register({
             "<cmd>let g:dirJumps='q'<cr>m`<cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast <bar> endtry<cr>zz",
             "QuickFix Entry",
         },
-        s = { "<cmd>let g:dirJumps='s'<cr>m`[szz", "Spelling Mistake" },
-        ["]"] = { "<cmd>let g:dirJumps=']'<cr>m`[]zz", "Section End", noremap = false },
-        ["{"] = { "<cmd>let g:dirJumps='{'<cr>m`[[zz", "Section Start" },
-        ["}"] = { "<cmd>let g:dirJumps='{'<cr>m`[[zz", "Section Start" },
-        -- ["*"] = { "<cmd>let g:dirJumps='*'<cr>m`[#zz", "Function Call", noremap = false },
+        s = { "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Scope" },
+        S = { "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoPrevioutEnd @function.outer<cr>zz", "Scope" },
         o = { "<cmd>let g:dirJumps='o'<cr>m`<cmd>TSTextobjectGotoPreviousStart @class.outer<cr>zz", "Class" },
         f = { "<cmd>let g:dirJumps='f'<cr>m`<cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Function" },
         [","] = { "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoPreviousStart @parameter.inner<cr>zz", "Parameter" },
@@ -787,7 +785,8 @@ require("which-key").register({
 
     ["]"] = {
         name = "Forward Leader",
-        ["]"] = { "v:lua.commandRepeat(']', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
+        ["]"] = { "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Scope" },
+        ["["] = { "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Scope" },
         h = {
             [[&diff ? "]czz<cmd>let g:dirJumps='h'<cr>m`" : "<cmd>lua require'gitsigns'.next_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>m`"]],
             "Hunk",
@@ -801,11 +800,8 @@ require("which-key").register({
             "<cmd>let g:dirJumps='q'<cr>m`<cmd>try <bar> cnext <bar> catch /E553/ <bar> cfirst <bar> endtry<cr>zz",
             "QuickFix Entry",
         },
-        s = { "<cmd>let g:dirJumps='s'<cr>m`]szz", "Spelling Mistake" },
-        ["["] = { "<cmd>let g:dirJumps='['<cr>m`][zz", "Section End", noremap = false },
-        ["}"] = { "<cmd>let g:dirJumps='}'<cr>m`]]zz", "Section Start", noremap = true },
-        ["{"] = { "<cmd>let g:dirJumps='}'<cr>m`]]zz", "Section Start", noremap = true },
-        -- ["*"] = { "<cmd>let g:dirJumps='*'<cr>m`]#zz", "Function Call", noremap = false },
+        s = { "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Scope" },
+        S = { "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Scope" },
         d = { "<cmd>let g:dirJumps='D'<cr>m`<cmd>TSTextobjectGotoNextStart @comment.outer<cr>zz", "Comment" },
         o = { "<cmd>let g:dirJumps='o'<cr>m`<cmd>TSTextobjectGotoNextStart @class.outer<cr>zz", "Class" },
         f = { "<cmd>let g:dirJumps='f'<cr>m`<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Function" },

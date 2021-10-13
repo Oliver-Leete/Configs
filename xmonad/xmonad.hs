@@ -124,7 +124,7 @@ myWorkspaces :: [[Char]]
 myWorkspaces = [wsTMP, wsTMP2, wsPRO1, wsPRO2, wsPRO3, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsWRK4]
 
 myWorkspaceIndices :: M.Map [Char] [Char]
-myWorkspaceIndices = M.fromList $ zip myWorkspaces ["Home", "End", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"] -- (,) == \x y -> (x,y)
+myWorkspaceIndices = M.fromList $ zip myWorkspaces ["Home", "End", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
 clickable :: [Char] -> [Char]
 clickable ws = "<action=`xdotool key super+"++show i++"`>"++ws++"</action>"

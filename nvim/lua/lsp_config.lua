@@ -415,12 +415,13 @@ end
 -- Null LS
 require("null-ls").config({
     sources = {
-        require("null-ls").builtins.code_actions.gitsigns.with({ filetype = { "conf" } }),
+        require("null-ls").builtins.code_actions.gitsigns.with({ filetype = { "kitty" } }),
         require("null-ls").builtins.formatting.trim_whitespace,
         require("null-ls").builtins.formatting.trim_newlines,
         require("null-ls").builtins.formatting.stylua,
         require("null-ls").builtins.formatting.fish_indent,
         require("null-ls").builtins.diagnostics.markdownlint,
+        require("null-ls").builtins.hover.dictionary.with({ filetype = { "tex", "markdown"}}),
         -- require("null-ls").builtins.diagnostics.chktex,
         -- require("null-ls").builtins.diagnostics.selene,
     },
