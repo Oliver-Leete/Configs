@@ -137,12 +137,10 @@ projects =
                 , projectDirectory  = "/tmp"
                 , projectStartHook  = Just $ return ()
                 }
-
     , Project   { projectName       = wsTMP2
                 , projectDirectory  = "/tmp"
                 , projectStartHook  = Just $ return ()
                 }
-
     , Project   { projectName       = wsPRO1
                 , projectDirectory  = "~/Projects/Printing"
                 , projectStartHook  = Just $ do spawnOn wsPRO1 "prusaslicer"
@@ -153,28 +151,25 @@ projects =
                 , projectStartHook  = Just $ do spawnOn wsPRO2 (myTerminal ++ " --session=/home/oleete/.config/kitty/logs.conf")
                                                 spawnOn wsPRO2 ("sleep .2; " ++ myBrowser)
                 }
-
     , Project   { projectName       = wsPRO3
                 , projectDirectory  = "~/Projects/D&D Home"
-                , projectStartHook  = Just $    spawnOn wsPRO3 "google-chrome-stable --user-data-dir=/home/oleete/.config/browser/google-chrome-stable --new-window 'https://roll20.net/welcome'"
+                , projectStartHook  = Just $ do spawnOn wsPRO3 (myLongBrowser ++ " --new-window 'https://roll20.net/welcome'")
                 }
-
     , Project   { projectName       = wsCON
                 , projectDirectory  = "~/.config"
                 , projectStartHook  = Just $ do spawnOn wsCON (myTerminal ++ " --session=/home/oleete/.config/kitty/config.conf")
                                                 spawnOn wsCON ("sleep .5; " ++ myBrowser)
                 }
-
     , Project   { projectName       = wsPER
                 , projectDirectory  = "~/PersonalDrive"
-                , projectStartHook  = Just $    spawnOn wsPER "google-chrome-stable --user-data-dir=/home/oleete/.config/browser/google-chrome-stable --new-window 'github.com' 'feedly.com/i/latest' 'youtube.com/feed/subscriptions' 'nebula.app/myshows' 'coinbase.com'"
+                , projectStartHook  = Just $ do spawnOn wsPER (myLongBrowser ++ " --new-window 'github.com' 'feedly.com/i/latest' 'youtube.com/feed/subscriptions' 'nebula.app/myshows' 'coinbase.com'")
                 }
-
     , Project   { projectName       = wsWRK
                 , projectDirectory  = "~/UniDrive"
-                , projectStartHook  = Just $    spawnOn wsWRK "google-chrome-stable --user-data-dir=/home/oleete/.config/browser/google-chrome-stable-wrk --new-window 'sheffield.ac.uk' 'gmail.com' 'calendar.google.com' 'chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html' 'keep.google.com' 'drive.google.com' 'github.com/Oliver-Leete/ThesisLatex' 'feedly.com/i/latest' 'paperpile.com/app'"
+                , projectStartHook  = Just $ do spawnOn wsWRK (myLongBrowser ++ "-wrk --new-window 'sheffield.ac.uk' 'gmail.com' 'calendar.google.com' "
+                                                               ++ "'chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html' 'keep.google.com' "
+                                                               ++ "'drive.google.com' 'github.com/Oliver-Leete/ThesisLatex' 'feedly.com/i/latest' 'paperpile.com/app'")
                 }
-
     , Project   { projectName       = wsSIM
                 , projectDirectory  = "~/Projects/PowderModel"
                 , projectStartHook  = Just $ do spawnOn wsSIM (myTerminal ++ " --session=/home/oleete/.config/kitty/sim.conf")
@@ -185,27 +180,25 @@ projects =
                 , projectStartHook  = Just $ do spawnOn wsEXP (myTerminal ++ " --session=/home/oleete/.config/kitty/exp.conf")
                                                 spawnOn wsEXP ("sleep .2; " ++ myBrowser)
                 }
-
     , Project   { projectName       = wsTHESIS
                 , projectDirectory  = "~/Projects/Thesis/0.1_LaTeX"
                 , projectStartHook  = Just $ do spawnOn wsTHESIS (myTerminal ++ " --session=/home/oleete/.config/kitty/thesis.conf")
                                                 spawnOn wsTHESIS ("sleep .2; " ++ myBrowser)
                                                 spawnOn wsTHESIS "sleep .5; zathura /home/oleete/Projects/Thesis/0.1_LaTeX/OML-Thesis.pdf"
                 }
-
     , Project   { projectName       = wsWRK4
                 , projectDirectory  = "~/UniDrive"
-                , projectStartHook  = Just $    spawnOn wsWRK4 "sleep .3; browser"
+                , projectStartHook  = Just $ do spawnOn wsWRK4 "sleep .3; browser"
                 }
     ]
 
 ----------------------------------------------------------------------------------------------------
 -- Applications                                                                                   --
 ----------------------------------------------------------------------------------------------------
-
 myTerminal     = "kitty --single-instance --listen-on unix:/tmp/mykitty"
 myTerminalRemote = "kitty @ --to unix:/tmp/mykitty launch --type=background"
 myBrowser      = "/home/oleete/.config/bin/browser"
+myLongBrowser  = "google-chrome-stable --user-data-dir=/home/oleete/.config/browser/google-chrome-stable"
 myBrowserClass = "google-chrome-stable"
 
 discordCommand         = "discord"
@@ -219,21 +212,18 @@ scratchpads :: [NamedScratchpad]
 scratchpads =
     [   NS "tasks" gTasksCommand (className =? "Tasks") nonFloating
     ,   NS "tasksWork"  gTasksWrkCommand (className =? "WrkTasks") nonFloating
-
     ,   NS "keepNsp" keepCommand (className =? "Keep") nonFloating
     ,   NS "keepWrkNsp"  keepWrkCommand (className =? "WrkKeep") nonFloating
 
     ,   NS "discord"  discordCommand (className =? "discord") defaultFloating
     ,   NS "youtubeMusic"  youtubeMusicCommand (className =? "youtube-music-desktop-app") nonFloating
     ,   NS "calc"  "gnome-calculator --class=calcu" (className =? "calcu") nonFloating
-
     ,   NS "console"  "kitty -1 --class=kittyconsole" (className =? "kittyconsole") nonFloating
     ]
 
 ----------------------------------------------------------------------------------------------------
 -- Theme                                                                                     --
 ----------------------------------------------------------------------------------------------------
-
 background = "#1a1b26"
 foreground = "#a9b1d6"
 dull       = "#565f89"
@@ -297,25 +287,6 @@ myShowWNameTheme = def
 ----------------------------------------------------------------------------------------------------
 -- Layouts                                                                                        --
 ----------------------------------------------------------------------------------------------------
-
-myNav2DConf :: Navigation2DConfig
-myNav2DConf = def
-    { defaultTiledNavigation    = centerNavigation
-    , floatNavigation           = centerNavigation
-    , screenNavigation          = lineNavigation
-    , layoutNavigation          = [("Full", centerNavigation)]
-    , unmappedWindowRect        = [("Full", singleWindowRect)]
-    }
-easymotionConfig = def
-    { overlayF = proportional (0.3 :: Double)
-    , bgCol = background
-    , txtCol = foreground
-    , borderCol = active
-    , cancelKey = xK_F8
-    , sKeys = AnyKeys [xK_t, xK_n, xK_s, xK_e, xK_r, xK_i, xK_a, xK_o, xK_d, xK_h, xK_g, xK_j, xK_p
-                      , xK_l, xK_f, xK_u, xK_w, xK_y, xK_b, xK_k, xK_v, xK_m, xK_c, xK_x, xK_z, xK_q]
-    }
-
 mySpacing = spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
 
 data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
@@ -337,6 +308,7 @@ myLayoutHook= smartBorders
             $ mkToggle (single FULL)
             $ mkToggle (single FULLBAR)
             $ mkToggle (single FULLCENTER)
+            $ renamed [Replace "Notebook"]
             $ showWName' myShowWNameTheme
             $ addTabs shrinkText myTabTheme
             $ avoidStruts
@@ -350,167 +322,141 @@ myLayoutHook= smartBorders
 ----------------------------------------------------------------------------------------------------
 -- Keybindings                                                                                    --
 ----------------------------------------------------------------------------------------------------
+myNav2DConf :: Navigation2DConfig
+myNav2DConf = def
+    { defaultTiledNavigation    = centerNavigation
+    , floatNavigation           = centerNavigation
+    , screenNavigation          = lineNavigation
+    , layoutNavigation          = [("Full", centerNavigation)]
+    , unmappedWindowRect        = [("Full", singleWindowRect)]
+    }
+easymotionConfig = def
+    { overlayF = proportional (0.3 :: Double)
+    , bgCol = background
+    , txtCol = foreground
+    , borderCol = active
+    , cancelKey = xK_F8
+    , sKeys = AnyKeys [xK_t, xK_n, xK_s, xK_e, xK_r, xK_i, xK_a, xK_o, xK_d, xK_h, xK_g, xK_j, xK_p
+                      , xK_l, xK_f, xK_u, xK_w, xK_y, xK_b, xK_k, xK_v, xK_m, xK_c, xK_x, xK_z, xK_q]
+    }
 
 myModMask = mod4Mask
-
--- myKeys :: XConfig Layout -> [((KeyMask, KeySym), NamedAction)]
--- myKeys conf = let
-
---     subKeys str ks = subtitle str : mkNamedKeymap conf ks
 wsKeys = ["S-#", "#", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-
 zipM  m ks as f = zipWith (\k d -> (m ++ k, f d)) ks as
 
-toggleFloat w = windows (\s -> if M.member w (W.floating s)
-                    then W.sink w s
-                    else W.float w (W.RationalRect (1/4) (1/4) (1/2) (1/2)) s)
-
---     in
-
---     subKeys "System"
---
 myKeys :: [(String, X ())]
 myKeys =
-    [ ("M-q"             ,  spawn "xmonad --restart")
-    , ("M-C-q"           ,  spawn "xmonad --recompile && xmonad --restart")
-    , ("M-S-q"           ,  confirmPrompt hotPromptTheme "Quit XMonad" $ io exitSuccess)
-    , ("M-M1-C-S-x"      ,  spawn "slock")
+    [ ("M-q"             , spawn "xmonad --restart")
+    , ("M-C-q"           , spawn "xmonad --recompile && xmonad --restart")
+    , ("M-S-q"           , confirmPrompt hotPromptTheme "Quit XMonad" $ io exitSuccess)
+    , ("M-M1-C-S-x"      , spawn "slock")
 
-    , ("M-M1-C-S-z"      ,  spawn "colorpicker")
-    , ("M-M1-C-S-o"      ,  spawn "killall screenkey || screenkey")
-    , ("M-M1-C-S-/"      ,  spawn "screenkey --show-settings")
+    , ("M-M1-C-S-z"      , spawn "colorpicker")
+    , ("M-M1-C-S-o"      , spawn "killall screenkey || screenkey")
+    , ("M-M1-C-S-/"      , spawn "screenkey --show-settings")
+    , ("M-M1-C-S-f"      , spawn "screencapt" )
+    , ("M-M1-C-S-s"      , spawn "screencapt area" )
+    , ("M-M1-C-S-w"      , spawn "screencast" )
+    , ("M-M1-C-S-r"      , spawn "screencast area" )
+    , ("M-M1-C-S-<Space>", spawn "playerctl play-pause" )
+    , ("M-M1-C-S-<Left>" , spawn "playerctl previous" )
+    , ("M-M1-C-S-<Right>", spawn "playerctl next" )
 
-    , ("M-M1-C-S-f"      ,  spawn "screencapt" )
-    , ("M-M1-C-S-s"      ,  spawn "screencapt area" )
-    , ("M-M1-C-S-w"      ,  spawn "screencast" )
-    , ("M-M1-C-S-r"      ,  spawn "screencast area" )
+    , ("M-a"             , spawn "rofi -matching fuzzy -modi combi -show combi -combi-modi window,drun,run -show-icons")
+    , ("M-<Return>"      , multiBind (P.sendKey (controlMask .|. shiftMask) xK_Return) (runOrRaise myTerminal (className =? "kitty")) (runOrRaise myTerminal (className =? "kitty")))
+    , ("M-C-<Return>"    , spawn myTerminal)
+    , ("M-b"             , multiBind (runOrRaise myBrowser (className =? "Google-chrome")) (P.sendKey controlMask xK_t) (runOrRaise myBrowser (className =? "Google-chrome")))
+    , ("M-C-b"           , spawn myBrowser)
+    , ("M-M1-b"          , altBrowser)
+    , ("M-v"             , runOrRaise "zathura" (className =? "Zathura"))
 
-    , ("M-M1-C-S-<Space>",  spawn "playerctl play-pause" )
-    , ("M-M1-C-S-<Left>" ,  spawn "playerctl previous" )
-    , ("M-M1-C-S-<Right>",  spawn "playerctl next" )
+    , ("M-S-c"           , allNamedScratchpadAction scratchpads "calc")
+    , ("M-S-<Return>"    , allNamedScratchpadAction scratchpads "console")
+    , ("M-S-d"           , allNamedScratchpadAction scratchpads "discord")
+    , ("M-S-m"           , allNamedScratchpadAction scratchpads "youtubeMusic")
+    , ("M-S-t"           , wrkNSP "tasksWork" "tasks")
+    , ("M-S-n"           , wrkNSP "keepWrkNsp" "keepNsp")
 
-    , ("M-u"             ,  spawn "xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4; sleep 0.001; xdotool click 4")
-    , ("M-d"             ,  spawn "xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5; sleep 0.001; xdotool click 5")
-
-    , ("M-<Return>"      ,  bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_Return)
-                                      ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_Return)
-                                      ,(pure True, runOrRaise myTerminal (className =? "kitty"))])
-    , ("M-C-<Return>"    ,  spawn myTerminal)
-    , ("M-b"             ,  bindFirst [(className =? "Google-chrome", P.sendKey controlMask xK_t)
-                                      ,(pure True, runOrRaise myBrowser (className =? "Google-chrome"))])
-    , ("M-v"             ,  runOrRaise "zathura" (className =? "Zathura"))
-    , ("M-C-b"           ,  spawn myBrowser)
-    , ("M-M1-b"          ,  bindOn WS [(wsTMP2,   spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
-                                      ,(wsTMP,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
-                                      ,(wsWRK,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
-                                      ,(wsWRK4,   spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
-                                      ,(wsTHESIS, spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
-                                      ,(wsEXP,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
-                                      ,(wsSIM,    spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable'")
-                                      ,("",       spawn "google-chrome-stable --user-data-dir='/home/oleete/.config/browser/google-chrome-stable-wrk'")])
-
-    , ("M-S-c"           ,  allNamedScratchpadAction scratchpads "calc")
-    , ("M-S-<Return>"    ,  allNamedScratchpadAction scratchpads "console")
-    , ("M-S-d"           ,  allNamedScratchpadAction scratchpads "discord")
-    , ("M-S-m"           ,  allNamedScratchpadAction scratchpads "youtubeMusic")
-    , ("M-S-t"           ,  bindOn WS [(wsWRK, allNamedScratchpadAction scratchpads "tasksWork")
-                                      ,(wsSIM, allNamedScratchpadAction scratchpads "tasksWork")
-                                      ,(wsEXP, allNamedScratchpadAction scratchpads "tasksWork")
-                                      ,(wsTHESIS, allNamedScratchpadAction scratchpads "tasksWork")
-                                      ,(wsWRK4, allNamedScratchpadAction scratchpads "tasksWork")
-                                      ,("", allNamedScratchpadAction scratchpads "tasks")])
-    , ("M-S-n"           ,  bindOn WS [(wsWRK, allNamedScratchpadAction scratchpads "keepWrkNsp")
-                                      ,(wsSIM, allNamedScratchpadAction scratchpads "keepWrkNsp")
-                                      ,(wsEXP, allNamedScratchpadAction scratchpads "keepWrkNsp")
-                                      ,(wsTHESIS, allNamedScratchpadAction scratchpads "keepWrkNsp")
-                                      ,(wsWRK4, allNamedScratchpadAction scratchpads "keepWrkNsp")
-                                      ,("", allNamedScratchpadAction scratchpads "keepNsp")])
-
-    , ("M-a"             ,  spawn "rofi -matching fuzzy -modi combi -show combi -combi-modi window,drun,run -show-icons")
-
-    , ("<F8>"            ,  selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow))
-
-    , ("M-<Backspace>"   ,  bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " delWindow"))
-                                      ,(className =? "kittyconsole",  spawn (myTerminalRemote ++ " delWindow"))
-                                      ,(className =? "Google-chrome", P.sendKey controlMask xK_w)
-                                      ,(pure True, kill)])
+    , ("M-<Backspace>"   , multiBind (spawn (myTerminalRemote ++ " delWindow")) (P.sendKey controlMask xK_w) kill)
     , ("M-C-<Backspace>" , kill)
-    , ("M-S-<Backspace>" ,  confirmPrompt hotPromptTheme "kill all" killAll)
+    , ("M-S-<Backspace>" , confirmPrompt hotPromptTheme "kill all" killAll)
 
-    , ("M-<Tab>"         ,  bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " tabSwap Right Tab"))
-                                      ,(className =? "kittyconsole", spawn (myTerminalRemote ++ " tabSwap Right Tab"))
-                                      ,(className =? "Google-chrome", P.sendKey controlMask xK_Tab)
-                                      ,(pure True, bindOn LD [("Tabs", windows W.focusDown)])])
-    , ("M-S-<Tab>"       ,  bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " tabSwap Left shift+Tab"))
-                                      ,(className =? "kittyconsole", spawn (myTerminalRemote ++ " tabSwap Left shift+Tab"))
-                                      ,(className =? "Google-chrome", P.sendKey (controlMask .|. shiftMask) xK_Tab)
-                                      ,(pure True, bindOn LD [("Tabs", windows W.focusUp)])])
-    , ("M-C-<Tab>"       ,   bindOn LD [("Tabs", windows W.focusDown)])
-    , ("M-C-S-<Tab>"     ,   bindOn LD [("Tabs", windows W.focusUp)])
+    , ("M-<Tab>"         , multiBind (spawn (myTerminalRemote ++ " tabSwap Right Tab")) (P.sendKey controlMask xK_Tab) (bindOn LD [("Tabs", windows W.focusDown)]))
+    , ("M-S-<Tab>"       , multiBind (spawn (myTerminalRemote ++ " tabSwap Left shift+Tab")) (P.sendKey (controlMask .|. shiftMask) xK_Tab) (bindOn LD [("Tabs", windows W.focusUp)]))
+    , ("M-C-<Tab>"       , bindOn LD [("Tabs", windows W.focusDown)])
+    , ("M-C-S-<Tab>"     , bindOn LD [("Tabs", windows W.focusUp)])
+    , ("M-t"             , multiBind (P.sendKey (controlMask .|. shiftMask) xK_t) (P.sendKey controlMask xK_t) (spawn ""))
 
-    , ("M-t"             ,  bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_t)
-                                      ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_t)
-                                      ,(className =? "Google-chrome", P.sendKey controlMask xK_t)])
+    , ("M-f"             , multiBind (P.sendKey (controlMask .|. shiftMask) xK_f) (P.sendKey noModMask xK_F11) (toggleLayout FULL))
+    , ("M-C-f"           , toggleLayout FULL)
+    , ("M-s"             , toggleLayout FULLBAR)
+    , ("M-c"             , toggleLayout FULLCENTER)
 
-    , ("M-f"             ,  bindFirst [(className =? "kitty", P.sendKey (controlMask .|. shiftMask) xK_f)
-                                      ,(className =? "kittyconsole", P.sendKey (controlMask .|. shiftMask) xK_f)
-                                      ,(pure True, sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle FULL ])])
-    , ("M-C-f"           ,  sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle FULL ])
-    , ("M-s"             ,  sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLBAR ])
-    , ("M-c"             ,  sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle FULLCENTER])
+    , ("<F8>"            , selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow))
+    , ("M-h"             , kittyBind " moveWindow left h"   (windowGo L True))
+    , ("M-j"             , kittyBind " moveWindow bottom j" (windowGo D True))
+    , ("M-k"             , kittyBind " moveWindow top k"    (windowGo U True))
+    , ("M-l"             , kittyBind " moveWindow right l"  (windowGo R True))
+    , ("M-C-S-h"         , windowGo L True)
+    , ("M-C-S-j"         , windowGo D True)
+    , ("M-C-S-k"         , windowGo U True)
+    , ("M-C-S-l"         , windowGo R True)
+    , ("M-C-h"           , windowSwap L True)
+    , ("M-C-j"           , windowSwap D True)
+    , ("M-C-k"           , windowSwap U True)
+    , ("M-C-l"           , windowSwap R True)
 
-    , ("M-m"             , bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " mainMove"))
-                                     ,(className =? "kitty", spawn (myTerminalRemote ++ " mainMove"))
-                                     ,(pure True, swapPromote' False)])
+    , ("M-m"             , kittyBind " mainMove" (swapPromote' False))
     , ("M-C-m"           , swapPromote' False)
-
-    , ("M-h"             ,  bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " moveWindow left h"))
-                                                 ,(className =? "kittyconsole", spawn (myTerminalRemote ++ " moveWindow left h"))
-                                                 ,(pure True, windowGo L True)])
-    , ("M-j"             ,  bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " moveWindow bottom j"))
-                                                 ,(className =? "kittyconsole", spawn (myTerminalRemote ++ " moveWindow bottom j"))
-                                                 ,(pure True, windowGo D True)])
-    , ("M-k"             ,  bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " moveWindow top k"))
-                                                 ,(className =? "kittyconsole", spawn (myTerminalRemote ++ " moveWindow top k"))
-                                                 ,(pure True, windowGo U True)])
-    , ("M-l"             ,  bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " moveWindow right l"))
-                                                 ,(className =? "kittyconsole", spawn (myTerminalRemote ++ " moveWindow right l"))
-                                                 ,(pure True, windowGo R True)])
-
-    , ("M-C-S-h"         ,  windowGo L True)
-    , ("M-C-S-j"         ,  windowGo D True)
-    , ("M-C-S-k"         ,  windowGo U True)
-    , ("M-C-S-l"         ,  windowGo R True)
-
-    , ("M-C-h"           ,  windowSwap L True)
-    , ("M-C-j"           ,  windowSwap D True)
-    , ("M-C-k"           ,  windowSwap U True)
-    , ("M-C-l"           ,  windowSwap R True)
-
-    , ("M-y"             ,  withFocused toggleFloat)
+    , ("M-y"             , withFocused toggleFloat)
     , ("M-C-y"           , sinkAll)
 
-    , ("M-,"             ,  sendMessage (IncMasterN (-1)))
-    , ("M-."             ,  sendMessage (IncMasterN 1))
-    , ("M-C-,"           ,  sendMessage (IncColumnN (-1)))
-    , ("M-C-."           ,  sendMessage (IncColumnN 1))
+    , ("M-,"             , sendMessage (IncMasterN (-1)))
+    , ("M-."             , sendMessage (IncMasterN 1))
+    , ("M-C-,"           , sendMessage (IncColumnN (-1)))
+    , ("M-C-."           , sendMessage (IncColumnN 1))
+    , ("M-["             , sendMessage Shrink)
+    , ("M-]"             , sendMessage Expand)
+    , ("M-C-["           , sendMessage MirrorShrink)
+    , ("M-C-]"           , sendMessage MirrorExpand)
 
-    , ("M-["             ,  sendMessage Shrink)
-    , ("M-]"             ,  sendMessage Expand)
-    , ("M-C-["           ,  sendMessage MirrorShrink)
-    , ("M-C-]"           ,  sendMessage MirrorExpand)
+    , ("M-r"             , sendMessage ToggleSide)
+    , ("M-C-r"           , sendMessage ToggleStackDir)
+    , ("M-S-x"           , sendMessage ToggleMiddle)
 
-    , ("M-r"             ,  sendMessage ToggleSide)
-    , ("M-C-r"           ,  sendMessage ToggleStackDir)
-    , ("M-S-x"           ,  sendMessage ToggleMiddle)
-
-    , ("M-w"             ,  switchProjectPrompt myPromptTheme)
-    , ("M-C-w"           ,  shiftToProjectPrompt myPromptTheme)
-    , ("M-<Space>"       ,  toggleWS' ["NSP"])
-    , ("M-C-<Space>"     ,  shiftToggleWS' ["NSP"])
+    , ("M-w"             , switchProjectPrompt myPromptTheme)
+    , ("M-C-w"           , shiftToProjectPrompt myPromptTheme)
+    , ("M-<Space>"       , toggleWS' ["NSP"])
+    , ("M-C-<Space>"     , shiftToggleWS' ["NSP"])
     ]
     ++ zipM "M-"         wsKeys [0..] (withNthWorkspace W.greedyView)
     ++ zipM "M-C-"       wsKeys [0..] (withNthWorkspace W.shift)
+    where
+        toggleFloat w = windows (\s -> if M.member w (W.floating s)
+                            then W.sink w s
+                            else W.float w (W.RationalRect (1/4) (1/4) (1/2) (1/2)) s)
+
+        altBrowser = bindOn WS [(wsTMP2,   spawn myLongBrowser) ,(wsTMP,   spawn myLongBrowser)
+                               ,(wsWRK,   spawn myLongBrowser) ,(wsWRK4,  spawn myLongBrowser)
+                               ,(wsTHESIS,spawn myLongBrowser) ,(wsEXP,   spawn myLongBrowser)
+                               ,(wsSIM,   spawn myLongBrowser) ,("",      spawn (myLongBrowser ++ "-wrk"))]
+
+        wrkNSP work personal = bindOn WS [(wsWRK, allNamedScratchpadAction scratchpads work)
+                                         ,(wsSIM, allNamedScratchpadAction scratchpads work)
+                                         ,(wsEXP, allNamedScratchpadAction scratchpads work)
+                                         ,(wsTHESIS, allNamedScratchpadAction scratchpads work)
+                                         ,(wsWRK4, allNamedScratchpadAction scratchpads work)
+                                         ,("", allNamedScratchpadAction scratchpads personal)]
+
+        kittyBind kitty leftover = bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ kitty))
+                                          ,(className =? "kittyconsole", spawn (myTerminalRemote ++ kitty))
+                                          ,(pure True, leftover)]
+
+        multiBind kitty chrome leftover = bindFirst [(className =? "kitty", kitty)
+                                                    ,(className =? "kittyconsole", kitty)
+                                                    ,(className =? "Google-chrome", chrome)
+                                                    ,(pure True, leftover)]
+        toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle layout ]
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {} = M.fromList

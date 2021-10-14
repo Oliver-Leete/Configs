@@ -1,8 +1,7 @@
 #!/bin/bash
 
+kittyStore=$(kitty @ ls)
 if [ "$#" -ne "3" ]; then
-
-    kittyStore=$(kitty @ ls)
     commands=$(echo $kittyStore | jq ".[].tabs[].windows[] | select(.is_focused) | .foreground_processes[].cmdline[0]")
 
     if [[ "$commands" == *"vim"* ]]; then
@@ -13,13 +12,13 @@ if [ "$#" -ne "3" ]; then
             nvr --servername /tmp/nvr-server-$tabID --nostart -c "KittyNavigate$1"
             exit
         else
-            kitty @ send-text ";KittyNavigate$1"
+            kitty @ send-text ";KittyNavigate$1\n"
             exit
         fi
     fi
 fi
 
-old_id=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .id")
+old_id=$(echo $kittyStore | jq ".[].tabs[].windows[] | select(.is_focused) | .id")
 
 kitty @ kitten neighboring_window.py $1
 

@@ -51,7 +51,6 @@ require("close_buffers").setup({
     end,
 })
 
-require("mkdir")
 require("nvim_comment").setup({ comment_empty = false, line_mapping = "g,cc", operator_mapping = "g,c" })
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
 require("foldsigns").setup()
@@ -73,4 +72,9 @@ require("bufjump").setup({
 require("neogen").setup({
     enabled = true,
 })
--- require('floatline').setup()
+
+require'marks'.setup {
+  default_mappings = false,
+  builtin_marks = {},
+  cyclic = true,
+}

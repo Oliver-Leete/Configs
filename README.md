@@ -6,7 +6,7 @@ configs, but it might be worth some of the things I'm doing that I haven't seen 
 much as I think I should be). I'll try and give credit to others where it's due, but there's stuff
 that I can't remember where it came from.
 
-## Neovim
+# Neovim
 
 ## Multiple Leaders
 
@@ -20,8 +20,9 @@ word count function.
 Square brackets are used as directional leaders (covered more in the Repeat section), for all manner
 of jumping about. I am trying to limit g to just be goto commands (goto paste works kinda), I'll
 hopefully remove all the normal extra crap it's used for at some point. v is a view related key
-(thanks Kakoune for the inspiration). Now I just need a way of locking the leader key on (think sub
-modes).
+(thanks Kakoune for the inspiration). I have a bit of a hacky way to lock a mode in, by simply
+having the mapping end by calling the same leader key again, this has many flaws, but it is the best
+I can be bothered to do at the moment.
 
 ## Repeat Mappings
 
@@ -49,20 +50,20 @@ end
     }
 ```
 
+Since writing this, I have moved the repeat key to n and N, with jumping between search results being
+the default for all file types. ]], ][, [[ and [] now jump to the start or end of the previous
+file type based defaults (mostly scopes, but sections in Tex or markdown files).
+
 Realizing that I could use the same function for all kinds of repeats. I've already added it to my
 panel opening mappings (all bound under \<leader\>v) so that \<leader\>vv will open the last panel,
 or close it if it's still open. This is just done by having another variable to store the window
 command in.
 
 All of these also have a default command that is used if nothing has been called yet (can't repeat
-what hasn't been done). For jumping the default is to the next treesitter function. This doesn't
-make sense for some file types, like latex, so this is used to set a different default for Tex files
-to jump by section and to open the table of contents instead of the file browser.
+what hasn't been done). The default panel is nvim tree, but the below snippet can be used to set it
+per file type, like setting it to open the table of contents in a Tex file.
 
 ```lua
-if vim.api.nvim_get_var("dirJumps") == "f" then
-    vim.api.nvim_set_var("dirJumps", "s")
-end
 if vim.api.nvim_get_var("panelRepeat") == "x" then
     vim.api.nvim_set_var("panelRepeat", "c")
 end
@@ -72,7 +73,7 @@ end
 
 OK, so I'm a massive fan of the next/last operators provided by the targets extension. Only problem
 is that they don't work with every text object. I've started to make some bindings for that will
-fill in the gaps, so far I've got this to add target mappings for treesitter text objects:
+fill in the gaps, so far I've got this to add target mappings for Treesitter text objects:
 
 ```lua
 function _G.ts_target(count, object)
@@ -117,8 +118,8 @@ This is something I've wanted for a while, a simple little pair of functions tha
 from afar. This is useful for putting the thing you just yanked at the end of the paragraph (or any
 other text object you could think of).
 
-The first is the setup function, followed by the function that can be set as the opfunc (for
-whatever reason the opfunc can't take arguments, hence the setup function).
+The first is the setup function, followed by the function that can be set as the Opfunc (for
+whatever reason the Opfunc can't take arguments, hence the setup function).
 
 ```lua
 function _G.pre_paste_away(register, paste)
@@ -332,7 +333,9 @@ snoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.'
 snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 ```
 
-## XMonad
+# XMonad
+
+## Layouts
 
 ### Notebook Layout
 
@@ -386,6 +389,19 @@ the top of the screen, on those layouts there are checks to see if a column is i
 of the screen horizontally. If not, it will extend the column height by the height of my XMobar, it's
 only a little of screen space that I gain back, but it's still nice.
 
+This is done with some strategic uses of the following function:
+
+```haskell
+modY :: Rectangle -> Rectangle -> Rectangle
+modY (Rectangle sx sy sw sh) (Rectangle bx _ bw _)=
+    Rectangle sx y sw h
+    where   ymoddifier= if (toInteger (fromIntegral sx + sw - 8) < toInteger ( bx + ceiling (1/3 * toRational bw))) || (toInteger (8 + sx) > toInteger ( bx + ceiling (2/3 * toRational bw)))
+                        then 31
+                        else 0
+            y = sy - ymoddifier
+            h = sh + fromIntegral ymoddifier
+```
+
 ### Toggleable layouts
 
 The only non notebook layouts I actually use are the three toggleable layouts I have set up. The
@@ -400,13 +416,7 @@ looking at right in front of you instead of way off to one side. I have this set
 so normally it defaults to half the screen width, but on my thesis workspace it instead uses roughly
 the width of 100 character columns in my terminal. For that extra focused writing experience.
 
-### Local Modules
-
-ConditionalKeys is from Ethan (where my XMonad config originated from). CycleWSLocal strips out
-everything I don't use and adds a function to send the current window to the previous workspace, I
-use this a lot now that I'm not using multiple monitors any more (I find it a lot easier than using
-numbers to send windows). WindowGoLocal just changes the runOrRaise function to only look on the
-current workspace.
+## Bindings
 
 ### 'Magic' keys
 
@@ -427,6 +437,46 @@ windows instead. It goes a step further by checking if the running process is a 
 moving within that if possible (using a modified version of the vim-kitty-navigator extension). This
 is done using NVR if the vim instance is the main editor, or by sending keypresses if not.
 
+```haskell
+    ("M-h"             ,  bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " moveWindow left h"))
+                                    ,(className =? "kittyconsole", spawn (myTerminalRemote ++ " moveWindow left h"))
+                                    ,(pure True, windowGo L True)])
+
+```
+
+This is done using the above XMonad key binding and the bellow bash script.
+
+```bash
+if [ "$#" -ne "3" ]; then
+
+    kittyStore=$(kitty @ ls)
+    commands=$(echo $kittyStore | jq ".[].tabs[].windows[] | select(.is_focused) | .foreground_processes[].cmdline[0]")
+
+    if [[ "$commands" == *"vim"* ]]; then
+        titles=$(echo $kittyStore | jq ".[].tabs[].windows[] | select(.is_focused) | .title")
+
+        if [[ "$titles" =~ \"MainEditor\" ]]; then
+            tabID=$(echo $kittyStore | jq ".[].tabs[] | select(.is_focused) | .id")
+            nvr --servername /tmp/nvr-server-$tabID --nostart -c "KittyNavigate$1"
+            exit
+        else
+            kitty @ send-text ";KittyNavigate$1\n"
+            exit
+        fi
+    fi
+fi
+
+old_id=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .id")
+
+kitty @ kitten neighboring_window.py $1
+
+new_id=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .id")
+
+if [ "$old_id" -eq "$new_id" ]; then
+    xdotool key super+shift+ctrl+$2
+fi
+```
+
 Super+backspace closes Neovim windows, terminal windows, or window manager windows depending on
 what is focused. Super+m moves the window to the master pane, unless the terminal is focused, in
 which case it moves the terminal window to the terminal master. If the terminal window is already in
@@ -440,3 +490,13 @@ see if there are any to switch to).
 Super+enter opens a new terminal (or it should, not working atm for some reason) if there isn't one
 on the workspace already, it focuses the terminal if there is, and it opens a new terminal window if
 the terminal is already focused. Same for super+b with browsers and browser tabs.
+
+## Other
+
+### Local Modules
+
+ConditionalKeys is from Ethan (where my XMonad config originated from). CycleWSLocal strips out
+everything I don't use and adds a function to send the current window to the previous workspace, I
+use this a lot now that I'm not using multiple monitors any more (I find it a lot easier than using
+numbers to send windows). WindowGoLocal just changes the runOrRaise function to only look on the
+current workspace.

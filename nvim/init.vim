@@ -30,10 +30,6 @@ call plug#begin('~/.config/nvim/pluged')
     " Saving
     Plug 'lambdalisue/suda.vim'
     Plug '907th/vim-auto-save'
-    Plug 'jghauser/mkdir.nvim'
-
-    " Project Management
-    Plug 'tpope/vim-projectionist'
 
     " Git
     Plug 'lewis6991/gitsigns.nvim'
@@ -43,12 +39,12 @@ call plug#begin('~/.config/nvim/pluged')
     " Registers
     Plug 'svermeulen/vim-subversive'
     Plug 'inkarkat/vim-unconditionalpaste'
+    Plug 'chentau/marks.nvim'
 
     " Movement Commands
     Plug 'andymass/vim-matchup'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
-    Plug 'caenrique/swap-buffers.nvim'
     Plug 'rhysd/clever-f.vim'
 
     " Normal Commands
@@ -65,6 +61,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'tpope/vim-abolish'
     Plug 'tpope/vim-eunuch'
     Plug 'kazhala/close-buffers.nvim'
+    Plug 'tpope/vim-projectionist'
 
     " Text Objects
     Plug 'tommcdo/vim-ninja-feet'
@@ -101,7 +98,8 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/todo-comments.nvim'
 
     " Themes
-    Plug 'folke/tokyonight.nvim'
+    " Plug 'folke/tokyonight.nvim'
+    Plug 'abzcoding/tokyonight.nvim', { 'branch': 'feature/vim-diagnostics'}
 
     " LSP
     Plug 'neovim/nvim-lspconfig'
@@ -109,8 +107,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'RRethy/vim-illuminate'
     Plug 'ray-x/lsp_signature.nvim'
-    Plug 'onsails/lspkind-nvim'
-    Plug 'kosayoda/nvim-lightbulb'
 
     " Completion
     Plug 'hrsh7th/nvim-cmp'
@@ -262,19 +258,19 @@ augroup mywellle
         \                      {'d':'='}, {'d':'~'}, {'d':'_'}, {'d':'*'}, {'d':'#'}, {'d':'/'},
         \                      {'d':'\'}, {'d':'|'}, {'d':'&'}, {'d':'$'}] },
         \ ',': {},
-        " \ ';': {},
-        " \ ':': {},
-        " \ '+': {},
-        " \ '-': {},
-        " \ '=': {},
-        " \ '~': {},
-        " \ '_': {},
-        " \ '*': {},
-        " \ '#': {},
-        " \ '/': {},
-        " \ '\': {},
-        " \ '|': {},
-        " \ '&': {},
+        \ ';': {},
+        \ ':': {},
+        \ '+': {},
+        \ '-': {},
+        \ '=': {},
+        \ '~': {},
+        \ '_': {},
+        \ '*': {},
+        \ '#': {},
+        \ '/': {},
+        \ '\': {},
+        \ '|': {},
+        \ '&': {},
         \ '$': {},
         \ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': '[,;]'}]},
         \ 'x': {'line': [{'c': 1}]},

@@ -15,6 +15,35 @@
 
 vim.o.completeopt = "menuone,noselect"
 
+local M = {}
+M.icons = {
+    Class = "ﴯ",
+    Color = "",
+    Constant = "",
+    Constructor = "",
+    Enum = "",
+    EnumMember = "",
+    Event = "",
+    Field = "ﰠ",
+    File = "",
+    Folder = "",
+    Function = "",
+    Interface = "",
+    Keyword = "",
+    Method = "",
+    Module = "",
+    Operator = "",
+    Property = "ﰠ",
+    Reference = "",
+    Snippet = "",
+    Struct = "",
+    Text = "",
+    TypeParameter = "",
+    Unit = "",
+    Value = "",
+    Variable = "",
+}
+
 local cmp = require("cmp")
 require("cmp").setup({
     snippet = {
@@ -41,7 +70,18 @@ require("cmp").setup({
         { name = "buffer" },
     },
     formatting = {
-        format = require("lspkind").cmp_format({with_text = false, maxwidth = 50})
+		format = function(entry, vim_item)
+			vim_item.menu = ({
+                luasnip = "(LSnip)",
+                cmp_tabnine = "(Tab9)",
+				nvim_lsp = "(LSP)",
+                path = "(Path)",
+                nvim_lua = "(Lua)",
+				buffer = "(Buffer)",
+			})[entry.source.name]
+            vim_item.kind = M.icons[vim_item.kind]
+			return vim_item
+		end
     },
 })
 

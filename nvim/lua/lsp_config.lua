@@ -75,7 +75,6 @@ local custom_attach = function(client)
     })
 
     require("illuminate").on_attach(client)
-    vim.cmd([[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb({sign={priority=7}})]])
 end
 
 require("lspconfig").hls.setup({
@@ -179,8 +178,6 @@ for _, server in pairs(servers) do
         })
     end
 end
-
-require("lspkind").init({})
 
 -- LTEX
 local configs = require("lspconfig/configs")

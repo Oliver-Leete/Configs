@@ -17,7 +17,7 @@ function _G.commandRepeat(leader, varName)
             return replace_keycodes("N")
         end
     end
-    return vim.api.nvim_replace_termcodes(leader .. jump, true, true, true)
+    return replace_keycodes(leader .. jump)
 end
 
 function _G.diff_repeat()
