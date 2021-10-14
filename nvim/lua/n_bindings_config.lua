@@ -454,6 +454,7 @@ require("which-key").register({
         g = {
             name = "Git",
             g = { "<cmd>silent !kitty @ launch --cwd=current --type=window --window-title 'LazyGit' lazygit<cr>", "LazyGit" },
+            G = { "<cmd>silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit<cr>", "LazyGit" },
 
             a = { "<cmd>lua require'gitsigns'.blame_line({full=true})<CR>", "Blame Line" },
             A = { "<cmd>Gitsigns toggle_current_line_blame<CR>", "Blame Toggle" },
