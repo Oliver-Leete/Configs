@@ -226,7 +226,7 @@ require("which-key").register({
 
         [";"] = { "q:", "Command Buffer" },
 
-        j = { "mzJ`z", "Join" },
+        j = { "m1J`1", "Join" },
         k = { "i<cr><esc>", "Split" },
         J = { "<cmd>SplitjoinJoin<cr>", "Smart Join" },
         K = { "<cmd>SplitjoinSplit<cr>", "Smart Split" },
@@ -277,7 +277,7 @@ require("which-key").register({
 
             f = { "<cmd>lua vim.lsp.buf.formatting_sync()<CR>", "Format" },
             ["<space>"] = { [[<cmd>%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces" },
-            w = { [["mz!ippar w". &textwidth . "<cr>`z"]], "Wrap Paragraph to Textwidth", expr = true },
+            w = { [["m1!ippar w". &textwidth . "<cr>`1"]], "Wrap Paragraph to Textwidth", expr = true },
             W = { [["<cmd>%!par w" . &textwidth . "<cr>"]], "Wrap File to Textwidth", expr = true },
 
             l = { "<cmd>left<cr>", "Left Allign" },
@@ -539,7 +539,6 @@ require("which-key").register({
             f = { "<cmd>let g:panelRepeat='f'<cr><cmd>TroubleToggle telescope<CR>", "Telescope List" },
             n = { "<cmd>let g:panelRepeat='n'<cr><cmd>TodoTrouble<cr>", "Todo List" },
             g = { "<cmd>let g:panelRepeat='g'<cr><cmd>DiffviewOpen<CR>", "Git" },
-            o = { "<cmd>let g:panelRepeat='o'<cr><cmd>SymbolsOutline<CR>", "Symbol List" },
             x = { "<cmd>let g:panelRepeat='x'<cr><cmd>NvimTreeToggle<CR>", "File Tree" },
             u = { "<cmd>let g:panelRepeat='u'<cr><cmd>UndotreeToggle<CR>", "Undo Tree" },
             z = {

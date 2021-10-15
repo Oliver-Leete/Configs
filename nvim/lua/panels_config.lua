@@ -101,20 +101,3 @@ require("trouble").setup({
     },
     use_lsp_diagnstic_signs = false, -- enabling this will use the s
 })
-
--- Symbols Outline
-
-vim.g.symbols_outline = {
-    highlight_hovered_item = true,
-    show_guides = true,
-    position = "right",
-    keymaps = {
-        close = "<Esc>",
-        goto_location = "<cr>",
-        -- focus_location = "<cr>",
-        hover_symbol = "<C-space>",
-        rename_symbol = "r",
-        code_actions = "a",
-    },
-    lsp_blacklist = {},
-}

@@ -98,16 +98,30 @@ require("nvim-autopairs").setup({
     },
 })
 
+-- require('nvim-autopairs').remove_rule('"')
+
 local Rule = require("nvim-autopairs.rule")
+local cond = require('nvim-autopairs.conds')
+require("nvim-autopairs").add_rules(
+    {Rule("$", "$", {"tex", "markdown"})
+        :with_move(cond.none())
+    },
+    {Rule("$$", "$$", {"tex", "markdown"})
+        :with_move(cond.none())
+    }
+)
+
 require("nvim-autopairs").add_rules({
-    Rule('"""', '"""', "julia"),
-    Rule("$", "$", "tex"),
+    Rule("\\(", "\\)", "tex"),
+    Rule("\\[", "\\]", "tex"),
+    Rule("#=", "=#", 'julia'),
     Rule("```", "```"),
 })
 
 require("nvim-autopairs.completion.cmp").setup({
     map_cr = true,
     map_complete = true,
+    insert = true,
     map_char = {
         all = '(',
         tex = '{',
@@ -161,6 +175,9 @@ require("tabout").setup({
         { open = "[[", close = "]]" },
         { open = "```", close = "```" },
         { open = '"""', close = '"""' },
+        { open = '#=', close = '=#' },
+        { open = '\\(', close = '\\)' },
+        { open = '\\[', close = '\\]' },
         { open = "<", close = ">" },
     },
     ignore_beginning = true,

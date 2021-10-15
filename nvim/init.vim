@@ -52,10 +52,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
     Plug 'Konfekt/vim-CtrlXA'
-
-    " Refactoring
-    Plug 'AndrewRadev/splitjoin.vim'
-    Plug 'fvictorio/vim-extract-variable'
+    Plug 'tpope/vim-surround'
 
     " Command Mode
     Plug 'tpope/vim-abolish'
@@ -92,7 +89,7 @@ call plug#begin('~/.config/nvim/pluged')
     " Panels
     Plug 'mbbill/undotree'
     Plug 'kyazdani42/nvim-tree.lua'
-    Plug 'simrat39/symbols-outline.nvim'
+    " Plug 'simrat39/symbols-outline.nvim'
     Plug 'folke/trouble.nvim'
     Plug 'folke/which-key.nvim'
     Plug 'folke/todo-comments.nvim'
@@ -141,18 +138,19 @@ call plug#begin('~/.config/nvim/pluged')
     " Refactor and Document
     Plug 'danymat/neogen'
     Plug 'ThePrimeagen/refactoring.nvim'
+    Plug 'AndrewRadev/splitjoin.vim'
 
     " Hop, Skip And Jump
     Plug 'IndianBoy42/hop.nvim'
     Plug 'mizlan/iswap.nvim'
     Plug 'mfussenegger/nvim-ts-hint-textobject'
     Plug 'kwkarlwang/bufjump.nvim'
-    
+
 call plug#end()
 
 " !!THEMES!!
 highlight link BiscuitColor TSComment
-highlight link CleverFDefaultLabel MatchParen 
+highlight link CleverFDefaultLabel MatchParen
 set noshowmode
 set termguicolors
 
@@ -287,9 +285,22 @@ let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA'
 let g:targets_gracious = 1
 let targets_nl = 'nN'
 
+let g:surround_no_mappings = 1
+nmap dp  <Plug>Dsurround
+nmap cp  <Plug>Csurround
+nmap cP  <Plug>CSurround
+nmap yp  <Plug>Ysurround
+nmap yP  <Plug>YSurround
+nmap ypp <Plug>Yssurround
+nmap yPp <Plug>YSsurround
+nmap yPP <Plug>YSsurround
+
 let g:loaded_matchit = 1
 let g:matchup_override_vimtex = 1
 let g:matchup_matchparen_offscreen = {'method': 'popup'}
+" let g:matchup_surround_enabled = 1
+" nmap cp <plug>(matchup-cs%)
+" nmap dp <plug>(matchup-ds%)
 
 " highlight Yank
 augroup LuaHighlight
@@ -354,8 +365,8 @@ xnoremap - <c-x>
 xnoremap g+ g<c-a>
 xnoremap g- g<c-x>
 
-xnoremap y myy`y
-xnoremap Y myY`y
+nnoremap y m1y`1
+nnoremap Y m1Y`1
 
 " slowly move to kak mappings
 nnoremap x V
@@ -381,8 +392,8 @@ nnoremap <m-d><m-d> "_dd
 xnoremap <m-c><m-c> "_cc
 xnoremap <m-d><m-d> "_dd
 
-nnoremap <m-o> mzo<esc>`z
-nnoremap <m-O> mzO<esc>`z
+nnoremap <m-o> m1o<esc>`1
+nnoremap <m-O> m1O<esc>`1
 
 nnoremap , <cmd>WhichKey g, n<cr>
 xnoremap , <cmd>WhichKey g, x<cr>
@@ -516,7 +527,7 @@ augroup END
 " nmap s <cmd>lua require'hop'.hint_char1()<cr>
 " nmap S <cmd>ISwapWith<cr>
 
-    
+
 
 noremap <silent> £ :silent :exe "let @/='" . expand("<cWORD>") . "'"<cr>
 
@@ -560,7 +571,7 @@ let g:lastplace_ignore_buftype = "quickfix,nofile,help"
 fu! s:lastplace()
 	if index(split(g:lastplace_ignore_buftype, ","), &buftype) != -1  | return | endif
 	if index(split(g:lastplace_ignore, ","), &filetype) != -1 | return | endif
-	try | 
+	try |
 		if empty(glob(@%)) | return | endif
 	catch | return | endtry
 	if line("'\"") > 0 && line("'\"") <= line("$") | execute "normal! g`\"zz" | endif
