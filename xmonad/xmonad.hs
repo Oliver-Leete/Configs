@@ -392,6 +392,9 @@ myKeys =
     , ("M-s"             , toggleLayout FULLBAR)
     , ("M-c"             , toggleLayout FULLCENTER)
 
+    , ("M-y"             , spawn "xdotool click 4")
+    , ("M-e"             , spawn "xdotool click 5")
+
     , ("<F8>"            , selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow))
     , ("M-h"             , kittyBind " moveWindow left h"   (windowGo L True))
     , ("M-j"             , kittyBind " moveWindow bottom j" (windowGo D True))
@@ -408,8 +411,8 @@ myKeys =
 
     , ("M-m"             , kittyBind " mainMove" (swapPromote' False))
     , ("M-C-m"           , swapPromote' False)
-    , ("M-y"             , withFocused toggleFloat)
-    , ("M-C-y"           , sinkAll)
+    , ("M-u"             , withFocused toggleFloat)
+    , ("M-C-u"           , sinkAll)
 
     , ("M-,"             , sendMessage (IncMasterN (-1)))
     , ("M-."             , sendMessage (IncMasterN 1))

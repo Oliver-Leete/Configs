@@ -44,8 +44,10 @@ function _G.commandRepeat(leader, varName)
     return vim.api.nvim_replace_termcodes(leader .. jump, true, true, true)
 end
 
+    n = { "v:lua.commandRepeat(']', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
+    N = { "v:lua.commandRepeat('[', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
+
     ["]"] = {
-        ["]"] = { "v:lua.commandRepeat(']', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
         f = { "<cmd>let g:dirJumps='f'<cr><cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Function" },
     }
 ```

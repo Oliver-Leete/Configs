@@ -16,7 +16,7 @@
 require("zen-mode").setup({
     window = {
         backdrop = 0.9, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
-        width = 85,
+        width = 105,
         height = 1,
         options = {
             signcolumn = "no",
@@ -27,6 +27,11 @@ require("zen-mode").setup({
     },
     plugins = {
         gitsigns = true, -- disables git signs
+        options = {
+            enabled = true,
+            ruler = true,
+            showcmd = true,
+        }
     },
     on_open = function()
         vim.api.nvim_command("IndentBlanklineDisable")
@@ -34,13 +39,6 @@ require("zen-mode").setup({
     on_close = function()
         vim.api.nvim_command("IndentBlanklineEnable")
     end,
-})
-require("twilight").setup({
-    dimming = {
-        alpha = 0.25,
-    },
-    context = 10,
-    exclude = {},
 })
 
 -- BufferLine
@@ -80,52 +78,11 @@ require("bufferline").setup({
     },
 })
 
--- LuaLine Status Line
+-- Windline Status Line
 
-require("lualine").setup({
-    options = {
-        theme = "tokyonight",
-        section_separators = { "", "" },
-        component_separators = { "", "" },
-        extensions = { "nvim-tree" },
-    },
-    sections = {
-        lualine_a = { { "mode" } },
-        lualine_b = { { "branch" }, { "filename", file_status = true } },
-        lualine_c = {
-            {
-                "diagnostics",
-                sources = { "nvim_lsp" },
-                sections = { "error", "warn", "info" },
-                color_error = "#db4b4b",
-                color_warn = "#e0af68",
-                color_info = "#1abc9c",
-                { error = "", warn = "", info = "" },
-            },
-        },
-        lualine_x = {
-            {
-                "diff",
-                color_added = "#266d6a",
-                color_modified = "#536c9e",
-                color_removed = "#b2555b",
-                symbols = { added = "+", modified = "~", removed = "-" },
-            },
-            "fileformat",
-            "filetype",
-        },
-        lualine_y = { "progress" },
-        lualine_z = { "location" },
-    },
-    inactive_sections = {
-        lualine_a = {},
-        lualine_b = {},
-        lualine_c = {},
-        lualine_x = {},
-        lualine_y = {},
-        lualine_z = {},
-    },
-})
+-- require("wlsample.bubble")
+
+vim.cmd("WindLineFloatToggle")
 
 -- Indent Blankline Settings
 require("indent_blankline").setup({

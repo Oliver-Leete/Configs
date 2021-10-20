@@ -12,9 +12,9 @@ function _G.commandRepeat(leader, varName)
     local jump = vim.api.nvim_get_var(varName)
     if jump == "search" then
         if leader == "]" then
-            return replace_keycodes("n")
+            return replace_keycodes("nzz")
         elseif leader == "[" then
-            return replace_keycodes("N")
+            return replace_keycodes("Nzz")
         end
     end
     return replace_keycodes(leader .. jump)
@@ -348,7 +348,7 @@ end
 function _G.delete_buffer()
     if #vim.fn.getbufinfo({ buflisted = true }) == 1 then
         vim.cmd([[quit]])
-    elseif vim.fn.winbufnr(2) ~= -1 then
+    elseif #vim.fn.win_findbuf(vim.fn.bufnr('%')) ~= 1 then
         vim.cmd([[wincmd c]])
     else
         require("close_buffers").delete({ type = "this" })

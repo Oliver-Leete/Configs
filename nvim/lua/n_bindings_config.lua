@@ -519,7 +519,7 @@ require("which-key").register({
             d = { "<cmd>lua PeekDefinition()<CR>", "Definition" },
             E = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
             e = {
-                "<cmd>lua vim.diagnostic.show_line_diagnostics({ focusable = false, border='single'})<CR>",
+                "<cmd>lua vim.diagnostic.open_float(0, {border='single', scope='line', source='always'})<CR>",
                 "Diagnostics",
             },
             W = { "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory" },
@@ -549,7 +549,6 @@ require("which-key").register({
                 },
                 r = { "<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References" },
             },
-            j = { "<cmd>MagmaShowOutput<cr>", "Evaluate Line" },
         },
         Q = { "<cmd>CClear<cr><cmd>cgetbuffer<cr><cmd>TroubleRefresh<cr>", "Populater QF List With Buffer Errors " },
         q = {
@@ -647,13 +646,6 @@ require("which-key").register({
         d = {
             name = "Debugging",
         },
-        J = { "<cmd>MagmaInit<cr>", "Start Jupyter" },
-        j = {
-            name = "Jupyter",
-            j = { "<cmd>MagmaEvaluateLine<cr>", "Evaluate Line" },
-            r = { "<cmd>MagmaReevaluateCell<cr>", "Re-Evaluate Cell" },
-            d = { "<cmd>MagmaDelete<cr>", "Delete Cell" },
-        },
         r = {
             name = "Refactor",
             V = { "<plug>(ExtractVar)", "Extract Variable" },
@@ -726,8 +718,8 @@ require("which-key").register({
             [","] = { "<cmd>Telescope vim_options<cr>", "Vim Options" },
             s = { "<cmd>set spell!<cr>", "Toggle Spelling" },
             k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
-            c = { "<cmd>Telescope colorscheme<cr>", "Color Schemes" },
-            C = { "<cmd>Telescope highlights<cr>", "Highlight Groups" },
+            C = { "<cmd>Telescope colorscheme<cr>", "Color Schemes" },
+            c = { "<cmd>Telescope highlights<cr>", "Highlight Groups" },
             a = { "<cmd>Telescope autocommands<cr>", "AutoCommands" },
             f = { "<cmd>Telescope filetypes<cr>", "FileTypes" },
             h = { "<cmd>Telescope help_tags<cr>", "Help Tags" },
@@ -787,11 +779,11 @@ require("which-key").register({
         m = { "<cmd>let g:dirJumps='m'<cr>m`<plug>(Marks-prev)vv", "File Marks", noremap = false },
         n = { "<cmd>let g:dirJumps='search'<cr>m`Nzz", "Search Result"},
         e = {
-            "<cmd>lua vim.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
+            "<cmd>lua vim.diagnostic.goto_prev({ float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
             "Diagnostics",
         },
         E = {
-            "<cmd>lua vim.diagnostic.goto_prev({ severity='Error', focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='E'<cr>m`",
+            "<cmd>lua vim.diagnostic.goto_prev({ severity='Error', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='E'<cr>m`",
             "Error",
         },
     },
@@ -831,11 +823,11 @@ require("which-key").register({
         m = { "<cmd>let g:dirJumps='m'<cr>m`<plug>(Marks-next)vv", "File Marks", noremap = false },
         n = { "<cmd>let g:dirJumps='search'<cr>m`nzz", "Search Result"},
         e = {
-            "<cmd>lua vim.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
+            "<cmd>lua vim.diagnostic.goto_next({ float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
             "Diagnostics",
         },
         E = {
-            "<cmd>lua vim.diagnostic.goto_next({ severity='Error', focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='E'<cr>m`",
+            "<cmd>lua vim.diagnostic.goto_next({ severity='Error', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='E'<cr>m`",
             "Error",
         },
     },

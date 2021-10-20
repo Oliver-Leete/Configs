@@ -53,7 +53,6 @@ require("close_buffers").setup({
 
 require("nvim_comment").setup({ comment_empty = false, line_mapping = "g,cc", operator_mapping = "g,c" })
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
-require("foldsigns").setup()
 require("colorizer").setup({ "*" }, {
     RGB = true,
     RRGGBB = true,
@@ -73,8 +72,9 @@ require("neogen").setup({
     enabled = true,
 })
 
-require'marks'.setup {
-  default_mappings = false,
-  builtin_marks = {},
-  cyclic = true,
-}
+require("marks").setup({
+    default_mappings = false,
+    builtin_marks = {},
+    cyclic = true,
+    sign_priority = 11,
+})

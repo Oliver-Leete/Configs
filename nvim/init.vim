@@ -19,7 +19,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-lua/plenary.nvim'
     Plug 'tpope/vim-repeat'
     Plug 'kyazdani42/nvim-web-devicons'
-    Plug 'winston0410/cmd-parser.nvim'
     Plug 'nvim-lua/popup.nvim'
 
     "Kitty
@@ -45,7 +44,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'andymass/vim-matchup'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
-    Plug 'rhysd/clever-f.vim'
+    " Plug 'rhysd/clever-f.vim'
 
     " Normal Commands
     Plug 'terrortylor/nvim-comment'
@@ -71,7 +70,6 @@ call plug#begin('~/.config/nvim/pluged')
     " Language
     Plug 'lervag/vimtex'
     Plug 'JuliaEditorSupport/julia-vim'
-    Plug 'dccsillag/magma-nvim', {'do': ':UpdateRemotePlugins'}
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
     Plug 'coachshea/vim-textobj-markdown'
     Plug 'fladson/vim-kitty'
@@ -80,23 +78,18 @@ call plug#begin('~/.config/nvim/pluged')
     " UI Stuff
     Plug 'folke/zen-mode.nvim'
     Plug 'akinsho/nvim-bufferline.lua'
-    Plug 'hoob3rt/lualine.nvim'
-    Plug 'lewis6991/foldsigns.nvim'
     Plug 'lukas-reineke/indent-blankline.nvim',
     Plug 'norcalli/nvim-colorizer.lua'
-    Plug 'folke/twilight.nvim'
+    Plug 'windwp/windline.nvim'
 
     " Panels
     Plug 'mbbill/undotree'
-    Plug 'kyazdani42/nvim-tree.lua'
-    " Plug 'simrat39/symbols-outline.nvim'
     Plug 'folke/trouble.nvim'
-    Plug 'folke/which-key.nvim'
     Plug 'folke/todo-comments.nvim'
+    Plug 'folke/which-key.nvim'
 
     " Themes
-    " Plug 'folke/tokyonight.nvim'
-    Plug 'abzcoding/tokyonight.nvim', { 'branch': 'feature/vim-diagnostics'}
+    Plug 'folke/tokyonight.nvim'
 
     " LSP
     Plug 'neovim/nvim-lspconfig'
@@ -235,8 +228,8 @@ augroup DeclutterSleepyWins
     autocmd!
     autocmd BufEnter,FocusGained,InsertLeave,WinEnter * setlocal cursorline
     autocmd BufLeave,FocusLost,InsertEnter,WinLeave * setlocal nocursorline
-    " autocmd BufEnter,FocusGained,WinEnter * setlocal signcolumn=yes:2
-    " autocmd BufLeave,FocusLost,WinLeave * setlocal signcolumn=no
+    autocmd BufEnter,FocusGained,WinEnter * setlocal signcolumn=yes:2
+    autocmd BufLeave,FocusLost,WinLeave * setlocal signcolumn=no
 augroup END
 
 " Saving and Backup
@@ -289,11 +282,11 @@ let g:surround_no_mappings = 1
 nmap dp  <Plug>Dsurround
 nmap cp  <Plug>Csurround
 nmap cP  <Plug>CSurround
-nmap yp  <Plug>Ysurround
-nmap yP  <Plug>YSurround
-nmap ypp <Plug>Yssurround
-nmap yPp <Plug>YSsurround
-nmap yPP <Plug>YSsurround
+" nmap yp  <Plug>Ysurround
+" nmap yP  <Plug>YSurround
+" nmap ypp <Plug>Yssurround
+" nmap yPp <Plug>YSsurround
+" nmap yPP <Plug>YSsurround
 
 let g:loaded_matchit = 1
 let g:matchup_override_vimtex = 1
@@ -365,8 +358,7 @@ xnoremap - <c-x>
 xnoremap g+ g<c-a>
 xnoremap g- g<c-x>
 
-nnoremap y m1y`1
-nnoremap Y m1Y`1
+xnoremap y m1y`1
 
 " slowly move to kak mappings
 nnoremap x V
@@ -531,9 +523,14 @@ augroup END
 
 noremap <silent> £ :silent :exe "let @/='" . expand("<cWORD>") . "'"<cr>
 
-" Clever-f
-let g:clever_f_across_no_line=1
-let g:clever_f_smart_case=1
+" " Clever-f
+" let g:clever_f_across_no_line=1
+" let g:clever_f_smart_case=1
+
+nnoremap <m-n> ;
+nnoremap <m-N> ,
+xnoremap <m-n> ;
+xnoremap <m-N> ,
 
 " Word Motion Command
 let g:wordmotion_prefix = '$'
@@ -582,20 +579,21 @@ augroup lastplace_notplugin
 augroup END
 
 lua << EOF
-require('main_config')
-require('compleation_config')
-require('ui_config')
-require('panels_config')
+require('telescope_config')
 require('n_bindings_config')
 require('x_bindings_config')
 require('o_bindings_config')
 require('i_bindings_config')
+require('main_config')
+require('compleation_config')
+require('panels_config')
 require('myfuncs_config')
 require('lsp_config')
 require('treesitter_config')
-require('telescope_config')
 require('git_config')
 require('snippets_config')
+require('bubble')
+require('ui_config')
 EOF
 
 let g:julia_blocks=0

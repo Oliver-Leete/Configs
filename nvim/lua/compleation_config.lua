@@ -11,7 +11,7 @@
 -- https://github.com/oliver-leete                                                                 --
 ----------------------------------------------------------------------------------------------------
 
--- Compleation (cmp) and Snippet (luasnip) Setup
+-- Compleation (cmp) and related pairs stuff
 
 vim.o.completeopt = "menuone,noselect"
 

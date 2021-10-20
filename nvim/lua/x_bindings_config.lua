@@ -127,9 +127,6 @@ require("which-key").register({
             r = { "<cmd>lua require'gitsigns'.reset_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Reset Hunks in Range" },
         },
         z = {},
-        j = {
-            j = { ":<c-u>MagmaEvaluateVisual<cr>", "Evaluate Selction" },
-        },
     },
     a = {
         name = "around",

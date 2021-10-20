@@ -11,10 +11,8 @@ vim.api.nvim_buf_set_var(0, "replCommand", "juliaREPL")
 vim.api.nvim_buf_set_var(0, "debugCommand", "juliadebug")
 
 require("which-key").register({
-    -- ["<cr>"] = { "<cmd>MagmaEvaluateOperator<cr>", "Evaluate Line"},
     ["<cr>"] = { "<cmd>SlimeSendCurrentLine<cr>", "Send Line to Repl"},
     ["<localleader>"] = {
-        ["<cr>"] = { "<cmd>MagmaEvaluateOperator<cr>", "Evaluate Line"},
         i = {
             i = {"<cmd>silent !kittyPersistent infilterm juliainfil<cr>", "Open Debug Terminal"},
             n = {"<cmd>silent !kittyPersistent infilterm juliainfil @continue<cr>", "Continue to Next Breakpoint"},
@@ -43,7 +41,7 @@ require("which-key").register({
             p = { "<cmd>Edeps<cr>", "Project Dependencies" },
             S = { [["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Main Source", expr = true },
             v = {
-                S = { [["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Main Source", expr = true },
+                S = { [["<cmd>Vsource " . split(getcwd(), '/')[-1] . "<cr>"]], "Main Source", expr = true },
                 d = { "<cmd>Vdoc<cr>", "Documentation" },
                 D = { "<cmd>VmainDoc<cr>", "Main Documentation" },
                 s = { "<cmd>Vsource<cr>", "Source" },
@@ -65,7 +63,7 @@ require("which-key").register({
                 p = { "<cmd>Sdeps<cr>", "Project Dependencies" },
             },
             O = {
-                S = { [["<cmd>Ssource " . split(getcwd(), '/')[-1] . "<cr>"]], "Main Source", expr = true },
+                S = { [["<cmd>Tsource " . split(getcwd(), '/')[-1] . "<cr>"]], "Main Source", expr = true },
                 d = { "<cmd>Tdoc<cr>", "Documentation" },
                 D = { "<cmd>TmainDoc<cr>", "Main Documentation" },
                 s = { "<cmd>Tsource<cr>", "Source" },
