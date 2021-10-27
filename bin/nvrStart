@@ -4,9 +4,9 @@ TITLES=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[].title")
 tabID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .id")
 
 if ! [[ "$TITLES" =~ \"MainEditor\" ]]; then
-    kitty @ set-window-title "MainEditor"
+	kitty @ set-window-title "MainEditor"
 else
-    ID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[] | select(.title==\"MainEditor\") | .id")
-    kitty @ focus-window --match id:$ID
+	ID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[] | select(.title==\"MainEditor\") | .id")
+	kitty @ focus-window --match id:$ID
 fi
 nvr -s --servername /tmp/nvr-server-$tabID $@

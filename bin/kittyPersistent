@@ -6,14 +6,14 @@ shift
 TITLES=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[].title")
 
 if ! [[ "$TITLES" =~ \"$WINTITLE\" ]]; then
-    kitty @ launch --type=window --window-title="$WINTITLE" --keep-focus $1
+	kitty @ launch --type=window --window-title="$WINTITLE" --keep-focus $1
 fi
 shift
 
 ID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[] | select(.title==\"$WINTITLE\") | .id")
 
 if [ "$#" -eq 0 ]; then
-    kitty @ focus-window --match id:$ID
+	kitty @ focus-window --match id:$ID
 else
-    kitty @ send-text --match id:$ID $@\\r
+	kitty @ send-text --match id:$ID $@\\r
 fi
