@@ -22,7 +22,7 @@ require("zen-mode").setup({
             signcolumn = "no",
             number = false, -- disable number column
             relativenumber = false, -- disable relative numbers
-            scrolloff = 999,
+            -- scrolloff = 999,
             wrap = true,
         },
     },

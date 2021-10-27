@@ -52,41 +52,58 @@ require("cmp").setup({
         end,
     },
     mapping = {
-        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-f>"] = cmp.mapping.scroll_docs(4),
-        ['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-        ['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-        ["<CR>"] = cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Insert,
-            select = true,
-        }),
+        ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
+        ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
+        ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), { "i", "c" }),
+        ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), { "i", "c" }),
+        ["<tab>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }), { "c" }),
+        ["<s-tab>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }), { "c" }),
+        ["<CR>"] = cmp.mapping(
+            cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true }),
+            { "i" }
+        ),
     },
     sources = {
         { name = "luasnip" },
         { name = "cmp_git" },
-        { name = "cmp_tabnine", keyword_length = 3},
+        { name = "cmp_tabnine", keyword_length = 3 },
         { name = "nvim_lsp" },
         { name = "path" },
         { name = "nvim_lua" },
-        { name = "buffer", keyword_lenght = 3},
+        { name = "buffer", keyword_lenght = 3 },
     },
     formatting = {
-		format = function(entry, vim_item)
-			vim_item.menu = ({
+        format = function(entry, vim_item)
+            vim_item.menu = ({
                 luasnip = "(LSnip)",
                 cmp_tabnine = "(Tab9)",
-				nvim_lsp = "(LSP)",
+                nvim_lsp = "(LSP)",
                 path = "(Path)",
                 nvim_lua = "(Lua)",
-				buffer = "(Buffer)",
-			})[entry.source.name]
+                buffer = "(Buffer)",
+                cmdline = "(CMD)",
+            })[entry.source.name]
             vim_item.kind = M.icons[vim_item.kind]
-			return vim_item
-		end
+            return vim_item
+        end,
     },
 })
 
-require("cmp_git").setup({ })
+cmp.setup.cmdline("/", {
+    sources = {
+        { name = "buffer" },
+    },
+})
+
+cmp.setup.cmdline(":", {
+    sources = cmp.config.sources({
+        { name = "path" },
+        { name = "buffer" },
+        { name = "cmdline" },
+    }),
+})
+
+require("cmp_git").setup({})
 
 -- AutoPairs Setup
 require("nvim-autopairs").setup({
@@ -104,20 +121,16 @@ require("nvim-autopairs").setup({
 -- require('nvim-autopairs').remove_rule('"')
 
 local Rule = require("nvim-autopairs.rule")
-local cond = require('nvim-autopairs.conds')
+local cond = require("nvim-autopairs.conds")
 require("nvim-autopairs").add_rules(
-    {Rule("$", "$", {"tex", "markdown"})
-        :with_move(cond.none())
-    },
-    {Rule("$$", "$$", {"tex", "markdown"})
-        :with_move(cond.none())
-    }
+    { Rule("$", "$", { "tex", "markdown" }):with_move(cond.none()) },
+    { Rule("$$", "$$", { "tex", "markdown" }):with_move(cond.none()) }
 )
 
 require("nvim-autopairs").add_rules({
     Rule("\\(", "\\)", "tex"),
     Rule("\\[", "\\]", "tex"),
-    Rule("#=", "=#", 'julia'),
+    Rule("#=", "=#", "julia"),
     Rule("```", "```"),
 })
 
@@ -126,10 +139,10 @@ require("nvim-autopairs.completion.cmp").setup({
     map_complete = true,
     insert = true,
     map_char = {
-        all = '(',
-        tex = '{',
-        haskell = ' ',
-    }
+        all = "(",
+        tex = "{",
+        haskell = " ",
+    },
 })
 
 vim.g.diagnostic_auto_popup_while_jump = 0
@@ -178,9 +191,9 @@ require("tabout").setup({
         { open = "[[", close = "]]" },
         { open = "```", close = "```" },
         { open = '"""', close = '"""' },
-        { open = '#=', close = '=#' },
-        { open = '\\(', close = '\\)' },
-        { open = '\\[', close = '\\]' },
+        { open = "#=", close = "=#" },
+        { open = "\\(", close = "\\)" },
+        { open = "\\[", close = "\\]" },
         { open = "<", close = ">" },
     },
     ignore_beginning = true,

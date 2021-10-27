@@ -39,6 +39,8 @@ import XMonad.Actions.PerWindowKeys
 import XMonad.Actions.SinkAll
 import XMonad.Actions.SpawnOn
 import XMonad.Actions.SwapPromote
+import XMonad.Actions.UpdateFocus
+import XMonad.Actions.UpdatePointer
 import XMonad.Actions.WindowGoLocal
 import XMonad.Actions.WithAll
 
@@ -342,8 +344,6 @@ easymotionConfig = def
     }
 
 myModMask = mod4Mask
-wsKeys = ["S-#", "#", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-zipM  m ks as f = zipWith (\k d -> (m ++ k, f d)) ks as
 
 myKeys :: [(String, X ())]
 myKeys =
@@ -364,19 +364,21 @@ myKeys =
     , ("M-M1-C-S-<Right>", spawn "playerctl next" )
 
     , ("M-a"             , spawn "rofi -matching fuzzy -modi combi -show combi -combi-modi window,drun,run -show-icons")
-    , ("M-<Return>"      , multiBind (P.sendKey (controlMask .|. shiftMask) xK_Return) (runOrRaise myTerminal (className =? "kitty")) (runOrRaise myTerminal (className =? "kitty")))
-    , ("M-C-<Return>"    , spawn myTerminal)
-    , ("M-b"             , multiBind (runOrRaise myBrowser (className =? "Google-chrome")) (P.sendKey controlMask xK_t) (runOrRaise myBrowser (className =? "Google-chrome")))
-    , ("M-C-b"           , spawn myBrowser)
-    , ("M-M1-b"          , altBrowser)
-    , ("M-v"             , runOrRaise "zathura" (className =? "Zathura"))
+    , ("M-<Return>"      , kittyBind2 (P.sendKey (controlMask .|. shiftMask) xK_Return) (upPointer $ runOrRaise myTerminal (className =? "kitty")))
+    , ("M-C-<Return>"    , upPointer $ spawn myTerminal)
 
-    , ("M-S-c"           , allNamedScratchpadAction scratchpads "calc")
-    , ("M-S-<Return>"    , allNamedScratchpadAction scratchpads "console")
-    , ("M-S-d"           , allNamedScratchpadAction scratchpads "discord")
-    , ("M-S-m"           , allNamedScratchpadAction scratchpads "youtubeMusic")
-    , ("M-S-t"           , wrkNSP "tasksWork" "tasks")
-    , ("M-S-n"           , wrkNSP "keepWrkNsp" "keepNsp")
+    , ("M-b"             , chromeBind (P.sendKey controlMask xK_t) (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
+    , ("M-C-b"           , upPointer $ spawn myBrowser)
+    , ("M-M1-b"          , upPointer altBrowser)
+
+    , ("M-v"             , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
+
+    , ("M-S-c"           , upPointer $ allNamedScratchpadAction scratchpads "calc")
+    , ("M-S-<Return>"    , upPointer $ allNamedScratchpadAction scratchpads "console")
+    , ("M-S-d"           , upPointer $ allNamedScratchpadAction scratchpads "discord")
+    , ("M-S-m"           , upPointer $ allNamedScratchpadAction scratchpads "youtubeMusic")
+    , ("M-S-t"           , upPointer $ wrkNSP "tasksWork" "tasks")
+    , ("M-S-n"           , upPointer $ wrkNSP "keepWrkNsp" "keepNsp")
 
     , ("M-<Backspace>"   , multiBind (spawn (myTerminalRemote ++ " delWindow")) (P.sendKey controlMask xK_w) kill)
     , ("M-C-<Backspace>" , kill)
@@ -390,7 +392,7 @@ myKeys =
     , ("M-C-S-<Tab>"     , bindOn LD [("Tabs", windows W.focusUp)])
     , ("M-t"             , multiBind (P.sendKey (controlMask .|. shiftMask) xK_t) (P.sendKey controlMask xK_t) (spawn ""))
 
-    , ("M-f"             , multiBind (P.sendKey (controlMask .|. shiftMask) xK_f) (toggleLayout FULL) (toggleLayout FULL))
+    , ("M-f"             , kittyBind2 (P.sendKey (controlMask .|. shiftMask) xK_f)  (toggleLayout FULL))
     , ("M-C-f"           , toggleLayout FULL)
     , ("M-s"             , toggleLayout FULLBAR)
     , ("M-c"             , toggleLayout FULLCENTER)
@@ -398,24 +400,24 @@ myKeys =
     , ("M-y"             , spawn "xdotool click 4")
     , ("M-e"             , spawn "xdotool click 5")
 
-    , ("<F8>"            , selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow))
-    , ("M-h"             , kittyBind " moveWindow left h"   (windowGo L True))
-    , ("M-j"             , kittyBind " moveWindow bottom j" (windowGo D True))
-    , ("M-k"             , kittyBind " moveWindow top k"    (windowGo U True))
-    , ("M-l"             , kittyBind " moveWindow right l"  (windowGo R True))
-    , ("M-C-S-h"         , windowGo L True)
-    , ("M-C-S-j"         , windowGo D True)
-    , ("M-C-S-k"         , windowGo U True)
-    , ("M-C-S-l"         , windowGo R True)
-    , ("M-C-h"           , windowSwap L True)
-    , ("M-C-j"           , windowSwap D True)
-    , ("M-C-k"           , windowSwap U True)
-    , ("M-C-l"           , windowSwap R True)
+    , ("<F8>"            , upPointer $ selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow))
+    , ("M-h"             , kittyBind " moveWindow left h"   (upPointer $ windowGo L True))
+    , ("M-j"             , kittyBind " moveWindow bottom j" (upPointer $ windowGo D True))
+    , ("M-k"             , kittyBind " moveWindow top k"    (upPointer $ windowGo U True))
+    , ("M-l"             , kittyBind " moveWindow right l"  (upPointer $ windowGo R True))
+    , ("M-C-S-h"         , upPointer $ windowGo L True)
+    , ("M-C-S-j"         , upPointer $ windowGo D True)
+    , ("M-C-S-k"         , upPointer $ windowGo U True)
+    , ("M-C-S-l"         , upPointer $ windowGo R True)
+    , ("M-C-h"           , upPointer $ windowSwap L True)
+    , ("M-C-j"           , upPointer $ windowSwap D True)
+    , ("M-C-h"           , upPointer $ windowSwap U True)
+    , ("M-C-l"           , upPointer $ windowSwap R True)
 
-    , ("M-m"             , kittyBind " mainMove" (swapPromote' False))
-    , ("M-C-m"           , swapPromote' False)
-    , ("M-u"             , withFocused toggleFloat)
-    , ("M-C-u"           , sinkAll)
+    , ("M-m"             , kittyBind " mainMove" (upPointer $ swapPromote' False))
+    , ("M-C-m"           , upPointer $ swapPromote' False)
+    , ("M-u"             , upPointer $ withFocused toggleFloat)
+    , ("M-C-u"           , upFocus sinkAll)
 
     , ("M-,"             , sendMessage (IncMasterN (-1)))
     , ("M-."             , sendMessage (IncMasterN 1))
@@ -426,18 +428,24 @@ myKeys =
     , ("M-C-["           , sendMessage MirrorShrink)
     , ("M-C-]"           , sendMessage MirrorExpand)
 
-    , ("M-r"             , sendMessage ToggleSide)
-    , ("M-C-r"           , sendMessage ToggleStackDir)
-    , ("M-x"             , sendMessage ToggleMiddle)
+    , ("M-r"             , upFocus $ sendMessage ToggleSide)
+    , ("M-C-r"           , upFocus $ sendMessage ToggleStackDir)
+    , ("M-x"             , upFocus $ sendMessage ToggleMiddle)
 
-    , ("M-w"             , switchProjectPrompt myPromptTheme)
-    , ("M-C-w"           , shiftToProjectPrompt myPromptTheme)
-    , ("M-<Space>"       , toggleWS' ["NSP"])
-    , ("M-C-<Space>"     , shiftToggleWS' ["NSP"])
+    , ("M-w"             , upFocus $ switchProjectPrompt myPromptTheme)
+    , ("M-C-w"           , upFocus $ shiftToProjectPrompt myPromptTheme)
+    , ("M-<Space>"       , upFocus $ toggleWS' ["NSP"])
+    , ("M-C-<Space>"     , upFocus $ shiftToggleWS' ["NSP"])
     ]
     ++ zipM "M-"         wsKeys [0..] (withNthWorkspace W.greedyView)
     ++ zipM "M-C-"       wsKeys [0..] (withNthWorkspace W.shift)
     where
+        upFocus a = sequence_ [a, focusUnderPointer]
+        upPointer a = sequence_ [a, updatePointer (0.5, 0.5) (0.25, 0.25)]
+
+        wsKeys = ["S-#", "#", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+        zipM  m ks as f = zipWith (\k d -> (m ++ k, upFocus $ f d)) ks as
+
         toggleFloat w = windows (\s -> if M.member w (W.floating s)
                             then W.sink w s
                             else W.float w (W.RationalRect (1/4) (1/4) (1/2) (1/2)) s)
@@ -458,11 +466,19 @@ myKeys =
                                           ,(className =? "kittyconsole", spawn (myTerminalRemote ++ kitty))
                                           ,(pure True, leftover)]
 
+        kittyBind2 kitty leftover = bindFirst [(className =? "kitty", kitty)
+                                               ,(className =? "kittyconsole", kitty)
+                                               ,(pure True, leftover)]
+
+        chromeBind chrome leftover = bindFirst [(className =? "Google-chrome", chrome)
+                                               ,(pure True, leftover)]
+
         multiBind kitty chrome leftover = bindFirst [(className =? "kitty", kitty)
                                                     ,(className =? "kittyconsole", kitty)
                                                     ,(className =? "Google-chrome", chrome)
                                                     ,(pure True, leftover)]
-        toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle layout ]
+
+        toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle layout, focusUnderPointer ]
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {} = M.fromList

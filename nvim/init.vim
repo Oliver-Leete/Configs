@@ -106,6 +106,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
     Plug 'petertriho/cmp-git'
+    Plug 'hrsh7th/cmp-cmdline'
     Plug 'L3MON4D3/LuaSnip'
     Plug 'saadparwaiz1/cmp_luasnip'
     Plug 'rafamadriz/friendly-snippets'
