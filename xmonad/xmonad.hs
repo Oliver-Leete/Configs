@@ -43,7 +43,7 @@ import XMonad.Actions.WindowGoLocal
 import XMonad.Actions.WithAll
 
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.EwmhDesktops ( ewmhDesktopsLogHook, ewmh )
+import XMonad.Hooks.EwmhDesktops ( ewmh )
 import XMonad.Hooks.FadeWindows
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
@@ -84,6 +84,7 @@ main = do
         $ dynamicProjects projects
         $ withNavigation2DConfig myNav2DConf
         $ ewmh
+        $ docks
         $ myConfig xmproc0
 
 myConfig p = def
@@ -383,11 +384,13 @@ myKeys =
 
     , ("M-<Tab>"         , multiBind (spawn (myTerminalRemote ++ " tabSwap Right Tab")) (P.sendKey controlMask xK_Tab) (bindOn LD [("Tabs", windows W.focusDown)]))
     , ("M-S-<Tab>"       , multiBind (spawn (myTerminalRemote ++ " tabSwap Left shift+Tab")) (P.sendKey (controlMask .|. shiftMask) xK_Tab) (bindOn LD [("Tabs", windows W.focusUp)]))
+    -- , ("M-<Tab>"         , multiBind (spawn (myTerminalRemote ++ " tabSwap Right Tab")) (spawn "chromeTab Tab") (bindOn LD [("Tabs", windows W.focusDown)]))
+    -- , ("M-S-<Tab>"       , multiBind (spawn (myTerminalRemote ++ " tabSwap Left shift+Tab")) (spawn "chromeTab shift+Tab") (bindOn LD [("Tabs", windows W.focusUp)]))
     , ("M-C-<Tab>"       , bindOn LD [("Tabs", windows W.focusDown)])
     , ("M-C-S-<Tab>"     , bindOn LD [("Tabs", windows W.focusUp)])
     , ("M-t"             , multiBind (P.sendKey (controlMask .|. shiftMask) xK_t) (P.sendKey controlMask xK_t) (spawn ""))
 
-    , ("M-f"             , multiBind (P.sendKey (controlMask .|. shiftMask) xK_f) (P.sendKey noModMask xK_F11) (toggleLayout FULL))
+    , ("M-f"             , multiBind (P.sendKey (controlMask .|. shiftMask) xK_f) (toggleLayout FULL) (toggleLayout FULL))
     , ("M-C-f"           , toggleLayout FULL)
     , ("M-s"             , toggleLayout FULLBAR)
     , ("M-c"             , toggleLayout FULLCENTER)
@@ -425,7 +428,7 @@ myKeys =
 
     , ("M-r"             , sendMessage ToggleSide)
     , ("M-C-r"           , sendMessage ToggleStackDir)
-    , ("M-S-x"           , sendMessage ToggleMiddle)
+    , ("M-x"             , sendMessage ToggleMiddle)
 
     , ("M-w"             , switchProjectPrompt myPromptTheme)
     , ("M-C-w"           , shiftToProjectPrompt myPromptTheme)
@@ -490,7 +493,6 @@ myStartupHook = do
 myLogHook :: Handle -> X ()
 myLogHook h = do
     fadeWindowsLogHook myFadeHook
-    ewmhDesktopsLogHook
     masterHistoryHook
     dynamicLogWithPP . filterOutWsPP ["NSP"] $ def
         { ppCurrent             = xmobarColor active "" . wrap "[" "]" . clickable
@@ -526,6 +528,7 @@ myManageHook =
     where
         manageSpecific = composeOne
             [ resource =? "desktop_window" -?> doIgnore
+            , resource =? "prusa-slicer" -?> doSink <+> insertPosition End Newer
             , resource =? "stalonetray"    -?> doIgnore
 
             , resource =? "gnome-calculator" -?> doCenterFloat
@@ -557,8 +560,7 @@ myManageHook =
 ----------------------------------------------------------------------------------------------------
 
 myHandleEventHook :: Event -> X All
-myHandleEventHook = docksEventHook
-                <+> fadeWindowsEventHook
+myHandleEventHook = fadeWindowsEventHook
                 <+> handleEventHook def
                 <+> XMonad.Util.Hacks.windowedFullscreenFixEventHook
 

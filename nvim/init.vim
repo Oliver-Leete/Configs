@@ -105,6 +105,7 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'hrsh7th/cmp-nvim-lua'
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
+    Plug 'petertriho/cmp-git'
     Plug 'L3MON4D3/LuaSnip'
     Plug 'saadparwaiz1/cmp_luasnip'
     Plug 'rafamadriz/friendly-snippets'
@@ -521,16 +522,16 @@ augroup END
 
 
 
-noremap <silent> £ :silent :exe "let @/='" . expand("<cWORD>") . "'"<cr>
+noremap <silent> £ :exe "let @/='" . expand("<cWORD>") . "'"<cr>
 
-" " Clever-f
-" let g:clever_f_across_no_line=1
-" let g:clever_f_smart_case=1
-
-nnoremap <m-n> ;
-nnoremap <m-N> ,
-xnoremap <m-n> ;
-xnoremap <m-N> ,
+nnoremap <m-f> ;
+nnoremap <m-F> ,
+nnoremap <m-t> ;
+nnoremap <m-T> ,
+xnoremap <m-f> ;
+xnoremap <m-F> ,
+xnoremap <m-t> ;
+xnoremap <m-T> ,
 
 " Word Motion Command
 let g:wordmotion_prefix = '$'

@@ -57,17 +57,18 @@ require("cmp").setup({
         ['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
         ['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
         ["<CR>"] = cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Replace,
+            behavior = cmp.ConfirmBehavior.Insert,
             select = true,
         }),
     },
     sources = {
         { name = "luasnip" },
-        { name = "cmp_tabnine" },
+        { name = "cmp_git" },
+        { name = "cmp_tabnine", keyword_length = 3},
         { name = "nvim_lsp" },
         { name = "path" },
         { name = "nvim_lua" },
-        { name = "buffer" },
+        { name = "buffer", keyword_lenght = 3},
     },
     formatting = {
 		format = function(entry, vim_item)
@@ -84,6 +85,8 @@ require("cmp").setup({
 		end
     },
 })
+
+require("cmp_git").setup({ })
 
 -- AutoPairs Setup
 require("nvim-autopairs").setup({

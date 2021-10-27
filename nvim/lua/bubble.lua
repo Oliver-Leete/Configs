@@ -94,24 +94,14 @@ basic.right = {
         text = { 'white', 'black_light' },
     },
     text = function(bufnr)
-        if lsp_comps.check_lsp(bufnr) then
-            return {
-                { sep.left_rounded, 'sep_before' },
-                { lsp_comps.lsp_name(), 'text'},
-                { b_components.line_col_lua, 'text'},
-                { '', 'text' },
-                { b_components.progress_lua, 'text' },
-                { sep.right_rounded, 'sep_after' },
-            }
-        else
-            return {
-                { sep.left_rounded, 'sep_before' },
-                { b_components.line_col_lua, 'text'},
-                { '', 'text' },
-                { b_components.progress_lua, 'text' },
-                { sep.right_rounded, 'sep_after' },
-            }
-        end
+        return {
+            { sep.left_rounded, 'sep_before' },
+            { lsp_comps.lsp_name(), 'text'},
+            { b_components.line_col_lua, 'text'},
+            { '', 'text' },
+            { b_components.progress_lua, 'text' },
+            { sep.right_rounded, 'sep_after' },
+        }
     end,
 }
 basic.git = {

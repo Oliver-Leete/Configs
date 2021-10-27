@@ -776,7 +776,7 @@ require("which-key").register({
         ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @parameter.inner<cr>zz", "Parameter" },
         L = { "<cmd>let g:dirJumps='L'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @loop.outer<cr>zz", "Loop" },
         B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @block.outer<cr>zz", "Block" },
-        m = { "<cmd>let g:dirJumps='m'<cr>m`<plug>(Marks-prev)vv", "File Marks", noremap = false },
+        ["`"] = { "<cmd>let g:dirJumps='`'<cr>m`<plug>(Marks-prev)vv", "File Marks", noremap = false },
         n = { "<cmd>let g:dirJumps='search'<cr>m`Nzz", "Search Result"},
         e = {
             "<cmd>lua vim.diagnostic.goto_prev({ float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
@@ -820,7 +820,7 @@ require("which-key").register({
         ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoNextEnd @parameter.inner<cr>zz", "Parameter (end)" },
         L = { "<cmd>let g:dirJumps='L'<cr>m`<cmd>TSTextobjectGotoNextEnd @loop.outer<cr>zz", "Loop (end)" },
         B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block (end)" },
-        m = { "<cmd>let g:dirJumps='m'<cr>m`<plug>(Marks-next)vv", "File Marks", noremap = false },
+        ["`"] = { "<cmd>let g:dirJumps='`'<cr>m`<plug>(Marks-next)vv", "File Marks", noremap = false },
         n = { "<cmd>let g:dirJumps='search'<cr>m`nzz", "Search Result"},
         e = {
             "<cmd>lua vim.diagnostic.goto_next({ float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",

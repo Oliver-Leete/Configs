@@ -23,7 +23,7 @@ function shutdown
         sudo ~/.config/bin/shutdownupdate shutdown now $argv
     end
 end
-alias exa "exa --colour=always --group-directories-first"
+alias exa "exa --colour=always --group-directories-first --icons"
 alias cat "batcat"
 
 abbr nt "nvr --servername nvimsynctex"
@@ -36,10 +36,10 @@ abbr rm "rm -i"
 
 abbr  fd "fd -H -L -I"
 
-abbr  lcd "exa -1"
-abbr  ls "exa -a -l --git"
-abbr  lt "exa -a -l -T --level=2 --git"
-abbr  lg "exa -a -l -T --level=2 --git --git-ignore"
+abbr  lcd "exa -1 --icons"
+abbr  ls "exa -a -l --git --icons"
+abbr  lt "exa -a -l -T --level=2 --git --icons"
+abbr  lg "exa -a -l -T --level=2 --git --git-ignore --icons"
 
 abbr -a bk backup
 abbr -a re restore

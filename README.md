@@ -232,6 +232,12 @@ I thought about the idea of keeping the editor for editing only, and started loo
 terminal tasks in my actual terminal. Using Kitty's remote functionality I was able to set up some
 shortcuts for running REPLs, debug and build tools.
 
+Three scripts are used for this. The first is for one shot tasks, it opens up a terminal window in
+the same tab as the editor, runs the given command and then runs a command to send the output to the
+quickfix list (using the current errorformat).
+
+<!-- TODO: describe other scripts -->
+
 For when I actually want the full powers of Kakoune I have a shortcut that uses kitty's remote
 control to open a new tab with Kak running. This tab is opened to the same cursor position in the
 same file as I ran the shortcut from.
