@@ -33,7 +33,6 @@ import XMonad.Actions.ConditionalKeys
 import XMonad.Actions.CycleWSLocal
 import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
-import XMonad.Actions.EasyMotion
 import XMonad.Actions.Navigation2D
 import XMonad.Actions.PerWindowKeys
 import XMonad.Actions.SinkAll
@@ -333,15 +332,6 @@ myNav2DConf = def
     , layoutNavigation          = [("Full", centerNavigation)]
     , unmappedWindowRect        = [("Full", singleWindowRect)]
     }
-easymotionConfig = def
-    { overlayF = proportional (0.3 :: Double)
-    , bgCol = background
-    , txtCol = foreground
-    , borderCol = active
-    , cancelKey = xK_F8
-    , sKeys = AnyKeys [xK_t, xK_n, xK_s, xK_e, xK_r, xK_i, xK_a, xK_o, xK_d, xK_h, xK_g, xK_j, xK_p
-                      , xK_l, xK_f, xK_u, xK_w, xK_y, xK_b, xK_k, xK_v, xK_m, xK_c, xK_x, xK_z, xK_q]
-    }
 
 myModMask = mod4Mask
 
@@ -386,8 +376,6 @@ myKeys =
 
     , ("M-<Tab>"         , multiBind (spawn (myTerminalRemote ++ " tabSwap Right Tab")) (P.sendKey controlMask xK_Tab) (bindOn LD [("Tabs", windows W.focusDown)]))
     , ("M-S-<Tab>"       , multiBind (spawn (myTerminalRemote ++ " tabSwap Left shift+Tab")) (P.sendKey (controlMask .|. shiftMask) xK_Tab) (bindOn LD [("Tabs", windows W.focusUp)]))
-    -- , ("M-<Tab>"         , multiBind (spawn (myTerminalRemote ++ " tabSwap Right Tab")) (spawn "chromeTab Tab") (bindOn LD [("Tabs", windows W.focusDown)]))
-    -- , ("M-S-<Tab>"       , multiBind (spawn (myTerminalRemote ++ " tabSwap Left shift+Tab")) (spawn "chromeTab shift+Tab") (bindOn LD [("Tabs", windows W.focusUp)]))
     , ("M-C-<Tab>"       , bindOn LD [("Tabs", windows W.focusDown)])
     , ("M-C-S-<Tab>"     , bindOn LD [("Tabs", windows W.focusUp)])
     , ("M-t"             , multiBind (P.sendKey (controlMask .|. shiftMask) xK_t) (P.sendKey controlMask xK_t) (spawn ""))
@@ -400,7 +388,6 @@ myKeys =
     , ("M-y"             , spawn "xdotool click 4")
     , ("M-e"             , spawn "xdotool click 5")
 
-    , ("<F8>"            , upPointer $ selectWindow easymotionConfig >>= (`whenJust` windows . W.focusWindow))
     , ("M-h"             , kittyBind " moveWindow left h"   (upPointer $ windowGo L True))
     , ("M-j"             , kittyBind " moveWindow bottom j" (upPointer $ windowGo D True))
     , ("M-k"             , kittyBind " moveWindow top k"    (upPointer $ windowGo U True))
@@ -411,7 +398,7 @@ myKeys =
     , ("M-C-S-l"         , upPointer $ windowGo R True)
     , ("M-C-h"           , upPointer $ windowSwap L True)
     , ("M-C-j"           , upPointer $ windowSwap D True)
-    , ("M-C-h"           , upPointer $ windowSwap U True)
+    , ("M-C-k"           , upPointer $ windowSwap U True)
     , ("M-C-l"           , upPointer $ windowSwap R True)
 
     , ("M-m"             , kittyBind " mainMove" (upPointer $ swapPromote' False))
@@ -434,8 +421,8 @@ myKeys =
 
     , ("M-w"             , upFocus $ switchProjectPrompt myPromptTheme)
     , ("M-C-w"           , upFocus $ shiftToProjectPrompt myPromptTheme)
-    , ("M-<Space>"       , upFocus $ toggleWS' ["NSP"])
-    , ("M-C-<Space>"     , upFocus $ shiftToggleWS' ["NSP"])
+    , ("<F8>"            , upFocus $ toggleWS' ["NSP"])
+    , ("C-<F8>"          , upFocus $ shiftToggleWS' ["NSP"])
     ]
     ++ zipM "M-"         wsKeys [0..] (withNthWorkspace W.greedyView)
     ++ zipM "M-C-"       wsKeys [0..] (withNthWorkspace W.shift)
