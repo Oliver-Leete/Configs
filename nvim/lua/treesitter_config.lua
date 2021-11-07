@@ -85,16 +85,4 @@ require("nvim-treesitter.configs").setup({
     },
 })
 
-require("nvim-biscuits").setup({
-    on_events = { "InsertLeave", "CursorHold" },
-    default_config = {
-        min_distance = 10,
-    },
-    language_config = {
-        haskell = {
-            disabled = true,
-        },
-    },
-})
-
 require("iswap").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })

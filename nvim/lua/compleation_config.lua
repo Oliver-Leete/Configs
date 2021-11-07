@@ -59,6 +59,7 @@ require("cmp").setup({
         ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }), { "c" }),
         ["<tab>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }), { "c" }),
         ["<s-tab>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }), { "c" }),
+        ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "i"}),
     },
     sources = {
         { name = "luasnip" },

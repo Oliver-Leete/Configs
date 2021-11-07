@@ -49,23 +49,12 @@ require("zen-mode").setup({
         }
     },
     on_open = function()
-        -- vim.cmd("IndentBlanklineDisable")
+        vim.cmd("IndentBlanklineDisable")
         vim.cmd("WindLineFloatToggle")
-        -- vim.cmd([[augroup DeclutterSleepyWins
-        --             autocmd!
-        --         augroup END]])
     end,
     on_close = function()
-        -- vim.cmd("IndentBlanklineEnable")
+        vim.cmd("IndentBlanklineEnable")
         vim.cmd("WindLineFloatToggle")
-        -- vim.cmd([[augroup DeclutterSleepyWins
-        --             autocmd!
-        --             autocmd BufEnter,FocusGained,InsertLeave,WinEnter * setlocal cursorline
-        --             autocmd BufLeave,FocusLost,InsertEnter,WinLeave * setlocal nocursorline
-        --             autocmd BufEnter,FocusGained,WinEnter * setlocal signcolumn=yes:2
-        --             autocmd BufLeave,FocusLost,WinLeave * setlocal signcolumn=no
-        --         augroup END
-        --         set signcolumn=yes:2]])
     end,
 })
 

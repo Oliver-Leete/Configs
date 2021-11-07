@@ -15,33 +15,26 @@ let $SHELL = "/bin/zsh"
 set shell=/bin/zsh
 
 call plug#begin('~/.config/nvim/pluged')
-    " Misc and Dependencies
     Plug 'nvim-lua/plenary.nvim'
     Plug 'tpope/vim-repeat'
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'nvim-lua/popup.nvim'
     Plug '907th/vim-auto-save'
     Plug 'knubie/vim-kitty-navigator'
+    Plug 'kazhala/close-buffers.nvim'
+    Plug 'tpope/vim-projectionist'
 
-    " Movement Commands
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
     Plug 'ThePrimeagen/harpoon'
-
-    " Normal Commands
     Plug 'terrortylor/nvim-comment'
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
     Plug 'Konfekt/vim-CtrlXA'
     Plug 'svermeulen/vim-subversive'
     Plug 'inkarkat/vim-unconditionalpaste'
-
-    " Command Mode
     Plug 'tpope/vim-abolish'
-    Plug 'kazhala/close-buffers.nvim'
-    Plug 'tpope/vim-projectionist'
 
-    " Text Objects
     Plug 'tommcdo/vim-ninja-feet'
     Plug 'wellle/targets.vim'
     Plug 'wellle/line-targets.vim'
@@ -49,7 +42,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'kana/vim-textobj-entire'
     Plug 'preservim/vim-textobj-sentence'
 
-    " Language
     Plug 'lervag/vimtex'
     Plug 'JuliaEditorSupport/julia-vim'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
@@ -57,7 +49,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'fladson/vim-kitty'
     Plug 'anufrievroman/vim-angry-reviewer'
 
-    " UI Stuff
     Plug 'folke/tokyonight.nvim'
     Plug 'folke/zen-mode.nvim'
     Plug 'akinsho/nvim-bufferline.lua'
@@ -66,21 +57,18 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'windwp/windline.nvim'
     Plug 'lewis6991/gitsigns.nvim'
 
-    " Panels
     Plug 'mbbill/undotree'
     Plug 'folke/trouble.nvim'
     Plug 'folke/todo-comments.nvim'
     Plug 'folke/which-key.nvim'
     Plug 'sindrets/diffview.nvim'
 
-    " LSP
     Plug 'neovim/nvim-lspconfig'
     Plug 'kabouzeid/nvim-lspinstall'
     Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'RRethy/vim-illuminate'
     Plug 'ray-x/lsp_signature.nvim'
 
-    " Completion
     Plug 'hrsh7th/nvim-cmp'
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/cmp-path'
@@ -95,7 +83,6 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'windwp/nvim-autopairs'
     Plug 'abecodes/tabout.nvim'
 
-    " Telescope
     Plug 'nvim-telescope/telescope.nvim'
     Plug 'nvim-telescope/telescope-hop.nvim'
     Plug 'nvim-telescope/telescope-symbols.nvim'
@@ -105,15 +92,10 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-telescope/telescope-github.nvim'
     Plug 'crispgm/telescope-heading.nvim'
 
-    " Treesitter
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-treesitter/playground'
     Plug 'p00f/nvim-ts-rainbow'
-    Plug 'code-biscuits/nvim-biscuits'
-
-    " Refactor and Document
-    Plug 'danymat/neogen'
     Plug 'ThePrimeagen/refactoring.nvim'
 
     " Hop, Skip And Jump
@@ -122,63 +104,8 @@ call plug#begin('~/.config/nvim/pluged')
 
 call plug#end()
 
-" !!THEMES!!
-highlight link BiscuitColor TSComment
-
 " !!SETTINGS!!
-
-" Search
-set incsearch hl
-set gdefault " NOTE : Might break some things
 noremap <plug>(slash-after) <cmd>let g:dirJumps='search'<cr>zz
-
-" Indenting
-set tabstop=4
-set shiftwidth=4
-set expandtab
-
-" Word Wrapping
-set nowrap
-set linebreak
-set breakindent
-set breakindentopt=shift:2
-" set textwidth=100
-call matchadd('TabLine', '\%101v', 203) "Colour Column
-
-" Folding
-set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
-set foldlevel=20
-
-" Splitting
-set splitbelow
-set splitright
-augroup windowPositioning
-    autocmd!
-    autocmd FileType help :wincmd H | vertical resize 90<cr>
-    autocmd FileType juliadoc wincmd H
-    autocmd FileType qf wincmd J
-augroup END
-
-set shortmess=Iflmnrwxt
-
-" Line Numbering
-set signcolumn=yes:2
-set number
-set relativenumber
-
-augroup numbertoggle
-    autocmd!
-    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
-    autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu                  | set nornu | endif
-augroup END
-
-set cursorline
-augroup DeclutterSleepyWins
-    autocmd!
-    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * setlocal cursorline
-    autocmd BufLeave,FocusLost,InsertEnter,WinLeave * setlocal nocursorline
-augroup END
 
 " Saving and Backup
 set confirm

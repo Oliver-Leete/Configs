@@ -1,9 +1,5 @@
 require("which-key").register({
     ["<c-]>"] = { "<plug>luasnip-next-choice", "#todo", noremap = false },
-    ["<CR>"] = {
-        "<cmd>lua require'cmp'.confirm({ behavior = require'cmp'.ConfirmBehavior.Insert, select = false })<cr>",
-        "#todo",
-    },
     ["<c-space>"] = { "v:lua.cmp_toggle()", "#todo", expr = true, noremap = false },
     ["<S-Tab>"] = { "v:lua.s_tab_complete()", "#todo", expr = true, noremap = false },
     ["<Tab>"] = { "v:lua.tab_complete()", "#todo", expr = true, noremap = false },
@@ -18,10 +14,6 @@ require("which-key").register({
 
 require("which-key").register({
     ["<c-]>"] = { "<plug>luasnip-next-choice", "#todo", noremap = false },
-    ["<CR>"] = {
-        "<cmd>lua require'cmp'.confirm({ behavior = require'cmp'.ConfirmBehavior.Insert, select = false })<cr>",
-        "#todo",
-    },
     ["<c-space>"] = { "v:lua.cmp_toggle()", "#todo", expr = true, noremap = false },
     ["<S-Tab>"] = { "v:lua.s_tab_complete()", "#todo", expr = true, noremap = false },
     ["<Tab>"] = { "v:lua.tab_complete()", "#todo", expr = true, noremap = false },
@@ -33,10 +25,6 @@ require("which-key").register({
 })
 
 require("which-key").register({
-    ["<CR>"] = {
-        "<cmd>lua require'cmp'.confirm({ behavior = require'cmp'.ConfirmBehavior.Insert, select = true })<cr><cr>",
-        "#todo",
-    },
     ["<c-a>"] = { "<Home>", "Home" },
     ["<c-e>"] = { "<End>", "End" },
 }, {

@@ -633,12 +633,6 @@ require("which-key").register({
                 noremap = false,
             },
         },
-        a = {
-            name = "Annotations",
-            t = { "<cmd>lua require('neogen').generate({type = 'type' })<cr>", "Type Documentation" },
-            c = { "<cmd>lua require('neogen').generate({type = 'class' })<cr>", "Class Documentation" },
-            f = { "<cmd>lua require('neogen').generate({type = 'func' })<cr>", "Function Documentation" },
-        },
         w = {
             name = "Window Managment",
             ["<leader>"] = { "<c-w>p", "Jump To Last Split" },
