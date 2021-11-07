@@ -11,6 +11,28 @@
 -- https://github.com/oliver-leete                                                                 --
 ----------------------------------------------------------------------------------------------------
 
+--Settings
+vim.opt.nrformats = vim.opt.nrformats - "octal"
+vim.opt.clipboard = vim.opt.clipboard + "unnamedplus"
+vim.opt.viminfo = "'100,f1"
+vim.opt.mouse = "a"
+vim.opt.encoding = "UTF-8"
+vim.opt.scrolloff = 0
+vim.opt.updatetime = 100
+vim.opt.backspace = "indent,eol,start"
+vim.opt.diffopt = "internal,filler,closeoff,iwhite,context:100000000"
+vim.opt.pumheight = 20
+vim.opt.spelllang = "en_gb"
+vim.opt.termguicolors = true
+vim.opt.hidden = true
+vim.opt.lazyredraw = true
+
+-- Search
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.hlsearch = true
+vim.opt.inccommand = "split"
+
 -- Disable builtins
 local disabled_built_ins = {
     "netrw",
@@ -63,18 +85,7 @@ require("colorizer").setup({ "*" }, {
     css_fn = false,
     mode = "background",
 })
-require("bufjump").setup({
-    forward = "<c-n>",
-    backward = "<c-p>",
-})
-
 require("neogen").setup({
     enabled = true,
 })
 
-require("marks").setup({
-    default_mappings = false,
-    builtin_marks = {},
-    cyclic = true,
-    sign_priority = 11,
-})

@@ -186,7 +186,6 @@ projects =
                 , projectDirectory  = "~/Projects/Thesis/0.1_LaTeX"
                 , projectStartHook  = Just $ do spawnOn wsTHESIS (myTerminal ++ " --session=/home/oleete/.config/kitty/thesis.conf")
                                                 spawnOn wsTHESIS ("sleep .2; " ++ myBrowser)
-                                                spawnOn wsTHESIS "sleep .5; zathura /home/oleete/Projects/Thesis/0.1_LaTeX/OML-Thesis.pdf"
                 }
     , Project   { projectName       = wsWRK4
                 , projectDirectory  = "~/UniDrive"
@@ -385,8 +384,7 @@ myKeys =
     , ("M-s"             , toggleLayout FULLBAR)
     , ("M-c"             , toggleLayout FULLCENTER)
 
-    , ("M-y"             , spawn "xdotool click 4")
-    , ("M-e"             , spawn "xdotool click 5")
+    , ("M-e"             , upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")])
 
     , ("M-h"             , kittyBind " moveWindow left h"   (upPointer $ windowGo L True))
     , ("M-j"             , kittyBind " moveWindow bottom j" (upPointer $ windowGo D True))
@@ -403,8 +401,8 @@ myKeys =
 
     , ("M-m"             , kittyBind " mainMove" (upPointer $ swapPromote' False))
     , ("M-C-m"           , upPointer $ swapPromote' False)
-    , ("M-u"             , upPointer $ withFocused toggleFloat)
-    , ("M-C-u"           , upFocus sinkAll)
+    , ("M-y"             , upPointer $ withFocused toggleFloat)
+    , ("M-C-y"           , upFocus sinkAll)
 
     , ("M-,"             , sendMessage (IncMasterN (-1)))
     , ("M-."             , sendMessage (IncMasterN 1))

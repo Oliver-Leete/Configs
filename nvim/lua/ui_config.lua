@@ -11,6 +11,20 @@
 -- https://github.com/oliver-leete                                                                 --
 ----------------------------------------------------------------------------------------------------
 
+-- Theme
+vim.opt.termguicolors = true
+
+vim.api.nvim_set_var("tokyonight_style", "night")
+vim.api.nvim_set_var("tokyonight_terminal_colors", "v:true")
+vim.api.nvim_set_var("tokyonight_dark_float", false)
+vim.api.nvim_set_var("tokyonight_dark_sidebar", true)
+vim.api.nvim_set_var("tokyonight_italic_comments", true)
+vim.api.nvim_set_var("tokyonight_italic_keywords", false)
+vim.api.nvim_set_var("tokyonight_sidebars", { "qf", "Outline", "terminal", "vim-plug", "undotree", "help", "DiffviewFiles", "DiffviewFileHistory", "juliadoc"})
+vim.api.nvim_set_var("tokyonight_hide_inactive_statusline", true)
+
+vim.cmd("colorscheme tokyonight")
+
 -- Zen Mode
 
 require("zen-mode").setup({
@@ -35,23 +49,23 @@ require("zen-mode").setup({
         }
     },
     on_open = function()
-        vim.cmd("IndentBlanklineDisable")
+        -- vim.cmd("IndentBlanklineDisable")
         vim.cmd("WindLineFloatToggle")
-        vim.cmd([[augroup DeclutterSleepyWins
-                    autocmd!
-                augroup END]])
+        -- vim.cmd([[augroup DeclutterSleepyWins
+        --             autocmd!
+        --         augroup END]])
     end,
     on_close = function()
-        vim.cmd("IndentBlanklineEnable")
+        -- vim.cmd("IndentBlanklineEnable")
         vim.cmd("WindLineFloatToggle")
-        vim.cmd([[augroup DeclutterSleepyWins
-                    autocmd!
-                    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * setlocal cursorline
-                    autocmd BufLeave,FocusLost,InsertEnter,WinLeave * setlocal nocursorline
-                    autocmd BufEnter,FocusGained,WinEnter * setlocal signcolumn=yes:2
-                    autocmd BufLeave,FocusLost,WinLeave * setlocal signcolumn=no
-                augroup END
-                set signcolumn=yes:2]])
+        -- vim.cmd([[augroup DeclutterSleepyWins
+        --             autocmd!
+        --             autocmd BufEnter,FocusGained,InsertLeave,WinEnter * setlocal cursorline
+        --             autocmd BufLeave,FocusLost,InsertEnter,WinLeave * setlocal nocursorline
+        --             autocmd BufEnter,FocusGained,WinEnter * setlocal signcolumn=yes:2
+        --             autocmd BufLeave,FocusLost,WinLeave * setlocal signcolumn=no
+        --         augroup END
+        --         set signcolumn=yes:2]])
     end,
 })
 

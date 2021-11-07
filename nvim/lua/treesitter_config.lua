@@ -98,23 +98,3 @@ require("nvim-biscuits").setup({
 })
 
 require("iswap").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
-require("tsht").config.hint_keys = {
-    "t",
-    "n",
-    "s",
-    "e",
-    "r",
-    "i",
-    "a",
-    "o",
-    "d",
-    "h",
-    "g",
-    "j",
-    "p",
-    "l",
-    "f",
-    "u",
-    "w",
-    "y",
-}

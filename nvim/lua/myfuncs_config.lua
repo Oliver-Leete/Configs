@@ -283,8 +283,11 @@ end
 -- Compleation functions
 
 local luasnip = require("luasnip")
+local cmp = require("cmp")
 _G.tab_complete = function()
-    if luasnip and luasnip.expand_or_jumpable() then
+    if cmp.visible() then
+        return replace_keycodes("<down>")
+    elseif luasnip and luasnip.expand_or_jumpable() then
         return replace_keycodes("<Plug>luasnip-expand-or-jump")
     elseif neogen.jumpable() then
         return replace_keycodes("<cmd>lua require('neogen').jump_next()<CR>")
@@ -294,7 +297,9 @@ _G.tab_complete = function()
 end
 
 _G.s_tab_complete = function()
-    if luasnip and luasnip.jumpable(-1) then
+    if cmp.visible() then
+        return replace_keycodes("<up>")
+    elseif luasnip and luasnip.jumpable(-1) then
         return replace_keycodes("<Plug>luasnip-jump-prev")
     else
         return replace_keycodes("<plug>(TaboutBackMulti)")
@@ -348,9 +353,59 @@ end
 function _G.delete_buffer()
     if #vim.fn.getbufinfo({ buflisted = true }) == 1 then
         vim.cmd([[quit]])
-    elseif #vim.fn.win_findbuf(vim.fn.bufnr('%')) ~= 1 then
+    elseif #vim.fn.win_findbuf(vim.fn.bufnr("%")) ~= 1 then
         vim.cmd([[wincmd c]])
     else
         require("close_buffers").delete({ type = "this" })
     end
 end
+
+function _G.KittySend(text)
+    vim.fn.system("kittyrepl replterm " .. vim.b.replCommand, text)
+end
+
+function _G.sendRange(startline, endline)
+    local regStore = vim.fn.getreg('"')
+    local regType = vim.fn.getregtype('"')
+    vim.cmd(startline .. "," .. endline .. " yank")
+    KittySend(vim.fn.getreg('"'))
+    vim.fn.setreg('"', regStore, regType)
+end
+
+function _G.sendLines(count)
+    count = count + 1
+    local regStore = vim.fn.getreg('"')
+    local regType = vim.fn.getregtype('"')
+    vim.cmd("normal! " .. count .. "yy")
+    KittySend(vim.fn.getreg('"'))
+    vim.fn.setreg('"', regStore, regType)
+end
+
+function _G.sendOp()
+    local regStore = vim.fn.getreg('"')
+    local regType = vim.fn.getregtype('"')
+    if type == "line" then
+        vim.cmd([[normal! '[V']y]])
+    elseif type == "block" then
+        vim.cmd([[normal! `[\<C-v>`]\y]])
+    else
+        vim.cmd([[normal! `[v`]y]])
+    end
+    KittySend(vim.fn.getreg('"') .. [[
+
+    ]])
+    vim.fn.setreg('"', regStore, regType)
+    vim.cmd("normal! `z")
+end
+
+function _G.sendRegion(type)
+    local regStore = vim.fn.getreg('"')
+    local regType = vim.fn.getregtype('"')
+    vim.cmd([[silent normal! `<]] .. type .. [[`>y]])
+    KittySend(vim.fn.getreg('"'))
+    vim.fn.setreg('"', regStore, regType)
+    vim.cmd("normal! `>")
+end
+
+vim.api.nvim_set_keymap("x", "<Plug>(sendReg)", [[:<c-u>call v:lua.sendRegion(visualmode())<cr>]], { noremap = true })
+vim.api.nvim_set_keymap("n", "<Plug>(sendOp)", [[mz:set opfunc=v:lua.sendOp<cr>g@]], { noremap = true })

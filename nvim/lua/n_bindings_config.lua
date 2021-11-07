@@ -106,6 +106,10 @@ require("which-key").register({
     ["n"] = { "v:lua.commandRepeat(']', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
     ["N"] = { "v:lua.commandRepeat('[', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
 
+
+    ["<cr>"] = {"<plug>(sendOp)", "Send to Repl"},
+    ["<cr><cr>"] = {"<cmd>call v:lua.sendLines(v:count)<cr>", "Send Line to Repl"},
+
     g = {
         name = "Goto",
 
@@ -116,8 +120,8 @@ require("which-key").register({
         l = { "$", "Line End" },
 
         t = { "H", "Window Top" },
-        c = { "M", "Window Bottom" },
-        b = { "L", "Window Center" },
+        c = { "M", "Window Center" },
+        b = { "L", "Window Bottom" },
 
         f = { "gf", "Open File" },
         F = { "<cmd>vsplit<cr>gf", "Open File in Split" },
@@ -161,6 +165,7 @@ require("which-key").register({
 
         t = { "zt", "Cursor On Top" },
         v = { "zz", "Centre Cursor (Vertically)" },
+        c = { "zz", "Centre Cursor (Vertically)" },
         b = { "zb", "Cursor On Bottom" },
 
         f = { "zs", "Cursor At First" },
@@ -175,8 +180,6 @@ require("which-key").register({
         u = { "<c-u>", "Half Page Up" },
         d = { "<c-d>", "Half Page Down" },
 
-        o = { "za", "Open Fold" },
-        c = { "zc", "Close Fold" },
         s = { "<cmd>normal! HVL<cr>", "Select Viewport" },
     },
 
@@ -228,23 +231,12 @@ require("which-key").register({
 
         j = { "m1J`1", "Join" },
         k = { "i<cr><esc>", "Split" },
-        J = { "<cmd>SplitjoinJoin<cr>", "Smart Join" },
-        K = { "<cmd>SplitjoinSplit<cr>", "Smart Split" },
 
         r = { "<plug>(SubversiveSubstitute)", "Substitute" },
         t = { "<Plug>(EasyAlign)", "Easy Allign" },
         c = { "Comment" },
         O = { "O<Esc>", "Insert Blankline Before" },
         o = { "o<Esc>", "Insert Blankline" },
-
-        --         h = {
-        --             name = "Hug",
-
-        --             h = { "<cmd>set operatorfunc=SurroundAddOperatorMode<cr>g@", "Hug Around" },
-        --             H = { "<cmd>lua require'surround'.repeat_last()<cr>", "Hug Repeat" },
-        --             r = { "<cmd>lua require'surround'.surround_replace()", "Hug Replace" },
-        --             d = { "<cmd>lua require'surround'.surround_delete()<cr>", "Hug Delete" },
-        --         },
 
         ["<"] = {
             name = "Swap With Previous",
@@ -342,14 +334,6 @@ require("which-key").register({
             k = { "<Plug>CaserTitleKebabCase", "Title Kebab Case" },
             ["."] = { "<Plug>CaserDotCase", "Dot Case" },
         },
-        m = {
-            d = { "<Plug>(Marks-deleteline)", "Delete Marks on Line" },
-            D = { "<Plug>(Marks-deletebuf)<cmd>wshada!<cr>", "Delete Marks in File" },
-            p = { "<Plug>(Marks-preview)", "Preview Mark" },
-            m = { "<Plug>(Marks-setnext)", "Set Next Available Mark" },
-            l = { "<cmd>MarksListBuf<cr><cmd>let g:panelRepeat='l'<cr><cmd>Trouble loclist", "List Marks" },
-            L = { "<cmd>MarksListGlobal<cr><cmd>let g:panelRepeat='l'<cr><cmd>Trouble loclist", "List Global Marks" },
-        },
     },
     ["<leader>"] = {
         ["<leader>"] = { "<cmd>e #<cr>", "Last File" },
@@ -435,16 +419,6 @@ require("which-key").register({
                 "Vim Grep",
                 expr = true,
             },
-            w = {
-                [["<cmd> Cfind! " . input("What would you like to find? ")  . "<cr><cmd>Telescope quickfix<cr>"]],
-                "Find",
-                expr = true,
-            },
-            W = {
-                [["<cmd> Clocate! " . input("What would you like to locate? ")  . "<cr><cmd>Telescope quickfix<cr>"]],
-                "Locate",
-                expr = true,
-            },
             y = { "<cmd>Telescope registers<cr>", "All Registers" },
             x = { "<cmd>Telescope file_browser<cr>", "File Browser" },
             X = { "<cmd>lua require'telescope.builtin'.file_browser{cwd=require'telescope.utils'.buffer_dir()}<cr>", "File Browser (Relative)" },
@@ -527,7 +501,6 @@ require("which-key").register({
             L = { "<cmd>NullLsInfo<cr>", "Null Ls  Info" },
             g = { "<cmd>lua require'gitsigns'.preview_hunk()<CR>", "Hunk Preview" },
             w = { "<cmd>MatchupWhereAmI??<cr>", "Preview Location" },
-            m = { "<plug>(Marks-preview)", "Preview Mark" },
         },
         v = {
             name = "View",
@@ -573,16 +546,6 @@ require("which-key").register({
                 "Populate With VimGrep",
                 expr = true,
             },
-            w = {
-                [["<cmd> Cfind! " . input("What would you like to find? ")  . "<cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>"]],
-                "Populate With find",
-                expr = true,
-            },
-            W = {
-                [["<cmd> Clocate! " . input("What would you like to locate? ")  . "<cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>"]],
-                "Populate With Locate",
-                expr = true,
-            },
         },
         L = { "<cmd>LClear<cr><cmd>lgetbuffer<cr><cmd>TroubleRefresh<cr>", "Populater LocList With Buffer Errors " },
         l = {
@@ -594,8 +557,6 @@ require("which-key").register({
                 "<cmd>Gitsigns setloclist<cr><cmd>let g:panelRepeat='l'<cr><cmd>Trouble quickfix<cr>",
                 "Populate With Diffs",
             },
-            m = { "<cmd>MarksListBuf<cr><cmd>let g:panelRepeat='l'<cr><cmd>Trouble loclist", "List Marks" },
-            M = { "<cmd>MarksListGlobal<cr><cmd>let g:panelRepeat='l'<cr><cmd>Trouble loclist", "List Global Marks" },
             ["<up>"] = { "<cmd>lnewer<cr>", "Newer List" },
             ["<down>"] = { "<cmd>lolder<cr>", "Older List" },
             n = { "<cmd>TodoLocList<cr>", "Populate With Todo Comments" },
@@ -776,15 +737,20 @@ require("which-key").register({
         ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @parameter.inner<cr>zz", "Parameter" },
         L = { "<cmd>let g:dirJumps='L'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @loop.outer<cr>zz", "Loop" },
         B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @block.outer<cr>zz", "Block" },
-        ["`"] = { "<cmd>let g:dirJumps='`'<cr>m`<plug>(Marks-prev)vv", "File Marks", noremap = false },
         n = { "<cmd>let g:dirJumps='search'<cr>m`Nzz", "Search Result"},
         e = {
             "<cmd>lua vim.diagnostic.goto_prev({ float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
             "Diagnostics",
         },
         E = {
-            "<cmd>lua vim.diagnostic.goto_prev({ severity='Error', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='E'<cr>m`",
-            "Error",
+            a = {"<cmd>lua vim.diagnostic.goto_prev({ severity='Error', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Ea'<cr>m`",
+            "Error",},
+            r = {"<cmd>lua vim.diagnostic.goto_prev({ severity='Warn', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Er'<cr>m`",
+            "Warn",},
+            s = {"<cmd>lua vim.diagnostic.goto_prev({ severity='Info', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Es'<cr>m`",
+            "Info",},
+            t = {"<cmd>lua vim.diagnostic.goto_prev({ severity='Hint', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Et'<cr>m`",
+            "Hint",},
         },
     },
 
@@ -820,15 +786,20 @@ require("which-key").register({
         ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoNextEnd @parameter.inner<cr>zz", "Parameter (end)" },
         L = { "<cmd>let g:dirJumps='L'<cr>m`<cmd>TSTextobjectGotoNextEnd @loop.outer<cr>zz", "Loop (end)" },
         B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block (end)" },
-        ["`"] = { "<cmd>let g:dirJumps='`'<cr>m`<plug>(Marks-next)vv", "File Marks", noremap = false },
         n = { "<cmd>let g:dirJumps='search'<cr>m`nzz", "Search Result"},
         e = {
             "<cmd>lua vim.diagnostic.goto_next({ float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
             "Diagnostics",
         },
         E = {
-            "<cmd>lua vim.diagnostic.goto_next({ severity='Error', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='E'<cr>m`",
-            "Error",
+            a = {"<cmd>lua vim.diagnostic.goto_next({ severity='Error', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Ea'<cr>m`",
+            "Error",},
+            r = {"<cmd>lua vim.diagnostic.goto_next({ severity='Warn', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Er'<cr>m`",
+            "Warn",},
+            s = {"<cmd>lua vim.diagnostic.goto_next({ severity='Info', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Es'<cr>m`",
+            "Info",},
+            t = {"<cmd>lua vim.diagnostic.goto_next({ severity='Hint', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Et'<cr>m`",
+            "Hint",},
         },
     },
 

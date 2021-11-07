@@ -21,7 +21,6 @@ require("telescope").load_extension("heading")
 
 local actions = require("telescope.actions")
 local extensions = require("telescope").extensions
-local trouble = require("trouble.providers.telescope")
 
 require("telescope").setup({
     defaults = {
@@ -75,12 +74,12 @@ require("telescope").setup({
             grep_string = {
                 use_regex = true,
             },
-            lsp_definitions = {
-                jump_type = "vsplit",
-            },
-            lsp_implementations = {
-                jump_type = "vsplit",
-            },
+            -- lsp_definitions = {
+            --     jump_type = "vsplit",
+            -- },
+            -- lsp_implementations = {
+            --     jump_type = "vsplit",
+            -- },
         },
         mappings = {
             i = {

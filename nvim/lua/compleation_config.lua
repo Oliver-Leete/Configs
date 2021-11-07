@@ -44,6 +44,7 @@ M.icons = {
     Variable = "",
 }
 
+
 local cmp = require("cmp")
 require("cmp").setup({
     snippet = {
@@ -54,14 +55,10 @@ require("cmp").setup({
     mapping = {
         ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
         ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-        ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), { "i", "c" }),
-        ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), { "i", "c" }),
+        ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }), { "c" }),
+        ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }), { "c" }),
         ["<tab>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }), { "c" }),
         ["<s-tab>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }), { "c" }),
-        ["<CR>"] = cmp.mapping(
-            cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true }),
-            { "i" }
-        ),
     },
     sources = {
         { name = "luasnip" },
@@ -105,6 +102,9 @@ cmp.setup.cmdline(":", {
 
 require("cmp_git").setup({})
 
+local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({  map_char = { all = "(", tex = '{', haskell = " "} }))
+
 -- AutoPairs Setup
 require("nvim-autopairs").setup({
     check_ts = true,
@@ -132,17 +132,6 @@ require("nvim-autopairs").add_rules({
     Rule("\\[", "\\]", "tex"),
     Rule("#=", "=#", "julia"),
     Rule("```", "```"),
-})
-
-require("nvim-autopairs.completion.cmp").setup({
-    map_cr = true,
-    map_complete = true,
-    insert = true,
-    map_char = {
-        all = "(",
-        tex = "{",
-        haskell = " ",
-    },
 })
 
 vim.g.diagnostic_auto_popup_while_jump = 0

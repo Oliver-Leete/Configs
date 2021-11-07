@@ -316,7 +316,7 @@ configs.ltex = {
                     environments = { Fortran = "ignore", jllisting = "ignore" },
                 },
                 dictionary = {},
-                disabledRules = {},
+                disabledRules = {"OXFORD_SPELLING_Z_NOT_S"},
                 hiddenFalsePositives = {},
             },
         },

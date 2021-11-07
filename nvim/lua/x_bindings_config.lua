@@ -17,6 +17,8 @@ require("which-key").register({
     ["'"] = { "`", "Jump to mark location" },
     ["`"] = { "'", "Jump to mark line" },
 
+    ["<cr>"] = {"<plug>(sendReg)", "Send to Repl"},
+
     s = {
         name = "Select Mode",
         s = { "<cmd>lua require'hop'.hint_char1()<cr>", "Hop Char" },

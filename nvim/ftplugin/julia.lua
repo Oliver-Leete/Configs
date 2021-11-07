@@ -11,7 +11,7 @@ vim.api.nvim_buf_set_var(0, "replCommand", "juliaREPL")
 vim.api.nvim_buf_set_var(0, "debugCommand", "juliadebug")
 
 require("which-key").register({
-    ["<cr>"] = { "<cmd>SlimeSendCurrentLine<cr>", "Send Line to Repl"},
+    -- ["<cr>"] = { "<cmd>SlimeSendCurrentLine<cr>", "Send Line to Repl"},
     ["<localleader>"] = {
         i = {
             i = {"<cmd>silent !kittyPersistent infilterm juliainfil<cr>", "Open Debug Terminal"},
@@ -131,7 +131,7 @@ require("which-key").register({
     buffer = 0,
 })
 require("which-key").register({
-    ["<cr>"] = { "<Plug>SlimeRegionSend", "Send to Repl"},
+    -- ["<cr>"] = { "<Plug>SlimeRegionSend", "Send to Repl"},
     ["<leader>"] = {
     },
 }, {

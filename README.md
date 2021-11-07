@@ -508,3 +508,23 @@ everything I don't use and adds a function to send the current window to the pre
 use this a lot now that I'm not using multiple monitors any more (I find it a lot easier than using
 numbers to send windows). WindowGoLocal just changes the runOrRaise function to only look on the
 current workspace.
+
+# Current Keyboard
+
+My current board is an ez-Planck board. Nothing too special on the mechanical side, just a 40%
+ortholinear settup.
+
+## Layers
+
+# Planed Keyboard
+
+Recently I've noticed slight hints of RSI, so I've decided to use it as an excuse to change to a split keyboard so I can use some tenting. I've started work on a Kyria based keyboard, with the intent to add a few different switches to get a bit more functionality out of it.
+
+## Hardware
+
+### 5 Way Switch
+
+As much as I like to do everything in Neovim, there are still times that I need the arrow keys (and
+even in vim they can make for useful shortcuts). In hopes of moving away from having two dedicated
+keys for left and right and duel function keys for up and down, I plan to use a 5 way switch as a
+dpad, giving all the arrow keys in the space of one.

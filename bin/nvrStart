@@ -1,12 +1,20 @@
 #!/bin/bash
 
-TITLES=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[].title")
-tabID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .id")
-
-if ! [[ "$TITLES" =~ \"MainEditor\" ]]; then
-	kitty @ set-window-title "MainEditor"
+if [[ "$(wmctrl -d | grep '*')" == *"PhD"* ]]; then
+    serverID="nvimsynctex"
+    winTitle="MainEditor (Synctex)"
 else
-	ID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[] | select(.title==\"MainEditor\") | .id")
+    serverID="nvr-server-$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .id")"
+    winTitle="MainEditor"
+fi
+
+TITLES=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[].title")
+
+if ! [[ "$TITLES" == *"$winTitle"* ]]; then
+	kitty @ set-window-title $winTitle
+else
+	ID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[] | select(.title==\"$winTitle\") | .id")
 	kitty @ focus-window --match id:$ID
 fi
-nvr -s --servername /tmp/nvr-server-$tabID $@
+
+nvr -s --servername "/tmp/$serverID" $@

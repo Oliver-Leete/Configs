@@ -20,42 +20,24 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'tpope/vim-repeat'
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'nvim-lua/popup.nvim'
-
-    "Kitty
-    Plug 'knubie/vim-kitty-navigator'
-    Plug 'jpalardy/vim-slime'
-    Plug 'vim-test/vim-test'
-
-    " Saving
-    Plug 'lambdalisue/suda.vim'
     Plug '907th/vim-auto-save'
-
-    " Git
-    Plug 'lewis6991/gitsigns.nvim'
-    Plug 'drzel/vim-repo-edit'
-    Plug 'sindrets/diffview.nvim'
-
-    " Registers
-    Plug 'svermeulen/vim-subversive'
-    Plug 'inkarkat/vim-unconditionalpaste'
-    Plug 'chentau/marks.nvim'
+    Plug 'knubie/vim-kitty-navigator'
 
     " Movement Commands
-    Plug 'andymass/vim-matchup'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
-    " Plug 'rhysd/clever-f.vim'
+    Plug 'ThePrimeagen/harpoon'
 
     " Normal Commands
     Plug 'terrortylor/nvim-comment'
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
     Plug 'Konfekt/vim-CtrlXA'
-    Plug 'tpope/vim-surround'
+    Plug 'svermeulen/vim-subversive'
+    Plug 'inkarkat/vim-unconditionalpaste'
 
     " Command Mode
     Plug 'tpope/vim-abolish'
-    Plug 'tpope/vim-eunuch'
     Plug 'kazhala/close-buffers.nvim'
     Plug 'tpope/vim-projectionist'
 
@@ -76,20 +58,20 @@ call plug#begin('~/.config/nvim/pluged')
     Plug 'anufrievroman/vim-angry-reviewer'
 
     " UI Stuff
+    Plug 'folke/tokyonight.nvim'
     Plug 'folke/zen-mode.nvim'
     Plug 'akinsho/nvim-bufferline.lua'
     Plug 'lukas-reineke/indent-blankline.nvim',
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'windwp/windline.nvim'
+    Plug 'lewis6991/gitsigns.nvim'
 
     " Panels
     Plug 'mbbill/undotree'
     Plug 'folke/trouble.nvim'
     Plug 'folke/todo-comments.nvim'
     Plug 'folke/which-key.nvim'
-
-    " Themes
-    Plug 'folke/tokyonight.nvim'
+    Plug 'sindrets/diffview.nvim'
 
     " LSP
     Plug 'neovim/nvim-lspconfig'
@@ -133,54 +115,20 @@ call plug#begin('~/.config/nvim/pluged')
     " Refactor and Document
     Plug 'danymat/neogen'
     Plug 'ThePrimeagen/refactoring.nvim'
-    Plug 'AndrewRadev/splitjoin.vim'
 
     " Hop, Skip And Jump
     Plug 'IndianBoy42/hop.nvim'
     Plug 'mizlan/iswap.nvim'
-    Plug 'mfussenegger/nvim-ts-hint-textobject'
-    Plug 'kwkarlwang/bufjump.nvim'
 
 call plug#end()
 
 " !!THEMES!!
 highlight link BiscuitColor TSComment
-highlight link CleverFDefaultLabel MatchParen
-set noshowmode
-set termguicolors
-
-let g:tokyonight_style='night'
-let g:tokyonight_terminal_colors=v:true
-let g:tokyonight_dark_float=v:false
-let g:tokyonight_dark_sidebar=v:true
-let g:tokyonight_italic_comments=v:true
-let g:tokyonight_italic_keywords=v:false
-let g:tokyonight_sidebars = [ "qf", "Outline", "terminal", "vim-plug", "undotree", "help", "DiffviewFiles", "DiffviewFileHistory", "juliadoc"]
-let g:tokyonight_hide_inactive_statusline=v:true
-colorscheme tokyonight
 
 " !!SETTINGS!!
-set nrformats-=octal
-set clipboard+=unnamedplus
-set viminfo='100,f1
-set mouse=a
-set termguicolors
-set hidden
-set encoding=UTF-8
-set scrolloff=0
-set updatetime=100
-set backspace=indent,eol,start
-set diffopt=internal,filler,closeoff,iwhite,context:100000000
-set pumheight=20
-set spelllang=en_gb
-set lazyredraw
 
 " Search
-set ignorecase
-set smartcase
-set hlsearch
 set incsearch hl
-set inccommand=split
 set gdefault " NOTE : Might break some things
 noremap <plug>(slash-after) <cmd>let g:dirJumps='search'<cr>zz
 
@@ -230,8 +178,6 @@ augroup DeclutterSleepyWins
     autocmd!
     autocmd BufEnter,FocusGained,InsertLeave,WinEnter * setlocal cursorline
     autocmd BufLeave,FocusLost,InsertEnter,WinLeave * setlocal nocursorline
-    autocmd BufEnter,FocusGained,WinEnter * setlocal signcolumn=yes:2
-    autocmd BufLeave,FocusLost,WinLeave * setlocal signcolumn=no
 augroup END
 
 " Saving and Backup
@@ -280,33 +226,11 @@ let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA'
 let g:targets_gracious = 1
 let targets_nl = 'nN'
 
-let g:surround_no_mappings = 1
-nmap dp  <Plug>Dsurround
-nmap cp  <Plug>Csurround
-nmap cP  <Plug>CSurround
-" nmap yp  <Plug>Ysurround
-" nmap yP  <Plug>YSurround
-" nmap ypp <Plug>Yssurround
-" nmap yPp <Plug>YSsurround
-" nmap yPP <Plug>YSsurround
-
-let g:loaded_matchit = 1
-let g:matchup_override_vimtex = 1
-let g:matchup_matchparen_offscreen = {'method': 'popup'}
-" let g:matchup_surround_enabled = 1
-" nmap cp <plug>(matchup-cs%)
-" nmap dp <plug>(matchup-ds%)
-
 " highlight Yank
 augroup LuaHighlight
     autocmd!
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup END
-
-" " Surround
-" " let g:surround_mappings_style="sandwich"
-" let g:surround_prefix="g,h"
-" let g:surround_load_keymaps=v:false
 
 " Leader key remap
 set timeoutlen=500
@@ -316,11 +240,6 @@ xnoremap <SPACE> <Nop>
 xnoremap <BackSPACE> <Nop>
 let mapleader = "\<space>"
 let gaplocalleader = "\\"
-
-" Kitty
-let g:slime_no_mappings = 1
-let g:slime_target = "kitty"
-let test#strategy = "kitty"
 
 " NOTE: _, =, |, ^, ¬ and # are free to map
 " !!MAPPINGS!!
@@ -397,81 +316,13 @@ xnoremap A A
 nnoremap [ <cmd>WhichKey [ n<cr>
 nnoremap ] <cmd>WhichKey ] n<cr>
 
-" Kak style always selecting, still needs lots of work
-" nnoremap h vh
-" nnoremap H vh
-" nnoremap j vj
-" nnoremap J vj
-" nnoremap k vk
-" nnoremap K vk
-" nnoremap l vl
-" nnoremap L vl
+nnoremap mm <cmd>lua require("harpoon.mark").add_file()<cr>
+nnoremap ma <cmd>lua require("harpoon.ui").nav_file(1)<cr>
+nnoremap mr <cmd>lua require("harpoon.ui").nav_file(2)<cr>
+nnoremap ms <cmd>lua require("harpoon.ui").nav_file(3)<cr>
+nnoremap mt <cmd>lua require("harpoon.ui").nav_file(4)<cr>
+nnoremap M <cmd>lua require("harpoon.ui").toggle_quick_menu()<cr>
 
-" nnoremap w vwh
-" nnoremap W vw
-" nnoremap b hvb
-" nnoremap B vb
-" nnoremap e ve
-" nnoremap E ve
-
-" xnoremap h <esc>vh
-" xnoremap H h
-" xnoremap j <esc>vj
-" xnoremap J j
-" xnoremap k <esc>vk
-" xnoremap K k
-" xnoremap l <esc>vl
-" xnoremap L l
-
-" xnoremap w <esc>vwh
-" xnoremap W w
-" xnoremap b <esc>hvb
-" xnoremap B b
-" xnoremap e <esc>ve
-" xnoremap E e
-
-" nnoremap <C-j> H
-" nnoremap <C-h> M
-" nnoremap <C-k> L
-
-" xnoremap <C-j> H
-" xnoremap <C-h> M
-" xnoremap <C-k> L
-
-" onoremap <C-j> H
-" onoremap <C-h> M
-" onoremap <C-k> L
-
-" Jump back to where you were
-" nnoremap J gi
-
-" Some Sensible Changes
-" nnoremap U <c-r>
-" nnoremap Y y$
-" nnoremap Q @q
-
-" Mappings for left actions
-" nnoremap dD d^
-" nnoremap yY y^
-" nnoremap cC c^
-
-" Make command easier to reach (requires clever-f)
-" nnoremap ; :
-" nnoremap : <nop>
-" nnoremap q; q:
-" nnoremap @; @:
-" xnoremap ; :
-" xnoremap : <nop>
-" xnoremap q; q:
-" xnoremap @; @:
-
-" Stop The Deselecting
-" xnoremap < <gv
-" xnoremap > >gv
-
-" Visual Moving
-" xnoremap J :move '>+1<cr>gv=gv
-" xnoremap K :move '<-2<cr>gv=gv
 
 " Insert Mode
 inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')
@@ -491,37 +342,25 @@ snoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
 imap <c-g> <c-o>%
 inoremap <c-s> <cmd>lua require('lsp_signature').toggle_float_win()<CR>
 
-" RSI, without the RSI
-" inoremap        <c-a> <C-O>^
-" cnoremap        <c-a> <Home>
-" inoremap        <c-e> <End>
-" cnoremap        <c-e> <End>
-
-" Terminal
-tnoremap <Esc> <C-\><C-n>
+inoremap        <c-a> <C-O>^
+cnoremap        <c-a> <Home>
+inoremap        <c-e> <End>
+cnoremap        <c-e> <End>
 
 " Panel Specific Mappings
 augroup panelMappings
     autocmd!
-    autocmd filetype Outline             map <buffer> o     <cmd>lua require('symbols-outline')._goto_location(true)<cr><cmd>sleep 2<cr><cmd>SymbolsOutlineClose<cr>
     autocmd filetype qf                  map <buffer> <esc> <cmd>q<cr>
     autocmd filetype help                map <buffer> <esc> <cmd>q<cr>
     autocmd filetype vim-plug            map <buffer> <esc> <cmd>q<cr>
     autocmd filetype juliadoc            map <buffer> <esc> <cmd>q<cr>
-    " autocmd filetype NeogitStatus      map <buffer> <esc> <cmd>tabclose<cr>
-    " autocmd filetype NeogitPopup       map <buffer> <esc> <cmd>q<cr>
     autocmd filetype undotree            map <buffer> <esc> <cmd>UndotreeHide<cr>
     autocmd filetype lspinfo             map <buffer> <esc> <cmd>q<cr>
     autocmd filetype DiffviewFiles       map <buffer> <esc> <cmd>DiffviewClose<cr>
     autocmd filetype DiffviewFileHistory map <buffer> <esc> <cmd>DiffviewClose<cr>
     autocmd filetype tsplayground        map <buffer> <esc> <cmd>q<cr>
+    autocmd filetype harpoon-menu        map <buffer> <esc> <cmd>wq<cr>
 augroup END
-
-" Hop, Skip And Jump
-" nmap s <cmd>lua require'hop'.hint_char1()<cr>
-" nmap S <cmd>ISwapWith<cr>
-
-
 
 noremap <silent> £ :exe "let @/='" . expand("<cWORD>") . "'"<cr>
 
@@ -541,15 +380,12 @@ let g:wordmotion_prefix = '$'
 nmap <c-_> g,cc
 xmap <c-_> g,c
 
-" Arrows
-
 " Unmap Pluggins
 let g:kitty_navigator_no_mappings = 1
-let g:splitjoin_split_mapping = ''
-let g:splitjoin_join_mapping = ''
 let g:UnconditionalPaste_no_mappings = 1
 let g:caser_no_mappings	= 1
 let g:textobj_markdown_no_default_key_mappings=1
+let g:julia_blocks=0
 
 "List Clearing mappings
 command! CClear cexpr[]
@@ -597,26 +433,5 @@ require('snippets_config')
 require('bubble')
 require('ui_config')
 EOF
-
-let g:julia_blocks=0
-
-function! JumpWithinFile(back, forw)
-    let [n, i] = [bufnr('%'), 1]
-    let p = [n] + getpos('.')[1:]
-    sil! exe 'norm!1' . a:forw
-    while 1
-        let p1 = [bufnr('%')] + getpos('.')[1:]
-        if n == p1[0] | break | endif
-        if p == p1
-            sil! exe 'norm!' . (i-1) . a:back
-            break
-        endif
-        let [p, i] = [p1, i+1]
-        sil! exe 'norm!1' . a:forw
-    endwhile
-endfunction
-
-nnoremap <silent> <c-i> :call JumpWithinFile("\<c-i>", "\<c-o>")<cr>
-nnoremap <silent> <c-o> :call JumpWithinFile("\<c-o>", "\<c-i>")<cr>
 
 redraw

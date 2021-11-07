@@ -246,6 +246,9 @@ ls.snippets = {
                 return args[1].captures[1]
             end, {}), t("}{"), i(1), t("}"),
         }),
+        s({trig="node", name="tikz Node", dscr="Flowchart Node"}, {
+            t("\\node ("), i(1, "nodeID"), t(") ["), i(2, "style"), t(", "), i(3, "position"), t("] {"), i(4, "text"), t("};")
+        }),
     },
     julia = {
         s({trig="docs", name="documentation"}, {
