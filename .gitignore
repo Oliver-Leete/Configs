@@ -8,7 +8,7 @@ rofi/
 
 !/.gitignore
 !/README.md
-!/nvim/init.vim
+!/nvim/init.lua
 !/kitty/*.conf
 !/picom/*.conf
 !/xmobar/*.conf
