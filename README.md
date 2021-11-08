@@ -518,7 +518,9 @@ ortholinear settup.
 
 # Planed Keyboard
 
-Recently I've noticed slight hints of RSI, so I've decided to use it as an excuse to change to a split keyboard so I can use some tenting. I've started work on a Kyria based keyboard, with the intent to add a few different switches to get a bit more functionality out of it.
+Recently I've noticed slight hints of RSI, so I've decided to use it as an excuse to change to a
+split keyboard so I can use some tenting. I've started work on a Kyria based keyboard, with the
+intent to add a few different switches to get a bit more functionality out of it.
 
 ## Hardware
 
@@ -528,3 +530,21 @@ As much as I like to do everything in Neovim, there are still times that I need 
 even in vim they can make for useful shortcuts). In hopes of moving away from having two dedicated
 keys for left and right and duel function keys for up and down, I plan to use a 5 way switch as a
 dpad, giving all the arrow keys in the space of one.
+
+### Discrete Rotary Encoder
+
+One of my most used shortcuts is tab and shift tab, so in place of a tab key I'm putting a rotary
+wheel. Each click of the rotary encoder ccw will send a tab key, and each cw a shift-tab. This will
+allow for easier magic tabbing in xmonad, and for super tabbing in Neovim.
+
+### Smooth Rotary Encoder
+
+The main reason I still reach for my mouse is the scroll wheel, even though in chrome and neovim I
+have keyboard shortcuts for it I still feel the need to use the scroll wheel. I'm hoping that the
+addition of a scroll wheel to the keyboard will further reduce the use of my mouse.
+
+### Trackball
+
+In addtion to the scroll wheel, having a small trackball on the keyboard should stop jumping to the
+mouse for small tasks. I have xmonad update my pointer position based on window swaps, so the cursor
+should already be close to where I need it.

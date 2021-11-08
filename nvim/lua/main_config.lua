@@ -11,6 +11,98 @@
 -- https://github.com/oliver-leete                                                                 --
 ----------------------------------------------------------------------------------------------------
 
+vim.api.nvim_set_var("$SHELL", "/bin/zsh")
+vim.opt.shell="/bin/zsh"
+
+vim.cmd([[call plug#begin('~/.config/nvim/pluged')
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'tpope/vim-repeat'
+    Plug 'kyazdani42/nvim-web-devicons'
+    Plug 'nvim-lua/popup.nvim'
+    Plug '907th/vim-auto-save'
+
+    Plug 'knubie/vim-kitty-navigator'
+    Plug 'kazhala/close-buffers.nvim'
+    Plug 'tpope/vim-projectionist'
+
+    Plug 'IndianBoy42/hop.nvim'
+    Plug 'mizlan/iswap.nvim'
+    Plug 'chaoren/vim-wordmotion'
+    Plug 'junegunn/vim-slash'
+    Plug 'ThePrimeagen/harpoon'
+    Plug 'terrortylor/nvim-comment'
+    Plug 'arthurxavierx/vim-caser'
+    Plug 'junegunn/vim-easy-align'
+    Plug 'Konfekt/vim-CtrlXA'
+    Plug 'svermeulen/vim-subversive'
+    Plug 'inkarkat/vim-unconditionalpaste'
+    Plug 'tpope/vim-abolish'
+
+    Plug 'tommcdo/vim-ninja-feet'
+    Plug 'wellle/targets.vim'
+    Plug 'wellle/line-targets.vim'
+    Plug 'kana/vim-textobj-user'
+    Plug 'kana/vim-textobj-entire'
+    Plug 'preservim/vim-textobj-sentence'
+
+    Plug 'lervag/vimtex'
+    Plug 'JuliaEditorSupport/julia-vim'
+    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+    Plug 'coachshea/vim-textobj-markdown'
+    Plug 'fladson/vim-kitty'
+    Plug 'anufrievroman/vim-angry-reviewer'
+
+    Plug 'folke/tokyonight.nvim'
+    Plug 'folke/zen-mode.nvim'
+    Plug 'akinsho/nvim-bufferline.lua'
+    Plug 'lukas-reineke/indent-blankline.nvim',
+    Plug 'norcalli/nvim-colorizer.lua'
+    Plug 'windwp/windline.nvim'
+    Plug 'lewis6991/gitsigns.nvim'
+
+    Plug 'mbbill/undotree'
+    Plug 'folke/trouble.nvim'
+    Plug 'folke/todo-comments.nvim'
+    Plug 'folke/which-key.nvim'
+    Plug 'sindrets/diffview.nvim'
+
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'kabouzeid/nvim-lspinstall'
+    Plug 'jose-elias-alvarez/null-ls.nvim'
+    Plug 'RRethy/vim-illuminate'
+    Plug 'ray-x/lsp_signature.nvim'
+
+    Plug 'hrsh7th/nvim-cmp'
+    Plug 'hrsh7th/cmp-buffer'
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/cmp-nvim-lua'
+    Plug 'hrsh7th/cmp-nvim-lsp'
+    Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
+    Plug 'petertriho/cmp-git'
+    Plug 'hrsh7th/cmp-cmdline'
+    Plug 'L3MON4D3/LuaSnip'
+    Plug 'saadparwaiz1/cmp_luasnip'
+    Plug 'rafamadriz/friendly-snippets'
+    Plug 'windwp/nvim-autopairs'
+    Plug 'abecodes/tabout.nvim'
+
+    Plug 'nvim-telescope/telescope.nvim'
+    Plug 'nvim-telescope/telescope-hop.nvim'
+    Plug 'nvim-telescope/telescope-symbols.nvim'
+    Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make'}
+    Plug 'nvim-telescope/telescope-media-files.nvim'
+    Plug 'nvim-telescope/telescope-bibtex.nvim'
+    Plug 'nvim-telescope/telescope-github.nvim'
+    Plug 'crispgm/telescope-heading.nvim'
+
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+    Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+    Plug 'nvim-treesitter/playground'
+    Plug 'p00f/nvim-ts-rainbow'
+    Plug 'ThePrimeagen/refactoring.nvim'
+call plug#end()]])
+
+
 --Settings
 vim.opt.nrformats = vim.opt.nrformats - "octal"
 vim.opt.clipboard = vim.opt.clipboard + "unnamedplus"
@@ -27,6 +119,7 @@ vim.opt.termguicolors = true
 vim.opt.hidden = true
 vim.opt.lazyredraw = true
 vim.opt.shortmess = "Iflmnrwxt"
+vim.opt.showmode = false
 
 -- Search
 vim.opt.ignorecase = true
@@ -71,6 +164,12 @@ vim.cmd([[augroup windowPositioning
     autocmd FileType help :wincmd H | vertical resize 90<cr>
     autocmd FileType juliadoc wincmd H
     autocmd FileType qf wincmd J
+augroup END]])
+
+-- Yank
+vim.cmd([[augroup LuaHighlight
+    autocmd!
+    autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup END]])
 
 -- Disable builtins
