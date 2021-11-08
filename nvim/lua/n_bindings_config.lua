@@ -14,12 +14,6 @@
 -- Whichkey setup
 require("which-key").setup({
     plugins = {
-        marks = true,
-        registers = true,
-        spelling = {
-            enabled = false,
-            suggestions = 20,
-        },
         presets = {
             operators = true,
             motions = true,
@@ -34,7 +28,6 @@ require("which-key").setup({
         ["g,c"] = "Comments",
         ["g,t"] = "Allign",
         ["g,r"] = "Replace",
-        ["g,hh"] = "Hug Around",
         ["g,sp"] = "Change to Pascal Case",
         ["g,sc"] = "Change to Camel Case",
         ["g,s_"] = "Change to Snake Case",
@@ -56,24 +49,8 @@ require("which-key").setup({
         ["g)"] = "Insert Right Inside",
         ["g}"] = "Insert Right Outside",
     },
-    icons = {
-        breadcrumb = "»",
-        separator = "➜",
-        group = "+",
-    },
-    window = {
-        border = "none",
-        position = "bottom",
-        margin = { 1, 0, 1, 0 },
-        padding = { 2, 2, 2, 2 },
-    },
-    layout = {
-        height = { min = 4, max = 30 },
-        width = { min = 20, max = 50 },
-        spacing = 2,
-    },
     hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ ", "<plug>", "<Plug>" },
-    show_help = true,
+    show_help = false
 })
 
 -- Normal Bindings
@@ -523,11 +500,9 @@ require("which-key").register({
                 r = { "<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References" },
             },
         },
-        Q = { "<cmd>CClear<cr><cmd>cgetbuffer<cr><cmd>TroubleRefresh<cr>", "Populater QF List With Buffer Errors " },
         q = {
             name = "QuickFix List",
             a = { "<cmd>caddbuffer<cr><cmd>TroubleRefresh<cr>", "Add Buffer Errrors to QF List" },
-            c = { "<cmd>CClear<cr><cmd>TroubleRefresh<cr>", "Clear The List" },
             g = {
                 "<cmd>Gitsigns setqflist<cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>",
                 "Populate With Diffs",
@@ -547,41 +522,6 @@ require("which-key").register({
                 expr = true,
             },
         },
-        L = { "<cmd>LClear<cr><cmd>lgetbuffer<cr><cmd>TroubleRefresh<cr>", "Populater LocList With Buffer Errors " },
-        l = {
-            name = "Location List",
-            a = { "<cmd>laddbuffer<cr><cmd>TroubleRefresh<cr>", "Add Buffer Errrors to LocList" },
-            c = { "<cmd>LClear<cr><cmd>TroubleRefresh<cr>", "Clear The List" },
-            l = { "<cmd>let g:panelRepeat='l'<cr><cmd>TroubleToggle loclist<CR>", "Location List" },
-            g = {
-                "<cmd>Gitsigns setloclist<cr><cmd>let g:panelRepeat='l'<cr><cmd>Trouble quickfix<cr>",
-                "Populate With Diffs",
-            },
-            ["<up>"] = { "<cmd>lnewer<cr>", "Newer List" },
-            ["<down>"] = { "<cmd>lolder<cr>", "Older List" },
-            n = { "<cmd>TodoLocList<cr>", "Populate With Todo Comments" },
-            V = {
-                [["<cmd> noautocmd lvimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>let g:panelRepeat='l'<cr><cmd>Trouble loclist<cr>"]],
-                "Populate With VimGrep (file select)",
-                expr = true,
-            },
-            v = {
-                [["<cmd> noautocmd lvimgrep /" . input("What would you like to vimgrep? > ") . "/gj " . input("In what files? > ") . "<cr><cmd>let g:panelRepeat='l'<cr><cmd>Trouble loclist<cr>"]],
-                "Populate With VimGrep",
-                expr = true,
-            },
-            w = {
-                [["<cmd> Lfind! " . input("What would you like to find? ")  . "<cr><cmd>let g:panelRepeat='l'<cr><cmd>Trouble loclist<cr>"]],
-                "Populate With find",
-                expr = true,
-            },
-            W = {
-                [["<cmd> Llocate! " . input("What would you like to locate? ")  . "<cr><cmd>let g:panelRepeat='l'<cr><cmd>Trouble loclist<cr>"]],
-                "Populate With Locate",
-                expr = true,
-            },
-        },
-        E = { "<cmd>CClear<cr><cmd>cgetbuffer<cr><cmd>TroubleRefresh<cr>", "Open Buffre Errors in Touble" },
         e = {
             name = "Errors",
             p = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
@@ -724,12 +664,10 @@ require("which-key").register({
         [","] = { "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoPreviousStart @parameter.inner<cr>zz", "Parameter" },
         c = { "<cmd>let g:dirJumps='c'<cr>m`<cmd>TSTextobjectGotoPreviousStart @conditional.inner<cr>zz", "Conditional" },
         C = { "<cmd>let g:dirJumps='C'<cr>m`<cmd>TSTextobjectGotoPreviousStart @comment.outer<cr>zz", "Comment" },
-        l = { "<cmd>let g:dirJumps='l'<cr>m`<cmd>TSTextobjectGotoPreviousStart @loop.outer<cr>zz", "Loop" },
         b = { "<cmd>let g:dirJumps='b'<cr>m`<cmd>TSTextobjectGotoPreviousStart @block.outer<cr>zz", "Block" },
         O = { "<cmd>let g:dirJumps='O'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @class.outer<cr>zz", "Class" },
         F = { "<cmd>let g:dirJumps='F'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @function.outer<cr>zz", "Function" },
         ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @parameter.inner<cr>zz", "Parameter" },
-        L = { "<cmd>let g:dirJumps='L'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @loop.outer<cr>zz", "Loop" },
         B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @block.outer<cr>zz", "Block" },
         n = { "<cmd>let g:dirJumps='search'<cr>m`Nzz", "Search Result"},
         e = {
@@ -772,13 +710,11 @@ require("which-key").register({
         f = { "<cmd>let g:dirJumps='f'<cr>m`<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Function" },
         c = { "<cmd>let g:dirJumps='c'<cr>m`<cmd>TSTextobjectGotoNextStart @conditional.inner<cr>zz", "Conditional" },
         [","] = { "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoNextStart @parameter.inner<cr>zz", "Parameter" },
-        l = { "<cmd>let g:dirJumps='l'<cr>m`<cmd>TSTextobjectGotoNextStart @loop.outer<cr>zz", "Loop" },
         b = { "<cmd>let g:dirJumps='b'<cr>m`<cmd>TSTextobjectGotoNextStart @block.outer<cr>zz", "Block" },
         O = { "<cmd>let g:dirJumps='O'<cr>m`<cmd>TSTextobjectGotoNextEnd @class.outer<cr>zz", "Class (end)" },
         F = { "<cmd>let g:dirJumps='F'<cr>m`<cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Function (end)" },
         C = { "<cmd>let g:dirJumps='C'<cr>m`<cmd>TSTextobjectGotoNextEnd @conditional.inner<cr>zz", "Conditional (end)" },
         ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoNextEnd @parameter.inner<cr>zz", "Parameter (end)" },
-        L = { "<cmd>let g:dirJumps='L'<cr>m`<cmd>TSTextobjectGotoNextEnd @loop.outer<cr>zz", "Loop (end)" },
         B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block (end)" },
         n = { "<cmd>let g:dirJumps='search'<cr>m`nzz", "Search Result"},
         e = {

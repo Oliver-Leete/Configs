@@ -32,7 +32,6 @@ require("which-key").register({
         d = { ":<c-u>TSTextobjectSelect @comment.outer<cr>", "Comment" },
         f = { ":<c-u>TSTextobjectSelect @function.outer<cr>", "Function" },
         F = { ":<c-u>TSTextobjectSelect @call.outer<cr>", "Function" },
-        l = { ":<c-u>TSTextobjectSelect @loop.outer<cr>", "Loop" },
         o = { ":<c-u>TSTextobjectSelect @class.outer<cr>", "Class" },
         v = { "<cmd>exec 'normal! HVL'<cr>", "Select Viewport"},
         n = {
@@ -49,7 +48,6 @@ require("which-key").register({
             d = { ":<c-u>call v:lua.ts_target(v:count, '@comment.outer')<cr>", "Comment" },
             f = { ":<c-u>call v:lua.ts_target(v:count, '@function.outer')<cr>", "Function" },
             F = { ":<c-u>call v:lua.ts_target(v:count, '@call.outer')<cr>", "Function" },
-            l = { ":<c-u>call v:lua.ts_target(v:count, '@loop.outer')<cr>", "Loop" },
             o = { ":<c-u>call v:lua.ts_target(v:count, '@class.outer')<cr>", "Class" },
         },
         N = {
@@ -66,7 +64,6 @@ require("which-key").register({
             d = { ":<c-u>call v:lua.ts_target_back(v:count, '@comment.outer')<cr>", "Comment" },
             f = { ":<c-u>call v:lua.ts_target_back(v:count, '@function.outer')<cr>", "Function" },
             F = { ":<c-u>call v:lua.ts_target_back(v:count, '@call.outer')<cr>", "Function" },
-            l = { ":<c-u>call v:lua.ts_target_back(v:count, '@loop.outer')<cr>", "Loop" },
             o = { ":<c-u>call v:lua.ts_target_back(v:count, '@class.outer')<cr>", "Class" },
         },
     },
@@ -79,7 +76,6 @@ require("which-key").register({
         d = { ":<c-u>TSTextobjectSelect @comment.outer<cr>", "Comment" },
         f = { ":<c-u>TSTextobjectSelect @function.inner<cr>", "Function" },
         F = { ":<c-u>TSTextobjectSelect @call.inner<cr>", "Function" },
-        l = { ":<c-u>TSTextobjectSelect @loop.inner<cr>", "Loop" },
         o = { ":<c-u>TSTextobjectSelect @class.inner<cr>", "Class" },
         v = { "<cmd>exec 'normal! HVL'<cr>", "Select Viewport"},
         n = {
@@ -96,7 +92,6 @@ require("which-key").register({
             d = { ":<c-u>call v:lua.ts_target(v:count, '@comment.outer')<cr>", "Comment" },
             f = { ":<c-u>call v:lua.ts_target(v:count, '@function.inner')<cr>", "Function" },
             F = { ":<c-u>call v:lua.ts_target(v:count, '@call.inner')<cr>", "Function" },
-            l = { ":<c-u>call v:lua.ts_target(v:count, '@loop.inner')<cr>", "Loop" },
             o = { ":<c-u>call v:lua.ts_target(v:count, '@class.inner')<cr>", "Class" },
         },
         N = {
@@ -113,7 +108,6 @@ require("which-key").register({
             d = { ":<c-u>call v:lua.ts_target_back(v:count, '@comment.outer')<cr>", "Comment" },
             f = { ":<c-u>call v:lua.ts_target_back(v:count, '@function.inner')<cr>", "Function" },
             F = { ":<c-u>call v:lua.ts_target_back(v:count, '@call.inner')<cr>", "Function" },
-            l = { ":<c-u>call v:lua.ts_target_back(v:count, '@loop.inner')<cr>", "Loop" },
             o = { ":<c-u>call v:lua.ts_target_back(v:count, '@class.inner')<cr>", "Class" },
         },
     },
