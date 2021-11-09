@@ -20,6 +20,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'nvim-lua/popup.nvim'
     Plug '907th/vim-auto-save'
+    Plug 'b0o/mapx.nvim'
 
     Plug 'knubie/vim-kitty-navigator'
     Plug 'kazhala/close-buffers.nvim'
@@ -133,10 +134,6 @@ require('settings_config')
 require('misc_config')
 require('mappings_config')
 require('telescope_config')
-require('n_bindings_config')
-require('x_bindings_config')
-require('o_bindings_config')
-require('i_bindings_config')
 require('compleation_config')
 require('panels_config')
 require('myfuncs_config')
