@@ -113,9 +113,9 @@ require("nvim-autopairs").setup({
     fast_wrap = {
         map = "<C-p>",
         chars = { "{", "[", "(", '"', "'", "`" },
-        pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], "%s+", ""),
+        pattern = string.gsub([[ [%'%"%)%>%]%)%}%,%s] ]], '%s+', ''),
         end_key = "l",
-        keys = "tnseriaodhgjplfuwybkvmcxzq",
+        keys   = "tnseriaodhgjplfuwybkvmcxzq",
     },
 })
 

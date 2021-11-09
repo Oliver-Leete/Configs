@@ -50,7 +50,7 @@ require("which-key").setup({
         ["g}"] = "Insert Right Outside",
     },
     hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ ", "<plug>", "<Plug>" },
-    show_help = false
+    show_help = false,
 })
 
 -- Normal Bindings
@@ -75,17 +75,11 @@ require("which-key").register({
     ["<S-right>"] = { "<cmd>tabnext<cr>", "Next Tab" },
     ["<S-left>"] = { "<cmd>tabprevious<cr>", "Prev Tab" },
 
-    ["<C-down>"] = { "<cmd>try<bar>cnext<bar>catch/E553/<bar>cfirst<bar>endtry<CR>zz", "Next Quickfix" },
-    ["<C-up>"] = { "<cmd>try<bar>cprevious<bar>catch/E553/<bar>clast<bar>endtry<CR>zz", "Prev Quickfix" },
-    ["<S-down>"] = { "<cmd>try<bar>lnext<bar>catch/E553/<bar>lfirst<bar>endtry<CR>zz", "Next Loclist" },
-    ["<S-up>"] = { "<cmd>try<bar>lprevious<bar>catch/E553/<bar>llast<bar>endtry<CR>zz", "Prev Loclist" },
-
     ["n"] = { "v:lua.commandRepeat(']', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
     ["N"] = { "v:lua.commandRepeat('[', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
 
-
-    ["<cr>"] = {"<plug>(sendOp)", "Send to Repl"},
-    ["<cr><cr>"] = {"<cmd>call v:lua.sendLines(v:count)<cr>", "Send Line to Repl"},
+    ["<cr>"] = { "<plug>(sendOp)", "Send to Repl" },
+    ["<cr><cr>"] = { "<cmd>call v:lua.sendLines(v:count)<cr>", "Send Line to Repl" },
 
     g = {
         name = "Goto",
@@ -103,15 +97,20 @@ require("which-key").register({
         f = { "gf", "Open File" },
         F = { "<cmd>vsplit<cr>gf", "Open File in Split" },
 
-        d = { "<cmd>lua require('telescope.builtin').lsp_definitions({jump_type='vsplit'})<cr>", "Definitions" },
+        d = { "<cmd>lua require('telescope.builtin').lsp_definitions()<cr>", "Definitions" },
         r = { "<cmd>Telescope lsp_references<cr>", "References" },
-        i = {
+        i = { "<cmd>lua require('telescope.builtin').lsp_implementations()<CR>", "Implementations" },
+        o = { "<cmd>lua require('telescope.builtin').lsp_type_definitions()<cr>", "Object Deffinition" },
+
+        D = { "<cmd>lua require('telescope.builtin').lsp_definitions({jump_type='vsplit'})<cr>", "Definitions (split)" },
+        R = { "<cmd>lua require('telescope.builtin').lep_references({jump_type='vsplit'})<cr>", "References (split)" },
+        I = {
             "<cmd>lua require('telescope.builtin').lsp_implementations({jump_type='vsplit'})<CR>",
-            "Implementations",
+            "Implementations (split)",
         },
-        T = {
+        O = {
             "<cmd>lua require('telescope.builtin').lsp_type_definitions({jump_type='vsplit'})<cr>",
-            "Type Deffinition",
+            "Object Deffinition (split)",
         },
 
         p = { "<plug>(paste-away-after)", "Paste After Object" },
@@ -205,6 +204,7 @@ require("which-key").register({
         name = "User Commands",
 
         [";"] = { "q:", "Command Buffer" },
+        ["."] = { "<cmd>Telescope lsp_code_actions theme=get_cursor<CR>", "Code Actions" },
 
         j = { "m1J`1", "Join" },
         k = { "i<cr><esc>", "Split" },
@@ -348,12 +348,10 @@ require("which-key").register({
                 r = { [[<cmd>Ereadme<cr>]], "Readme" },
             },
         },
-        [">"] = { "<cmd>Telescope spell_suggest theme=get_cursor<cr>", "Spelling Suggestions" },
-        F = { "<cmd>Telescope commands<cr>", "Commands" },
         f = {
             name = "Find",
             ["/"] = { "<cmd>Telescope search_history<cr>", "Search History" },
-            [":"] = { "<cmd>Telescope command_history<cr>", "Search History" },
+            [";"] = { "<cmd>Telescope command_history<cr>", "Search History" },
             ["*"] = {
                 [[<cmd>lua require'telescope.builtin'.find_files({find_command={'rg', vim.fn.expand("<cword>")}})<cr>]],
                 "Grep Word Under Cursor",
@@ -377,7 +375,6 @@ require("which-key").register({
             n = { "<cmd>TodoTelescope<cr>", "Todo Items" },
             i = { "<cmd>Telescope media_files<cr>", "Images (and other media)" },
             o = { "<cmd>Telescope oldfiles<cr>", "Old Files" },
-            Q = { "<cmd>Telescope loclist<cr>", "LocList" },
             q = { "<cmd>Telescope quickfix<cr>", "QuickFix" },
             r = { "<cmd>Telescope live_grep<cr>", "Grep" },
             R = {
@@ -385,7 +382,6 @@ require("which-key").register({
                 "Fast Grep (with regex)",
                 expr = true,
             },
-            t = { "<cmd>Telescope treesitter<cr>", "Treesitter" },
             V = {
                 [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj " . input("In what files? > ") . "<cr><cmd>Telescope quickfix<cr>"]],
                 "Vim Grep (file select)",
@@ -396,15 +392,19 @@ require("which-key").register({
                 "Vim Grep",
                 expr = true,
             },
-            y = { "<cmd>Telescope registers<cr>", "All Registers" },
             x = { "<cmd>Telescope file_browser<cr>", "File Browser" },
-            X = { "<cmd>lua require'telescope.builtin'.file_browser{cwd=require'telescope.utils'.buffer_dir()}<cr>", "File Browser (Relative)" },
+            X = {
+                "<cmd>lua require'telescope.builtin'.file_browser{cwd=require'telescope.utils'.buffer_dir()}<cr>",
+                "File Browser (Relative)",
+            },
             I = { "<cmd>lua require'telescope.builtin'.symbols{sources={'julia'}}<cr>", "Insert Symbols" },
-            -- z = { "<cmd>Telescope session-lens search_session<cr>", "Session Search" },
         },
         g = {
             name = "Git",
-            g = { "<cmd>silent !kitty @ launch --cwd=current --type=window --window-title 'LazyGit' lazygit<cr>", "LazyGit" },
+            g = {
+                "<cmd>silent !kitty @ launch --cwd=current --type=window --window-title 'LazyGit' lazygit<cr>",
+                "LazyGit",
+            },
             G = { "<cmd>silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit<cr>", "LazyGit" },
 
             a = { "<cmd>lua require'gitsigns'.blame_line({full=true})<CR>", "Blame Line" },
@@ -413,6 +413,10 @@ require("which-key").register({
             b = { "<cmd>Telescope git_branches<cr>", "Branches" },
             C = { "<cmd>Telescope git_bcommits<cr>", "Commits (buffer)" },
             c = { "<cmd>Telescope git_commits<cr>", "Commits" },
+            q = {
+                "<cmd>Gitsigns setqflist<cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>",
+                "Send diffs to qf",
+            },
 
             d = {
                 l = { "<cmd>call v:lua.diff_repeat()<cr>", "Repeat Last Diff" },
@@ -474,43 +478,28 @@ require("which-key").register({
                 "Diagnostics",
             },
             W = { "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory" },
-            l = { "<cmd>LspInfo<cr>", "Lsp Infomation" },
-            L = { "<cmd>NullLsInfo<cr>", "Null Ls  Info" },
             g = { "<cmd>lua require'gitsigns'.preview_hunk()<CR>", "Hunk Preview" },
             w = { "<cmd>MatchupWhereAmI??<cr>", "Preview Location" },
         },
         v = {
             name = "View",
             v = { "v:lua.commandRepeat('<leader>v', 'panelRepeat')", "Repeat Panel", expr = true, noremap = false },
-            e = { "<cmd>let g:panelRepeat='e'<cr><cmd>TroubleToggle lsp_workspace_diagnostics<CR>", "Error List" },
-            E = { "<cmd>let g:panelRepeat='E'<cr><cmd>TroubleToggle lsp_document_diagnostics<CR>", "Error List (buffer)" },
+            e = {
+                "<cmd>let g:panelRepeat='e'<cr><cmd>TroubleToggle lsp_workspace_diagnostics<CR>",
+                "Error List (Workspace)",
+            },
+            E = { "<cmd>let g:panelRepeat='E'<cr><cmd>TroubleToggle lsp_document_diagnostics<CR>", "Error List" },
             q = { "<cmd>let g:panelRepeat='q'<cr><cmd>TroubleToggle quickfix<CR>", "QuickFix List" },
-            l = { "<cmd>let g:panelRepeat='l'<cr><cmd>TroubleToggle loclist<CR>", "Location List" },
-            f = { "<cmd>let g:panelRepeat='f'<cr><cmd>TroubleToggle telescope<CR>", "Telescope List" },
             n = { "<cmd>let g:panelRepeat='n'<cr><cmd>TodoTrouble<cr>", "Todo List" },
             g = { "<cmd>let g:panelRepeat='g'<cr><cmd>DiffviewOpen<CR>", "Git" },
             x = { "<cmd>let g:panelRepeat='x'<cr><cmd>NvimTreeToggle<CR>", "File Tree" },
             u = { "<cmd>let g:panelRepeat='u'<cr><cmd>UndotreeToggle<CR>", "Undo Tree" },
-            z = {
-                d = { "<cmd>let g:panelRepeat='zd'<cr><cmd>TroubleToggle lsp_definitions<cr>", "List Definitions" },
-                i = {
-                    "<cmd>let g:panelRepeat='zi'<cr><cmd>TroubleToggle lsp_implementations<cr>",
-                    "List Implementations",
-                },
-                r = { "<cmd>let g:panelRepeat='zr'<cr><cmd>TroubleToggle lsp_references<cr>", "List References" },
-            },
         },
         q = {
             name = "QuickFix List",
-            a = { "<cmd>caddbuffer<cr><cmd>TroubleRefresh<cr>", "Add Buffer Errrors to QF List" },
-            g = {
-                "<cmd>Gitsigns setqflist<cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>",
-                "Populate With Diffs",
-            },
-            ["<down>"] = { "<cmd>cnewer<cr>", "Newer List" },
-            ["<up>"] = { "<cmd>colder<cr>", "Older List" },
+            l = { "<cmd>cnewer<cr>", "Newer List" },
+            h = { "<cmd>colder<cr>", "Older List" },
             q = { "<cmd>let g:panelRepeat='q'<cr><cmd>TroubleToggle quickfix<CR>", "QuickFix List", noremap = false },
-            n = { "<cmd>TodoQuickFix<cr>", "Populate With Todo Comments" },
             V = {
                 [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>"]],
                 "Populate With VimGrep (file select)",
@@ -528,7 +517,6 @@ require("which-key").register({
             r = { "<cmd>TroubleRefresh<cr>", "Refresh Errors" },
             e = { "<cmd>let g:panelRepeat='e'<cr><cmd>TroubleToggle lsp_workspace_diagnostics<CR>", "Error List" },
             E = { "<cmd>let g:panelRepeat='E'<cr><cmd>TroubleToggle lsp_document_diagnostics<CR>", "Error List (buffer)" },
-            f = { "<cmd>let g:panelRepeat='f'<cr><cmd>TroubleToggle telescope<CR>", "Telescope List" },
             n = { "<cmd>let g:panelRepeat='n'<cr><cmd>TodoTrouble<cr>", "Todo List" },
         },
         t = {
@@ -549,9 +537,7 @@ require("which-key").register({
         },
         r = {
             name = "Refactor",
-            V = { "<plug>(ExtractVar)", "Extract Variable" },
             r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)" },
-            R = { "Rename (Treesitter)" },
             f = {
                 "zib<cmd>lua require('refactoring').refactor('Extract Function')<cr>",
                 "Extract Function",
@@ -573,40 +559,27 @@ require("which-key").register({
                 noremap = false,
             },
         },
+        z = { "<cmd>ZenMode<cr>", "Zen Mode" },
         w = {
             name = "Window Managment",
             ["<leader>"] = { "<c-w>p", "Jump To Last Split" },
+            o = { "<c-w>o", "Clean Up Windows" },
             O = { "<cmd>BDelete hidden<cr>", "Close All Hidden Buffers" },
             f = { "<c-w>w", "Focus Floating Window" },
             d = { "<cmd>bdelete<cr>", "Delete the current buffer" },
             D = { "<cmd>tabclose<cr>", "Close the Current Tab" },
-            w = { "<cmd>ZenMode<cr>", "Zen Mode" },
-            o = { "<c-w>o", "Clean Up Windows" },
             ["<bs>"] = { "<c-w>c", "Close Window" },
             ["<cr>"] = { "<c-w>v", "Open Window" },
             x = { "<c-w>s", "Horizontal Split" },
             v = { "<c-w>v", "Vertical Split" },
             n = { "<C-W>n", "Open New Window" },
-            N = { "<C-W>r", "Move Window Next" },
-            P = { "<C-W>R", "Move Window Previous" },
-            ["]"] = { "<cmd>vertical resize +5<cr>", "Vertical Resize" },
-            ["["] = { "<cmd>vertical resize -5<cr>", "Vertical Resize" },
-            ["}"] = { "<cmd>resize +5<cr>", "Horizontal Resize" },
-            ["{"] = { "<cmd>resize -5<cr>", "Horizontal Resize" },
             ["="] = { "<c-w>=", "Equal Size" },
-            h = { "<c-w>h", "Left Windown" },
-            j = { "<c-w>j", "Below Window" },
-            k = { "<c-w>k", "Above Window" },
-            l = { "<c-w>l", "Right Window" },
-            H = { "<c-w>H", "Move Far Left" },
-            J = { "<c-w>J", "Move Far Down" },
-            K = { "<c-w>K", "Move Far Up" },
-            L = { "<c-w>L", "Move Far Right" },
+            h = { "<c-w>H", "Move Far Left" },
+            j = { "<c-w>J", "Move Far Down" },
+            k = { "<c-w>K", "Move Far Up" },
+            l = { "<c-w>L", "Move Far Right" },
             c = { "<c-w>c", "Close Window" },
             q = { "<c-w>c", "Close Window" },
-            ["/"] = { "<c-w>^", "Open Alternate File" },
-            [","] = { "<cmd>BufferLineCyclePrev<cr>", "Previous Buffer" },
-            ["."] = { "<cmd>BufferLineCycleNext<cr>", "Next Buffer" },
         },
         [","] = {
             name = "Settings",
@@ -627,11 +600,6 @@ require("which-key").register({
                 B = { "<cmd>call v:lua.gitsign_bchange_base()<cr>", "Change Gitsigns Base" },
             },
             ["/"] = { "<cmd>let @/=''<cr>", "Clear Search" },
-        },
-        h = {
-            h = { "<cmd>Telescope help_tags<cr>", "Search Help Tags" },
-            i = { "<cmd>LvimHelper<cr>", "Insert Mode Mappings" },
-            k = { "K", "Documentation" },
         },
         k = {
             [[":silent !kitty @ launch --type=tab --tab-title 'Kak %:t' kak %:p +" . line(".") . ":" . col(".") . "<cr>"]],
@@ -669,20 +637,29 @@ require("which-key").register({
         F = { "<cmd>let g:dirJumps='F'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @function.outer<cr>zz", "Function" },
         ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @parameter.inner<cr>zz", "Parameter" },
         B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @block.outer<cr>zz", "Block" },
-        n = { "<cmd>let g:dirJumps='search'<cr>m`Nzz", "Search Result"},
+        n = { "<cmd>let g:dirJumps='search'<cr>m`Nzz", "Search Result" },
         e = {
             "<cmd>lua vim.diagnostic.goto_prev({ float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
             "Diagnostics",
         },
+        p = { "<cmd>let g:dirJumps='p'<cr>{zz", "Paragraph" },
         E = {
-            a = {"<cmd>lua vim.diagnostic.goto_prev({ severity='Error', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Ea'<cr>m`",
-            "Error",},
-            r = {"<cmd>lua vim.diagnostic.goto_prev({ severity='Warn', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Er'<cr>m`",
-            "Warn",},
-            s = {"<cmd>lua vim.diagnostic.goto_prev({ severity='Info', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Es'<cr>m`",
-            "Info",},
-            t = {"<cmd>lua vim.diagnostic.goto_prev({ severity='Hint', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Et'<cr>m`",
-            "Hint",},
+            a = {
+                "<cmd>lua vim.diagnostic.goto_prev({ severity='Error', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Ea'<cr>m`",
+                "Error",
+            },
+            r = {
+                "<cmd>lua vim.diagnostic.goto_prev({ severity='Warn', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Er'<cr>m`",
+                "Warn",
+            },
+            s = {
+                "<cmd>lua vim.diagnostic.goto_prev({ severity='Info', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Es'<cr>m`",
+                "Info",
+            },
+            t = {
+                "<cmd>lua vim.diagnostic.goto_prev({ severity='Hint', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Et'<cr>m`",
+                "Hint",
+            },
         },
     },
 
@@ -716,20 +693,29 @@ require("which-key").register({
         C = { "<cmd>let g:dirJumps='C'<cr>m`<cmd>TSTextobjectGotoNextEnd @conditional.inner<cr>zz", "Conditional (end)" },
         ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoNextEnd @parameter.inner<cr>zz", "Parameter (end)" },
         B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block (end)" },
-        n = { "<cmd>let g:dirJumps='search'<cr>m`nzz", "Search Result"},
+        n = { "<cmd>let g:dirJumps='search'<cr>m`nzz", "Search Result" },
         e = {
             "<cmd>lua vim.diagnostic.goto_next({ float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
             "Diagnostics",
         },
+        p = { "<cmd>let g:dirJumps='p'<cr>}zz", "Paragraph" },
         E = {
-            a = {"<cmd>lua vim.diagnostic.goto_next({ severity='Error', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Ea'<cr>m`",
-            "Error",},
-            r = {"<cmd>lua vim.diagnostic.goto_next({ severity='Warn', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Er'<cr>m`",
-            "Warn",},
-            s = {"<cmd>lua vim.diagnostic.goto_next({ severity='Info', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Es'<cr>m`",
-            "Info",},
-            t = {"<cmd>lua vim.diagnostic.goto_next({ severity='Hint', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Et'<cr>m`",
-            "Hint",},
+            a = {
+                "<cmd>lua vim.diagnostic.goto_next({ severity='Error', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Ea'<cr>m`",
+                "Error",
+            },
+            r = {
+                "<cmd>lua vim.diagnostic.goto_next({ severity='Warn', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Er'<cr>m`",
+                "Warn",
+            },
+            s = {
+                "<cmd>lua vim.diagnostic.goto_next({ severity='Info', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Es'<cr>m`",
+                "Info",
+            },
+            t = {
+                "<cmd>lua vim.diagnostic.goto_next({ severity='Hint', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Et'<cr>m`",
+                "Hint",
+            },
         },
     },
 
