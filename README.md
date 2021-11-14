@@ -258,7 +258,7 @@ _G.tab_complete = function()
     if luasnip and luasnip.expand_or_jumpable() then
         return replace_keycodes("<Plug>luasnip-expand-or-jump")
     else
-        return replace_keycodes("<plug>(TaboutMulti)")
+        return replace_keycodes("<tab>")
     end
 end
 
@@ -266,7 +266,7 @@ _G.s_tab_complete = function()
     if luasnip and luasnip.jumpable(-1) then
         return replace_keycodes("<Plug>luasnip-jump-prev")
     else
-        return replace_keycodes("<plug>(TaboutBackMulti)")
+        return replace_keycodes("<s-tab>")
     end
 end
 

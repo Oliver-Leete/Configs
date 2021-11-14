@@ -21,7 +21,7 @@ vim.opt.showmode = false
 -- Saving
 vim.opt.confirm = true
 vim.opt.swapfile = false
-vim.opt.undodir = "~/.vim/undo//"
+vim.opt.undodir = "/home/oleete/.vim/undo//"
 vim.opt.undofile = true
 vim.api.nvim_set_var("auto_save", 1)
 vim.api.nvim_set_var("auto_save_silent", 1)

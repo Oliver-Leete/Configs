@@ -46,9 +46,9 @@ function _G.ts_target_back(count, object)
     vim.cmd("TSTextobjectSelect " .. object)
 end
 
-function _G.git_target(count, forward)
+function _G.git_target(count, go_forward)
     local move_cmd
-    if forward == "true" then
+    if go_forward == "true" then
         move_cmd = "Gitsigns next_hunk"
     else
         move_cmd = "Gitsigns prev_hunk"
@@ -63,6 +63,7 @@ function _G.git_target(count, forward)
 end
 
 function _G.mapped_targets(count, movement, selection)
+    print(count)
     local cmd = movement
     count = count - 1
     while count > 0 do
@@ -70,16 +71,16 @@ function _G.mapped_targets(count, movement, selection)
         count = count - 1
     end
     cmd = cmd .. "v" .. selection
+    print(cmd)
     vim.cmd([[normal ]] .. cmd)
 end
 function _G.mapped_targets_back(count, movement, end_movement, selection)
-    local cmd = movement
+    local cmd = end_movement
     count = count - 1
     while count > 0 do
         cmd = cmd .. movement
         count = count - 1
     end
-    cmd = cmd .. end_movement
     cmd = cmd .. "v" .. selection
     vim.cmd([[normal ]] .. cmd)
 end
@@ -290,7 +291,7 @@ _G.tab_complete = function()
     elseif luasnip and luasnip.expand_or_jumpable() then
         return replace_keycodes("<Plug>luasnip-expand-or-jump")
     else
-        return replace_keycodes("<plug>(TaboutMulti)")
+        return replace_keycodes("<tab>")
     end
 end
 
@@ -300,7 +301,7 @@ _G.s_tab_complete = function()
     elseif luasnip and luasnip.jumpable(-1) then
         return replace_keycodes("<Plug>luasnip-jump-prev")
     else
-        return replace_keycodes("<plug>(TaboutBackMulti)")
+        return replace_keycodes("<c-d>")
     end
 end
 

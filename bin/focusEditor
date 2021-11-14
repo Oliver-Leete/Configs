@@ -6,5 +6,4 @@ else
     winTitle="MainEditor"
 fi
 
-ID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[] | select(.title==\"$winTitle\") | .id")
-kitty @ focus-window --match id:$ID
+kitty @ focus-window --match title:$winTitle

@@ -58,46 +58,7 @@ require("zen-mode").setup({
     end,
 })
 
--- BufferLine
-
-require("bufferline").setup({
-    options = {
-        view = "multiwindow",
-        numbers = "none",
-        buffer_close_icon = "",
-        modified_icon = "●",
-        close_icon = "",
-        left_trunc_marker = "",
-        right_trunc_marker = "",
-        max_name_length = 18,
-        max_prefix_length = 15,
-        tab_size = 18,
-        diagnostics = "nvim_lsp",
-        diagnostics_indicator = function(count, level)
-            local icon = level:match("error") and "" or (level:match("warning") and "" or "")
-            return " " .. icon .. count
-        end,
-        show_buffer_close_icons = true,
-        show_close_icon = true,
-        show_tab_indicators = true,
-        persist_buffer_sort = true,
-        separator_style = "thick",
-        enforce_regular_tabs = true,
-        always_show_bufferline = true,
-        offsets = {
-            { filetype = "NvimTree", text = "File Explorer", text_align = "center" },
-            { filetype = "DiffviewFiles", text = "Git Changes", text_align = "center" },
-            { filetype = "help", text = "Help", text_align = "center" },
-            { filetype = "Outline", text = "Symbols", text_align = "center" },
-            { filetype = "vim-plug", text = "Plugins", text_align = "center" },
-            { filetype = "undotree", text = "Undo Tree", text_align = "center" },
-        },
-    },
-})
-
 -- Windline Status Line
-
--- require("wlsample.bubble")
 
 vim.cmd("WindLineFloatToggle")
 

@@ -15,9 +15,7 @@
 
 require("nvim-treesitter.configs").setup({
     autopairs = { enable = true },
-    indent = { enable = true },
-    rainbow = { enable = true },
-    matchup = { enable = true },
+    -- indent = { enable = true },
     highlight = {
         enable = true,
         addditional_vim_regex_highlighting = false,
@@ -26,23 +24,7 @@ require("nvim-treesitter.configs").setup({
         select = {
             enable = true,
             lookahead = true,
-            keymaps = {
-                -- ["a,"] = "@parameter.outer",
-                -- ["i,"] = "@parameter.inner",
-                -- ["ao"] = "@class.outer",
-                -- ["io"] = "@class.inner",
-                -- ["af"] = "@function.outer",
-                -- ["if"] = "@function.inner",
-                -- ["aF"] = "@call.outer",
-                -- ["iF"] = "@call.inner",
-                -- ["ac"] = "@conditional.outer",
-                -- ["ic"] = "@conditional.inner",
-                -- ["aC"] = "@comment.outer",
-                -- ["aL"] = "@loop.outer",
-                -- ["il"] = "@loop.inner",
-                -- ["aB"] = "@block.outer",
-                -- ["iB"] = "@block.inner",
-            },
+            keymaps = {},
         },
         move = {
             enable = true,

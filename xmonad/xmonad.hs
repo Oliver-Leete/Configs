@@ -20,16 +20,14 @@
 {-# LANGUAGE LambdaCase #-}
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 import qualified Data.Map as M
-import Data.Maybe
 import Data.Monoid
 import System.Exit
-import System.IO
 import Graphics.X11.Types
 
 import XMonad hiding ( (|||) )
 import qualified XMonad.StackSet as W
 
-import XMonad.Actions.ConditionalKeys
+import XMonad.Actions.ConditionalKeys as C
 import XMonad.Actions.CycleWSLocal
 import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
@@ -43,12 +41,13 @@ import XMonad.Actions.UpdatePointer
 import XMonad.Actions.WindowGoLocal
 import XMonad.Actions.WithAll
 
-import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops ( ewmh )
 import XMonad.Hooks.FadeWindows
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.StatusBar
+import XMonad.Hooks.StatusBar.PP
 
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
@@ -66,11 +65,11 @@ import XMonad.Prompt
 import XMonad.Prompt.ConfirmPrompt
 import XMonad.Prompt.FuzzyMatch
 
+import XMonad.Util.ClickableWorkspaces
 import XMonad.Util.EZConfig
 import XMonad.Util.Hacks
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.Paste as P
-import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 
 
@@ -79,16 +78,14 @@ import XMonad.Util.SpawnOnce
 ----------------------------------------------------------------------------------------------------
 main :: IO ()
 main = do
-    xmproc0 <- spawnPipe "xmobar -x0 $HOME/.config/xmobar/xmobar.conf"
-
     xmonad
         $ dynamicProjects projects
         $ withNavigation2DConfig myNav2DConf
+        $ withSB mySB
         $ ewmh
-        $ docks
-        $ myConfig xmproc0
+        $ docks myConfig
 
-myConfig p = def
+myConfig = def
         { borderWidth        = myBorder
         , clickJustFocuses   = True
         , focusFollowsMouse  = True
@@ -97,7 +94,7 @@ myConfig p = def
         , manageHook         = myManageHook
         , handleEventHook    = myHandleEventHook
         , layoutHook         = myLayoutHook
-        , logHook            = myLogHook p
+        , logHook            = myLogHook
         , modMask            = myModMask
         , mouseBindings      = myMouseBindings
         , startupHook        = myStartupHook
@@ -124,13 +121,6 @@ wsWRK4   = "wrk4"
 
 myWorkspaces :: [[Char]]
 myWorkspaces = [wsTMP, wsTMP2, wsPRO1, wsPRO2, wsPRO3, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsWRK4]
-
-myWorkspaceIndices :: M.Map [Char] [Char]
-myWorkspaceIndices = M.fromList $ zip myWorkspaces ["Home", "End", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-
-clickable :: [Char] -> [Char]
-clickable ws = "<action=`xdotool key super+"++show i++"`>"++ws++"</action>"
-    where i = fromJust $ M.lookup ws myWorkspaceIndices
 
 projects :: [Project]
 projects =
@@ -164,7 +154,7 @@ projects =
                 }
     , Project   { projectName       = wsPER
                 , projectDirectory  = "~/PersonalDrive"
-                , projectStartHook  = Just $ do spawnOn wsPER (myLongBrowser ++ " --new-window 'github.com' 'feedly.com/i/latest' 'youtube.com/feed/subscriptions' 'nebula.app/myshows' 'coinbase.com'")
+                , projectStartHook  = Just $ do spawnOn wsPER (myLongBrowser ++ " --new-window 'github.com' 'feedly.com/i/latest' 'youtube.com/feed/subscriptions' 'coinbase.com'")
                 }
     , Project   { projectName       = wsWRK
                 , projectDirectory  = "~/UniDrive"
@@ -202,7 +192,7 @@ myBrowser      = "/home/oleete/.config/bin/browser"
 myLongBrowser  = "google-chrome-stable --user-data-dir=/home/oleete/.config/browser/google-chrome-stable"
 myBrowserClass = "google-chrome-stable"
 
-discordCommand         = "discord"
+discordCommand         = "discord --no-sandbox"
 gTasksCommand          = myBrowser ++ " '-tasks --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html --class=Tasks'"
 gTasksWrkCommand       = myBrowser ++ " 'tasks --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html --class=WrkTasks'"
 keepCommand            = myBrowser ++ " '-keep --app=https://keep.google.com/#home --class=Keep'"
@@ -435,12 +425,12 @@ myKeys =
                             then W.sink w s
                             else W.float w (W.RationalRect (1/4) (1/4) (1/2) (1/2)) s)
 
-        altBrowser = bindOn WS [(wsTMP2,   spawn myLongBrowser) ,(wsTMP,   spawn myLongBrowser)
+        altBrowser = bindOn C.WS [(wsTMP2,   spawn myLongBrowser) ,(wsTMP,   spawn myLongBrowser)
                                ,(wsWRK,   spawn myLongBrowser) ,(wsWRK4,  spawn myLongBrowser)
                                ,(wsTHESIS,spawn myLongBrowser) ,(wsEXP,   spawn myLongBrowser)
                                ,(wsSIM,   spawn myLongBrowser) ,("",      spawn (myLongBrowser ++ "-wrk"))]
 
-        wrkNSP work personal = bindOn WS [(wsWRK, allNamedScratchpadAction scratchpads work)
+        wrkNSP work personal = bindOn C.WS [(wsWRK, allNamedScratchpadAction scratchpads work)
                                          ,(wsSIM, allNamedScratchpadAction scratchpads work)
                                          ,(wsEXP, allNamedScratchpadAction scratchpads work)
                                          ,(wsTHESIS, allNamedScratchpadAction scratchpads work)
@@ -481,6 +471,8 @@ myMouseBindings XConfig {} = M.fromList
 
 myStartupHook :: X ()
 myStartupHook = do
+    killStatusBar "xmobar ~/.config/xmobar/xmobar.conf"
+    spawnStatusBar "xmobar ~/.config/xmobar/xmobar.conf"
     spawn "feh --bg-fill --randomize ~/Pictures/wallpapers/"
     spawnOnce "picom -b --config ~/.config/picom/picom.conf"
     spawnOnce "insync start; insync hide"
@@ -491,22 +483,18 @@ myStartupHook = do
 -- Log                                                                                            --
 ----------------------------------------------------------------------------------------------------
 
-myLogHook :: Handle -> X ()
-myLogHook h = do
+mySB = statusBarProp "xmobar" (clickablePP $ filterOutWsPP ["NSP"] myPP)
+myPP = def
+    { ppCurrent = xmobarColor active ""
+    , ppVisible = xmobarColor visible ""
+    , ppHidden  = xmobarColor dull  ""
+    , ppTitle   = const ""
+    , ppLayout  = const ""
+    }
+
+myLogHook = do
     fadeWindowsLogHook myFadeHook
     masterHistoryHook
-    dynamicLogWithPP . filterOutWsPP ["NSP"] $ def
-        { ppCurrent             = xmobarColor active "" . wrap "[" "]" . clickable
-        , ppTitle               = const ""
-        , ppVisible             = xmobarColor visible  "" . clickable
-        , ppHidden              = xmobarColor dull  "" . clickable
-        , ppHiddenNoWindows     = const ""
-        , ppSep                 = " | "
-        , ppWsSep               = " | "
-        , ppLayout              = const ""
-        , ppOrder               = id
-        , ppOutput              = hPutStrLn h
-        , ppSort                = ppSort def }
 
 myFadeHook :: FadeHook
 myFadeHook = composeAll

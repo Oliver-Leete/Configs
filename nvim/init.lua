@@ -55,7 +55,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'folke/tokyonight.nvim'
     Plug 'folke/zen-mode.nvim'
-    Plug 'akinsho/nvim-bufferline.lua'
     Plug 'lukas-reineke/indent-blankline.nvim',
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'windwp/windline.nvim'
@@ -85,10 +84,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'saadparwaiz1/cmp_luasnip'
     Plug 'rafamadriz/friendly-snippets'
     Plug 'windwp/nvim-autopairs'
-    Plug 'abecodes/tabout.nvim'
 
     Plug 'nvim-telescope/telescope.nvim'
-    Plug 'nvim-telescope/telescope-hop.nvim'
     Plug 'nvim-telescope/telescope-symbols.nvim'
     Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make'}
     Plug 'nvim-telescope/telescope-media-files.nvim'
@@ -99,7 +96,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-treesitter/playground'
-    Plug 'p00f/nvim-ts-rainbow'
     Plug 'ThePrimeagen/refactoring.nvim'
 call plug#end()]])
 
@@ -144,3 +140,6 @@ require('snippets_config')
 require('bubble')
 require('ui_config')
 
+vim.cmd([[augroup exitingVim
+    autocmd VimLeave * silent! !kitty @ set-window-title ""
+augroup end]])
