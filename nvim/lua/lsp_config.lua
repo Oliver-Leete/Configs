@@ -73,8 +73,6 @@ local custom_attach = function(client)
             border = "single",
         },
     })
-
-    require("illuminate").on_attach(client)
 end
 
 require("lspconfig").hls.setup({

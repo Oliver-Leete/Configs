@@ -16,7 +16,7 @@ vim.opt.shell = "/bin/zsh"
 
 vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-lua/plenary.nvim'
-    Plug 'tpope/vim-repeat'
+    Plug 'tpope/vimrepeat'
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'nvim-lua/popup.nvim'
     Plug '907th/vim-auto-save'
@@ -26,7 +26,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'kazhala/close-buffers.nvim'
     Plug 'tpope/vim-projectionist'
 
-    Plug 'IndianBoy42/hop.nvim'
+    Plug 'phaazon/hop.nvim'
     Plug 'mizlan/iswap.nvim'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
@@ -69,7 +69,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'neovim/nvim-lspconfig'
     Plug 'kabouzeid/nvim-lspinstall'
     Plug 'jose-elias-alvarez/null-ls.nvim'
-    Plug 'RRethy/vim-illuminate'
     Plug 'ray-x/lsp_signature.nvim'
 
     Plug 'hrsh7th/nvim-cmp'

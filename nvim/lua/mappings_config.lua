@@ -22,19 +22,19 @@ require("which-key").setup({
         },
     },
     operators = {
-        ["g,c"] = "Comments",
-        ["g,t"] = "Allign",
-        ["g,r"] = "Replace",
-        ["g,sp"] = "Change to Pascal Case",
-        ["g,sc"] = "Change to Camel Case",
-        ["g,s_"] = "Change to Snake Case",
-        ["g,su"] = "Change to Upper Case",
-        ["g,st"] = "Change to Title Case",
-        ["g,sd"] = "Change to Sentance Case",
-        ["g,s<space>"] = "Change to Space Case",
-        ["g,s-"] = "Change to Kebab Case",
-        ["g,sk"] = "Change to Title Kebab Case",
-        ["g,s."] = "Change to Dot Case",
+        [",c"] = "Comments",
+        [",t"] = "Allign",
+        [",r"] = "Replace",
+        [",sp"] = "Change to Pascal Case",
+        [",sc"] = "Change to Camel Case",
+        [",ss"] = "Change to Snake Case",
+        [",su"] = "Change to Upper Case",
+        [",st"] = "Change to Title Case",
+        [",sd"] = "Change to Sentance Case",
+        [",s<space>"] = "Change to Space Case",
+        [",s-"] = "Change to Kebab Case",
+        [",sk"] = "Change to Title Kebab Case",
+        [",s."] = "Change to Dot Case",
         ["gp"] = "Paste After",
         ["gP"] = "Paste Before",
         ["{"] = "Goto Left Outside",
@@ -123,8 +123,8 @@ nnoremap("]", "<cmd>WhichKey ] n<cr>")
 xnoremap("]", "<cmd>WhichKey ] x<cr>")
 nnoremap("[", "<cmd>WhichKey [ n<cr>")
 xnoremap("[", "<cmd>WhichKey [ x<cr>")
-nnoremap(",", "<cmd>WhichKey g, n<cr>")
-xnoremap(",", "<cmd>WhichKey g, x<cr>")
+-- nnoremap(",", "<cmd>WhichKey g, n<cr>")
+-- xnoremap(",", "<cmd>WhichKey g, x<cr>")
 xnoremap("I", "I")
 xnoremap("A", "A")
 
@@ -214,6 +214,7 @@ xnoremap("S", ":lua require('tsht').nodes()<CR>")
 onoremap("s", "<cmd>lua require'hop'.hint_char1()<cr>")
 onoremap("S", ":<c-u>lua require('tsht').nodes()<cr>")
 
+
 nnoremap("'", "`")
 nnoremap("`", "'")
 xnoremap("'", "`")
@@ -231,14 +232,18 @@ nnoremap("<C-left>", "<cmd>tabprevious<cr>")
 nnoremap("<S-right>", "<cmd>tabnext<cr>")
 nnoremap("<S-left>", "<cmd>tabprevious<cr>")
 
+nnoremap("<c-t>", "<cmd>tabedit #<cr>")
+nnoremap("<c-v>", "<cmd>vsplit #<cr>")
+nnoremap("<c-x>", "<cmd>split #<cr>")
+
 nmap("n", "v:lua.commandRepeat(']', 'dirJumps')", "expr")
 vmap("n", "v:lua.commandRepeat(']', 'dirJumps')", "expr")
 nmap("N", "v:lua.commandRepeat('[', 'dirJumps')", "expr")
 vmap("N", "v:lua.commandRepeat('[', 'dirJumps')", "expr")
 
 nnoremap("<cr><cr>", "<cmd>call v:lua.sendLines(v:count)<cr>")
-nnoremap("<cr>", "<plug>(sendOp)")
-xnoremap("<cr>", "<plug>(sendReg)")
+nmap("<cr>", "<plug>(sendOp)")
+xmap("<cr>", "<plug>(sendReg)")
 
 m.name("g", "Goto")
     nnoremap("gg", "gg", "Buffer Top")
@@ -279,12 +284,12 @@ m.name("g", "Goto")
     nnoremap("gI", "<cmd>lua require('telescope.builtin').lsp_implementations({jump_type='vsplit'})<CR>", "Implementations (split)")
     nnoremap("gO", "<cmd>lua require('telescope.builtin').lsp_type_definitions({jump_type='vsplit'})<cr>", "Object Deffinition (split)")
 
-    nnoremap("gp", "<plug>(paste-away-after)", "Paste After Object")
-    nnoremap("gP", "<plug>(paste-away-before)", "Paste Before Object")
-    nnoremap("g{", "<Plug>(ninja-insert)a", "Go Insert Left Outside")
-    nnoremap("g(", "<Plug>(ninja-insert)i", "Go Insert Left Inside")
-    nnoremap("g)", "<Plug>(ninja-append)i", "Go Insert Right Inside")
-    nnoremap("g}", "<Plug>(ninja-append)a", "Go Insert Right Outside")
+    nmap("gp", "<plug>(paste-away-after)", "Paste After Object")
+    nmap("gP", "<plug>(paste-away-before)", "Paste Before Object")
+    nmap("g{", "<Plug>(ninja-insert)a", "Go Insert Left Outside")
+    nmap("g(", "<Plug>(ninja-insert)i", "Go Insert Left Inside")
+    nmap("g)", "<Plug>(ninja-append)i", "Go Insert Right Inside")
+    nmap("g}", "<Plug>(ninja-append)a", "Go Insert Right Outside")
 
 m.name("G", "Goto (Select)")
     nnoremap("Gg", "vgg", "Buffer Top")
@@ -368,851 +373,528 @@ m.name("z", "Select Mode")
     xmap("zi", "<esc><m-v>i", "Inside")
     xmap("zo", "<esc><m-v>a", "Outside")
 
--- Normal Bindings
-require("which-key").register({
-    ["g,"] = {
-        name = "User Commands",
+m.name(",", "User Commands")
+nnoremap(",;", "q:", "Command Buffer")
+xnoremap(",;", "q:", "Command Buffer")
+nnoremap(",.", "<cmd>Telescope lsp_code_actions theme=get_cursor<CR>", "Code Actions")
+xnoremap(",.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR>", "Code Actions (Range)")
 
-        [";"] = { "q:", "Command Buffer" },
-        ["."] = { "<cmd>Telescope lsp_code_actions theme=get_cursor<CR>", "Code Actions" },
+nnoremap(",j", "m1J`1", "Join")
+nnoremap(",k", "i<cr><esc>", "Split")
+xnoremap(",j", "J")
+xnoremap(",k", "c<cr><esc>")
 
-        j = { "m1J`1", "Join" },
-        k = { "i<cr><esc>", "Split" },
+m.name(",c", "Comment")
+nmap(",r", "<plug>(SubversiveSubstitute)", "Substitute")
+xmap(",r", "<plug>(SubversiveSubstitute)", "Substitute")
+nmap(",t", "<Plug>(EasyAlign)", "Easy Allign")
+xmap(",t", "<Plug>(EasyAlign)", "Align")
 
-        r = { "<plug>(SubversiveSubstitute)", "Substitute" },
-        t = { "<Plug>(EasyAlign)", "Easy Allign" },
-        c = { "Comment" },
-        O = { "O<Esc>", "Insert Blankline Before" },
-        o = { "o<Esc>", "Insert Blankline" },
+nnoremap(",O", "O<Esc>", "Insert Blankline Before")
+nnoremap(",o", "o<Esc>", "Insert Blankline")
+    m.name(",f", "Format")
+    nnoremap(",ff", "<cmd>lua vim.lsp.buf.formatting_sync()<CR>", "Format")
+    nnoremap(",f<space>", [[<cmd>%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces")
+    nnoremap(",fw", [["m1!ippar w". &textwidth . "<cr>`1"]], "Wrap Paragraph to Textwidth", "expr")
+    nnoremap(",fW", [["<cmd>%!par w" . &textwidth . "<cr>"]], "Wrap File to Textwidth", "expr")
+    xnoremap(",ff", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", "Format")
+    xnoremap(",f<space>", ":%s/\v[^^ ]\zs  / /g<cr>", "Remove Double Spaces")
+    xnoremap(",fw", [["!par w" . &textwidth . "<cr>"]], "Wrap to Textwidth", "expr")
 
-        f = {
-            name = "Formatting",
+    nnoremap(",fl", "<cmd>left<cr>", "Left Allign")
+    nnoremap(",fc", "<cmd>center<cr>", "Centre Allign")
+    nnoremap(",fr", "<cmd>right<cr>", "Right Allign")
+    xnoremap(",fl", ":left<cr>", "Left Allign")
+    xnoremap(",fc", ":center<cr>", "Centre Allign")
+    xnoremap(",fr", ":right<cr>", "Right Allign")
 
-            f = { "<cmd>lua vim.lsp.buf.formatting_sync()<CR>", "Format" },
-            ["<space>"] = { [[<cmd>%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces" },
-            w = { [["m1!ippar w". &textwidth . "<cr>`1"]], "Wrap Paragraph to Textwidth", expr = true },
-            W = { [["<cmd>%!par w" . &textwidth . "<cr>"]], "Wrap File to Textwidth", expr = true },
+    m.name(",P", "Paste Before")
+    nmap(",Pb", "<Plug>UnconditionalPasteBlockBefore", "Paste Block")
+    nmap(",PB", "<Plug>UnconditionalPasteJaggedBefore", "Paste Jagged")
+    nmap(",Pi", "<Plug>UnconditionalPasteInlinedBefore", "Paste Inline")
+    nmap(",Pl", "<plug>UnconditionalPasteLineBefore", "Paste Line")
+    nmap(",PS", "<Plug>UnconditionalPasteParagraphedBefore", "Paste Paragraph")
+    nmap(",Ps", "<Plug>UnconditionalPasteSpacedBefore", "Paste Spaced")
+    nnoremap(",Pu", "P`]l", "Paste No Move")
 
-            l = { "<cmd>left<cr>", "Left Allign" },
-            c = { "<cmd>center<cr>", "Centre Allign" },
-            r = { "<cmd>right<cr>", "Right Allign" },
-        },
+    m.name(",p", "Paste")
+    nmap(",pb", "<Plug>UnconditionalPasteBlockAfter", "Paste Block")
+    nmap(",pB", "<Plug>UnconditionalPasteJaggedAfter", "Paste Jagged")
+    nmap(",pi", "<Plug>UnconditionalPasteInlinedAfter", "Paste Inline")
+    nmap(",pl", "<plug>UnconditionalPasteLineAfter", "Paste Line")
+    nmap(",pS", "<Plug>UnconditionalPasteParagraphedAfter", "Paste Paragraph")
+    nmap(",ps", "<Plug>UnconditionalPasteSpacedAfter", "Paste Spaced")
+    nnoremap(",pu", "p`[h", "Paste No Move")
 
-        i = {
-            name = "insert",
+    m.name(",i", "Insert")
+    nnoremap(",iH", "I", "Insert Before Line")
+    nnoremap(",ih", "i", "Insert Before")
+    nnoremap(",il", "a", "Insert After")
+    nnoremap(",iL", "A", "Insert After Line")
 
-            H = { "I", "Insert Before Line" },
-            h = { "i", "Insert Before" },
-            l = { "a", "Insert After" },
-            L = { "A", "Insert After Line" },
+    nnoremap(",iK", "ggO", "Insert Above File")
+    nnoremap(",ik", "O", "Insert Above")
+    nnoremap(",ij", "o", "Insert Below")
+    nnoremap(",iJ", "Go", "Insert Below File")
 
-            K = { "ggO", "Insert Above File" },
-            k = { "O", "Insert Above" },
-            j = { "o", "Insert Below" },
-            J = { "Go", "Insert Below File" },
+    nmap(",i{", "<Plug>(ninja-insert)a", "Go Insert Left Outside")
+    nmap(",i(", "<Plug>(ninja-insert)i", "Go Insert Left Inside")
+    nmap(",i)", "<Plug>(ninja-append)i", "Go Insert Right Inside")
+    nmap(",i}", "<Plug>(ninja-append)a", "Go Insert Right Outside")
 
-            ["{"] = { "<Plug>(ninja-insert)a", "Go Insert Left Outside" },
-            ["("] = { "<Plug>(ninja-insert)i", "Go Insert Left Inside" },
-            [")"] = { "<Plug>(ninja-append)i", "Go Insert Right Inside" },
-            ["}"] = { "<Plug>(ninja-append)a", "Go Insert Right Outside" },
-        },
+    m.name(",s", "Change Case")
+    nmap(",sp", "<Plug>CaserMixedCase", "Pascal Case")
+    nmap(",sc", "<Plug>CaserCamelCase", "Camel Case")
+    nmap(",ss", "<Plug>CaserSnakeCase", "Snake Case")
+    nmap(",su", "<Plug>CaserUpperCase", "Upper Case")
+    nmap(",st", "<Plug>CaserTitleCase", "Title Case")
+    nmap(",sd", "<Plug>CaserSentenceCase", "Sentance Case")
+    nmap(",s<space>", "<Plug>CaserSpaceCase", "Space Case")
+    nmap(",sk", "<Plug>CaserKebabCase", "Kebab Case")
+    nmap(",sk", "<Plug>CaserTitleKebabCase", "Title Kebab Case")
+    nmap(",s.", "<Plug>CaserDotCase", "Dot Case")
+    xmap(",fp", "<Plug>CaserVMixedCase", "Pascal Case")
+    xmap(",fc", "<Plug>CaserVCamelCase", "Camel Case")
+    xmap(",f_", "<Plug>CaserVSnakeCase", "Snake Case")
+    xmap(",fu", "<Plug>CaserVUpperCase", "Upper Case")
+    xmap(",ft", "<Plug>CaserVTitleCase", "Title Case")
+    xmap(",fs", "<Plug>CaserVSentenceCase", "Sentance Case")
+    xmap(",f<space>", "<Plug>CaserVSpaceCase", "Space Case")
+    xmap(",f-", "<Plug>CaserVKebabCase", "Kebab Case")
+    xmap(",fk", "<Plug>CaserVTitleKebabCase", "Title Case")
+    xmap(",f.", "<Plug>CaserVDotCase", "Dot Case")
 
-        P = {
-            name = "Paste Before",
+m.name("<leader>", "Leader")
+nnoremap("<leader><leader>", "<cmd>e #<cr>", "Last File")
+nnoremap("<leader>.", "<cmd>Telescope lsp_code_actions theme=get_cursor<CR>", "Code Actions")
+xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR>", "Code Actions")
+    m.name("<leader>/", "Related Files")
+    nnoremap("<leader>/", "<cmd>Z<cr>", "Alternate File")
+    nnoremap("<leader>/r", "<cmd>Ereadme<cr>", "Readme")
+        m.name("<leader>/n", "New File")
+        nnoremap("<leader>/nr", [[<cmd>Ereadme<cr>]], "Readme")
 
-            b = { "<Plug>UnconditionalPasteBlockBefore", "Paste Block" },
-            B = { "<Plug>UnconditionalPasteJaggedBefore", "Paste Jagged" },
-            L = { "<Plug>UnconditionalPasteInlinedBefore", "Paste Inline" },
-            l = { "<plug>UnconditionalPasteLineBefore", "Paste Line" },
-            S = { "<Plug>UnconditionalPasteParagraphedBefore", "Paste Paragraph" },
-            s = { "<Plug>UnconditionalPasteSpacedBefore", "Paste Spaced" },
-            u = { "P`]l", "Paste No Move" },
-        },
+    m.name("<leader>f", "Telescope")
+    nnoremap("<leader>f/", "<cmd>Telescope search_history<cr>", "Search History")
+    nnoremap("<leader>f;", "<cmd>Telescope command_history<cr>", "Search History")
+    nnoremap("<leader>fs", "<cmd>Telescope lsp_workspace_symbols<cr>", "Symbols")
+    nnoremap("<leader>fS", "<cmd>Telescope lsp_document_symbols<cr>", "Symbols (buffer)")
+    nnoremap("<leader>fE", "<cmd>Telescope lsp_document_diagnostics<cr>", "Errors (buffer)")
+    nnoremap("<leader>fe", "<cmd>Telescope lsp_workspace_diagnostics<cr>", "Errors")
+    nnoremap("<leader>fB", "<cmd>Telescope buffers only_cwd=true<cr>", "Buffers (cwd)")
+    nnoremap("<leader>fb", "<cmd>Telescope buffers<cr>", "Buffers")
+    nnoremap("<leader>fC", "<cmd>Telescope git_bcommits<cr>", "Commits (buffer)")
+    nnoremap("<leader>fc", "<cmd>Telescope git_commits<cr>", "Git Commits")
+    nnoremap("<leader>fF", "<cmd>lua require('telescope.builtin').find_files({find_command={'fd', '-I'}})<cr>", "Files (non git)")
+    nnoremap("<leader>ff", "<cmd>call v:lua.project_files()<cr>", "Find Files")
+    nnoremap("<leader>fG", "<cmd>Gitsigns setqflist<cr><cmd>Telescope quickfix<cr>", "Git Changes")
+    nnoremap("<leader>fg", "<cmd>Telescope git_status<cr>", "Git Status")
+    nnoremap("<leader>fj", "<cmd>Telescope jumplist<cr>", "Jumps")
+    nnoremap("<leader>fl", "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Fuzzy Line")
+    nnoremap("<leader>fL", '<cmd>Telescope grep_string only_sort_text=true search=""<cr>', "Fuzzy Line (Project)")
+    nnoremap("<leader>fm", "<cmd>Telescope marks<cr>", "Marks")
+    nnoremap("<leader>fn", "<cmd>TodoTelescope<cr>", "Todo Items")
+    nnoremap("<leader>fi", "<cmd>Telescope media_files<cr>", "Images (and other media)")
+    nnoremap("<leader>fo", "<cmd>Telescope oldfiles<cr>", "Old Files")
+    nnoremap("<leader>fq", "<cmd>Telescope quickfix<cr>", "QuickFix")
+    nnoremap("<leader>fr", "<cmd>Telescope live_grep<cr>", "Grep")
+    nnoremap("<leader>fR", [["<cmd> Telescope grep_string search=" . input("Grep For > ") . "<CR>"]], "Fast Grep (with regex)", "expr")
+    nnoremap("<leader>fV", [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj " . input("In what files? > ") . "<cr><cmd>Telescope quickfix<cr>"]], "Vim Grep (file select)", "expr")
+    nnoremap("<leader>fv", [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>Telescope quickfix<cr>"]], "Vim Grep", "expr")
+    nnoremap("<leader>fx", "<cmd>Telescope file_browser<cr>", "File Browser")
+    nnoremap("<leader>fX", "<cmd>lua require'telescope.builtin'.file_browser{cwd=require'telescope.utils'.buffer_dir()}<cr>", "File Browser (Relative)")
+    nnoremap("<leader>fI", "<cmd>lua require'telescope.builtin'.symbols{sources={'julia'}}<cr>", "Insert Symbols")
 
-        p = {
-            name = "Paste After",
+    m.name("<leader>r", "Refactor")
+    xnoremap("<leader>rf", "<cmd>lua require('refactoring').refactor('Extract Function')<cr>", "Extract Function")
+    xnoremap("<leader>rF", "<cmd>lua require('refactoring').refactor('Extract Function to File')<cr>", "Extract Function")
+    xnoremap("<leader>rv", "<cmd>lua require('refactoring').refactor('Extract Variable')<cr>", "Extract Variable")
+    xnoremap("<leader>ri", "<cmd>lua require('refactoring').refactor('Inline Variable')<cr>", "Inline Variable")
 
-            b = { "<Plug>UnconditionalPasteBlockAfter", "Paste Block" },
-            B = { "<Plug>UnconditionalPasteJaggedAfter", "Paste Jagged" },
-            L = { "<Plug>UnconditionalPasteInlinedAfter", "Paste Inline" },
-            l = { "<plug>UnconditionalPasteLineAfter", "Paste Line" },
-            S = { "<Plug>UnconditionalPasteParagraphedAfter", "Paste Paragraph" },
-            s = { "<Plug>UnconditionalPasteSpacedAfter", "Paste Spaced" },
-            u = { "p`[h", "Paste No Move" },
-        },
+    m.name("<leader>w", "Window Managment")
+    nnoremap("<leader>w<leader>", "<c-w>p", "Jump To Last Split")
+    nnoremap("<leader>wo", "<c-w>o", "Clean Up Windows")
+    nnoremap("<leader>wO", "<cmd>BDelete hidden<cr>", "Close All Hidden Buffers")
+    nnoremap("<leader>wf", "<c-w>w", "Focus Floating Window")
+    nnoremap("<leader>wd", "<cmd>bdelete<cr>", "Delete the current buffer")
+    nnoremap("<leader>wD", "<cmd>tabclose<cr>", "Close the Current Tab")
+    nnoremap("<leader>w<bs>", "<c-w>c", "Close Window")
+    nnoremap("<leader>w<cr>", "<c-w>v", "Open Window")
+    nnoremap("<leader>wx", "<c-w>s", "Horizontal Split")
+    nnoremap("<leader>wv", "<c-w>v", "Vertical Split")
+    nnoremap("<leader>wn", "<C-W>n", "Open New Window")
+    nnoremap("<leader>w=", "<c-w>=", "Equal Size")
+    nnoremap("<leader>wh", "<c-w>H", "Move Far Left")
+    nnoremap("<leader>wj", "<c-w>J", "Move Far Down")
+    nnoremap("<leader>wk", "<c-w>K", "Move Far Up")
+    nnoremap("<leader>wl", "<c-w>L", "Move Far Right")
+    nnoremap("<leader>wc", "<c-w>c", "Close Window")
+    nnoremap("<leader>wq", "<c-w>c", "Close Window")
 
-        s = {
-            name = "Change Case",
+    m.name("<leader>g", "Git")
+    nnoremap("<leader>gg", "<cmd>silent !kitty @ launch --cwd=current --type=window --window-title 'LazyGit' lazygit<cr>", "LazyGit")
+    nnoremap("<leader>gG", "<cmd>silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit<cr>", "LazyGit")
+    nnoremap("<leader>ga", "<cmd>lua require'gitsigns'.blame_line({full=true})<CR>", "Blame Line")
+    nnoremap("<leader>gA", "<cmd>Gitsigns toggle_current_line_blame<CR>", "Blame Toggle")
 
-            p = { "<Plug>CaserMixedCase", "Pascal Case" },
-            c = { "<Plug>CaserCamelCase", "Camel Case" },
-            ["_"] = { "<Plug>CaserSnakeCase", "Snake Case" },
-            u = { "<Plug>CaserUpperCase", "Upper Case" },
-            t = { "<Plug>CaserTitleCase", "Title Case" },
-            d = { "<Plug>CaserSentenceCase", "Sentance Case" },
-            ["<space>"] = { "<Plug>CaserSpaceCase", "Space Case" },
-            ["-"] = { "<Plug>CaserKebabCase", "Kebab Case" },
-            k = { "<Plug>CaserTitleKebabCase", "Title Kebab Case" },
-            ["."] = { "<Plug>CaserDotCase", "Dot Case" },
-        },
-    },
-    ["<leader>"] = {
-        ["<leader>"] = { "<cmd>e #<cr>", "Last File" },
-        ["."] = { "<cmd>Telescope lsp_code_actions theme=get_cursor<CR>", "Code Actions" },
-        ["/"] = {
-            name = "Related Files",
-            ["<leader>"] = { "<c-^>", "Last File" },
-            ["/"] = { "<cmd>A<cr>", "Alternate File" },
-            f = {
-                [["<cmd>lua require'telescope.builtin'.find_files({find_command={'fd', \"" . split(expand("%:t:r"), '_')[0] . "\"}})<cr>"]],
-                "Search",
-                expr = true,
-            },
-            r = { "<cmd>Ereadme<cr>", "Readme" },
-            v = {
-                name = "Vertical Split",
-                ["<leader>"] = { "<cmd>vsplit #<cr>", "Last File" },
-                ["/"] = { "<cmd>AV<cr>", "Alternate File" },
-                r = { "<cmd>Vreadme<cr>", "Readme" },
-            },
-            x = {
-                name = "Horizontal Split",
-                ["<leader>"] = { "<cmd>split #<cr>", "Last File" },
-                ["/"] = { "<cmd>AS<cr>", "Alternate File" },
-                r = { "<cmd>Sreadme<cr>", "Readme" },
-            },
-            O = {
-                name = "New Tab",
-                ["<leader>"] = { "<cmd>tabedit #<cr>", "Last File" },
-                ["/"] = { "<cmd>AT<cr>", "Alternate File" },
-                r = { "<cmd>Treadme<cr>", "Readme" },
-            },
-            n = {
-                name = "New File",
-                r = { [[<cmd>Ereadme<cr>]], "Readme" },
-            },
-        },
-        f = {
-            name = "Find",
-            ["/"] = { "<cmd>Telescope search_history<cr>", "Search History" },
-            [";"] = { "<cmd>Telescope command_history<cr>", "Search History" },
-            ["*"] = {
-                [[<cmd>lua require'telescope.builtin'.find_files({find_command={'rg', vim.fn.expand("<cword>")}})<cr>]],
-                "Grep Word Under Cursor",
-            },
-            s = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Symbols" },
-            S = { "<cmd>Telescope lsp_document_symbols<cr>", "Symbols (buffer)" },
-            E = { "<cmd>Telescope lsp_document_diagnostics<cr>", "Errors (buffer)" },
-            e = { "<cmd>Telescope lsp_workspace_diagnostics<cr>", "Errors" },
-            B = { "<cmd>Telescope buffers only_cwd=true<cr>", "Buffers (cwd)" },
-            b = { "<cmd>Telescope buffers<cr>", "Buffers" },
-            C = { "<cmd>Telescope git_bcommits<cr>", "Commits (buffer)" },
-            c = { "<cmd>Telescope git_commits<cr>", "Git Commits" },
-            F = { "<cmd>lua require('telescope.builtin').find_files({find_command={'fd', '-I'}})<cr>", "Files (non git)" },
-            f = { "<cmd>call v:lua.project_files()<cr>", "Find Files" },
-            G = { "<cmd>Gitsigns setqflist<cr><cmd>Telescope quickfix<cr>", "Git Changes" },
-            g = { "<cmd>Telescope git_status<cr>", "Git Status" },
-            j = { "<cmd>Telescope jumplist<cr>", "Jumps" },
-            l = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Fuzzy Line" },
-            L = { '<cmd>Telescope grep_string only_sort_text=true search=""<cr>', "Fuzzy Line (Project)" },
-            m = { "<cmd>Telescope marks<cr>", "Marks" },
-            n = { "<cmd>TodoTelescope<cr>", "Todo Items" },
-            i = { "<cmd>Telescope media_files<cr>", "Images (and other media)" },
-            o = { "<cmd>Telescope oldfiles<cr>", "Old Files" },
-            q = { "<cmd>Telescope quickfix<cr>", "QuickFix" },
-            r = { "<cmd>Telescope live_grep<cr>", "Grep" },
-            R = {
-                [["<cmd> Telescope grep_string search=" . input("Grep For > ") . "<CR>"]],
-                "Fast Grep (with regex)",
-                expr = true,
-            },
-            V = {
-                [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj " . input("In what files? > ") . "<cr><cmd>Telescope quickfix<cr>"]],
-                "Vim Grep (file select)",
-                expr = true,
-            },
-            v = {
-                [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>Telescope quickfix<cr>"]],
-                "Vim Grep",
-                expr = true,
-            },
-            x = { "<cmd>Telescope file_browser<cr>", "File Browser" },
-            X = {
-                "<cmd>lua require'telescope.builtin'.file_browser{cwd=require'telescope.utils'.buffer_dir()}<cr>",
-                "File Browser (Relative)",
-            },
-            I = { "<cmd>lua require'telescope.builtin'.symbols{sources={'julia'}}<cr>", "Insert Symbols" },
-        },
-        g = {
-            name = "Git",
-            g = {
-                "<cmd>silent !kitty @ launch --cwd=current --type=window --window-title 'LazyGit' lazygit<cr>",
-                "LazyGit",
-            },
-            G = { "<cmd>silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit<cr>", "LazyGit" },
+    nnoremap("<leader>gb", "<cmd>Telescope git_branches<cr>", "Branches")
+    nnoremap("<leader>gC", "<cmd>Telescope git_bcommits<cr>", "Commits (buffer)")
+    nnoremap("<leader>gc", "<cmd>Telescope git_commits<cr>", "Commits")
+    nnoremap("<leader>gq", "<cmd>Gitsigns setqflist<cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>", "Send diffs to qf")
 
-            a = { "<cmd>lua require'gitsigns'.blame_line({full=true})<CR>", "Blame Line" },
-            A = { "<cmd>Gitsigns toggle_current_line_blame<CR>", "Blame Toggle" },
+    nnoremap("<leader>gp", "<cmd>Gitsigns preview_hunk<CR>", "Hunk Preview")
+    nnoremap("<leader>gr", "<cmd>Gitsigns reset_hunk<CR>", "Hunk Reset")
+    nnoremap("<leader>gR", "<cmd>Gitsigns reset_buffer<CR>", "Reset Buffer")
+    nnoremap("<leader>gS", "<cmd>Gitsigns stage_buffer<CR>", "Stage File")
+    nnoremap("<leader>gs", "<cmd>Gitsigns stage_hunk<CR>", "Hunk Stage")
+    nnoremap("<leader>gv", "<cmd>Gitsigns select_hunk<CR>", "Select Current Hunk")
+    xnoremap("<leader>gs", "<cmd>lua require'gitsigns'.stage_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Stage Hunks in Range")
+    xnoremap("<leader>gr", "<cmd>lua require'gitsigns'.reset_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Reset Hunks in Range")
 
-            b = { "<cmd>Telescope git_branches<cr>", "Branches" },
-            C = { "<cmd>Telescope git_bcommits<cr>", "Commits (buffer)" },
-            c = { "<cmd>Telescope git_commits<cr>", "Commits" },
-            q = {
-                "<cmd>Gitsigns setqflist<cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>",
-                "Send diffs to qf",
-            },
+        m.name("<leader>gd", "Git Diff")
+        nnoremap("<leader>gdl", "<cmd>call v:lua.diff_repeat()<cr>", "Repeat Last Diff")
+        nnoremap("<leader>gdd", "<cmd>call v:lua.diff_repeat()<cr>", "Repeat Last Diff")
 
-            d = {
-                l = { "<cmd>call v:lua.diff_repeat()<cr>", "Repeat Last Diff" },
-                d = { "<cmd>call v:lua.diff_repeat()<cr>", "Repeat Last Diff" },
+        nnoremap("<leader>gdD", "<cmd>let g:DiffviewLast='DiffviewOpen'<cr><cmd>DiffviewOpen<CR>", "Git Diff Viewer")
+        nnoremap("<leader>gdc", "<cmd>call v:lua.git_commits_onechange()<cr>", "View The Diff of a Commit")
+        nnoremap("<leader>gdC", "<cmd>call v:lua.git_commits_againsthead()<cr>", "Diff Against a Commit")
+        nnoremap("<leader>gdb", "<cmd>call v:lua.git_branch_dif()<cr>", "Diff Against a Branch")
+        nnoremap("<leader>gdB", "<cmd>call v:lua.git_branch_mergebase()<cr>", "View The Diff of a Branch")
 
-                D = { "<cmd>let g:DiffviewLast='DiffviewOpen'<cr><cmd>DiffviewOpen<CR>", "Git Diff Viewer" },
-                c = { "<cmd>call v:lua.git_commits_onechange()<cr>", "View The Diff of a Commit" },
-                C = { "<cmd>call v:lua.git_commits_againsthead()<cr>", "Diff Against a Commit" },
-                b = { "<cmd>call v:lua.git_branch_dif()<cr>", "Diff Against a Branch" },
-                B = { "<cmd>call v:lua.git_branch_mergebase()<cr>", "View The Diff of a Branch" },
+        nnoremap("<leader>gdh", "<cmd>let g:DiffviewLast='DiffviewFileHistory'<cr><cmd>DiffviewFileHistory<CR>", "View File History")
+        nnoremap("<leader>gdH", [["<cmd>let g:DiffviewLast='DiffviewFileHistory" . getcwd() . "'<cr><cmd>DiffviewFileHistory" . getcwd() . "<CR>"]], "View Directory History", "expr")
 
-                h = {
-                    "<cmd>let g:DiffviewLast='DiffviewFileHistory'<cr><cmd>DiffviewFileHistory<CR>",
-                    "View File History",
-                },
-                H = {
-                    [["<cmd>let g:DiffviewLast='DiffviewFileHistory" . getcwd() . "'<cr><cmd>DiffviewFileHistory" . getcwd() . "<CR>"]],
-                    "View Directory History",
-                    expr = true,
-                },
-            },
+        m.name("<leader>gh", "GitHub")
+        nnoremap("<leader>ghe", [["<cmd>RepoEdit git@github.com:" . input("What repo would you like to browse > ") . "<cr>"]], "Browse Repo", "expr")
+        nnoremap("<leader>ghi", "<cmd>Telescope gh issues<cr>", "Search Issues")
+        nnoremap("<leader>ghp", "<cmd>Telescope gh pull_request<cr>", "Search Pull Requests")
+        nnoremap("<leader>ghg", "<cmd>Telescope gh gist<cr>", "Search Gists")
+        nnoremap("<leader>ghr", "<cmd>Telescope gh run<cr>", "Search GH Runs")
+        m.name("<leader>g,", "Git Settings")
+        nnoremap("<leader>g,b", "<cmd>call v:lua.gitsign_change_base()<cr>", "Change Gitsigns Base")
+        nnoremap("<leader>g,B", "<cmd>call v:lua.gitsign_bchange_base()<cr>", "Change Gitsigns Base")
 
-            p = { "<cmd>Gitsigns preview_hunk<CR>", "Hunk Preview" },
-            r = { "<cmd>Gitsigns reset_hunk<CR>", "Hunk Reset" },
-            R = { "<cmd>Gitsigns reset_buffer<CR>", "Reset Buffer" },
-            S = { "<cmd>Gitsigns stage_buffer<CR>", "Stage File" },
-            s = { "<cmd>Gitsigns stage_hunk<CR>", "Hunk Stage" },
+    m.name("<leader>p", "Preview")
+    nnoremap("<leader>pa", "<cmd>lua require'gitsigns'.blame_line({full=true})<CR>", "Blame Line")
+    nnoremap("<leader>pp", "<Cmd>lua vim.lsp.buf.hover({ focusable = false})<CR>", "Documentation")
+    nnoremap("<leader>ps", "<cmd>lua vim.lsp.buf.signature_help({ focusable = false})<CR>", "Signature")
+    nnoremap("<leader>pd", "<cmd>lua PeekDefinition()<CR>", "Definition")
+    nnoremap("<leader>pE", "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown")
+    nnoremap("<leader>pe", "<cmd>lua vim.diagnostic.open_float(0, {border='single', scope='line', source='always'})<CR>", "Diagnostics")
+    nnoremap("<leader>pW", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory")
+    nnoremap("<leader>pg", "<cmd>lua require'gitsigns'.preview_hunk()<CR>", "Hunk Preview")
+    nnoremap("<leader>pw", "<cmd>MatchupWhereAmI??<cr>", "Preview Location")
 
-            v = { "<cmd>Gitsigns select_hunk<CR>", "Select Current Hunk" },
+    m.name("<leader>v", "View Panels")
+    nmap("v:lua.commandRepeat('<leader>v', 'panelRepeat')", "Repeat Panel", "expr")
+    nnoremap("<leader>ve", "<cmd>let g:panelRepeat='e'<cr><cmd>TroubleToggle lsp_workspace_diagnostics<CR>", "Error List (Workspace)")
+    nnoremap("<leader>vE", "<cmd>let g:panelRepeat='E'<cr><cmd>TroubleToggle lsp_document_diagnostics<CR>", "Error List")
+    nnoremap("<leader>vq", "<cmd>let g:panelRepeat='q'<cr><cmd>TroubleToggle quickfix<CR>", "QuickFix List")
+    nnoremap("<leader>vn", "<cmd>let g:panelRepeat='n'<cr><cmd>TodoTrouble<cr>", "Todo List")
+    nnoremap("<leader>vg", "<cmd>let g:panelRepeat='g'<cr><cmd>DiffviewOpen<CR>", "Git")
+    nnoremap("<leader>vu", "<cmd>let g:panelRepeat='u'<cr><cmd>UndotreeToggle<CR>", "Undo Tree")
 
-            h = {
-                name = "GitHub",
-                e = {
-                    [["<cmd>RepoEdit git@github.com:" . input("What repo would you like to browse > ") . "<cr>"]],
-                    "Browse Repo",
-                    expr = true,
-                },
-                i = { "<cmd>Telescope gh issues<cr>", "Search Issues" },
-                p = { "<cmd>Telescope gh pull_request<cr>", "Search Pull Requests" },
-                g = { "<cmd>Telescope gh gist<cr>", "Search Gists" },
-                r = { "<cmd>Telescope gh run<cr>", "Search GH Runs" },
-            },
-            [","] = {
-                name = "Git Settings",
-                b = { "<cmd>call v:lua.gitsign_change_base()<cr>", "Change Gitsigns Base" },
-                B = { "<cmd>call v:lua.gitsign_bchange_base()<cr>", "Change Gitsigns Base" },
-            },
-        },
-        p = {
-            name = "Preview",
+    m.name("<leader>q", "Quickfix List")
+    nnoremap("<leader>ql", "<cmd>cnewer<cr>", "Newer List")
+    nnoremap("<leader>qh", "<cmd>colder<cr>", "Older List")
+    nmap("<leader>qq", "<cmd>let g:panelRepeat='q'<cr><cmd>TroubleToggle quickfix<CR>", "QuickFix List")
+    nnoremap("<leader>qn", "<cmd>TodoQuickFix<cr><let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>", "Populate with todo items")
+    nnoremap("<leader>q2", [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>"]], "Populate With VimGrep (file select)", "expr")
+    nnoremap("<leader>q2", [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj " . input("In what files? > ") . "<cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>"]], "Populate With VimGrep", "expr")
 
-            a = { "<cmd>lua require'gitsigns'.blame_line({full=true})<CR>", "Blame Line" },
-            p = { "<Cmd>lua vim.lsp.buf.hover({ focusable = false})<CR>", "Documentation" },
-            s = { "<cmd>lua vim.lsp.buf.signature_help({ focusable = false})<CR>", "Signature" },
-            d = { "<cmd>lua PeekDefinition()<CR>", "Definition" },
-            E = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
-            e = {
-                "<cmd>lua vim.diagnostic.open_float(0, {border='single', scope='line', source='always'})<CR>",
-                "Diagnostics",
-            },
-            W = { "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory" },
-            g = { "<cmd>lua require'gitsigns'.preview_hunk()<CR>", "Hunk Preview" },
-            w = { "<cmd>MatchupWhereAmI??<cr>", "Preview Location" },
-        },
-        v = {
-            name = "View",
-            v = { "v:lua.commandRepeat('<leader>v', 'panelRepeat')", "Repeat Panel", expr = true, noremap = false },
-            e = {
-                "<cmd>let g:panelRepeat='e'<cr><cmd>TroubleToggle lsp_workspace_diagnostics<CR>",
-                "Error List (Workspace)",
-            },
-            E = { "<cmd>let g:panelRepeat='E'<cr><cmd>TroubleToggle lsp_document_diagnostics<CR>", "Error List" },
-            q = { "<cmd>let g:panelRepeat='q'<cr><cmd>TroubleToggle quickfix<CR>", "QuickFix List" },
-            n = { "<cmd>let g:panelRepeat='n'<cr><cmd>TodoTrouble<cr>", "Todo List" },
-            g = { "<cmd>let g:panelRepeat='g'<cr><cmd>DiffviewOpen<CR>", "Git" },
-            x = { "<cmd>let g:panelRepeat='x'<cr><cmd>NvimTreeToggle<CR>", "File Tree" },
-            u = { "<cmd>let g:panelRepeat='u'<cr><cmd>UndotreeToggle<CR>", "Undo Tree" },
-        },
-        q = {
-            name = "QuickFix List",
-            l = { "<cmd>cnewer<cr>", "Newer List" },
-            h = { "<cmd>colder<cr>", "Older List" },
-            q = { "<cmd>let g:panelRepeat='q'<cr><cmd>TroubleToggle quickfix<CR>", "QuickFix List", noremap = false },
-            n = { "<cmd>TodoQuickFix<cr><let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>", "Populate with todo items" },
-            V = {
-                [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>"]],
-                "Populate With VimGrep (file select)",
-                expr = true,
-            },
-            v = {
-                [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj " . input("In what files? > ") . "<cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>"]],
-                "Populate With VimGrep",
-                expr = true,
-            },
-        },
-        e = {
-            name = "Errors",
-            p = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
-            r = { "<cmd>TroubleRefresh<cr>", "Refresh Errors" },
-            e = { "<cmd>let g:panelRepeat='e'<cr><cmd>TroubleToggle lsp_workspace_diagnostics<CR>", "Error List" },
-            E = { "<cmd>let g:panelRepeat='E'<cr><cmd>TroubleToggle lsp_document_diagnostics<CR>", "Error List (buffer)" },
-            n = { "<cmd>let g:panelRepeat='n'<cr><cmd>TodoTrouble<cr>", "Todo List" },
-        },
-        t = {
-            name = "Terminal",
-            t = { "<cmd>silent !kittyPersistent normterm<cr>", "Normal Terminal" },
-            i = { [[<cmd>silent exe "!kittyrepl replterm " . b:replCommand<cr>]], "REPL Terminal" },
-            d = { [[<cmd>silent exe "!kittyPersistent debugterm " . b:debugCommand<cr>]], "Debug Terminal" },
-            m = { "<cmd>silent !kittyPersistent maketerm<cr>", "Building Terminal" },
-        },
-        m = {
-            name = "Make Things",
-        },
-        u = {
-            name = "Unit Tests",
-        },
-        d = {
-            name = "Debugging",
-        },
-        r = {
-            name = "Refactor",
-            r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)" },
-            f = {
-                "zib<cmd>lua require('refactoring').refactor('Extract Function')<cr>",
-                "Extract Function",
-                noremap = false,
-            },
-            F = {
-                "zib<cmd>lua require('refactoring').refactor('Extract Function to File')<cr>",
-                "Extract Function",
-                noremap = false,
-            },
-            v = {
-                "zi,<cmd>lua require('refactoring').refactor('Extract Variable')<cr>",
-                "Extract Variable",
-                noremap = false,
-            },
-            i = {
-                "zi,<cmd>lua require('refactoring').refactor('Inline Variable')<cr>",
-                "Inline Variable",
-                noremap = false,
-            },
-        },
-        z = { "<cmd>ZenMode<cr>", "Zen Mode" },
-        w = {
-            name = "Window Managment",
-            ["<leader>"] = { "<c-w>p", "Jump To Last Split" },
-            o = { "<c-w>o", "Clean Up Windows" },
-            O = { "<cmd>BDelete hidden<cr>", "Close All Hidden Buffers" },
-            f = { "<c-w>w", "Focus Floating Window" },
-            d = { "<cmd>bdelete<cr>", "Delete the current buffer" },
-            D = { "<cmd>tabclose<cr>", "Close the Current Tab" },
-            ["<bs>"] = { "<c-w>c", "Close Window" },
-            ["<cr>"] = { "<c-w>v", "Open Window" },
-            x = { "<c-w>s", "Horizontal Split" },
-            v = { "<c-w>v", "Vertical Split" },
-            n = { "<C-W>n", "Open New Window" },
-            ["="] = { "<c-w>=", "Equal Size" },
-            h = { "<c-w>H", "Move Far Left" },
-            j = { "<c-w>J", "Move Far Down" },
-            k = { "<c-w>K", "Move Far Up" },
-            l = { "<c-w>L", "Move Far Right" },
-            c = { "<c-w>c", "Close Window" },
-            q = { "<c-w>c", "Close Window" },
-        },
-        [","] = {
-            name = "Settings",
-            [","] = { "<cmd>Telescope vim_options<cr>", "Vim Options" },
-            s = { "<cmd>set spell!<cr>", "Toggle Spelling" },
-            k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
-            C = { "<cmd>Telescope colorscheme<cr>", "Color Schemes" },
-            c = { "<cmd>Telescope highlights<cr>", "Highlight Groups" },
-            a = { "<cmd>Telescope autocommands<cr>", "AutoCommands" },
-            f = { "<cmd>Telescope filetypes<cr>", "FileTypes" },
-            h = { "<cmd>Telescope help_tags<cr>", "Help Tags" },
-            m = { "<cmd>Telescope man_pages<cr>", "Man Pages" },
-            d = { "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown" },
-            w = { "<cmd>set wrap!<cr>", "Toggle Text Wraping" },
-            g = {
-                name = "Git Settings",
-                b = { "<cmd>call v:lua.gitsign_change_base()<cr>", "Change Gitsigns Base" },
-                B = { "<cmd>call v:lua.gitsign_bchange_base()<cr>", "Change Gitsigns Base" },
-            },
-            ["/"] = { "<cmd>let @/=''<cr>", "Clear Search" },
-        },
-        k = {
-            [[":silent !kitty @ launch --type=tab --tab-title 'Kak %:t' kak %:p +" . line(".") . ":" . col(".") . "<cr>"]],
-            "Open file in Kak",
-            expr = true,
-        },
-    },
+    m.name("<leader>e", "Errors")
+    nnoremap("<leader>ep", "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown")
+    nnoremap("<leader>er", "<cmd>TroubleRefresh<cr>", "Refresh Errors")
+    nnoremap("<leader>ee", "<cmd>let g:panelRepeat='e'<cr><cmd>TroubleToggle lsp_workspace_diagnostics<CR>", "Error List")
+    nnoremap("<leader>eE", "<cmd>let g:panelRepeat='E'<cr><cmd>TroubleToggle lsp_document_diagnostics<CR>", "Error List (buffer)")
+    nnoremap("<leader>en", "<cmd>let g:panelRepeat='n'<cr><cmd>TodoTrouble<cr>", "Todo List")
 
-    ["["] = {
-        name = "Backward Leader",
-        ["["] = { "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Scope" },
-        ["]"] = { "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @function.outer<cr>zz", "Scope" },
-        h = {
-            [[&diff ? "[czz<cmd>let g:dirJumps='h'<cr>m`" : "<cmd>lua require'gitsigns'.prev_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>m`"]],
-            "Hunk",
-            expr = true,
-        },
-        Q = {
-            "<cmd>let g:dirJumps='Q'<cr>m`<cmd>try <bar> cpfile <bar> catch /E553/ <bar> clast <bar> endtry<cr>zz",
-            "Location Entry",
-        },
-        q = {
-            "<cmd>let g:dirJumps='q'<cr>m`<cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast <bar> endtry<cr>zz",
-            "QuickFix Entry",
-        },
-        s = { "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Scope" },
-        S = { "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoPrevioutEnd @function.outer<cr>zz", "Scope" },
-        o = { "<cmd>let g:dirJumps='o'<cr>m`<cmd>TSTextobjectGotoPreviousStart @class.outer<cr>zz", "Class" },
-        f = { "<cmd>let g:dirJumps='f'<cr>m`<cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Function" },
-        [","] = { "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoPreviousStart @parameter.inner<cr>zz", "Parameter" },
-        c = { "<cmd>let g:dirJumps='c'<cr>m`<cmd>TSTextobjectGotoPreviousStart @conditional.inner<cr>zz", "Conditional" },
-        C = { "<cmd>let g:dirJumps='C'<cr>m`<cmd>TSTextobjectGotoPreviousStart @comment.outer<cr>zz", "Comment" },
-        b = { "<cmd>let g:dirJumps='b'<cr>m`<cmd>TSTextobjectGotoPreviousStart @block.outer<cr>zz", "Block" },
-        O = { "<cmd>let g:dirJumps='O'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @class.outer<cr>zz", "Class" },
-        F = { "<cmd>let g:dirJumps='F'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @function.outer<cr>zz", "Function" },
-        ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @parameter.inner<cr>zz", "Parameter" },
-        B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @block.outer<cr>zz", "Block" },
-        n = { "<cmd>let g:dirJumps='search'<cr>m`Nzz", "Search Result" },
-        e = {
-            "<cmd>lua vim.diagnostic.goto_prev({ float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
-            "Diagnostics",
-        },
-        p = { "<cmd>let g:dirJumps='p'<cr>{zz", "Paragraph" },
-        E = {
-            a = {
-                "<cmd>lua vim.diagnostic.goto_prev({ severity='Error', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Ea'<cr>m`",
-                "Error",
-            },
-            r = {
-                "<cmd>lua vim.diagnostic.goto_prev({ severity='Warn', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Er'<cr>m`",
-                "Warn",
-            },
-            s = {
-                "<cmd>lua vim.diagnostic.goto_prev({ severity='Info', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Es'<cr>m`",
-                "Info",
-            },
-            t = {
-                "<cmd>lua vim.diagnostic.goto_prev({ severity='Hint', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Et'<cr>m`",
-                "Hint",
-            },
-        },
-    },
+    m.name("<leader>t", "Terminal")
+    nnoremap("<leader>tt", "<cmd>silent !kittyPersistent normterm<cr>", "Normal Terminal")
+    nnoremap("<leader>ti", [[<cmd>silent exe "!kittyrepl replterm " . b:replCommand<cr>]], "REPL Terminal")
+    nnoremap("<leader>td", [[<cmd>silent exe "!kittyPersistent debugterm " . b:debugCommand<cr>]], "Debug Terminal")
+    nnoremap("<leader>tm", "<cmd>silent !kittyPersistent maketerm<cr>", "Building Terminal")
 
-    ["]"] = {
-        name = "Forward Leader",
-        ["]"] = { "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Scope" },
-        ["["] = { "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Scope" },
-        h = {
-            [[&diff ? "]czz<cmd>let g:dirJumps='h'<cr>m`" : "<cmd>lua require'gitsigns'.next_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>m`"]],
-            "Hunk",
-            expr = true,
-        },
-        Q = {
-            "<cmd>let g:dirJumps='Q'<cr>m`<cmd>try <bar> cnfile <bar> catch /E553/ <bar> cfirst <bar> endtry<cr>zz",
-            "Location Entry",
-        },
-        q = {
-            "<cmd>let g:dirJumps='q'<cr>m`<cmd>try <bar> cnext <bar> catch /E553/ <bar> cfirst <bar> endtry<cr>zz",
-            "QuickFix Entry",
-        },
-        s = { "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Scope" },
-        S = { "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Scope" },
-        d = { "<cmd>let g:dirJumps='D'<cr>m`<cmd>TSTextobjectGotoNextStart @comment.outer<cr>zz", "Comment" },
-        o = { "<cmd>let g:dirJumps='o'<cr>m`<cmd>TSTextobjectGotoNextStart @class.outer<cr>zz", "Class" },
-        f = { "<cmd>let g:dirJumps='f'<cr>m`<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Function" },
-        c = { "<cmd>let g:dirJumps='c'<cr>m`<cmd>TSTextobjectGotoNextStart @conditional.inner<cr>zz", "Conditional" },
-        [","] = { "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoNextStart @parameter.inner<cr>zz", "Parameter" },
-        b = { "<cmd>let g:dirJumps='b'<cr>m`<cmd>TSTextobjectGotoNextStart @block.outer<cr>zz", "Block" },
-        O = { "<cmd>let g:dirJumps='O'<cr>m`<cmd>TSTextobjectGotoNextEnd @class.outer<cr>zz", "Class (end)" },
-        F = { "<cmd>let g:dirJumps='F'<cr>m`<cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Function (end)" },
-        C = { "<cmd>let g:dirJumps='C'<cr>m`<cmd>TSTextobjectGotoNextEnd @conditional.inner<cr>zz", "Conditional (end)" },
-        ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoNextEnd @parameter.inner<cr>zz", "Parameter (end)" },
-        B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block (end)" },
-        n = { "<cmd>let g:dirJumps='search'<cr>m`nzz", "Search Result" },
-        e = {
-            "<cmd>lua vim.diagnostic.goto_next({ float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
-            "Diagnostics",
-        },
-        p = { "<cmd>let g:dirJumps='p'<cr>}zz", "Paragraph" },
-        E = {
-            a = {
-                "<cmd>lua vim.diagnostic.goto_next({ severity='Error', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Ea'<cr>m`",
-                "Error",
-            },
-            r = {
-                "<cmd>lua vim.diagnostic.goto_next({ severity='Warn', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Er'<cr>m`",
-                "Warn",
-            },
-            s = {
-                "<cmd>lua vim.diagnostic.goto_next({ severity='Info', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Es'<cr>m`",
-                "Info",
-            },
-            t = {
-                "<cmd>lua vim.diagnostic.goto_next({ severity='Hint', float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='Et'<cr>m`",
-                "Hint",
-            },
-        },
-    },
+    m.name("<leader>m", "Make")
+    m.name("<leader>u", "Unit Tests")
+    m.name("<leader>d", "Debugging")
 
-    ["<localleader>"] = {
-        name = "Local Leader",
-    },
-})
+    m.name("<leader>r", "Refactoring")
+    nnoremap("<leader>rr", "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)")
+    nmap("<leader>rf", "zib<cmd>lua require('refactoring').refactor('Extract Function')<cr>", "Extract Function")
+    nmap("<leader>rF", "zib<cmd>lua require('refactoring').refactor('Extract Function to File')<cr>", "Extract Function")
+    nmap("<leader>rv", "zi,<cmd>lua require('refactoring').refactor('Extract Variable')<cr>", "Extract Variable")
+    nmap("<leader>ri", "zi,<cmd>lua require('refactoring').refactor('Inline Variable')<cr>", "Inline Variable")
+
+    m.name("<leader>,", "Settings")
+    nnoremap("<leader>,,", "<cmd>Telescope vim_options<cr>", "Vim Options")
+    nnoremap("<leader>,s", "<cmd>set spell!<cr>", "Toggle Spelling")
+    nnoremap("<leader>,k", "<cmd>Telescope keymaps<cr>", "Keymaps")
+    nnoremap("<leader>,C", "<cmd>Telescope colorscheme<cr>", "Color Schemes")
+    nnoremap("<leader>,c", "<cmd>Telescope highlights<cr>", "Highlight Groups")
+    nnoremap("<leader>,a", "<cmd>Telescope autocommands<cr>", "AutoCommands")
+    nnoremap("<leader>,f", "<cmd>Telescope filetypes<cr>", "FileTypes")
+    nnoremap("<leader>,h", "<cmd>Telescope help_tags<cr>", "Help Tags")
+    nnoremap("<leader>,m", "<cmd>Telescope man_pages<cr>", "Man Pages")
+    nnoremap("<leader>,d", "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown")
+    nnoremap("<leader>,w", "<cmd>set wrap!<cr>", "Toggle Text Wraping")
+    nnoremap("<leader>,/", "<cmd>let @/=''<cr>", "Clear Search")
+
+nnoremap("<leader>k", [[":silent !kitty @ launch --type=tab --tab-title 'Kak %:t' kak %:p +" . line(".") . ":" . col(".") . "<cr>"]], "Open file in Kak", "expr")
+nnoremap("<leader>z", "<cmd>ZenMode<cr>", "Zen Mode")
+
+m.name("[", "Backward Leader")
+nnoremap("[[", "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Scope")
+nnoremap("[]", "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @function.outer<cr>zz", "Scope")
+nnoremap("[s", "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Scope")
+nnoremap("[S", "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoPrevioutEnd @function.outer<cr>zz", "Scope")
+nnoremap("[,", "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoPreviousStart @parameter.inner<cr>zz", "Parameter")
+nnoremap("[b", "<cmd>let g:dirJumps='b'<cr>m`<cmd>TSTextobjectGotoPreviousStart @block.outer<cr>zz", "Block")
+nnoremap("[<", "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @parameter.inner<cr>zz", "Parameter")
+nnoremap("[B", "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @block.outer<cr>zz", "Block")
+nnoremap("[h", [[&diff ? "[czz<cmd>let g:dirJumps='h'<cr>m`" : "<cmd>lua require'gitsigns'.prev_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>m`"]], "Hunk", "expr")
+nnoremap("[q", "<cmd>let g:dirJumps='q'<cr>m`<cmd>try<bar>cprevious<bar>catch/E553/<bar>clast<bar>endtry<cr>zz", "QuickFix Entry")
+nnoremap("[/", "<cmd>let g:dirJumps='search'<cr>m`Nzz", "Search Result")
+nnoremap("[p", "<cmd>let g:dirJumps='p'<cr>{zz", "Paragraph")
+nnoremap("[w", "<cmd>let g:dirJumps='w'<cr>b", "Word")
+nnoremap("[e", "<cmd>let g:dirJumps='e'<cr>ge", "Word End")
+-- nmap("[$w", "<cmd>let g:dirJumps='$w'<cr><plug>WordMotion_b", "Sub-Word")
+-- nmap("[$e", "<cmd>let g:dirJumps='$e'<cr><plug>WordMotion_ge", "Sub-Word End")
+nnoremap("[d", "<cmd>lua vim.diagnostic.goto_prev({ float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='e'<cr>m`", "Diagnostics")
+    m.name("[D", "Diagnostaic Type")
+    nnoremap("[Dn", "<cmd>lua vim.diagnostic.goto_prev({severity='Error',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Da'<cr>m`", "Error")
+    nnoremap("[De", "<cmd>lua vim.diagnostic.goto_prev({severity='Warn',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Dr'<cr>m`", "Warn")
+    nnoremap("[Di", "<cmd>lua vim.diagnostic.goto_prev({severity='Info',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Ds'<cr>m`", "Info")
+    nnoremap("[Do", "<cmd>lua vim.diagnostic.goto_prev({severity='Hint',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Dt'<cr>m`", "Hint")
+xnoremap("[[", "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Scope")
+xnoremap("[]", "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @function.outer<cr>zz", "Scope")
+xnoremap("[s", "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Scope")
+xnoremap("[S", "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoPrevioutEnd @function.outer<cr>zz", "Scope")
+xnoremap("[,", "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoPreviousStart @parameter.inner<cr>zz", "Parameter")
+xnoremap("[b", "<cmd>let g:dirJumps='b'<cr>m`<cmd>TSTextobjectGotoPreviousStart @block.outer<cr>zz", "Block")
+xnoremap("[<", "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @parameter.inner<cr>zz", "Parameter")
+xnoremap("[B", "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @block.outer<cr>zz", "Block")
+xnoremap("[h", [[&diff ? "[czz<cmd>let g:dirJumps='h'<cr>m`" : "<cmd>lua require'gitsigns'.prev_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>m`"]], "Hunk", "expr")
+xnoremap("[q", "<cmd>let g:dirJumps='q'<cr>m`<cmd>try<bar>cprevious<bar>catch/E553/<bar>clast<bar>endtry<cr>zz", "QuickFix Entry")
+xnoremap("[/", "<cmd>let g:dirJumps='search'<cr>m`Nzz", "Search Result")
+xnoremap("[p", "<cmd>let g:dirJumps='p'<cr>{zz", "Paragraph")
+xnoremap("[d", "<cmd>lua vim.diagnostic.goto_prev({ float = {border='single', scope='cursor', source='always'}})<CR>zz<cmd>let g:dirJumps='e'<cr>m`", "Diagnostics")
+    xnoremap("[Dn", "<cmd>lua vim.diagnostic.goto_prev({severity='Error',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Da'<cr>m`", "Error")
+    xnoremap("[De", "<cmd>lua vim.diagnostic.goto_prev({severity='Warn',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Dr'<cr>m`", "Warn")
+    xnoremap("[Di", "<cmd>lua vim.diagnostic.goto_prev({severity='Info',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Ds'<cr>m`", "Info")
+    xnoremap("[Do", "<cmd>lua vim.diagnostic.goto_prev({severity='Hint',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Dt'<cr>m`", "Hint")
+
+m.name("]", "Forward Leader")
+nnoremap("]]", "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Scope")
+nnoremap("][", "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Scope")
+nnoremap("]s", "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Scope")
+nnoremap("]S", "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Scope")
+nnoremap("],", "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoNextStart @parameter.inner<cr>zz", "Parameter")
+nnoremap("]<", "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoNextEnd @parameter.inner<cr>zz", "Parameter (end)")
+nnoremap("]b", "<cmd>let g:dirJumps='b'<cr>m`<cmd>TSTextobjectGotoNextStart @block.outer<cr>zz", "Block")
+nnoremap("]B", "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block (end)")
+nnoremap("]h", [[&diff?"]czz<cmd>let g:dirJumps='h'<cr>m`":"<cmd>luarequire'gitsigns'.next_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>m`"]], "Hunk", "expr")
+nnoremap("]q", "<cmd>let g:dirJumps='q'<cr>m`<cmd>try<bar>cnext<bar>catch/E553/<bar>cfirst<bar>endtry<cr>zz", "QuickFix Entry")
+nnoremap("]/", "<cmd>let g:dirJumps='search'<cr>m`nzz", "Search Result")
+nnoremap("]p", "<cmd>let g:dirJumps='p'<cr>}zz", "Paragraph")
+nnoremap("]w", "<cmd>let g:dirJumps='w'<cr>w", "Word")
+nnoremap("]e", "<cmd>let g:dirJumps='e'<cr>e", "Word End")
+-- nmap("]$w", "<cmd>let g:dirJumps='$w'<cr><plug>WordMotion_w", "Sub-Word")
+-- nmap("]$e", "<cmd>let g:dirJumps='$e'<cr><plug>WordMotion_e", "Sub-Word End")
+nnoremap("]d", "<cmd>lua vim.diagnostic.goto_next({float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='d'<cr>m`", "Diagnostics")
+    m.name("]D", "Diagnostaic Type")
+    nnoremap("]Dn", "<cmd>lua vim.diagnostic.goto_next({severity='Error',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Da'<cr>m`", "Error")
+    nnoremap("]De", "<cmd>lua vim.diagnostic.goto_next({severity='Warn',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Dr'<cr>m`", "Warn")
+    nnoremap("]Di", "<cmd>lua vim.diagnostic.goto_next({severity='Info',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Ds'<cr>m`", "Info")
+    nnoremap("]Do", "<cmd>lua vim.diagnostic.goto_next({severity='Hint',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Dt'<cr>m`", "Hint")
+xnoremap("]]", "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Scope")
+xnoremap("][", "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Scope")
+xnoremap("]s", "<cmd>let g:dirJumps='s'<cr>m`<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Scope")
+xnoremap("]S", "<cmd>let g:dirJumps='S'<cr>m`<cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Scope")
+xnoremap("],", "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoNextStart @parameter.inner<cr>zz", "Parameter")
+xnoremap("]<", "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoNextEnd @parameter.inner<cr>zz", "Parameter (end)")
+xnoremap("]b", "<cmd>let g:dirJumps='b'<cr>m`<cmd>TSTextobjectGotoNextStart @block.outer<cr>zz", "Block")
+xnoremap("]B", "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block (end)")
+xnoremap("]h", [[&diff?"]czz<cmd>let g:dirJumps='h'<cr>m`":"<cmd>luarequire'gitsigns'.next_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>m`"]], "Hunk", "expr")
+xnoremap("]q", "<cmd>let g:dirJumps='q'<cr>m`<cmd>try<bar>cnext<bar>catch/E553/<bar>cfirst<bar>endtry<cr>zz", "QuickFix Entry")
+xnoremap("]/", "<cmd>let g:dirJumps='search'<cr>m`nzz", "Search Result")
+xnoremap("]p", "<cmd>let g:dirJumps='p'<cr>}zz", "Paragraph")
+xnoremap("]d", "<cmd>lua vim.diagnostic.goto_next({float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='d'<cr>m`", "Diagnostics")
+    xnoremap("]Dn", "<cmd>lua vim.diagnostic.goto_next({severity='Error',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Da'<cr>m`", "Error")
+    xnoremap("]De", "<cmd>lua vim.diagnostic.goto_next({severity='Warn',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Dr'<cr>m`", "Warn")
+    xnoremap("]Di", "<cmd>lua vim.diagnostic.goto_next({severity='Info',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Ds'<cr>m`", "Info")
+    xnoremap("]Do", "<cmd>lua vim.diagnostic.goto_next({severity='Hint',float={border='single',scope='cursor',source='always'}})<CR>zz<cmd>let g:dirJumps='Dt'<cr>m`", "Hint")
+
+-- TODO : Movement always infront of dirJump setting, so works in opperator pending mode
+-- TODO : Merge with in next/in last op bindings, have logic for n always following dirJumps
+-- TODO : Or have a new variable for operator only ones
+-- TODO : Make bindings for n,N for visual, operator
+-- TODO : Make gn,gN bindings
+
+m.name("<localleader>", "Local Leader")
 
 -- Git Diff Bindings
 if vim.api.nvim_win_get_option(0, "diff") then
-    require("which-key").register({
-        ["<leader>"] = {
-            ["["] = { "<cmd>diffget LOCAL<cr>", "Take From Local Change" },
-            ["]"] = { "<cmd>diffget REMOTE<cr>", "Take From Remote Change" },
-            ["<leader>"] = { "<cmd>diffget BASE<cr>", "Take From Base" },
-        },
-    })
+    nnoremap("<leader>[", "<cmd>diffget LOCAL<cr>", "Take From Local Change")
+    nnoremap("<leader>]", "<cmd>diffget REMOTE<cr>", "Take From Remote Change")
+    nnoremap("<leader><leader>", "<cmd>diffget BASE<cr>", "Take From Base" )
 end
 
 -- Visual Bindings
-require("which-key").register({
-    ["g,"] = {
-        name = "User Commands",
 
-        [";"] = { "q:", "Command Buffer" },
+m.xname("a", "Around")
+xnoremap("ah", ":<c-u>Gitsigns selct_hunk<cr>", "Git Hunk")
+xnoremap("aB", ":<c-u>TSTextobjectSelect @block.outer<cr>", "Block")
+xnoremap("ac", ":<c-u>TSTextobjectSelect @conditional.outer<cr>", "Conditional")
+xnoremap("a,", ":<c-u>TSTextobjectSelect @parameter.outer<cr>", "Parameter")
+xnoremap("ad", ":<c-u>TSTextobjectSelect @comment.outer<cr>", "Comment")
+xnoremap("af", ":<c-u>TSTextobjectSelect @function.outer<cr>", "Function")
+xnoremap("aF", ":<c-u>TSTextobjectSelect @call.outer<cr>", "Function")
+xnoremap("ao", ":<c-u>TSTextobjectSelect @class.outer<cr>", "Class")
+xnoremap("av", "<cmd>exec 'normal! HVL'<cr>", "Select Viewport")
+    m.xname("a]", "Around Next")
+    xnoremap("a]s", ":<c-u>call v:lua.mapped_targets(v:count, ')', 'as')<cr>", "Sentance")
+    xnoremap("a]w", ":<c-u>call v:lua.mapped_targets(v:count, 'w', 'aw')<cr>", "Word")
+    xnoremap("a]W", ":<c-u>call v:lua.mapped_targets(v:count, 'W', 'aW')<cr>", "Word")
+    xnoremap("a]$w", ":<c-u>call v:lua.mapped_targets(v:count, '$w', 'a$w')<cr>", "Sub Word")
+    xnoremap("a]p", ":<c-u>call v:lua.paragraph_targets(v:count, 1)<cr>", "Paragraph")
+    xnoremap("a]h", ":<c-u>call v:lua.git_target(v:count, 'true')<cr>", "Git Hunk")
+    xnoremap("a]B", ":<c-u>call v:lua.ts_target(v:count, '@block.outer')<cr>", "Block")
+    xnoremap("a]c", ":<c-u>call v:lua.ts_target(v:count, '@conditional.outer')<cr>", "Conditional")
+    xnoremap("a],", ":<c-u>call v:lua.ts_target(v:count, '@parameter.outer')<cr>", "Parameter")
+    xnoremap("a]d", ":<c-u>call v:lua.ts_target(v:count, '@comment.outer')<cr>", "Comment")
+    xnoremap("a]f", ":<c-u>call v:lua.ts_target(v:count, '@function.outer')<cr>", "Function")
+    xnoremap("a]F", ":<c-u>call v:lua.ts_target(v:count, '@call.outer')<cr>", "Function")
+    xnoremap("a]o", ":<c-u>call v:lua.ts_target(v:count, '@class.outer')<cr>", "Class")
+    m.xname("a[", "Around Previous")
+    xnoremap("a[s", ":<c-u>call v:lua.mapped_targets_back(v:count, '(', 'g(', 'as')<cr>", "Sentance")
+    xnoremap("a[w", ":<c-u>call v:lua.mapped_targets_back(v:count, 'b', 'ge', 'aw')<cr>", "Word")
+    xnoremap("a[W", ":<c-u>call v:lua.mapped_targets_back(v:count, 'B', 'gE', 'aW')<cr>", "Word")
+    xnoremap("a[$w", ":<c-u>call v:lua.mapped_targets_back(v:count, '$ge', '$b', 'a$w')<cr>", "Sub Word")
+    xnoremap("a[p", ":<c-u>call v:lua.paragraph_targets_back(v:count, 1)<cr>", "Paragraph")
+    xnoremap("a[h", ":<c-u>call v:lua.git_target(v:count, 'false')<cr>", "Git Hunk")
+    xnoremap("a[B", ":<c-u>call v:lua.ts_target_back(v:count, '@block.outer')<cr>", "Block")
+    xnoremap("a[c", ":<c-u>call v:lua.ts_target_back(v:count, '@conditional.outer')<cr>", "Conditional")
+    xnoremap("a[,", ":<c-u>call v:lua.ts_target_back(v:count, '@parameter.outer')<cr>", "Parameter")
+    xnoremap("a[d", ":<c-u>call v:lua.ts_target_back(v:count, '@comment.outer')<cr>", "Comment")
+    xnoremap("a[f", ":<c-u>call v:lua.ts_target_back(v:count, '@function.outer')<cr>", "Function")
+    xnoremap("a[F", ":<c-u>call v:lua.ts_target_back(v:count, '@call.outer')<cr>", "Function")
+    xnoremap("a[o", ":<c-u>call v:lua.ts_target_back(v:count, '@class.outer')<cr>", "Class")
+m.xname("i", "In")
+xnoremap("ih", ":<c-u>Gitsigns selct_hunk<cr>", "Git Hunk")
+xnoremap("iB", ":<c-u>TSTextobjectSelect @block.inner<cr>", "Block")
+xnoremap("ic", ":<c-u>TSTextobjectSelect @conditional.inner<cr>", "Conditional")
+xnoremap("i,", ":<c-u>TSTextobjectSelect @parameter.inner<cr>", "Parameter")
+xnoremap("id", ":<c-u>TSTextobjectSelect @comment.outer<cr>", "Comment")
+xnoremap("if", ":<c-u>TSTextobjectSelect @function.inner<cr>", "Function")
+xnoremap("iF", ":<c-u>TSTextobjectSelect @call.inner<cr>", "Function")
+xnoremap("io", ":<c-u>TSTextobjectSelect @class.inner<cr>", "Class")
+xnoremap("iv", "<cmd>exec 'normal! HVL'<cr>", "Select Viewport")
+    m.xname("i[", "In Next")
+    xnoremap("i]s", ":<c-u>call v:lua.mapped_targets(v:count, ')', 'is')<cr>", "Sentance")
+    xnoremap("i]w", ":<c-u>call v:lua.mapped_targets(v:count, 'w', 'iw')<cr>", "Word")
+    xnoremap("i]W", ":<c-u>call v:lua.mapped_targets(v:count, 'W', 'iW')<cr>", "WORD")
+    xnoremap("i]$w", ":<c-u>call v:lua.mapped_targets(v:count, '$w', 'i$w')<cr>", "Sub Word")
+    xnoremap("i]p", ":<c-u>call v:lua.paragraph_targets(v:count, 0)<cr>", "Paragraph")
+    xnoremap("i]h", ":<c-u>call v:lua.git_target(v:count, 'true')<cr>", "Git Hunk")
+    xnoremap("i]B", ":<c-u>call v:lua.ts_target(v:count, '@block.inner')<cr>", "Block")
+    xnoremap("i]c", ":<c-u>call v:lua.ts_target(v:count, '@conditional.inner')<cr>", "Conditional")
+    xnoremap("i],", ":<c-u>call v:lua.ts_target(v:count, '@parameter.inner')<cr>", "Parameter")
+    xnoremap("i]d", ":<c-u>call v:lua.ts_target(v:count, '@comment.outer')<cr>", "Comment")
+    xnoremap("i]f", ":<c-u>call v:lua.ts_target(v:count, '@function.inner')<cr>", "Function")
+    xnoremap("i]F", ":<c-u>call v:lua.ts_target(v:count, '@call.inner')<cr>", "Function")
+    xnoremap("i]o", ":<c-u>call v:lua.ts_target(v:count, '@class.inner')<cr>", "Class")
+    m.xname("i[", "In Previous")
+    xnoremap("i[s", ":<c-u>call v:lua.mapped_targets_back(v:count, '(', 'g(', 'is')<cr>", "Sentance")
+    xnoremap("i[w", ":<c-u>call v:lua.mapped_targets_back(v:count, 'b', 'ge', 'iw')<cr>", "Word")
+    xnoremap("i[W", ":<c-u>call v:lua.mapped_targets_back(v:count, 'B', 'gE', 'iW')<cr>", "WORD")
+    xnoremap("i[$w", ":<c-u>call v:lua.mapped_targets_back(v:count, '$ge', '$b', 'i$w')<cr>", "Sub Word")
+    xnoremap("i[p", ":<c-u>call v:lua.paragraph_targets_back(v:count, 0)<cr>", "Paragraph")
+    xnoremap("i[h", ":<c-u>call v:lua.git_target(v:count, 'false')<cr>", "Git Hunk")
+    xnoremap("i[B", ":<c-u>call v:lua.ts_target_back(v:count, '@block.inner')<cr>", "Block")
+    xnoremap("i[c", ":<c-u>call v:lua.ts_target_back(v:count, '@conditional.inner')<cr>", "Conditional")
+    xnoremap("i[,", ":<c-u>call v:lua.ts_target_back(v:count, '@parameter.inner')<cr>", "Parameter")
+    xnoremap("i[d", ":<c-u>call v:lua.ts_target_back(v:count, '@comment.outer')<cr>", "Comment")
+    xnoremap("i[f", ":<c-u>call v:lua.ts_target_back(v:count, '@function.inner')<cr>", "Function")
+    xnoremap("i[F", ":<c-u>call v:lua.ts_target_back(v:count, '@call.inner')<cr>", "Function")
+    xnoremap("i[o", ":<c-u>call v:lua.ts_target_back(v:count, '@class.inner')<cr>", "Class")
 
-        j = { "J", "Join" },
-        k = { "c<cr><esc>", "Split" },
-
-        r = { "<plug>(SubversiveSubstitute)", "Substitute" },
-        -- t = { "<Plug>(EasyAlign)", "Align" },
-        c = { "Comment" },
-        -- h = { "gv<cmd>lua require'surround'.surround_add()<cr>", "Hug" },
-
-        f = {
-            name = "Formatting",
-
-            f = { "<cmd>lua vim.lsp.buf.range_formatting()<CR>", "Format" },
-            ["<space>"] = { [[:%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces" },
-            w = { [["!par w" . &textwidth . "<cr>"]], "Wrap to Textwidth", expr = true },
-
-            l = { ":left<cr>", "Left Allign" },
-            c = { ":center<cr>", "Centre Allign" },
-            r = { ":right<cr>", "Right Allign" },
-        },
-
-        s = {
-            name = "Change Case",
-
-            p = { "<Plug>CaserVMixedCase", "Pascal Case" },
-            c = { "<Plug>CaserVCamelCase", "Camel Case" },
-            ["_"] = { "<Plug>CaserVSnakeCase", "Snake Case" },
-            u = { "<Plug>CaserVUpperCase", "Upper Case" },
-            t = { "<Plug>CaserVTitleCase", "Title Case" },
-            s = { "<Plug>CaserVSentenceCase", "Sentance Case" },
-            ["<space>"] = { "<Plug>CaserVSpaceCase", "Space Case" },
-            ["-"] = { "<Plug>CaserVKebabCase", "Kebab Case" },
-            k = { "<Plug>CaserVTitleKebabCase", "Title Case" },
-            ["."] = { "<Plug>CaserVDotCase", "Dot Case" },
-        },
-    },
-    ["<leader>"] = {
-        ["."] = { "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR>", "Code Actions" },
-        r = {
-            name = "Refactor",
-            V = { "<plug>(ExtractVarVis)", "Extract Variable" },
-            f = { "<cmd>lua require('refactoring').refactor('Extract Function')<cr>", "Extract Function" },
-            F = { "<cmd>lua require('refactoring').refactor('Extract Function to File')<cr>", "Extract Function" },
-            v = { "<cmd>lua require('refactoring').refactor('Extract Variable')<cr>", "Extract Variable" },
-            i = { "<cmd>lua require('refactoring').refactor('Inline Variable')<cr>", "Inline Variable" },
-        },
-        g = {
-            s = { "<cmd>lua require'gitsigns'.stage_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Stage Hunks in Range" },
-            r = { "<cmd>lua require'gitsigns'.reset_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Reset Hunks in Range" },
-        },
-        z = {},
-    },
-    a = {
-        name = "around",
-        h = { ":<c-u>Gitsigns selct_hunk<cr>", "Git Hunk" },
-        B = { ":<c-u>TSTextobjectSelect @block.outer<cr>", "Block" },
-        c = { ":<c-u>TSTextobjectSelect @conditional.outer<cr>", "Conditional" },
-        [","] = { ":<c-u>TSTextobjectSelect @parameter.outer<cr>", "Parameter" },
-        d = { ":<c-u>TSTextobjectSelect @comment.outer<cr>", "Comment" },
-        f = { ":<c-u>TSTextobjectSelect @function.outer<cr>", "Function" },
-        F = { ":<c-u>TSTextobjectSelect @call.outer<cr>", "Function" },
-        o = { ":<c-u>TSTextobjectSelect @class.outer<cr>", "Class" },
-        v = { "<cmd>normal! H^oL$<cr>", "Select Viewport" },
-        n = {
-            name = "Next",
-            s = { ":<c-u>call v:lua.mapped_targets(v:count, ')', 'as')<cr>", "Sentance" },
-            w = { ":<c-u>call v:lua.mapped_targets(v:count, 'w', 'aw')<cr>", "Word" },
-            W = { ":<c-u>call v:lua.mapped_targets(v:count, 'W', 'aW')<cr>", "WORD" },
-            ["$w"] = { ":<c-u>call v:lua.mapped_targets(v:count, '$w', 'a$w')<cr>", "Sub Word" },
-            p = { ":<c-u>call v:lua.paragraph_targets(v:count, 1)<cr>", "Paragraph" },
-            h = { ":<c-u>call v:lua.git_target(v:count, 'true')<cr>", "Git Hunk" },
-            B = { ":<c-u>call v:lua.ts_target(v:count, '@block.outer')<cr>", "Block" },
-            c = { ":<c-u>call v:lua.ts_target(v:count, '@conditional.outer')<cr>", "Conditional" },
-            [","] = { ":<c-u>call v:lua.ts_target(v:count, '@parameter.outer')<cr>", "Parameter" },
-            d = { ":<c-u>call v:lua.ts_target(v:count, '@comment.outer')<cr>", "Comment" },
-            f = { ":<c-u>call v:lua.ts_target(v:count, '@function.outer')<cr>", "Function" },
-            F = { ":<c-u>call v:lua.ts_target(v:count, '@call.outer')<cr>", "Function" },
-            l = { ":<c-u>call v:lua.ts_target(v:count, '@loop.outer')<cr>", "Loop" },
-            o = { ":<c-u>call v:lua.ts_target(v:count, '@class.outer')<cr>", "Class" },
-        },
-        l = {
-            name = "Previous",
-            s = { ":<c-u>call v:lua.mapped_targets_back(v:count, '(', 'g(', 'as')<cr>", "Sentance" },
-            w = { ":<c-u>call v:lua.mapped_targets_back(v:count, 'b', 'ge', 'aw')<cr>", "Word" },
-            W = { ":<c-u>call v:lua.mapped_targets_back(v:count, 'B', 'gE', 'aW')<cr>", "WORD" },
-            ["$w"] = { ":<c-u>call v:lua.mapped_targets_back(v:count, '$ge', '$b', 'a$w')<cr>", "Sub Word" },
-            p = { ":<c-u>call v:lua.paragraph_targets_back(v:count, 1)<cr>", "Paragraph" },
-            h = { ":<c-u>call v:lua.git_target(v:count, 'false')<cr>", "Git Hunk" },
-            B = { ":<c-u>call v:lua.ts_target_back(v:count, '@block.outer')<cr>", "Block" },
-            c = { ":<c-u>call v:lua.ts_target_back(v:count, '@conditional.outer')<cr>", "Conditional" },
-            [","] = { ":<c-u>call v:lua.ts_target_back(v:count, '@parameter.outer')<cr>", "Parameter" },
-            d = { ":<c-u>call v:lua.ts_target_back(v:count, '@comment.outer')<cr>", "Comment" },
-            f = { ":<c-u>call v:lua.ts_target_back(v:count, '@function.outer')<cr>", "Function" },
-            F = { ":<c-u>call v:lua.ts_target_back(v:count, '@call.outer')<cr>", "Function" },
-            l = { ":<c-u>call v:lua.ts_target_back(v:count, '@loop.outer')<cr>", "Loop" },
-            o = { ":<c-u>call v:lua.ts_target_back(v:count, '@class.outer')<cr>", "Class" },
-        },
-    },
-    i = {
-        name = "inside",
-        h = { ":<c-u>Gitsigns selct_hunk<cr>", "Git Hunk" },
-        B = { ":<c-u>TSTextobjectSelect @block.inner<cr>", "Block" },
-        c = { ":<c-u>TSTextobjectSelect @conditional.inner<cr>", "Conditional" },
-        [","] = { ":<c-u>TSTextobjectSelect @parameter.inner<cr>", "Parameter" },
-        d = { ":<c-u>TSTextobjectSelect @comment.outer<cr>", "Comment" },
-        f = { ":<c-u>TSTextobjectSelect @function.inner<cr>", "Function" },
-        F = { ":<c-u>TSTextobjectSelect @call.inner<cr>", "Function" },
-        o = { ":<c-u>TSTextobjectSelect @class.inner<cr>", "Class" },
-        v = { "<cmd>normal! H^oL$<cr>", "Select Viewport" },
-        n = {
-            name = "Next",
-            s = { ":<c-u>call v:lua.mapped_targets(v:count, ')', 'is')<cr>", "Sentance" },
-            w = { ":<c-u>call v:lua.mapped_targets(v:count, 'w', 'iw')<cr>", "Word" },
-            W = { ":<c-u>call v:lua.mapped_targets(v:count, 'W', 'iW')<cr>", "WORD" },
-            ["$w"] = { ":<c-u>call v:lua.mapped_targets(v:count, '$w', 'i$w')<cr>", "Sub Word" },
-            p = { ":<c-u>call v:lua.paragraph_targets(v:count, 0)<cr>", "Paragraph" },
-            h = { ":<c-u>call v:lua.git_target(v:count, 'true')<cr>", "Git Hunk" },
-            B = { ":<c-u>call v:lua.ts_target(v:count, '@block.inner')<cr>", "Block" },
-            c = { ":<c-u>call v:lua.ts_target(v:count, '@conditional.inner')<cr>", "Conditional" },
-            [","] = { ":<c-u>call v:lua.ts_target(v:count, '@parameter.inner')<cr>", "Parameter" },
-            d = { ":<c-u>call v:lua.ts_target(v:count, '@comment.outer')<cr>", "Comment" },
-            f = { ":<c-u>call v:lua.ts_target(v:count, '@function.inner')<cr>", "Function" },
-            F = { ":<c-u>call v:lua.ts_target(v:count, '@call.inner')<cr>", "Function" },
-            l = { ":<c-u>call v:lua.ts_target(v:count, '@loop.inner')<cr>", "Loop" },
-            o = { ":<c-u>call v:lua.ts_target(v:count, '@class.inner')<cr>", "Class" },
-        },
-        l = {
-            name = "Previous",
-            s = { ":<c-u>call v:lua.mapped_targets_back(v:count, '(', 'g(', 'is')<cr>", "Sentance" },
-            w = { ":<c-u>call v:lua.mapped_targets_back(v:count, 'b', 'ge', 'iw')<cr>", "Word" },
-            W = { ":<c-u>call v:lua.mapped_targets_back(v:count, 'B', 'gE', 'iW')<cr>", "WORD" },
-            ["$w"] = { ":<c-u>call v:lua.mapped_targets_back(v:count, '$ge', '$b', 'i$w')<cr>", "Sub Word" },
-            p = { ":<c-u>call v:lua.paragraph_targets_back(v:count, 0)<cr>", "Paragraph" },
-            h = { ":<c-u>call v:lua.git_target(v:count, 'false')<cr>", "Git Hunk" },
-            B = { ":<c-u>call v:lua.ts_target_back(v:count, '@block.inner')<cr>", "Block" },
-            c = { ":<c-u>call v:lua.ts_target_back(v:count, '@conditional.inner')<cr>", "Conditional" },
-            [","] = { ":<c-u>call v:lua.ts_target_back(v:count, '@parameter.inner')<cr>", "Parameter" },
-            d = { ":<c-u>call v:lua.ts_target_back(v:count, '@comment.outer')<cr>", "Comment" },
-            f = { ":<c-u>call v:lua.ts_target_back(v:count, '@function.inner')<cr>", "Function" },
-            F = { ":<c-u>call v:lua.ts_target_back(v:count, '@call.inner')<cr>", "Function" },
-            l = { ":<c-u>call v:lua.ts_target_back(v:count, '@loop.inner')<cr>", "Loop" },
-            o = { ":<c-u>call v:lua.ts_target_back(v:count, '@class.inner')<cr>", "Class" },
-        },
-    },
-    ["["] = {
-        name = "Backward Leader",
-        ["["] = { "v:lua.commandRepeat('[', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
-        h = {
-            [[&diff ? "[czz<cmd>let g:dirJumps='h'<cr>m`" : "<cmd>lua require'gitsigns'.prev_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>m`"]],
-            "Hunk",
-            expr = true,
-        },
-        Q = {
-            "<cmd>let g:dirJumps='Q'<cr>m`<cmd>try <bar> cpfile <bar> catch /E553/ <bar> clast <bar> endtry<cr>zz",
-            "Location Entry",
-        },
-        q = {
-            "<cmd>let g:dirJumps='q'<cr>m`<cmd>try <bar> cprevious <bar> catch /E553/ <bar> clast <bar> endtry<cr>zz",
-            "QuickFix Entry",
-        },
-        s = { "<cmd>let g:dirJumps='s'<cr>m`[szz", "Spelling Mistake" },
-        ["]"] = { "<cmd>let g:dirJumps=']'<cr>m`[]zz", "Section End", noremap = false },
-        ["{"] = { "<cmd>let g:dirJumps='{'<cr>m`[[zz", "Section Start" },
-        ["}"] = { "<cmd>let g:dirJumps='{'<cr>m`[[zz", "Section Start" },
-        -- ["*"] = { "<cmd>let g:dirJumps='*'<cr>m`[#zz", "Function Call", noremap = false },
-        o = { "<cmd>let g:dirJumps='o'<cr>m`<cmd>TSTextobjectGotoPreviousStart @class.outer<cr>zz", "Class" },
-        f = { "<cmd>let g:dirJumps='f'<cr>m`<cmd>TSTextobjectGotoPreviousStart @function.outer<cr>zz", "Function" },
-        [","] = { "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoPreviousStart @parameter.inner<cr>zz", "Parameter" },
-        c = { "<cmd>let g:dirJumps='c'<cr>m`<cmd>TSTextobjectGotoPreviousStart @conditional.inner<cr>zz", "Conditional" },
-        C = { "<cmd>let g:dirJumps='C'<cr>m`<cmd>TSTextobjectGotoPreviousStart @comment.outer<cr>zz", "Comment" },
-        l = { "<cmd>let g:dirJumps='l'<cr>m`<cmd>TSTextobjectGotoPreviousStart @loop.outer<cr>zz", "Loop" },
-        b = { "<cmd>let g:dirJumps='b'<cr>m`<cmd>TSTextobjectGotoPreviousStart @block.outer<cr>zz", "Block" },
-        O = { "<cmd>let g:dirJumps='O'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @class.outer<cr>zz", "Class" },
-        F = { "<cmd>let g:dirJumps='F'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @function.outer<cr>zz", "Function" },
-        ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @parameter.inner<cr>zz", "Parameter" },
-        L = { "<cmd>let g:dirJumps='L'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @loop.outer<cr>zz", "Loop" },
-        B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoPreviousEnd @block.outer<cr>zz", "Block" },
-        E = {
-            "<cmd>let g:dirJumps='E'<cr>m`<cmd>lua require'trouble'.previous({skip_groups=false, jump=true})<cr>zz",
-            "Trouble Item",
-        },
-        m = { "<cmd>let g:dirJumps='m'<cr>m`[`zz", "File Marks" },
-        e = {
-            "<cmd>lua vim.lsp.diagnostic.goto_prev({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
-            "Error",
-        },
-    },
-    ["]"] = {
-        name = "Forward Leader",
-        ["]"] = { "v:lua.commandRepeat(']', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
-        h = {
-            [[&diff ? "]czz<cmd>let g:dirJumps='h'<cr>m`" : "<cmd>lua require'gitsigns'.next_hunk()<cr>zz<cmd>let g:dirJumps='h'<cr>m`"]],
-            "Hunk",
-            expr = true,
-        },
-        Q = {
-            "<cmd>let g:dirJumps='Q'<cr>m`<cmd>try <bar> cnfile <bar> catch /E553/ <bar> cfirst <bar> endtry<cr>zz",
-            "Location Entry",
-        },
-        q = {
-            "<cmd>let g:dirJumps='q'<cr>m`<cmd>try <bar> cnext <bar> catch /E553/ <bar> cfirst <bar> endtry<cr>zz",
-            "QuickFix Entry",
-        },
-        s = { "<cmd>let g:dirJumps='s'<cr>m`]szz", "Spelling Mistake" },
-        ["["] = { "<cmd>let g:dirJumps='['<cr>m`][zz", "Section End", noremap = false },
-        ["}"] = { "<cmd>let g:dirJumps='}'<cr>m`]]zz", "Section Start", noremap = true },
-        ["{"] = { "<cmd>let g:dirJumps='}'<cr>m`]]zz", "Section Start", noremap = true },
-        -- ["*"] = { "<cmd>let g:dirJumps='*'<cr>m`]#zz", "Function Call", noremap = false },
-        d = { "<cmd>let g:dirJumps='D'<cr>m`<cmd>TSTextobjectGotoNextStart @comment.outer<cr>zz", "Comment" },
-        o = { "<cmd>let g:dirJumps='o'<cr>m`<cmd>TSTextobjectGotoNextStart @class.outer<cr>zz", "Class" },
-        f = { "<cmd>let g:dirJumps='f'<cr>m`<cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Function" },
-        c = { "<cmd>let g:dirJumps='c'<cr>m`<cmd>TSTextobjectGotoNextStart @conditional.inner<cr>zz", "Conditional" },
-        [","] = { "<cmd>let g:dirJumps=','<cr>m`<cmd>TSTextobjectGotoNextStart @parameter.inner<cr>zz", "Parameter" },
-        l = { "<cmd>let g:dirJumps='l'<cr>m`<cmd>TSTextobjectGotoNextStart @loop.outer<cr>zz", "Loop" },
-        b = { "<cmd>let g:dirJumps='b'<cr>m`<cmd>TSTextobjectGotoNextStart @block.outer<cr>zz", "Block" },
-        O = { "<cmd>let g:dirJumps='O'<cr>m`<cmd>TSTextobjectGotoNextEnd @class.outer<cr>zz", "Class (end)" },
-        F = { "<cmd>let g:dirJumps='F'<cr>m`<cmd>TSTextobjectGotoNextEnd @function.outer<cr>zz", "Function (end)" },
-        C = { "<cmd>let g:dirJumps='C'<cr>m`<cmd>TSTextobjectGotoNextEnd @conditional.inner<cr>zz", "Conditional (end)" },
-        ["<"] = { "<cmd>let g:dirJumps='<'<cr>m`<cmd>TSTextobjectGotoNextEnd @parameter.inner<cr>zz", "Parameter (end)" },
-        L = { "<cmd>let g:dirJumps='L'<cr>m`<cmd>TSTextobjectGotoNextEnd @loop.outer<cr>zz", "Loop (end)" },
-        B = { "<cmd>let g:dirJumps='B'<cr>m`<cmd>TSTextobjectGotoNextEnd @block.outer<cr>zz", "Block (end)" },
-        E = {
-            "<cmd>let g:dirJumps='E'<cr>m`<cmd>lua require'trouble'.next({skip_groups=false, jump=true})<cr>zz",
-            "Trouble Item",
-        },
-        m = { "<cmd>let g:dirJumps='m'<cr>m`]`zz", "File Marks" },
-        e = {
-            "<cmd>lua vim.lsp.diagnostic.goto_next({ focusable = false , popup_opts = { border = 'single' }})<CR>zz<cmd>let g:dirJumps='e'<cr>m`",
-            "Error",
-        },
-    },
-}, {
-    mode = "x",
-})
-
-require("which-key").register({
-    a = {
-        name = "around",
-        h = { ":<c-u>Gitsigns selct_hunk<cr>", "Git Hunk" },
-        B = { ":<c-u>TSTextobjectSelect @block.outer<cr>", "Block" },
-        c = { ":<c-u>TSTextobjectSelect @conditional.outer<cr>", "Conditional" },
-        [","] = { ":<c-u>TSTextobjectSelect @parameter.outer<cr>", "Parameter" },
-        d = { ":<c-u>TSTextobjectSelect @comment.outer<cr>", "Comment" },
-        f = { ":<c-u>TSTextobjectSelect @function.outer<cr>", "Function" },
-        F = { ":<c-u>TSTextobjectSelect @call.outer<cr>", "Function" },
-        o = { ":<c-u>TSTextobjectSelect @class.outer<cr>", "Class" },
-        v = { "<cmd>exec 'normal! HVL'<cr>", "Select Viewport" },
-        n = {
-            name = "Next",
-            s = { ":<c-u>call v:lua.mapped_targets(v:count, ')', 'as')<cr>", "Sentance" },
-            w = { ":<c-u>call v:lua.mapped_targets(v:count, 'w', 'aw')<cr>", "Word" },
-            W = { ":<c-u>call v:lua.mapped_targets(v:count, 'W', 'aW')<cr>", "Word" },
-            ["$w"] = { ":<c-u>call v:lua.mapped_targets(v:count, '$w', 'a$w')<cr>", "Sub Word" },
-            p = { ":<c-u>call v:lua.paragraph_targets(v:count, 1)<cr>", "Paragraph" },
-            h = { ":<c-u>call v:lua.git_target(v:count, 'true')<cr>", "Git Hunk" },
-            B = { ":<c-u>call v:lua.ts_target(v:count, '@block.outer')<cr>", "Block" },
-            c = { ":<c-u>call v:lua.ts_target(v:count, '@conditional.outer')<cr>", "Conditional" },
-            [","] = { ":<c-u>call v:lua.ts_target(v:count, '@parameter.outer')<cr>", "Parameter" },
-            d = { ":<c-u>call v:lua.ts_target(v:count, '@comment.outer')<cr>", "Comment" },
-            f = { ":<c-u>call v:lua.ts_target(v:count, '@function.outer')<cr>", "Function" },
-            F = { ":<c-u>call v:lua.ts_target(v:count, '@call.outer')<cr>", "Function" },
-            o = { ":<c-u>call v:lua.ts_target(v:count, '@class.outer')<cr>", "Class" },
-        },
-        l = {
-            name = "Previous",
-            s = { ":<c-u>call v:lua.mapped_targets_back(v:count, '(', 'g(', 'as')<cr>", "Sentance" },
-            w = { ":<c-u>call v:lua.mapped_targets_back(v:count, 'b', 'ge', 'aw')<cr>", "Word" },
-            W = { ":<c-u>call v:lua.mapped_targets_back(v:count, 'B', 'gE', 'aW')<cr>", "Word" },
-            ["$w"] = { ":<c-u>call v:lua.mapped_targets_back(v:count, '$ge', '$b', 'a$w')<cr>", "Sub Word" },
-            p = { ":<c-u>call v:lua.paragraph_targets_back(v:count, 1)<cr>", "Paragraph" },
-            h = { ":<c-u>call v:lua.git_target(v:count, 'false')<cr>", "Git Hunk" },
-            B = { ":<c-u>call v:lua.ts_target_back(v:count, '@block.outer')<cr>", "Block" },
-            c = { ":<c-u>call v:lua.ts_target_back(v:count, '@conditional.outer')<cr>", "Conditional" },
-            [","] = { ":<c-u>call v:lua.ts_target_back(v:count, '@parameter.outer')<cr>", "Parameter" },
-            d = { ":<c-u>call v:lua.ts_target_back(v:count, '@comment.outer')<cr>", "Comment" },
-            f = { ":<c-u>call v:lua.ts_target_back(v:count, '@function.outer')<cr>", "Function" },
-            F = { ":<c-u>call v:lua.ts_target_back(v:count, '@call.outer')<cr>", "Function" },
-            o = { ":<c-u>call v:lua.ts_target_back(v:count, '@class.outer')<cr>", "Class" },
-        },
-    },
-    i = {
-        name = "inside",
-        h = { ":<c-u>Gitsigns selct_hunk<cr>", "Git Hunk" },
-        B = { ":<c-u>TSTextobjectSelect @block.inner<cr>", "Block" },
-        c = { ":<c-u>TSTextobjectSelect @conditional.inner<cr>", "Conditional" },
-        [","] = { ":<c-u>TSTextobjectSelect @parameter.inner<cr>", "Parameter" },
-        d = { ":<c-u>TSTextobjectSelect @comment.outer<cr>", "Comment" },
-        f = { ":<c-u>TSTextobjectSelect @function.inner<cr>", "Function" },
-        F = { ":<c-u>TSTextobjectSelect @call.inner<cr>", "Function" },
-        o = { ":<c-u>TSTextobjectSelect @class.inner<cr>", "Class" },
-        v = { "<cmd>exec 'normal! HVL'<cr>", "Select Viewport" },
-        n = {
-            name = "Next",
-            s = { ":<c-u>call v:lua.mapped_targets(v:count, ')', 'is')<cr>", "Sentance" },
-            w = { ":<c-u>call v:lua.mapped_targets(v:count, 'w', 'iw')<cr>", "Word" },
-            W = { ":<c-u>call v:lua.mapped_targets(v:count, 'W', 'iW')<cr>", "WORD" },
-            ["$w"] = { ":<c-u>call v:lua.mapped_targets(v:count, '$w', 'i$w')<cr>", "Sub Word" },
-            p = { ":<c-u>call v:lua.paragraph_targets(v:count, 0)<cr>", "Paragraph" },
-            h = { ":<c-u>call v:lua.git_target(v:count, 'true')<cr>", "Git Hunk" },
-            B = { ":<c-u>call v:lua.ts_target(v:count, '@block.inner')<cr>", "Block" },
-            c = { ":<c-u>call v:lua.ts_target(v:count, '@conditional.inner')<cr>", "Conditional" },
-            [","] = { ":<c-u>call v:lua.ts_target(v:count, '@parameter.inner')<cr>", "Parameter" },
-            d = { ":<c-u>call v:lua.ts_target(v:count, '@comment.outer')<cr>", "Comment" },
-            f = { ":<c-u>call v:lua.ts_target(v:count, '@function.inner')<cr>", "Function" },
-            F = { ":<c-u>call v:lua.ts_target(v:count, '@call.inner')<cr>", "Function" },
-            o = { ":<c-u>call v:lua.ts_target(v:count, '@class.inner')<cr>", "Class" },
-        },
-        l = {
-            name = "Previous",
-            s = { ":<c-u>call v:lua.mapped_targets_back(v:count, '(', 'g(', 'is')<cr>", "Sentance" },
-            w = { ":<c-u>call v:lua.mapped_targets_back(v:count, 'b', 'ge', 'iw')<cr>", "Word" },
-            W = { ":<c-u>call v:lua.mapped_targets_back(v:count, 'B', 'gE', 'iW')<cr>", "WORD" },
-            ["$w"] = { ":<c-u>call v:lua.mapped_targets_back(v:count, '$ge', '$b', 'i$w')<cr>", "Sub Word" },
-            p = { ":<c-u>call v:lua.paragraph_targets_back(v:count, 0)<cr>", "Paragraph" },
-            h = { ":<c-u>call v:lua.git_target(v:count, 'false')<cr>", "Git Hunk" },
-            B = { ":<c-u>call v:lua.ts_target_back(v:count, '@block.inner')<cr>", "Block" },
-            c = { ":<c-u>call v:lua.ts_target_back(v:count, '@conditional.inner')<cr>", "Conditional" },
-            [","] = { ":<c-u>call v:lua.ts_target_back(v:count, '@parameter.inner')<cr>", "Parameter" },
-            d = { ":<c-u>call v:lua.ts_target_back(v:count, '@comment.outer')<cr>", "Comment" },
-            f = { ":<c-u>call v:lua.ts_target_back(v:count, '@function.inner')<cr>", "Function" },
-            F = { ":<c-u>call v:lua.ts_target_back(v:count, '@call.inner')<cr>", "Function" },
-            o = { ":<c-u>call v:lua.ts_target_back(v:count, '@class.inner')<cr>", "Class" },
-        },
-    },
-}, {
-    mode = "o",
-})
+m.oname("a", "Around")
+onoremap("ah", ":<c-u>Gitsigns selct_hunk<cr>", "Git Hunk")
+onoremap("aB", ":<c-u>TSTextobjectSelect @block.outer<cr>", "Block")
+onoremap("ac", ":<c-u>TSTextobjectSelect @conditional.outer<cr>", "Conditional")
+onoremap("a,", ":<c-u>TSTextobjectSelect @parameter.outer<cr>", "Parameter")
+onoremap("ad", ":<c-u>TSTextobjectSelect @comment.outer<cr>", "Comment")
+onoremap("af", ":<c-u>TSTextobjectSelect @function.outer<cr>", "Function")
+onoremap("aF", ":<c-u>TSTextobjectSelect @call.outer<cr>", "Function")
+onoremap("ao", ":<c-u>TSTextobjectSelect @class.outer<cr>", "Class")
+onoremap("av", "<cmd>exec 'normal! HVL'<cr>", "Select Viewport")
+    m.oname("a]", "Around Next")
+    onoremap("a]s", ":<c-u>call v:lua.mapped_targets(v:count, ')', 'as')<cr>", "Sentance")
+    onoremap("a]w", ":<c-u>call v:lua.mapped_targets(v:count, 'w', 'aw')<cr>", "Word")
+    onoremap("a]W", ":<c-u>call v:lua.mapped_targets(v:count, 'W', 'aW')<cr>", "Word")
+    onoremap("a]$w", ":<c-u>call v:lua.mapped_targets(v:count, '$w', 'a$w')<cr>", "Sub Word")
+    onoremap("a]p", ":<c-u>call v:lua.paragraph_targets(v:count, 1)<cr>", "Paragraph")
+    onoremap("a]h", ":<c-u>call v:lua.git_target(v:count, 'true')<cr>", "Git Hunk")
+    onoremap("a]B", ":<c-u>call v:lua.ts_target(v:count, '@block.outer')<cr>", "Block")
+    onoremap("a]c", ":<c-u>call v:lua.ts_target(v:count, '@conditional.outer')<cr>", "Conditional")
+    onoremap("a],", ":<c-u>call v:lua.ts_target(v:count, '@parameter.outer')<cr>", "Parameter")
+    onoremap("a]d", ":<c-u>call v:lua.ts_target(v:count, '@comment.outer')<cr>", "Comment")
+    onoremap("a]f", ":<c-u>call v:lua.ts_target(v:count, '@function.outer')<cr>", "Function")
+    onoremap("a]F", ":<c-u>call v:lua.ts_target(v:count, '@call.outer')<cr>", "Function")
+    onoremap("a]o", ":<c-u>call v:lua.ts_target(v:count, '@class.outer')<cr>", "Class")
+    m.oname("a[", "Around Previous")
+    onoremap("a[s", ":<c-u>call v:lua.mapped_targets_back(v:count, '(', 'g(', 'as')<cr>", "Sentance")
+    onoremap("a[w", ":<c-u>call v:lua.mapped_targets_back(v:count, 'b', 'ge', 'aw')<cr>", "Word")
+    onoremap("a[W", ":<c-u>call v:lua.mapped_targets_back(v:count, 'B', 'gE', 'aW')<cr>", "Word")
+    onoremap("a[$w", ":<c-u>call v:lua.mapped_targets_back(v:count, '$ge', '$b', 'a$w')<cr>", "Sub Word")
+    onoremap("a[p", ":<c-u>call v:lua.paragraph_targets_back(v:count, 1)<cr>", "Paragraph")
+    onoremap("a[h", ":<c-u>call v:lua.git_target(v:count, 'false')<cr>", "Git Hunk")
+    onoremap("a[B", ":<c-u>call v:lua.ts_target_back(v:count, '@block.outer')<cr>", "Block")
+    onoremap("a[c", ":<c-u>call v:lua.ts_target_back(v:count, '@conditional.outer')<cr>", "Conditional")
+    onoremap("a[,", ":<c-u>call v:lua.ts_target_back(v:count, '@parameter.outer')<cr>", "Parameter")
+    onoremap("a[d", ":<c-u>call v:lua.ts_target_back(v:count, '@comment.outer')<cr>", "Comment")
+    onoremap("a[f", ":<c-u>call v:lua.ts_target_back(v:count, '@function.outer')<cr>", "Function")
+    onoremap("a[F", ":<c-u>call v:lua.ts_target_back(v:count, '@call.outer')<cr>", "Function")
+    onoremap("a[o", ":<c-u>call v:lua.ts_target_back(v:count, '@class.outer')<cr>", "Class")
+m.oname("i", "In")
+onoremap("ih", ":<c-u>Gitsigns selct_hunk<cr>", "Git Hunk")
+onoremap("iB", ":<c-u>TSTextobjectSelect @block.inner<cr>", "Block")
+onoremap("ic", ":<c-u>TSTextobjectSelect @conditional.inner<cr>", "Conditional")
+onoremap("i,", ":<c-u>TSTextobjectSelect @parameter.inner<cr>", "Parameter")
+onoremap("id", ":<c-u>TSTextobjectSelect @comment.outer<cr>", "Comment")
+onoremap("if", ":<c-u>TSTextobjectSelect @function.inner<cr>", "Function")
+onoremap("iF", ":<c-u>TSTextobjectSelect @call.inner<cr>", "Function")
+onoremap("io", ":<c-u>TSTextobjectSelect @class.inner<cr>", "Class")
+onoremap("iv", "<cmd>exec 'normal! HVL'<cr>", "Select Viewport")
+    m.oname("i[", "In Next")
+    onoremap("i]s", ":<c-u>call v:lua.mapped_targets(v:count, ')', 'is')<cr>", "Sentance")
+    onoremap("i]w", ":<c-u>call v:lua.mapped_targets(v:count, 'w', 'iw')<cr>", "Word")
+    onoremap("i]W", ":<c-u>call v:lua.mapped_targets(v:count, 'W', 'iW')<cr>", "WORD")
+    onoremap("i]$w", ":<c-u>call v:lua.mapped_targets(v:count, '$w', 'i$w')<cr>", "Sub Word")
+    onoremap("i]p", ":<c-u>call v:lua.paragraph_targets(v:count, 0)<cr>", "Paragraph")
+    onoremap("i]h", ":<c-u>call v:lua.git_target(v:count, 'true')<cr>", "Git Hunk")
+    onoremap("i]B", ":<c-u>call v:lua.ts_target(v:count, '@block.inner')<cr>", "Block")
+    onoremap("i]c", ":<c-u>call v:lua.ts_target(v:count, '@conditional.inner')<cr>", "Conditional")
+    onoremap("i],", ":<c-u>call v:lua.ts_target(v:count, '@parameter.inner')<cr>", "Parameter")
+    onoremap("i]d", ":<c-u>call v:lua.ts_target(v:count, '@comment.outer')<cr>", "Comment")
+    onoremap("i]f", ":<c-u>call v:lua.ts_target(v:count, '@function.inner')<cr>", "Function")
+    onoremap("i]F", ":<c-u>call v:lua.ts_target(v:count, '@call.inner')<cr>", "Function")
+    onoremap("i]o", ":<c-u>call v:lua.ts_target(v:count, '@class.inner')<cr>", "Class")
+    m.oname("i[", "In Previous")
+    onoremap("i[s", ":<c-u>call v:lua.mapped_targets_back(v:count, '(', 'g(', 'is')<cr>", "Sentance")
+    onoremap("i[w", ":<c-u>call v:lua.mapped_targets_back(v:count, 'b', 'ge', 'iw')<cr>", "Word")
+    onoremap("i[W", ":<c-u>call v:lua.mapped_targets_back(v:count, 'B', 'gE', 'iW')<cr>", "WORD")
+    onoremap("i[$w", ":<c-u>call v:lua.mapped_targets_back(v:count, '$ge', '$b', 'i$w')<cr>", "Sub Word")
+    onoremap("i[p", ":<c-u>call v:lua.paragraph_targets_back(v:count, 0)<cr>", "Paragraph")
+    onoremap("i[h", ":<c-u>call v:lua.git_target(v:count, 'false')<cr>", "Git Hunk")
+    onoremap("i[B", ":<c-u>call v:lua.ts_target_back(v:count, '@block.inner')<cr>", "Block")
+    onoremap("i[c", ":<c-u>call v:lua.ts_target_back(v:count, '@conditional.inner')<cr>", "Conditional")
+    onoremap("i[,", ":<c-u>call v:lua.ts_target_back(v:count, '@parameter.inner')<cr>", "Parameter")
+    onoremap("i[d", ":<c-u>call v:lua.ts_target_back(v:count, '@comment.outer')<cr>", "Comment")
+    onoremap("i[f", ":<c-u>call v:lua.ts_target_back(v:count, '@function.inner')<cr>", "Function")
+    onoremap("i[F", ":<c-u>call v:lua.ts_target_back(v:count, '@call.inner')<cr>", "Function")
+    onoremap("i[o", ":<c-u>call v:lua.ts_target_back(v:count, '@class.inner')<cr>", "Class")
 
 imap("<c-a>", "<C-O>^")
 imap("<c-e>", "<END>")
@@ -1228,19 +910,12 @@ smap("<c-]>", "<plug>luasnip-next-choice")
 imap("<c-space>", "v:lua.cmp_toggle()", "expr")
 smap("<c-space>", "v:lua.cmp_toggle()", "expr")
 
-cmap("<esc>", "v:lua.cmp_esc()", "expr")
 imap("<S-Tab>", "v:lua.s_tab_complete()", "expr")
 imap("<Tab>", "v:lua.tab_complete()", "expr")
 smap("<S-Tab>", "v:lua.s_tab_complete()", "expr")
 smap("<Tab>", "v:lua.tab_complete()", "expr")
 
-inoremap(
-    "<Down>",
-    [[<cmd>lua require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Select })<cr>]]
-)
+inoremap( "<Down>", [[<cmd>lua require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Select })<cr>]])
 inoremap("<Up>", [[<cmd>lua require("cmp").select_prev_item({ behavior = require("cmp").SelectBehavior.Select })<cr>]])
-snoremap(
-    "<Down>",
-    [[<cmd>lua require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Select })<cr>]]
-)
+snoremap( "<Down>", [[<cmd>lua require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Select })<cr>]])
 snoremap("<Up>", [[<cmd>lua require("cmp").select_prev_item({ behavior = require("cmp").SelectBehavior.Select })<cr>]])

@@ -5,7 +5,7 @@ end
 -- Repaets
 -- set defaults
 vim.api.nvim_set_var("dirJumps", "search")
-vim.api.nvim_set_var("panelRepeat", "x")
+vim.api.nvim_set_var("panelRepeat", "q")
 vim.api.nvim_set_var("DiffviewLast", "DiffviewOpen")
 
 function _G.commandRepeat(leader, varName)
@@ -63,7 +63,6 @@ function _G.git_target(count, go_forward)
 end
 
 function _G.mapped_targets(count, movement, selection)
-    print(count)
     local cmd = movement
     count = count - 1
     while count > 0 do
@@ -71,7 +70,6 @@ function _G.mapped_targets(count, movement, selection)
         count = count - 1
     end
     cmd = cmd .. "v" .. selection
-    print(cmd)
     vim.cmd([[normal ]] .. cmd)
 end
 function _G.mapped_targets_back(count, movement, end_movement, selection)

@@ -33,6 +33,7 @@ augroup end]])
 vim.api.nvim_set_var("targets_seekRanges", "cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al")
 vim.api.nvim_set_var("targets_jumpRanges", "rr rb rB bb bB BB ll al Al aa Aa AA")
 vim.api.nvim_set_var("targets_gracious", true)
+vim.api.nvim_set_var("targets_nl", "][")
 vim.cmd([[fu! s:lastplace()
 	if index(split("quickfix,nofile,help", ","), &buftype) != -1  | return | endif
 	if index(split("gitcommit,gitrebase,svn,hgcommit", ","), &filetype) != -1 | return | endif
