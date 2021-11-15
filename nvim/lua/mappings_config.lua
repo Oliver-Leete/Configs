@@ -37,14 +37,6 @@ require("which-key").setup({
         [",s."] = "Change to Dot Case",
         ["gp"] = "Paste After",
         ["gP"] = "Paste Before",
-        ["{"] = "Goto Left Outside",
-        ["("] = "Goto Left Inside",
-        [")"] = "Goto Right Inside",
-        ["}"] = "Goto Right Outside",
-        ["g{"] = "Insert Left Outside",
-        ["g("] = "Insert Left Inside",
-        ["g)"] = "Insert Right Inside",
-        ["g}"] = "Insert Right Outside",
     },
     hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ ", "<plug>", "<Plug>" },
     show_help = false,
@@ -128,12 +120,12 @@ xnoremap("[", "<cmd>WhichKey [ x<cr>")
 xnoremap("I", "I")
 xnoremap("A", "A")
 
-nnoremap("mm", "<cmd>lua require'harpoon.mark'.add_file()<cr>")
-nnoremap("ma", "<cmd>lua require'harpoon.ui'.nav_file(1)<cr>")
-nnoremap("mr", "<cmd>lua require'harpoon.ui'.nav_file(2)<cr>")
-nnoremap("ms", "<cmd>lua require'harpoon.ui'.nav_file(3)<cr>")
-nnoremap("mt", "<cmd>lua require'harpoon.ui'.nav_file(4)<cr>")
-nnoremap("M", "<cmd>lua require'harpoon.ui'.toggle_quick_menu()<cr>")
+nnoremap("mm", function() require'harpoon.mark'.add_file() end)
+nnoremap("ma", function() require'harpoon.ui'.nav_file(1)end)
+nnoremap("mr", function() require'harpoon.ui'.nav_file(2)end)
+nnoremap("ms", function() require'harpoon.ui'.nav_file(3)end)
+nnoremap("mt", function() require'harpoon.ui'.nav_file(4)end)
+nnoremap("M", function() require'harpoon.ui'.toggle_quick_menu()end)
 
 nmap("<c-_>", "g,cc")
 xmap("<c-_>", "g,c")
@@ -152,7 +144,7 @@ vim.cmd([[snoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1),'\%'.virt
 vim.cmd([[snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
 
 inoremap("<c-g>", "<c-o>%")
-inoremap("<c-s>", "<cmd>lua require('lsp_signature').toggle_float_win()<CR>")
+inoremap("<c-s>", function() require('lsp_signature').toggle_float_win()end)
 
 inoremap(",", ",<c-g>u")
 inoremap(".", ".<c-g>u")
@@ -207,11 +199,11 @@ xnoremap("K", ":move '<-2<cr>gv=gv")
 nnoremap("Q", "@q")
 xnoremap("Q", ":norm! @q<cr>")
 
-nnoremap("s", "<cmd>lua require'hop'.hint_char1()<cr>")
+nnoremap("s", function() require'hop'.hint_char1()end)
 nnoremap("S", "<cmd>ISwapWith<cr>")
-xnoremap("s", "<cmd>lua require'hop'.hint_char1()<cr>")
+xnoremap("s", function() require'hop'.hint_char1()end)
 xnoremap("S", ":lua require('tsht').nodes()<CR>")
-onoremap("s", "<cmd>lua require'hop'.hint_char1()<cr>")
+onoremap("s", function() require'hop'.hint_char1()end)
 onoremap("S", ":<c-u>lua require('tsht').nodes()<cr>")
 
 
@@ -275,14 +267,14 @@ m.name("g", "Goto")
     nnoremap("gf", "gf", "Open File")
     nnoremap("gF", "<cmd>vsplit<cr>gf", "Open File in Split")
 
-    nnoremap("gd", "<cmd>lua require('telescope.builtin').lsp_definitions()<cr>", "Definitions")
-    nnoremap("gr", "<cmd>Telescope lsp_references<cr>", "References")
-    nnoremap("gi", "<cmd>lua require('telescope.builtin').lsp_implementations()<CR>", "Implementations")
-    nnoremap("go", "<cmd>lua require('telescope.builtin').lsp_type_definitions()<cr>", "Object Deffinition")
-    nnoremap("gD", "<cmd>lua require('telescope.builtin').lsp_definitions({jump_type='vsplit'})<cr>", "Definitions (split)")
-    nnoremap("gR", "<cmd>lua require('telescope.builtin').lep_references({jump_type='vsplit'})<cr>", "References (split)")
-    nnoremap("gI", "<cmd>lua require('telescope.builtin').lsp_implementations({jump_type='vsplit'})<CR>", "Implementations (split)")
-    nnoremap("gO", "<cmd>lua require('telescope.builtin').lsp_type_definitions({jump_type='vsplit'})<cr>", "Object Deffinition (split)")
+    nnoremap("gd", function() require('telescope.builtin').lsp_definitions()end, "Definitions")
+    nnoremap("gi", function() require('telescope.builtin').lsp_references()end, "Implementations")
+    nnoremap("gi", function() require('telescope.builtin').lsp_implementations()end, "Implementations")
+    nnoremap("go", function() require('telescope.builtin').lsp_type_definitions()end, "Object Deffinition")
+    nnoremap("gD", function() require('telescope.builtin').lsp_definitions({jump_type='vsplit'})end, "Definitions (split)")
+    nnoremap("gR", function() require('telescope.builtin').lep_references({jump_type='vsplit'})end, "References (split)")
+    nnoremap("gI", function() require('telescope.builtin').lsp_implementations({jump_type='vsplit'})end, "Implementations (split)")
+    nnoremap("gO", function() require('telescope.builtin').lsp_type_definitions({jump_type='vsplit'})end, "Object Deffinition (split)")
 
     nmap("gp", "<plug>(paste-away-after)", "Paste After Object")
     nmap("gP", "<plug>(paste-away-before)", "Paste Before Object")
@@ -393,11 +385,11 @@ xmap(",t", "<Plug>(EasyAlign)", "Align")
 nnoremap(",O", "O<Esc>", "Insert Blankline Before")
 nnoremap(",o", "o<Esc>", "Insert Blankline")
     m.name(",f", "Format")
-    nnoremap(",ff", "<cmd>lua vim.lsp.buf.formatting_sync()<CR>", "Format")
+    nnoremap(",ff", function() vim.lsp.buf.formatting_sync()end, "Format")
     nnoremap(",f<space>", [[<cmd>%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces")
     nnoremap(",fw", [["m1!ippar w". &textwidth . "<cr>`1"]], "Wrap Paragraph to Textwidth", "expr")
     nnoremap(",fW", [["<cmd>%!par w" . &textwidth . "<cr>"]], "Wrap File to Textwidth", "expr")
-    xnoremap(",ff", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", "Format")
+    xnoremap(",ff", function() vim.lsp.buf.range_formatting()end, "Format")
     xnoremap(",f<space>", ":%s/\v[^^ ]\zs  / /g<cr>", "Remove Double Spaces")
     xnoremap(",fw", [["!par w" . &textwidth . "<cr>"]], "Wrap to Textwidth", "expr")
 
@@ -485,7 +477,7 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
     nnoremap("<leader>fb", "<cmd>Telescope buffers<cr>", "Buffers")
     nnoremap("<leader>fC", "<cmd>Telescope git_bcommits<cr>", "Commits (buffer)")
     nnoremap("<leader>fc", "<cmd>Telescope git_commits<cr>", "Git Commits")
-    nnoremap("<leader>fF", "<cmd>lua require('telescope.builtin').find_files({find_command={'fd', '-I'}})<cr>", "Files (non git)")
+    nnoremap("<leader>fF", function() require('telescope.builtin').find_files({find_command={'fd', '-I'}})end, "Files (non git)")
     nnoremap("<leader>ff", "<cmd>call v:lua.project_files()<cr>", "Find Files")
     nnoremap("<leader>fG", "<cmd>Gitsigns setqflist<cr><cmd>Telescope quickfix<cr>", "Git Changes")
     nnoremap("<leader>fg", "<cmd>Telescope git_status<cr>", "Git Status")
@@ -502,14 +494,14 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
     nnoremap("<leader>fV", [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj " . input("In what files? > ") . "<cr><cmd>Telescope quickfix<cr>"]], "Vim Grep (file select)", "expr")
     nnoremap("<leader>fv", [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/* <cr><cmd>Telescope quickfix<cr>"]], "Vim Grep", "expr")
     nnoremap("<leader>fx", "<cmd>Telescope file_browser<cr>", "File Browser")
-    nnoremap("<leader>fX", "<cmd>lua require'telescope.builtin'.file_browser{cwd=require'telescope.utils'.buffer_dir()}<cr>", "File Browser (Relative)")
-    nnoremap("<leader>fI", "<cmd>lua require'telescope.builtin'.symbols{sources={'julia'}}<cr>", "Insert Symbols")
+    nnoremap("<leader>fX", function() require'telescope.builtin'.file_browser{cwd=require'telescope.utils'.buffer_dir()}end, "File Browser (Relative)")
+    nnoremap("<leader>fI", function() require'telescope.builtin'.symbols{sources={'julia'}}end, "Insert Symbols")
 
     m.name("<leader>r", "Refactor")
-    xnoremap("<leader>rf", "<cmd>lua require('refactoring').refactor('Extract Function')<cr>", "Extract Function")
-    xnoremap("<leader>rF", "<cmd>lua require('refactoring').refactor('Extract Function to File')<cr>", "Extract Function")
-    xnoremap("<leader>rv", "<cmd>lua require('refactoring').refactor('Extract Variable')<cr>", "Extract Variable")
-    xnoremap("<leader>ri", "<cmd>lua require('refactoring').refactor('Inline Variable')<cr>", "Inline Variable")
+    xnoremap("<leader>rf", function() require('refactoring').refactor('Extract Function')end, "Extract Function")
+    xnoremap("<leader>rF", function() require('refactoring').refactor('Extract Function to File')end, "Extract Function")
+    xnoremap("<leader>rv", function() require('refactoring').refactor('Extract Variable')end, "Extract Variable")
+    xnoremap("<leader>ri", function() require('refactoring').refactor('Inline Variable')end, "Inline Variable")
 
     m.name("<leader>w", "Window Managment")
     nnoremap("<leader>w<leader>", "<c-w>p", "Jump To Last Split")
@@ -534,7 +526,7 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
     m.name("<leader>g", "Git")
     nnoremap("<leader>gg", "<cmd>silent !kitty @ launch --cwd=current --type=window --window-title 'LazyGit' lazygit<cr>", "LazyGit")
     nnoremap("<leader>gG", "<cmd>silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit<cr>", "LazyGit")
-    nnoremap("<leader>ga", "<cmd>lua require'gitsigns'.blame_line({full=true})<CR>", "Blame Line")
+    nnoremap("<leader>ga", function() require'gitsigns'.blame_line({full=true})end, "Blame Line")
     nnoremap("<leader>gA", "<cmd>Gitsigns toggle_current_line_blame<CR>", "Blame Toggle")
 
     nnoremap("<leader>gb", "<cmd>Telescope git_branches<cr>", "Branches")
@@ -575,14 +567,14 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
         nnoremap("<leader>g,B", "<cmd>call v:lua.gitsign_bchange_base()<cr>", "Change Gitsigns Base")
 
     m.name("<leader>p", "Preview")
-    nnoremap("<leader>pa", "<cmd>lua require'gitsigns'.blame_line({full=true})<CR>", "Blame Line")
-    nnoremap("<leader>pp", "<Cmd>lua vim.lsp.buf.hover({ focusable = false})<CR>", "Documentation")
-    nnoremap("<leader>ps", "<cmd>lua vim.lsp.buf.signature_help({ focusable = false})<CR>", "Signature")
-    nnoremap("<leader>pd", "<cmd>lua PeekDefinition()<CR>", "Definition")
+    nnoremap("<leader>pa", function() require'gitsigns'.blame_line({full=true})end, "Blame Line")
+    nnoremap("<leader>pp", function() vim.lsp.buf.hover({ focusable = false})end, "Documentation")
+    nnoremap("<leader>ps", function() vim.lsp.buf.signature_help({ focusable = false})end, "Signature")
+    nnoremap("<leader>pd", function() PeekDefinition()end, "Definition")
     nnoremap("<leader>pE", "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown")
-    nnoremap("<leader>pe", "<cmd>lua vim.diagnostic.open_float(0, {border='single', scope='line', source='always'})<CR>", "Diagnostics")
-    nnoremap("<leader>pW", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Workspace Directory")
-    nnoremap("<leader>pg", "<cmd>lua require'gitsigns'.preview_hunk()<CR>", "Hunk Preview")
+    nnoremap("<leader>pe", function() vim.diagnostic.open_float(0, {border='single', scope='line', source='always'})end, "Diagnostics")
+    nnoremap("<leader>pW", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders()))end, "Workspace Directory")
+    nnoremap("<leader>pg", function() require'gitsigns'.preview_hunk()end, "Hunk Preview")
     nnoremap("<leader>pw", "<cmd>MatchupWhereAmI??<cr>", "Preview Location")
 
     m.name("<leader>v", "View Panels")
@@ -620,7 +612,7 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
     m.name("<leader>d", "Debugging")
 
     m.name("<leader>r", "Refactoring")
-    nnoremap("<leader>rr", "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename (LSP)")
+    nnoremap("<leader>rr", function() vim.lsp.buf.rename()end, "Rename (LSP)")
     nmap("<leader>rf", "zib<cmd>lua require('refactoring').refactor('Extract Function')<cr>", "Extract Function")
     nmap("<leader>rF", "zib<cmd>lua require('refactoring').refactor('Extract Function to File')<cr>", "Extract Function")
     nmap("<leader>rv", "zi,<cmd>lua require('refactoring').refactor('Extract Variable')<cr>", "Extract Variable")
