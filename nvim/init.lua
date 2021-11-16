@@ -16,7 +16,7 @@ vim.opt.shell = "/bin/zsh"
 
 vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-lua/plenary.nvim'
-    Plug 'tpope/vimrepeat'
+    Plug 'tpope/vim-repeat'
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'nvim-lua/popup.nvim'
     Plug '907th/vim-auto-save'
@@ -38,6 +38,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'svermeulen/vim-subversive'
     Plug 'inkarkat/vim-unconditionalpaste'
     Plug 'tpope/vim-abolish'
+    Plug 'tpope/vim-surround'
 
     Plug 'tommcdo/vim-ninja-feet'
     Plug 'wellle/targets.vim'
@@ -128,6 +129,7 @@ end
 require('settings_config')
 require('misc_config')
 require('mappings_config')
+require('jump_config')
 require('telescope_config')
 require('compleation_config')
 require('panels_config')

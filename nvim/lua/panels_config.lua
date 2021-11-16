@@ -46,7 +46,7 @@ require("todo-comments").setup({
     },
     highlight = {
         before = "fg",
-        keyword = "fg",
+        keyword = "bg",
         after = "fg",
     },
     colors = {

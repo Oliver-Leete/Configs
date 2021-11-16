@@ -4,147 +4,25 @@ end
 
 -- Repaets
 -- set defaults
-vim.api.nvim_set_var("dirJumps", "search")
 vim.api.nvim_set_var("panelRepeat", "q")
 vim.api.nvim_set_var("DiffviewLast", "DiffviewOpen")
 
 function _G.commandRepeat(leader, varName)
-    local jump = vim.api.nvim_get_var(varName)
-    if jump == "search" then
+    local key = vim.api.nvim_get_var(varName)
+    if key == "search" then
         if leader == "]" then
             return replace_keycodes("nzz")
         elseif leader == "[" then
             return replace_keycodes("Nzz")
         end
     end
-    return replace_keycodes(leader .. jump)
+    return replace_keycodes(leader .. key)
 end
 
 function _G.diff_repeat()
     local cmd = vim.api.nvim_get_var("DiffviewLast")
     vim.cmd(cmd)
 end
-
--- Text object targets
-function _G.ts_target(count, object)
-    vim.cmd("TSTextobjectGotoNextStart " .. object)
-    count = count - 1
-    while count > 0 do
-        vim.cmd("TSTextobjectGotoNextStart " .. object)
-        count = count - 1
-    end
-    vim.cmd("TSTextobjectSelect " .. object)
-end
-function _G.ts_target_back(count, object)
-    vim.cmd("TSTextobjectGotoPreviousEnd " .. object)
-    count = count - 1
-    while count > 0 do
-        vim.cmd("TSTextobjectGotoPreviousEnd " .. object)
-        count = count - 1
-    end
-    vim.cmd("TSTextobjectGotoPreviousStart " .. object)
-    vim.cmd("TSTextobjectSelect " .. object)
-end
-
-function _G.git_target(count, go_forward)
-    local move_cmd
-    if go_forward == "true" then
-        move_cmd = "Gitsigns next_hunk"
-    else
-        move_cmd = "Gitsigns prev_hunk"
-    end
-    vim.cmd(move_cmd)
-    count = count - 1
-    while count > 0 do
-        vim.cmd(move_cmd)
-        count = count - 1
-    end
-    vim.cmd("Gitsigns select_hunk")
-end
-
-function _G.mapped_targets(count, movement, selection)
-    local cmd = movement
-    count = count - 1
-    while count > 0 do
-        cmd = cmd .. movement
-        count = count - 1
-    end
-    cmd = cmd .. "v" .. selection
-    vim.cmd([[normal ]] .. cmd)
-end
-function _G.mapped_targets_back(count, movement, end_movement, selection)
-    local cmd = end_movement
-    count = count - 1
-    while count > 0 do
-        cmd = cmd .. movement
-        count = count - 1
-    end
-    cmd = cmd .. "v" .. selection
-    vim.cmd([[normal ]] .. cmd)
-end
-
-function _G.plug_targets(count, movement, selection)
-    local cmd = [[\<plug>]] .. movement
-    count = count - 1
-    while count > 0 do
-        cmd = cmd .. [[\<plug>]] .. movement
-        count = count - 1
-    end
-    cmd = cmd .. [[v\<plug>]] .. selection
-    vim.cmd([[exe "normal ]] .. cmd .. [["]])
-end
-function _G.plug_targets_back(count, movement, end_movement, selection)
-    local cmd = [[\<plug>]] .. movement
-    count = count - 1
-    while count > 0 do
-        cmd = cmd .. [[\<plug>]] .. movement
-        count = count - 1
-    end
-    cmd = [[\<plug>]] .. end_movement
-    cmd = cmd .. [[v\<plug>]] .. selection
-    vim.cmd([[exe "normal ]] .. cmd .. [["]])
-end
-
-function _G.paragraph_targets(count, around)
-    vim.fn.search([[\v^$\n^\zs.+$]], "W")
-    count = count - 1
-    while count > 0 do
-        vim.fn.search([[\v^$\n^\zs.+$]], "W")
-        count = count - 1
-    end
-    local line_diff
-    if around == 1 then
-        line_diff = vim.fn.search([[\v(^$\n^.+$|\%$)]], "Wnc") - vim.fn.line(".")
-    else
-        line_diff = vim.fn.search([[\v(^.+$\n^$|\%$)]], "Wnc") - vim.fn.line(".")
-    end
-    if line_diff > 0 then
-        vim.cmd([[normal! V]] .. line_diff .. "j")
-    else
-        vim.cmd([[normal! V]])
-    end
-end
-
-function _G.paragraph_targets_back(count, around)
-    vim.fn.search([[\v^.+\zs$\n^$]], "Wb")
-    count = count - 1
-    while count > 0 do
-        vim.fn.search([[\v^.+\zs$\n^$]], "Wb")
-        count = count - 1
-    end
-    local line_diff
-    if around == 1 then
-        line_diff = vim.fn.line(".") - vim.fn.search([[\v(^.+$\n^$|\%^)]], "bWnc")
-    else
-        line_diff = vim.fn.line(".") - vim.fn.search([[\v(^$\n^\zs.+$|\%^)]], "bWnc")
-    end
-    if line_diff > 0 then
-        vim.cmd([[normal! V]] .. line_diff .. "k")
-    else
-        vim.cmd([[normal! V]])
-    end
-end
-
 -- Distant Pasting
 
 function _G.pre_paste_away(register, paste)
