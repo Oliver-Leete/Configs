@@ -1,0 +1,3 @@
+#!/bin/bash
+projectName=$(basename $(pwd))
+julia -e "using Test, Documenter, $projectName; DocMeta.setdocmeta!($projectName, :DocTestSetup, :(using $projectName)); doctest($projectName)"

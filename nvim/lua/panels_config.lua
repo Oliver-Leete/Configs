@@ -58,3 +58,30 @@ require("todo-comments").setup({
     },
 })
 
+-- Toggle Quickfix list
+function _G.toggle_qflist()
+    local qf_open = false
+    for _, win in pairs(vim.fn.getwininfo()) do
+        if win["quickfix"] == 1 then
+            qf_open = true
+        end
+    end
+    if qf_open == true then
+        vim.cmd("cclose")
+    elseif not vim.tbl_isempty(vim.fn.getqflist()) then
+        vim.cmd("copen")
+    end
+end
+function _G.toggle_loclist()
+    local loc_open = false
+    for _, win in pairs(vim.fn.getwininfo()) do
+        if win["loclist"] == 1 then
+            loc_open = true
+        end
+    end
+    if loc_open == true then
+        vim.cmd("lclose")
+    else
+        vim.cmd("lopen")
+    end
+end

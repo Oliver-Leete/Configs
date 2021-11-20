@@ -139,3 +139,45 @@ vim.g.diagnostic_auto_popup_while_jump = 0
 vim.g.diagnostic_enable_virtual_text = 0
 vim.g.diagnostic_enable_underline = 0
 vim.g.completion_timer_cycle = 200
+
+local function replace_keycodes(str)
+    return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local luasnip = require("luasnip")
+_G.tab_complete = function()
+    if cmp.visible() then
+        return replace_keycodes("<down>")
+    elseif luasnip and luasnip.expand_or_jumpable() then
+        return replace_keycodes("<Plug>luasnip-expand-or-jump")
+    else
+        return replace_keycodes("<tab>")
+    end
+end
+
+_G.s_tab_complete = function()
+    if cmp.visible() then
+        return replace_keycodes("<up>")
+    elseif luasnip and luasnip.jumpable(-1) then
+        return replace_keycodes("<Plug>luasnip-jump-prev")
+    else
+        return replace_keycodes("<c-d>")
+    end
+end
+
+_G.cmp_toggle = function()
+    if require("cmp").visible() then
+        return replace_keycodes([[<cmd>lua require("cmp").close()<cr>]])
+    else
+        return replace_keycodes([[<cmd>lua require("cmp").complete()<cr>]])
+    end
+end
+
+_G.cmp_esc = function()
+    if require("cmp").visible() then
+        return replace_keycodes([[<cmd>lua require("cmp").close()<cr>]])
+    else
+        return replace_keycodes("<esc>")
+    end
+end
+

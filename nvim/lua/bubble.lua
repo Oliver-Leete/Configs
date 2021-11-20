@@ -186,4 +186,7 @@ windline.setup({
         default,
         quickfix,
     },
+    tabline = {}
 })
+
+vim.cmd("WindLineFloatToggle")

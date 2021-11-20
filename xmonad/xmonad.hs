@@ -249,12 +249,12 @@ myTabTheme = def
 myPromptTheme :: XPConfig
 myPromptTheme = def
     { font                  = myFont
-    , bgColor               = background
-    , fgColor               = foreground
-    , fgHLight              = visible
-    , bgHLight              = background
+    , bgColor               = active
+    , fgColor               = background
+    , fgHLight              = dull
+    , bgHLight              = active
     , borderColor           = active
-    , promptBorderWidth     = myBorder
+    , promptBorderWidth     = 0
     , height                = prompt
     , position              = CenteredAt (1 / 4) (1 / 4)
     , searchPredicate       = fuzzyMatch
@@ -264,8 +264,8 @@ myPromptTheme = def
 
 hotPromptTheme :: XPConfig
 hotPromptTheme = myPromptTheme
-    { bgColor               = background
-    , fgColor               = alert
+    { bgColor               = alert
+    , fgColor               = background
     }
 
 myShowWNameTheme :: SWNConfig
@@ -342,7 +342,6 @@ myKeys =
     , ("M-M1-C-S-<Left>" , spawn "playerctl previous" )
     , ("M-M1-C-S-<Right>", spawn "playerctl next" )
 
-    , ("M-a"             , spawn "rofi -matching fuzzy -modi combi -show combi -combi-modi window,drun,run -show-icons")
     , ("M-<Return>"      , kittyBind2 (P.sendKey (controlMask .|. shiftMask) xK_Return) (upPointer $ runOrRaise myTerminal (className =? "kitty")))
     , ("M-C-<Return>"    , upPointer $ spawn myTerminal)
 
@@ -350,6 +349,7 @@ myKeys =
     , ("M-C-b"           , upPointer $ spawn myBrowser)
     , ("M-M1-b"          , upPointer altBrowser)
 
+    , ("M-a"             , spawn "rofi -matching fuzzy -modi combi -show combi -combi-modi window,drun,run -show-icons")
     , ("M-v"             , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
 
     , ("M-S-c"           , upPointer $ allNamedScratchpadAction scratchpads "calc")

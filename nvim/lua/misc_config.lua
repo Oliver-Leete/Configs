@@ -2,7 +2,7 @@
 vim.cmd([[augroup mywellle
     autocmd!
     autocmd User targets#mappings#user call targets#mappings#extend({
-        \ '.': { 'separator': [{'d':','}, {'d':'.'}, {'d':';'}, {'d':':'}, {'d':'+'}, {'d':'-'},
+        \ 'z': { 'separator': [{'d':','}, {'d':'.'}, {'d':';'}, {'d':':'}, {'d':'+'}, {'d':'-'},
         \                      {'d':'='}, {'d':'~'}, {'d':'_'}, {'d':'*'}, {'d':'#'}, {'d':'/'},
         \                      {'d':'\'}, {'d':'|'}, {'d':'&'}, {'d':'$'}] },
         \ ',': {},

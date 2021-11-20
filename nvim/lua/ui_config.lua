@@ -58,10 +58,6 @@ require("zen-mode").setup({
     end,
 })
 
--- Windline Status Line
-
-vim.cmd("WindLineFloatToggle")
-
 -- Indent Blankline Settings
 require("indent_blankline").setup({
     char = "│",

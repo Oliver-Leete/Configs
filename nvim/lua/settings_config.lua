@@ -1,5 +1,3 @@
-
-
 --Settings
 vim.opt.nrformats = vim.opt.nrformats - "octal"
 vim.opt.clipboard = vim.opt.clipboard + "unnamedplus"
@@ -27,7 +25,7 @@ vim.api.nvim_set_var("auto_save", 1)
 vim.api.nvim_set_var("auto_save_silent", 1)
 
 -- Search
-vim.opt.ignorecase = true
+vim.opt.ignorecase = true  
 vim.opt.smartcase = true
 vim.opt.hlsearch = true
 vim.opt.inccommand = "split"
@@ -39,6 +37,8 @@ vim.api.nvim_set_keymap("", "<plug>(slash-after)", "<cmd>let g:dirJumps='search'
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
+vim.opt.list = true
+vim.opt.listchars = "tab:> ,trail:·"
 
 -- Wrapping
 vim.opt.wrap = false
@@ -84,4 +84,3 @@ vim.cmd([[augroup myfiletypes
     au BufNewFile,BufRead *.fish set filetype=fish
     au BufNewFile,BufRead *.jl set filetype=julia
 augroup end]])
-

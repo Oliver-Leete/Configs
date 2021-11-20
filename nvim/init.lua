@@ -43,14 +43,10 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'tommcdo/vim-ninja-feet'
     Plug 'wellle/targets.vim'
     Plug 'wellle/line-targets.vim'
-    Plug 'kana/vim-textobj-user'
-    Plug 'kana/vim-textobj-entire'
-    Plug 'preservim/vim-textobj-sentence'
 
     Plug 'lervag/vimtex'
     Plug 'JuliaEditorSupport/julia-vim'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-    Plug 'coachshea/vim-textobj-markdown'
     Plug 'fladson/vim-kitty'
     Plug 'anufrievroman/vim-angry-reviewer'
 
@@ -58,8 +54,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/zen-mode.nvim'
     Plug 'lukas-reineke/indent-blankline.nvim',
     Plug 'norcalli/nvim-colorizer.lua'
-    Plug 'windwp/windline.nvim'
     Plug 'lewis6991/gitsigns.nvim'
+    Plug 'windwp/windline.nvim'
 
     Plug 'mbbill/undotree'
     Plug 'folke/trouble.nvim'

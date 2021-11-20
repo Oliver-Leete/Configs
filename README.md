@@ -236,6 +236,19 @@ Three scripts are used for this. The first is for one shot tasks, it opens up a 
 the same tab as the editor, runs the given command and then runs a command to send the output to the
 quickfix list (using the current errorformat).
 
+## New Text Object Concept
+
+I haven't put much time into implementing this yet, but I have plans. The plan is to have all text
+objects accessable by alphabetic characters (so the capital letters can be used for some stuff). And
+then to use a few directional keys to select them in different ways. The first set would be used ([
+and ] in my current plans) to jump to the next or previous object or in operator pending, to act
+until the next object. The next pair ({ and } in my current plans) would select within the next text
+object, similar to gn and gN. And the last pair (( and ) in my current plans), would jump to the
+start or end of the current text object, like vim ninja feet.
+
+Having this would allow for things like yanking the next two functions, deleting to the next bracket
+and then changing to the end of the quote the cursor is currently in.
+
 <!-- TODO: describe other scripts -->
 
 For when I actually want the full powers of Kakoune I have a shortcut that uses kitty's remote
