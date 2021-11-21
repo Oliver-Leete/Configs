@@ -181,7 +181,7 @@ function _G.git_branch_mergebase()
 end
 
 function _G.project_files()
-    local opts = ""
+    local opts = {}
     local ok = pcall(require("telescope.builtin").git_files, opts)
     if not ok then
         require("telescope.builtin").find_files(opts)

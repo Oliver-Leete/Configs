@@ -64,7 +64,6 @@ require("cmp").setup({
     sources = {
         { name = "luasnip" },
         { name = "cmp_git" },
-        { name = "cmp_tabnine", keyword_length = 3 },
         { name = "nvim_lsp" },
         { name = "path" },
         { name = "nvim_lua" },
@@ -74,7 +73,6 @@ require("cmp").setup({
         format = function(entry, vim_item)
             vim_item.menu = ({
                 luasnip = "(LSnip)",
-                cmp_tabnine = "(Tab9)",
                 nvim_lsp = "(LSP)",
                 path = "(Path)",
                 nvim_lua = "(Lua)",
