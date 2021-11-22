@@ -471,16 +471,10 @@ function _G.paragraph_targets(count, around)
         vim.fn.search([[\v^$\n^\zs.+$]], "W")
         count = count - 1
     end
-    local line_diff
     if around == 1 then
-        line_diff = vim.fn.search([[\v(^$\n^.+$|\%$)]], "Wnc") - vim.fn.line(".")
+        vim.cmd("norm! Vap")
     else
-        line_diff = vim.fn.search([[\v(^.+$\n^$|\%$)]], "Wnc") - vim.fn.line(".")
-    end
-    if line_diff > 0 then
-        vim.cmd([[normal! V]] .. line_diff .. "j")
-    else
-        vim.cmd("normal! V")
+        vim.cmd("norm! Vip")
     end
 end
 
@@ -491,16 +485,10 @@ function _G.paragraph_targets_back(count, around)
         vim.fn.search([[\v^.+\zs$\n^$]], "Wb")
         count = count - 1
     end
-    local line_diff
     if around == 1 then
-        line_diff = vim.fn.line(".") - vim.fn.search([[\v(^.+$\n^$|\%^)]], "bWnc")
+        vim.cmd("norm! Vap")
     else
-        line_diff = vim.fn.line(".") - vim.fn.search([[\v(^$\n^\zs.+$|\%^)]], "bWnc")
-    end
-    if line_diff > 0 then
-        vim.cmd([[normal! V]] .. line_diff .. "k")
-    else
-        vim.cmd([[normal! V]])
+        vim.cmd("norm! Vip")
     end
 end
 
