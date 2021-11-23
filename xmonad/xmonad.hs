@@ -474,9 +474,10 @@ myStartupHook = do
     killStatusBar "xmobar ~/.config/xmobar/xmobar.conf"
     spawnStatusBar "xmobar ~/.config/xmobar/xmobar.conf"
     spawn "feh --bg-fill --randomize ~/Pictures/wallpapers/"
+    spawnOnce "xsetroot -cursor_name left_ptr"
+    spawnOnce "setxkbmap us alt-intl"
     spawnOnce "picom -b --config ~/.config/picom/picom.conf"
     spawnOnce "insync start; insync hide"
-    spawnOnce "xsetroot -cursor_name left_ptr"
     spawnOnce "deadd-notification-center &"
 
 ----------------------------------------------------------------------------------------------------
