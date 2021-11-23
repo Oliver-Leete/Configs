@@ -235,9 +235,9 @@ nnoremap("<C-left>", "<cmd>tabprevious<cr>")
 nnoremap("<S-right>", "<cmd>tabnext<cr>")
 nnoremap("<S-left>", "<cmd>tabprevious<cr>")
 
-nnoremap("<c-t>", "<cmd>tabedit #<cr>")
-nnoremap("<c-v>", "<cmd>vsplit #<cr>")
-nnoremap("<c-x>", "<cmd>split #<cr>")
+nnoremap("<c-t>", "<cmd>tabedit %<cr>")
+nnoremap("<c-v>", "<cmd>vsplit %<cr>")
+nnoremap("<c-x>", "<cmd>split %<cr>")
 
 nnoremap("<cr><cr>", "<cmd>call v:lua.sendLines(v:count)<cr>")
 nmap("<cr>", "<plug>(sendOp)")

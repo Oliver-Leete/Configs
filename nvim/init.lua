@@ -136,6 +136,8 @@ require('snippets_config')
 require('bubble')
 require('ui_config')
 
-vim.cmd([[augroup exitingVim
+
+vim.cmd([[augroup enterAndExitVim
     autocmd VimLeave * silent! !kitty @ set-window-title ""
 augroup end]])
+

@@ -180,11 +180,20 @@ function _G.git_branch_mergebase()
     })
 end
 
+-- function _G.project_files()
+--     local opts = {}
+--     local ok = pcall(require("telescope.builtin").git_files, opts)
+--     if not ok then
+--         require("telescope.builtin").find_files(opts)
+--     end
+-- end
+
 function _G.project_files()
-    local opts = {}
-    local ok = pcall(require("telescope.builtin").git_files, opts)
-    if not ok then
-        require("telescope.builtin").find_files(opts)
+    local results = require('telescope.utils').get_os_command_output({'git', 'rev-parse', '--git-dir'})
+
+    if results[1] then
+        require('telescope.builtin').git_files(require'telescope.themes'.get_ivy())
+    else
+        require('telescope.builtin').find_files(require'telescope.themes'.get_ivy())
     end
 end
-

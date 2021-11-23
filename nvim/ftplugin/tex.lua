@@ -240,3 +240,8 @@ vim.g.projectionist_heuristics = {
         ["Citations.bib"] = { type = "citations" },
     },
 }
+
+if not PdfOpened then
+    PdfOpened = true
+    vim.cmd("VimtexView")
+end

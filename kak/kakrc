@@ -12,6 +12,10 @@ enable-auto-pairs
 
 plug 'h-youhei/kakoune-surround'
 
+plug "HeavyRain266/tokyonight.kak" config %{
+    colorscheme tokyonight
+}
+
 plug 'occivink/kakoune-phantom-selection'
 plug 'occivink/kakoune-sort-selections'
 
@@ -55,7 +59,6 @@ map global normal \; :
 
 hook global NormalIdle .* %{ wa }
 
-colorscheme tomorrow-night
 def ide %{
     rename-client main
     set global jumpclient main

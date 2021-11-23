@@ -49,7 +49,7 @@ augroup END]])
 
 -- Close Buffers Setup
 require("close_buffers").setup({
-    preserve_window_layout = {},
+    preserve_window_layout = {"this"},
 })
 
 require("nvim_comment").setup({ comment_empty = false, line_mapping = "g,cc", operator_mapping = "g,c" })
