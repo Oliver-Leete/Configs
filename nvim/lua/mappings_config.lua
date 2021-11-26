@@ -263,11 +263,6 @@ omap("$b", "<plug>(WordMotion_b)")
 omap("$e", "<plug>(WordMotion_e)")
 omap("$ge", "<plug>(WordMotion_ge)")
 
-nnoremap([[<Esc>]], function()
-  vim.cmd("nohlsearch")
-  closeFloatWins()
-end, silent)
-
 mapxName.name("g", "Goto")
     nnoremap("gg", "gg", "Buffer Top")
     nnoremap("gj", "G", "Buffer Bottom")
@@ -300,7 +295,7 @@ mapxName.name("g", "Goto")
     nnoremap("gx", ":!xdg-open <cfile> &<cr><cr>")
 
     nnoremap("gd", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>", "Definitions")
-    nnoremap("gi", "<cmd>Telescope lsp_references theme=get_ivy<cr>", "Implementations")
+    nnoremap("gr", "<cmd>Telescope lsp_references theme=get_ivy<cr>", "References")
     nnoremap("gi", "<cmd>Telescope lsp_implementations theme=get_ivy<cr>", "Implementations")
     nnoremap("go", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>", "Object Deffinition")
 
