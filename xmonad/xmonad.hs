@@ -109,18 +109,16 @@ myConfig = def
 wsTMP    = "Tmp"
 wsTMP2   = "Tmp2"
 wsPRO1   = "Print"
-wsPRO2   = "Notes"
-wsPRO3   = "Dnd"
+wsPRO2   = "Dnd"
 wsCON    = "Configs"
 wsPER    = "Home"
 wsWRK    = "Wrk"
 wsSIM    = "Sim wrk"
 wsTHESIS = "PhD wrk"
 wsEXP    = "Exp wrk"
-wsWRK4   = "wrk4"
 
 myWorkspaces :: [[Char]]
-myWorkspaces = [wsTMP, wsTMP2, wsPRO1, wsPRO2, wsPRO3, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsWRK4]
+myWorkspaces = [wsTMP, wsPRO1, wsPRO2, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsTMP2]
 
 projects :: [Project]
 projects =
@@ -139,13 +137,8 @@ projects =
                                                 spawnOn wsPRO1 ("sleep 2; " ++ myBrowser)
                 }
     , Project   { projectName       = wsPRO2
-                , projectDirectory  = "~/Projects/ProjectLogs"
-                , projectStartHook  = Just $ do spawnOn wsPRO2 (myTerminal ++ " --session=/home/oleete/.config/kitty/logs.conf")
-                                                spawnOn wsPRO2 ("sleep .2; " ++ myBrowser)
-                }
-    , Project   { projectName       = wsPRO3
                 , projectDirectory  = "~/Projects/D&D Home"
-                , projectStartHook  = Just $ do spawnOn wsPRO3 (myLongBrowser ++ " --new-window 'https://roll20.net/welcome'")
+                , projectStartHook  = Just $ do spawnOn wsPRO2 (myLongBrowser ++ " --new-window 'https://roll20.net/welcome'")
                 }
     , Project   { projectName       = wsCON
                 , projectDirectory  = "~/.config"
@@ -176,10 +169,6 @@ projects =
                 , projectDirectory  = "~/Projects/Thesis/0.1_LaTeX"
                 , projectStartHook  = Just $ do spawnOn wsTHESIS (myTerminal ++ " --session=/home/oleete/.config/kitty/thesis.conf")
                                                 spawnOn wsTHESIS ("sleep .2; " ++ myBrowser)
-                }
-    , Project   { projectName       = wsWRK4
-                , projectDirectory  = "~/UniDrive"
-                , projectStartHook  = Just $ do spawnOn wsWRK4 "sleep .3; browser"
                 }
     ]
 
@@ -284,16 +273,15 @@ data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
 
-barFull = renamed [Replace "Tabs"] $ avoidStruts $ addTabs shrinkText myTabTheme $ mySpacing
+barFull = renamed [Replace "Tabs"] $ avoidStruts $ addTabsBottom shrinkText myTabTheme $ mySpacing
         $ SimpleFocus 1 (reSize/2) 0
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
     transform FULLCENTER x k = k centerFull (const x)
 
-centerFull = renamed [Replace "Tabs"] $ avoidStruts $ addTabs shrinkText myTabTheme $ mySpacing
-           $ onWorkspaces [wsTHESIS] (SimpleFocus (1/4) (reSize/2) 1000)
-           $ SimpleFocus (1/2) (reSize/2) 1500
+centerFull = renamed [Replace "Tabs"] $ avoidStruts $ addTabsBottom shrinkText myTabTheme $ mySpacing
+           $ SimpleFocus (1/3) (reSize/2) 1000
 
 myLayoutHook= smartBorders
             $ mkToggle (single FULL)
@@ -301,7 +289,7 @@ myLayoutHook= smartBorders
             $ mkToggle (single FULLCENTER)
             $ renamed [Replace "Notebook"]
             $ showWName' myShowWNameTheme
-            $ addTabs shrinkText myTabTheme
+            $ addTabsBottom shrinkText myTabTheme
             $ avoidStruts
             $ mySpacing
               notebookLayout
@@ -418,7 +406,7 @@ myKeys =
         upFocus a = sequence_ [a, focusUnderPointer]
         upPointer a = sequence_ [a, updatePointer (0.5, 0.5) (0.25, 0.25)]
 
-        wsKeys = ["S-#", "#", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+        wsKeys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
         zipM  m ks as f = zipWith (\k d -> (m ++ k, upFocus $ f d)) ks as
 
         toggleFloat w = windows (\s -> if M.member w (W.floating s)
@@ -426,15 +414,14 @@ myKeys =
                             else W.float w (W.RationalRect (1/4) (1/4) (1/2) (1/2)) s)
 
         altBrowser = bindOn C.WS [(wsTMP2,   spawn myLongBrowser) ,(wsTMP,   spawn myLongBrowser)
-                               ,(wsWRK,   spawn myLongBrowser) ,(wsWRK4,  spawn myLongBrowser)
-                               ,(wsTHESIS,spawn myLongBrowser) ,(wsEXP,   spawn myLongBrowser)
-                               ,(wsSIM,   spawn myLongBrowser) ,("",      spawn (myLongBrowser ++ "-wrk"))]
+                               ,(wsWRK,   spawn myLongBrowser) ,(wsTHESIS,spawn myLongBrowser)
+                               ,(wsEXP,   spawn myLongBrowser) ,(wsSIM,   spawn myLongBrowser)
+                               ,("",      spawn (myLongBrowser ++ "-wrk"))]
 
         wrkNSP work personal = bindOn C.WS [(wsWRK, allNamedScratchpadAction scratchpads work)
                                          ,(wsSIM, allNamedScratchpadAction scratchpads work)
                                          ,(wsEXP, allNamedScratchpadAction scratchpads work)
                                          ,(wsTHESIS, allNamedScratchpadAction scratchpads work)
-                                         ,(wsWRK4, allNamedScratchpadAction scratchpads work)
                                          ,("", allNamedScratchpadAction scratchpads personal)]
 
         kittyBind kitty leftover = bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ kitty))
@@ -489,8 +476,10 @@ myPP = def
     { ppCurrent = xmobarColor active ""
     , ppVisible = xmobarColor visible ""
     , ppHidden  = xmobarColor dull  ""
-    , ppTitle   = const ""
+    , ppTitle   = xmobarColor foreground "" . shorten 50
     , ppLayout  = const ""
+    , ppSep = " | "
+    , ppOrder = reverse
     }
 
 myLogHook = do
@@ -522,7 +511,7 @@ myManageHook =
             , resource =? "stalonetray"    -?> doIgnore
 
             , resource =? "gnome-calculator" -?> doCenterFloat
-            , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect (1285/3840) (31/2160) (600/3840) (800/2160))
+            , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect (8/3840) (31/2160) (600/3840) (800/2160))
 
             , resource =? "Tasks" -?> doRectFloat halfNhalf
             , resource =? "WrkTasks" -?> doRectFloat halfNhalf
@@ -533,8 +522,10 @@ myManageHook =
             , resource =? "discord" -?> doRectFloat halfNhalf
 
             , transience
-            , isBrowserDialog -?> forceCenterFloat
-            , isRole =? "GtkFileChooserDialog" -?> forceCenterFloat
+            -- , isBrowserDialog -?> forceCenterFloat
+            -- , isRole =? "GtkFileChooserDialog" -?> forceCenterFloat
+            , isBrowserDialog -?> doCenterFloat 
+            , isRole =? "GtkFileChooserDialog" -?> doCenterFloat 
             , isRole =? "pop-up" -?> doCenterFloat
             , isInProperty "_NET_WM_WINDOW_TYPE"
                            "_NET_WM_WINDOW_TYPE_SPLASH" -?> doCenterFloat
@@ -553,19 +544,3 @@ myHandleEventHook :: Event -> X All
 myHandleEventHook = fadeWindowsEventHook
                 <+> handleEventHook def
                 <+> XMonad.Util.Hacks.windowedFullscreenFixEventHook
-
-----------------------------------------------------------------------------------------------------
--- Custom hook helpers                                                                            --
-----------------------------------------------------------------------------------------------------
-
-forceCenterFloat :: ManageHook
-forceCenterFloat = doFloatDep move
-  where
-    move :: W.RationalRect -> W.RationalRect
-    move _ = W.RationalRect x y w h
-
-    w, h, x, y :: Rational
-    w = 1/3
-    h = 1/2
-    x = (1-w)/2
-    y = (1-h)/2

@@ -306,12 +306,14 @@ splitColumns list minWidth stackRect mf d bigRect
 modY :: Rectangle -> Rectangle -> Rectangle
 modY (Rectangle sx sy sw sh) (Rectangle bx _ bw _)=
     Rectangle sx y sw h
-    where   ymoddifier= if (toInteger (fromIntegral sx + sw - 8) < toInteger ( bx + ceiling (1/3 * toRational bw))) || (toInteger (8 + sx) > toInteger ( bx + ceiling (2/3 * toRational bw)))
+    -- where   ymoddifier= if (toInteger (fromIntegral sx + sw - 8) < toInteger ( bx + ceiling (1/3 * toRational bw))) || (toInteger (8 + sx) > toInteger ( bx + ceiling (2/3 * toRational bw)))
+    -- where   ymoddifier= if (toInteger (fromIntegral sx + sw - 8) < toInteger ( bx + ceiling (1/3 * toRational bw))) -- || 
+    where   ymoddifier= if toInteger (8 + sx) > toInteger ( bx + ceiling (1/3 * toRational bw))
                         then 31
                         else 0
             y = sy - ymoddifier
             h = sh + fromIntegral ymoddifier
-    
+
 
 
 sortByXLocation :: [(Rectangle, Int)] -> [(Rectangle, Int)]

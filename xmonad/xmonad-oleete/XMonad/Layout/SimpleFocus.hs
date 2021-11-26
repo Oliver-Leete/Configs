@@ -40,7 +40,7 @@ import Control.Monad ( msum)
 data SimpleFocus a = SimpleFocus {focusFrac :: !Rational, focusDelta :: !Rational, sizeLimit:: !Integer} deriving (Show, Read)
 instance LayoutClass SimpleFocus a where
     pureLayout (SimpleFocus f _ limit) rec (S.Stack w l r) = zip (w : reverse l ++ r) (repeat midRect)
-      where midRect = centreRect (if f<0 then 1+2*f else f) limit rec
+      where midRect = modY (centreRect (if f<0 then 1+2*f else f) limit rec) rec
     handleMessage l m =
       return $ msum [fmap resize (fromMessage m)]
       where resize Shrink = l { focusFrac = max (-0.5) $ f-d}
@@ -56,3 +56,12 @@ centreRect f limit (Rectangle sx sy sw sh) =
         where width = ceiling $ fromIntegral sw * f
               gap = ceiling ( (sw - width) % 2 )
               limitGap = ceiling ( (sw - fromIntegral limit) % 2 )
+
+modY :: Rectangle -> Rectangle -> Rectangle
+modY (Rectangle sx sy sw sh) (Rectangle bx _ bw _)=
+    Rectangle sx y sw h
+    where   ymoddifier= if toInteger (8 + sx) > toInteger ( bx + ceiling (1/3 * toRational bw))
+                        then 31
+                        else 0
+            y = sy - ymoddifier
+            h = sh + fromIntegral ymoddifier

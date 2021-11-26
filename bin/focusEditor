@@ -5,5 +5,10 @@ if [[ "$(wmctrl -d | grep '*')" == *"PhD"* ]]; then
 else
     winTitle="MainEditor"
 fi
+TITLES=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[].title")
 
-kitty @ focus-window --match title:$winTitle
+if [[ "$TITLES" == *"$winTitle"* ]]; then
+    kitty @ focus-window --match title:$winTitle
+else
+    kitty @ launch --location before nvrStart
+fi

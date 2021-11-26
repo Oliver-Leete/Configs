@@ -239,17 +239,25 @@ quickfix list (using the current errorformat).
 ## New Text Object Concept
 
 I haven't put much time into implementing this yet, but I have plans. The plan is to have all text
-objects accessable by alphabetic characters (so the capital letters can be used for some stuff). And
-then to use a few directional keys to select them in different ways. The first set would be used ([
-and ] in my current plans) to jump to the next or previous object or in operator pending, to act
-until the next object. The next pair ({ and } in my current plans) would select within the next text
-object, similar to gn and gN. And the last pair (( and ) in my current plans), would jump to the
-start or end of the current text object, like vim ninja feet.
+objects accessable by alphabetic characters (so the capital letters can be used for some stuff) or
+characters that can be shifted. And then to use a few directional keys to select them in different
+ways. The first set would be used ([ and ] in my current plans) to jump to the next or previous
+object or in operator pending, to act until the next object. The next pair ({ and } in my current
+plans) would select within the next text object, similar to gn and gN. And the last pair (( and ) in
+my current plans), would jump to the start or end of the current text object, like vim ninja feet.
 
 Having this would allow for things like yanking the next two functions, deleting to the next bracket
 and then changing to the end of the quote the cursor is currently in.
 
-<!-- TODO: describe other scripts -->
+I have started working on this now. I'm trying to think about how to make it customisable, both for
+easy changes for my own config, but also to be able to make it into an extension. At the moment it
+uses custom methods for some of the built in text objects, like words, paragraphs ect., targets is
+used for brackets, arguments and quotes, vim-word-motion is used for subwords and treesitter text
+objects is used for functions and that stuff. I have altered the queries in TSTextobjects to
+simplyfy them a bit, using just three instead of the many, parameters is the same as it is. Scope
+takes over for function and objects and block takes over for conditionals, loops and blocks.
+
+### Other editors
 
 For when I actually want the full powers of Kakoune I have a shortcut that uses kitty's remote
 control to open a new tab with Kak running. This tab is opened to the same cursor position in the
