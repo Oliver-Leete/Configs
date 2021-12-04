@@ -4,7 +4,7 @@ echo -n "Would you like to update before you $1 y/n?"
 read reply
 
 if [ "$reply" = y -o "$reply" = Y ]; then
-	xdotool key super+ctrl+f
+	xdotool key super+meta+f
 	apt update
 	apt upgrade
 	apt autoremove

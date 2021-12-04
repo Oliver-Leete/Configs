@@ -64,7 +64,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'sindrets/diffview.nvim'
 
     Plug 'neovim/nvim-lspconfig'
-    Plug 'kabouzeid/nvim-lspinstall'
+    Plug 'williamboman/nvim-lsp-installer'
     Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'ray-x/lsp_signature.nvim'
 

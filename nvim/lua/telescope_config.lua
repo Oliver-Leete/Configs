@@ -51,6 +51,8 @@ require("telescope").setup({
         },
         mappings = {
             i = {
+                ["<tab>"] = actions.move_selection_worse,
+                ["<S-tab>"] = actions.move_selection_better,
                 ["<c-u>"] = false,
                 ["<c-a>"] = { "<home>", type = "command" },
                 ["<c-e>"] = { "<end>", type = "command" },
@@ -61,6 +63,8 @@ require("telescope").setup({
                 ["<C-space>"] = actions.toggle_selection + actions.move_selection_worse,
             },
             n = {
+                ["<tab>"] = actions.move_selection_worse,
+                ["<S-tab>"] = actions.move_selection_better,
                 ["<C-q>"] = actions.smart_send_to_qflist,
                 ["<C-Q>"] = actions.smart_add_to_qflist,
                 ["<C-n>"] = actions.cycle_history_next,

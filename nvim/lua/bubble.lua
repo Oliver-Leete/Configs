@@ -8,6 +8,7 @@ local state = _G.WindLine.state
 
 local lsp_comps = require("windline.components.lsp")
 local git_comps = require("windline.components.git")
+local git_rev = require('windline.components.git_rev')
 
 local hl_list = {
     Black = { "blue", "ActiveBg" },
@@ -149,6 +150,7 @@ local default = {
         basic.divider,
         basic.git,
         { git_comps.git_branch({ icon = "  " }), { "green", "ActiveBg" }, 90 },
+        { git_rev.git_rev({format=" ⇡%s⇣%s",interval=10000}), { "green", "ActiveBg" }},
         { " ", hl_list.Black },
         basic.right,
     },

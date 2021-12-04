@@ -5,5 +5,5 @@ tabcount=$(kitty @ ls | jq ".[] | select(.is_focused) | .tabs[].id" | wc -l)
 if [ "$tabcount" -gt 1 ]; then
 	xdotool key --clearmodifiers ctrl+shift+$1
 else
-	xdotool key super+ctrl+$2
+	xdotool key super+meta+$2
 fi

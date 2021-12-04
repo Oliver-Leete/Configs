@@ -67,7 +67,6 @@ xmap("N", "v:lua.commandRepeat('[', 'dirJumps')", expr)
 omap("N", "v:lua.commandRepeat('[', 'dirJumps')", expr)
 
 mapxName.name("[", "Backward Leader")
-
 nnoremap("[[", function() markGoCentre("TSTextobjectGotoPreviousStart @function.outer", "s")end, "Scope")
 nnoremap("[]", function() markGoCentre("TSTextobjectGotoPreviousEnd @function.outer", "S")end, "Scope")
 nnoremap("[s", function() markGoCentre("TSTextobjectGotoPreviousStart @function.outer", "s")end, "Scope")

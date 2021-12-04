@@ -8,5 +8,5 @@ sleep 0.5
 new_id=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[] | .columns, .lines")
 
 if [ "$old_id" = "$new_id" ]; then
-	xdotool key "super+ctrl+m"
+	xdotool key "super+meta+m"
 fi

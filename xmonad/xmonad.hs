@@ -315,7 +315,7 @@ myModMask = mod4Mask
 myKeys :: [(String, X ())]
 myKeys =
     [ ("M-q"             , spawn "xmonad --restart")
-    , ("M-C-q"           , spawn "xmonad --recompile && xmonad --restart")
+    , ("M-M1-q"          , spawn "xmonad --recompile && xmonad --restart")
     , ("M-S-q"           , confirmPrompt hotPromptTheme "Quit XMonad" $ io exitSuccess)
     , ("M-M1-C-S-x"      , spawn "slock")
 
@@ -329,13 +329,15 @@ myKeys =
     , ("M-M1-C-S-<Space>", spawn "playerctl play-pause" )
     , ("M-M1-C-S-<Left>" , spawn "playerctl previous" )
     , ("M-M1-C-S-<Right>", spawn "playerctl next" )
+    , ("M-M1-C-S-<Up>"   , spawn "pactl -- set-sink-volume 2 +10%" )
+    , ("M-M1-C-S-<Down>" , spawn "pactl -- set-sink-volume 2 -10%" )
 
     , ("M-<Return>"      , kittyBind2 (P.sendKey (controlMask .|. shiftMask) xK_Return) (upPointer $ runOrRaise myTerminal (className =? "kitty")))
-    , ("M-C-<Return>"    , upPointer $ spawn myTerminal)
+    , ("M-M1-<Return>"   , upPointer $ spawn myTerminal)
 
     , ("M-b"             , chromeBind (P.sendKey controlMask xK_t) (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
-    , ("M-C-b"           , upPointer $ spawn myBrowser)
-    , ("M-M1-b"          , upPointer altBrowser)
+    , ("M-M1-b"          , upPointer $ spawn myBrowser)
+    , ("M-C-b"           , upPointer altBrowser)
 
     , ("M-a"             , spawn "rofi -matching fuzzy -modi combi -show combi -combi-modi window,drun,run -show-icons")
     , ("M-v"             , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
@@ -348,17 +350,17 @@ myKeys =
     , ("M-S-n"           , upPointer $ wrkNSP "keepWrkNsp" "keepNsp")
 
     , ("M-<Backspace>"   , multiBind (spawn (myTerminalRemote ++ " delWindow")) (P.sendKey controlMask xK_w) kill)
-    , ("M-C-<Backspace>" , kill)
+    , ("M-M1-<Backspace>", kill)
     , ("M-S-<Backspace>" , confirmPrompt hotPromptTheme "kill all" killAll)
 
     , ("M-<Tab>"         , multiBind (spawn (myTerminalRemote ++ " tabSwap Right Tab")) (P.sendKey controlMask xK_Tab) (bindOn LD [("Tabs", windows W.focusDown)]))
     , ("M-S-<Tab>"       , multiBind (spawn (myTerminalRemote ++ " tabSwap Left shift+Tab")) (P.sendKey (controlMask .|. shiftMask) xK_Tab) (bindOn LD [("Tabs", windows W.focusUp)]))
-    , ("M-C-<Tab>"       , bindOn LD [("Tabs", windows W.focusDown)])
-    , ("M-C-S-<Tab>"     , bindOn LD [("Tabs", windows W.focusUp)])
+    , ("M-M1-<Tab>"      , bindOn LD [("Tabs", windows W.focusDown)])
+    , ("M-M1-S-<Tab>"    , bindOn LD [("Tabs", windows W.focusUp)])
     , ("M-t"             , multiBind (P.sendKey (controlMask .|. shiftMask) xK_t) (P.sendKey controlMask xK_t) (spawn ""))
 
     , ("M-f"             , kittyBind2 (P.sendKey (controlMask .|. shiftMask) xK_f)  (toggleLayout FULL))
-    , ("M-C-f"           , toggleLayout FULL)
+    , ("M-M1-f"          , toggleLayout FULL)
     , ("M-s"             , toggleLayout FULLBAR)
     , ("M-c"             , toggleLayout FULLCENTER)
 
@@ -368,40 +370,40 @@ myKeys =
     , ("M-j"             , kittyBind " moveWindow bottom j" (upPointer $ windowGo D True))
     , ("M-k"             , kittyBind " moveWindow top k"    (upPointer $ windowGo U True))
     , ("M-l"             , kittyBind " moveWindow right l"  (upPointer $ windowGo R True))
-    , ("M-C-S-h"         , upPointer $ windowGo L True)
-    , ("M-C-S-j"         , upPointer $ windowGo D True)
-    , ("M-C-S-k"         , upPointer $ windowGo U True)
-    , ("M-C-S-l"         , upPointer $ windowGo R True)
-    , ("M-C-h"           , upPointer $ windowSwap L True)
-    , ("M-C-j"           , upPointer $ windowSwap D True)
-    , ("M-C-k"           , upPointer $ windowSwap U True)
-    , ("M-C-l"           , upPointer $ windowSwap R True)
+    , ("M-M1-S-h"        , upPointer $ windowGo L True)
+    , ("M-M1-S-j"        , upPointer $ windowGo D True)
+    , ("M-M1-S-k"        , upPointer $ windowGo U True)
+    , ("M-M1-S-l"        , upPointer $ windowGo R True)
+    , ("M-M1-h"          , upPointer $ windowSwap L True)
+    , ("M-M1-j"          , upPointer $ windowSwap D True)
+    , ("M-M1-k"          , upPointer $ windowSwap U True)
+    , ("M-M1-l"          , upPointer $ windowSwap R True)
 
     , ("M-m"             , kittyBind " mainMove" (upPointer $ swapPromote' False))
-    , ("M-C-m"           , upPointer $ swapPromote' False)
+    , ("M-M1-m"          , upPointer $ swapPromote' False)
     , ("M-y"             , upPointer $ withFocused toggleFloat)
-    , ("M-C-y"           , upFocus sinkAll)
+    , ("M-M1-y"          , upFocus sinkAll)
 
     , ("M-,"             , sendMessage (IncMasterN (-1)))
     , ("M-."             , sendMessage (IncMasterN 1))
-    , ("M-C-,"           , sendMessage (IncColumnN (-1)))
-    , ("M-C-."           , sendMessage (IncColumnN 1))
+    , ("M-M1-,"          , sendMessage (IncColumnN (-1)))
+    , ("M-M1-."          , sendMessage (IncColumnN 1))
     , ("M-["             , sendMessage Shrink)
     , ("M-]"             , sendMessage Expand)
-    , ("M-C-["           , sendMessage MirrorShrink)
-    , ("M-C-]"           , sendMessage MirrorExpand)
+    , ("M-M1-["          , sendMessage MirrorShrink)
+    , ("M-M1-]"          , sendMessage MirrorExpand)
 
     , ("M-r"             , upFocus $ sendMessage ToggleSide)
-    , ("M-C-r"           , upFocus $ sendMessage ToggleStackDir)
+    , ("M-M1-r"          , upFocus $ sendMessage ToggleStackDir)
     , ("M-x"             , upFocus $ sendMessage ToggleMiddle)
 
     , ("M-w"             , upFocus $ switchProjectPrompt myPromptTheme)
-    , ("M-C-w"           , upFocus $ shiftToProjectPrompt myPromptTheme)
-    , ("<F8>"            , upFocus $ toggleWS' ["NSP"])
-    , ("C-<F8>"          , upFocus $ shiftToggleWS' ["NSP"])
+    , ("M-M1-w"          , upFocus $ shiftToProjectPrompt myPromptTheme)
+    , ("M-<Space>"       , upFocus $ toggleWS' ["NSP"])
+    , ("M-M1-<Space>"    , upFocus $ shiftToggleWS' ["NSP"])
     ]
     ++ zipM "M-"         wsKeys [0..] (withNthWorkspace W.greedyView)
-    ++ zipM "M-C-"       wsKeys [0..] (withNthWorkspace W.shift)
+    ++ zipM "M-M1-"       wsKeys [0..] (withNthWorkspace W.shift)
     where
         upFocus a = sequence_ [a, focusUnderPointer]
         upPointer a = sequence_ [a, updatePointer (0.5, 0.5) (0.25, 0.25)]
@@ -462,7 +464,7 @@ myStartupHook = do
     spawnStatusBar "xmobar ~/.config/xmobar/xmobar.conf"
     spawn "feh --bg-fill --randomize ~/Pictures/wallpapers/"
     spawnOnce "xsetroot -cursor_name left_ptr"
-    spawnOnce "setxkbmap us alt-intl"
+    -- spawnOnce "setxkbmap us alt-intl"
     spawnOnce "picom -b --config ~/.config/picom/picom.conf"
     spawnOnce "insync start; insync hide"
     spawnOnce "deadd-notification-center &"

@@ -48,7 +48,6 @@ vim.diagnostic.config({
 
 local custom_attach = function(client)
     print("LSP: " .. client.name .. " Started")
-
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
         border = "single",
         focusable = false,
@@ -97,107 +96,88 @@ require("lspconfig").julials.setup({
     -- flags = { debounce_text_changes = 500 },
 })
 
-require("lspinstall").setup()
-local servers = require("lspinstall").installed_servers()
-for _, server in pairs(servers) do
-    if server == "latex" then
-        require("lspconfig").texlab.setup({
+require("nvim-lsp-installer").on_server_ready(function(server)
+    local opts = {
             on_attach = custom_attach,
             capabilities = capabilities,
             flags = { debounce_text_changes = 500 },
-            root_dir = nvim_lsp.util.root_pattern(".git"),
-            settings = {
-                texlab = {
-                    build = {
-                        args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
-                        executable = "latexmk",
-                        onSave = false,
-                        forwardSearchAfter = true,
-                    },
-                    forwardSearch = {
-                        executable = "zathura",
-                        args = { "--synctex-forward", "%l:1:%f", "%p" },
-                        onSave = false,
-                    },
-                    chktex = {
-                        onEdit = false,
-                        onOpenAndSave = false,
-                    },
+    }
+    if server.name == "latex" then
+        opts.root_dir = nvim_lsp.util.root_pattern(".git")
+        opts.settings = {
+            texlab = {
+                build = {
+                    args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+                    executable = "latexmk",
+                    onSave = false,
+                    forwardSearchAfter = true,
+                },
+                forwardSearch = {
+                    executable = "zathura",
+                    args = { "--synctex-forward", "%l:1:%f", "%p" },
+                    onSave = false,
+                },
+                chktex = {
+                    onEdit = false,
+                    onOpenAndSave = false,
                 },
             },
-        })
-    elseif server == "lua" then
-        require("lspconfig").lua.setup({
-            on_attach = custom_attach,
-            capabilities = capabilities,
-            flags = { debounce_text_changes = 500 },
-            cmd = {
-                "/home/oleete/.local/share/nvim/lspinstall/lua/sumneko-lua-language-server",
-                "-E",
-                "/home/oleete/.local/share/nvim/lspinstall/lua/sumneko-lua/extension/server/bin/linux/sumneko-lua-language-server",
-            },
-            root_dir = nvim_lsp.util.root_pattern("init.vim", "init.lua"),
-            settings = {
-                Lua = {
-                    runtime = {
-                        version = "LuaJIT",
-                        path = vim.split(package.path, ";"),
-                    },
-                    diagnostics = {
-                        -- enable = false,
-                        globals = {
-                            "vim",
-                            "map",
-                            "nmap",
-                            "vmap",
-                            "xmap",
-                            "smap",
-                            "omap",
-                            "imap",
-                            "lmap",
-                            "cmap",
-                            "tmap",
-                            "noremap",
-                            "nnoremap",
-                            "vnoremap",
-                            "xnoremap",
-                            "snoremap",
-                            "onoremap",
-                            "inoremap",
-                            "lnoremap",
-                            "cnoremap",
-                            "tnoremap",
-                        },
-                    },
-                    workspace = {
-                        library = {
-                            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                            [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-                        },
-                        maxPreload = 3000,
-                        preloadFileSize = 500,
-                    },
-                    telemetry = {
-                        enable = false,
+        }
+    elseif server.name == "sumneko_lua" then
+        opts.cmd = {
+            "/home/oleete/.local/share/nvim/lspinstall/lua/sumneko-lua-language-server",
+            "-E",
+            "/home/oleete/.local/share/nvim/lspinstall/lua/sumneko-lua/extension/server/bin/linux/sumneko-lua-language-server",
+        }
+        opts.root_dir = nvim_lsp.util.root_pattern("init.lua")
+        opts.settings = {
+            Lua = {
+                runtime = {
+                    version = "LuaJIT",
+                    path = vim.split(package.path, ";"),
+                },
+                diagnostics = {
+                    -- enable = false,
+                    globals = {
+                        "vim",
+                        "map",
+                        "nmap",
+                        "vmap",
+                        "xmap",
+                        "smap",
+                        "omap",
+                        "imap",
+                        "lmap",
+                        "cmap",
+                        "tmap",
+                        "noremap",
+                        "nnoremap",
+                        "vnoremap",
+                        "xnoremap",
+                        "snoremap",
+                        "onoremap",
+                        "inoremap",
+                        "lnoremap",
+                        "cnoremap",
+                        "tnoremap",
                     },
                 },
+                workspace = {
+                    library = {
+                        [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                        [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+                    },
+                    maxPreload = 3000,
+                    preloadFileSize = 500,
+                },
+                telemetry = {
+                    enable = false,
+                },
             },
-        })
-    elseif server == "diagnosticls" then
-        -- require("lspconfig").diagnosticls.setup({
-        --     on_attach=custom_attach,
-        -- capabilities = capabilities,
-        --     filetypes = {"tex"},
-        --     initializationOptions = {},
-        -- })
-    else
-        require("lspconfig")[server].setup({
-            on_attach = custom_attach,
-            capabilities = capabilities,
-            flags = { debounce_text_changes = 500 },
-        })
+        }
     end
-end
+    server:setup(opts)
+end)
 
 -- LTEX
 local configs = require("lspconfig/configs")
