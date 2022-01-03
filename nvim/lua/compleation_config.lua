@@ -44,8 +44,15 @@ M.icons = {
     Variable = "",
 }
 
-
+local has_words_before = function()
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+local t = function(str)
+    return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
 local cmp = require("cmp")
+local luasnip = require("luasnip")
 require("cmp").setup({
     snippet = {
         expand = function(args)
@@ -55,12 +62,65 @@ require("cmp").setup({
     mapping = {
         ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
         ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-        ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }), { "c", "i" }),
-        ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }), { "c", "i" }),
-        ["<tab>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }), { "c" }),
-        ["<s-tab>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }), { "c" }),
-        ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "i"}),
+        ["<Tab>"] = cmp.mapping({
+            c = function()
+                if cmp.visible() then
+                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+                else
+                    vim.api.nvim_feedkeys(t("<Down>"), "n", true)
+                end
+            end,
+            i = function(fallback)
+                if cmp.visible() then
+                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+                elseif luasnip.expand_or_jumpable() then
+                    luasnip.expand_or_jump()
+                -- elseif has_words_before() then
+                --     cmp.complete()
+                else
+                    fallback()
+                end
+            end,
+            s = function(fallback)
+                if cmp.visible() then
+                    cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+                elseif luasnip.expand_or_jumpable() then
+                    luasnip.expand_or_jump()
+                else
+                    fallback()
+                end
+            end,
+        }),
+        ["<S-Tab>"] = cmp.mapping({
+            c = function()
+                if cmp.visible() then
+                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
+                else
+                    vim.api.nvim_feedkeys(t("<up>"), "n", true)
+                end
+            end,
+            i = function(fallback)
+                if cmp.visible() then
+                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
+                elseif luasnip.jumpable(-1) then
+                    luasnip.jump(-1)
+                else
+                    fallback()
+                end
+            end,
+            s = function(fallback)
+                if cmp.visible() then
+                    cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
+                elseif luasnip.jumpable(-1) then
+                    luasnip.jump(-1)
+                else
+                    fallback()
+                end
+            end
+        }),
+        ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "i" }),
     },
+
     sources = {
         { name = "luasnip" },
         { name = "cmp_git" },
@@ -102,7 +162,7 @@ cmp.setup.cmdline(":", {
 require("cmp_git").setup({})
 
 local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({  map_char = { all = "(", tex = '{', haskell = " "} }))
+cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({ map_char = { all = "(", tex = "{", haskell = " " } }))
 
 -- AutoPairs Setup
 require("nvim-autopairs").setup({
@@ -111,9 +171,9 @@ require("nvim-autopairs").setup({
     fast_wrap = {
         map = "<C-p>",
         chars = { "{", "[", "(", '"', "'", "`" },
-        pattern = string.gsub([[ [%'%"%)%>%]%)%}%,%s] ]], '%s+', ''),
+        pattern = string.gsub([[ [%'%"%)%>%]%)%}%,%s] ]], "%s+", ""),
         end_key = "l",
-        keys   = "tnseriaodhgjplfuwybkvmcxzq",
+        keys = "tnseriaodhgjplfuwybkvmcxzq",
     },
 })
 
@@ -138,28 +198,44 @@ vim.g.diagnostic_enable_virtual_text = 0
 vim.g.diagnostic_enable_underline = 0
 vim.g.completion_timer_cycle = 200
 
+require('tabout').setup {
+    tabouts = {
+      {open = "'", close = "'"},
+      {open = '"', close = '"'},
+      {open = '`', close = '`'},
+      {open = '(', close = ')'},
+      {open = '[', close = ']'},
+      {open = '{', close = '}'},
+      {open = '[[', close = ']]'},
+      {open = '\\[', close = '\\]'},
+      {open = '\\(', close = '\\)'},
+      {open = '```', close = '```'},
+      {open = '"""', close = '"""'},
+    },
+}
+
 local function replace_keycodes(str)
     return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 
-local luasnip = require("luasnip")
 _G.tab_complete = function()
     if cmp.visible() then
-        return replace_keycodes("<down>")
+        return [[<cmd>lua require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]]
+        -- return "<down>"
     elseif luasnip and luasnip.expand_or_jumpable() then
-        return replace_keycodes("<Plug>luasnip-expand-or-jump")
+        return "<Plug>luasnip-expand-or-jump"
     else
-        return replace_keycodes("<tab>")
+        return "<tab>"
     end
 end
 
 _G.s_tab_complete = function()
     if cmp.visible() then
-        return replace_keycodes("<up>")
+        return [[<cmd>lua require("cmp").select_prev_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]]
     elseif luasnip and luasnip.jumpable(-1) then
-        return replace_keycodes("<Plug>luasnip-jump-prev")
+        return "<Plug>luasnip-jump-prev"
     else
-        return replace_keycodes("<c-d>")
+        return "<c-d>"
     end
 end
 
@@ -178,4 +254,3 @@ _G.cmp_esc = function()
         return replace_keycodes("<esc>")
     end
 end
-

@@ -49,10 +49,31 @@ augroup END]])
 
 -- Close Buffers Setup
 require("close_buffers").setup({
-    preserve_window_layout = {"this"},
+    preserve_window_layout = { "this" },
 })
 
-require("nvim_comment").setup({ comment_empty = false, line_mapping = "g,cc", operator_mapping = "g,c" })
+require("Comment").setup({
+    ignore = "^$",
+    toggler = {
+        line = ",cc",
+        block = ",bb",
+    },
+    opleader = {
+        line = ",c",
+        block = ",b",
+    },
+    extra = {
+        above = ",cO",
+        below = ",co",
+        eol = ",cA",
+    },
+    mappings = {
+        basic = true,
+        extra = true,
+        extended = false,
+    }
+})
+
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
 require("colorizer").setup({ "*" }, {
     RGB = true,

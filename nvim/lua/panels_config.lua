@@ -3,7 +3,7 @@
 require("trouble").setup({
     height = 20,
     icons = true,
-    mode = "workspace",
+    mode = "workspace_diagnostics",
     fold_open = "",
     fold_closed = "",
     action_keys = {

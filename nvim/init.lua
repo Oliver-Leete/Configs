@@ -31,7 +31,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
     Plug 'ThePrimeagen/harpoon'
-    Plug 'terrortylor/nvim-comment'
+    Plug 'numToStr/Comment.nvim'
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
     Plug 'Konfekt/vim-CtrlXA'
@@ -50,6 +50,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'fladson/vim-kitty'
     Plug 'anufrievroman/vim-angry-reviewer'
 
+    Plug 'rebelot/kanagawa.nvim'
     Plug 'folke/tokyonight.nvim'
     Plug 'folke/zen-mode.nvim'
     Plug 'lukas-reineke/indent-blankline.nvim',
@@ -67,6 +68,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'williamboman/nvim-lsp-installer'
     Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'ray-x/lsp_signature.nvim'
+    Plug 'brymer-meneses/grammar-guard.nvim'
 
     Plug 'hrsh7th/nvim-cmp'
     Plug 'hrsh7th/cmp-buffer'
@@ -79,6 +81,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'saadparwaiz1/cmp_luasnip'
     Plug 'rafamadriz/friendly-snippets'
     Plug 'windwp/nvim-autopairs'
+    Plug 'abecodes/tabout.nvim'
 
     Plug 'nvim-telescope/telescope.nvim'
     Plug 'nvim-telescope/telescope-symbols.nvim'

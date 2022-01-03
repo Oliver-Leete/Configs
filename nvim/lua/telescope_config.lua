@@ -13,12 +13,54 @@
 
 -- Telescope Setup
 
+local action_state = require("telescope.actions.state")
+local actions = require("telescope.actions")
+local from_entry = require("telescope.from_entry")
+local entry_to_qf = function(entry)
+    local text = entry.text
+
+    if not text then
+        if type(entry.value) == "table" then
+            text = entry.value.text
+        else
+            text = entry.value
+        end
+    end
+
+    return {
+        bufnr = entry.bufnr,
+        filename = from_entry.path(entry, false),
+        lnum = vim.F.if_nil(entry.lnum, 1),
+        col = vim.F.if_nil(entry.col, 1),
+        text = text,
+    }
+end
+
+local openAndList = function(prompt_bufnr)
+    local picker = action_state.get_current_picker(prompt_bufnr)
+    local qf_entries = {}
+
+    if table.getn(picker:get_multi_selection()) > 0 then
+        for _, entry in ipairs(picker:get_multi_selection()) do
+            table.insert(qf_entries, entry_to_qf(entry))
+        end
+        vim.fn.setqflist(qf_entries, "r")
+    else
+        local manager = picker.manager
+        for entry in manager:iter() do
+            table.insert(qf_entries, entry_to_qf(entry))
+        end
+
+        vim.fn.setqflist(qf_entries, "r")
+    end
+
+    actions.select_default(prompt_bufnr)
+end
+
 require("telescope").load_extension("bibtex")
 require("telescope").load_extension("gh")
 require("telescope").load_extension("media_files")
 require("telescope").load_extension("heading")
-
-local actions = require("telescope.actions")
 
 require("telescope").setup({
     defaults = {
@@ -51,6 +93,7 @@ require("telescope").setup({
         },
         mappings = {
             i = {
+                -- ["<cr>"] = openAndList,
                 ["<tab>"] = actions.move_selection_worse,
                 ["<S-tab>"] = actions.move_selection_better,
                 ["<c-u>"] = false,
@@ -63,6 +106,7 @@ require("telescope").setup({
                 ["<C-space>"] = actions.toggle_selection + actions.move_selection_worse,
             },
             n = {
+                -- ["<cr>"] = openAndList,
                 ["<tab>"] = actions.move_selection_worse,
                 ["<S-tab>"] = actions.move_selection_better,
                 ["<C-q>"] = actions.smart_send_to_qflist,
@@ -89,8 +133,6 @@ require("telescope").setup({
 
 require("telescope").load_extension("fzf")
 require("telescope").load_extension("bibtex")
-
-local action_state = require("telescope.actions.state")
 
 local open_dif = function()
     local selected_entry = action_state.get_selected_entry()
@@ -193,11 +235,11 @@ end
 -- end
 
 function _G.project_files()
-    local results = require('telescope.utils').get_os_command_output({'git', 'rev-parse', '--git-dir'})
+    local results = require("telescope.utils").get_os_command_output({ "git", "rev-parse", "--git-dir" })
 
     if results[1] then
-        require('telescope.builtin').git_files(require'telescope.themes'.get_ivy())
+        require("telescope.builtin").git_files(require("telescope.themes").get_ivy())
     else
-        require('telescope.builtin').find_files(require'telescope.themes'.get_ivy())
+        require("telescope.builtin").find_files(require("telescope.themes").get_ivy())
     end
 end

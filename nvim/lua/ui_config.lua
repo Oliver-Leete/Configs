@@ -14,17 +14,33 @@
 -- Theme
 vim.opt.termguicolors = true
 
-vim.api.nvim_set_var("tokyonight_style", "night")
-vim.api.nvim_set_var("tokyonight_terminal_colors", "v:true")
-vim.api.nvim_set_var("tokyonight_dark_float", false)
-vim.api.nvim_set_var("tokyonight_dark_sidebar", true)
-vim.api.nvim_set_var("tokyonight_italic_comments", true)
-vim.api.nvim_set_var("tokyonight_italic_keywords", false)
-vim.api.nvim_set_var("tokyonight_sidebars", { "qf", "Outline", "terminal", "vim-plug", "undotree", "help", "DiffviewFiles", "DiffviewFileHistory", "juliadoc"})
-vim.api.nvim_set_var("tokyonight_hide_inactive_statusline", true)
+-- vim.api.nvim_set_var("tokyonight_style", "night")
+-- vim.api.nvim_set_var("tokyonight_terminal_colors", "v:true")
+-- vim.api.nvim_set_var("tokyonight_dark_float", false)
+-- vim.api.nvim_set_var("tokyonight_dark_sidebar", true)
+-- vim.api.nvim_set_var("tokyonight_italic_comments", true)
+-- vim.api.nvim_set_var("tokyonight_italic_keywords", false)
+-- vim.api.nvim_set_var("tokyonight_sidebars", { "qf", "Outline", "terminal", "vim-plug", "undotree", "help", "DiffviewFiles", "DiffviewFileHistory", "juliadoc"})
+-- vim.api.nvim_set_var("tokyonight_hide_inactive_statusline", true)
 
-vim.cmd("colorscheme tokyonight")
+-- vim.cmd("colorscheme tokyonight")
 
+require('kanagawa').setup({
+    undercurl = true,
+    commentStyle = "italic",
+    functionStyle = "NONE",
+    keywordStyle = "NONE",
+    statementStyle = "NONE",
+    typeStyle = "NONE",
+    variablebuiltinStyle = "NONE",
+    specialReturn = true,
+    specialException = true,
+    transparent = false,
+    colors = {},
+    overrides = {},
+})
+
+vim.cmd("colorscheme kanagawa")
 -- Zen Mode
 
 require("zen-mode").setup({

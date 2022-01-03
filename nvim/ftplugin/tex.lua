@@ -179,7 +179,7 @@ vim.api.nvim_buf_set_option(0, "textwidth", 100)
 vim.cmd([[let g:vimtex_quickfix_mode=0]])
 vim.cmd([[let g:vimtex_view_method='zathura']])
 vim.cmd([[let g:vimtex_view_forward_search_on_start=1]])
-vim.cmd([[let g:vimtex_view_automatic_xwin = 0]])
+vim.cmd([[let g:vimtex_view_automatic = 0]])
 vim.cmd(
     [[let g:vimtex_compiler_latexmk = { 'build_dir' : '', 'callback' : 1, 'continuous' : 0, 'executable' : 'latexmk', 'hooks' : [], 'options' : [ '-verbose', '-file-line-error', '-synctex=1', '-interaction=nonstopmode', ] }]]
 )

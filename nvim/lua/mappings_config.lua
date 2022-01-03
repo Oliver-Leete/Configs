@@ -139,8 +139,8 @@ nnoremap("ms", function() require'harpoon.ui'.nav_file(3)end)
 nnoremap("mt", function() require'harpoon.ui'.nav_file(4)end)
 nnoremap("M", function() require'harpoon.ui'.toggle_quick_menu()end)
 
-nmap("<c-_>", "g,cc")
-xmap("<c-_>", "g,c")
+nmap("<c-_>", ",cc")
+xmap("<c-_>", ",c")
 
 nnoremap("£", [[:exe "let @/='" . expand("<cWORD>") . ", "<cr>]])
 nmap("<c-p>", "a<c-p>")
@@ -204,6 +204,7 @@ onoremap("H", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], expr)
 onoremap("L", [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], expr)
 
 nnoremap("J", "gi")
+nnoremap("K", function() vim.lsp.buf.hover()end)
 nnoremap("U", "<c-r>")
 xnoremap("U", "<c-r>")
 
@@ -492,8 +493,8 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
     nnoremap("<leader>f;", "<cmd>Telescope command_history theme=get_ivy<cr>", "Search History")
     nnoremap("<leader>fs", "<cmd>Telescope lsp_workspace_symbols theme=get_ivy<cr>", "Symbols")
     nnoremap("<leader>fS", "<cmd>Telescope lsp_document_symbols theme=get_ivy<cr>", "Symbols (buffer)")
-    nnoremap("<leader>fE", "<cmd>Telescope lsp_document_diagnostics theme=get_ivy<cr>", "Errors (buffer)")
-    nnoremap("<leader>fe", "<cmd>Telescope lsp_workspace_diagnostics theme=get_ivy<cr>", "Errors")
+    nnoremap("<leader>fD", "<cmd>Telescope lsp_document_diagnostics theme=get_ivy<cr>", "Errors (buffer)")
+    nnoremap("<leader>fd", "<cmd>Telescope lsp_workspace_diagnostics theme=get_ivy<cr>", "Errors")
     nnoremap("<leader>fB", "<cmd>Telescope buffers only_cwd=true<cr>", "Buffers (cwd)")
     nnoremap("<leader>fb", "<cmd>Telescope buffers<cr>", "Buffers")
     nnoremap("<leader>fC", "<cmd>Telescope git_bcommits theme=get_ivy<cr>", "Commits (buffer)")
@@ -517,6 +518,9 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
     nnoremap("<leader>fx", "<cmd>Telescope file_browser<cr>", "File Browser")
     nnoremap("<leader>fX", function() require'telescope.builtin'.file_browser{cwd=require'telescope.utils'.buffer_dir()}end, "File Browser (Relative)")
     nnoremap("<leader>fI", function() require'telescope.builtin'.symbols{sources={'julia'}}end, "Insert Symbols")
+
+    mapxName.name("<leader>l", "List Stuff")
+    nnoremap("<leader>ll", "<cmd>Telescope resume<cr>", "Open List")
 
     mapxName.name("<leader>r", "Refactor")
     xnoremap("<leader>rf", function() require('refactoring').refactor('Extract Function')end, "Extract Function")
@@ -659,7 +663,8 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
     nnoremap("<leader>,w", "<cmd>set wrap!<cr>", "Toggle Text Wraping")
     nnoremap("<leader>,/", "<cmd>let @/=''<cr>", "Clear Search")
 
-nnoremap("<leader>k", [[":silent !kitty @ launch --type=tab --tab-title 'Kak %:t' kak %:p +" . line(".") . ":" . col(".") . "<cr>"]], "Open file in Kak", expr)
+nnoremap("<leader>ok", [[":silent !kitty @ launch --type=tab --tab-title 'Kak %:t' kak %:p +" . line(".") . ":" . col(".") . "<cr>"]], "Open file in Kak", expr)
+nnoremap("<leader>ov", [[":silent !kitty @ launch --type=tab --tab-title 'Vis %:t' vis %:p<cr>"]], "Open file in Kak", expr)
 nnoremap("<leader>z", "<cmd>ZenMode<cr>", "Zen Mode")
 
 mapxName.name("<localleader>", "Local Leader")
@@ -676,21 +681,19 @@ imap("<c-e>", "<END>")
 cmap("<c-a>", "<HOME>")
 cmap("<c-e>", "<END>")
 
-imap("<s-tab>", "<c-d>")
-smap("<s-tab>", "<c-d>")
-
 imap("<c-]>", "<plug>luasnip-next-choice")
 smap("<c-]>", "<plug>luasnip-next-choice")
 
 imap("<c-space>", "v:lua.cmp_toggle()", expr)
 smap("<c-space>", "v:lua.cmp_toggle()", expr)
+cmap("<c-space>", "v:lua.cmp_toggle()", expr)
 
-imap("<S-Tab>", "v:lua.s_tab_complete()", expr)
-imap("<Tab>", "v:lua.tab_complete()", expr)
-smap("<S-Tab>", "v:lua.s_tab_complete()", expr)
-smap("<Tab>", "v:lua.tab_complete()", expr)
+-- imap("<Up>", "v:lua.s_tab_complete()", expr)
+-- imap("<Down>", "v:lua.tab_complete()", expr)
+-- smap("<Up>", "v:lua.s_tab_complete()", expr)
+-- smap("<Down>", "v:lua.tab_complete()", expr)
 
-inoremap("<Down>", [[<cmd>lua require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]])
-inoremap("<Up>", [[<cmd>lua require("cmp").select_prev_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]])
-snoremap("<Down>", [[<cmd>lua require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]])
-snoremap("<Up>", [[<cmd>lua require("cmp").select_prev_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]])
+-- inoremap("<Down>", [[<cmd>lua require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]])
+-- inoremap("<Up>", [[<cmd>lua require("cmp").select_prev_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]])
+-- snoremap("<Down>", [[<cmd>lua require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]])
+-- snoremap("<Up>", [[<cmd>lua require("cmp").select_prev_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]])

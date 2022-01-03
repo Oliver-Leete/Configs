@@ -545,13 +545,6 @@ intent to add a few different switches to get a bit more functionality out of it
 
 ## Hardware
 
-### 5 Way Switch
-
-As much as I like to do everything in Neovim, there are still times that I need the arrow keys (and
-even in vim they can make for useful shortcuts). In hopes of moving away from having two dedicated
-keys for left and right and duel function keys for up and down, I plan to use a 5 way switch as a
-dpad, giving all the arrow keys in the space of one.
-
 ### Discrete Rotary Encoder
 
 One of my most used shortcuts is tab and shift tab, so in place of a tab key I'm putting a rotary

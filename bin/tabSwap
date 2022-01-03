@@ -7,3 +7,4 @@ if [ "$tabcount" -gt 1 ]; then
 else
 	xdotool key super+meta+$2
 fi
+
