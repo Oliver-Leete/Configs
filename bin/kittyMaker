@@ -1,0 +1,4 @@
+#!/bin/sh
+
+WS=$(wmctrl -d | grep '*' | rev | cut -d " " -f 1 | rev | tr '[:upper:]' '[:lower:]' | cut -d: -f1 | tr -cd '[[:alpha:]]')
+kitty --single-instance --instance-group=$WS --listen-on=unix:/tmp/kitty-$WS

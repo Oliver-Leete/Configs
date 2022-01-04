@@ -62,7 +62,7 @@ require("cmp").setup({
     mapping = {
         ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
         ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-        ["<Tab>"] = cmp.mapping({
+        ["<down>"] = cmp.mapping({
             c = function()
                 if cmp.visible() then
                     cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
@@ -70,7 +70,7 @@ require("cmp").setup({
                     vim.api.nvim_feedkeys(t("<Down>"), "n", true)
                 end
             end,
-            i = function(fallback)
+            i = function()
                 if cmp.visible() then
                     cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
                 elseif luasnip.expand_or_jumpable() then
@@ -78,20 +78,20 @@ require("cmp").setup({
                 -- elseif has_words_before() then
                 --     cmp.complete()
                 else
-                    fallback()
+                    vim.api.nvim_feedkeys(t("<tab>"), "n", true)
                 end
             end,
-            s = function(fallback)
+            s = function()
                 if cmp.visible() then
                     cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
                 elseif luasnip.expand_or_jumpable() then
                     luasnip.expand_or_jump()
                 else
-                    fallback()
+                    vim.api.nvim_feedkeys(t("<tab>"), "n", true)
                 end
             end,
         }),
-        ["<S-Tab>"] = cmp.mapping({
+        ["<up>"] = cmp.mapping({
             c = function()
                 if cmp.visible() then
                     cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
@@ -99,22 +99,22 @@ require("cmp").setup({
                     vim.api.nvim_feedkeys(t("<up>"), "n", true)
                 end
             end,
-            i = function(fallback)
+            i = function()
                 if cmp.visible() then
                     cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
                 elseif luasnip.jumpable(-1) then
                     luasnip.jump(-1)
                 else
-                    fallback()
+                    vim.api.nvim_feedkeys(t("<s-tab>"), "n", true)
                 end
             end,
-            s = function(fallback)
+            s = function()
                 if cmp.visible() then
                     cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
                 elseif luasnip.jumpable(-1) then
                     luasnip.jump(-1)
                 else
-                    fallback()
+                    vim.api.nvim_feedkeys(t("<s-tab>"), "n", true)
                 end
             end
         }),
@@ -216,27 +216,6 @@ require('tabout').setup {
 
 local function replace_keycodes(str)
     return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
-_G.tab_complete = function()
-    if cmp.visible() then
-        return [[<cmd>lua require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]]
-        -- return "<down>"
-    elseif luasnip and luasnip.expand_or_jumpable() then
-        return "<Plug>luasnip-expand-or-jump"
-    else
-        return "<tab>"
-    end
-end
-
-_G.s_tab_complete = function()
-    if cmp.visible() then
-        return [[<cmd>lua require("cmp").select_prev_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]]
-    elseif luasnip and luasnip.jumpable(-1) then
-        return "<Plug>luasnip-jump-prev"
-    else
-        return "<c-d>"
-    end
 end
 
 _G.cmp_toggle = function()
