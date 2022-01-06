@@ -54,6 +54,7 @@ import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.NoBorders
 import XMonad.Layout.NoFrillsDecoration
 import XMonad.Layout.Notebook
+import XMonad.Layout.PerScreen
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Renamed
 import XMonad.Layout.ShowWName
@@ -72,7 +73,8 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.Paste as P
 import XMonad.Util.SpawnOnce
 
-
+import Data.Tree
+import XMonad.Actions.TreeSelect
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
 ----------------------------------------------------------------------------------------------------
@@ -294,11 +296,12 @@ myLayoutHook= smartBorders
             $ mySpacing
               notebookLayout
     where
-    notebookMulti   = Notebook 2560  True True True 1 2 reSize 2 (2/3)
-    notebookThesis  = Notebook 2560  True True True 1 3 reSize 2 (2/3)
-    notebookColumns = Notebook 1920 False True True 4 4 reSize 2 (2/3)
+    notebookMulti   = Notebook 1000  True True True 1 2 reSize 2 (2/3)
+    notebookThesis  = Notebook 1000  True True True 1 3 reSize 2 (2/3)
+    notebookColumns = Notebook 1000 False True True 4 4 reSize 2 (2/3)
+    notebookLaptop = Notebook 1000 True False False 1 2 reSize 2 (2/3)
     notebookLayout = onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns 
-                   $ onWorkspaces [wsTHESIS, wsPRO1] notebookThesis notebookMulti
+                   $ ifWider 1920 (onWorkspaces [wsTHESIS, wsPRO1] notebookThesis notebookMulti) notebookLaptop
 
 ----------------------------------------------------------------------------------------------------
 -- Keybindings                                                                                    --
@@ -321,6 +324,7 @@ myKeys =
     , ("M-M1-S-q"           , confirmPrompt hotPromptTheme "Quit XMonad" $ io exitSuccess)
     , ("M-M1-C-S-x"         , spawn "slock")
 
+    , ("M-M1-C-S-a"         , myTree def)
     , ("M-M1-C-S-z"         , spawn "colorpicker")
     , ("M-M1-C-S-o"         , spawn "killall screenkey || screenkey")
     , ("M-M1-C-S-/"         , spawn "screenkey --show-settings")
@@ -472,7 +476,7 @@ myStartupHook = do
     spawnOnce "xsetroot -cursor_name left_ptr"
     spawnOnce "picom -b --config ~/.config/picom/picom.conf"
     spawnOnce "insync start; insync hide"
-    spawnOnce "deadd-notification-center &"
+    spawnOnce "tlp start"
 
 ----------------------------------------------------------------------------------------------------
 -- Log                                                                                            --
@@ -483,7 +487,7 @@ myPP = def
     { ppCurrent = xmobarColor active ""
     , ppVisible = xmobarColor visible ""
     , ppHidden  = xmobarColor dull  ""
-    , ppTitle   = xmobarColor foreground "" . shorten 50
+    , ppTitle   = xmobarColor foreground "" . shorten 30
     , ppLayout  = const ""
     , ppSep = " | "
     , ppOrder = reverse
@@ -518,7 +522,9 @@ myManageHook =
             , resource =? "stalonetray"    -?> doIgnore
 
             , resource =? "gnome-calculator" -?> doCenterFloat
-            , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect (8/3840) (31/2160) (600/3840) (800/2160))
+            , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "nw-connection-editor" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "tlpui" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
 
             , resource =? "Tasks" -?> doRectFloat halfNhalf
             , resource =? "WrkTasks" -?> doRectFloat halfNhalf
@@ -551,3 +557,35 @@ myHandleEventHook :: Event -> X All
 myHandleEventHook = fadeWindowsEventHook
                 <+> handleEventHook def
                 <+> XMonad.Util.Hacks.windowedFullscreenFixEventHook
+
+
+myTreeConf = TSConfig { ts_hidechildren = True
+           , ts_background   = 0xc0c0c0c0
+           , ts_font         = "xft:Sans-16"
+           , ts_node         = (0xff000000, 0xff50d0db)
+           , ts_nodealt      = (0xff000000, 0xff10b8d6)
+           , ts_highlight    = (0xffffffff, 0xffff0000)
+           , ts_extra        = 0xff000000
+           , ts_node_width   = 200
+           , ts_node_height  = 30
+           , ts_originX      = 0
+           , ts_originY      = 0
+           , ts_indent       = 80
+           , ts_navigate     = defaultNavigation
+           }
+
+myTree a = treeselectAction a
+   [ Node (TSNode "Lock"       "Lock the session"     (spawn "slock")) []
+   , Node (TSNode "Logout"     "Logout of session" (io exitSuccess)) []
+   , Node (TSNode "Suspend"    "Sleep the system" (spawn "systemctl suspend")) []
+   , Node (TSNode "Hibernate"  "Hibernate the system" (spawn "systemctl hibernate")) []
+   , Node (TSNode "Shutdown"   "Poweroff the system" (spawn "systemctl poweroff")) []
+   , Node (TSNode "Reboot"     "Reboot the system" (spawn "systemctl reboot")) []
+   , Node (TSNode "Brightness" "Sets screen brightness using xbacklight" (return ()))
+       [ Node (TSNode "Bright" "FULL POWER!!"            (spawn "ybacklight -set 100")) []
+       , Node (TSNode "High"   "Normal Brightness (75%)" (spawn "ybacklight -set 75"))  []
+       , Node (TSNode "Normal" "Normal Brightness (50%)" (spawn "ybacklight -set 50"))  []
+       , Node (TSNode "Low"    "Normal Brightness (25%)" (spawn "ybacklight -set 25"))  []
+       , Node (TSNode "Dim"    "Quite dark"              (spawn "ybacklight -set 10"))  []
+       ]
+   ]
