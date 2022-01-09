@@ -1,0 +1,66 @@
+#!/bin/bash
+action_end='</action>'
+
+# Battery
+bat_stat=$(acpi -b)
+if [[ "$bat_stat" == *"Discharging"* ]]; then
+    percent=$(echo $bat_stat | rg -o -e "[0-9]{1,3}%" | rg -o -e "[0-9]*")
+    if   ((0<=percent && percent<10)); then
+        bat_icon=""
+    elif ((10<=percent && percent<20)); then
+        bat_icon=""
+    elif ((20<=percent && percent<30)); then
+        bat_icon=""
+    elif ((30<=percent && percent<40)); then
+        bat_icon=""
+    elif ((40<=percent && percent<50)); then
+        bat_icon=""
+    elif ((50<=percent && percent<60)); then
+        bat_icon=""
+    elif ((60<=percent && percent<70)); then
+        bat_icon=""
+    elif ((70<=percent && percent<80)); then
+        bat_icon=""
+    elif ((80<=percent && percent<90)); then
+        bat_icon=""
+    elif ((90<=percent && percent<100)); then
+        bat_icon=""
+    fi
+elif [[ "$bat_stat" == *"Charging"* ]]; then
+    percent=$(echo $bat_stat | rg -o -e "[0-9]{1,3}%" | rg -o -e "[0-9]*")
+    if   ((0<=percent && percent<10)); then
+        bat_icon=""
+    elif ((10<=percent && percent<20)); then
+        bat_icon=""
+    elif ((20<=percent && percent<30)); then
+        bat_icon=""
+    elif ((30<=percent && percent<40)); then
+        bat_icon=""
+    elif ((40<=percent && percent<50)); then
+        bat_icon=""
+    elif ((50<=percent && percent<60)); then
+        bat_icon=""
+    elif ((60<=percent && percent<70)); then
+        bat_icon=""
+    elif ((70<=percent && percent<80)); then
+        bat_icon=""
+    elif ((80<=percent && percent<90)); then
+        bat_icon=""
+    elif ((90<=percent && percent<100)); then
+        bat_icon=""
+    fi
+fi
+action_bat='<action=`/home/oleete/.config/bin/notify_bat`>'
+
+net_stat=$(nmcli -t device)
+if [[ "$net_stat" == *"ethernet"*"connected"* ]]; then
+    net_icon=""
+elif [[ "$net_stat" == *"wifi"*"connected"* ]]; then
+    net_icon=""
+else
+    net_icon="睊"
+fi
+action_net='<action=`/home/oleete/.config/bin/notify_net`>'
+
+
+echo "$action_bat$bat_icon$action_end $action_net$net_icon$action_end"

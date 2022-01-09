@@ -5,9 +5,9 @@ starship init fish | source
 
 set -Ux EDITOR "nvrTab --remote-tab-wait"
 set -Ux VISUAL "nvrTab --remote-tab-wait"
-set -gx PATH /home/oleete/.cargo/bin /home/oleete/.yarn/bin /home/oleete/go/bin /home/oleete/.config/nvim/node_modules/tree-sitter-cli /home/oleete/.config/bin $PATH
+set -gx PATH /home/oleete/.cargo/bin /home/oleete/.yarn/bin /home/oleete/go/bin /home/oleete/.config/nvim/node_modules/tree-sitter-cli /home/oleete/.local/bin /home/oleete/.config/bin $PATH
 
-export BAT_PAGER="nvim +'Man!|set nowrap'"
+export PAGER="nvim +'Man!|set nowrap'"
 
 # aliases
 alias neovim nvim
@@ -24,7 +24,6 @@ function shutdown
     end
 end
 alias exa "exa --colour=always --group-directories-first --icons"
-alias cat "batcat"
 
 abbr nt "nvr --servername nvimsynctex"
 
@@ -51,11 +50,7 @@ alias ... "cd ../.."
 alias .... "cd ../../.."
 alias ..... "cd ../../../.."
 
-abbr  code "code-insiders"
 abbr  htop 'htop -t'
-abbr  man "batman"
-abbr  rb "batgrep"
-abbr  watch "batwatch"
 
 # Git abbreviations
 alias g git
@@ -210,3 +205,6 @@ set -g fish_pager_color_progress $comment
 set -g fish_pager_color_prefix $cyan
 set -g fish_pager_color_completion $foreground
 set -g fish_pager_color_description $comment
+set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME ; set -gx PATH $HOME/.cabal/bin /home/oleete/.ghcup/bin $PATH # ghcup-env
+
+clear

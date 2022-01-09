@@ -75,27 +75,15 @@ local custom_attach = function(client)
     })
 end
 
-require("lspconfig").hls.setup({
-    on_attach = custom_attach,
-    capabilities = capabilities,
-    flags = { debounce_text_changes = 500 },
-    cmd = { "haskell-language-server-wrapper", "--lsp" },
-    filetypes = { "haskell", "lhaskell" },
-    root_dir = nvim_lsp.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml", ".git"),
-    lspinfo = function(cfg)
-        if cfg.settings.languageServerHaskell.logFile or false then
-            return "logfile: " .. cfg.settings.languageServerHaskell.logFile
-        end
-        return ""
-    end,
-})
 
 require("lspconfig").julials.setup({
     on_attach = custom_attach,
+    cmd = { "julia1.6", "--startup-file=no", "--history-file=no", "-e", '    # Load LanguageServer.jl: attempt to load from ~/.julia/environments/nvim-lspconfig\n    # with the regular load path as a fallback\n    ls_install_path = joinpath(\n        get(DEPOT_PATH, 1, joinpath(homedir(), ".julia")),\n        "environments", "nvim-lspconfig"\n    )\n    pushfirst!(LOAD_PATH, ls_install_path)\n    using LanguageServer\n    popfirst!(LOAD_PATH)\n    depot_path = get(ENV, "JULIA_DEPOT_PATH", "")\n    project_path = let\n        dirname(something(\n            ## 1. Finds an explicitly set project (JULIA_PROJECT)\n            Base.load_path_expand((\n                p = get(ENV, "JULIA_PROJECT", nothing);\n                p === nothing ? nothing : isempty(p) ? nothing : p\n            )),\n            ## 2. Look for a Project.toml file in the current working directory,\n            ##    or parent directories, with $HOME as an upper boundary\n            Base.current_project(),\n            ## 3. First entry in the load path\n            get(Base.load_path(), 1, nothing),\n            ## 4. Fallback to default global environment,\n            ##    this is more or less unreachable\n            Base.load_path_expand("@v#.#"),\n        ))\n    end\n    @info "Running language server" VERSION pwd() project_path depot_path\n    server = LanguageServer.LanguageServerInstance(stdin, stdout, project_path, depot_path)\n    server.runlinter = true\n    run(server)\n  ' }
 })
 
 require("grammar-guard").init()
 require("lspconfig").grammar_guard.setup({
+    cmd = { "/home/oleete/.local/share/nvim/lsp_servers/ltex/ltex-ls/bin/ltex-ls" },
     settings = {
         ltex = {
             enabled = { "latex", "tex", "bib", "markdown" },
@@ -147,11 +135,6 @@ require("nvim-lsp-installer").on_server_ready(function(server)
             },
         }
     elseif server.name == "sumneko_lua" then
-        opts.cmd = {
-            "/home/oleete/.local/share/nvim/lspinstall/lua/sumneko-lua-language-server",
-            "-E",
-            "/home/oleete/.local/share/nvim/lspinstall/lua/sumneko-lua/extension/server/bin/linux/sumneko-lua-language-server",
-        }
         opts.root_dir = nvim_lsp.util.root_pattern("init.lua")
         opts.settings = {
             Lua = {
@@ -198,6 +181,9 @@ require("nvim-lsp-installer").on_server_ready(function(server)
                 },
             },
         }
+    elseif server.name == "hls" then
+        opts.filetypes = { "haskell", "lhaskell" }
+        opts.root_dir = nvim_lsp.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml", ".git")
     end
     server:setup(opts)
 end)
@@ -255,7 +241,7 @@ require("null-ls").setup({
         require("null-ls").builtins.diagnostics.markdownlint,
         require("null-ls").builtins.hover.dictionary.with({ filetype = { "tex", "markdown" } }),
         require("null-ls").builtins.code_actions.refactoring,
-        -- require("null-ls").builtins.diagnostics.chktex,
+        require("null-ls").builtins.diagnostics.chktex,
         -- require("null-ls").builtins.diagnostics.selene,
     },
 })

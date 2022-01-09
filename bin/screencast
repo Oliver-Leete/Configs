@@ -31,24 +31,23 @@ status () {
 	red=#ff6188
 	if [ -f $PIDFILE ]
 	then
-		echo " | <fc=$red><fn=1></fn> REC</fc>"
+		echo "<fc=$red><fn=1></fn> REC</fc> | "
 	fi
 }
 
 start () {
 	FILENAME="$HOME/Videos/captures/$SCRIPTNAME-$(date +'%Y-%m-%d-%H-%M-%S').$FILETYPE"
-	nvidia-settings --assign="0/AllowFlipping=0" &>/dev/null
 
 	getarea # sets W H X Y
 
-	ffmpeg  -f alsa -i pulse -f x11grab -s ${W}x${H} -r $FRAMERATE -i :1.0+${X},${Y} \
-		-c:v libx264 \
-		-crf 4 \
-		-acodec aac \
-		-preset:v ultrafast \
-		-c:a pcm_s16le \
-		-af aresample=async=1:first_pts=0 \
-		$FILENAME &
+    ffmpeg -f x11grab -s ${W}x${H} -r $FRAMERATE -i :0.0+${X},${Y} -f pulse -ac 2 -i default $FILENAME &
+	# ffmpeg  -f alsa -i pulse -f x11grab -s ${W}x${H} -r $FRAMERATE -i :1.0+${X},${Y} \
+	# 	-c:v libx264 \
+	# 	-crf 4 \
+	# 	-acodec aac \
+	# 	-preset:v ultrafast \
+	# 	-c:a pcm_s16le \
+	# 	-af aresample=async=1:first_pts=0 \
 
 	echo "PID=$!" > $PIDFILE
 	echo "FILENAME=$FILENAME" >> $PIDFILE
@@ -58,7 +57,6 @@ stop () {
 	. $PIDFILE
 	kill -s INT $PID || notify-send "failed to kill recordscreen process"
 	rm $PIDFILE
-	nvidia-settings --assign="0/AllowFlipping=1" &>/dev/null
 	notify-send "Screen recording complete\n$(basename $FILENAME)"
 	echo -n $FILENAME | xclip -sel clipboard
 }

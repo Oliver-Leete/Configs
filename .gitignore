@@ -31,8 +31,11 @@ rofi/
 !/zathura/zathurarc
 !/bin/*
 
-/xmonad/xmonad
-/xmonad/xmonad-contrib
+/bin/startupScript
+/bin/brightness
+/xmonad/xmonad-git
+/xmonad/xmonad-contrib-git
+/xmobar/xmobar-git
 /nvim/neovim
 /kak/kakoune
 

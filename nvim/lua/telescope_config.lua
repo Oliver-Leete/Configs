@@ -61,6 +61,7 @@ require("telescope").load_extension("bibtex")
 require("telescope").load_extension("gh")
 require("telescope").load_extension("media_files")
 require("telescope").load_extension("heading")
+require("telescope").load_extension("refactoring")
 
 require("telescope").setup({
     defaults = {

@@ -17,7 +17,7 @@
 ----------------------------------------------------------------------------------------------------
 -- Modules                                                                                        --
 ----------------------------------------------------------------------------------------------------
-{-# LANGUAGE LambdaCase #-}
+
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 import qualified Data.Map as M
 import Data.Monoid
@@ -39,7 +39,6 @@ import XMonad.Actions.SwapPromote
 import XMonad.Actions.UpdateFocus
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.WindowGoLocal
-import XMonad.Actions.WithAll
 
 import XMonad.Hooks.EwmhDesktops ( ewmh )
 import XMonad.Hooks.FadeWindows
@@ -52,7 +51,6 @@ import XMonad.Hooks.StatusBar.PP
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.NoBorders
-import XMonad.Layout.NoFrillsDecoration
 import XMonad.Layout.Notebook
 import XMonad.Layout.PerScreen
 import XMonad.Layout.PerWorkspace
@@ -60,11 +58,6 @@ import XMonad.Layout.Renamed
 import XMonad.Layout.ShowWName
 import XMonad.Layout.SimpleFocus
 import XMonad.Layout.Spacing
-import XMonad.Layout.Tabbed
-
-import XMonad.Prompt
-import XMonad.Prompt.ConfirmPrompt
-import XMonad.Prompt.FuzzyMatch
 
 import XMonad.Util.ClickableWorkspaces
 import XMonad.Util.EZConfig
@@ -120,7 +113,8 @@ wsTHESIS = "PhD wrk"
 wsEXP    = "Exp wrk"
 
 myWorkspaces :: [[Char]]
-myWorkspaces = [wsTMP, wsPRO1, wsPRO2, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsTMP2]
+-- myWorkspaces = [wsTMP, wsPRO1, wsPRO2, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsTMP2]
+myWorkspaces = [wsTMP, wsPER, wsPRO1, wsCON, wsPRO2, wsEXP, wsSIM, wsTHESIS, wsWRK, wsTMP2]
 
 projects :: [Project]
 projects =
@@ -135,11 +129,10 @@ projects =
                 }
     , Project   { projectName       = wsPRO1
                 , projectDirectory  = "~/Projects/Printing"
-                , projectStartHook  = Just $ do spawnOn wsPRO1 "prusaslicer"
-                                                spawnOn wsPRO1 ("sleep 2; " ++ myBrowser)
+                , projectStartHook  = Just $ do spawnOn wsPRO1 "prusa-slicer"
                 }
     , Project   { projectName       = wsPRO2
-                , projectDirectory  = "~/Projects/D&D Home"
+                , projectDirectory  = "~/Projects/Rpgs"
                 , projectStartHook  = Just $ do spawnOn wsPRO2 (myLongBrowser ++ " --new-window 'https://roll20.net/welcome'")
                 }
     , Project   { projectName       = wsCON
@@ -168,7 +161,7 @@ projects =
                                                 spawnOn wsEXP ("sleep .2; " ++ myBrowser)
                 }
     , Project   { projectName       = wsTHESIS
-                , projectDirectory  = "~/Projects/Thesis/0.1_LaTeX"
+                , projectDirectory  = "~/Projects/Thesis"
                 , projectStartHook  = Just $ do spawnOn wsTHESIS (myTerminal ++ " --session=/home/oleete/.config/kitty/thesis.conf")
                                                 spawnOn wsTHESIS ("sleep .2; " ++ myBrowser)
                 }
@@ -188,7 +181,7 @@ gTasksCommand          = myBrowser ++ " '-tasks --app=chrome-extension://ndbaejg
 gTasksWrkCommand       = myBrowser ++ " 'tasks --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html --class=WrkTasks'"
 keepCommand            = myBrowser ++ " '-keep --app=https://keep.google.com/#home --class=Keep'"
 keepWrkCommand         = myBrowser ++ " 'keep --app=https://keep.google.com/#home --class=WrkKeep'"
-youtubeMusicCommand    = "$HOME/.local/bin/YouTube-Music-Desktop-App-1.13.0.AppImage"
+youtubeMusicCommand    = "youtube-music"
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
@@ -198,7 +191,7 @@ scratchpads =
     ,   NS "keepWrkNsp"  keepWrkCommand (className =? "WrkKeep") nonFloating
 
     ,   NS "discord"  discordCommand (className =? "discord") defaultFloating
-    ,   NS "youtubeMusic"  youtubeMusicCommand (className =? "youtube-music-desktop-app") nonFloating
+    ,   NS "youtubeMusic"  youtubeMusicCommand (className =? "youtube music") nonFloating
     ,   NS "calc"  "gnome-calculator --class=calcu" (className =? "calcu") nonFloating
     ,   NS "console"  "kitty -1 --class=kittyconsole" (className =? "kittyconsole") nonFloating
     ]
@@ -210,54 +203,15 @@ background = "#1a1b26"
 foreground = "#a9b1d6"
 dull       = "#565f89"
 active     = "#7595E0"
-visible    = "#9ece6a"
-alert      = "#f7768e"
 
 -- sizes
 gap    = 4
 reSize = 1/20
-tabsh    = 20
 myBorder = 3
-prompt   = 30
 
-myFont      = "xft:Ubuntu:weight=normal:pixelsize=16:antialias=true:hinting=true"
 myWideFont  = "xft:Eurostar Black Extended:"
             ++ "style=Regular:pixelsize=180:hinting=true"
 
-myTabTheme :: Theme
-myTabTheme = def
-    { fontName              = myFont
-    , activeColor           = active
-    , activeBorderColor     = active
-    , activeTextColor       = background
-    , inactiveColor         = background
-    , inactiveBorderColor   = background
-    , inactiveTextColor     = foreground
-    , decoWidth             = 150
-    , decoHeight            = tabsh
-    }
-
-myPromptTheme :: XPConfig
-myPromptTheme = def
-    { font                  = myFont
-    , bgColor               = active
-    , fgColor               = background
-    , fgHLight              = dull
-    , bgHLight              = active
-    , borderColor           = active
-    , promptBorderWidth     = 0
-    , height                = prompt
-    , position              = CenteredAt (1 / 4) (1 / 4)
-    , searchPredicate       = fuzzyMatch
-    , sorter                = fuzzySort
-    , autoComplete          = Nothing
-    }
-
-hotPromptTheme :: XPConfig
-hotPromptTheme = myPromptTheme
-    { bgColor               = alert
-    , fgColor               = background
-    }
 
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def
@@ -275,15 +229,15 @@ data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
 
-barFull = renamed [Replace "Tabs"] $ avoidStruts $ addTabsBottom shrinkText myTabTheme $ mySpacing
+barFull = renamed [Replace "Tabs"] $ mySpacing
         $ SimpleFocus 1 (reSize/2) 0
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
     transform FULLCENTER x k = k centerFull (const x)
 
-centerFull = renamed [Replace "Tabs"] $ avoidStruts $ addTabsBottom shrinkText myTabTheme $ mySpacing
-           $ SimpleFocus (1/3) (reSize/2) 1000
+centerFull = renamed [Replace "Tabs"] $ mySpacing
+           $ SimpleFocus (1/3) (reSize/2) 1280
 
 myLayoutHook= smartBorders
             $ mkToggle (single FULL)
@@ -291,8 +245,6 @@ myLayoutHook= smartBorders
             $ mkToggle (single FULLCENTER)
             $ renamed [Replace "Notebook"]
             $ showWName' myShowWNameTheme
-            $ addTabsBottom shrinkText myTabTheme
-            $ avoidStruts
             $ mySpacing
               notebookLayout
     where
@@ -300,7 +252,7 @@ myLayoutHook= smartBorders
     notebookThesis  = Notebook 1000  True True True 1 3 reSize 2 (2/3)
     notebookColumns = Notebook 1000 False True True 4 4 reSize 2 (2/3)
     notebookLaptop = Notebook 1000 True False False 1 2 reSize 2 (2/3)
-    notebookLayout = onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns 
+    notebookLayout = onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns
                    $ ifWider 1920 (onWorkspaces [wsTHESIS, wsPRO1] notebookThesis notebookMulti) notebookLaptop
 
 ----------------------------------------------------------------------------------------------------
@@ -321,22 +273,16 @@ myKeys :: [(String, X ())]
 myKeys =
     [ ("M-q"                , spawn "xmonad --restart")
     , ("M-M1-q"             , spawn "xmonad --recompile && xmonad --restart")
-    , ("M-M1-S-q"           , confirmPrompt hotPromptTheme "Quit XMonad" $ io exitSuccess)
-    , ("M-M1-C-S-x"         , spawn "slock")
 
-    , ("M-M1-C-S-a"         , myTree def)
-    , ("M-M1-C-S-z"         , spawn "colorpicker")
-    , ("M-M1-C-S-o"         , spawn "killall screenkey || screenkey")
-    , ("M-M1-C-S-/"         , spawn "screenkey --show-settings")
-    , ("M-M1-C-S-f"         , spawn "screencapt" )
-    , ("M-M1-C-S-s"         , spawn "screencapt area" )
-    , ("M-M1-C-S-w"         , spawn "screencast" )
-    , ("M-M1-C-S-r"         , spawn "screencast area" )
+    , ("M-w"                , myTree myTreeConf)
+    , ("<XF86MonBrightnessDown>"  , spawn "/home/oleete/.config/bin/brightness -dec 5")
+    , ("<XF86MonBrightnessUp>"    , spawn "/home/oleete/.config/bin/brightness -inc 5")
+    , ("<XF86AudioLowerVolume>"   , spawn "pactl -- set-sink-volume @DEFAULT_SINK@ -5%" )
+    , ("<XF86AudioRaiseVolume>"   , spawn "pactl -- set-sink-volume @DEFAULT_SINK@ +5%" )
+    , ("<XF86AudioMute>"          , spawn "pactl -- set-sink-volume @DEFAULT_SINK@ 0%" )
     , ("M-M1-C-S-<Space>"   , spawn "playerctl play-pause" )
     , ("M-M1-C-S-<Left>"    , spawn "playerctl previous" )
     , ("M-M1-C-S-<Right>"   , spawn "playerctl next" )
-    , ("M-M1-C-S-<Up>"      , spawn "pactl -- set-sink-volume @DEFAULT_SINK@ +5%" )
-    , ("M-M1-C-S-<Down>"    , spawn "pactl -- set-sink-volume @DEFAULT_SINK@ -5%" )
     , ("M-M1-C-S-<Return>"  , spawn "pactl -- set-sink-volume @DEFAULT_SINK@ 100%" )
 
     , ("M-<Return>"         , kittyBind2 (P.sendKey (controlMask .|. shiftMask) xK_Return) (upPointer $ runOrRaise myTerminal (className =? "kitty")))
@@ -344,7 +290,7 @@ myKeys =
 
     , ("M-b"                , chromeBind (P.sendKey controlMask xK_t) (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
     , ("M-M1-b"             , upPointer $ spawn myBrowser)
-    , ("M-M1-S-b"           , upPointer altBrowser)
+    , ("M-S-b"              , upPointer altBrowser)
 
     , ("M-a"                , spawn "rofi -matching fuzzy -modi combi -show combi -combi-modi window,drun,run -show-icons")
     , ("M-v"                , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
@@ -358,7 +304,6 @@ myKeys =
 
     , ("M-<Backspace>"      , multiBind (spawn (myTerminalRemote ++ " delWindow")) (P.sendKey controlMask xK_w) kill)
     , ("M-M1-<Backspace>"   , kill)
-    , ("M-S-<Backspace>"    , confirmPrompt hotPromptTheme "kill all" killAll)
 
     , ("M-<Down>"           , multiBind (spawn (myTerminalRemote ++ " tabSwap Right Down")) (P.sendKey controlMask xK_Tab) (bindOn LD [("Tabs", windows W.focusDown)]))
     , ("M-<Up>"             , multiBind (spawn (myTerminalRemote ++ " tabSwap Left Up")) (P.sendKey (controlMask .|. shiftMask) xK_Tab) (bindOn LD [("Tabs", windows W.focusUp)]))
@@ -386,8 +331,7 @@ myKeys =
     , ("M-M1-k"             , upPointer $ windowSwap U True)
     , ("M-M1-l"             , upPointer $ windowSwap R True)
 
-    , ("M-m"                , kittyBind " mainMove" (upPointer $ swapPromote' False))
-    , ("M-M1-m"             , upPointer $ swapPromote' False)
+    , ("M-m"                , upPointer $ swapPromote' False)
     , ("M-y"                , upPointer $ withFocused toggleFloat)
     , ("M-M1-y"             , upFocus sinkAll)
     -- , ("M-h"                , bindFirst [(title =? "MainEditor", spawn "nvr --servername /tmp/nvr-server-1 --nostart -c 'KittyNavigateleft'")
@@ -407,8 +351,6 @@ myKeys =
     , ("M-M1-r"             , upFocus $ sendMessage ToggleStackDir)
     , ("M-x"                , upFocus $ sendMessage ToggleMiddle)
 
-    , ("M-w"                , upFocus $ switchProjectPrompt myPromptTheme)
-    , ("M-M1-w"             , upFocus $ shiftToProjectPrompt myPromptTheme)
     , ("M-<Space>"          , upFocus $ toggleWS' ["NSP"])
     , ("M-M1-<Space>"       , upFocus $ shiftToggleWS' ["NSP"])
     ]
@@ -476,7 +418,12 @@ myStartupHook = do
     spawnOnce "xsetroot -cursor_name left_ptr"
     spawnOnce "picom -b --config ~/.config/picom/picom.conf"
     spawnOnce "insync start; insync hide"
-    spawnOnce "tlp start"
+    spawnOnce "/home/oleete/.config/bin/startupScript"
+    spawnOnce "/home/oleete/.config/bin/connect_screen.py"
+    -- spawnOnce "stalonetray --config ~/.config/stalonetray.conf"
+    -- spawnOnce "cbatticon --command-left-click tlpui"
+    -- spawnOnce "nm-applet"
+    -- spawnOnce "volctl"
 
 ----------------------------------------------------------------------------------------------------
 -- Log                                                                                            --
@@ -484,8 +431,8 @@ myStartupHook = do
 
 mySB = statusBarProp "xmobar" (clickablePP $ filterOutWsPP ["NSP"] myPP)
 myPP = def
-    { ppCurrent = xmobarColor active ""
-    , ppVisible = xmobarColor visible ""
+    { ppCurrent = xmobarColor active "" . wrap ("<box type=Bottom width=2 mt=2 color=" ++ active ++ ">") "</box>"
+    , ppVisible = xmobarColor active ""
     , ppHidden  = xmobarColor dull  ""
     , ppTitle   = xmobarColor foreground "" . shorten 30
     , ppLayout  = const ""
@@ -521,24 +468,28 @@ myManageHook =
             , resource =? "prusa-slicer" -?> doSink <+> insertPosition End Newer
             , resource =? "stalonetray"    -?> doIgnore
 
-            , resource =? "gnome-calculator" -?> doCenterFloat
             , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
-            , className =? "nw-connection-editor" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
-            , className =? "tlpui" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "Nm-connection-editor" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "Nm-applet" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "Tlp-UI" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "Blueberry.py" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "Insync" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "Volctl" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
 
+            , resource =? "galculator" -?> doCenterFloat
             , resource =? "Tasks" -?> doRectFloat halfNhalf
             , resource =? "WrkTasks" -?> doRectFloat halfNhalf
             , className =? "Keep" -?> doRectFloat halfNhalf
             , className =? "WrkKeep" -?> doRectFloat halfNhalf
             , resource =? "kittyconsole" -?> doRectFloat (W.RationalRect (3 / 5) (3 / 5) (1 / 3) (1 / 3))
-            , resource =? "youtube-music-desktop-app" -?> doRectFloat halfNhalf
+            , resource =? "youtube music" -?> doRectFloat halfNhalf
             , resource =? "discord" -?> doRectFloat halfNhalf
 
             , transience
             -- , isBrowserDialog -?> forceCenterFloat
             -- , isRole =? "GtkFileChooserDialog" -?> forceCenterFloat
-            , isBrowserDialog -?> doCenterFloat 
-            , isRole =? "GtkFileChooserDialog" -?> doCenterFloat 
+            , isBrowserDialog -?> doCenterFloat
+            , isRole =? "GtkFileChooserDialog" -?> doCenterFloat
             , isRole =? "pop-up" -?> doCenterFloat
             , isInProperty "_NET_WM_WINDOW_TYPE"
                            "_NET_WM_WINDOW_TYPE_SPLASH" -?> doCenterFloat
@@ -560,12 +511,12 @@ myHandleEventHook = fadeWindowsEventHook
 
 
 myTreeConf = TSConfig { ts_hidechildren = True
-           , ts_background   = 0xc0c0c0c0
+           , ts_background   = 0xdd292d3e
            , ts_font         = "xft:Sans-16"
-           , ts_node         = (0xff000000, 0xff50d0db)
-           , ts_nodealt      = (0xff000000, 0xff10b8d6)
-           , ts_highlight    = (0xffffffff, 0xffff0000)
-           , ts_extra        = 0xff000000
+           , ts_node         = (0xffd0d0d0, 0xff202331)
+           , ts_nodealt      = (0xffd0d0d0, 0xff202331)
+           , ts_highlight    = (0xffffffff, 0xff755999)
+           , ts_extra        = 0xffd0d0d0
            , ts_node_width   = 200
            , ts_node_height  = 30
            , ts_originX      = 0
@@ -576,16 +527,40 @@ myTreeConf = TSConfig { ts_hidechildren = True
 
 myTree a = treeselectAction a
    [ Node (TSNode "Lock"       "Lock the session"     (spawn "slock")) []
-   , Node (TSNode "Logout"     "Logout of session" (io exitSuccess)) []
-   , Node (TSNode "Suspend"    "Sleep the system" (spawn "systemctl suspend")) []
-   , Node (TSNode "Hibernate"  "Hibernate the system" (spawn "systemctl hibernate")) []
-   , Node (TSNode "Shutdown"   "Poweroff the system" (spawn "systemctl poweroff")) []
-   , Node (TSNode "Reboot"     "Reboot the system" (spawn "systemctl reboot")) []
+   , Node (TSNode "Utilities"  "All that useful stuff" (return ()))
+       [ Node (TSNode "color picker"    "Find that color" (spawn "/home/oleete/.config/bin/colorPicker")) []
+       , Node (TSNode "Calculator"      "For maths and shit" (spawn "galculator")) []
+       , Node (TSNode "Screenkey"       "Show key presses" (spawn "killall screenkey || screenkey"))  []
+       , Node (TSNode "Screenshot"      "Take a screenshot" (spawn "/home/oleete/.config/bin/screencapt"))  []
+       , Node (TSNode "Screenshot Area" "Take a screenshot" (spawn "/home/oleete/.config/bin/screencapt area"))  []
+       , Node (TSNode "Screencap"       "Take a screen capture" (spawn "/home/oleete/.config/bin/screencast"))  []
+       , Node (TSNode "Screencap Area"  "Take a screen capture" (spawn "/home/oleete/.config/bin/screencast area"))  []
+       ]
    , Node (TSNode "Brightness" "Sets screen brightness using xbacklight" (return ()))
-       [ Node (TSNode "Bright" "FULL POWER!!"            (spawn "ybacklight -set 100")) []
-       , Node (TSNode "High"   "Normal Brightness (75%)" (spawn "ybacklight -set 75"))  []
-       , Node (TSNode "Normal" "Normal Brightness (50%)" (spawn "ybacklight -set 50"))  []
-       , Node (TSNode "Low"    "Normal Brightness (25%)" (spawn "ybacklight -set 25"))  []
-       , Node (TSNode "Dim"    "Quite dark"              (spawn "ybacklight -set 10"))  []
+       [ Node (TSNode "Bright" "FULL POWER!!"            (spawn "/home/oleete/.config/bin/brightness -set 100")) []
+       , Node (TSNode "High"   "Normal Brightness (75%)" (spawn "/home/oleete/.config/bin/brightness -set 75"))  []
+       , Node (TSNode "Normal" "Normal Brightness (50%)" (spawn "/home/oleete/.config/bin/brightness -set 50"))  []
+       , Node (TSNode "Low"    "Normal Brightness (25%)" (spawn "/home/oleete/.config/bin/brightness -set 25"))  []
+       , Node (TSNode "Dim"    "Quite dark"              (spawn "/home/oleete/.config/bin/brightness -set 10"))  []
+       ]
+   , Node (TSNode "Display" "Set the display mode" (return ()))
+       [ Node (TSNode "Internal" "Internal display only"     (spawn "/home/oleete/.config/bin/displayctl internal")) []
+       , Node (TSNode "External" "External display only"     (spawn "/home/oleete/.config/bin/displayctl external"))  []
+       , Node (TSNode "Mirror"   "Mirro display"             (spawn "/home/oleete/.config/bin/displayctl mirror"))  []
+       , Node (TSNode "Span"     "Span all displays"         (spawn "/home/oleete/.config/bin/displayctl span"))  []
+       , Node (TSNode "SpanEx"   "Span external displays"    (spawn "/home/oleete/.config/bin/displayctl spanex"))  []
+       ]
+   , Node (TSNode "Settings" "Open settings" (return ()))
+       [ Node (TSNode "Bluetooth"  "Manage bluetooth devices" (spawn "blueberry")) []
+       , Node (TSNode "Network"    "Manage networks" (spawn "nm-connection-editor")) []
+       , Node (TSNode "Battery"    "Manage power settings" (spawn "tlp-ui")) []
+       , Node (TSNode "Screenkey"  "Screenkey settings" (spawn "screenkey --show-settings"))  []
+       ]
+   , Node (TSNode "Power" "Suspend or Shutdown" (return ()))
+       [ Node (TSNode "Logout"     "Logout of session" (io exitSuccess)) []
+       , Node (TSNode "Suspend"    "Sleep the system" (spawn "systemctl suspend")) []
+       , Node (TSNode "Hibernate"  "Hibernate the system" (spawn "systemctl hibernate")) []
+       , Node (TSNode "Shutdown"   "Poweroff the system" (spawn "systemctl poweroff")) []
+       , Node (TSNode "Reboot"     "Reboot the system" (spawn "systemctl reboot")) []
        ]
    ]

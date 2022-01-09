@@ -5,11 +5,11 @@ read reply
 
 if [ "$reply" = y -o "$reply" = Y ]; then
 	xdotool key super+meta+f
-	apt update
-	apt upgrade
-	apt autoremove
+	pacman -Syu
+	su -c 'yay -Syu' oleete
 	snap refresh
 	flatpak update
+	cargo install-update -a
 	su -c 'tldr -u' oleete
 	/home/oleete/.config/bin/xmonad-update
 	/home/oleete/.config/bin/nvim-update

@@ -1,174 +1,60 @@
-require("which-key").register({
-    ["<localleader>"] = {
-        ["<localleader>"] = { "<cmd>TexlabForward<cr>", "Forward Search", silent = true },
-        r = { "<cmd>Telescope bibtex bibtex theme=get_cursor<cr>", "References" },
-        c = { "<cmd>VimtexTocToggle<cr>", "Open TOC" },
-        v = { "<cmd>VimtexView<cr>", "View Document" },
-        w = { "<cmd>VimtexCountWord<cr>", "Word Count" },
-        W = { "<cmd>VimtexCountWord!<cr>", "Word Count Report" },
-        m = { "<cmd>VimtexToggleMain<cr>", "Toggle the Main File" },
-        g = { "<cmd>TexlabForward<cr>", "Forward Search" },
-        i = { "A% chktex ", "Chktex Ignore" },
-        s = { "<cmd>lua require'telescope.builtin'.symbols{sources={'latex'}}<cr>", "Insert Symbols" },
-        a = { "<cmd>AngryReviewer<cr>", "Bring Forth The Angry One"}
-    },
-    ["<leader>"] = {
-        ["/"] = {
-            ["1"] = { "<cmd>EchapOneMain<cr>", "Chapter 1" },
-            ["2"] = { "<cmd>EchapTwoMain<cr>", "Chapter 2" },
-            ["3"] = { "<cmd>EchapThreeMain<cr>", "Chapter 3" },
-            ["4"] = { "<cmd>EchapFourMain<cr>", "Chapter 4" },
-            ["5"] = { "<cmd>EchapFiveMain<cr>", "Chapter 5" },
-            ["6"] = { "<cmd>EchapSixMain<cr>", "Chapter 6" },
-            ["7"] = { "<cmd>EchapSevenMain<cr>", "Chapter 7" },
-            c = { "<cmd>Ecitations<cr>", "Citations" },
-            m = { "<cmd>Emain<cr>", "Main File" },
-            n = {
-                ["1"] = { [["<cmd>EchapOne " . input('File Name > ') . "<cr>"]], "Chapter 1", expr = true },
-                ["2"] = { [["<cmd>EchapTwo " . input('File Name > ') . "<cr>"]], "Chapter 2", expr = true },
-                ["3"] = { [["<cmd>EchapThree " . input('File Name > ') . "<cr>"]], "Chapter 3", expr = true },
-                ["4"] = { [["<cmd>EchapFour " . input('File Name > ') . "<cr>"]], "Chapter 4", expr = true },
-                ["5"] = { [["<cmd>EchapFive " . input('File Name > ') . "<cr>"]], "Chapter 5", expr = true },
-                ["6"] = { [["<cmd>EchapSix " . input('File Name > ') . "<cr>"]], "Chapter 6", expr = true },
-                ["7"] = { [["<cmd>EchapSeven " . input('File Name > ') . "<cr>"]], "Chapter 7", expr = true },
-                u = { [["<cmd>Escripts " . input('File Name > ') . "<cr>"]], "Scripts", expr = true },
-            },
-        },
-        M = {
-            [[<cmd>silent !kittyOneShot buildterm "latexmk -verbose -file-line-error -synctex=1 -interaction=nonstopmode"<cr>]],
-            "Build in Terminal",
-        },
-        m = {
-            m = { "<cmd>VimtexCompileSS<cr>", "Build Project" },
-            M = { "<cmd>ProjectDo TexlabBuild<cr>", "Build Lowest Subfile" },
-            o = { "<cmd>VimtexCompile<cr>", "Toggle Continuous Building" },
-            c = { "<cmd>VimtexClean<cr>", "Clear Build Files" },
-            g = { "<cmd>compiler textidote<cr><cmd>lmake!<cr><cmd>Trouble loclist<cr>", "Grammer Checking" },
-        },
-        v = {
-            c = { "<cmd>let panelRepeat='c'<cr><cmd>VimtexTocToggle<cr>", "Open TOC" },
-        },
-    },
-    ["["] = {
-        s = { "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-[[)zz", "Tex Section Start", noremap = false },
-        S = { "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-[])zz", "Tex Section End", noremap = false },
-        m = { "<cmd>let g:dirJumps='m'<cr>m`<plug>(vimtex-[m)zz", "EnviroMent Start", noremap = false },
-        M = { "<cmd>let g:dirJumps='M'<cr>m`<plug>(vimtex-[M)zz", "EnviroMent End", noremap = false },
-        n = { "<cmd>let g:dirJumps='n'<cr>m`<plug>(vimtex-[n)zz", "Number Start", noremap = false },
-        N = { "<cmd>let g:dirJumps='N'<cr>m`<plug>(vimtex-[N)zz", "Number End", noremap = false },
-        r = { "<cmd>let g:dirJumps='r'<cr>m`<plug>(vimtex-[r)zz", "Frame Start", noremap = false },
-        R = { "<cmd>let g:dirJumps='R'<cr>m`<plug>(vimtex-[R)zz", "Frame End", noremap = false },
-        ["]"] = { "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-[[)zz", "Tex Section Start", noremap = false },
-        ["["] = { "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-[])zz", "Tex Section End", noremap = false },
-    },
-    ["]"] = {
-        s = { "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-]])zz", "Tex Section Start", noremap = false },
-        S = { "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-][)zz", "Tex Section End", noremap = false },
-        m = { "<cmd>let g:dirJumps='m'<cr>m`<plug>(vimtex-]m)zz", "EnviroMent Start", noremap = false },
-        M = { "<cmd>let g:dirJumps='M'<cr>m`<plug>(vimtex-]M)zz", "EnviroMent End", noremap = false },
-        n = { "<cmd>let g:dirJumps='n'<cr>m`<plug>(vimtex-]n)zz", "Number Start", noremap = false },
-        N = { "<cmd>let g:dirJumps='N'<cr>m`<plug>(vimtex-]N)zz", "Number End", noremap = false },
-        r = { "<cmd>let g:dirJumps='r'<cr>m`<plug>(vimtex-]r)zz", "Frame Start", noremap = false },
-        R = { "<cmd>let g:dirJumps='R'<cr>m`<plug>(vimtex-]R)zz", "Frame End", noremap = false },
-        ["["] = { "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-][)zz", "Tex Section End", noremap = false },
-        ["]"] = { "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-]])zz", "Tex Section Start", noremap = false },
-    },
-}, {
-    buffer = 0,
-})
-require("which-key").register({
-    ["<localleader>"] = {},
-    ["<leader>"] = {
-        m = {
-            m = { "<cmd>VimtexCompileSelected<cr>", "Build Selected" },
-        },
-    },
-    i = {
-        n = {
-            P = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-iP)')<cr>", "Section" },
-            m = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ie)')<cr>", "Environment" },
-            n = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-i$)')<cr>", "Maths" },
-        },
-        N = {
-            P = {
-                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-iP)')<cr>",
-                "Section",
-            },
-            m = {
-                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ie)')<cr>",
-                "Environment",
-            },
-            n = { ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-i$)')<cr>", "Maths" },
-        },
-    },
-    a = {
-        n = {
-            P = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-aP)')<cr>", "Section" },
-            m = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ae)')<cr>", "Environment" },
-            n = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-a$)')<cr>", "Maths" },
-        },
-        N = {
-            P = {
-                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-aP)')<cr>",
-                "Section",
-            },
-            m = {
-                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ae)')<cr>",
-                "Environment",
-            },
-            n = { ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-a$)')<cr>", "Maths" },
-        },
-    },
-}, {
-    buffer = 0,
-    mode = "x",
-})
+nnoremap("<localleader><localleader>", "<cmd>TexlabForward<cr>", "Forward Search", mapxName.silent) 
+nnoremap("<localleader>r", "<cmd>Telescope bibtex bibtex theme=get_cursor<cr>", "References")
+nnoremap("<localleader>c", "<cmd>VimtexTocToggle<cr>", "Open TOC")
+nnoremap("<localleader>v", "<cmd>VimtexView<cr>", "View Document")
+nnoremap("<localleader>w", "<cmd>VimtexCountWord<cr>", "Word Count")
+nnoremap("<localleader>W", "<cmd>VimtexCountWord!<cr>", "Word Count Report")
+nnoremap("<localleader>m", "<cmd>VimtexToggleMain<cr>", "Toggle the Main File")
+nnoremap("<localleader>g", "<cmd>TexlabForward<cr>", "Forward Search")
+nnoremap("<localleader>i", "A% chktex ", "Chktex Ignore")
+nnoremap("<localleader>s", "<cmd>lua require'telescope.builtin'.symbols{sources={'latex'}}<cr>", "Insert Symbols")
+nnoremap("<localleader>a", "<cmd>AngryReviewer<cr>", "Bring Forth The Angry One")
 
-require("which-key").register({
-    i = {
-        n = {
-            P = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-iP)')<cr>", "Section" },
-            m = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ie)')<cr>", "Environment" },
-            n = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-i$)')<cr>", "Maths" },
-        },
-        N = {
-            P = {
-                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-iP)')<cr>",
-                "Section",
-            },
-            m = {
-                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ie)')<cr>",
-                "Environment",
-            },
-            n = { ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-i$)')<cr>", "Maths" },
-        },
-    },
-    a = {
-        n = {
-            P = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-aP)')<cr>", "Section" },
-            m = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ae)')<cr>", "Environment" },
-            n = { ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-a$)')<cr>", "Maths" },
-        },
-        N = {
-            P = {
-                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-aP)')<cr>",
-                "Section",
-            },
-            m = {
-                ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ae)')<cr>",
-                "Environment",
-            },
-            n = { ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-a$)')<cr>", "Maths" },
-        },
-    },
-}, {
-    buffer = 0,
-    mode = "o",
-})
+nnoremap("<leader>M", [[<cmd>silent !kittyOneShot buildterm "latexmk -verbose -file-line-error -synctex=1 -interaction=nonstopmode"<cr>]], "Build in Terminal")
+nnoremap("<leader>mm", "<cmd>VimtexCompileSS<cr>", "Build Project")
+nnoremap("<leader>mM", "<cmd>ProjectDo TexlabBuild<cr>", "Build Lowest Subfile")
+nnoremap("<leader>mo", "<cmd>VimtexCompile<cr>", "Toggle Continuous Building")
+nnoremap("<leader>mc", "<cmd>VimtexClean<cr>", "Clear Build Files")
+nnoremap("<leader>mg", "<cmd>compiler textidote<cr><cmd>lmake!<cr><cmd>Trouble loclist<cr>", "Grammer Checking")
+xnoremap("<leader>mm", "<cmd>VimtexCompileSelected<cr>", "Build Selected")
 
--- if vim.api.nvim_get_var("dirJumps") == "f" then
---     vim.api.nvim_set_var("dirJumps", "p")
--- end
+nnoremap("<leader>c", "<cmd>let panelRepeat='c'<cr><cmd>VimtexTocToggle<cr>", "Open TOC" )
+
+nmap("[s", "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-[[)zz", "Tex Section Start")
+nmap("[S", "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-[])zz", "Tex Section End")
+nmap("[m", "<cmd>let g:dirJumps='m'<cr>m`<plug>(vimtex-[m)zz", "EnviroMent Start")
+nmap("[M", "<cmd>let g:dirJumps='M'<cr>m`<plug>(vimtex-[M)zz", "EnviroMent End")
+nmap("[n", "<cmd>let g:dirJumps='n'<cr>m`<plug>(vimtex-[n)zz", "Number Start")
+nmap("[N", "<cmd>let g:dirJumps='N'<cr>m`<plug>(vimtex-[N)zz", "Number End")
+nmap("[r", "<cmd>let g:dirJumps='r'<cr>m`<plug>(vimtex-[r)zz", "Frame Start")
+nmap("[R", "<cmd>let g:dirJumps='R'<cr>m`<plug>(vimtex-[R)zz", "Frame End")
+nmap("[]", "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-[[)zz", "Tex Section Start")
+nmap("[[", "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-[])zz", "Tex Section End")
+
+nmap("]s", "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-]])zz", "Tex Section Start")
+nmap("]S", "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-][)zz", "Tex Section End")
+nmap("]m", "<cmd>let g:dirJumps='m'<cr>m`<plug>(vimtex-]m)zz", "EnviroMent Start")
+nmap("]M", "<cmd>let g:dirJumps='M'<cr>m`<plug>(vimtex-]M)zz", "EnviroMent End")
+nmap("]n", "<cmd>let g:dirJumps='n'<cr>m`<plug>(vimtex-]n)zz", "Number Start")
+nmap("]N", "<cmd>let g:dirJumps='N'<cr>m`<plug>(vimtex-]N)zz", "Number End")
+nmap("]r", "<cmd>let g:dirJumps='r'<cr>m`<plug>(vimtex-]r)zz", "Frame Start")
+nmap("]R", "<cmd>let g:dirJumps='R'<cr>m`<plug>(vimtex-]R)zz", "Frame End")
+nmap("][", "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-][)zz", "Tex Section End")
+nmap("]]", "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-]])zz", "Tex Section Start")
+
+xnoremap("inP", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-iP)')<cr>", "Section")
+xnoremap("inm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ie)')<cr>", "Environment")
+xnoremap("inn", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-i$)')<cr>", "Maths")
+xnoremap("iNP", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-iP)')<cr>", "Section")
+xnoremap("iNm", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ie)')<cr>", "Environment")
+xnoremap("iNn", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-i$)')<cr>", "Maths")
+xnoremap("anP", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-aP)')<cr>", "Section")
+xnoremap("anm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ae)')<cr>", "Environment")
+xnoremap("ann", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-a$)')<cr>", "Maths")
+xnoremap("aNP", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-aP)')<cr>", "Section")
+xnoremap("aNm", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ae)')<cr>", "Environment")
+xnoremap("aNn", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-a$)')<cr>", "Maths")
+
 if vim.api.nvim_get_var("panelRepeat") == "q" then
     vim.api.nvim_set_var("panelRepeat", "c")
 end
