@@ -42,8 +42,6 @@ abbr  lg "exa -a -l -T --level=2 --git --git-ignore --icons"
 
 abbr -a bk backup
 abbr -a re restore
-abbr -a mc "mkdir-cd -vp"
-abbr -a unzip unzip-cd
 
 alias .. "cd .."
 alias ... "cd ../.."
@@ -106,45 +104,11 @@ end
 function backup --argument filename
     cp $filename $filename.bak
 end
+
 function restore --argument file
     mv $file (echo $file | sed s/.bak//)
 end
-function mkdir-cd
-    mkdir $argv && cd
-end
 
-function clean-unzip --argument zipfile
-    if not test (echo $zipfile | string sub --start=-4) = .zip
-        echo (status function): argument must be a zipfile
-        return 1
-    end
-
-    if is-clean-zip $zipfile
-        unzip $zipfile
-    else
-        set zipname (echo $zipfile | trim-right '.zip')
-        mkdir $zipname || return 1
-        unzip $zipfile -d $zipname
-    end
-end
-function unzip-cd --argument zipfile
-    clean-unzip $zipfile && cd (echo $zipfile | trim-right .zip)
-end
-
-function clean-unzip --argument zipfile
-    if not test (echo $zipfile | string sub --start=-4) = .zip
-        echo (status function): argument must be a zipfile
-        return 1
-    end
-
-    if is-clean-zip $zipfile
-        unzip $zipfile
-    else
-        set zipname (echo $zipfile | trim-right '.zip')
-        mkdir $zipname || return 1
-        unzip $zipfile -d $zipname
-    end
-end
 function skip-lines --argument n
     tail +(math 1 + $n)
 end
@@ -207,4 +171,5 @@ set -g fish_pager_color_completion $foreground
 set -g fish_pager_color_description $comment
 set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME ; set -gx PATH $HOME/.cabal/bin /home/oleete/.ghcup/bin $PATH # ghcup-env
 
+set fish_greeting
 clear

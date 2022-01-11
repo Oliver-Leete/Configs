@@ -32,6 +32,10 @@ function PeekDefinition()
 end
 
 vim.cmd([[
+    " sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticSignError
+    " sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=DiagnosticSignWarn
+    " sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=DiagnosticSignInfo
+    " sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=DiagnosticSignHint
     sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticSignError
     sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=DiagnosticSignWarn
     sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=DiagnosticSignInfo
@@ -232,16 +236,15 @@ require("null-ls").setup({
     on_attach = custom_attach,
     diagnostics_format = "[#{c}] #{m} (#{s})",
     sources = {
-        require("null-ls").builtins.code_actions.gitsigns.with({ filetype = { "kitty" } }),
+        require("null-ls").builtins.code_actions.gitsigns.with({ filetypes = { "kitty" } }),
         require("null-ls").builtins.formatting.trim_whitespace,
         require("null-ls").builtins.formatting.trim_newlines,
         require("null-ls").builtins.formatting.shfmt,
         require("null-ls").builtins.formatting.stylua,
         require("null-ls").builtins.formatting.fish_indent,
         require("null-ls").builtins.diagnostics.markdownlint,
-        require("null-ls").builtins.hover.dictionary.with({ filetype = { "tex", "markdown" } }),
-        require("null-ls").builtins.code_actions.refactoring,
         require("null-ls").builtins.diagnostics.chktex,
-        -- require("null-ls").builtins.diagnostics.selene,
+        require("null-ls").builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
+        require("null-ls").builtins.code_actions.refactoring,
     },
 })

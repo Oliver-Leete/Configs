@@ -1,4 +1,4 @@
-mapxName = require("mapx").setup({ global = true })
+mapxName = require("mapx").setup({ global = true, whichkey = true})
 local expr = mapxName.expr
 local nowait = mapxName.nowait
 local silent = mapxName.silent
@@ -12,38 +12,38 @@ noremap("<BackSPACE>", "<Nop>")
 noremap("<SPACE>", "<Nop>")
 
 -- Whichkey setup
--- require("which-key").setup({
---     plugins = {
---         presets = {
---             operators = true,
---             motions = true,
---             text_objects = true,
---             windows = false,
---             nav = false,
---             z = false,
---             g = false,
---         },
---     },
---     operators = {
---         [",c"] = "Comments",
---         [",t"] = "Allign",
---         [",r"] = "Replace",
---         [",sp"] = "Change to Pascal Case",
---         [",sc"] = "Change to Camel Case",
---         [",ss"] = "Change to Snake Case",
---         [",su"] = "Change to Upper Case",
---         [",st"] = "Change to Title Case",
---         [",sd"] = "Change to Sentance Case",
---         [",s<space>"] = "Change to Space Case",
---         [",s-"] = "Change to Kebab Case",
---         [",sk"] = "Change to Title Kebab Case",
---         [",s."] = "Change to Dot Case",
---         ["gp"] = "Paste After",
---         ["gP"] = "Paste Before",
---     },
---     hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ ", "<plug>", "<Plug>" },
---     show_help = false,
--- })
+require("which-key").setup({
+    plugins = {
+        presets = {
+            operators = true,
+            motions = true,
+            text_objects = true,
+            windows = false,
+            nav = false,
+            z = false,
+            g = false,
+        },
+    },
+    operators = {
+        [",c"] = "Comments",
+        [",t"] = "Allign",
+        [",r"] = "Replace",
+        [",sp"] = "Change to Pascal Case",
+        [",sc"] = "Change to Camel Case",
+        [",ss"] = "Change to Snake Case",
+        [",su"] = "Change to Upper Case",
+        [",st"] = "Change to Title Case",
+        [",sd"] = "Change to Sentance Case",
+        [",s<space>"] = "Change to Space Case",
+        [",s-"] = "Change to Kebab Case",
+        [",sk"] = "Change to Title Kebab Case",
+        [",s."] = "Change to Dot Case",
+        ["gp"] = "Paste After",
+        ["gP"] = "Paste Before",
+    },
+    hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ ", "<plug>", "<Plug>" },
+    show_help = false,
+})
 
 -- Un-Mappings
 noremap("v", "<nop>")
@@ -271,18 +271,18 @@ mapxName.name("g", "Goto")
     nnoremap("gg", "gg", "Buffer Top")
     nnoremap("gj", "G", "Buffer Bottom")
     nnoremap("gk", "gg", "Buffer Top")
-    nnoremap("gh", "^", "Line Begining")
-    nnoremap("gl", "$", "Line End")
+    nnoremap("gh", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], expr)
+    nnoremap("gl", [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], expr)
     xnoremap("gg", "gg", "Buffer Top")
     xnoremap("gj", "G", "Buffer Bottom")
     xnoremap("gk", "gg", "Buffer Top")
-    xnoremap("gh", "^", "Line Begining")
-    xnoremap("gl", "$", "Line End")
+    xnoremap("gh", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], expr)
+    xnoremap("gl", [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], expr)
     onoremap("gg", "gg", "Buffer Top")
     onoremap("gj", "G", "Buffer Bottom")
     onoremap("gk", "gg", "Buffer Top")
-    onoremap("gh", "^", "Line Begining")
-    onoremap("gl", "$", "Line End")
+    onoremap("gh", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], expr)
+    onoremap("gl", [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], expr)
 
     nnoremap("gt", "H", "Window Top")
     nnoremap("gc", "M", "Window Center")
@@ -408,7 +408,7 @@ nnoremap(",o", "o<Esc>", "Insert Blankline")
     mapxName.name(",f", "Format")
     nnoremap(",ff", function() vim.lsp.buf.formatting_sync()end, "Format")
     nnoremap(",f<space>", [[<cmd>%s/\v[^^ ]\zs  / /g<cr>]], "Remove Double Spaces")
-    nnoremap(",fw", [["m1!ippar w". &textwidth . "<cr>`1"]], "Wrap Paragraph to Textwidth", expr, silent)
+    nnoremap(",fw", "m1!ippar w100<cr>`1", "Wrap Paragraph to Textwidth", silent)
     nnoremap(",fW", [["<cmd>%!par w" . &textwidth . "<cr>"]], "Wrap File to Textwidth", expr)
     xnoremap(",ff", function() vim.lsp.buf.range_formatting()end, "Format")
     xnoremap(",f<space>", ":%s/\v[^^ ]\zs  / /g<cr>", "Remove Double Spaces")
@@ -668,6 +668,7 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
 
 nnoremap("<leader>ok", [[":silent !kitty @ launch --type=tab --tab-title 'Kak %:t' kak %:p +" . line(".") . ":" . col(".") . "<cr>"]], "Open file in Kak", expr)
 nnoremap("<leader>ov", [[":silent !kitty @ launch --type=tab --tab-title 'Vis %:t' vis %:p<cr>"]], "Open file in Kak", expr)
+nnoremap("<leader>oh", [[":silent !kitty @ launch --type=tab --tab-title 'Helix %:t' hx %:p<cr>"]], "Open file in Helix", expr)
 nnoremap("<leader>z", "<cmd>ZenMode<cr>", "Zen Mode")
 
 mapxName.name("<localleader>", "Local Leader")

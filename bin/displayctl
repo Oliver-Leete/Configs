@@ -98,7 +98,7 @@ main () {
     DISCONNECTED_ACTIVE_OUTPUTS="$(echo $(echo "$XRANDRV" | awk '/disconnected.*[[:digit:]]/ {print $1}') | sed 's/ \+/|/g')"
 
     # execute function based on command line arguments
-    case ${1:-auto} in
+    case ${1:-menu} in
         menu)   menu ;;
         in*)    internal ;;
         ex*)    external ;;
@@ -116,7 +116,7 @@ main () {
 
 menu () {
     items="auto internal external span spanex mirror"
-    result=$((for item in $items; do echo $item; done) | launcher "Display Mode")
+    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Display Mode" -dmenu "Display Mode")
     case ${result:-} in
         in*)    internal ;;
         ex*)    external ;;
@@ -199,9 +199,16 @@ execute () {
 
 save_fingerprint () {
     fingerprint="$(generate_fingerprint)" 
-    CONFIG_VALUES="$(grep -v $fingerprint /home/oleete/.config/displayctl)"
-    echo $CONFIG_VALUES > "/home/oleete/.config/displayctl"
-    echo $fingerprint=$1 >> "/home/oleete/.config/displayctl"
+    echo $fingerprint
+    if rg -q $fingerprint "/home/oleete/.config/displayctl"; then
+        sed -i "s/$fingerprint.*/$fingerprint=$1/" "/home/oleete/.config/displayctl"
+    else
+        echo $fingerprint=$1 >> "/home/oleete/.config/displayctl"
+    fi
+
+    # CONFIG_VALUES="$(grep -v $fingerprint /home/oleete/.config/displayctl)"
+    # echo $CONFIG_VALUES > "/home/oleete/.config/displayctl"
+    # echo $fingerprint=$1 >> "/home/oleete/.config/displayctl"
 }
 
 generate_fingerprint () {
@@ -244,7 +251,7 @@ get_edids () {
 }
 
 get_internal_output () {
-    echo "eDP"
+    echo "eDP-1"
 }
 
 get_default_mode () {

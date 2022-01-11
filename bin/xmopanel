@@ -1,5 +1,4 @@
 #!/bin/bash
-action_end='</action>'
 
 # Battery
 bat_stat=$(acpi -b)
@@ -46,11 +45,12 @@ elif [[ "$bat_stat" == *"Charging"* ]]; then
         bat_icon=""
     elif ((80<=percent && percent<90)); then
         bat_icon=""
-    elif ((90<=percent && percent<100)); then
+    elif ((90<=percent && percent<=100)); then
         bat_icon=""
     fi
+elif [[ "$bat_stat" == *"Full"* ]]; then
+    bat_icon=""
 fi
-action_bat='<action=`/home/oleete/.config/bin/notify_bat`>'
 
 net_stat=$(nmcli -t device)
 if [[ "$net_stat" == *"ethernet"*"connected"* ]]; then
@@ -60,7 +60,52 @@ elif [[ "$net_stat" == *"wifi"*"connected"* ]]; then
 else
     net_icon="睊"
 fi
-action_net='<action=`/home/oleete/.config/bin/notify_net`>'
 
+vol_stat=$(pactl get-sink-volume @DEFAULT_SINK@ | rg -o -e "[0-9]{1,3}%" | head -n 1 | rg -o -e "[0-9]{1,3}")
+if (( vol_stat==0 )); then
+    vol_icon="婢"
+elif (( vol_stat<=33)); then
+    vol_icon="奄"
+elif (( vol_stat<=66)); then
+    vol_icon="奔"
+else
+    vol_icon="墳"
+fi
 
-echo "$action_bat$bat_icon$action_end $action_net$net_icon$action_end"
+blu_stat=$(bluetooth status)
+if [[ "$blu_stat" == *"on"* ]]; then
+    blu_xm4=$(bluetoothctl info 14:3F:A6:91:FC:17 | rg Connected)
+    blu_dev=$(bluetoothctl devices | cut -f2 -d' ' | while read uuid; do bluetoothctl info $uuid; done|rg -e "Connected")
+    if [[ "$blu_xm4" == *"yes"* ]]; then
+        blu_icon=""
+    elif [[ "$blu_dev" == *"yes"* ]]; then
+        blu_icon=""
+    else
+        blu_icon=""
+    fi
+else
+    blu_icon=""
+fi
+
+men_icon=""
+
+if [ -f /tmp/screencast.pid ]; then
+    cap_icon="<box type=Bottom width=2 mt=2 color=#C34043><fc=#C34043>  REC</fc></box>"
+fi
+
+action_end='</action>'
+action_bat='<action=`/home/oleete/.config/bin/toggle battery`>'
+action_net='<action=`/home/oleete/.config/bin/toggle network`>'
+action_vol='<action=`/home/oleete/.config/bin/toggle sound`>'
+action_blu='<action=`/home/oleete/.config/bin/toggle bluetooth`>'
+action_men='<action=`xdotool key super+w`>'
+action_cap='<action=`/home/oleete/.config/bin/screencast`>'
+
+men=$action_men$men_icon$action_end
+bat=$action_bat$bat_icon$action_end
+net=$action_net$net_icon$action_end
+vol=$action_vol$vol_icon$action_end
+blu=$action_blu$blu_icon$action_end
+cap=$action_cap$cap_icon$action_end
+
+echo "<box type=Bottom width=2 mt=2 color=#DCA561><fc=#DCA561>$men $bat $net $vol $blu</fc></box>$cap"

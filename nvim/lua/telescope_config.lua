@@ -62,6 +62,7 @@ require("telescope").load_extension("gh")
 require("telescope").load_extension("media_files")
 require("telescope").load_extension("heading")
 require("telescope").load_extension("refactoring")
+-- require("telescope").load_extension("")
 
 require("telescope").setup({
     defaults = {

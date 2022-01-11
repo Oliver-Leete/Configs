@@ -1,11 +1,6 @@
-require("which-key").register({
-    ["<localleader>"] = {
-        h = { "<cmd>Telescope heading<cr>", "Headings" },
-        p = { "<plug>MarkdownPreviewToggle", "Preview File" },
-    },
-}, {
-    buffer = 0,
-})
+nnoremap("<localleader>h",  "<cmd>Telescope heading<cr>", "Headings")
+nnoremap("<localleader>p",  "<plug>MarkdownPreviewToggle", "Preview File")
+nnoremap("<localleader>,", function() require'telescope'.extensions.dict.synonyms() end, "Synonyms")
 
 if vim.api.nvim_get_var("panelRepeat") == "q" then
     vim.api.nvim_set_var("panelRepeat", "o")

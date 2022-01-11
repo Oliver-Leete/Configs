@@ -545,6 +545,8 @@ intent to add a few different switches to get a bit more functionality out of it
 
 ## Hardware
 
+Ok, none of this happened
+
 ### Discrete Rotary Encoder
 
 One of my most used shortcuts is tab and shift tab, so in place of a tab key I'm putting a rotary
@@ -562,3 +564,24 @@ addition of a scroll wheel to the keyboard will further reduce the use of my mou
 In addtion to the scroll wheel, having a small trackball on the keyboard should stop jumping to the
 mouse for small tasks. I have xmonad update my pointer position based on window swaps, so the cursor
 should already be close to where I need it.
+
+# Laptop Stuff
+
+So I needed to go back to the office, and lugging a desktop computer back and forth didn't sound
+fun, so I finally got a new laptop. With the new laptop came the requirement for some new config
+stuff.
+
+## Xmobar Icons
+
+I wanted to use nerdfont icons to represent things like battery level and network connection. I
+don't think there is a good way to do this in xmobar, so I made a litte bash script that would
+output these icons and then had xmobar run that script. It's nothing fancy, just checks the battery
+state and returns the relevant icon, and does the same with network state. It also adds some actions
+to the icons, so that clicking on them makes a notification with some more info in it. It'd be nice
+to have that information in hover text, but it doesn't look like that's possible with xmobar, maybe
+it's time to move to another bar. It also adds a bluetooth icon, at the moment it doesn't track
+bluetooth state, just provides a shortcut to bluetooth settings.
+
+## Screen Management
+
+blank.

@@ -9,6 +9,7 @@ nnoremap("<localleader>g", "<cmd>TexlabForward<cr>", "Forward Search")
 nnoremap("<localleader>i", "A% chktex ", "Chktex Ignore")
 nnoremap("<localleader>s", "<cmd>lua require'telescope.builtin'.symbols{sources={'latex'}}<cr>", "Insert Symbols")
 nnoremap("<localleader>a", "<cmd>AngryReviewer<cr>", "Bring Forth The Angry One")
+nnoremap("<localleader>,", function() require'telescope'.extensions.dict.synonyms() end, "Synonyms")
 
 nnoremap("<leader>M", [[<cmd>silent !kittyOneShot buildterm "latexmk -verbose -file-line-error -synctex=1 -interaction=nonstopmode"<cr>]], "Build in Terminal")
 nnoremap("<leader>mm", "<cmd>VimtexCompileSS<cr>", "Build Project")
@@ -63,7 +64,7 @@ vim.api.nvim_buf_set_option(0, "textwidth", 100)
 
 -- vim.cmd([[let g:vimtex_toc_config=[{"mode":3, "split_width":60}]]])
 vim.cmd([[let g:vimtex_quickfix_mode=0]])
-vim.cmd([[let g:vimtex_view_method='zathura']])
+vim.cmd([[let g:vimtex_view_general_viewer='zathura']])
 vim.cmd([[let g:vimtex_view_forward_search_on_start=1]])
 vim.cmd([[let g:vimtex_view_automatic = 0]])
 vim.cmd(

@@ -68,6 +68,10 @@ import XMonad.Util.SpawnOnce
 
 import Data.Tree
 import XMonad.Actions.TreeSelect
+
+import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
+import XMonad.Actions.WithAll (killAll)
+import XMonad.Prompt
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
 ----------------------------------------------------------------------------------------------------
@@ -84,7 +88,7 @@ myConfig = def
         { borderWidth        = myBorder
         , clickJustFocuses   = True
         , focusFollowsMouse  = True
-        , normalBorderColor  = background
+        , normalBorderColor  = borderCol
         , focusedBorderColor = active
         , manageHook         = myManageHook
         , handleEventHook    = myHandleEventHook
@@ -191,18 +195,21 @@ scratchpads =
     ,   NS "keepWrkNsp"  keepWrkCommand (className =? "WrkKeep") nonFloating
 
     ,   NS "discord"  discordCommand (className =? "discord") defaultFloating
-    ,   NS "youtubeMusic"  youtubeMusicCommand (className =? "youtube music") nonFloating
+    ,   NS "youtubeMusic"  youtubeMusicCommand (className =? "YouTube Music") nonFloating
     ,   NS "calc"  "gnome-calculator --class=calcu" (className =? "calcu") nonFloating
-    ,   NS "console"  "kitty -1 --class=kittyconsole" (className =? "kittyconsole") nonFloating
+    ,   NS "console"  "alacritty --class console" (resource =? "console") nonFloating
+    ,   NS "sysMon"  "alacritty --class sysMon -e btop" (resource =? "sysMon") nonFloating
     ]
 
 ----------------------------------------------------------------------------------------------------
 -- Theme                                                                                     --
 ----------------------------------------------------------------------------------------------------
-background = "#1a1b26"
-foreground = "#a9b1d6"
-dull       = "#565f89"
-active     = "#7595E0"
+borderCol  = "#1a1b26"
+background = "#1F1F28"
+foreground = "#C8C093"
+dull       = "#54546D"
+active     = "#76946A"
+yellow     = "#DCA561"
 
 -- sizes
 gap    = 4
@@ -219,6 +226,19 @@ myShowWNameTheme = def
     , swn_fade              = 0.3
     , swn_bgcolor           = active
     , swn_color             = background
+    }
+
+myPromptTheme :: XPConfig
+myPromptTheme = def
+    { bgColor               = active
+    , fgColor               = background
+    , fgHLight              = dull
+    , bgHLight              = active
+    , borderColor           = active
+    , promptBorderWidth     = 0
+    , height                = 30
+    , position              = CenteredAt (1 / 4) (1 / 4)
+    , autoComplete          = Nothing
     }
 ----------------------------------------------------------------------------------------------------
 -- Layouts                                                                                        --
@@ -272,18 +292,24 @@ myModMask = mod4Mask
 myKeys :: [(String, X ())]
 myKeys =
     [ ("M-q"                , spawn "xmonad --restart")
-    , ("M-M1-q"             , spawn "xmonad --recompile && xmonad --restart")
+    , ("M-M1-q"             , spawn "cd /home/oleete/.config/xmonad; stack install; xmonad --recompile; xmonad --restart; cd -")
+    , ("M-S-q"              , confirmPrompt myPromptTheme "Quit XMonad" $ io exitSuccess)
 
     , ("M-w"                , myTree myTreeConf)
     , ("<XF86MonBrightnessDown>"  , spawn "/home/oleete/.config/bin/brightness -dec 5")
     , ("<XF86MonBrightnessUp>"    , spawn "/home/oleete/.config/bin/brightness -inc 5")
-    , ("<XF86AudioLowerVolume>"   , spawn "pactl -- set-sink-volume @DEFAULT_SINK@ -5%" )
-    , ("<XF86AudioRaiseVolume>"   , spawn "pactl -- set-sink-volume @DEFAULT_SINK@ +5%" )
-    , ("<XF86AudioMute>"          , spawn "pactl -- set-sink-volume @DEFAULT_SINK@ 0%" )
-    , ("M-M1-C-S-<Space>"   , spawn "playerctl play-pause" )
-    , ("M-M1-C-S-<Left>"    , spawn "playerctl previous" )
-    , ("M-M1-C-S-<Right>"   , spawn "playerctl next" )
-    , ("M-M1-C-S-<Return>"  , spawn "pactl -- set-sink-volume @DEFAULT_SINK@ 100%" )
+    , ("<XF86AudioLowerVolume>"   , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ -5%" )
+    , ("<XF86AudioRaiseVolume>"   , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ +5%" )
+    , ("<XF86AudioMute>"          , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ 0%" )
+    , ("<XF86Display>"            , spawn "/home/oleete/.config/bin/displayctl" )
+    , ("<XF86AudioPlay>"          , spawn "playerctl play-pause")
+    , ("<XF86AudioStop>"          , spawn "playerctl play-pause")
+    , ("<XF86AudioPause>"         , spawn "playerctl play-pause")
+    , ("<XF86AudioPrev>"          , spawn "playerctl previous")
+    , ("<XF86AudioNext>"          , spawn "playerctl next")
+    , ("<Print>"                  , spawn "/home/oleete/.config/bin/screencapt area")
+    , ("M-<Esc>"                  , upPointer $ allNamedScratchpadAction scratchpads "sysMon")
+    , ("M-S-<Esc>"                , upPointer $ allNamedScratchpadAction scratchpads "sysMon")
 
     , ("M-<Return>"         , kittyBind2 (P.sendKey (controlMask .|. shiftMask) xK_Return) (upPointer $ runOrRaise myTerminal (className =? "kitty")))
     , ("M-M1-<Return>"      , upPointer $ spawn myTerminal)
@@ -303,7 +329,8 @@ myKeys =
     , ("M-S-n"              , upPointer $ wrkNSP "keepWrkNsp" "keepNsp")
 
     , ("M-<Backspace>"      , multiBind (spawn (myTerminalRemote ++ " delWindow")) (P.sendKey controlMask xK_w) kill)
-    , ("M-M1-<Backspace>"   , kill)
+    , ("M-M1-<Backspace>"   , kill   )
+    , ("M-<Delete>"         , confirmPrompt myPromptTheme "kill all" killAll)
 
     , ("M-<Down>"           , multiBind (spawn (myTerminalRemote ++ " tabSwap Right Down")) (P.sendKey controlMask xK_Tab) (bindOn LD [("Tabs", windows W.focusDown)]))
     , ("M-<Up>"             , multiBind (spawn (myTerminalRemote ++ " tabSwap Left Up")) (P.sendKey (controlMask .|. shiftMask) xK_Tab) (bindOn LD [("Tabs", windows W.focusUp)]))
@@ -311,8 +338,9 @@ myKeys =
     , ("M-M1-<Up>"          , bindOn LD [("Tabs", windows W.focusUp)])
     , ("M-t"                , multiBind (P.sendKey (controlMask .|. shiftMask) xK_t) (P.sendKey controlMask xK_t) (spawn ""))
 
-    , ("M-f"                , kittyBind2 (P.sendKey (controlMask .|. shiftMask) xK_f)  (toggleLayout FULL))
+    , ("M-f"                , kittyBind " kittyFullscreen"  (toggleLayout FULL))
     , ("M-M1-f"             , toggleLayout FULL)
+    , ("M-M1-S-f"           , toggleLayout FULL)
     , ("M-s"                , toggleLayout FULLBAR)
     , ("M-c"                , toggleLayout FULLCENTER)
 
@@ -331,7 +359,9 @@ myKeys =
     , ("M-M1-k"             , upPointer $ windowSwap U True)
     , ("M-M1-l"             , upPointer $ windowSwap R True)
 
-    , ("M-m"                , upPointer $ swapPromote' False)
+    , ("M-m"                , kittyBind " mainMove"   (upPointer $ swapPromote' False))
+    , ("M-M1-m"             , upPointer $ swapPromote' False)
+    , ("M-M1-S-m"           , upPointer $ swapPromote' False)
     , ("M-y"                , upPointer $ withFocused toggleFloat)
     , ("M-M1-y"             , upFocus sinkAll)
     -- , ("M-h"                , bindFirst [(title =? "MainEditor", spawn "nvr --servername /tmp/nvr-server-1 --nostart -c 'KittyNavigateleft'")
@@ -379,18 +409,15 @@ myKeys =
                                          ,("", allNamedScratchpadAction scratchpads personal)]
 
         kittyBind kitty leftover = bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ kitty))
-                                          ,(className =? "kittyconsole", spawn (myTerminalRemote ++ kitty))
                                           ,(pure True, leftover)]
 
         kittyBind2 kitty leftover = bindFirst [(className =? "kitty", kitty)
-                                               ,(className =? "kittyconsole", kitty)
                                                ,(pure True, leftover)]
 
         chromeBind chrome leftover = bindFirst [(className =? "Google-chrome", chrome)
                                                ,(pure True, leftover)]
 
         multiBind kitty chrome leftover = bindFirst [(className =? "kitty", kitty)
-                                                    ,(className =? "kittyconsole", kitty)
                                                     ,(className =? "Google-chrome", chrome)
                                                     ,(pure True, leftover)]
 
@@ -420,10 +447,6 @@ myStartupHook = do
     spawnOnce "insync start; insync hide"
     spawnOnce "/home/oleete/.config/bin/startupScript"
     spawnOnce "/home/oleete/.config/bin/connect_screen.py"
-    -- spawnOnce "stalonetray --config ~/.config/stalonetray.conf"
-    -- spawnOnce "cbatticon --command-left-click tlpui"
-    -- spawnOnce "nm-applet"
-    -- spawnOnce "volctl"
 
 ----------------------------------------------------------------------------------------------------
 -- Log                                                                                            --
@@ -434,9 +457,9 @@ myPP = def
     { ppCurrent = xmobarColor active "" . wrap ("<box type=Bottom width=2 mt=2 color=" ++ active ++ ">") "</box>"
     , ppVisible = xmobarColor active ""
     , ppHidden  = xmobarColor dull  ""
-    , ppTitle   = xmobarColor foreground "" . shorten 30
+    , ppTitle   = xmobarColor foreground "" . wrap ("<box type=Bottom width=2 mt=2 color=" ++ yellow ++ "><fc=" ++ yellow ++ ">") "</fc></box>" . shorten 30
     , ppLayout  = const ""
-    , ppSep = " | "
+    , ppSep = xmobarColor foreground "" " | "
     , ppOrder = reverse
     }
 
@@ -481,7 +504,8 @@ myManageHook =
             , resource =? "WrkTasks" -?> doRectFloat halfNhalf
             , className =? "Keep" -?> doRectFloat halfNhalf
             , className =? "WrkKeep" -?> doRectFloat halfNhalf
-            , resource =? "kittyconsole" -?> doRectFloat (W.RationalRect (3 / 5) (3 / 5) (1 / 3) (1 / 3))
+            , resource =? "sysMon" -?> doRectFloat (W.RationalRect (1 / 8) (1 / 8) (3 / 4) (3 / 4))
+            , resource =? "console" -?> doRectFloat (W.RationalRect (4 / 7) (4 / 7) (2 / 5) (2 / 5))
             , resource =? "youtube music" -?> doRectFloat halfNhalf
             , resource =? "discord" -?> doRectFloat halfNhalf
 
@@ -509,24 +533,47 @@ myHandleEventHook = fadeWindowsEventHook
                 <+> handleEventHook def
                 <+> XMonad.Util.Hacks.windowedFullscreenFixEventHook
 
+----------------------------------------------------------------------------------------------------
+-- Tree Menu                                                                                      --
+----------------------------------------------------------------------------------------------------
 
 myTreeConf = TSConfig { ts_hidechildren = True
-           , ts_background   = 0xdd292d3e
+           , ts_background   = 0x00000000
            , ts_font         = "xft:Sans-16"
-           , ts_node         = (0xffd0d0d0, 0xff202331)
-           , ts_nodealt      = (0xffd0d0d0, 0xff202331)
+           , ts_node         = (0xffd0d0d0, 0xff1a1b26)
+           , ts_nodealt      = (0xffd0d0d0, 0xff1a1b26)
            , ts_highlight    = (0xffffffff, 0xff755999)
-           , ts_extra        = 0xffd0d0d0
+           , ts_extra        = 0x00000000
            , ts_node_width   = 200
            , ts_node_height  = 30
-           , ts_originX      = 0
-           , ts_originY      = 0
+           , ts_originX      = 20
+           , ts_originY      = 30
            , ts_indent       = 80
-           , ts_navigate     = defaultNavigation
+           , ts_navigate     = myTreeNav
            }
+
+myTreeNav = M.fromList
+    [ ((0, xK_Escape), cancel)
+    , ((mod4Mask, xK_w), cancel)
+    , ((0, xK_Return), select)
+    , ((0, xK_space),  select)
+    , ((0, xK_Up),     movePrev)
+    , ((0, xK_Down),   moveNext)
+    , ((0, xK_Left),   moveParent)
+    , ((0, xK_Right),  moveChild)
+    , ((0, xK_k),      movePrev)
+    , ((0, xK_j),      moveNext)
+    , ((0, xK_h),      moveParent)
+    , ((0, xK_l),      moveChild)
+    ]
 
 myTree a = treeselectAction a
    [ Node (TSNode "Lock"       "Lock the session"     (spawn "slock")) []
+   , Node (TSNode "Media"  "Media Controls" (return ()))
+       [ Node (TSNode "Play/Pause"     "Play/pause media"       (spawn "playerctl play-pause")) []
+       , Node (TSNode "Next Track"     "Skip to next track"     (spawn "playerctl next"))  []
+       , Node (TSNode "Previous Track" "Skip to previous track" (spawn "playerctl previous"))  []
+       ]
    , Node (TSNode "Utilities"  "All that useful stuff" (return ()))
        [ Node (TSNode "color picker"    "Find that color" (spawn "/home/oleete/.config/bin/colorPicker")) []
        , Node (TSNode "Calculator"      "For maths and shit" (spawn "galculator")) []
@@ -535,6 +582,7 @@ myTree a = treeselectAction a
        , Node (TSNode "Screenshot Area" "Take a screenshot" (spawn "/home/oleete/.config/bin/screencapt area"))  []
        , Node (TSNode "Screencap"       "Take a screen capture" (spawn "/home/oleete/.config/bin/screencast"))  []
        , Node (TSNode "Screencap Area"  "Take a screen capture" (spawn "/home/oleete/.config/bin/screencast area"))  []
+       , Node (TSNode "System Monitor"  "Monitor the system" (allNamedScratchpadAction scratchpads "sysMon")) []
        ]
    , Node (TSNode "Brightness" "Sets screen brightness using xbacklight" (return ()))
        [ Node (TSNode "Bright" "FULL POWER!!"            (spawn "/home/oleete/.config/bin/brightness -set 100")) []
@@ -543,16 +591,18 @@ myTree a = treeselectAction a
        , Node (TSNode "Low"    "Normal Brightness (25%)" (spawn "/home/oleete/.config/bin/brightness -set 25"))  []
        , Node (TSNode "Dim"    "Quite dark"              (spawn "/home/oleete/.config/bin/brightness -set 10"))  []
        ]
-   , Node (TSNode "Display" "Set the display mode" (return ()))
+   , Node (TSNode "Display" "Set the display mode" (spawn "/home/oleete/.config/bin/displayctl"))
        [ Node (TSNode "Internal" "Internal display only"     (spawn "/home/oleete/.config/bin/displayctl internal")) []
        , Node (TSNode "External" "External display only"     (spawn "/home/oleete/.config/bin/displayctl external"))  []
        , Node (TSNode "Mirror"   "Mirro display"             (spawn "/home/oleete/.config/bin/displayctl mirror"))  []
        , Node (TSNode "Span"     "Span all displays"         (spawn "/home/oleete/.config/bin/displayctl span"))  []
        , Node (TSNode "SpanEx"   "Span external displays"    (spawn "/home/oleete/.config/bin/displayctl spanex"))  []
        ]
+   , Node (TSNode "Networks"    "Select networks" (spawn "networkmanager_dmenu")) []
    , Node (TSNode "Settings" "Open settings" (return ()))
-       [ Node (TSNode "Bluetooth"  "Manage bluetooth devices" (spawn "blueberry")) []
-       , Node (TSNode "Network"    "Manage networks" (spawn "nm-connection-editor")) []
+       [ Node (TSNode "Volume"  "Manage audio devices" (spawn "pavucontrol")) []
+       , Node (TSNode "Bluetooth"  "Manage bluetooth devices" (spawn "blueberry")) []
+       , Node (TSNode "Network Settings"    "Manage networks" (spawn "nm-connection-editor")) []
        , Node (TSNode "Battery"    "Manage power settings" (spawn "tlp-ui")) []
        , Node (TSNode "Screenkey"  "Screenkey settings" (spawn "screenkey --show-settings"))  []
        ]

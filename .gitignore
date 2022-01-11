@@ -4,7 +4,6 @@
 /nvim/pluged/**
 /kak/plugins
 zsh/
-rofi/
 
 !/.gitignore
 !/README.md
@@ -30,7 +29,9 @@ rofi/
 !/kak/kakrc
 !/zathura/zathurarc
 !/bin/*
+!/rofi/themes/*.rasi
 
+/rofi-themes
 /bin/startupScript
 /bin/brightness
 /xmonad/xmonad-git

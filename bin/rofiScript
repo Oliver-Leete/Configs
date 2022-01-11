@@ -1,0 +1,106 @@
+#!/bin/bash
+
+vol () {
+    result=$(rofi -matching fuzzy -l 0 -window-title "Volume" -dmenu "Volume")
+    /home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ $result%
+}
+
+brightness () {
+    result=$(rofi -matching fuzzy -l 0 -window-title "Brightness" -dmenu "Brightness")
+    /home/oleete/.config/bin/brightness -set $result
+}
+
+display () {
+    displayctl
+}
+
+power () {
+    items="lock logout suspend hibernate shutdown reboot"
+    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Power" -dmenu "Power")
+
+    case ${result:-} in
+        lock)       "slock"               ;;
+        logout)     "killall xmonad"      ;;
+        suspend)    "systemctl suspend"   ;;
+        hibernate)  "systemctl hibernate" ;;
+        shutdown)   "systemctl poweroff"  ;;
+        reboot)     "systemctl reboot"    ;;
+    esac
+
+}
+
+menu () {
+    items="lock pause utilities media display network power settings volume brightness"
+    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu")
+    case ${result:-} in
+        lock)       slock           ;;
+        pause)      playerctl pause ;;
+        utilities)  utilities       ;;
+        media)      media           ;;
+        display)    display         ;;
+        network)    network         ;;
+        power)      power           ;;
+        settings)   settings        ;;
+        volume)     vol             ;;
+        brightness) brightness      ;;
+    esac
+}
+
+
+# [ Node (TSNode "Lock"       "Lock the session"     (spawn "slock")) []
+#    , Node (TSNode "Media"  "Media Controls" (return ()))
+#        [ Node (TSNode "Play/Pause"     "Play/pause media"       (spawn "playerctl play-pause")) []
+#        , Node (TSNode "Next Track"     "Skip to next track"     (spawn "playerctl next"))  []
+#        , Node (TSNode "Previous Track" "Skip to previous track" (spawn "playerctl previous"))  []
+#        ]
+#    , Node (TSNode "Utilities"  "All that useful stuff" (return ()))
+#        [ Node (TSNode "color picker"    "Find that color" (spawn "/home/oleete/.config/bin/colorPicker")) []
+#        , Node (TSNode "Calculator"      "For maths and shit" (spawn "galculator")) []
+#        , Node (TSNode "Screenkey"       "Show key presses" (spawn "killall screenkey || screenkey"))  []
+#        , Node (TSNode "Screenshot"      "Take a screenshot" (spawn "/home/oleete/.config/bin/screencapt"))  []
+#        , Node (TSNode "Screenshot Area" "Take a screenshot" (spawn "/home/oleete/.config/bin/screencapt area"))  []
+#        , Node (TSNode "Screencap"       "Take a screen capture" (spawn "/home/oleete/.config/bin/screencast"))  []
+#        , Node (TSNode "Screencap Area"  "Take a screen capture" (spawn "/home/oleete/.config/bin/screencast area"))  []
+#        , Node (TSNode "System Monitor"  "Monitor the system" (allNamedScratchpadAction scratchpads "sysMon")) []
+#        ]
+#    , Node (TSNode "Brightness" "Sets screen brightness using xbacklight" (return ()))
+#        [ Node (TSNode "Bright" "FULL POWER!!"            (spawn "/home/oleete/.config/bin/brightness -set 100")) []
+#        , Node (TSNode "High"   "Normal Brightness (75%)" (spawn "/home/oleete/.config/bin/brightness -set 75"))  []
+#        , Node (TSNode "Normal" "Normal Brightness (50%)" (spawn "/home/oleete/.config/bin/brightness -set 50"))  []
+#        , Node (TSNode "Low"    "Normal Brightness (25%)" (spawn "/home/oleete/.config/bin/brightness -set 25"))  []
+#        , Node (TSNode "Dim"    "Quite dark"              (spawn "/home/oleete/.config/bin/brightness -set 10"))  []
+#        ]
+#    , Node (TSNode "Display" "Set the display mode" (spawn "/home/oleete/.config/bin/displayctl"))
+#        [ Node (TSNode "Internal" "Internal display only"     (spawn "/home/oleete/.config/bin/displayctl internal")) []
+#        , Node (TSNode "External" "External display only"     (spawn "/home/oleete/.config/bin/displayctl external"))  []
+#        , Node (TSNode "Mirror"   "Mirro display"             (spawn "/home/oleete/.config/bin/displayctl mirror"))  []
+#        , Node (TSNode "Span"     "Span all displays"         (spawn "/home/oleete/.config/bin/displayctl span"))  []
+#        , Node (TSNode "SpanEx"   "Span external displays"    (spawn "/home/oleete/.config/bin/displayctl spanex"))  []
+#        ]
+#    , Node (TSNode "Networks"    "Select networks" (spawn "networkmanager_dmenu")) []
+#    , Node (TSNode "Settings" "Open settings" (return ()))
+#        [ Node (TSNode "Volume"  "Manage audio devices" (spawn "pavucontrol")) []
+#        , Node (TSNode "Bluetooth"  "Manage bluetooth devices" (spawn "blueberry")) []
+#        , Node (TSNode "Network Settings"    "Manage networks" (spawn "nm-connection-editor")) []
+#        , Node (TSNode "Battery"    "Manage power settings" (spawn "tlp-ui")) []
+#        , Node (TSNode "Screenkey"  "Screenkey settings" (spawn "screenkey --show-settings"))  []
+#        ]
+#    , Node (TSNode "Power" "Suspend or Shutdown" (return ()))
+#    ]
+
+main () {
+    case ${1:-mainMenu} in
+        mainMenu)   menu       ;;
+        utilities)  utilities  ;;
+        media)      media      ;;
+        display)    display    ;;
+        network)    network    ;;
+        power)      power      ;;
+        settings)   settings   ;;
+        volume)     vol        ;;
+        brightness) brightness ;;
+        *) ;;
+    esac
+}
+
+main $*

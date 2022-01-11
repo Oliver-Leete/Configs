@@ -128,6 +128,7 @@ require("cmp").setup({
         { name = "path" },
         { name = "nvim_lua" },
         { name = "buffer", keyword_lenght = 3 },
+        { name = "dictionary", keyword_lenght = 2},
     },
     formatting = {
         format = function(entry, vim_item)
@@ -138,6 +139,7 @@ require("cmp").setup({
                 nvim_lua = "(Lua)",
                 buffer = "(Buffer)",
                 cmdline = "(CMD)",
+                dictionary = "(DICT)"
             })[entry.source.name]
             vim_item.kind = M.icons[vim_item.kind]
             return vim_item
@@ -160,6 +162,13 @@ cmp.setup.cmdline(":", {
 })
 
 require("cmp_git").setup({})
+
+require("cmp_dictionary").setup({
+    dic = {
+        ["tex"] = "/home/oleete/.config/nvim/pluged/cmp-dictionary/british_english.dic",
+        ["markdown"] = "/home/oleete/.config/nvim/pluged/cmp-dictionary/british_english.dic",
+    },
+})
 
 local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({ map_char = { all = "(", tex = "{", haskell = " " } }))

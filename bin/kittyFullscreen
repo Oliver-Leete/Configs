@@ -2,7 +2,7 @@
 windows=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length")
 
 if (($windows > 1)); then
-	xdotool key --clearmodifiers "ctrl+shift+m"
+	xdotool key --clearmodifiers "ctrl+shift+f"
 else
-	xdotool key super+shift+meta+m
+	xdotool key super+shift+meta+f
 fi

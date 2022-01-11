@@ -61,7 +61,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'mbbill/undotree'
     Plug 'folke/trouble.nvim'
     Plug 'folke/todo-comments.nvim'
-    Plug 'folke/which-key.nvim'
+    Plug 'zeertzjq/which-key.nvim', { 'branch': 'patch-1'}
     Plug 'sindrets/diffview.nvim'
 
     Plug 'neovim/nvim-lspconfig'
@@ -77,6 +77,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'petertriho/cmp-git'
     Plug 'hrsh7th/cmp-cmdline'
+    Plug 'uga-rosa/cmp-dictionary'
     Plug 'L3MON4D3/LuaSnip'
     Plug 'saadparwaiz1/cmp_luasnip'
     Plug 'rafamadriz/friendly-snippets'
@@ -90,6 +91,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-telescope/telescope-bibtex.nvim'
     Plug 'nvim-telescope/telescope-github.nvim'
     Plug 'crispgm/telescope-heading.nvim'
+    Plug 'rudism/telescope-dict.nvim'
 
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'

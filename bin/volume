@@ -1,0 +1,5 @@
+#!/bin/bash
+
+pactl -- $@
+vol_level=$(pactl get-sink-volume @DEFAULT_SINK@ | rg -o -e "[0-9]{1,3}%" | head -n 1 | rg -o -e "[0-9]{1,3}")
+dunstify --hints int:value:$vol_level -r 102 "Volume: $vol_level%"

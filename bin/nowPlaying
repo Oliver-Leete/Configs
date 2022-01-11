@@ -4,4 +4,4 @@
 artist=$(playerctl metadata | grep artist | cut -d' ' -f 3- | awk -v len=35 '{ if (length($0) > len) print substr($0, 1, len-3) "..."; else print; }' | xargs)
 title=$(playerctl metadata | grep title | cut -d' ' -f 3- | awk -v len=35 '{ if (length($0) > len) print substr($0, 1, len-3) "..."; else print; }' | xargs)
 
-[ -z "$title"] && echo "" || echo " <fc=#78dce8> $title - $artist </fc>"
+[ -z "$title"] && echo "" || echo " | <box type=Bottom width=2 mt=2 color=#76946A><fc=#76946A>$title - $artist</fc></box>"

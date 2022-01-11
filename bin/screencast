@@ -5,7 +5,7 @@
 set -eu
 
 SCRIPTNAME=$(basename $0)
-PIDFILE=/tmp/$SCRIPTNAME.pid
+PIDFILE=/tmp/screencast.pid
 FILETYPE=mkv
 FRAMERATE=60
 
