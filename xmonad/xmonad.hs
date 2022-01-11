@@ -66,9 +66,6 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.Paste as P
 import XMonad.Util.SpawnOnce
 
-import Data.Tree
-import XMonad.Actions.TreeSelect
-
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Actions.WithAll (killAll)
 import XMonad.Prompt
@@ -295,7 +292,7 @@ myKeys =
     , ("M-M1-q"             , spawn "cd /home/oleete/.config/xmonad; stack install; xmonad --recompile; xmonad --restart; cd -")
     , ("M-S-q"              , confirmPrompt myPromptTheme "Quit XMonad" $ io exitSuccess)
 
-    , ("M-w"                , myTree myTreeConf)
+    , ("M-w"                      , spawn "/home/oleete/.config/bin/rofiScript")
     , ("<XF86MonBrightnessDown>"  , spawn "/home/oleete/.config/bin/brightness -dec 5")
     , ("<XF86MonBrightnessUp>"    , spawn "/home/oleete/.config/bin/brightness -inc 5")
     , ("<XF86AudioLowerVolume>"   , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ -5%" )
@@ -532,85 +529,3 @@ myHandleEventHook :: Event -> X All
 myHandleEventHook = fadeWindowsEventHook
                 <+> handleEventHook def
                 <+> XMonad.Util.Hacks.windowedFullscreenFixEventHook
-
-----------------------------------------------------------------------------------------------------
--- Tree Menu                                                                                      --
-----------------------------------------------------------------------------------------------------
-
-myTreeConf = TSConfig { ts_hidechildren = True
-           , ts_background   = 0x00000000
-           , ts_font         = "xft:Sans-16"
-           , ts_node         = (0xffd0d0d0, 0xff1a1b26)
-           , ts_nodealt      = (0xffd0d0d0, 0xff1a1b26)
-           , ts_highlight    = (0xffffffff, 0xff755999)
-           , ts_extra        = 0x00000000
-           , ts_node_width   = 200
-           , ts_node_height  = 30
-           , ts_originX      = 20
-           , ts_originY      = 30
-           , ts_indent       = 80
-           , ts_navigate     = myTreeNav
-           }
-
-myTreeNav = M.fromList
-    [ ((0, xK_Escape), cancel)
-    , ((mod4Mask, xK_w), cancel)
-    , ((0, xK_Return), select)
-    , ((0, xK_space),  select)
-    , ((0, xK_Up),     movePrev)
-    , ((0, xK_Down),   moveNext)
-    , ((0, xK_Left),   moveParent)
-    , ((0, xK_Right),  moveChild)
-    , ((0, xK_k),      movePrev)
-    , ((0, xK_j),      moveNext)
-    , ((0, xK_h),      moveParent)
-    , ((0, xK_l),      moveChild)
-    ]
-
-myTree a = treeselectAction a
-   [ Node (TSNode "Lock"       "Lock the session"     (spawn "slock")) []
-   , Node (TSNode "Media"  "Media Controls" (return ()))
-       [ Node (TSNode "Play/Pause"     "Play/pause media"       (spawn "playerctl play-pause")) []
-       , Node (TSNode "Next Track"     "Skip to next track"     (spawn "playerctl next"))  []
-       , Node (TSNode "Previous Track" "Skip to previous track" (spawn "playerctl previous"))  []
-       ]
-   , Node (TSNode "Utilities"  "All that useful stuff" (return ()))
-       [ Node (TSNode "color picker"    "Find that color" (spawn "/home/oleete/.config/bin/colorPicker")) []
-       , Node (TSNode "Calculator"      "For maths and shit" (spawn "galculator")) []
-       , Node (TSNode "Screenkey"       "Show key presses" (spawn "killall screenkey || screenkey"))  []
-       , Node (TSNode "Screenshot"      "Take a screenshot" (spawn "/home/oleete/.config/bin/screencapt"))  []
-       , Node (TSNode "Screenshot Area" "Take a screenshot" (spawn "/home/oleete/.config/bin/screencapt area"))  []
-       , Node (TSNode "Screencap"       "Take a screen capture" (spawn "/home/oleete/.config/bin/screencast"))  []
-       , Node (TSNode "Screencap Area"  "Take a screen capture" (spawn "/home/oleete/.config/bin/screencast area"))  []
-       , Node (TSNode "System Monitor"  "Monitor the system" (allNamedScratchpadAction scratchpads "sysMon")) []
-       ]
-   , Node (TSNode "Brightness" "Sets screen brightness using xbacklight" (return ()))
-       [ Node (TSNode "Bright" "FULL POWER!!"            (spawn "/home/oleete/.config/bin/brightness -set 100")) []
-       , Node (TSNode "High"   "Normal Brightness (75%)" (spawn "/home/oleete/.config/bin/brightness -set 75"))  []
-       , Node (TSNode "Normal" "Normal Brightness (50%)" (spawn "/home/oleete/.config/bin/brightness -set 50"))  []
-       , Node (TSNode "Low"    "Normal Brightness (25%)" (spawn "/home/oleete/.config/bin/brightness -set 25"))  []
-       , Node (TSNode "Dim"    "Quite dark"              (spawn "/home/oleete/.config/bin/brightness -set 10"))  []
-       ]
-   , Node (TSNode "Display" "Set the display mode" (spawn "/home/oleete/.config/bin/displayctl"))
-       [ Node (TSNode "Internal" "Internal display only"     (spawn "/home/oleete/.config/bin/displayctl internal")) []
-       , Node (TSNode "External" "External display only"     (spawn "/home/oleete/.config/bin/displayctl external"))  []
-       , Node (TSNode "Mirror"   "Mirro display"             (spawn "/home/oleete/.config/bin/displayctl mirror"))  []
-       , Node (TSNode "Span"     "Span all displays"         (spawn "/home/oleete/.config/bin/displayctl span"))  []
-       , Node (TSNode "SpanEx"   "Span external displays"    (spawn "/home/oleete/.config/bin/displayctl spanex"))  []
-       ]
-   , Node (TSNode "Networks"    "Select networks" (spawn "networkmanager_dmenu")) []
-   , Node (TSNode "Settings" "Open settings" (return ()))
-       [ Node (TSNode "Volume"  "Manage audio devices" (spawn "pavucontrol")) []
-       , Node (TSNode "Bluetooth"  "Manage bluetooth devices" (spawn "blueberry")) []
-       , Node (TSNode "Network Settings"    "Manage networks" (spawn "nm-connection-editor")) []
-       , Node (TSNode "Battery"    "Manage power settings" (spawn "tlp-ui")) []
-       , Node (TSNode "Screenkey"  "Screenkey settings" (spawn "screenkey --show-settings"))  []
-       ]
-   , Node (TSNode "Power" "Suspend or Shutdown" (return ()))
-       [ Node (TSNode "Logout"     "Logout of session" (io exitSuccess)) []
-       , Node (TSNode "Suspend"    "Sleep the system" (spawn "systemctl suspend")) []
-       , Node (TSNode "Hibernate"  "Hibernate the system" (spawn "systemctl hibernate")) []
-       , Node (TSNode "Shutdown"   "Poweroff the system" (spawn "systemctl poweroff")) []
-       , Node (TSNode "Reboot"     "Reboot the system" (spawn "systemctl reboot")) []
-       ]
-   ]

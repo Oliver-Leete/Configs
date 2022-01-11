@@ -83,7 +83,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'rafamadriz/friendly-snippets'
     Plug 'windwp/nvim-autopairs'
     Plug 'abecodes/tabout.nvim'
-
+    Plug 'nvim-telescope/telescope-file-browser.nvim'
     Plug 'nvim-telescope/telescope.nvim'
     Plug 'nvim-telescope/telescope-symbols.nvim'
     Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make'}

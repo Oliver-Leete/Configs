@@ -516,7 +516,7 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
     nnoremap("<leader>fV", [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj " . input("In what files? > ") . " theme=get_ivy<cr><cmd>Telescope quickfix<cr>"]], "Vim Grep (file select)", expr)
     nnoremap("<leader>fv", [["<cmd> noautocmd vimgrep /" . input("What would you like to vimgrep? > ") . "/gj **/*  theme=get_ivy<cr><cmd>Telescope quickfix<cr>"]], "Vim Grep", expr)
     nnoremap("<leader>fx", "<cmd>Telescope file_browser<cr>", "File Browser")
-    nnoremap("<leader>fX", function() require'telescope.builtin'.file_browser{cwd=require'telescope.utils'.buffer_dir()}end, "File Browser (Relative)")
+    nnoremap("<leader>fX", function() require'telescope'.extensions.file_browser.file_browser{cwd=require'telescope.utils'.buffer_dir()}end, "File Browser (Relative)")
     nnoremap("<leader>fI", function() require'telescope.builtin'.symbols{sources={'julia'}}end, "Insert Symbols")
 
     mapxName.name("<leader>l", "List Stuff")

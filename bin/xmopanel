@@ -90,7 +90,7 @@ fi
 men_icon=""
 
 if [ -f /tmp/screencast.pid ]; then
-    cap_icon="<box type=Bottom width=2 mt=2 color=#C34043><fc=#C34043>  REC</fc></box>"
+    cap_icon=" <box type=Bottom width=2 mt=2 color=#C34043><fc=#C34043> REC</fc></box>"
 fi
 
 action_end='</action>'
