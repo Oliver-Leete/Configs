@@ -1,0 +1,4 @@
+#!/bin/sh
+
+WS=$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')
+kitty @ --to unix:/tmp/kitty-$WS launch --type=background $@

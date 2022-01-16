@@ -11,7 +11,7 @@ brightness () {
 }
 
 display () {
-    displayctl
+    displayctl menu
 }
 
 network () {
@@ -50,7 +50,7 @@ utilities () {
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Utilities" -dmenu "Utilities")
     case ${result:-} in
         colour-picker) /home/oleete/.config/bin/colorPicker ;;
-        calculator) galculator ;;
+        calculator) xdotool key super+shift+c ;;
         screenshot) /home/oleete/.config/bin/screencapt ;;
         screenshot-area) /home/oleete/.config/bin/screencapt area ;;
         screencap) /home/oleete/.config/bin/screencast ;;
@@ -74,35 +74,49 @@ settings () {
 }
 
 menu () {
-    items="lock play-pause utilities media display network power settings volume brightness system-monitor"
+    items="lock play-pause apps utilities commands media display network power settings volume brightness windows sys-mon terminal calculator music discord tasks notes"
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu")
     case ${result:-} in
         lock)       slock           ;;
         play-pause) playerctl play-pause ;;
+        apps) rofi -matching fuzzy -show drun -show-icons ;;
         utilities)  utilities       ;;
+        commands) rofi -matching fuzzy -show run ;;
         media)      media           ;;
-        display)    display         ;;
+        display)    /home/oleete/.config/bin/displayctl ;;
         network)    network         ;;
         power)      power           ;;
         settings)   settings        ;;
         volume)     vol             ;;
         brightness) brightness      ;;
-        system-monitor) xdotool key super+Escape;;
+        windows) rofi -matching fuzzy -show window ;;
+        sys-mon) xdotool key super+shift+Escape;;
+        terminal) xdotool key super+shift+Enter;;
+        calculator) xdotool key super+shift+c;;
+        discord) xdotool key super+shift+d;;
+        music) xdotool key super+shift+m;;
+        tasks) xdotool key super+shift+t;;
+        notes) xdotool key super+shift+n;;
     esac
 }
 
 main () {
     case ${1:-mainMenu} in
         mainMenu)   menu        ;;
-        utilities)  utilities   ;;
-        media)      media       ;;
-        display)    display     ;;
-        network)    network     ;;
-        power)      power       ;;
-        settings)   settings    ;;
-        volume)     vol         ;;
-        brightness) brightness  ;;
-        *) ;;
+        lock)       slock           ;;
+        play-pause) playerctl play-pause ;;
+        apps) rofi -matching fuzzy -show drun -show-icons ;;
+        utilities)  utilities       ;;
+        commands) rofi -matching fuzzy -show run ;;
+        media)      media           ;;
+        display)    /home/oleete/.config/bin/displayctl      ;;
+        network)    network         ;;
+        power)      power           ;;
+        settings)   settings        ;;
+        volume)     vol             ;;
+        brightness) brightness      ;;
+        windows) rofi -matching fuzzy -show window ;;
+        system-monitor) xdotool key super+Escape;;
     esac
 }
 

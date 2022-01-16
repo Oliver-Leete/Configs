@@ -6,8 +6,9 @@ commands=$(echo $kittyStore | jq ".[].tabs[].windows[] | select(.is_focused) | .
 if [[ "$commands" == *"vim"* ]]; then
 	titles=$(echo $kittyStore | jq ".[].tabs[].windows[] | select(.is_focused) | .title")
 	if [[ "$titles" =~ \"MainEditor\" ]]; then
-		tabID=$(echo $kittyStore | jq ".[].tabs[] | select(.is_focused) | .id")
-		nvr --servername /tmp/nvr-server-$tabID --nostart -c "call v:lua.delete_buffer()"
+        WS=$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')
+        tabID=$(echo $kittyStore | jq ".[].tabs[] | select(.is_focused) | .id")
+        nvr --servername "/tmp/nvr-$WS" --nostart -c "call v:lua.delete_buffer()"
 		exit
 	else
 		kitty @ send-text ";call v:lua.delete_buffer()"

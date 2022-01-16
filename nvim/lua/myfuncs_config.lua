@@ -56,7 +56,9 @@ vim.api.nvim_set_keymap(
 )
 
 function _G.delete_buffer()
-    if #vim.fn.getbufinfo({ buflisted = true }) == 1 then
+    if vim.bo.filetype == "man" then
+        vim.cmd([[bdelete]])
+    elseif #vim.fn.getbufinfo({ buflisted = true }) == 1 then
         vim.cmd([[quit]])
     -- elseif #vim.fn.win_findbuf(vim.fn.bufnr("%")) ~= 1 then
     elseif vim.fn.winnr("$") ~= 2 then
@@ -65,6 +67,8 @@ function _G.delete_buffer()
         require("close_buffers").delete({ type = "this" })
     end
 end
+
+vim.cmd([[command DeleteBuffer call v:lua.delete_buffer()]])
 
 function _G.KittySend(text)
     vim.fn.system("kittyrepl replterm " .. vim.b.replCommand, text)

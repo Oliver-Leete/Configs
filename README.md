@@ -486,7 +486,7 @@ if [ "$#" -ne "3" ]; then
 
         if [[ "$titles" =~ \"MainEditor\" ]]; then
             tabID=$(echo $kittyStore | jq ".[].tabs[] | select(.is_focused) | .id")
-            nvr --servername /tmp/nvr-server-$tabID --nostart -c "KittyNavigate$1"
+            nvr --servername /tmp/nvr-$WS --nostart -c "KittyNavigate$1"
             exit
         else
             kitty @ send-text ";KittyNavigate$1\n"

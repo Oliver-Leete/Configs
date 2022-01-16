@@ -61,7 +61,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'mbbill/undotree'
     Plug 'folke/trouble.nvim'
     Plug 'folke/todo-comments.nvim'
-    Plug 'zeertzjq/which-key.nvim', { 'branch': 'patch-1'}
+    Plug 'folke/which-key.nvim'
     Plug 'sindrets/diffview.nvim'
 
     Plug 'neovim/nvim-lspconfig'

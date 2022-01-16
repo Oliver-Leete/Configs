@@ -1,4 +1,5 @@
 #!/bin/bash
 
 tabID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .id")
-nvr -s --servername /tmp/nvr-server-$tabID $@
+WS=$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')
+nvr -s --servername /tmp/nvr-$WS $@

@@ -30,6 +30,7 @@ zsh/
 !/zathura/zathurarc
 !/bin/*
 !/rofi/themes/*.rasi
+!/alacritty.yml
 
 /rofi-themes
 /bin/startupScript

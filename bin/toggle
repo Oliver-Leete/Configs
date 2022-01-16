@@ -13,7 +13,7 @@ network() {
 		pkill -f nm-connection-editor
 	else
 		nm-connection-editor &
-		dunstify -r 103 "$(nmcli -t device | rg -e "[^(dis)]connected" | sed -E -e 's/.*(wifi|ethernet).*:([^:])/\1: \2/')" &
+		dunstify -r 103 "$(nmcli -t device | rg -e "[^(dis)]connected" | rg -v -e "docker" | sed -E -e 's/.*(wifi|ethernet).*:([^:])/\1: \2/')" &
 	fi
 }
 

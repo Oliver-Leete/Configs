@@ -71,6 +71,7 @@ window {
     border:           3;
     border-radius:   12;
     padding:          3;
+    width:          500;
 }
 
 mainbox {

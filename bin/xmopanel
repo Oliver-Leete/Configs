@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Battery
-bat_stat=$(acpi -b)
+bat_stat=$(acpi -b | head -n 1)
 if [[ "$bat_stat" == *"Discharging"* ]]; then
     percent=$(echo $bat_stat | rg -o -e "[0-9]{1,3}%" | rg -o -e "[0-9]*")
     if   ((0<=percent && percent<10)); then
@@ -22,7 +22,7 @@ if [[ "$bat_stat" == *"Discharging"* ]]; then
         bat_icon=""
     elif ((80<=percent && percent<90)); then
         bat_icon=""
-    elif ((90<=percent && percent<100)); then
+    elif ((90<=percent && percent<=100)); then
         bat_icon=""
     fi
 elif [[ "$bat_stat" == *"Charging"* ]]; then
@@ -45,11 +45,15 @@ elif [[ "$bat_stat" == *"Charging"* ]]; then
         bat_icon=""
     elif ((80<=percent && percent<90)); then
         bat_icon=""
-    elif ((90<=percent && percent<=100)); then
+    elif ((90<=percent && percent<98)); then
         bat_icon=""
+    else
+        bat_icon=""
     fi
 elif [[ "$bat_stat" == *"Full"* ]]; then
     bat_icon=""
+else
+    bat_icon=""
 fi
 
 net_stat=$(nmcli -t device)
@@ -98,7 +102,7 @@ action_bat='<action=`/home/oleete/.config/bin/toggle battery`>'
 action_net='<action=`/home/oleete/.config/bin/toggle network`>'
 action_vol='<action=`/home/oleete/.config/bin/toggle sound`>'
 action_blu='<action=`/home/oleete/.config/bin/toggle bluetooth`>'
-action_men='<action=`xdotool key super+w`>'
+action_men='<action=`xdotool key super+a`>'
 action_cap='<action=`/home/oleete/.config/bin/screencast`>'
 
 men=$action_men$men_icon$action_end

@@ -41,7 +41,6 @@ import XMonad.Actions.UpdatePointer
 import XMonad.Actions.WindowGoLocal
 
 import XMonad.Hooks.EwmhDesktops ( ewmh )
-import XMonad.Hooks.FadeWindows
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
@@ -66,9 +65,11 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.Paste as P
 import XMonad.Util.SpawnOnce
 
+
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Actions.WithAll (killAll)
 import XMonad.Prompt
+import XMonad.Hooks.RefocusLast
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
 ----------------------------------------------------------------------------------------------------
@@ -171,8 +172,8 @@ projects =
 ----------------------------------------------------------------------------------------------------
 -- Applications                                                                                   --
 ----------------------------------------------------------------------------------------------------
-myTerminal     = "kitty --single-instance --listen-on unix:/tmp/mykitty"
-myTerminalRemote = "kitty @ --to unix:/tmp/mykitty launch --type=background"
+myTerminal     = "/home/oleete/.config/bin/kittyMaker"
+myTerminalRemote = "/home/oleete/.config/bin/kittyRemote"
 myBrowser      = "/home/oleete/.config/bin/browser"
 myLongBrowser  = "google-chrome-stable --user-data-dir=/home/oleete/.config/browser/google-chrome-stable"
 myBrowserClass = "google-chrome-stable"
@@ -195,7 +196,7 @@ scratchpads =
     ,   NS "youtubeMusic"  youtubeMusicCommand (className =? "YouTube Music") nonFloating
     ,   NS "calc"  "gnome-calculator --class=calcu" (className =? "calcu") nonFloating
     ,   NS "console"  "alacritty --class console" (resource =? "console") nonFloating
-    ,   NS "sysMon"  "alacritty --class sysMon -e btop" (resource =? "sysMon") nonFloating
+    ,   NS "sysMon"  "alacritty --class sysMon -t 'System Monitor' -e btop" (resource =? "sysMon") nonFloating
     ]
 
 ----------------------------------------------------------------------------------------------------
@@ -292,7 +293,7 @@ myKeys =
     , ("M-M1-q"             , spawn "cd /home/oleete/.config/xmonad; stack install; xmonad --recompile; xmonad --restart; cd -")
     , ("M-S-q"              , confirmPrompt myPromptTheme "Quit XMonad" $ io exitSuccess)
 
-    , ("M-w"                      , spawn "/home/oleete/.config/bin/rofiScript")
+    , ("M-t"                      , spawn "/home/oleete/.config/bin/rofiScript")
     , ("<XF86MonBrightnessDown>"  , spawn "/home/oleete/.config/bin/brightness -dec 5")
     , ("<XF86MonBrightnessUp>"    , spawn "/home/oleete/.config/bin/brightness -inc 5")
     , ("<XF86AudioLowerVolume>"   , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ -5%" )
@@ -308,15 +309,16 @@ myKeys =
     , ("M-<Esc>"                  , upPointer $ allNamedScratchpadAction scratchpads "sysMon")
     , ("M-S-<Esc>"                , upPointer $ allNamedScratchpadAction scratchpads "sysMon")
 
-    , ("M-<Return>"         , kittyBind2 (P.sendKey (controlMask .|. shiftMask) xK_Return) (upPointer $ runOrRaise myTerminal (className =? "kitty")))
-    , ("M-M1-<Return>"      , upPointer $ spawn myTerminal)
+    , ("M-<Return>"         , klBind " 'kitty @ launch'" (upPointer $ runOrRaise myTerminal (className =? "kitty")))
 
-    , ("M-b"                , chromeBind (P.sendKey controlMask xK_t) (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
-    , ("M-M1-b"             , upPointer $ spawn myBrowser)
-    , ("M-S-b"              , upPointer altBrowser)
+    , ("M-n"                , rnklBind (spawn (myTerminalRemote ++ " 'kitty @ launch'")) " focusEditor" (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")]))
+    , ("M-M1-n"             , upPointer $ spawn myTerminal)
 
-    , ("M-a"                , spawn "rofi -matching fuzzy -modi combi -show combi -combi-modi window,drun,run -show-icons")
-    , ("M-v"                , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
+    , ("M-i"                , clBind (P.sendKey controlMask xK_t) (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
+    , ("M-M1-i"             , upPointer $ spawn myBrowser)
+    , ("M-S-i"              , upPointer altBrowser)
+
+    , ("M-e"                , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
 
     , ("M-S-c"              , upPointer $ allNamedScratchpadAction scratchpads "calc")
     , ("M-S-<Return>"       , upPointer $ allNamedScratchpadAction scratchpads "console")
@@ -325,28 +327,26 @@ myKeys =
     , ("M-S-t"              , upPointer $ wrkNSP "tasksWork" "tasks")
     , ("M-S-n"              , upPointer $ wrkNSP "keepWrkNsp" "keepNsp")
 
-    , ("M-<Backspace>"      , multiBind (spawn (myTerminalRemote ++ " delWindow")) (P.sendKey controlMask xK_w) kill)
-    , ("M-M1-<Backspace>"   , kill   )
+    , ("M-<Backspace>"      , nkclBind "DeleteBuffer" (P.sendKey (controlMask .|. shiftMask) xK_BackSpace) (P.sendKey controlMask xK_w) kill)
+    , ("M-M1-<Backspace>"   , kill)
     , ("M-<Delete>"         , confirmPrompt myPromptTheme "kill all" killAll)
 
-    , ("M-<Down>"           , multiBind (spawn (myTerminalRemote ++ " tabSwap Right Down")) (P.sendKey controlMask xK_Tab) (bindOn LD [("Tabs", windows W.focusDown)]))
-    , ("M-<Up>"             , multiBind (spawn (myTerminalRemote ++ " tabSwap Left Up")) (P.sendKey (controlMask .|. shiftMask) xK_Tab) (bindOn LD [("Tabs", windows W.focusUp)]))
-    , ("M-M1-<Down>"        , bindOn LD [("Tabs", windows W.focusDown)])
-    , ("M-M1-<Up>"          , bindOn LD [("Tabs", windows W.focusUp)])
-    , ("M-t"                , multiBind (P.sendKey (controlMask .|. shiftMask) xK_t) (P.sendKey controlMask xK_t) (spawn ""))
+    , ("M-<Left>"           , kcBind (P.sendKey (controlMask .|. shiftMask) xK_Left) (P.sendKey (controlMask .|. shiftMask) xK_Tab))
+    , ("M-<Right>"          , kcBind (P.sendKey (controlMask .|. shiftMask) xK_Right) (P.sendKey controlMask xK_Tab))
+    , ("M-<Down>"           , bindOn LD [("Tabs", windows W.focusDown)])
+    , ("M-<Up>"             , bindOn LD [("Tabs", windows W.focusUp)])
 
-    , ("M-f"                , kittyBind " kittyFullscreen"  (toggleLayout FULL))
+
+    , ("M-f"                , klBind " kittyFullscreen"  (toggleLayout FULL))
     , ("M-M1-f"             , toggleLayout FULL)
     , ("M-M1-S-f"           , toggleLayout FULL)
     , ("M-s"                , toggleLayout FULLBAR)
     , ("M-c"                , toggleLayout FULLCENTER)
 
-    , ("M-e"                , upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")])
-
-    , ("M-h"                , kittyBind " moveWindow left h"   (upPointer $ windowGo L True))
-    , ("M-j"                , kittyBind " moveWindow bottom j" (upPointer $ windowGo D True))
-    , ("M-k"                , kittyBind " moveWindow top k"    (upPointer $ windowGo U True))
-    , ("M-l"                , kittyBind " moveWindow right l"  (upPointer $ windowGo R True))
+    , ("M-h"                , nklBind "KittyNavigateleft"   " moveWindow left h" (upPointer $ windowGo L True))
+    , ("M-j"                , nklBind "KittyNavigatebottom" " moveWindow bottom j" (upPointer $ windowGo D True))
+    , ("M-k"                , nklBind "KittyNavigatetop"    " moveWindow top k" (upPointer $ windowGo U True))
+    , ("M-l"                , nklBind "KittyNavigateright"  " moveWindow right l" (upPointer $ windowGo R True))
     , ("M-M1-S-h"           , upPointer $ windowGo L True)
     , ("M-M1-S-j"           , upPointer $ windowGo D True)
     , ("M-M1-S-k"           , upPointer $ windowGo U True)
@@ -356,14 +356,13 @@ myKeys =
     , ("M-M1-k"             , upPointer $ windowSwap U True)
     , ("M-M1-l"             , upPointer $ windowSwap R True)
 
-    , ("M-m"                , kittyBind " mainMove"   (upPointer $ swapPromote' False))
+    , ("M-m"                , klBind " mainMove"   (upPointer $ swapPromote' False))
     , ("M-M1-m"             , upPointer $ swapPromote' False)
     , ("M-M1-S-m"           , upPointer $ swapPromote' False)
+    , ("M-v"                , myFocusMaster)
+
     , ("M-y"                , upPointer $ withFocused toggleFloat)
     , ("M-M1-y"             , upFocus sinkAll)
-    -- , ("M-h"                , bindFirst [(title =? "MainEditor", spawn "nvr --servername /tmp/nvr-server-1 --nostart -c 'KittyNavigateleft'")
-    --                         ,(className =? "kitty", spawn (myTerminalRemote ++ " moveWindow left h"))
-    --                         ,(pure True,upPointer $ windowGo L True)])
 
     , ("M-,"                , sendMessage (IncMasterN (-1)))
     , ("M-."                , sendMessage (IncMasterN 1))
@@ -378,8 +377,10 @@ myKeys =
     , ("M-M1-r"             , upFocus $ sendMessage ToggleStackDir)
     , ("M-x"                , upFocus $ sendMessage ToggleMiddle)
 
-    , ("M-<Space>"          , upFocus $ toggleWS' ["NSP"])
-    , ("M-M1-<Space>"       , upFocus $ shiftToggleWS' ["NSP"])
+    , ("M-o"                , upPointer toggleFocus)
+    , ("M-M1-o"             , upPointer swapWithLast)
+    , ("M-a"                , upFocus $ toggleWS' ["NSP"])
+    , ("M-M1-a"             , upFocus $ shiftToggleWS' ["NSP"])
     ]
     ++ zipM "M-"            wsKeys [0..] (withNthWorkspace W.greedyView)
     ++ zipM "M-M1-"         wsKeys [0..] (withNthWorkspace W.shift)
@@ -405,20 +406,37 @@ myKeys =
                                          ,(wsTHESIS, allNamedScratchpadAction scratchpads work)
                                          ,("", allNamedScratchpadAction scratchpads personal)]
 
-        kittyBind kitty leftover = bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ kitty))
+        nklBind nvr kitty leftover = bindFirst [(title =? "MainEditor", spawn ("/home/oleete/.config/bin/nvrWS " ++ nvr))
+                                               ,(className =? "kitty", spawn (myTerminalRemote ++ kitty))
+                                               ,(pure True, leftover)]
+
+        rnklBind nvr kitty leftover = bindFirst [(title =? "MainEditor", nvr)
+                                                ,(className =? "kitty", spawn (myTerminalRemote ++ kitty))
+                                                ,(pure True, leftover)]
+
+        klBind kitty leftover = bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ kitty))
                                           ,(pure True, leftover)]
 
-        kittyBind2 kitty leftover = bindFirst [(className =? "kitty", kitty)
-                                               ,(pure True, leftover)]
+        clBind chrome leftover = bindFirst [(className =? "Google-chrome", chrome)
+                                           ,(pure True, leftover)]
 
-        chromeBind chrome leftover = bindFirst [(className =? "Google-chrome", chrome)
-                                               ,(pure True, leftover)]
+        kcBind kitty chrome = bindFirst [(className =? "kitty", kitty)
+                                        ,(className =? "Google-chrome", chrome)]
 
-        multiBind kitty chrome leftover = bindFirst [(className =? "kitty", kitty)
-                                                    ,(className =? "Google-chrome", chrome)
-                                                    ,(pure True, leftover)]
+        nkclBind nvr kitty chrome leftover = bindFirst [(title =? "MainEditor", spawn ("/home/oleete/.config/bin/nvrWS " ++ nvr))
+                                                       ,(className =? "kitty", kitty)
+                                                       ,(className =? "Google-chrome", chrome)
+                                                       ,(pure True, leftover)]
 
         toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle layout, focusUnderPointer ]
+
+myFocusMaster :: X ()
+myFocusMaster = withWindowSet $ \wset ->
+  case W.index wset of
+    []      -> pure ()
+    (x : _) -> if   Just x == W.peek wset
+               then toggleFocus
+               else windows W.focusMaster
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {} = M.fromList
@@ -461,15 +479,9 @@ myPP = def
     }
 
 myLogHook = do
-    fadeWindowsLogHook myFadeHook
     masterHistoryHook
-
-myFadeHook :: FadeHook
-myFadeHook = composeAll
-    [ opaque
-    , isUnfocused --> opacity 0.9
-    , isDialog --> opaque
-    ]
+    -- nsHideOnFocusLoss scratchpads
+    refocusLastLogHook 
 
 ----------------------------------------------------------------------------------------------------
 -- New Window Actions                                                                             --
@@ -526,6 +538,5 @@ myManageHook =
 ----------------------------------------------------------------------------------------------------
 
 myHandleEventHook :: Event -> X All
-myHandleEventHook = fadeWindowsEventHook
-                <+> handleEventHook def
+myHandleEventHook = handleEventHook def
                 <+> XMonad.Util.Hacks.windowedFullscreenFixEventHook

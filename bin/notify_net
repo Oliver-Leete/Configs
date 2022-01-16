@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dunstify -r 103 "$(nmcli -t device | rg -e "[^(dis)]connected" | sed -E -e 's/.*(wifi|ethernet).*:([^:])/\1: \2/')"
+dunstify -r 103 "$(nmcli -t device | rg -e "[^(dis)]connected" | rg -v -e "docker" | sed -E -e 's/.*(wifi|ethernet).*:([^:])/\1: \2/')"
 
 # if [[ "$net_stat" == *"ethernet"*"connected"* ]]; then
 #     connections=$(echo $net_stat | rg -e "connected")

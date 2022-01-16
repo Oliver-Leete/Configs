@@ -205,12 +205,31 @@ ls.snippets = {
             t({"", "", "\t\\end{tixzpicture}", "\\end{center}"})
 
         }),
-        s({trig="jul"}, {
-			t({"{\\large", ""}),
-			t({"\\begin{jllisting}[language=julia, style=jlcodestyle]", ""}),
-			t("\t"), i(0), t({"", ""}),
-			t({"\\end{jllisting}", ""}),
-			t({"}", ""})
+        s({trig="julia"}, {
+            t({"\\begin{algorithm}[htbp]", ""}),
+			t({"\t{\\large", ""}),
+			t({"\t\t\\begin{jllisting}[language=julia, style=jlcodestyle]", ""}),
+			i(0), t({"", ""}),
+			t({"\t\t\\end{jllisting}", ""}),
+			t({"\t}", ""}),
+			t("\t\\caption["), m(1, "^.-%."), t("]{"), i(1, "caption"), t("}\\label{alg:"), i(2), t({"}", ""}),
+            t({"\\end{algorithm}"})
+        }),
+        s({trig="fortran"}, {
+            t({"\\begin{algorithm}[htbp]", ""}),
+			t({"\t\\begin{Fortran}[1]", ""}),
+			i(0), t({"", ""}),
+			t({"\t\\end{Fortran}", ""}),
+			t("\t\\caption["), m(1, "^.-%."), t("]{"), i(1, "caption"), t("}\\label{alg:"), i(2), t({"}", ""}),
+            t({"\\end{algorithm}"})
+        }),
+        s({trig="pseudo"}, {
+            t({"\\begin{algorithm}[htbp]", ""}),
+			t({"\t\\begin{algorithmic}[1]", ""}),
+			i(0), t({"", ""}),
+			t({"\t\\end{algorithmic}", ""}),
+			t("\t\\caption["), m(1, "^.-%."), t("]{"), i(1, "caption"), t("}\\label{alg:"), i(2), t({"}", ""}),
+            t({"\\end{algorithm}"})
         }),
         s({trig="tab", name="table", dscr="my normal table settings"}, {
 			t({"\\begin{table}[htbp]", ""}),
@@ -367,3 +386,19 @@ ls.snippets = {
 -- stylua: ignore end
 
 require("luasnip/loaders/from_vscode").load({exclude={"tex"}})
+
+-- \begin{algorithm}[t]
+--     \begin{algorithmic}[1]
+--         \Procedure{Time Step Solver}{previous results, boundary conditions}
+--         \State previous temperature array $\gets$ array Setup(previous results)
+--         \State current temperature array $\gets$ empty
+
+--         \State conduction Solver(current temperature, previous temperature)
+--         \State boundary Solver(current temperature, previous temperature)
+
+--         \State \Return{current temperature array}
+
+--         \EndProcedure
+--     \end{algorithmic}
+--     \caption{Time step solver pseudocode}
+-- \end{algorithm}

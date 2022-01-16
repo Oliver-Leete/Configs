@@ -1,0 +1,4 @@
+#!/bin/bash
+
+WS=$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')
+nvr --servername /tmp/nvr-$WS --nostart -c $@

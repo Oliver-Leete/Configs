@@ -1,4 +1,3 @@
-
 # set PATH /usr/local/go/bin /home/oleete/.cargo/bin $PATH
 
 starship init fish | source
@@ -7,7 +6,8 @@ set -Ux EDITOR "nvrTab --remote-tab-wait"
 set -Ux VISUAL "nvrTab --remote-tab-wait"
 set -gx PATH /home/oleete/.cargo/bin /home/oleete/.yarn/bin /home/oleete/go/bin /home/oleete/.config/nvim/node_modules/tree-sitter-cli /home/oleete/.local/bin /home/oleete/.config/bin $PATH
 
-export PAGER="nvim +'Man!|set nowrap'"
+set WORKSPACE (wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')
+export PAGER="nvr --servername /tmp/nvr-$WORKSPACE -c 'Man!|set nowrap' -"
 
 # aliases
 alias neovim nvim
@@ -24,8 +24,6 @@ function shutdown
     end
 end
 alias exa "exa --colour=always --group-directories-first --icons"
-
-abbr nt "nvr --servername nvimsynctex"
 
 abbr vidir "vidir -v"
 abbr ns "n -S"

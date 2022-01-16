@@ -108,6 +108,8 @@ main () {
         toggle) toggle   ;;
         auto)   auto     ;;
         fing*)  report_fingerprint ;;
+        lidopen) lidopen ;;
+        lidclose) lidclose ;;
         *)      usage ;;
     esac
 
@@ -439,6 +441,39 @@ mirror () {
     execute "$FUNCNAME"
     }
 
+lidclose () {
+        if [ -f $CONFIG ]
+        then
+            fingerprint=$(generate_fingerprint)
+            . $CONFIG
+            eval "fingerprint_mode=\"\${${fingerprint}:-}\""
+        fi
+        # then run the fingerprinted mode or simply switch to
+        # external if no (or invalid) fingerprint is found
+        case ${fingerprint_mode:-} in
+            span) spanex ;;
+            internal) external ;;
+            external|spanex|mirror) $fingerprint_mode ;;
+            *) menu ;;
+        esac
+}
+
+lidopen () {
+        if [ -f $CONFIG ]
+        then
+            fingerprint=$(generate_fingerprint)
+            . $CONFIG
+            eval "fingerprint_mode=\"\${${fingerprint}:-}\""
+        fi
+        # then run the fingerprinted mode or simply switch to
+        # external if no (or invalid) fingerprint is found
+        case ${fingerprint_mode:-} in
+            spanex) span ;;
+            external) internal ;;
+            external|spanex|mirror) $fingerprint_mode ;;
+            *) menu ;;
+        esac
+}
 
 main $*
 

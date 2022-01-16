@@ -1,33 +1,11 @@
 #!/bin/bash
 
-kittyStore=$(kitty @ ls)
-if [ "$#" -ne "3" ]; then
-	commands=$(echo $kittyStore | jq ".[].tabs[].windows[] | select(.is_focused) | .foreground_processes[].cmdline[0]")
+old_id=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .id")
 
-	if [[ "$commands" == *"vim"* ]]; then
-		titles=$(echo $kittyStore | jq ".[].tabs[].windows[] | select(.is_focused) | .title")
-
-		if [[ "$titles" =~ \"MainEditor\" ]]; then
-			tabID=$(echo $kittyStore | jq ".[].tabs[] | select(.is_focused) | .id")
-			nvr --servername "/tmp/nvr-server-$tabID" --nostart -c "KittyNavigate$1"
-			exit
-        elif [[ "$titles" =~ Synctex ]]; then
-			tabID=$(echo $kittyStore | jq ".[].tabs[] | select(.is_focused) | .id")
-			nvr --servername "/tmp/nvimsynctex" --nostart -c "KittyNavigate$1"
-			exit
-		else
-			kitty @ send-text ";KittyNavigate$1\n"
-			exit
-		fi
-	fi
-fi
-
-old_id=$(echo $kittyStore | jq ".[].tabs[].windows[] | select(.is_focused) | .id")
-
-kitty @ kitten neighboring_window.py $1
+kitty @ kitten neighboring_window.py "$1"
 
 new_id=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .id")
 
 if [ "$old_id" -eq "$new_id" ]; then
-	xdotool key super+shift+meta+$2
+	xdotool key super+shift+meta+"$2"
 fi

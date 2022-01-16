@@ -1,12 +1,8 @@
 #!/bin/bash
 
-if [[ "$(wmctrl -d | grep '*')" == *"PhD"* ]]; then
-    serverID="nvimsynctex"
-    winTitle="MainEditor (Synctex)"
-else
-    serverID="nvr-server-$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .id")"
-    winTitle="MainEditor"
-fi
+WS=$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')
+serverID="nvr-$WS"
+winTitle="MainEditor"
 
 TITLES=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[].title")
 
