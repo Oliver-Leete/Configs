@@ -4,7 +4,7 @@ import time
 
 #--- set commands below
 screen_command = "/home/oleete/.config/bin/displayctl auto"
-net_command = "/home/oleete/.config/bin/notify_net"
+net_command = "/home/oleete/.config/bin/statusNotify net"
 lid_open_command = "/home/oleete/.config/bin/displayctl lidopen"
 lid_closed_command = "/home/oleete/.config/bin/displayctl lidclose"
 #---

@@ -66,6 +66,13 @@ nmap("N", "v:lua.commandRepeat('[', 'dirJumps')", expr)
 xmap("N", "v:lua.commandRepeat('[', 'dirJumps')", expr)
 omap("N", "v:lua.commandRepeat('[', 'dirJumps')", expr)
 
+nmap("<right>", "v:lua.commandRepeat(']', 'dirJumps')", expr)
+xmap("<right>", "v:lua.commandRepeat(']', 'dirJumps')", expr)
+omap("<right>", "v:lua.commandRepeat(']', 'dirJumps')", expr)
+nmap("<left>", "v:lua.commandRepeat('[', 'dirJumps')", expr)
+xmap("<left>", "v:lua.commandRepeat('[', 'dirJumps')", expr)
+omap("<left>", "v:lua.commandRepeat('[', 'dirJumps')", expr)
+
 mapxName.name("[", "Backward Leader")
 nnoremap("[[", function() markGoCentre("TSTextobjectGotoPreviousStart @function.outer", "s")end, "Scope")
 nnoremap("[]", function() markGoCentre("TSTextobjectGotoPreviousEnd @function.outer", "S")end, "Scope")

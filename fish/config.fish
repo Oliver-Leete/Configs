@@ -47,6 +47,7 @@ alias .... "cd ../../.."
 alias ..... "cd ../../../.."
 
 abbr  htop 'htop -t'
+alias lzd lazydocker
 
 # Git abbreviations
 alias g git

@@ -151,7 +151,7 @@ doL res m s dir n c f mf r st
 
 tileSlim :: Rational -> Rational -> Rectangle -> Int -> Int -> Int -> [Rectangle]
 tileSlim f mf r n c nwin
-    | nstack >= nwin = map modY (splitHorizontally nwin r)
+    | nstack >= nwin = map (`modY` r) (splitHorizontally nwin r)
     | ncol == 0 && nstack >= 1 = rep c modR1 ++ splitVertically nstack modR2
     | nmain == 0 && nstack >= 1 = rep c modS1 ++ splitVertically nstack modS2
     | (ncol == 0 || nmain == 0) && nstack == 0 = rep c r
@@ -161,13 +161,13 @@ tileSlim f mf r n c nwin
             (r21, r22) = splitVerticallyBy (if mf<0 then 1+2*mf else mf) modR2
 
 
-            modR1 = modY r1
-            modR2 = modY r2
+            modR1 = modY r1 r
+            modR2 = modY r2 r
 
             fs = f/2
             (s1, s2) = splitHorizontallyBy (if fs<0 then 1+2*fs else fs) r
-            modS1 = modY s1
-            modS2 = modY s2
+            modS1 = modY s1 r
+            modS2 = modY s2 r
 
             nmain
                 | nwin <= n = nwin
@@ -180,8 +180,8 @@ tileSlim f mf r n c nwin
 
 newWide ::Bool -> Bool -> Bool -> Int -> Int -> Int -> Rational -> Rational -> Rectangle -> [Rectangle]
 newWide m s d n c nwin f mf r
-    | c == 0 = map modY (splitHorizontally nwin r)
-    | nwin <= ncol + nmain = map modY (map fst listCols)
+    | c == 0 = map (`modY` r) (splitHorizontally nwin r)
+    | nwin <= ncol + nmain = map (`modY` r) (map fst listCols)
     | otherwise = listWithStack
     where   startPoint
                 | m && s     && even (nmain+ncol)               = toInteger (rect_x r) + (floor (nmain%2) * fromIntegral width) + (ceiling (ncol%2) * fromIntegral colWidth)
@@ -296,19 +296,19 @@ splitColumns list minWidth stackRect mf d bigRect
     where   rect = fst $ head list
             index = snd $ head list
             listN = tail list
-            modMastRect = modY masterRect
-            modRect = modY rect
+            modMastRect = modY masterRect bigRect
+            modRect = modY rect bigRect
             (masterRect, stackRectAdd) = splitVerticallyBy mf rect
             stackRectN
                 | d     = rectangleDiff stackRect stackRectAdd
                 | otherwise = rectangleDiff stackRectAdd stackRect
 
-modY :: Rectangle -> Rectangle
-modY (Rectangle sx sy sw sh) =
+modY :: Rectangle -> Rectangle -> Rectangle
+modY (Rectangle sx sy sw sh) (Rectangle bx _ bw _)=
     Rectangle sx y sw h
     -- where   ymoddifier= if (toInteger (fromIntegral sx + sw - 8) < toInteger ( bx + ceiling (1/3 * toRational bw))) || (toInteger (8 + sx) > toInteger ( bx + ceiling (2/3 * toRational bw)))
     -- where   ymoddifier= if (toInteger (fromIntegral sx + sw - 8) < toInteger ( bx + ceiling (1/3 * toRational bw))) -- || 
-    where   ymoddifier= if toInteger (8 + sx) < 1280
+    where   ymoddifier= if toInteger (8 + sx) < toInteger bx + 1280
                         then 31
                         else 0
             y = sy + ymoddifier

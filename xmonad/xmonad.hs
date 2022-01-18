@@ -241,29 +241,27 @@ myPromptTheme = def
 ----------------------------------------------------------------------------------------------------
 -- Layouts                                                                                        --
 ----------------------------------------------------------------------------------------------------
-mySpacing = spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
-
 data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
 
-barFull = renamed [Replace "Tabs"] $ mySpacing
+barFull = renamed [Replace "Tabs"]
         $ SimpleFocus 1 (reSize/2) 0
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
     transform FULLCENTER x k = k centerFull (const x)
 
-centerFull = renamed [Replace "Tabs"] $ mySpacing
+centerFull = renamed [Replace "Tabs"]
            $ SimpleFocus (1/3) (reSize/2) 1280
 
 myLayoutHook= smartBorders
+            $ showWName' myShowWNameTheme
+            $ spacingRaw True (Border gap gap gap gap) True (Border gap gap gap gap) True
             $ mkToggle (single FULL)
             $ mkToggle (single FULLBAR)
             $ mkToggle (single FULLCENTER)
             $ renamed [Replace "Notebook"]
-            $ showWName' myShowWNameTheme
-            $ mySpacing
               notebookLayout
     where
     notebookMulti   = Notebook 1000  True True True 1 2 reSize 2 (2/3)
@@ -293,7 +291,7 @@ myKeys =
     , ("M-M1-q"             , spawn "cd /home/oleete/.config/xmonad; stack install; xmonad --recompile; xmonad --restart; cd -")
     , ("M-S-q"              , confirmPrompt myPromptTheme "Quit XMonad" $ io exitSuccess)
 
-    , ("M-t"                      , spawn "/home/oleete/.config/bin/rofiScript")
+    , ("M-p"                      , spawn "/home/oleete/.config/bin/rofiScript")
     , ("<XF86MonBrightnessDown>"  , spawn "/home/oleete/.config/bin/brightness -dec 5")
     , ("<XF86MonBrightnessUp>"    , spawn "/home/oleete/.config/bin/brightness -inc 5")
     , ("<XF86AudioLowerVolume>"   , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ -5%" )
