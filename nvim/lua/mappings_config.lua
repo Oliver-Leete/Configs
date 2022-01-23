@@ -138,6 +138,7 @@ nnoremap("mr", function() require'harpoon.ui'.nav_file(2)end)
 nnoremap("ms", function() require'harpoon.ui'.nav_file(3)end)
 nnoremap("mt", function() require'harpoon.ui'.nav_file(4)end)
 nnoremap("M", function() require'harpoon.ui'.toggle_quick_menu()end)
+nnoremap("mo", "<cmd>edit #<cr>")
 
 nmap("<c-_>", ",cc")
 xmap("<c-_>", ",c")
@@ -390,9 +391,12 @@ nnoremap(",k", "i<cr><esc>", "Split")
 xnoremap(",j", "J")
 xnoremap(",k", "c<cr><esc>")
 
+nmap("R", "<plug>(SubversiveSubstitute)", "Substitute")
+xmap("R", "<plug>(SubversiveSubstitute)", "Substitute")
+
 mapxName.name(",c", "Comment")
-nmap(",r", "<plug>(SubversiveSubstitute)", "Substitute")
-xmap(",r", "<plug>(SubversiveSubstitute)", "Substitute")
+nnoremap(",r", "R", "Overwrite")
+xnoremap(",r", "R", "Overwrite")
 nmap(",t", "<Plug>(EasyAlign)", "Easy Allign")
 xmap(",t", "<Plug>(EasyAlign)", "Align")
 

@@ -206,14 +206,14 @@ ls.snippets = {
 
         }),
         s({trig="julia"}, {
-            t({"\\begin{algorithm}[htbp]", ""}),
+            t({"\\begin{codeblock}[htbp]", ""}),
 			t({"\t{\\large", ""}),
 			t({"\t\t\\begin{jllisting}[language=julia, style=jlcodestyle]", ""}),
 			i(0), t({"", ""}),
 			t({"\t\t\\end{jllisting}", ""}),
 			t({"\t}", ""}),
-			t("\t\\caption["), m(1, "^.-%."), t("]{"), i(1, "caption"), t("}\\label{alg:"), i(2), t({"}", ""}),
-            t({"\\end{algorithm}"})
+			t("\t\\caption["), m(1, "^.-%."), t("]{"), i(1, "caption"), t("}\\label{lst:"), i(2), t({"}", ""}),
+            t({"\\end{codeblock}"})
         }),
         s({trig="fortran"}, {
             t({"\\begin{algorithm}[htbp]", ""}),

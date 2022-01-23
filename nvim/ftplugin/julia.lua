@@ -29,7 +29,8 @@ nnoremap("<localleader>iw", [["<cmd>silent !kittyPersistent infilterm juliainfil
 nnoremap("<localleader>iW", [["<cmd>silent !kittyPersistent infilterm juliainfil '@descend_code_warntype " . getline(".") . "'<cr>"]], "Cthulu's Warning (Line)")
 nnoremap("<localleader>iq", "<cmd>silent !kittyPersistent infilterm juliainfil @exit<cr>", "Quit")
 
-nnoremap("<leader>mm", [[<cmd>silent !kittyOneShot maketerm "~/.config/nvim/filetype/julia/precompile"<cr>]], "Precompile")
+nnoremap("<leader>mm", [[<cmd>silent !kittyOneShot maketerm "~/.config/nvim/filetype/julia/runExample"<cr>]], "Run Example Script")
+nnoremap("<leader>mp", [[<cmd>silent !kittyOneShot maketerm "~/.config/nvim/filetype/julia/precompile"<cr>]], "Precompile")
 nnoremap("<leader>mt", [[<cmd>silent !kittyOneShot maketerm "~/.config/nvim/filetype/julia/test"<cr>]], "Test Package")
 nnoremap("<leader>mc", [[<cmd>silent !kittyOneShot maketerm "~/.config/nvim/filetype/julia/testCov"<cr>]], "Coverage Check Package")
 nnoremap("<leader>mb", [[<cmd>silent !kittyOneShot maketerm "~/.config/nvim/filetype/julia/benchmark"<cr>]], "Benckmark Package")

@@ -53,7 +53,6 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.Notebook
 import XMonad.Layout.PerScreen
 import XMonad.Layout.PerWorkspace
-import XMonad.Layout.Renamed
 import XMonad.Layout.ShowWName
 import XMonad.Layout.SimpleFocus
 import XMonad.Layout.Spacing
@@ -64,7 +63,6 @@ import XMonad.Util.Hacks
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.Paste as P
 import XMonad.Util.SpawnOnce
-
 
 import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Actions.WithAll (killAll)
@@ -78,7 +76,7 @@ main = do
     xmonad
         $ dynamicProjects projects
         $ withNavigation2DConfig myNav2DConf
-        $ withSB mySB
+        $ dynamicSBs barSpawner
         $ ewmh
         $ docks myConfig
 
@@ -105,18 +103,19 @@ myConfig = def
 ----------------------------------------------------------------------------------------------------
 wsTMP    = "Tmp"
 wsTMP2   = "Tmp2"
-wsPRO1   = "Print"
-wsPRO2   = "Dnd"
-wsCON    = "Configs"
 wsPER    = "Home"
+wsPER1   = "Home1"
+ws3D     = "Print"
+wsDND    = "Dnd"
+wsCON    = "Configs"
 wsWRK    = "Wrk"
-wsSIM    = "Sim wrk"
-wsTHESIS = "PhD wrk"
-wsEXP    = "Exp wrk"
+wsWRK1   = "Wrk1"
+wsSIM    = "Sim"
+wsTHESIS = "Thesis"
+wsEXP    = "Exp"
 
 myWorkspaces :: [[Char]]
--- myWorkspaces = [wsTMP, wsPRO1, wsPRO2, wsCON, wsPER, wsWRK, wsSIM, wsEXP, wsTHESIS, wsTMP2]
-myWorkspaces = [wsTMP, wsPER, wsPRO1, wsCON, wsPRO2, wsEXP, wsSIM, wsTHESIS, wsWRK, wsTMP2]
+myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1]
 
 projects :: [Project]
 projects =
@@ -129,42 +128,40 @@ projects =
                 , projectDirectory  = "/tmp"
                 , projectStartHook  = Just $ return ()
                 }
-    , Project   { projectName       = wsPRO1
+    , Project   { projectName       = ws3D
                 , projectDirectory  = "~/Projects/Printing"
-                , projectStartHook  = Just $ do spawnOn wsPRO1 "prusa-slicer"
+                , projectStartHook  = Just $ do spawnOn ws3D "prusa-slicer"
                 }
-    , Project   { projectName       = wsPRO2
+    , Project   { projectName       = wsDND
                 , projectDirectory  = "~/Projects/Rpgs"
-                , projectStartHook  = Just $ do spawnOn wsPRO2 (myLongBrowser ++ " --new-window 'https://roll20.net/welcome'")
+                , projectStartHook  = Just $ spawnOn wsDND myBrowser
                 }
     , Project   { projectName       = wsCON
                 , projectDirectory  = "~/.config"
-                , projectStartHook  = Just $ do spawnOn wsCON (myTerminal ++ " --session=/home/oleete/.config/kitty/config.conf")
+                , projectStartHook  = Just $ do spawnOn wsCON myTerminal
                                                 spawnOn wsCON ("sleep .5; " ++ myBrowser)
                 }
     , Project   { projectName       = wsPER
                 , projectDirectory  = "~/PersonalDrive"
-                , projectStartHook  = Just $ do spawnOn wsPER (myLongBrowser ++ " --new-window 'github.com' 'feedly.com/i/latest' 'youtube.com/feed/subscriptions' 'coinbase.com'")
+                , projectStartHook  = Just $ do spawnOn wsPER myBrowser
                 }
     , Project   { projectName       = wsWRK
                 , projectDirectory  = "~/UniDrive"
-                , projectStartHook  = Just $ do spawnOn wsWRK (myLongBrowser ++ "-wrk --new-window 'sheffield.ac.uk' 'gmail.com' 'calendar.google.com' "
-                                                               ++ "'chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html' 'keep.google.com' "
-                                                               ++ "'drive.google.com' 'github.com/Oliver-Leete/ThesisLatex' 'feedly.com/i/latest' 'paperpile.com/app'")
+                , projectStartHook  = Just $ do spawnOn wsWRK myBrowser
                 }
     , Project   { projectName       = wsSIM
                 , projectDirectory  = "~/Projects/PowderModel"
-                , projectStartHook  = Just $ do spawnOn wsSIM (myTerminal ++ " --session=/home/oleete/.config/kitty/sim.conf")
+                , projectStartHook  = Just $ do spawnOn wsSIM myTerminal
                                                 spawnOn wsSIM ("sleep .2; " ++ myBrowser)
                 }
     , Project   { projectName       = wsEXP
                 , projectDirectory  = "~/Projects/JuliaPlotting"
-                , projectStartHook  = Just $ do spawnOn wsEXP (myTerminal ++ " --session=/home/oleete/.config/kitty/exp.conf")
+                , projectStartHook  = Just $ do spawnOn wsEXP myTerminal
                                                 spawnOn wsEXP ("sleep .2; " ++ myBrowser)
                 }
     , Project   { projectName       = wsTHESIS
                 , projectDirectory  = "~/Projects/Thesis"
-                , projectStartHook  = Just $ do spawnOn wsTHESIS (myTerminal ++ " --session=/home/oleete/.config/kitty/thesis.conf")
+                , projectStartHook  = Just $ do spawnOn wsTHESIS myTerminal
                                                 spawnOn wsTHESIS ("sleep .2; " ++ myBrowser)
                 }
     ]
@@ -175,7 +172,6 @@ projects =
 myTerminal     = "/home/oleete/.config/bin/kittyMaker"
 myTerminalRemote = "/home/oleete/.config/bin/kittyRemote"
 myBrowser      = "/home/oleete/.config/bin/browser"
-myLongBrowser  = "google-chrome-stable --user-data-dir=/home/oleete/.config/browser/google-chrome-stable"
 myBrowserClass = "google-chrome-stable"
 
 discordCommand         = "discord --no-sandbox"
@@ -245,23 +241,20 @@ data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
 
-barFull = renamed [Replace "Tabs"]
-        $ SimpleFocus 1 (reSize/2) 0
+barFull = SimpleFocus 1 (reSize/2) 0
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
     transform FULLCENTER x k = k centerFull (const x)
 
-centerFull = renamed [Replace "Tabs"]
-           $ SimpleFocus (1/3) (reSize/2) 1280
+centerFull = SimpleFocus (1/3) (reSize/2) 1280
 
 myLayoutHook= smartBorders
             $ showWName' myShowWNameTheme
-            $ spacingRaw True (Border gap gap gap gap) True (Border gap gap gap gap) True
             $ mkToggle (single FULL)
+            $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
             $ mkToggle (single FULLBAR)
             $ mkToggle (single FULLCENTER)
-            $ renamed [Replace "Notebook"]
               notebookLayout
     where
     notebookMulti   = Notebook 1000  True True True 1 2 reSize 2 (2/3)
@@ -269,7 +262,7 @@ myLayoutHook= smartBorders
     notebookColumns = Notebook 1000 False True True 4 4 reSize 2 (2/3)
     notebookLaptop = Notebook 1000 True False False 1 2 reSize 2 (2/3)
     notebookLayout = onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns
-                   $ ifWider 1920 (onWorkspaces [wsTHESIS, wsPRO1] notebookThesis notebookMulti) notebookLaptop
+                   $ ifWider 1920 (onWorkspaces [wsTHESIS, ws3D] notebookThesis notebookMulti) notebookLaptop
 
 ----------------------------------------------------------------------------------------------------
 -- Keybindings                                                                                    --
@@ -291,16 +284,17 @@ myKeys =
     , ("M-M1-q"             , spawn "cd /home/oleete/.config/xmonad; stack install; xmonad --recompile; xmonad --restart; cd -")
     , ("M-S-q"              , confirmPrompt myPromptTheme "Quit XMonad" $ io exitSuccess)
 
-    , ("M-p"                      , spawn "/home/oleete/.config/bin/rofiScript")
+    , ("M-f"                      , spawn "/home/oleete/.config/bin/rofiScript")
+    , ("M-p"                      , spawn "rofi -matching fuzzy -show drun -show-icons")
     , ("<XF86MonBrightnessDown>"  , spawn "/home/oleete/.config/bin/brightness -dec 5")
     , ("<XF86MonBrightnessUp>"    , spawn "/home/oleete/.config/bin/brightness -inc 5")
     , ("<XF86AudioLowerVolume>"   , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ -5%" )
     , ("<XF86AudioRaiseVolume>"   , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ +5%" )
     , ("<XF86AudioMute>"          , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ 0%" )
     , ("<XF86Display>"            , spawn "/home/oleete/.config/bin/displayctl" )
-    , ("<XF86AudioPlay>"          , spawn "playerctl play-pause")
-    , ("<XF86AudioStop>"          , spawn "playerctl play-pause")
-    , ("<XF86AudioPause>"         , spawn "playerctl play-pause")
+    , ("<XF86AudioPlay>"          , spawn "playerctl play")
+    , ("<XF86AudioStop>"          , spawn "playerctl stop")
+    , ("<XF86AudioPause>"         , spawn "playerctl pause")
     , ("<XF86AudioPrev>"          , spawn "playerctl previous")
     , ("<XF86AudioNext>"          , spawn "playerctl next")
     , ("<Print>"                  , spawn "/home/oleete/.config/bin/screencapt area")
@@ -314,7 +308,6 @@ myKeys =
 
     , ("M-i"                , clBind (P.sendKey controlMask xK_t) (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
     , ("M-M1-i"             , upPointer $ spawn myBrowser)
-    , ("M-S-i"              , upPointer altBrowser)
 
     , ("M-e"                , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
 
@@ -327,18 +320,18 @@ myKeys =
 
     , ("M-<Backspace>"      , nkclBind "DeleteBuffer" (P.sendKey (controlMask .|. shiftMask) xK_BackSpace) (P.sendKey controlMask xK_w) kill)
     , ("M-M1-<Backspace>"   , kill)
-    , ("M-<Delete>"         , confirmPrompt myPromptTheme "kill all" killAll)
+    -- , ("M-<Delete>"         , confirmPrompt myPromptTheme "kill all" killAll)
 
     , ("M-<Left>"           , kcBind (P.sendKey (controlMask .|. shiftMask) xK_Left) (P.sendKey (controlMask .|. shiftMask) xK_Tab))
     , ("M-<Right>"          , kcBind (P.sendKey (controlMask .|. shiftMask) xK_Right) (P.sendKey controlMask xK_Tab))
-    , ("M-<Down>"           , bindOn LD [("Tabs", windows W.focusDown)])
-    , ("M-<Up>"             , bindOn LD [("Tabs", windows W.focusUp)])
+    , ("M-<Down>"           , windows W.focusDown)
+    , ("M-<Up>"             , windows W.focusUp)
 
 
-    , ("M-f"                , klBind " kittyFullscreen"  (toggleLayout FULL))
-    , ("M-M1-f"             , toggleLayout FULL)
-    , ("M-M1-S-f"           , toggleLayout FULL)
-    , ("M-s"                , toggleLayout FULLBAR)
+    , ("M-z"                , klBind " kittyFullscreen"  (toggleLayout FULL))
+    , ("M-M1-z"             , toggleLayout FULL)
+    , ("M-M1-S-z"           , toggleLayout FULL)
+    , ("M-x"                , toggleLayout FULLBAR)
     , ("M-c"                , toggleLayout FULLCENTER)
 
     , ("M-h"                , nklBind "KittyNavigateleft"   " moveWindow left h" (upPointer $ windowGo L True))
@@ -371,9 +364,9 @@ myKeys =
     , ("M-M1-["             , sendMessage MirrorShrink)
     , ("M-M1-]"             , sendMessage MirrorExpand)
 
-    , ("M-r"                , upFocus $ sendMessage ToggleSide)
-    , ("M-M1-r"             , upFocus $ sendMessage ToggleStackDir)
-    , ("M-x"                , upFocus $ sendMessage ToggleMiddle)
+    , ("M-w"                , upFocus $ sendMessage ToggleSide)
+    , ("M-M1-w"             , upFocus $ sendMessage ToggleStackDir)
+    , ("M-S-w"                , upFocus $ sendMessage ToggleMiddle)
 
     , ("M-o"                , upPointer toggleFocus)
     , ("M-M1-o"             , upPointer swapWithLast)
@@ -386,17 +379,12 @@ myKeys =
         upFocus a = sequence_ [a, focusUnderPointer]
         upPointer a = sequence_ [a, updatePointer (0.5, 0.5) (0.25, 0.25)]
 
-        wsKeys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+        wsKeys = ["S-4", "S-7", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
         zipM  m ks as f = zipWith (\k d -> (m ++ k, upFocus $ f d)) ks as
 
         toggleFloat w = windows (\s -> if M.member w (W.floating s)
                             then W.sink w s
                             else W.float w (W.RationalRect (1/4) (1/4) (1/2) (1/2)) s)
-
-        altBrowser = bindOn C.WS [(wsTMP2,   spawn myLongBrowser) ,(wsTMP,   spawn myLongBrowser)
-                               ,(wsWRK,   spawn myLongBrowser) ,(wsTHESIS,spawn myLongBrowser)
-                               ,(wsEXP,   spawn myLongBrowser) ,(wsSIM,   spawn myLongBrowser)
-                               ,("",      spawn (myLongBrowser ++ "-wrk"))]
 
         wrkNSP work personal = bindOn C.WS [(wsWRK, allNamedScratchpadAction scratchpads work)
                                          ,(wsSIM, allNamedScratchpadAction scratchpads work)
@@ -452,8 +440,7 @@ myMouseBindings XConfig {} = M.fromList
 
 myStartupHook :: X ()
 myStartupHook = do
-    killStatusBar "xmobar ~/.config/xmobar/xmobar.conf"
-    spawnStatusBar "xmobar ~/.config/xmobar/xmobar.conf"
+    killAllStatusBars
     spawn "feh --bg-fill --randomize ~/Pictures/wallpapers/"
     spawnOnce "xsetroot -cursor_name left_ptr"
     spawnOnce "picom -b --config ~/.config/picom/picom.conf"
@@ -465,7 +452,11 @@ myStartupHook = do
 -- Log                                                                                            --
 ----------------------------------------------------------------------------------------------------
 
-mySB = statusBarProp "xmobar" (clickablePP $ filterOutWsPP ["NSP"] myPP)
+mySB0 = statusBarPropTo "_XMONAD_LOG_0" "xmobar -x 0 ~/.config/xmobar/xmobar0.conf" (clickablePP $ filterOutWsPP ["NSP"] myPP)
+mySB1 = statusBarPropTo "_XMONAD_LOG_1" "xmobar -x 1 ~/.config/xmobar/xmobar1.conf" (clickablePP $ filterOutWsPP ["NSP"] myPP)
+mySB2 = statusBarPropTo "_XMONAD_LOG_2" "xmobar -x 2 ~/.config/xmobar/xmobar2.conf" (clickablePP $ filterOutWsPP ["NSP"] myPP)
+mySB3 = statusBarPropTo "_XMONAD_LOG_3" "xmobar -x 3 ~/.config/xmobar/xmobar3.conf" (clickablePP $ filterOutWsPP ["NSP"] myPP)
+
 myPP = def
     { ppCurrent = xmobarColor active "" . wrap ("<box type=Bottom width=2 mt=2 color=" ++ active ++ ">") "</box>"
     , ppVisible = xmobarColor active ""
@@ -475,6 +466,12 @@ myPP = def
     , ppSep = xmobarColor foreground "" " | "
     , ppOrder = reverse
     }
+
+barSpawner :: ScreenId -> IO StatusBarConfig
+barSpawner 0 = pure mySB0
+barSpawner 1 = pure mySB1
+barSpawner 2 = pure mySB2
+barSpawner _ = pure mySB3
 
 myLogHook = do
     masterHistoryHook

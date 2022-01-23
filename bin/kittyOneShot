@@ -19,5 +19,5 @@ if [ "$#" -eq 0 ]; then
 	kitty @ focus-window --match id:$ID
 else
 	kitty @ send-text --match id:$ID $@\\r
-	kitty @ send-text --match id:$ID nvrTab -q \( kitty @ get-text --match id:$ID --extent all \| psub \) \&\> /dev/null \\r
+	# kitty @ send-text --match id:$ID nvrTab -q \( kitty @ get-text --match id:$ID --extent all \| psub \) \&\> /dev/null \\r
 fi

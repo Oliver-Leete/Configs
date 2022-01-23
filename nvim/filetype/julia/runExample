@@ -1,0 +1,3 @@
+#!/bin/bash
+
+julia --banner no -t auto --project -i ./example.jl
