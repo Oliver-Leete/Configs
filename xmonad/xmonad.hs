@@ -108,14 +108,16 @@ wsPER1   = "Home1"
 ws3D     = "Print"
 wsDND    = "Dnd"
 wsCON    = "Configs"
+wsQMK    = "QMK"
 wsWRK    = "Wrk"
 wsWRK1   = "Wrk1"
 wsSIM    = "Sim"
 wsTHESIS = "Thesis"
 wsEXP    = "Exp"
+wsANSYS  = "ANSYS"
 
 myWorkspaces :: [[Char]]
-myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1]
+myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1, wsQMK, wsANSYS]
 
 projects :: [Project]
 projects =
@@ -141,6 +143,11 @@ projects =
                 , projectStartHook  = Just $ do spawnOn wsCON myTerminal
                                                 spawnOn wsCON ("sleep .5; " ++ myBrowser)
                 }
+    , Project   { projectName       = wsQMK
+                , projectDirectory  = "~/Projects/qmk_firmware"
+                , projectStartHook  = Just $ do spawnOn wsQMK myTerminal
+                                                spawnOn wsQMK ("sleep .5; " ++ myBrowser)
+                }
     , Project   { projectName       = wsPER
                 , projectDirectory  = "~/PersonalDrive"
                 , projectStartHook  = Just $ do spawnOn wsPER myBrowser
@@ -163,6 +170,11 @@ projects =
                 , projectDirectory  = "~/Projects/Thesis"
                 , projectStartHook  = Just $ do spawnOn wsTHESIS myTerminal
                                                 spawnOn wsTHESIS ("sleep .2; " ++ myBrowser)
+                }
+    , Project   { projectName       = wsANSYS
+                , projectDirectory  = "~/Projects/ANSYSpowderModel"
+                , projectStartHook  = Just $ do spawnOn wsEXP myTerminal
+                                                spawnOn wsEXP ("sleep .2; " ++ myBrowser)
                 }
     ]
 
@@ -204,6 +216,7 @@ foreground = "#C8C093"
 dull       = "#54546D"
 active     = "#76946A"
 yellow     = "#DCA561"
+warning    = "#C34043"
 
 -- sizes
 gap    = 4
@@ -233,6 +246,12 @@ myPromptTheme = def
     , height                = 30
     , position              = CenteredAt (1 / 4) (1 / 4)
     , autoComplete          = Nothing
+    }
+
+hotPromptTheme :: XPConfig
+hotPromptTheme = myPromptTheme
+    { bgColor               = warning
+    , fgColor               = background
     }
 ----------------------------------------------------------------------------------------------------
 -- Layouts                                                                                        --
@@ -284,7 +303,15 @@ myKeys =
     , ("M-M1-q"             , spawn "cd /home/oleete/.config/xmonad; stack install; xmonad --recompile; xmonad --restart; cd -")
     , ("M-S-q"              , confirmPrompt myPromptTheme "Quit XMonad" $ io exitSuccess)
 
-    , ("M-f"                      , spawn "/home/oleete/.config/bin/rofiScript")
+    , ("M-f M-f"            , spawn "/home/oleete/.config/bin/rofiScript")
+    , ("M-f f"              , spawn "/home/oleete/.config/bin/rofiScript")
+    , ("M-f M-w"            , spawn "/home/oleete/.config/bin/wsHarpoon menu")
+    , ("M-f w"              , spawn "/home/oleete/.config/bin/wsHarpoon menu")
+    , ("M-f M-g"            , spawn "/home/oleete/.config/bin/wsHarpoon moveMenu")
+    , ("M-f g"              , spawn "/home/oleete/.config/bin/wsHarpoon moveMenu")
+    , ("M-f M-p"            , spawn "rofi -matching fuzzy -show drun -show-icons")
+    , ("M-f p"              , spawn "rofi -matching fuzzy -show drun -show-icons")
+
     , ("M-p"                      , spawn "rofi -matching fuzzy -show drun -show-icons")
     , ("<XF86MonBrightnessDown>"  , spawn "/home/oleete/.config/bin/brightness -dec 5")
     , ("<XF86MonBrightnessUp>"    , spawn "/home/oleete/.config/bin/brightness -inc 5")
@@ -320,7 +347,7 @@ myKeys =
 
     , ("M-<Backspace>"      , nkclBind "DeleteBuffer" (P.sendKey (controlMask .|. shiftMask) xK_BackSpace) (P.sendKey controlMask xK_w) kill)
     , ("M-M1-<Backspace>"   , kill)
-    -- , ("M-<Delete>"         , confirmPrompt myPromptTheme "kill all" killAll)
+    , ("M-S-<Backspace>"    , confirmPrompt hotPromptTheme "kill all" killAll)
 
     , ("M-<Left>"           , kcBind (P.sendKey (controlMask .|. shiftMask) xK_Left) (P.sendKey (controlMask .|. shiftMask) xK_Tab))
     , ("M-<Right>"          , kcBind (P.sendKey (controlMask .|. shiftMask) xK_Right) (P.sendKey controlMask xK_Tab))
@@ -328,11 +355,16 @@ myKeys =
     , ("M-<Up>"             , windows W.focusUp)
 
 
-    , ("M-z"                , klBind " kittyFullscreen"  (toggleLayout FULL))
-    , ("M-M1-z"             , toggleLayout FULL)
-    , ("M-M1-S-z"           , toggleLayout FULL)
-    , ("M-x"                , toggleLayout FULLBAR)
-    , ("M-c"                , toggleLayout FULLCENTER)
+    , ("M-c M-f"            , klBind " kittyFullscreen" (P.sendKey noModMask xK_F11))
+    , ("M-c f"              , klBind " kittyFullscreen" (P.sendKey noModMask xK_F11))
+    , ("M-c M-w"            , toggleLayout FULL)
+    , ("M-c w"              , toggleLayout FULL)
+    , ("M-c M-s"            , toggleLayout FULLBAR)
+    , ("M-c s"              , toggleLayout FULLBAR)
+    , ("M-c M-c"            , toggleLayout FULLCENTER)
+    , ("M-c c"              , toggleLayout FULLCENTER)
+    , ("M-c M-x"            , nklBind "ZenMode" " kittyFullscreen" (toggleLayout FULLCENTER))
+    , ("M-c x"              , nklBind "ZenMode" " kittyFullscreen" (toggleLayout FULLCENTER))
 
     , ("M-h"                , nklBind "KittyNavigateleft"   " moveWindow left h" (upPointer $ windowGo L True))
     , ("M-j"                , nklBind "KittyNavigatebottom" " moveWindow bottom j" (upPointer $ windowGo D True))
@@ -364,14 +396,30 @@ myKeys =
     , ("M-M1-["             , sendMessage MirrorShrink)
     , ("M-M1-]"             , sendMessage MirrorExpand)
 
-    , ("M-w"                , upFocus $ sendMessage ToggleSide)
-    , ("M-M1-w"             , upFocus $ sendMessage ToggleStackDir)
-    , ("M-S-w"                , upFocus $ sendMessage ToggleMiddle)
+    , ("M-g"                , upFocus $ sendMessage ToggleSide)
+    , ("M-M1-g"             , upFocus $ sendMessage ToggleStackDir)
+    , ("M-S-g"              , upFocus $ sendMessage ToggleMiddle)
+
+    , ("M-a"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 1")
+    , ("M-r"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 2")
+    , ("M-s"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 3")
+    , ("M-t"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 4")
+    , ("M-M1-a"             , spawn "/home/oleete/.config/bin/wsHarpoon move 1")
+    , ("M-M1-r"             , spawn "/home/oleete/.config/bin/wsHarpoon move 2")
+    , ("M-M1-s"             , spawn "/home/oleete/.config/bin/wsHarpoon move 3")
+    , ("M-M1-t"             , spawn "/home/oleete/.config/bin/wsHarpoon move 4")
+
+    , ("M-w M-w"            , spawn "/home/oleete/.config/bin/wsHarpoon add")
+    , ("M-w w"              , spawn "/home/oleete/.config/bin/wsHarpoon add")
+    , ("M-w M-e"            , spawn "/home/oleete/.config/bin/wsHarpoon modify")
+    , ("M-w e"              , spawn "/home/oleete/.config/bin/wsHarpoon modify")
+    , ("M-w M-p"            , spawn "/home/oleete/.config/bin/wsHarpoon makePreset")
+    , ("M-w p"              , spawn "/home/oleete/.config/bin/wsHarpoon makePreset")
 
     , ("M-o"                , upPointer toggleFocus)
     , ("M-M1-o"             , upPointer swapWithLast)
-    , ("M-a"                , upFocus $ toggleWS' ["NSP"])
-    , ("M-M1-a"             , upFocus $ shiftToggleWS' ["NSP"])
+    , ("M-<Space>"          , upFocus $ toggleWS' ["NSP"])
+    , ("M-M1-<Space>"       , upFocus $ shiftToggleWS' ["NSP"])
     ]
     ++ zipM "M-"            wsKeys [0..] (withNthWorkspace W.greedyView)
     ++ zipM "M-M1-"         wsKeys [0..] (withNthWorkspace W.shift)
@@ -509,6 +557,7 @@ myManageHook =
             , className =? "Keep" -?> doRectFloat halfNhalf
             , className =? "WrkKeep" -?> doRectFloat halfNhalf
             , resource =? "sysMon" -?> doRectFloat (W.RationalRect (1 / 8) (1 / 8) (3 / 4) (3 / 4))
+            , resource =? "wsHarpoon" -?> doRectFloat (W.RationalRect (3 / 10) (3 / 10) (2 / 5) (2 / 5))
             , resource =? "console" -?> doRectFloat (W.RationalRect (4 / 7) (4 / 7) (2 / 5) (2 / 5))
             , resource =? "youtube music" -?> doRectFloat halfNhalf
             , resource =? "discord" -?> doRectFloat halfNhalf

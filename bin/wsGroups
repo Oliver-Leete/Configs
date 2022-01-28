@@ -1,0 +1,22 @@
+#!/bin/bash
+
+WS=$(wmctrl -d | cut -c33- | sed 's/ /-/')
+
+#Groups
+# Home - Home, Wrk, tmp
+# DnD - DnD, tmp, tmp
+# Configs - .configs, qmk, projects
+# EngEditors - PrusaSlicer, kiCAD, Freecad
+# PicEditors - Inkscape, Krita, gimp
+# MedEditors - kdenlive, audacity, blender
+
+# Thesis - Thesis, simulation, experimental
+
+
+case "$NUM" in
+    1) echo 1 ;;
+    2) echo 2 or 3 ;;
+    3) echo default
+    4) echo 1 ;;
+esac
+

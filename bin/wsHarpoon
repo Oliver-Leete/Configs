@@ -1,0 +1,76 @@
+#!/bin/bash
+
+HARPFILE="/home/oleete/.config/wsHarpoon"
+HARPFOLDER="/home/oleete/.config/Harpoon"
+
+main () {
+    case ${1:-menu} in
+        menu)    menu ;;
+        moveMenu)moveMenu ;;
+        add)     addWS ;;
+        modify)  modifyWS ;;
+        jump)    jumpToWS "$2" ;;
+        move)    moveToWS "$2" ;;
+        preset)  preset "$2" ;;
+        makePreset) makePreset ;;
+    esac
+}
+
+menu () {
+    items="$(wmctrl -d | cut -c33-)"
+    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
+    if [ ! -z "$result" ]; then
+        WS="$(wmctrl -d | rg -w "$result" | cut -d' ' -f1)"
+        wmctrl -s "$WS"
+    fi
+}
+
+moveMenu () {
+    items="$(wmctrl -d | cut -c33-)"
+    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
+    WIN=$(xdotool getwindowfocus)
+    if [ ! -z "$result" ]; then
+        WS="$(wmctrl -d | rg -w "$result" | cut -d' ' -f1)"
+        xdotool set_desktop_for_window "$WIN" "$WS"
+    fi
+}
+
+modifyWS () {
+    alacritty --class wsHarpoon -t 'System Monitor' -e "nvim" +"nnoremap <esc> :wq<cr>|nnoremap q :wq<cr>" "$HARPFILE"
+}
+
+addWS () {
+    WSnum="$(wmctrl -d | grep '*' | cut -d' ' -f1)"
+    WSname="$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')"
+    if ! rg -q "$WSname" "/home/oleete/.config/wsHarpoon"; then
+        echo "$WSnum" "$WSname" >> "$HARPFILE"
+    fi
+}
+
+jumpToWS () {
+    if [[ $(wc -l <"$HARPFILE") -ge $1 ]]; then
+        WS="$(cat "$HARPFILE" | head -"$1" | tail -1 | cut -d' ' -f1)"
+        wmctrl -s "$WS"
+    fi
+}
+
+moveToWS () {
+    WS="$(cat "$HARPFILE" | head -"$1" | tail -1 | cut -d' ' -f1)"
+    WIN=$(xdotool getwindowfocus)
+    xdotool set_desktop_for_window "$WIN" "$WS"
+}
+
+preset () {
+    echo
+    cat "$HARPFOLDER/$1" > "$HARPFILE"
+    jumpToWS 1
+}
+
+makePreset () {
+    NAME=$(rofi -matching fuzzy -l 0 -window-title "Preset Name" -dmenu "Preset Name")
+    if [ ! -z "$NAME" ]; then
+        cat "$HARPFILE" > "$HARPFOLDER/$NAME"
+    fi
+}
+
+main "$@"

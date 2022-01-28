@@ -2,7 +2,7 @@
 
 winTitle="MainEditor"
 
-TITLES=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[].title")
+TITLES=$(kitty @ ls | jq ".[].tabs[].windows[].title")
 
 if [[ "$TITLES" == *"$winTitle"* ]]; then
     kitty @ focus-window --match title:$winTitle

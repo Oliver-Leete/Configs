@@ -2,12 +2,12 @@
 
 vol () {
     result=$(rofi -matching fuzzy -l 0 -window-title "Volume" -dmenu "Volume")
-    /home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ $result%
+    /home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ "$result"%
 }
 
 brightness () {
     result=$(rofi -matching fuzzy -l 0 -window-title "Brightness" -dmenu "Brightness")
-    /home/oleete/.config/bin/brightness -set $result
+    /home/oleete/.config/bin/brightness -set "$result"
 }
 
 display () {
@@ -73,8 +73,13 @@ settings () {
     esac
 }
 
+wsPreset () {
+    preset=$((for item in "/home/oleete/.config/Harpoon"/*; do echo $(basename $item); done) | rofi -matching fuzzy -window-title "Workspace Presets" -dmenu "WorkspacePresets")
+    /home/oleete/.config/bin/wsHarpoon preset "$preset"
+}
+
 menu () {
-    items="lock play-pause apps utilities commands media display network power settings volume brightness windows sys-mon terminal calculator music discord tasks notes"
+    items="lock play-pause apps utilities commands media display network power settings volume brightness windows sys-mon terminal calculator music discord tasks notes presets"
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu")
     case ${result:-} in
         lock)       slock           ;;
@@ -97,6 +102,7 @@ menu () {
         music) xdotool key super+shift+m;;
         tasks) xdotool key super+shift+t;;
         notes) xdotool key super+shift+n;;
+        presets) wsPreset ;;
     esac
 }
 
@@ -120,4 +126,4 @@ main () {
     esac
 }
 
-main $*
+main "$@"

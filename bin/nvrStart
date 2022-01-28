@@ -4,12 +4,12 @@ WS=$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')
 serverID="nvr-$WS"
 winTitle="MainEditor"
 
-TITLES=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[].title")
+TITLES=$(kitty @ ls | jq ".[].tabs[].windows[].title")
 
 if ! [[ "$TITLES" == *"$winTitle"* ]]; then
 	kitty @ set-window-title $winTitle
 else
-	ID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows[] | select(.title==\"$winTitle\") | .id")
+	ID=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.title==\"MainEditor\") | .id")
 	kitty @ focus-window --match id:$ID
 fi
 

@@ -54,9 +54,6 @@ plug 'https://gitlab.com/Screwtapello/kakoune-inc-dec'
 map global normal <c-]> <a-)>
 map global normal <c-[> <a-(>
 
-map global normal : \;
-map global normal \; :
-
 hook global NormalIdle .* %{ wa }
 
 def ide %{

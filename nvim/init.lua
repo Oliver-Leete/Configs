@@ -75,6 +75,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'hrsh7th/cmp-path'
     Plug 'hrsh7th/cmp-nvim-lua'
     Plug 'hrsh7th/cmp-nvim-lsp'
+    Plug 'hrsh7th/cmp-omni'
     Plug 'petertriho/cmp-git'
     Plug 'hrsh7th/cmp-cmdline'
     Plug 'uga-rosa/cmp-dictionary'
@@ -97,6 +98,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-treesitter/playground'
     Plug 'ThePrimeagen/refactoring.nvim'
+
+    Plug 'petertriho/nvim-scrollbar'
 call plug#end()]])
 
 -- Disable builtins

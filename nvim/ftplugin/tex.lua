@@ -1,6 +1,8 @@
 nnoremap("<localleader><localleader>", "<cmd>TexlabForward<cr>", "Forward Search", mapxName.silent) 
 nnoremap("<localleader>r", "<cmd>Telescope bibtex bibtex theme=get_cursor<cr>", "References")
 nnoremap("<localleader>c", "<cmd>VimtexTocToggle<cr>", "Open TOC")
+nnoremap("<localleader>l", "<cmd>call g:custom_toc1.toggle()<cr>", "Open TOL")
+nnoremap("<localleader>t", "<cmd>call g:custom_toc2.toggle()<cr>", "Open TODO List")
 nnoremap("<localleader>v", "<cmd>VimtexView<cr>", "View Document")
 nnoremap("<localleader>w", "<cmd>VimtexCountWord<cr>", "Word Count")
 nnoremap("<localleader>W", "<cmd>VimtexCountWord!<cr>", "Word Count Report")
@@ -11,6 +13,7 @@ nnoremap("<localleader>s", "<cmd>lua require'telescope.builtin'.symbols{sources=
 nnoremap("<localleader>a", "<cmd>AngryReviewer<cr>", "Bring Forth The Angry One")
 nnoremap("<localleader>,", function() require'telescope'.extensions.dict.synonyms() end, "Synonyms")
 
+nnoremap("K", "<cmd>VimtexDocPackage<cr>")
 nnoremap("<leader>M", [[<cmd>silent !kittyOneShot buildterm "latexmk -verbose -file-line-error -synctex=1 -interaction=nonstopmode"<cr>]], "Build in Terminal")
 nnoremap("<leader>mm", "<cmd>VimtexCompileSS<cr>", "Build Project")
 nnoremap("<leader>mM", "<cmd>ProjectDo TexlabBuild<cr>", "Build Lowest Subfile")
@@ -18,8 +21,6 @@ nnoremap("<leader>mo", "<cmd>VimtexCompile<cr>", "Toggle Continuous Building")
 nnoremap("<leader>mc", "<cmd>VimtexClean<cr>", "Clear Build Files")
 nnoremap("<leader>mg", "<cmd>compiler textidote<cr><cmd>lmake!<cr><cmd>Trouble loclist<cr>", "Grammer Checking")
 xnoremap("<leader>mm", "<cmd>VimtexCompileSelected<cr>", "Build Selected")
-
-nnoremap("<leader>c", "<cmd>let panelRepeat='c'<cr><cmd>VimtexTocToggle<cr>", "Open TOC" )
 
 nmap("[s", "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-[[)zz", "Tex Section Start")
 nmap("[S", "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-[])zz", "Tex Section End")
@@ -95,10 +96,29 @@ vim.cmd([[let g:vimtex_view_automatic = 0]])
 vim.cmd(
     [[let g:vimtex_compiler_latexmk = { 'build_dir' : '', 'callback' : 1, 'continuous' : 0, 'executable' : 'latexmk', 'hooks' : [], 'options' : [ '-verbose', '-file-line-error', '-synctex=1', '-interaction=nonstopmode', ] }]]
 )
+vim.opt_local.conceallevel = 2
+vim.g.vimtex_syntax_conceal = {
+           ["accents"] = true,
+           ["cites"] = true,
+           ["fancy"] = true,
+           ["greek"] = true,
+           ["math_bounds"] = true,
+           ["math_delimiters"] = true,
+           ["math_fracs"] = true,
+           ["math_super_sub"] = false,
+           ["math_symbols"] = true,
+           ["sections"] = true,
+           ["styles"] = true,
+          }
 vim.cmd([[let g:vimtex_grammar_textidote={'jar':'~/.local/bin/textidote.jar', 'args':''}]])
 vim.cmd([[set errorformat=]])
 vim.cmd([[set errorformat+=%f(L%lC%c-L%\\d%\\+C%\\d%\\+):\ %m]])
 vim.cmd([[set errorformat+=%-G%.%#]])
+
+vim.cmd([[
+    let g:custom_toc1 = vimtex#toc#new({ 'name':'Tabel of labels', 'layers' : ['label'], 'todo_sorted' : 0, 'show_help' : 0, 'show_numbers' : 0, 'mode' : 1})
+    let g:custom_toc2 = vimtex#toc#new({ 'name':'TODO', 'layers' : ['todo'], 'todo_sorted' : 0, 'show_help' : 0, 'show_numbers' : 0, 'mode' : 1})
+]])
 
 vim.g.AngryReviewerEnglish = {'british'}
 
@@ -140,6 +160,10 @@ vim.g.projectionist_heuristics = {
             type = "chapSeven",
             alternate = "ProcessModel.tex",
         },
+        ["appendix/*.tex"] = {
+            type = "appendix",
+            alternate = "Appendix.tex",
+        },
         ["Scripts/Packages.tex"] = { type = "deps" },
         ["IntroductiontoAM.tex"] = { type = "chapOneMain" },
         ["PowderBedFusion.tex"] = { type = "chapTwoMain" },
@@ -157,3 +181,16 @@ if not PdfOpened then
     PdfOpened = true
     vim.cmd("VimtexView")
 end
+
+require('cmp').setup.buffer({
+    sources = {
+        { name = "luasnip" },
+        { name = "cmp_git" },
+        { name = 'omni' },
+        { name = "nvim_lsp" },
+        { name = "path" },
+        { name = "nvim_lua" },
+        { name = "buffer", keyword_lenght = 3 },
+        { name = "dictionary", keyword_lenght = 2},
+    },
+})

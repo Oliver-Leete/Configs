@@ -34,8 +34,8 @@ abbr rm "rm -i"
 abbr  fd "fd -H -L -I"
 
 abbr  lcd "exa -1 --icons"
-abbr  ls "exa -a -l --git --icons"
-abbr  lt "exa -a -l -T --level=2 --git --icons"
+abbr  ls "exa -a -l --icons"
+abbr  lt "exa -a -l -T --level=2 --icons"
 abbr  lg "exa -a -l -T --level=2 --git --git-ignore --icons"
 
 abbr -a bk backup
@@ -135,17 +135,16 @@ clear
 set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME
 test -f /home/oleete/.ghcup/env; and set -gx PATH $HOME/.cabal/bin /home/oleete/.ghcup/bin $PATH
 
-# TokyoNight Color Palette
-set -l foreground c0caf5
-set -l selection 33467C
-set -l comment 565f89
-set -l red f7768e
-set -l orange ff9e64
-set -l yellow e0af68
-set -l green 9ece6a
-set -l purple 9d7cd8
-set -l cyan 7dcfff
-set -l pink bb9af7
+set -l foreground DCD7BA
+set -l selection 2D4F67
+set -l comment 727169
+set -l red C34043
+set -l orange FF9E64
+set -l yellow C0A36E
+set -l green 76946A
+set -l purple 957FB8
+set -l cyan 7AA89F
+set -l pink D27E99
 
 # Syntax Highlighting Colors
 set -g fish_color_normal $foreground
@@ -168,7 +167,5 @@ set -g fish_pager_color_progress $comment
 set -g fish_pager_color_prefix $cyan
 set -g fish_pager_color_completion $foreground
 set -g fish_pager_color_description $comment
-set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME ; set -gx PATH $HOME/.cabal/bin /home/oleete/.ghcup/bin $PATH # ghcup-env
-
 set fish_greeting
 clear

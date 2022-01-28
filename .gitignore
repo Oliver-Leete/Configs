@@ -31,6 +31,8 @@ zsh/
 !/bin/*
 !/rofi/themes/*.rasi
 !/alacritty.yml
+!/broot/conf.hjson
+!/vifm/vifmrc
 
 /rofi-themes
 /bin/startupScript

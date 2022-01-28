@@ -41,13 +41,8 @@ require("gitsigns").setup({
     --         linehl     = false,
     --     },
     keymaps = {},
-    watch_index = {
-        interval = 1000,
-        follow_files = true
-    },
     numhl = true,
     sign_priority = 6,
-    status_formatter = nil,
 })
 -- DiffView.nvim
 
