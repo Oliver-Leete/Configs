@@ -7,8 +7,10 @@ vim.cmd([[set errorformat+=%-G%.%#]])
 vim.api.nvim_set_option("makeprg", [[julia\ -e\ \'using\ Pkg;\ Pkg.precompile()\']])
 vim.api.nvim_buf_set_option(0, "commentstring", [[#%s]])
 
-vim.api.nvim_buf_set_var(0, "replCommand", "juliaREPL")
-vim.api.nvim_buf_set_var(0, "debugCommand", "juliadebug")
+vim.b[0].replCommand = "juliaREPL"
+vim.b[0].replName = "JuliaREPL"
+vim.b[0].debugCommand = "juliadebug"
+vim.b[0].debugName = "JuliaDebug"
 
 local expr = mapxName.expr
 local buffer = mapxName.buffer
@@ -80,8 +82,6 @@ nnoremap("<leader>/S", [["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], 
     nnoremap("<leader>/nT", [[<cmd>EmainTest<cr>]], "Main Tests")
     nnoremap("<leader>/np", [[<cmd>Edeps<cr>]], "Project Dependencies")
 end)
-
-    -- FIX : description text making things much slower, maybe move back to whichkey for filetype things
 
 vim.g.projectionist_heuristics = {
     ["src/*.jl"] = {

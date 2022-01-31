@@ -84,5 +84,3 @@ require("indent_blankline").setup({
     filetype_exclude = { "qf", "outline", "vimplug", "undotree", "help", "DiffviewFiles", "juliadoc" },
     buftype_exclude = { "teriminal" },
 })
-
-require("scrollbar").setup()

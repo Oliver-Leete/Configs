@@ -57,7 +57,7 @@ import XMonad.Layout.ShowWName
 import XMonad.Layout.SimpleFocus
 import XMonad.Layout.Spacing
 
-import XMonad.Util.ClickableWorkspaces
+-- import XMonad.Util.ClickableWorkspaces
 import XMonad.Util.EZConfig
 import XMonad.Util.Hacks
 import XMonad.Util.NamedScratchpad
@@ -68,6 +68,7 @@ import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Actions.WithAll (killAll)
 import XMonad.Prompt
 import XMonad.Hooks.RefocusLast
+import XMonad.Prelude
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
 ----------------------------------------------------------------------------------------------------
@@ -500,12 +501,36 @@ myStartupHook = do
 -- Log                                                                                            --
 ----------------------------------------------------------------------------------------------------
 
-mySB0 = statusBarPropTo "_XMONAD_LOG_0" "xmobar -x 0 ~/.config/xmobar/xmobar0.conf" (clickablePP $ filterOutWsPP ["NSP"] myPP)
-mySB1 = statusBarPropTo "_XMONAD_LOG_1" "xmobar -x 1 ~/.config/xmobar/xmobar1.conf" (clickablePP $ filterOutWsPP ["NSP"] myPP)
-mySB2 = statusBarPropTo "_XMONAD_LOG_2" "xmobar -x 2 ~/.config/xmobar/xmobar2.conf" (clickablePP $ filterOutWsPP ["NSP"] myPP)
-mySB3 = statusBarPropTo "_XMONAD_LOG_3" "xmobar -x 3 ~/.config/xmobar/xmobar3.conf" (clickablePP $ filterOutWsPP ["NSP"] myPP)
+type WindowScreen
+  = W.Screen WorkspaceId (Layout Window) Window ScreenId ScreenDetail
 
-myPP = def
+type WorkspaceScreenCombiner = String -> WindowScreen -> String
+
+monitorIds :: IO [(ScreenId, String)]
+monitorIds = return [(S 0, "¹"), (S 1, "²"), (S 2, "³"), (S 3, "⁴")]
+
+combineWithScreenName :: X WorkspaceScreenCombiner
+combineWithScreenName = do
+  screenNames <- io monitorIds
+  return
+    $ \w sc -> w <> fromJust (W.screen sc `lookup` screenNames)
+
+renameWithScreen :: X WorkspaceScreenCombiner -> X (String -> WindowSpace -> String)
+renameWithScreen xCombiner = do
+  combiner <- xCombiner
+  ss       <- withWindowSet (return . W.screens)
+  return $ \s w ->
+    maybe s (combiner s) (find ((== W.tag w) . W.tag . W.workspace) ss)
+
+addScreen :: X WorkspaceScreenCombiner -> PP -> X PP
+addScreen xcombiner pp =
+  renameWithScreen xcombiner <&> \ren -> pp { ppRename = ppRename pp <=< ren }
+
+barSpawner :: ScreenId -> IO StatusBarConfig
+barSpawner (S sid) = pure $
+  statusBarPropTo ("_XMONAD_LOG_" ++ show sid) ( "/home/oleete/.config/xmobar/xmobarLaunch " ++ show sid) myPP
+
+myPP = addScreen combineWithScreenName $ filterOutWsPP ["NSP"] $ def
     { ppCurrent = xmobarColor active "" . wrap ("<box type=Bottom width=2 mt=2 color=" ++ active ++ ">") "</box>"
     , ppVisible = xmobarColor active ""
     , ppHidden  = xmobarColor dull  ""
@@ -514,12 +539,6 @@ myPP = def
     , ppSep = xmobarColor foreground "" " | "
     , ppOrder = reverse
     }
-
-barSpawner :: ScreenId -> IO StatusBarConfig
-barSpawner 0 = pure mySB0
-barSpawner 1 = pure mySB1
-barSpawner 2 = pure mySB2
-barSpawner _ = pure mySB3
 
 myLogHook = do
     masterHistoryHook

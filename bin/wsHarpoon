@@ -67,7 +67,8 @@ preset () {
 }
 
 makePreset () {
-    NAME=$(rofi -matching fuzzy -l 0 -window-title "Preset Name" -dmenu "Preset Name")
+    items="$(wmctrl -d | cut -c33-)"
+    NAME=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Preset Name" -dmenu "Preset Name")
     if [ ! -z "$NAME" ]; then
         cat "$HARPFILE" > "$HARPFOLDER/$NAME"
     fi

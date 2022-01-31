@@ -47,11 +47,12 @@ alias .... "cd ../../.."
 alias ..... "cd ../../../.."
 
 abbr  htop 'htop -t'
+alias lzg lazygit
 alias lzd lazydocker
+alias zathura zathura --fork
 
 # Git abbreviations
 alias g git
-alias lzg lazygit
 abbr gc "g checkout"
 abbr gcm "g commit"
 abbr ga "g add"
@@ -70,32 +71,7 @@ abbr gmt2 "g mergetool --tool nvimdiff"
 abbr gclone clone
 abbr gwip wip
 
-function bind_bang
-    switch (commandline -t)
-        case "!"
-            commandline -t $history[1]
-            commandline -f repaint
-        case "*"
-            commandline -i !
-    end
-end
-
-function bind_dollar
-    switch (commandline -t)
-        case "!"
-            commandline -t ""
-            commandline -f history-token-search-backward
-        case "*"
-            commandline -i '$'
-    end
-end
-
-function fish_user_key_bindings
-    bind ! bind_bang
-    bind '$' bind_dollar
-end
-
-function take
+function mkmv
     mkdir -p $argv
     cd $argv
 end
@@ -108,29 +84,10 @@ function restore --argument file
     mv $file (echo $file | sed s/.bak//)
 end
 
-function skip-lines --argument n
-    tail +(math 1 + $n)
-end
-function take --argument number
-    head -$number
-end
-function unsymlink --argument _file
-    set file (echo $_file | trim-trailing-slash)
-    test -L $file
-    and rm $file
-end
 function isodate
     date +%Y-%m-%d
 end
 
-function wip
-    if git diff --cached --quiet
-        git add .
-    end
-    git commit --no-verify -m "wip $argv"
-end
-
-clear
 # ghcup-env
 set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME
 test -f /home/oleete/.ghcup/env; and set -gx PATH $HOME/.cabal/bin /home/oleete/.ghcup/bin $PATH

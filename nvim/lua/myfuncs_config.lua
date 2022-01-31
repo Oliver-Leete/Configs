@@ -71,7 +71,7 @@ end
 vim.cmd([[command DeleteBuffer call v:lua.delete_buffer()]])
 
 function _G.KittySend(text)
-    vim.fn.system("kittyrepl replterm " .. vim.b.replCommand, text)
+    vim.fn.system("kittyrepl " .. vim.b[0].replName .. " " .. vim.b[0].replCommand, text)
 end
 
 function _G.sendRange(startline, endline)

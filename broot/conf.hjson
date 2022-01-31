@@ -286,8 +286,7 @@
 		perm_w: rgb(204, 36, 29) None
 		perm_x: rgb(152, 151, 26) None
 		owner: rgb(215, 153, 33) None Bold
-		group: rgb(215, 153, 33) oone
-
+		group: rgb(215, 153, 33) None
 		count: rgb(69, 133, 136) rgb(50, 48, 47)
 		dates: rgb(168, 153, 132) None
 		sparse: rgb(250, 189,47) None

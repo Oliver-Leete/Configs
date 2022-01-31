@@ -98,8 +98,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-treesitter/playground'
     Plug 'ThePrimeagen/refactoring.nvim'
-
-    Plug 'petertriho/nvim-scrollbar'
 call plug#end()]])
 
 -- Disable builtins
