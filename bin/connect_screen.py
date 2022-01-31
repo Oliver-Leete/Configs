@@ -5,8 +5,8 @@ import time
 #--- set commands below
 screen_command = "/home/oleete/.config/bin/displayctl auto"
 net_command = "/home/oleete/.config/bin/statusNotify net"
-lid_open_command = "/home/oleete/.config/bin/displayctl lidopen"
-lid_closed_command = "/home/oleete/.config/bin/displayctl lidclose"
+lid_open_command = "/home/oleete/.config/bin/displayctl auto"
+lid_closed_command = "/home/oleete/.config/bin/displayctl auto"
 #---
 
 def get(cmd): return subprocess.check_output(cmd).decode("utf-8")
