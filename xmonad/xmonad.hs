@@ -277,10 +277,10 @@ myLayoutHook= smartBorders
             $ mkToggle (single FULLCENTER)
               notebookLayout
     where
-    notebookMulti   = Notebook 1000  True True True 1 2 reSize 2 (2/3)
-    notebookThesis  = Notebook 1000  True True True 1 3 reSize 2 (2/3)
-    notebookColumns = Notebook 1000 False True True 4 4 reSize 2 (2/3)
-    notebookLaptop = Notebook 1000 True False False 1 2 reSize 2 (2/3)
+    notebookMulti   = Notebook True True True 1 2 reSize 2 (2/3)
+    notebookThesis  = Notebook True True True 1 3 reSize 2 (2/3)
+    notebookColumns = Notebook False True True 4 4 reSize 2 (2/3)
+    notebookLaptop = Notebook True False False 1 2 reSize 2 (2/3)
     notebookLayout = onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns
                    $ ifWider 1920 (onWorkspaces [wsTHESIS, ws3D] notebookThesis notebookMulti) notebookLaptop
 

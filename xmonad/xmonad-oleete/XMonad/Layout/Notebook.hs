@@ -98,11 +98,11 @@ data ToggleStackDir = ToggleStackDir deriving (Read, Show, Typeable)
 instance Message ToggleStackDir
 
 -- | Arguments are nmaster, delta, fraction, mirror fraction
-data Notebook a = Notebook{ minResWidth :: !Int, notebookMiddle :: !Bool, notebookSide :: !Bool, stackDirection :: !Bool, notebookMaster :: !Int, notebookColumn :: !Int, notebookDelta :: !Rational, notebookFrac :: !Rational, notebookMirrorFrac :: !Rational}
+data Notebook a = Notebook{ notebookMiddle :: !Bool, notebookSide :: !Bool, stackDirection :: !Bool, notebookMaster :: !Int, notebookColumn :: !Int, notebookDelta :: !Rational, notebookFrac :: !Rational, notebookMirrorFrac :: !Rational}
     deriving (Show,Read)
 
 instance LayoutClass Notebook a where
-    pureLayout (Notebook res mid s dir n c _ f mf) r    = doL res mid s dir n c f mf r
+    pureLayout (Notebook mid s dir n c _ f mf) r    = doL mid s dir n c f mf r
     handleMessage l m =
         return $ msum   [fmap resize         (fromMessage m)
                         ,fmap mresize        (fromMessage m)
@@ -130,58 +130,15 @@ instance LayoutClass Notebook a where
                     dir = stackDirection l
     description _ = "Notebook"
 
-doL :: Int -> Bool -> Bool -> Bool -> Int -> Int -> Rational -> Rational -> Rectangle -> W.Stack a -> [(a, Rectangle)]
-doL res m s dir n c f mf r st
-    | rect_width r >= fromIntegral res = zip sti (newWide m s dir n c nwin f mf r)
-    | otherwise  = zip stackList (tileSlim f1 mf r n c nwin)
+doL :: Bool -> Bool -> Bool -> Int -> Int -> Rational -> Rational -> Rectangle -> W.Stack a -> [(a, Rectangle)]
+doL m s dir n c f mf r st = zip sti (newWide m s dir n c nwin f mf r)
         where   sti = W.integrate st
                 nwin = length sti
-                f1 = (1/f)*(4/3)
-                foc = W.focus st
-                u = W.up st
-                d = W.down st
-                stackList
-                    | length u < c && length u > n = u1 ++ [foc] ++ u2 ++ d
-                    | length u < n = u3 ++ [foc] ++ u4 ++ d
-                    | m && length u > c = u5 ++ [foc] ++ u6 ++ d
-                    | otherwise = sti
-                        where (u1, u2) = splitAt n (reverse u)
-                              (u3, u4) = splitAt 0 (reverse u)
-                              (u5, u6) = splitAt c (reverse u)
-
-tileSlim :: Rational -> Rational -> Rectangle -> Int -> Int -> Int -> [Rectangle]
-tileSlim f mf r n c nwin
-    | nstack >= nwin = map (`modY` r) (splitHorizontally nwin r)
-    | ncol == 0 && nstack >= 1 = rep c modR1 ++ splitVertically nstack modR2
-    | nmain == 0 && nstack >= 1 = rep c modS1 ++ splitVertically nstack modS2
-    | (ncol == 0 || nmain == 0) && nstack == 0 = rep c r
-    | nstack == 0 = rep nmain modR1 ++ rep ncol modR2
-    | otherwise = rep nmain r1 ++ rep ncol r21 ++ rep nstack r22
-    where   (r1, r2) = splitHorizontallyBy (if f<0 then 1+2*f else f) r
-            (r21, r22) = splitVerticallyBy (if mf<0 then 1+2*mf else mf) modR2
-
-
-            modR1 = modY r1 r
-            modR2 = modY r2 r
-
-            fs = f/2
-            (s1, s2) = splitHorizontallyBy (if fs<0 then 1+2*fs else fs) r
-            modS1 = modY s1 r
-            modS2 = modY s2 r
-
-            nmain
-                | nwin <= n = nwin
-                | otherwise = n
-            ncol
-                | c < n = 0
-                | c >= nwin = nwin - nmain
-                | otherwise = c - nmain
-            nstack = nwin - nmain - ncol
 
 newWide ::Bool -> Bool -> Bool -> Int -> Int -> Int -> Rational -> Rational -> Rectangle -> [Rectangle]
 newWide m s d n c nwin f mf r
     | c == 0 = map (`modY` r) (splitHorizontally nwin r)
-    | nwin <= ncol + nmain = map (`modY` r) (map fst listCols)
+    | nwin <= ncol + nmain = map ((`modY` r) . fst) listCols
     | otherwise = listWithStack
     where   startPoint
                 | m && s     && even (nmain+ncol)               = toInteger (rect_x r) + (floor (nmain%2) * fromIntegral width) + (ceiling (ncol%2) * fromIntegral colWidth)
@@ -304,7 +261,7 @@ splitColumns list minWidth stackRect mf d bigRect
                 | otherwise = rectangleDiff stackRectAdd stackRect
 
 modY :: Rectangle -> Rectangle -> Rectangle
-modY (Rectangle sx sy sw sh) (Rectangle bx _ bw _)=
+modY (Rectangle sx sy sw sh) (Rectangle bx _ _ _)=
     Rectangle sx y sw h
     -- where   ymoddifier= if (toInteger (fromIntegral sx + sw - 8) < toInteger ( bx + ceiling (1/3 * toRational bw))) || (toInteger (8 + sx) > toInteger ( bx + ceiling (2/3 * toRational bw)))
     -- where   ymoddifier= if (toInteger (fromIntegral sx + sw - 8) < toInteger ( bx + ceiling (1/3 * toRational bw))) -- || 
@@ -328,9 +285,3 @@ sortByIndex = sortOn snd
 rectangleDiff :: Rectangle -> Rectangle -> Rectangle
 rectangleDiff firstRect secondRect =
     Rectangle (rect_x firstRect) (rect_y firstRect) (rect_width firstRect + rect_width secondRect) (rect_height firstRect)
-
-rep :: Int -> rect -> [rect]
-rep n x =
-    if n == 1
-    then [x]
-    else x : rep (n-1) x
