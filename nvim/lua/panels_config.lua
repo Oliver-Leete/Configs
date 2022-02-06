@@ -10,8 +10,8 @@ require("trouble").setup({
         cancel = "q", -- cancel the preview and get back to your last window / buffer / cursor
         close = "<esc>", -- close the list
         refresh = "r", -- manually refresh
-        jump = "<cr>", -- jump to the diagnostic or open / close folds
-        jump_close = { "o" }, -- jump to the diagnostic and close the list
+        jump = "o", -- jump to the diagnostic or open / close folds
+        jump_close = { "<cr>" }, -- jump to the diagnostic and close the list
         toggle_mode = "m", -- toggle between "workspace" and "document" mode
         preview = "P", -- preview the diagnostic location
         toggle_preview = "p", -- preview the diagnostic location
@@ -24,7 +24,7 @@ require("trouble").setup({
     indent_lines = true, -- add an indent guide below the fold icons
     auto_open = false,
     auto_close = false,
-    auto_preview = false, -- automatically preview the location of the diagnostic. <esc> to close preview and go back
+    auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back
     signs = {
         error = "",
         warning = "",
@@ -42,7 +42,7 @@ require("todo-comments").setup({
         HACK = { icon = " ", color = "warning", alt = { "JANK", "WORKAROUND" } },
         WARN = { icon = " ", color = "warning", alt = { "WARNING" } },
         PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
     },
     highlight = {
         before = "fg",

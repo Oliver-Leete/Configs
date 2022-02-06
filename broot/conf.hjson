@@ -100,7 +100,7 @@
     # to cancel (for example when you just opened broot), uncomment
     # this parameter
     # 
-    # quit_on_last_cancel: true
+    quit_on_last_cancel: true
 
     ###############################################################
     # Search modes
@@ -166,7 +166,7 @@
     {
         invocation: edit
         shortcut: e
-        execution: "/home/oleete/.config/bin/nvrStart +{line} {file}"
+        execution: "/home/oleete/.config/bin/nvrStart +{line} {file} &"
         leave_broot: false
     }
 

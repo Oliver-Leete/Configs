@@ -19,6 +19,7 @@
 ----------------------------------------------------------------------------------------------------
 
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
+{-# LANGUAGE FlexibleContexts #-}
 import qualified Data.Map as M
 import Data.Monoid
 import System.Exit
@@ -29,6 +30,7 @@ import qualified XMonad.StackSet as W
 
 import XMonad.Actions.ConditionalKeys as C
 import XMonad.Actions.CycleWSLocal
+import XMonad.Actions.CycleWS (nextScreen)
 import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.Navigation2D
@@ -44,6 +46,7 @@ import XMonad.Hooks.EwmhDesktops ( ewmh )
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.ServerMode
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
 
@@ -69,6 +72,7 @@ import XMonad.Actions.WithAll (killAll)
 import XMonad.Prompt
 import XMonad.Hooks.RefocusLast
 import XMonad.Prelude
+import XMonad.Hooks.WorkspaceHistory (workspaceHistoryHookExclude)
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
 ----------------------------------------------------------------------------------------------------
@@ -116,9 +120,11 @@ wsSIM    = "Sim"
 wsTHESIS = "Thesis"
 wsEXP    = "Exp"
 wsANSYS  = "ANSYS"
+wsCOMMENTS = "Comments"
+wsWRKN   = "WrkNotes"
 
 myWorkspaces :: [[Char]]
-myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1, wsQMK, wsANSYS]
+myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1, wsQMK, wsANSYS, wsCOMMENTS, wsWRKN]
 
 projects :: [Project]
 projects =
@@ -168,14 +174,24 @@ projects =
                                                 spawnOn wsEXP ("sleep .2; " ++ myBrowser)
                 }
     , Project   { projectName       = wsTHESIS
-                , projectDirectory  = "~/Projects/Thesis"
+                , projectDirectory  = "~/Projects/Thesis/Thesis"
                 , projectStartHook  = Just $ do spawnOn wsTHESIS myTerminal
                                                 spawnOn wsTHESIS ("sleep .2; " ++ myBrowser)
                 }
+    , Project   { projectName       = wsCOMMENTS
+                , projectDirectory  = "~/Projects/Thesis/Thesis"
+                , projectStartHook  = Just $ do spawnOn wsCOMMENTS myTerminal
+                                                spawnOn wsCOMMENTS ("sleep .2; " ++ myBrowser)
+                                                spawnOn wsCOMMENTS "sleep .4; foxitreader"
+                }
+    , Project   { projectName       = wsWRKN
+                , projectDirectory  = "~/Projects/Thesis/Notes"
+                , projectStartHook  = Just $ do spawnOn wsCOMMENTS "obsidian"
+                }
     , Project   { projectName       = wsANSYS
                 , projectDirectory  = "~/Projects/ANSYSpowderModel"
-                , projectStartHook  = Just $ do spawnOn wsEXP myTerminal
-                                                spawnOn wsEXP ("sleep .2; " ++ myBrowser)
+                , projectStartHook  = Just $ do spawnOn wsANSYS myTerminal
+                                                spawnOn wsANSYS ("sleep .2; " ++ myBrowser)
                 }
     ]
 
@@ -188,18 +204,27 @@ myBrowser      = "/home/oleete/.config/bin/browser"
 myBrowserClass = "google-chrome-stable"
 
 discordCommand         = "discord --no-sandbox"
-gTasksCommand          = myBrowser ++ " '-tasks --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html --class=Tasks'"
-gTasksWrkCommand       = myBrowser ++ " 'tasks --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html --class=WrkTasks'"
-keepCommand            = myBrowser ++ " '-keep --app=https://keep.google.com/#home --class=Keep'"
-keepWrkCommand         = myBrowser ++ " 'keep --app=https://keep.google.com/#home --class=WrkKeep'"
+gTasksCommand          = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/task --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html --class=Tasks"
+gTasksWrkCommand       = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/taskWrk --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html --class=WrkTasks"
+keepCommand            = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/keep   --app=https://keep.google.com/#home --class=Keep"
+keepWrkCommand         = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/keepWrk   --app=https://keep.google.com/#home --class=WrkKeep"
+gmailCommand           = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmail --app=https://mail.google.com --class=GMail"
+gmailCommandWrk        = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmailWrk --app=https://mail.google.com --class=WrkGMail"
+gcalCommand            = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcal   --app=https://calendar.google.com --class=GCal"
+gcalCommandWrk         = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcalWrk   --app=https://calendar.google.com --class=WrkGCal"
 youtubeMusicCommand    = "youtube-music"
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
     [   NS "tasks" gTasksCommand (className =? "Tasks") nonFloating
     ,   NS "tasksWork"  gTasksWrkCommand (className =? "WrkTasks") nonFloating
-    ,   NS "keepNsp" keepCommand (className =? "Keep") nonFloating
-    ,   NS "keepWrkNsp"  keepWrkCommand (className =? "WrkKeep") nonFloating
+    ,   NS "keep" keepCommand (className =? "Keep") nonFloating
+    ,   NS "keepWork"  keepWrkCommand (className =? "WrkKeep") nonFloating
+
+    ,   NS "gmail" gmailCommand (className =? "GMail") nonFloating
+    ,   NS "gmailWork"  gmailCommandWrk (className =? "WrkGMail") nonFloating
+    ,   NS "gcal" gcalCommand (className =? "GCal") nonFloating
+    ,   NS "gcalWork"  gcalCommandWrk (className =? "WrkGCal") nonFloating
 
     ,   NS "discord"  discordCommand (className =? "discord") defaultFloating
     ,   NS "youtubeMusic"  youtubeMusicCommand (className =? "YouTube Music") nonFloating
@@ -282,7 +307,7 @@ myLayoutHook= smartBorders
     notebookColumns = Notebook False True True 4 4 reSize 2 (2/3)
     notebookLaptop = Notebook True False False 1 2 reSize 2 (2/3)
     notebookLayout = onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns
-                   $ ifWider 1920 (onWorkspaces [wsTHESIS, ws3D] notebookThesis notebookMulti) notebookLaptop
+                   $ ifWider 1920 (onWorkspaces [wsTHESIS, ws3D, wsCOMMENTS] notebookThesis notebookMulti) notebookLaptop
 
 ----------------------------------------------------------------------------------------------------
 -- Keybindings                                                                                    --
@@ -298,6 +323,10 @@ myNav2DConf = def
 
 myModMask = mod4Mask
 
+upFocus a = sequence_ [a, focusUnderPointer]
+upPointer a = sequence_ [a, updatePointer (0.5, 0.5) (0.25, 0.25)]
+toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle layout, focusUnderPointer ]
+
 myKeys :: [(String, X ())]
 myKeys =
     [ ("M-q"                , spawn "xmonad --restart")
@@ -306,14 +335,15 @@ myKeys =
 
     , ("M-f M-f"            , spawn "/home/oleete/.config/bin/rofiScript")
     , ("M-f f"              , spawn "/home/oleete/.config/bin/rofiScript")
-    , ("M-f M-w"            , spawn "/home/oleete/.config/bin/wsHarpoon menu")
-    , ("M-f w"              , spawn "/home/oleete/.config/bin/wsHarpoon menu")
+    , ("M-f M-p"            , spawn "/home/oleete/.config/bin/wsHarpoon menu")
+    , ("M-f p"              , spawn "/home/oleete/.config/bin/wsHarpoon menu")
     , ("M-f M-g"            , spawn "/home/oleete/.config/bin/wsHarpoon moveMenu")
     , ("M-f g"              , spawn "/home/oleete/.config/bin/wsHarpoon moveMenu")
-    , ("M-f M-p"            , spawn "rofi -matching fuzzy -show drun -show-icons")
-    , ("M-f p"              , spawn "rofi -matching fuzzy -show drun -show-icons")
+    , ("M-f M-a"            , spawn "rofi -matching fuzzy -show drun -show-icons")
+    , ("M-f a"              , spawn "rofi -matching fuzzy -show drun -show-icons")
 
-    , ("M-p"                      , spawn "rofi -matching fuzzy -show drun -show-icons")
+    , ("M-<Esc>"            , upPointer $ sequence_ $ hideAllNamedScratchPads scratchpads)
+
     , ("<XF86MonBrightnessDown>"  , spawn "/home/oleete/.config/bin/brightness -dec 5")
     , ("<XF86MonBrightnessUp>"    , spawn "/home/oleete/.config/bin/brightness -inc 5")
     , ("<XF86AudioLowerVolume>"   , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ -5%" )
@@ -326,10 +356,9 @@ myKeys =
     , ("<XF86AudioPrev>"          , spawn "playerctl previous")
     , ("<XF86AudioNext>"          , spawn "playerctl next")
     , ("<Print>"                  , spawn "/home/oleete/.config/bin/screencapt area")
-    , ("M-<Esc>"                  , upPointer $ allNamedScratchpadAction scratchpads "sysMon")
-    , ("M-S-<Esc>"                , upPointer $ allNamedScratchpadAction scratchpads "sysMon")
 
-    , ("M-<Return>"         , klBind " 'kitty @ launch'" (upPointer $ runOrRaise myTerminal (className =? "kitty")))
+    , ("M-<Return>"         , klBind " 'kitty @ launch'" (upPointer $ spawn myTerminal))
+    , ("M-M1-<Return>"      , upPointer $ spawn myTerminal)
 
     , ("M-n"                , rnklBind (spawn (myTerminalRemote ++ " 'kitty @ launch'")) " focusEditor" (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")]))
     , ("M-M1-n"             , upPointer $ spawn myTerminal)
@@ -339,42 +368,33 @@ myKeys =
 
     , ("M-e"                , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
 
-    , ("M-S-c"              , upPointer $ allNamedScratchpadAction scratchpads "calc")
-    , ("M-S-<Return>"       , upPointer $ allNamedScratchpadAction scratchpads "console")
-    , ("M-S-d"              , upPointer $ allNamedScratchpadAction scratchpads "discord")
-    , ("M-S-m"              , upPointer $ allNamedScratchpadAction scratchpads "youtubeMusic")
-    , ("M-S-t"              , upPointer $ wrkNSP "tasksWork" "tasks")
-    , ("M-S-n"              , upPointer $ wrkNSP "keepWrkNsp" "keepNsp")
+    , ("M-o"                , upPointer $ bindOn C.WS [(wsCOMMENTS, runOrRaise "foxitreader" (className =? "Foxit Reader"))])
 
     , ("M-<Backspace>"      , nkclBind "DeleteBuffer" (P.sendKey (controlMask .|. shiftMask) xK_BackSpace) (P.sendKey controlMask xK_w) kill)
     , ("M-M1-<Backspace>"   , kill)
     , ("M-S-<Backspace>"    , confirmPrompt hotPromptTheme "kill all" killAll)
 
-    , ("M-<Left>"           , kcBind (P.sendKey (controlMask .|. shiftMask) xK_Left) (P.sendKey (controlMask .|. shiftMask) xK_Tab))
-    , ("M-<Right>"          , kcBind (P.sendKey (controlMask .|. shiftMask) xK_Right) (P.sendKey controlMask xK_Tab))
+    , ("M-<Left>"           , rklBind (P.sendKey (controlMask .|. shiftMask) xK_Left) (P.sendKey (controlMask .|. shiftMask) xK_Tab))
+    , ("M-<Right>"          , rklBind (P.sendKey (controlMask .|. shiftMask) xK_Right) (P.sendKey controlMask xK_Tab))
     , ("M-<Down>"           , windows W.focusDown)
     , ("M-<Up>"             , windows W.focusUp)
 
 
-    , ("M-c M-f"            , klBind " kittyFullscreen" (P.sendKey noModMask xK_F11))
-    , ("M-c f"              , klBind " kittyFullscreen" (P.sendKey noModMask xK_F11))
-    , ("M-c M-w"            , toggleLayout FULL)
-    , ("M-c w"              , toggleLayout FULL)
-    , ("M-c M-s"            , toggleLayout FULLBAR)
-    , ("M-c s"              , toggleLayout FULLBAR)
-    , ("M-c M-c"            , toggleLayout FULLCENTER)
-    , ("M-c c"              , toggleLayout FULLCENTER)
-    , ("M-c M-x"            , nklBind "ZenMode" " kittyFullscreen" (toggleLayout FULLCENTER))
-    , ("M-c x"              , nklBind "ZenMode" " kittyFullscreen" (toggleLayout FULLCENTER))
+    , ("M-w M-f"            , klBind " kittyFullscreen" (P.sendKey noModMask xK_F11))
+    , ("M-w f"              , klBind " kittyFullscreen" (P.sendKey noModMask xK_F11))
+    , ("M-w M-w"            , toggleLayout FULL)
+    , ("M-w w"              , toggleLayout FULL)
+    , ("M-w M-s"            , toggleLayout FULLBAR)
+    , ("M-w s"              , toggleLayout FULLBAR)
+    , ("M-w M-c"            , toggleLayout FULLCENTER)
+    , ("M-w c"              , toggleLayout FULLCENTER)
+    , ("M-w M-x"            , nklBind "ZenMode" " kittyFullscreen" (toggleLayout FULLCENTER))
+    , ("M-w x"              , nklBind "ZenMode" " kittyFullscreen" (toggleLayout FULLCENTER))
 
-    , ("M-h"                , nklBind "KittyNavigateleft"   " moveWindow left h" (upPointer $ windowGo L True))
-    , ("M-j"                , nklBind "KittyNavigatebottom" " moveWindow bottom j" (upPointer $ windowGo D True))
-    , ("M-k"                , nklBind "KittyNavigatetop"    " moveWindow top k" (upPointer $ windowGo U True))
-    , ("M-l"                , nklBind "KittyNavigateright"  " moveWindow right l" (upPointer $ windowGo R True))
-    , ("M-M1-S-h"           , upPointer $ windowGo L True)
-    , ("M-M1-S-j"           , upPointer $ windowGo D True)
-    , ("M-M1-S-k"           , upPointer $ windowGo U True)
-    , ("M-M1-S-l"           , upPointer $ windowGo R True)
+    , ("M-h"                , nklBind "KittyNavigateleft"   " moveWindow left"   (upPointer $ windowGo L True))
+    , ("M-j"                , nklBind "KittyNavigatebottom" " moveWindow bottom" (upPointer $ windowGo D True))
+    , ("M-k"                , nklBind "KittyNavigatetop"    " moveWindow top"    (upPointer $ windowGo U True))
+    , ("M-l"                , nklBind "KittyNavigateright"  " moveWindow right"  (upPointer $ windowGo R True))
     , ("M-M1-h"             , upPointer $ windowSwap L True)
     , ("M-M1-j"             , upPointer $ windowSwap D True)
     , ("M-M1-k"             , upPointer $ windowSwap U True)
@@ -382,7 +402,6 @@ myKeys =
 
     , ("M-m"                , klBind " mainMove"   (upPointer $ swapPromote' False))
     , ("M-M1-m"             , upPointer $ swapPromote' False)
-    , ("M-M1-S-m"           , upPointer $ swapPromote' False)
     , ("M-v"                , myFocusMaster)
 
     , ("M-y"                , upPointer $ withFocused toggleFloat)
@@ -397,10 +416,6 @@ myKeys =
     , ("M-M1-["             , sendMessage MirrorShrink)
     , ("M-M1-]"             , sendMessage MirrorExpand)
 
-    , ("M-g"                , upFocus $ sendMessage ToggleSide)
-    , ("M-M1-g"             , upFocus $ sendMessage ToggleStackDir)
-    , ("M-S-g"              , upFocus $ sendMessage ToggleMiddle)
-
     , ("M-a"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 1")
     , ("M-r"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 2")
     , ("M-s"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 3")
@@ -410,36 +425,21 @@ myKeys =
     , ("M-M1-s"             , spawn "/home/oleete/.config/bin/wsHarpoon move 3")
     , ("M-M1-t"             , spawn "/home/oleete/.config/bin/wsHarpoon move 4")
 
-    , ("M-w M-w"            , spawn "/home/oleete/.config/bin/wsHarpoon add")
-    , ("M-w w"              , spawn "/home/oleete/.config/bin/wsHarpoon add")
-    , ("M-w M-e"            , spawn "/home/oleete/.config/bin/wsHarpoon modify")
-    , ("M-w e"              , spawn "/home/oleete/.config/bin/wsHarpoon modify")
-    , ("M-w M-p"            , spawn "/home/oleete/.config/bin/wsHarpoon makePreset")
-    , ("M-w p"              , spawn "/home/oleete/.config/bin/wsHarpoon makePreset")
+    , ("M-p M-p"            , spawn "/home/oleete/.config/bin/wsHarpoon add")
+    , ("M-p p"              , spawn "/home/oleete/.config/bin/wsHarpoon add")
+    , ("M-p M-e"            , spawn "/home/oleete/.config/bin/wsHarpoon modify")
+    , ("M-p e"              , spawn "/home/oleete/.config/bin/wsHarpoon modify")
+    , ("M-p M-n"            , spawn "/home/oleete/.config/bin/wsHarpoon makePreset")
+    , ("M-p n"              , spawn "/home/oleete/.config/bin/wsHarpoon makePreset")
 
-    , ("M-o"                , upPointer toggleFocus)
-    , ("M-M1-o"             , upPointer swapWithLast)
+    , ("M-<Tab>"            , upPointer nextScreen)
     , ("M-<Space>"          , upFocus $ toggleWS' ["NSP"])
     , ("M-M1-<Space>"       , upFocus $ shiftToggleWS' ["NSP"])
     ]
-    ++ zipM "M-"            wsKeys [0..] (withNthWorkspace W.greedyView)
-    ++ zipM "M-M1-"         wsKeys [0..] (withNthWorkspace W.shift)
     where
-        upFocus a = sequence_ [a, focusUnderPointer]
-        upPointer a = sequence_ [a, updatePointer (0.5, 0.5) (0.25, 0.25)]
-
-        wsKeys = ["S-4", "S-7", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-        zipM  m ks as f = zipWith (\k d -> (m ++ k, upFocus $ f d)) ks as
-
         toggleFloat w = windows (\s -> if M.member w (W.floating s)
                             then W.sink w s
                             else W.float w (W.RationalRect (1/4) (1/4) (1/2) (1/2)) s)
-
-        wrkNSP work personal = bindOn C.WS [(wsWRK, allNamedScratchpadAction scratchpads work)
-                                         ,(wsSIM, allNamedScratchpadAction scratchpads work)
-                                         ,(wsEXP, allNamedScratchpadAction scratchpads work)
-                                         ,(wsTHESIS, allNamedScratchpadAction scratchpads work)
-                                         ,("", allNamedScratchpadAction scratchpads personal)]
 
         nklBind nvr kitty leftover = bindFirst [(title =? "MainEditor", spawn ("/home/oleete/.config/bin/nvrWS " ++ nvr))
                                                ,(className =? "kitty", spawn (myTerminalRemote ++ kitty))
@@ -455,15 +455,14 @@ myKeys =
         clBind chrome leftover = bindFirst [(className =? "Google-chrome", chrome)
                                            ,(pure True, leftover)]
 
-        kcBind kitty chrome = bindFirst [(className =? "kitty", kitty)
-                                        ,(className =? "Google-chrome", chrome)]
+        rklBind kitty leftover = bindFirst [(className =? "kitty", kitty)
+                                          ,(pure True, leftover)]
 
         nkclBind nvr kitty chrome leftover = bindFirst [(title =? "MainEditor", spawn ("/home/oleete/.config/bin/nvrWS " ++ nvr))
                                                        ,(className =? "kitty", kitty)
                                                        ,(className =? "Google-chrome", chrome)
                                                        ,(pure True, leftover)]
 
-        toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle layout, focusUnderPointer ]
 
 myFocusMaster :: X ()
 myFocusMaster = withWindowSet $ \wset ->
@@ -542,6 +541,7 @@ myPP = addScreen combineWithScreenName $ filterOutWsPP ["NSP"] $ def
 
 myLogHook = do
     masterHistoryHook
+    workspaceHistoryHookExclude ["NSP"]
     -- nsHideOnFocusLoss scratchpads
     refocusLastLogHook 
 
@@ -571,10 +571,14 @@ myManageHook =
             , className =? "Volctl" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
 
             , resource =? "galculator" -?> doCenterFloat
-            , resource =? "Tasks" -?> doRectFloat halfNhalf
-            , resource =? "WrkTasks" -?> doRectFloat halfNhalf
+            , className =? "Tasks" -?> doRectFloat halfNhalf
+            , className =? "WrkTasks" -?> doRectFloat halfNhalf
             , className =? "Keep" -?> doRectFloat halfNhalf
             , className =? "WrkKeep" -?> doRectFloat halfNhalf
+            , className =? "GMail" -?> doRectFloat halfNhalf
+            , className =? "WrkGMail" -?> doRectFloat halfNhalf
+            , className =? "GCal" -?> doRectFloat halfNhalf
+            , className =? "WrkGCal" -?> doRectFloat halfNhalf
             , resource =? "sysMon" -?> doRectFloat (W.RationalRect (1 / 8) (1 / 8) (3 / 4) (3 / 4))
             , resource =? "wsHarpoon" -?> doRectFloat (W.RationalRect (3 / 10) (3 / 10) (2 / 5) (2 / 5))
             , resource =? "console" -?> doRectFloat (W.RationalRect (4 / 7) (4 / 7) (2 / 5) (2 / 5))
@@ -597,9 +601,52 @@ myManageHook =
         halfNhalf = W.RationalRect (1/4) (1/4) (1/2) (1/2)
 
 ----------------------------------------------------------------------------------------------------
--- X Event Actions                                                                                --
+-- HangleEventHook
 ----------------------------------------------------------------------------------------------------
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook = handleEventHook def
                 <+> XMonad.Util.Hacks.windowedFullscreenFixEventHook
+                <+> myServerModeEventHook
+                -- <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn)
+
+----------------------------------------------------------------------------------------------------
+-- Server Commands
+----------------------------------------------------------------------------------------------------
+
+myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
+myCommands' = myCommands ++ sendTo ++ swapTo
+    where sendTo = zipM "move-to-" nums (withNthWorkspace W.shift)
+          swapTo = zipM "jump-to-" nums (withNthWorkspace W.greedyView)
+          nums = [0..(length myWorkspaces)]
+          zipM  m ks f = zipWith (\k d -> (m ++ show k, upFocus $ f d)) ks ks
+
+myCommands :: [(String, X ())]
+myCommands =
+    [ ("togglework"          , toggleWS' ["NSP"])
+    , ("winGo-left"          , upPointer $ windowGo L True)
+    , ("winGo-bottom"        , upPointer $ windowGo D True)
+    , ("winGo-top"           , upPointer $ windowGo U True)
+    , ("winGo-right"         , upPointer $ windowGo R True)
+    , ("winGo-main"          , upPointer $ swapPromote' False)
+
+    , ("nsp-calc"            , upPointer $ namedScratchpadAction scratchpads "calc")
+    , ("nsp-cons"            , upPointer $ namedScratchpadAction scratchpads "console")
+    , ("nsp-disc"            , upPointer $ namedScratchpadAction scratchpads "discord")
+    , ("nsp-musc"            , upPointer $ namedScratchpadAction scratchpads "youtubeMusic")
+    , ("nsp-sysm"            , upPointer $ namedScratchpadAction scratchpads "sysMon")
+
+    , ("nsp-task"            , upPointer $ namedScratchpadAction scratchpads "tasks")
+    , ("nsp-task-wrk"        , upPointer $ namedScratchpadAction scratchpads "tasksWork")
+    , ("nsp-note"            , upPointer $ namedScratchpadAction scratchpads "keep")
+    , ("nsp-note-wrk"        , upPointer $ namedScratchpadAction scratchpads "keepWork")
+    , ("nsp-gmail"           , upPointer $ namedScratchpadAction scratchpads "gmail")
+    , ("nsp-gmail-wrk"       , upPointer $ namedScratchpadAction scratchpads "gmailWork")
+    , ("nsp-gcal"            , upPointer $ namedScratchpadAction scratchpads "gcal")
+    , ("nsp-gcal-wrk"        , upPointer $ namedScratchpadAction scratchpads "gcalWork")
+
+    , ("layout-full"         , toggleLayout FULL)
+    , ("layout-dir"          , upFocus $ sendMessage ToggleSide)
+    , ("layout-stack-dir"    , upFocus $ sendMessage ToggleStackDir)
+    , ("layout-style"        , upFocus $ sendMessage ToggleMiddle)
+    ]

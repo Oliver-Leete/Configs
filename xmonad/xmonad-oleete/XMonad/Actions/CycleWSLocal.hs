@@ -47,7 +47,7 @@ import XMonad.StackSet hiding (filter)
 -- > -- Ignore the scratchpad workspace while toggling:
 -- > ("M-b", toggleWS' ["NSP"])
 toggleWS' :: [WorkspaceId] -> X ()
-toggleWS' skips = lastViewedHiddenExcept skips >>= flip whenJust (windows . view)
+toggleWS' skips = lastViewedHiddenExcept skips >>= flip whenJust (windows . greedyView)
 
 -- | Same as toggleWS' but sends the focused window instead of moving workspace
 shiftToggleWS' :: [WorkspaceId] -> X ()
@@ -62,9 +62,10 @@ skipTags wss ids = filter ((`notElem` ids) . tag) wss
 -- workspace.
 lastViewedHiddenExcept :: [WorkspaceId] -> X (Maybe WorkspaceId)
 lastViewedHiddenExcept skips = do
+    hs2 <- gets $ map tag . flip skipTags skips . (map workspace . visible) . windowset
     hs <- gets $ map tag . flip skipTags skips . hidden . windowset
-    choose hs . find (`elem` hs) <$> WH.workspaceHistory
+    let hs3 = hs2 ++ hs
+    choose hs3 . find (`elem` hs3) <$> WH.workspaceHistory
     where choose []    _           = Nothing
           choose (h:_) Nothing     = Just h
           choose _     vh@(Just _) = vh
-

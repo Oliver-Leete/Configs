@@ -7,5 +7,5 @@ kitty @ kitten neighboring_window.py "$1"
 new_id=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .id")
 
 if [ "$old_id" -eq "$new_id" ]; then
-	xdotool key super+shift+meta+"$2"
+	/home/oleete/.cabal/bin/xmonadctl-exe winGo-"$1"
 fi

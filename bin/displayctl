@@ -103,6 +103,7 @@ main () {
         in*)    internal ;;
         ex*)    external ;;
         span)   span     ;;
+        spanAbove)   spanAbove ;;
         spanex) spanex   ;;
         mirror) mirror   ;;
         toggle) toggle   ;;
@@ -117,12 +118,13 @@ main () {
 
 
 menu () {
-    items="auto internal external span spanex mirror"
+    items="auto internal external span spanAbove spanex mirror"
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Display Mode" -dmenu "Display Mode")
     case ${result:-} in
         in*)    internal ;;
         ex*)    external ;;
         span)   span     ;;
+        spanAbove)   spanAbove ;;
         spanex) spanex   ;;
         mirror) mirror   ;;
         auto)   auto     ;;
@@ -381,6 +383,35 @@ span () {
     execute "$FUNCNAME"
     }
 
+spanAbove () {
+    CMD="$CMDBASE --output $INTERNAL_OUTPUT --scale 1x1 --primary --mode $INTERNAL_OUTPUT_MODE --pos 0x0"
+    NEIGHBOR=$INTERNAL_OUTPUT
+    PRIMARY_SET=false
+
+    for OUTPUT in $ALL_OUTPUTS
+    do
+        if ! $PRIMARY_SET
+        then
+            eval '
+            case $OUTPUT in
+                $INTERNAL_OUTPUT) : ;;
+                '$CONNECTED_OUTPUTS') PRIMARY_SET=true; CMD="$CMD --output $OUTPUT --scale 1x1 --auto --above $NEIGHBOR"; NEIGHBOR=$OUTPUT ;;
+                *) : ;;
+            esac'
+        else
+            eval '
+            case $OUTPUT in
+                $INTERNAL_OUTPUT) : ;;
+                '$CONNECTED_OUTPUTS') CMD="$CMD --output $OUTPUT --scale 1x1 --auto --right-of $NEIGHBOR"; NEIGHBOR=$OUTPUT ;;
+                *) : ;;
+            esac'
+        fi
+    done
+
+    log_notify "Switch to spanned displays"
+    execute "$FUNCNAME"
+    }
+
 spanex () {
     CMD="$CMDBASE --output $INTERNAL_OUTPUT --off"
     NEIGHBOR=$INTERNAL_OUTPUT
@@ -476,6 +507,6 @@ mirror () {
 #         esac
 # }
 
-main $*
+main $@
 
 # vim: ft=sh:expandtab:ts=4:shiftwidth=4

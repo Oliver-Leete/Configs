@@ -13,8 +13,6 @@ if [[ "$commands" == *"vim"* ]]; then
 		kitty @ send-text ";call v:lua.delete_buffer()"
 		exit
 	fi
-# elif [[ "$(echo $kittyStore | jq '.[] | select(.is_focused) | .tabs[].windows[].id' | wc -w)" == "1" ]]; then
-# 	xdotool key super+meta+BackSpace
 else
 	kitty @ close_window
 fi

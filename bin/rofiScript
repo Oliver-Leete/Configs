@@ -41,7 +41,7 @@ media () {
         next) playerctl next ;;
         previous) playerctl previous ;;
         skip) playerctl next ;;
-        music) xdotool key super+shift+m ;;
+        music) xmonadctl-exe nsp-musc ;;
     esac
 }
 
@@ -50,13 +50,13 @@ utilities () {
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Utilities" -dmenu "Utilities")
     case ${result:-} in
         colour-picker) /home/oleete/.config/bin/colorPicker ;;
-        calculator) xdotool key super+shift+c ;;
+        calculator) xmonadctl-exe nsp-calc ;;
         screenshot) /home/oleete/.config/bin/screencapt ;;
         screenshot-area) /home/oleete/.config/bin/screencapt area ;;
         screencap) /home/oleete/.config/bin/screencast ;;
         screencap-area) /home/oleete/.config/bin/screencast area ;;
         screenkey) screenkey ;;
-        system-monitor) xdotool key super+Escape;;
+        system-monitor) /home/oleete/.cabal/bin/xmonadctl-exe nsp-sysm ;;
     esac
 }
 
@@ -69,17 +69,22 @@ settings () {
         network) nm-connection-editor ;;
         battery) tlp-ui ;;
         screenkey) screenkey --show-settings ;;
-        system-monitor) xdotool key super+Escape;;
+        system-monitor) /home/oleete/.cabal/bin/xmonadctl-exe nsp-sysm ;;
     esac
 }
 
-wsPreset () {
-    preset=$((for item in "/home/oleete/.config/Harpoon"/*; do echo $(basename $item); done) | rofi -matching fuzzy -window-title "Workspace Presets" -dmenu "WorkspacePresets")
-    /home/oleete/.config/bin/wsHarpoon preset "$preset"
+layouts () {
+    items="mirror mirror_stack centre_main"
+    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Layout" -dmenu "Layout")
+    case ${result:-} in 
+        mirror) /home/oleete/.cabal/bin/xmonadctl-exe layout-dir ;;
+        mirror_stack) /home/oleete/.cabal/bin/xmonadctl-exe layout-stack-dir ;;
+        centre_main) /home/oleete/.cabal/bin/xmonadctl-exe layout-style ;;
+    esac
 }
 
 menu () {
-    items="lock play-pause apps utilities commands media display network power settings volume brightness windows sys-mon terminal calculator music discord tasks notes presets"
+    items="lock play-pause apps utilities commands media display network power settings volume brightness windows sys-mon terminal calculator music discord tasks notes calendar gmail presets layout"
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu")
     case ${result:-} in
         lock)       slock           ;;
@@ -95,15 +100,28 @@ menu () {
         volume)     vol             ;;
         brightness) brightness      ;;
         windows) rofi -matching fuzzy -show window ;;
-        sys-mon) xdotool key super+shift+Escape;;
-        terminal) xdotool key super+shift+Enter;;
-        calculator) xdotool key super+shift+c;;
-        discord) xdotool key super+shift+d;;
-        music) xdotool key super+shift+m;;
-        tasks) xdotool key super+shift+t;;
-        notes) xdotool key super+shift+n;;
-        presets) wsPreset ;;
+        sys-mon) /home/oleete/.cabal/bin/xmonadctl-exe nsp-sysm ;;
+        terminal) /home/oleete/.cabal/bin/xmonadctl-exe nsp-cons ;;
+        calculator) /home/oleete/.cabal/bin/xmonadctl-exe nsp-calc ;;
+        discord) /home/oleete/.cabal/bin/xmonadctl-exe nsp-disc ;;
+        music) /home/oleete/.cabal/bin/xmonadctl-exe nsp-musc ;;
+        tasks) workLauncher task ;;
+        notes) workLauncher note ;;
+        gmail) workLauncher gmail ;;
+        calendar) workLauncher gcal ;;
+        presets) /home/oleete/.config/bin/wsHarpoon preset ;;
+        layout) layouts ;;
     esac
+}
+
+workLauncher () {
+    WS=$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')
+    WSS="Wrk Wrk1 Thesis Comments Sim Exp ANSYS" 
+    if [[ "$WSS" == *"$WS"* ]]; then
+        /home/oleete/.cabal/bin/xmonadctl-exe nsp-$1-wrk
+    else
+        /home/oleete/.cabal/bin/xmonadctl-exe nsp-$1
+    fi
 }
 
 main () {
@@ -122,7 +140,7 @@ main () {
         volume)     vol             ;;
         brightness) brightness      ;;
         windows) rofi -matching fuzzy -show window ;;
-        system-monitor) xdotool key super+Escape;;
+        system-monitor) /home/oleete/.cabal/bin/xmonadctl-exe nsp-sysm ;;
     esac
 }
 

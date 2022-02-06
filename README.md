@@ -6,6 +6,11 @@ configs, but it might be worth some of the things I'm doing that I haven't seen 
 much as I think I should be). I'll try and give credit to others where it's due, but there's stuff
 that I can't remember where it came from.
 
+## WARNING
+
+This readme is horrifically out of date with the code in this repo, do not trust it. It seems I
+change my configs way more often than I write about them.
+
 # Neovim
 
 ## Multiple Leaders

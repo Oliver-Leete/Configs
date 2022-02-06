@@ -21,17 +21,16 @@ menu () {
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
     if [ ! -z "$result" ]; then
         WS="$(wmctrl -d | rg -w "$result" | cut -d' ' -f1)"
-        wmctrl -s "$WS"
+        /home/oleete/.cabal/bin/xmonadctl-exe jump-to-"$WS"
     fi
 }
 
 moveMenu () {
     items="$(wmctrl -d | cut -c33-)"
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
-    WIN=$(xdotool getwindowfocus)
     if [ ! -z "$result" ]; then
         WS="$(wmctrl -d | rg -w "$result" | cut -d' ' -f1)"
-        xdotool set_desktop_for_window "$WIN" "$WS"
+        /home/oleete/.cabal/bin/xmonadctl-exe move-to-"$WS"
     fi
 }
 
@@ -47,31 +46,30 @@ addWS () {
     fi
 }
 
+preset () {
+    FILE=$((for item in "/home/oleete/.config/Harpoon"/*; do echo $(basename $item); done) | rofi -matching fuzzy -window-title "Workspace Presets" -dmenu "WorkspacePresets")
+    cat "$HARPFOLDER/$FILE" > "$HARPFILE"
+    jumpToWS 1
+}
+
+makePreset () {
+    NAME=$((for item in "/home/oleete/.config/Harpoon"/*; do echo $(basename $item); done) | rofi -matching fuzzy -window-title "Make Preset" -dmenu "Make Preset")
+    if [ ! -z "$NAME" ]; then
+        cat "$HARPFILE" > "$HARPFOLDER/$NAME"
+    fi
+}
+
 jumpToWS () {
     if [[ $(wc -l <"$HARPFILE") -ge $1 ]]; then
         WS="$(cat "$HARPFILE" | head -"$1" | tail -1 | cut -d' ' -f1)"
-        wmctrl -s "$WS"
+        /home/oleete/.cabal/bin/xmonadctl-exe jump-to-"$WS"
     fi
 }
 
 moveToWS () {
     WS="$(cat "$HARPFILE" | head -"$1" | tail -1 | cut -d' ' -f1)"
-    WIN=$(xdotool getwindowfocus)
-    xdotool set_desktop_for_window "$WIN" "$WS"
+    /home/oleete/.cabal/bin/xmonadctl-exe move-to-"$WS"
 }
 
-preset () {
-    echo
-    cat "$HARPFOLDER/$1" > "$HARPFILE"
-    jumpToWS 1
-}
-
-makePreset () {
-    items="$(wmctrl -d | cut -c33-)"
-    NAME=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Preset Name" -dmenu "Preset Name")
-    if [ ! -z "$NAME" ]; then
-        cat "$HARPFILE" > "$HARPFOLDER/$NAME"
-    fi
-}
 
 main "$@"

@@ -65,8 +65,8 @@ basic.lsp_diagnos = {
             return {
                 { lsp_comps.lsp_error({ format = "  %s" }), "red" },
                 { lsp_comps.lsp_warning({ format = "  %s" }), "yellow" },
-                { lsp_comps.lsp_hint({ format = "  %s" }), "blue" },
-                { lsp_comps.lsp_info({ format = "  %s" }), "blue" },
+                { lsp_comps.lsp_hint({ format = "  %s" }), "blue" },
+                { lsp_comps.lsp_info({ format = "  %s" }), "blue" },
             }
         end
         return ""

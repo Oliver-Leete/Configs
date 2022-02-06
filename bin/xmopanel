@@ -25,7 +25,7 @@ if [[ "$bat_stat" == *"discharging"* ]]; then
     elif ((90<=percent && percent<=100)); then
         bat_icon=""
     fi
-elif [[ "$bat_stat" == *"charging"* ]]; then
+elif [[ "$bat_stat" == *"charg"* ]]; then
     if   ((0<=percent && percent<10)); then
         bat_icon=""
     elif ((10<=percent && percent<20)); then
