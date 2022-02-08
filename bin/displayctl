@@ -85,10 +85,8 @@ main () {
 
     # cache xrandr output since it's the slowest call
     XRANDRV="$(xrandr -q --verbose)"
-    # XRANDRV="$(${CMDBASE} --verbose)"
 
     # parse cached xrandr output to identify outputs
-    # TODO: test on a system without an "internal" laptop display
     INTERNAL_OUTPUT="$(echo "$XRANDRV" | get_internal_output)"
     INTERNAL_OUTPUT_MODE="$(echo "$XRANDRV" | get_default_mode $INTERNAL_OUTPUT)"
     ALL_OUTPUTS="$(echo $(echo "$XRANDRV" | awk '/.*connected/ {print $1}'))"
@@ -99,19 +97,16 @@ main () {
 
     # execute function based on command line arguments
     case ${1:-menu} in
-        menu)   menu ;;
-        in*)    internal ;;
-        ex*)    external ;;
-        span)   span     ;;
-        spanAbove)   spanAbove ;;
-        spanex) spanex   ;;
-        mirror) mirror   ;;
-        toggle) toggle   ;;
-        auto)   auto     ;;
-        fing*)  report_fingerprint ;;
-        # lidopen) lidopen ;;
-        # lidclose) lidclose ;;
-        *)      usage ;;
+        menu)        menu               ;;
+        in*)         internal           ;;
+        ex*)         external           ;;
+        span)        span               ;;
+        spanAbove)   spanAbove          ;;
+        spanex)      spanex             ;;
+        mirror)      mirror             ;;
+        auto)        auto               ;;
+        fing*)       report_fingerprint ;;
+        *)           usage              ;;
     esac
 
 }
@@ -121,14 +116,14 @@ menu () {
     items="auto internal external span spanAbove spanex mirror"
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Display Mode" -dmenu "Display Mode")
     case ${result:-} in
-        in*)    internal ;;
-        ex*)    external ;;
-        span)   span     ;;
+        in*)         internal  ;;
+        ex*)         external  ;;
+        span)        span      ;;
         spanAbove)   spanAbove ;;
-        spanex) spanex   ;;
-        mirror) mirror   ;;
-        auto)   auto     ;;
-        *)      :        ;;
+        spanex)      spanex    ;;
+        mirror)      mirror    ;;
+        auto)        auto      ;;
+        *)           :         ;;
     esac
 }
 
@@ -143,6 +138,7 @@ usage () {
     internal
     external
     span
+    spanAbove
     spanex
     mirror
     auto
@@ -170,11 +166,6 @@ execute () {
     # record mode (should be $1 via colling mode function)
     mode="${1:-}"
 
-    # TODO: the restart of dunst is probably messing with our flock on the
-    # lockfile so I'm removing it here till I can test or change my lockfile
-    # method or change the way I restart dunst
-    #notifications kill
-
     # execute the output change
     eval $CMD
 
@@ -193,10 +184,6 @@ execute () {
     # remember what our preferred config is for this output combination
     save_fingerprint $mode
 
-    # TODO: the restart of dunst is probably messing with our flock on the
-    # lockfile (see above note)
-    #notifications init
-    
     # journal and notification
     log_notify "${mode:-} ${LOGIC:-}"
 }
@@ -209,10 +196,6 @@ save_fingerprint () {
     else
         echo $fingerprint=$1 >> "/home/oleete/.config/displayctl"
     fi
-
-    # CONFIG_VALUES="$(grep -v $fingerprint /home/oleete/.config/displayctl)"
-    # echo $CONFIG_VALUES > "/home/oleete/.config/displayctl"
-    # echo $fingerprint=$1 >> "/home/oleete/.config/displayctl"
 }
 
 generate_fingerprint () {
@@ -281,23 +264,8 @@ get_default_mode () {
 }
 
 # ----------------------------------------------------------------------
-# Display change logic functions
+# Auto logic
 # ----------------------------------------------------------------------
-
-toggle () {
-    LOGIC=toggle
-    log_notify $FUNCNAME
-    # if internal is only active display but there are also inactive
-    # connected displays, switch to the external display, otherwise
-    # switch to the internal
-    if [ "$CONNECTED_ACTIVE_OUTPUTS" = "$INTERNAL_OUTPUT" ] \
-    && [ "$CONNECTED_OUTPUTS" != "$INTERNAL_OUTPUT" ]
-    then
-        external
-    else
-        internal
-    fi
-}
 
 auto () {
     LOGIC=auto
@@ -311,17 +279,17 @@ auto () {
         xmonad --restart
     else # external mode
         # first check for an existing recorded fingerprint
-        # of this combination of displays
+        # of this combination of displays and lid
         if [ -f $CONFIG ]
         then
             fingerprint=$(generate_fingerprint)
             . $CONFIG
             eval "fingerprint_mode=\"\${${fingerprint}:-}\""
         fi
-        # then run the fingerprinted mode or simply switch to
-        # external if no (or invalid) fingerprint is found
+        # then run the fingerprinted mode or simply call menu
+        # no (or invalid) fingerprint is found
         case ${fingerprint_mode:-} in
-            internal|external|span|spanex|mirror) $fingerprint_mode ;;
+            internal|external|span|spanex|spanAbove|mirror) $fingerprint_mode ;;
             *) menu ;;
         esac
     fi
@@ -408,7 +376,7 @@ spanAbove () {
         fi
     done
 
-    log_notify "Switch to spanned displays"
+    log_notify "Switch to above spanned displays"
     execute "$FUNCNAME"
     }
 
@@ -436,25 +404,8 @@ spanex () {
         fi
     done
 
-    log_notify "Switch to spanned displays"
+    log_notify "Switch to external spanned displays"
     echo "CMD is $CMD"
-    execute "$FUNCNAME"
-    }
-
-oldspan () {
-    CMD="$CMDBASE --output $INTERNAL_OUTPUT --scale 1x1 --primary --mode $INTERNAL_OUTPUT_MODE --pos 0x0"
-    NEIGHBOR=$INTERNAL_OUTPUT
-    OFFSET="$(echo $INTERNAL_OUTPUT_MODE | cut -d 'x' -f 1)"
-    for OUTPUT in $ALL_OUTPUTS
-    do
-        eval '
-        case $OUTPUT in
-            $INTERNAL_OUTPUT) : ;; 
-            '$CONNECTED_OUTPUTS') CMD="$CMD --output $OUTPUT --scale 1x1 --auto --pos '$OFFSET'x0" ;;
-            *) : ;;
-        esac'
-    done
-    log_notify "Switch to spanned displays"
     execute "$FUNCNAME"
     }
 
@@ -472,40 +423,6 @@ mirror () {
     log_notify "Switch to external mirror of internal display"
     execute "$FUNCNAME"
     }
-
-# lidclose () {
-#         if [ -f $CONFIG ]
-#         then
-#             fingerprint=$(generate_fingerprint)
-#             . $CONFIG
-#             eval "fingerprint_mode=\"\${${fingerprint}:-}\""
-#         fi
-#         # then run the fingerprinted mode or simply switch to
-#         # external if no (or invalid) fingerprint is found
-#         case ${fingerprint_mode:-} in
-#             span) spanex ;;
-#             internal) external ;;
-#             external|spanex|mirror) $fingerprint_mode ;;
-#             *) menu ;;
-#         esac
-# }
-
-# lidopen () {
-#         if [ -f $CONFIG ]
-#         then
-#             fingerprint=$(generate_fingerprint)
-#             . $CONFIG
-#             eval "fingerprint_mode=\"\${${fingerprint}:-}\""
-#         fi
-#         # then run the fingerprinted mode or simply switch to
-#         # external if no (or invalid) fingerprint is found
-#         case ${fingerprint_mode:-} in
-#             spanex) span ;;
-#             external) internal ;;
-#             external|spanex|mirror) $fingerprint_mode ;;
-#             *) menu ;;
-#         esac
-# }
 
 main $@
 

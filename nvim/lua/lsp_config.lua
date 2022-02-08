@@ -95,7 +95,7 @@ require("lspconfig").grammar_guard.setup({
             },
             latex = {
                 environments = { Fortran = "ignore", jllisting = "ignore", algorithmic = "ignore"},
-                commands = { ["\\subfile{}"] = "ignore" },
+                commands = { ["\\subfile{}"] = "ignore", ["\\glsname{}"] = "ignore", ["\\gls{}"] = "ignore", ["\\glsfirst{}"] = "ignore"},
             },
             dictionary = { ["en-GB"] = { "ANSYS", "UPF" }  },
             disabledRules = { ["en-GB"] = { "OXFORD_SPELLING_Z_NOT_S" } },

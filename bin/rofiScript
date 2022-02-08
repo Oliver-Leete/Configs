@@ -84,7 +84,7 @@ layouts () {
 }
 
 menu () {
-    items="lock play-pause apps utilities commands media display network power settings volume brightness windows sys-mon terminal calculator music discord tasks notes calendar gmail presets layout"
+    items="lock play-pause apps utilities commands media display network power settings volume brightness windows sys-mon terminal calculator music discord tasks notes calendar gmail projects presets layout"
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu")
     case ${result:-} in
         lock)       slock           ;;
@@ -109,6 +109,7 @@ menu () {
         notes) workLauncher note ;;
         gmail) workLauncher gmail ;;
         calendar) workLauncher gcal ;;
+        projects) /home/oleete/.config/bin/wsHarpoon menu ;;
         presets) /home/oleete/.config/bin/wsHarpoon preset ;;
         layout) layouts ;;
     esac

@@ -357,50 +357,51 @@ myKeys =
     , ("<XF86AudioNext>"          , spawn "playerctl next")
     , ("<Print>"                  , spawn "/home/oleete/.config/bin/screencapt area")
 
-    , ("M-<Return>"         , klBind " 'kitty @ launch'" (upPointer $ spawn myTerminal))
+    , ("M-<Return>"         , bF $ kt " 'kitty @ launch'" $ l(upPointer $ spawn myTerminal))
     , ("M-M1-<Return>"      , upPointer $ spawn myTerminal)
 
-    , ("M-n"                , rnklBind (spawn (myTerminalRemote ++ " 'kitty @ launch'")) " focusEditor" (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")]))
+    , ("M-n"                , bF $ rNv (spawn (myTerminalRemote ++ " 'kitty @ launch'")) $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")]))
     , ("M-M1-n"             , upPointer $ spawn myTerminal)
 
-    , ("M-i"                , clBind (P.sendKey controlMask xK_t) (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
+    , ("M-i"                , bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
     , ("M-M1-i"             , upPointer $ spawn myBrowser)
 
     , ("M-e"                , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
 
     , ("M-o"                , upPointer $ bindOn C.WS [(wsCOMMENTS, runOrRaise "foxitreader" (className =? "Foxit Reader"))])
 
-    , ("M-<Backspace>"      , nkclBind "DeleteBuffer" (P.sendKey (controlMask .|. shiftMask) xK_BackSpace) (P.sendKey controlMask xK_w) kill)
+    , ("M-<Backspace>"      , bF $ nv "DeleteBuffer" $ rKt (P.sendKey (controlMask .|. shiftMask) xK_BackSpace) $ crm (P.sendKey controlMask xK_w) $ l kill)
     , ("M-M1-<Backspace>"   , kill)
     , ("M-S-<Backspace>"    , confirmPrompt hotPromptTheme "kill all" killAll)
 
-    , ("M-<Left>"           , rklBind (P.sendKey (controlMask .|. shiftMask) xK_Left) (P.sendKey (controlMask .|. shiftMask) xK_Tab))
-    , ("M-<Right>"          , rklBind (P.sendKey (controlMask .|. shiftMask) xK_Right) (P.sendKey controlMask xK_Tab))
+    , ("M-<Left>"           , bF $ rKt (P.sendKey (controlMask .|. shiftMask) xK_Left)  $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
+    , ("M-<Right>"          , bF $ rKt (P.sendKey (controlMask .|. shiftMask) xK_Right) $ l (P.sendKey controlMask xK_Tab))
     , ("M-<Down>"           , windows W.focusDown)
     , ("M-<Up>"             , windows W.focusUp)
 
 
-    , ("M-w M-f"            , klBind " kittyFullscreen" (P.sendKey noModMask xK_F11))
-    , ("M-w f"              , klBind " kittyFullscreen" (P.sendKey noModMask xK_F11))
+    , ("M-w M-f"            , bF $ kt " kittyFullscreen" $ l (P.sendKey noModMask xK_F11))
+    , ("M-w f"              , bF $ kt " kittyFullscreen" $ l (P.sendKey noModMask xK_F11))
     , ("M-w M-w"            , toggleLayout FULL)
     , ("M-w w"              , toggleLayout FULL)
     , ("M-w M-s"            , toggleLayout FULLBAR)
     , ("M-w s"              , toggleLayout FULLBAR)
     , ("M-w M-c"            , toggleLayout FULLCENTER)
     , ("M-w c"              , toggleLayout FULLCENTER)
-    , ("M-w M-x"            , nklBind "ZenMode" " kittyFullscreen" (toggleLayout FULLCENTER))
-    , ("M-w x"              , nklBind "ZenMode" " kittyFullscreen" (toggleLayout FULLCENTER))
+    , ("M-w M-x"            , bF $ nv "ZenMode" $ kt " kittyFullscreen" $ l (toggleLayout FULLCENTER))
+    , ("M-w x"              , bF $ nv "ZenMode" $ kt " kittyFullscreen" $ l (toggleLayout FULLCENTER))
 
-    , ("M-h"                , nklBind "KittyNavigateleft"   " moveWindow left"   (upPointer $ windowGo L True))
-    , ("M-j"                , nklBind "KittyNavigatebottom" " moveWindow bottom" (upPointer $ windowGo D True))
-    , ("M-k"                , nklBind "KittyNavigatetop"    " moveWindow top"    (upPointer $ windowGo U True))
-    , ("M-l"                , nklBind "KittyNavigateright"  " moveWindow right"  (upPointer $ windowGo R True))
+    , ("M-h"                , bF $ nv "KittyNavigateleft"   $ kt " moveWindow left"   $ l (upPointer $ windowGo L True))
+    , ("M-j"                , bF $ nv "KittyNavigatebottom" $ kt " moveWindow bottom" $ l (upPointer $ windowGo D True))
+    , ("M-k"                , bF $ nv "KittyNavigatetop"    $ kt " moveWindow top"    $ l (upPointer $ windowGo U True))
+    , ("M-l"                , bF $ nv "KittyNavigateright"  $ kt " moveWindow right"  $ l (upPointer $ windowGo R True))
+
     , ("M-M1-h"             , upPointer $ windowSwap L True)
     , ("M-M1-j"             , upPointer $ windowSwap D True)
     , ("M-M1-k"             , upPointer $ windowSwap U True)
     , ("M-M1-l"             , upPointer $ windowSwap R True)
 
-    , ("M-m"                , klBind " mainMove"   (upPointer $ swapPromote' False))
+    , ("M-m"                , bF $ kt " mainMove" $ l (upPointer $ swapPromote' False))
     , ("M-M1-m"             , upPointer $ swapPromote' False)
     , ("M-v"                , myFocusMaster)
 
@@ -441,28 +442,14 @@ myKeys =
                             then W.sink w s
                             else W.float w (W.RationalRect (1/4) (1/4) (1/2) (1/2)) s)
 
-        nklBind nvr kitty leftover = bindFirst [(title =? "MainEditor", spawn ("/home/oleete/.config/bin/nvrWS " ++ nvr))
-                                               ,(className =? "kitty", spawn (myTerminalRemote ++ kitty))
-                                               ,(pure True, leftover)]
+        l leftover = [(pure True, leftover)]
+        nv n o = (title =? "MainEditor", spawn ("/home/oleete/.config/bin/nvrWS " ++ n)) : o
+        rNv n o = (title =? "MainEditor", n) : o
+        kt k o = (className =? "kitty", spawn (myTerminalRemote ++ k)) : o
+        rKt k o = (className =? "kitty", k) : o
+        crm c o = (className =? "Google-chrome", c) : o
 
-        rnklBind nvr kitty leftover = bindFirst [(title =? "MainEditor", nvr)
-                                                ,(className =? "kitty", spawn (myTerminalRemote ++ kitty))
-                                                ,(pure True, leftover)]
-
-        klBind kitty leftover = bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ kitty))
-                                          ,(pure True, leftover)]
-
-        clBind chrome leftover = bindFirst [(className =? "Google-chrome", chrome)
-                                           ,(pure True, leftover)]
-
-        rklBind kitty leftover = bindFirst [(className =? "kitty", kitty)
-                                          ,(pure True, leftover)]
-
-        nkclBind nvr kitty chrome leftover = bindFirst [(title =? "MainEditor", spawn ("/home/oleete/.config/bin/nvrWS " ++ nvr))
-                                                       ,(className =? "kitty", kitty)
-                                                       ,(className =? "Google-chrome", chrome)
-                                                       ,(pure True, leftover)]
-
+        bF o = bindFirst o
 
 myFocusMaster :: X ()
 myFocusMaster = withWindowSet $ \wset ->
@@ -543,7 +530,7 @@ myLogHook = do
     masterHistoryHook
     workspaceHistoryHookExclude ["NSP"]
     -- nsHideOnFocusLoss scratchpads
-    refocusLastLogHook 
+    refocusLastLogHook
 
 ----------------------------------------------------------------------------------------------------
 -- New Window Actions                                                                             --
