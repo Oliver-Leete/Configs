@@ -4,6 +4,12 @@ sound() {
 		pkill pavucontrol
 	else
 		pavucontrol &
+        sleep 0.1
+        RESOLUTIONS=$(xrandr | rg -e "^$(/home/oleete/.config/bin/get-focused-monitor.pl)" | rg -o -e '\d*x\d*\+\d*\+\d*' | rg -o -e '\d+')
+        X=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f3)" + 8)
+        Y=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f4)" + 31)
+        window=$(wmctrl -l | rg "Volume Control" | cut -d' ' -f1)
+        wmctrl -i -r "$window" -e 1,"$X","$Y",600,800
 	fi
 }
 
@@ -12,6 +18,12 @@ network() {
 		pkill -f nm-connection-editor
 	else
 		nm-connection-editor &
+        sleep 0.1
+        RESOLUTIONS=$(xrandr | rg -e "^$(/home/oleete/.config/bin/get-focused-monitor.pl)" | rg -o -e '\d*x\d*\+\d*\+\d*' | rg -o -e '\d+')
+        X=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f3)" + 8)
+        Y=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f4)" + 31)
+        window=$(wmctrl -l | rg "Network Connections" | cut -d' ' -f1)
+        wmctrl -i -r "$window" -e 1,"$X","$Y",600,800
 	fi
 }
 
@@ -20,6 +32,12 @@ bluetooth() {
 		pkill blueberry
 	else
 		blueberry &
+        sleep 0.4
+        RESOLUTIONS=$(xrandr | rg -e "^$(/home/oleete/.config/bin/get-focused-monitor.pl)" | rg -o -e '\d*x\d*\+\d*\+\d*' | rg -o -e '\d+')
+        X=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f3)" + 8)
+        Y=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f4)" + 31)
+        window=$(wmctrl -l | rg "Bluetooth" | cut -d' ' -f1)
+        wmctrl -i -r "$window" -e 1,"$X","$Y",600,800
 	fi
 }
 
@@ -28,7 +46,46 @@ battery() {
 		pkill tlpui
 	else
 		tlpui &
+        sleep 0.6
+        RESOLUTIONS=$(xrandr | rg -e "^$(/home/oleete/.config/bin/get-focused-monitor.pl)" | rg -o -e '\d*x\d*\+\d*\+\d*' | rg -o -e '\d+')
+        X=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f3)" + 8)
+        Y=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f4)" + 31)
+        window=$(wmctrl -l | rg "Tlp-UI" | cut -d' ' -f1)
+        wmctrl -i -r "$window" -e 1,"$X","$Y",600,800
 	fi
+}
+
+DND() {
+    if [[ "$(dunstctl is-paused)" == "true" ]]; then
+        dunstctl set-paused false
+    else
+        dunstctl set-paused true
+        for i in $(atq | cut -f 1); do atrm $i; done
+        echo "dunstctl set-paused false" | at now + 2 hour
+    fi
+}
+
+DND_menu() {
+    if [[ "$(dunstctl is-paused)" == "true" ]]; then
+        dunstctl set-paused false
+    else
+        items="15-minutes 30-minutes 1-hour 2-hours 4-hours 8-hours"
+        result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "DND" -dmenu "DND" -i)
+        if [ ! -z "$result" ]; then
+            dunstctl set-paused true
+            for i in $(atq | cut -f 1); do atrm $i; done
+            case $result in
+                15-minutes) time="15 minute";;
+                30-minutes) time="30 minute";;
+                1-hour)     time="1 hour";;
+                2-hours)    time="2 hour";;
+                4-hours)    time="4 hour";;
+                8-hours)    time="8 hour";;
+                *)          time="15 minute";;
+            esac
+            echo "dunstctl set-paused false" | at now + $time
+        fi
+    fi
 }
 
 case ${1:-} in
@@ -36,6 +93,8 @@ sound) sound ;;
 network) network ;;
 bluetooth) bluetooth ;;
 battery) battery ;;
+DND) DND ;;
+DND_menu) DND_menu ;;
 *) ;;
 esac
 exit

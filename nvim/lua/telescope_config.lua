@@ -122,7 +122,7 @@ require("telescope").setup({
     extensions = {
         bibtex = {
             depth = 2,
-            global_files = { "/home/oleete/UniDrive/1_Thesis/0.1_LaTeX/Citations.bib" },
+            global_files = { "/home/oleete/UniDrive/Thesis/thesis/Citations.bib" },
         },
         fzf = {
             override_generic_sorter = true,

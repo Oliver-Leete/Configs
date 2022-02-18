@@ -2,16 +2,18 @@
 
 HARPFILE="/home/oleete/.config/wsHarpoon"
 HARPFOLDER="/home/oleete/.config/Harpoon"
+XMONADCTL="/home/oleete/.cabal/bin/xmonadctl-exe"
 
 main () {
     case ${1:-menu} in
-        menu)    menu ;;
-        moveMenu)moveMenu ;;
-        add)     addWS ;;
-        modify)  modifyWS ;;
-        jump)    jumpToWS "$2" ;;
-        move)    moveToWS "$2" ;;
-        preset)  preset "$2" ;;
+        menu)       menu ;;
+        moveMenu)   moveMenu ;;
+        goMoveMenu) goMoveMenu ;;
+        add)        addWS ;;
+        modify)     modifyWS ;;
+        jump)       jumpToWS "$2" ;;
+        move)       moveToWS "$2" ;;
+        preset)     preset "$2" ;;
         makePreset) makePreset ;;
     esac
 }
@@ -21,7 +23,7 @@ menu () {
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
     if [ ! -z "$result" ]; then
         WS="$(wmctrl -d | rg -w "$result" | cut -d' ' -f1)"
-        /home/oleete/.cabal/bin/xmonadctl-exe jump-to-"$WS"
+        $XMONADCTL jump-to-"$WS"
     fi
 }
 
@@ -30,7 +32,17 @@ moveMenu () {
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
     if [ ! -z "$result" ]; then
         WS="$(wmctrl -d | rg -w "$result" | cut -d' ' -f1)"
-        /home/oleete/.cabal/bin/xmonadctl-exe move-to-"$WS"
+        $XMONADCTL move-to-"$WS"
+    fi
+}
+
+goMoveMenu () {
+    items="$(wmctrl -d | cut -c33-)"
+    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
+    if [ ! -z "$result" ]; then
+        WS="$(wmctrl -d | rg -w "$result" | cut -d' ' -f1)"
+        $XMONADCTL move-to-"$WS"
+        $XMONADCTL jump-to-"$WS"
     fi
 }
 
@@ -41,19 +53,19 @@ modifyWS () {
 addWS () {
     WSnum="$(wmctrl -d | grep '*' | cut -d' ' -f1)"
     WSname="$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')"
-    if ! rg -q "$WSname" "/home/oleete/.config/wsHarpoon"; then
+    if ! rg -q "$WSname" "$HARPFILE"; then
         echo "$WSnum" "$WSname" >> "$HARPFILE"
     fi
 }
 
 preset () {
-    FILE=$((for item in "/home/oleete/.config/Harpoon"/*; do echo $(basename $item); done) | rofi -matching fuzzy -window-title "Workspace Presets" -dmenu "WorkspacePresets")
+    FILE=$((for item in "$HARPFOLDER"/*; do echo $(basename $item); done) | rofi -matching fuzzy -window-title "Workspace Presets" -dmenu "WorkspacePresets")
     cat "$HARPFOLDER/$FILE" > "$HARPFILE"
     jumpToWS 1
 }
 
 makePreset () {
-    NAME=$((for item in "/home/oleete/.config/Harpoon"/*; do echo $(basename $item); done) | rofi -matching fuzzy -window-title "Make Preset" -dmenu "Make Preset")
+    NAME=$((for item in "$HARPFOLDER"/*; do echo $(basename $item); done) | rofi -matching fuzzy -window-title "Make Preset" -dmenu "Make Preset")
     if [ ! -z "$NAME" ]; then
         cat "$HARPFILE" > "$HARPFOLDER/$NAME"
     fi
@@ -62,13 +74,13 @@ makePreset () {
 jumpToWS () {
     if [[ $(wc -l <"$HARPFILE") -ge $1 ]]; then
         WS="$(cat "$HARPFILE" | head -"$1" | tail -1 | cut -d' ' -f1)"
-        /home/oleete/.cabal/bin/xmonadctl-exe jump-to-"$WS"
+        $XMONADCTL jump-to-"$WS"
     fi
 }
 
 moveToWS () {
     WS="$(cat "$HARPFILE" | head -"$1" | tail -1 | cut -d' ' -f1)"
-    /home/oleete/.cabal/bin/xmonadctl-exe move-to-"$WS"
+    $XMONADCTL move-to-"$WS"
 }
 
 

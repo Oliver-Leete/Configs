@@ -90,6 +90,13 @@ else
     blu_icon=""
 fi
 
+dnd_stat=$(dunstctl is-paused)
+if [[ "$(dunstctl is-paused)" == "true" ]]; then
+    dnd_icon="ﮖ"
+else
+    dnd_icon=""
+fi
+
 men_icon=""
 
 if [ -f /tmp/screencast.pid ]; then
@@ -97,6 +104,7 @@ if [ -f /tmp/screencast.pid ]; then
 fi
 
 action_end='</action>'
+action_dnd='<action=`/home/oleete/.config/bin/toggle DND`>'
 action_bat='<action=`/home/oleete/.config/bin/toggle battery`>'
 action_net='<action=`/home/oleete/.config/bin/toggle network`>'
 action_vol='<action=`/home/oleete/.config/bin/toggle sound`>'
@@ -105,10 +113,11 @@ action_men='<action=`/home/oleete/.config/bin/statusNotify`>'
 action_cap='<action=`/home/oleete/.config/bin/screencast`>'
 
 men=$action_men$men_icon$action_end
+dnd=$action_dnd$dnd_icon$action_end
 bat=$action_bat$bat_icon$action_end
 net=$action_net$net_icon$action_end
 vol=$action_vol$vol_icon$action_end
 blu=$action_blu$blu_icon$action_end
 cap=$action_cap$cap_icon$action_end
 
-echo "<box type=Bottom width=2 mt=2 color=#DCA561><fc=#DCA561>$men $bat $net $vol $blu</fc></box>$cap"
+echo "<box type=Bottom width=2 mt=2 color=#DCA561><fc=#DCA561>$men $bat $net $vol $blu $dnd</fc></box>$cap"

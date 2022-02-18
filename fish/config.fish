@@ -2,8 +2,8 @@
 
 starship init fish | source
 
-set -Ux EDITOR "nvrTab --remote-tab-wait"
-set -Ux VISUAL "nvrTab --remote-tab-wait"
+set -Ux EDITOR "/home/oleete/.config/bin/nvrTab --remote-tab-wait"
+set -Ux VISUAL "/home/oleete/.config/bin/nvrTab --remote-tab-wait"
 set -gx PATH /home/oleete/.cargo/bin /home/oleete/.yarn/bin /home/oleete/go/bin /home/oleete/.config/nvim/node_modules/tree-sitter-cli /home/oleete/.local/bin /home/oleete/.config/bin $PATH
 
 set WORKSPACE (wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')

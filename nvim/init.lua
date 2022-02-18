@@ -69,6 +69,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'ray-x/lsp_signature.nvim'
     Plug 'brymer-meneses/grammar-guard.nvim'
+    Plug 'p00f/clangd_extensions.nvim'
 
     Plug 'hrsh7th/nvim-cmp'
     Plug 'hrsh7th/cmp-buffer'

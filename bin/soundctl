@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+all_sinks=$(pactl list short sinks | cut -f 2)
+default_sink=$(pactl get-default-sink)
+active_sink=$(echo "$all_sinks" | grep -n "$default_sink" | cut -d : -f 1)
+
+all_sources=$(pactl list sources | awk -v RS='' -v ORS='\n\n' "/Monitor of Sink: n\/a/" | grep -o -P '(?<=Name: ).*')
+default_source=$(pactl get-default-source)
+active_source=$(echo "$all_sources" | grep -n "$default_source" | cut -d : -f 1)
+
+sinkMenu() {
+    niceNames=$(for item in $all_sinks; do printf "$(pactl list sinks | awk -v RS='' -v ORS='\n\n' "/$item/" | grep -o -P '(?<=device.description = ").*(?=")')\n"; done)
+
+    sinkNum=$(echo "$niceNames" | rofi -dmenu -i -a $(($active_sink - 1)) -format 'i' -p 'Select a device (Output): ')
+    selected_sink=$(pactl list short sinks | cut -f 2 | head -$(($sinkNum + 1)) | tail -1)
+
+	if [[ ! -z $selected_sink ]]; then
+		pactl set-default-sink "$selected_sink"
+	fi
+}
+
+sourceMenu() {
+    niceNames=$(for item in $all_sources; do printf "$(pactl list sources | awk -v RS='' -v ORS='\n\n' "/$item/" | grep -o -P '(?<=device.description = ").*(?=")')\n"; done)
+
+    sourceNum=$(echo "$niceNames" | rofi -dmenu -i -a $(($active_source - 1)) -format 'i' -p 'Select a device (Input): ')
+    selected_source=$(pactl list sources | awk -v RS='' -v ORS='\n\n' "/Monitor of Sink: n\/a/" | grep -o -P '(?<=Name: ).*' | head -$(($sourceNum + 1)) | tail -1)
+
+	if [[ ! -z $selected_source ]]; then
+		pactl set-default-source "$selected_source"
+	fi
+}
+
+main() {
+	case ${1:-menu} in
+        sink-menu) sinkMenu ;;
+        source-menu) sourceMenu ;;
+	esac
+}
+
+main "$@"

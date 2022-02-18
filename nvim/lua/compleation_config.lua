@@ -139,7 +139,8 @@ require("cmp").setup({
                 nvim_lua = "(Lua)",
                 buffer = "(Buffer)",
                 cmdline = "(CMD)",
-                dictionary = "(DICT)"
+                dictionary = "(DICT)",
+                omni = "(TEX?)"
             })[entry.source.name]
             vim_item.kind = M.icons[vim_item.kind]
             return vim_item

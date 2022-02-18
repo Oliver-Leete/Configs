@@ -18,37 +18,107 @@ network () {
     networkmanager_dmenu
 }
 
-power () {
-    items="lock logout suspend hibernate shutdown reboot"
-    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Power" -dmenu "Power")
+menu () {
+    items="
+    lock
+    play
+    pause
+    dnd
 
-    case ${result:-} in
-        lock)       slock               ;;
-        logout)     pkill xmonad      ;;
-        suspend)    systemctl suspend   ;;
-        hibernate)  systemctl hibernate ;;
-        shutdown)   systemctl poweroff  ;;
-        reboot)     systemctl reboot    ;;
-    esac
-}
+    apps
+    utilities
+    commands
+    windows
 
-media () {
-    items="play pause next previous skip music"
-    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Media" -dmenu "Media")
+    next
+    skip
+    prev
+
+    sound
+    sound-input
+    display
+    network
+    bluetooth
+    settings
+
+    volume
+    brightness
+
+    sys-mon
+    terminal
+    calculator
+    music
+    discord
+
+    tasks
+    notes
+    calendar
+    gmail
+
+    colour-picker
+    calculator
+    screenshot
+    screenshot-area
+    screencap
+    screencap-area
+    screenkey
+    screenkey-settings
+
+    goto-project
+    move-project
+    goto-move-project
+
+    presets
+    modify-preset
+    make-preset
+
+    mirror
+    mirror_stack
+    centre_main
+
+    logout
+    suspend
+    hibernate
+    shutdown
+    reboot
+    "
+    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu")
     case ${result:-} in
+        lock)       slock           ;;
         play) playerctl play ;;
         pause) playerctl pause ;;
-        next) playerctl next ;;
-        previous) playerctl previous ;;
-        skip) playerctl next ;;
-        music) xmonadctl-exe nsp-musc ;;
-    esac
-}
+        dnd) /home/oleete/.config/bin/toggle DND_menu ;;
 
-utilities () {
-    items="colour-picker calculator screenshot screenshot-area screencap screencap-area screenkey system-monitor"
-    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Utilities" -dmenu "Utilities")
-    case ${result:-} in
+        apps) rofi -matching fuzzy -show drun -show-icons ;;
+        utilities)  utilities       ;;
+        commands) rofi -matching fuzzy -show run ;;
+        windows) rofi -matching fuzzy -show window ;;
+
+        next|skip) playerctl next ;;
+        prev) playerctl previous ;;
+        music) /home/oleete/.cabal/bin/xmonadctl-exe nsp-musc ;;
+
+        sound) /home/oleete/.config/bin/soundctl sink-menu;;
+        sound-input) /home/oleete/.config/bin/soundctl source-menu;;
+        display)    /home/oleete/.config/bin/displayctl ;;
+        network)    network         ;;
+        bluetooth)  /home/oleete/.config/bin/rofi-bluetooth ;;
+        settings)   settings        ;;
+
+        volume)     vol             ;;
+        brightness) brightness      ;;
+
+        sys-mon) /home/oleete/.cabal/bin/xmonadctl-exe nsp-sysm ;;
+        terminal) /home/oleete/.cabal/bin/xmonadctl-exe nsp-cons ;;
+        calculator) /home/oleete/.cabal/bin/xmonadctl-exe nsp-calc ;;
+        discord) /home/oleete/.cabal/bin/xmonadctl-exe nsp-disc ;;
+        music) /home/oleete/.cabal/bin/xmonadctl-exe nsp-musc ;;
+
+        tasks) workLauncher task ;;
+        notes) workLauncher note ;;
+        gmail) workLauncher gmail ;;
+        calendar) workLauncher gcal ;;
+
         colour-picker) /home/oleete/.config/bin/colorPicker ;;
         calculator) xmonadctl-exe nsp-calc ;;
         screenshot) /home/oleete/.config/bin/screencapt ;;
@@ -56,62 +126,25 @@ utilities () {
         screencap) /home/oleete/.config/bin/screencast ;;
         screencap-area) /home/oleete/.config/bin/screencast area ;;
         screenkey) screenkey ;;
-        system-monitor) /home/oleete/.cabal/bin/xmonadctl-exe nsp-sysm ;;
-    esac
-}
+        screenkey-settings) screenkey --show-settings ;;
 
-settings () {
-    items="sound bluetooth network battery screenkey system-monitor"
-    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Settings" -dmenu "Settings")
-    case ${result:-} in
-        sound) pavucontrol ;;
-        bluetooth) blueberry ;;
-        network) nm-connection-editor ;;
-        battery) tlp-ui ;;
-        screenkey) screenkey --show-settings ;;
-        system-monitor) /home/oleete/.cabal/bin/xmonadctl-exe nsp-sysm ;;
-    esac
-}
+        goto-project) /home/oleete/.config/bin/wsHarpoon menu ;;
+        move-project) /home/oleete/.config/bin/wsHarpoon moveMenu ;;
+        goto-move-project) /home/oleete/.config/bin/wsHarpoon goMoveMenu ;;
 
-layouts () {
-    items="mirror mirror_stack centre_main"
-    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Layout" -dmenu "Layout")
-    case ${result:-} in 
+        presets) /home/oleete/.config/bin/wsHarpoon preset ;;
+        edit-preset)/home/oleete/.config/bin/wsHarpoon modify ;;
+        make-preset)/home/oleete/.config/bin/wsHarpoon makePreset ;;
+
         mirror) /home/oleete/.cabal/bin/xmonadctl-exe layout-dir ;;
         mirror_stack) /home/oleete/.cabal/bin/xmonadctl-exe layout-stack-dir ;;
         centre_main) /home/oleete/.cabal/bin/xmonadctl-exe layout-style ;;
-    esac
-}
 
-menu () {
-    items="lock play-pause apps utilities commands media display network power settings volume brightness windows sys-mon terminal calculator music discord tasks notes calendar gmail projects presets layout"
-    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu")
-    case ${result:-} in
-        lock)       slock           ;;
-        play-pause) playerctl play-pause ;;
-        apps) rofi -matching fuzzy -show drun -show-icons ;;
-        utilities)  utilities       ;;
-        commands) rofi -matching fuzzy -show run ;;
-        media)      media           ;;
-        display)    /home/oleete/.config/bin/displayctl ;;
-        network)    network         ;;
-        power)      power           ;;
-        settings)   settings        ;;
-        volume)     vol             ;;
-        brightness) brightness      ;;
-        windows) rofi -matching fuzzy -show window ;;
-        sys-mon) /home/oleete/.cabal/bin/xmonadctl-exe nsp-sysm ;;
-        terminal) /home/oleete/.cabal/bin/xmonadctl-exe nsp-cons ;;
-        calculator) /home/oleete/.cabal/bin/xmonadctl-exe nsp-calc ;;
-        discord) /home/oleete/.cabal/bin/xmonadctl-exe nsp-disc ;;
-        music) /home/oleete/.cabal/bin/xmonadctl-exe nsp-musc ;;
-        tasks) workLauncher task ;;
-        notes) workLauncher note ;;
-        gmail) workLauncher gmail ;;
-        calendar) workLauncher gcal ;;
-        projects) /home/oleete/.config/bin/wsHarpoon menu ;;
-        presets) /home/oleete/.config/bin/wsHarpoon preset ;;
-        layout) layouts ;;
+        logout)     pkill xmonad      ;;
+        suspend)    systemctl suspend   ;;
+        hibernate)  systemctl hibernate ;;
+        shutdown)   systemctl poweroff  ;;
+        reboot)     systemctl reboot    ;;
     esac
 }
 
@@ -125,24 +158,4 @@ workLauncher () {
     fi
 }
 
-main () {
-    case ${1:-mainMenu} in
-        mainMenu)   menu        ;;
-        lock)       slock           ;;
-        play-pause) playerctl play-pause ;;
-        apps) rofi -matching fuzzy -show drun -show-icons ;;
-        utilities)  utilities       ;;
-        commands) rofi -matching fuzzy -show run ;;
-        media)      media           ;;
-        display)    /home/oleete/.config/bin/displayctl      ;;
-        network)    network         ;;
-        power)      power           ;;
-        settings)   settings        ;;
-        volume)     vol             ;;
-        brightness) brightness      ;;
-        windows) rofi -matching fuzzy -show window ;;
-        system-monitor) /home/oleete/.cabal/bin/xmonadctl-exe nsp-sysm ;;
-    esac
-}
-
-main "$@"
+menu "$@"

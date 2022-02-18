@@ -93,7 +93,6 @@ vim.cmd([[let g:vimtex_view_general_viewer='zathura']])
 vim.cmd([[let g:vimtex_view_forward_search_on_start=1]])
 vim.cmd([[let g:vimtex_view_automatic = 0]])
 vim.g.vimtex_compiler_latexmk = {
-    ["build_dir"] = 'build',
     ["callback"] = 1,
     ["continuous"] = 0,
     ["executable"] = 'latexmk',
@@ -194,3 +193,8 @@ require('cmp').setup.buffer({
         { name = "dictionary", keyword_lenght = 2},
     },
 })
+vim.cmd([[
+augroup vimtex_events
+    au!
+    au User VimtexEventCompileSuccess silent! !cp build/OML-Thesis.pdf ./
+]])

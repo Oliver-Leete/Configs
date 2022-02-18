@@ -174,12 +174,12 @@ projects =
                                                 spawnOn wsEXP ("sleep .2; " ++ myBrowser)
                 }
     , Project   { projectName       = wsTHESIS
-                , projectDirectory  = "~/Projects/Thesis/Thesis"
+                , projectDirectory  = "~/Projects/Thesis/thesis"
                 , projectStartHook  = Just $ do spawnOn wsTHESIS myTerminal
                                                 spawnOn wsTHESIS ("sleep .2; " ++ myBrowser)
                 }
     , Project   { projectName       = wsCOMMENTS
-                , projectDirectory  = "~/Projects/Thesis/Thesis"
+                , projectDirectory  = "~/Projects/Thesis/thesis"
                 , projectStartHook  = Just $ do spawnOn wsCOMMENTS myTerminal
                                                 spawnOn wsCOMMENTS ("sleep .2; " ++ myBrowser)
                                                 spawnOn wsCOMMENTS "sleep .4; foxitreader"
@@ -203,16 +203,16 @@ myTerminalRemote = "/home/oleete/.config/bin/kittyRemote"
 myBrowser      = "/home/oleete/.config/bin/browser"
 myBrowserClass = "google-chrome-stable"
 
-discordCommand         = "discord --no-sandbox"
-gTasksCommand          = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/task --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html --class=Tasks"
-gTasksWrkCommand       = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/taskWrk --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html --class=WrkTasks"
-keepCommand            = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/keep   --app=https://keep.google.com/#home --class=Keep"
-keepWrkCommand         = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/keepWrk   --app=https://keep.google.com/#home --class=WrkKeep"
-gmailCommand           = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmail --app=https://mail.google.com --class=GMail"
-gmailCommandWrk        = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmailWrk --app=https://mail.google.com --class=WrkGMail"
-gcalCommand            = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcal   --app=https://calendar.google.com --class=GCal"
-gcalCommandWrk         = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcalWrk   --app=https://calendar.google.com --class=WrkGCal"
-youtubeMusicCommand    = "youtube-music"
+discordCommand   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/discord  --class=discord  --app=https://discord.com/channels/@me                              "
+gTasksCommand    = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/task     --class=Tasks    --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html"
+gTasksWrkCommand = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/taskWrk  --class=WrkTasks --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html"
+keepCommand      = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/keep     --class=Keep     --app=https://keep.google.com/#home                                 "
+keepWrkCommand   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/keepWrk  --class=WrkKeep  --app=https://keep.google.com/#home                                 "
+gmailCommand     = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmail    --class=GMail          https://mail.google.com                                       "
+gmailCommandWrk  = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmailWrk --class=WrkGMail       https://mail.google.com                                       "
+gcalCommand      = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcal     --class=GCal           https://calendar.google.com                                   "
+gcalCommandWrk   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcalWrk  --class=WrkGCal        https://calendar.google.com                                   "
+ytmCommand       = "youtube-music"
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
@@ -227,7 +227,7 @@ scratchpads =
     ,   NS "gcalWork"  gcalCommandWrk (className =? "WrkGCal") nonFloating
 
     ,   NS "discord"  discordCommand (className =? "discord") defaultFloating
-    ,   NS "youtubeMusic"  youtubeMusicCommand (className =? "YouTube Music") nonFloating
+    ,   NS "youtubeMusic"  ytmCommand (className =? "YouTube Music") nonFloating
     ,   NS "calc"  "gnome-calculator --class=calcu" (className =? "calcu") nonFloating
     ,   NS "console"  "alacritty --class console" (resource =? "console") nonFloating
     ,   NS "sysMon"  "alacritty --class sysMon -t 'System Monitor' -e btop" (resource =? "sysMon") nonFloating
@@ -306,8 +306,10 @@ myLayoutHook= smartBorders
     notebookThesis  = Notebook True True True 1 3 reSize 2 (2/3)
     notebookColumns = Notebook False True True 4 4 reSize 2 (2/3)
     notebookLaptop = Notebook True False False 1 2 reSize 2 (2/3)
+    notebookTwoMain = Notebook False True True 2 3 reSize 2 (2/3)
+    notebookDifferent = onWorkspaces [wsTHESIS, ws3D] notebookThesis $ onWorkspaces [wsCOMMENTS] notebookTwoMain notebookMulti
     notebookLayout = onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns
-                   $ ifWider 1920 (onWorkspaces [wsTHESIS, ws3D, wsCOMMENTS] notebookThesis notebookMulti) notebookLaptop
+                   $ ifWider 1920 notebookDifferent notebookLaptop
 
 ----------------------------------------------------------------------------------------------------
 -- Keybindings                                                                                    --
@@ -333,14 +335,7 @@ myKeys =
     , ("M-M1-q"             , spawn "cd /home/oleete/.config/xmonad; stack install; xmonad --recompile; xmonad --restart; cd -")
     , ("M-S-q"              , confirmPrompt myPromptTheme "Quit XMonad" $ io exitSuccess)
 
-    , ("M-f M-f"            , spawn "/home/oleete/.config/bin/rofiScript")
-    , ("M-f f"              , spawn "/home/oleete/.config/bin/rofiScript")
-    , ("M-f M-p"            , spawn "/home/oleete/.config/bin/wsHarpoon menu")
-    , ("M-f p"              , spawn "/home/oleete/.config/bin/wsHarpoon menu")
-    , ("M-f M-g"            , spawn "/home/oleete/.config/bin/wsHarpoon moveMenu")
-    , ("M-f g"              , spawn "/home/oleete/.config/bin/wsHarpoon moveMenu")
-    , ("M-f M-a"            , spawn "rofi -matching fuzzy -show drun -show-icons")
-    , ("M-f a"              , spawn "rofi -matching fuzzy -show drun -show-icons")
+    , ("M-f"            , spawn "/home/oleete/.config/bin/rofiScript")
 
     , ("M-<Esc>"            , upPointer $ sequence_ $ hideAllNamedScratchPads scratchpads)
 
@@ -380,16 +375,10 @@ myKeys =
     , ("M-<Up>"             , windows W.focusUp)
 
 
-    , ("M-w M-f"            , bF $ kt " kittyFullscreen" $ l (P.sendKey noModMask xK_F11))
-    , ("M-w f"              , bF $ kt " kittyFullscreen" $ l (P.sendKey noModMask xK_F11))
-    , ("M-w M-w"            , toggleLayout FULL)
-    , ("M-w w"              , toggleLayout FULL)
-    , ("M-w M-s"            , toggleLayout FULLBAR)
-    , ("M-w s"              , toggleLayout FULLBAR)
-    , ("M-w M-c"            , toggleLayout FULLCENTER)
-    , ("M-w c"              , toggleLayout FULLCENTER)
-    , ("M-w M-x"            , bF $ nv "ZenMode" $ kt " kittyFullscreen" $ l (toggleLayout FULLCENTER))
-    , ("M-w x"              , bF $ nv "ZenMode" $ kt " kittyFullscreen" $ l (toggleLayout FULLCENTER))
+    , ("M-w"                , bF $ kt " kittyFullscreen" $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
+    , ("M-z"                , toggleLayout FULL)
+    , ("M-x"                , toggleLayout FULLBAR)
+    , ("M-c"                , toggleLayout FULLCENTER)
 
     , ("M-h"                , bF $ nv "KittyNavigateleft"   $ kt " moveWindow left"   $ l (upPointer $ windowGo L True))
     , ("M-j"                , bF $ nv "KittyNavigatebottom" $ kt " moveWindow bottom" $ l (upPointer $ windowGo D True))
@@ -426,14 +415,12 @@ myKeys =
     , ("M-M1-s"             , spawn "/home/oleete/.config/bin/wsHarpoon move 3")
     , ("M-M1-t"             , spawn "/home/oleete/.config/bin/wsHarpoon move 4")
 
-    , ("M-p M-p"            , spawn "/home/oleete/.config/bin/wsHarpoon add")
-    , ("M-p p"              , spawn "/home/oleete/.config/bin/wsHarpoon add")
+    , ("M-p p"                , spawn "/home/oleete/.config/bin/wsHarpoon add")
+    , ("M-p M-p"                , spawn "/home/oleete/.config/bin/wsHarpoon add")
     , ("M-p M-e"            , spawn "/home/oleete/.config/bin/wsHarpoon modify")
     , ("M-p e"              , spawn "/home/oleete/.config/bin/wsHarpoon modify")
-    , ("M-p M-n"            , spawn "/home/oleete/.config/bin/wsHarpoon makePreset")
-    , ("M-p n"              , spawn "/home/oleete/.config/bin/wsHarpoon makePreset")
 
-    , ("M-<Tab>"            , upPointer nextScreen)
+    , ("M-g"                , upPointer nextScreen)
     , ("M-<Space>"          , upFocus $ toggleWS' ["NSP"])
     , ("M-M1-<Space>"       , upFocus $ shiftToggleWS' ["NSP"])
     ]
@@ -545,32 +532,31 @@ myManageHook =
     <+> manageSpawn
     where
         manageSpecific = composeOne
-            [ resource =? "desktop_window" -?> doIgnore
-            , resource =? "prusa-slicer" -?> doSink <+> insertPosition End Newer
-            , resource =? "stalonetray"    -?> doIgnore
+            [ resource  =? "desktop_window"       -?> doIgnore
+            , resource  =? "prusa-slicer"         -?> doSink <+> insertPosition End Newer
+            , resource  =? "stalonetray"          -?> doIgnore
 
-            , resource =? "pavucontrol" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , resource  =? "pavucontrol"          -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
             , className =? "Nm-connection-editor" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
-            , className =? "Nm-applet" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
-            , className =? "Tlp-UI" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
-            , className =? "Blueberry.py" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
-            , className =? "Insync" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
-            , className =? "Volctl" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "Nm-applet"            -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "Tlp-UI"               -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "Blueberry.py"         -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "Insync"               -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
 
-            , resource =? "galculator" -?> doCenterFloat
-            , className =? "Tasks" -?> doRectFloat halfNhalf
-            , className =? "WrkTasks" -?> doRectFloat halfNhalf
-            , className =? "Keep" -?> doRectFloat halfNhalf
-            , className =? "WrkKeep" -?> doRectFloat halfNhalf
-            , className =? "GMail" -?> doRectFloat halfNhalf
-            , className =? "WrkGMail" -?> doRectFloat halfNhalf
-            , className =? "GCal" -?> doRectFloat halfNhalf
-            , className =? "WrkGCal" -?> doRectFloat halfNhalf
-            , resource =? "sysMon" -?> doRectFloat (W.RationalRect (1 / 8) (1 / 8) (3 / 4) (3 / 4))
-            , resource =? "wsHarpoon" -?> doRectFloat (W.RationalRect (3 / 10) (3 / 10) (2 / 5) (2 / 5))
-            , resource =? "console" -?> doRectFloat (W.RationalRect (4 / 7) (4 / 7) (2 / 5) (2 / 5))
-            , resource =? "youtube music" -?> doRectFloat halfNhalf
-            , resource =? "discord" -?> doRectFloat halfNhalf
+            , resource  =? "galculator"           -?> doCenterFloat
+            , className =? "Tasks"                -?> doRectFloat halfNhalf
+            , className =? "WrkTasks"             -?> doRectFloat halfNhalf
+            , className =? "Keep"                 -?> doRectFloat halfNhalf
+            , className =? "WrkKeep"              -?> doRectFloat halfNhalf
+            , className =? "GMail"                -?> doRectFloat thirdNthird
+            , className =? "WrkGMail"             -?> doRectFloat thirdNthird
+            , className =? "GCal"                 -?> doRectFloat thirdNthird
+            , className =? "WrkGCal"              -?> doRectFloat thirdNthird
+            , resource  =? "sysMon"               -?> doRectFloat (W.RationalRect (1 / 8) (1 / 8) (3 / 4) (3 / 4))
+            , resource  =? "wsHarpoon"            -?> doRectFloat (W.RationalRect (3 / 10) (3 / 10) (2 / 5) (2 / 5))
+            , resource  =? "console"              -?> doRectFloat (W.RationalRect (4 / 7) (4 / 7) (2 / 5) (2 / 5))
+            , resource  =? "youtube music"        -?> doRectFloat halfNhalf
+            , className =? "discord"              -?> doRectFloat halfNhalf
 
             , transience
             -- , isBrowserDialog -?> forceCenterFloat
@@ -586,6 +572,7 @@ myManageHook =
         isBrowserDialog = isDialog <&&> className =? myBrowserClass
         isRole = stringProperty "WM_WINDOW_ROLE"
         halfNhalf = W.RationalRect (1/4) (1/4) (1/2) (1/2)
+        thirdNthird = W.RationalRect (1/5) (1/5) (3/5) (3/5)
 
 ----------------------------------------------------------------------------------------------------
 -- HangleEventHook
@@ -636,4 +623,7 @@ myCommands =
     , ("layout-dir"          , upFocus $ sendMessage ToggleSide)
     , ("layout-stack-dir"    , upFocus $ sendMessage ToggleStackDir)
     , ("layout-style"        , upFocus $ sendMessage ToggleMiddle)
+
+    , ("sendF"               , P.sendKey noModMask xK_f)
+    , ("sendF11"             , P.sendKey noModMask xK_F11)
     ]

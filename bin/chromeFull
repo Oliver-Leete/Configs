@@ -1,0 +1,9 @@
+#!/bin/bash
+
+WINTITLE=$(xdotool getwindowfocus getwindowname) 
+
+if [[ "$WINTITLE" == *"YouTube"* ]]; then
+    /home/oleete/.cabal/bin/xmonadctl-exe sendF
+else
+    /home/oleete/.cabal/bin/xmonadctl-exe sendF11
+fi

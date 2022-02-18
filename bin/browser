@@ -26,5 +26,5 @@ CACHEDIR=${XDG_CACHE_HOME:-${HOME}/.cache/browser}
 [ "$WSTAG" = "incognito" ] && INCOGNITO=" --incognito " || INCOGNITO=""
 
 # eval $BROWSER $INCOGNITO --user-data-dir=${CONFIGDIR}/${BROWSER}${SUFFIX} ${REMOTE:-} $* \&
-echo $BROWSER $INCOGNITO --user-data-dir=${CONFIGDIR}/${BROWSER}${SUFFIX}$@ \&
-eval $BROWSER $INCOGNITO --user-data-dir=${CONFIGDIR}/${BROWSER}${SUFFIX}$@ \&
+echo $BROWSER $INCOGNITO --enable-features=VaapiVideoDecoder,VaapiVideoEncoder --user-data-dir=${CONFIGDIR}/${BROWSER}${SUFFIX}$@ \&
+eval $BROWSER $INCOGNITO --enable-features=VaapiVideoDecoder,VaapiVideoEncoder --user-data-dir=${CONFIGDIR}/${BROWSER}${SUFFIX}$@ \&
