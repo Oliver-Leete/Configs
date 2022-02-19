@@ -1,3 +1,4 @@
+mapxName.group(mapxName.buffer, function()
 nnoremap("<localleader><localleader>", "<cmd>TexlabForward<cr>", "Forward Search", mapxName.silent) 
 nnoremap("<localleader>r", "<cmd>Telescope bibtex bibtex theme=get_cursor<cr>", "References")
 nnoremap("<localleader>c", "<cmd>VimtexTocToggle<cr>", "Open TOC")
@@ -80,6 +81,7 @@ onoremap("a]n", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-
 onoremap("a[P", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-aP)')<cr>", "Section")
 onoremap("a[m", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ae)')<cr>", "Environment")
 onoremap("a[n", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-a$)')<cr>", "Maths")
+end)
 
 if vim.api.nvim_get_var("panelRepeat") == "q" then
     vim.api.nvim_set_var("panelRepeat", "c")
