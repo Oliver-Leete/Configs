@@ -162,6 +162,30 @@ ls.snippets = {
         })
     },
     tex = {
+        s({trig="fig", name="figure reference", dscr="figure reference"}, {
+            t({ "Figure~\\ref{fig:" }), i(1), t({ "}" }),
+        }),
+        s({trig="sect", name="section reference", dscr="section reference"}, {
+            t({ "Section~\\ref{sect:" }), i(1), t({ "}" }),
+        }),
+        s({trig="ch", name="chapter reference", dscr="chapter reference"}, {
+            t({ "Chapter~\\ref{ch:" }), i(1), t({ "}" }),
+        }),
+        s({trig="eq", name="equation reference", dscr="equation reference"}, {
+            t({ "Equation~\\ref{eq:" }), i(1), t({ "}" }),
+        }),
+        s({trig="alg", name="algorithm reference", dscr="algorithm reference"}, {
+            t({ "Algorithm~\\ref{alg:" }), i(1), t({ "}" }),
+        }),
+        s({trig="ap", name="appendix reference", dscr="appendix reference"}, {
+            t({ "Appendix~\\ref{ap:" }), i(1), t({ "}" }),
+        }),
+        s({trig="tab", name="table reference", dscr="table reference"}, {
+            t({ "Table~\\ref{tab:" }), i(1), t({ "}" }),
+        }),
+        s({trig="lst", name="listing reference", dscr="listing reference"}, {
+            t({ "Listing~\\ref{lst:" }), i(1), t({ "}" }),
+        }),
         s({trig="ls", name="list", dscr="An infinite list of items"}, {
             t({ "\\begin{itemize}", "\t\\item " }), i(1), d(2, rec_ls, {}),
             t({ "", "\\end{itemize}" }),
@@ -171,7 +195,7 @@ ls.snippets = {
             t({"", "\t\t"}), i(2), d(3, rec_ds, {}), t({"", ""}),
             t({"", "\\end{description}"})
         }),
-        s({trig="3f", name="three figures", dscr="Three figures, all equal width"}, {
+        s({trig="threefigure", name="three figures", dscr="Three figures, all equal width"}, {
             t({ "\\setlength{\\figwidth}{\\textwidth}", "" }),
             t({ "\\begin{figure}[htbp]", "" }),
             t({ "\t\\centering", "" }),
@@ -182,7 +206,7 @@ ls.snippets = {
 			t(" \t\\caption["), m(1, "^.-%."), t("]{"), i(1, "caption"), t("}\\label{fig:"), i(2), t({"}", ""}),
             t({ "\\end{figure}" }), i(0)
         }),
-        s({trig="2f", name="two figures", dscr="Two figures of equal width"}, {
+        s({trig="twofigure", name="two figures", dscr="Two figures of equal width"}, {
             t({ "\\setlength{\\figwidth}{\\textwidth}", "" }),
             t({ "\\begin{figure}[htbp]", "" }),
             t({ "\t\\centering", "" }),
@@ -192,7 +216,7 @@ ls.snippets = {
 			t("\t\\caption["), m(1, "^.-%."), t("]{"), i(1, "caption"), t("}\\label{fig:"), i(2), t({"}", ""}),
             t({ "\\end{figure}" }), i(0)
         }),
-        s({trig="fig", name="single figure", dscr="insert a single figure"}, {
+        s({trig="figure", name="single figure", dscr="insert a single figure"}, {
 			t({"\\begin{figure}[htbp]", ""}),
 			t({"\t\\centering", ""}),
 			t( "\t\\includegraphics[width=1\\textwidth]{"), i(3, "directory"), t({"}", ""}),
@@ -231,7 +255,7 @@ ls.snippets = {
 			t("\t\\caption["), m(1, "^.-%."), t("]{"), i(1, "caption"), t("}\\label{alg:"), i(2), t({"}", ""}),
             t({"\\end{algorithm}"})
         }),
-        s({trig="tab", name="table", dscr="my normal table settings"}, {
+        s({trig="table", name="table", dscr="my normal table settings"}, {
 			t({"\\begin{table}[htbp]", ""}),
 			t({"\t\\centering", ""}),
 			t("\t\\begin{tabular}{"), i(3, "alignment"), t({"}\\toprule", ""}),

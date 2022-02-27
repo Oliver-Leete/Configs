@@ -8,4 +8,6 @@ if ! [[ "$TITLES" =~ \"$WINTITLE\" ]]; then
 	kitty @ launch --type=window --window-title="$WINTITLE" --keep-focus fish -c "$2"
 fi
 
+kitty @ goto-layout fat:bias=70
+
 cat - | pee "ifne -n kitty @ focus-window --match title:$WINTITLE" "kitty @ send-text --match title:$WINTITLE --stdin"

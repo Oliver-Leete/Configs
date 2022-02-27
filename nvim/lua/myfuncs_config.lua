@@ -38,8 +38,8 @@ function _G.pre_paste_away(register, paste)
 end
 
 function _G.paste_away()
-    -- vim.cmd("normal! `" .. Paste_away_direction .. '"' .. Paste_away_register .. Paste_away_paste)
-    vim.cmd([[execute "']] .. Paste_away_direction .. " put" .. Paste_away_paste .. " " .. Paste_away_register .. '"')
+    vim.cmd("normal! `" .. Paste_away_direction .. '"' .. Paste_away_register .. Paste_away_paste)
+    -- vim.cmd([[execute "']] .. Paste_away_direction .. " put" .. Paste_away_paste .. " " .. Paste_away_register .. '"')
 end
 
 vim.api.nvim_set_keymap(

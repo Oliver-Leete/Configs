@@ -117,8 +117,8 @@ menu () {
     fingerprint=$(generate_fingerprint)
     . $CONFIG
     eval "fingerprint_mode=\"\${${fingerprint}:-}\""
-    default_mode=$((for item in $items; do echo $item; done) | grep -n $fingerprint_mode | cut -d : -f 1)
-    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Display Mode" -dmenu -a $((default_mode - 1)) -p "Display Mode")
+    default_mode=$((for item in $items; do echo $item; done) | grep -n -e "^$fingerprint_mode\$" | cut -d : -f 1)
+    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Display Mode" -dmenu -a $(($default_mode - 1)) -p "Display Mode")
     case ${result:-} in
         in*)         internal  ;;
         ex*)         external  ;;

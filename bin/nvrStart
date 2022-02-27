@@ -10,7 +10,7 @@ if ! [[ "$TITLES" == *"$winTitle"* ]]; then
 	kitty @ set-window-title $winTitle
 else
 	ID=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.title==\"MainEditor\") | .id")
-	kitty @ focus-window --match id:$ID
+	kitty @ focus-window --match title:$winTitle
 fi
 
 nvr -s --servername "/tmp/$serverID" $@

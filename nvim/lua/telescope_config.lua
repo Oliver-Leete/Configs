@@ -75,14 +75,14 @@ require("telescope").setup({
             "--column",
             "--smart-case",
         },
-        layout_strategy = "vertical",
-        layout_config = {
-            vertical = {
-                width = 100,
-                preview_height = 40,
-                height = 80,
-            },
-        },
+        -- layout_strategy = "vertical",
+        -- layout_config = {
+        --     vertical = {
+        --         width = 100,
+        --         preview_height = 40,
+        --         height = 80,
+        --     },
+        -- },
         path_display = { shorten = 3 },
         pickers = {
             buffers = {

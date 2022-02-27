@@ -14,10 +14,10 @@ fi
 kitty @ launch --type=window --window-title="$WINTITLE" --keep-focus
 
 ID=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.title==\"$WINTITLE\") | .id")
+kitty @ goto-layout fat:bias=70
 
 if [ "$#" -eq 0 ]; then
-	kitty @ focus-window --match id:$ID
+	kitty @ focus-window --match title:$WINTITLE
 else
-	kitty @ send-text --match id:$ID $@\\r
-	# kitty @ send-text --match id:$ID 
+	kitty @ send-text --match title:$WINTITLE $@\\r
 fi

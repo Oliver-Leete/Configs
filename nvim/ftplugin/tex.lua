@@ -178,11 +178,6 @@ vim.g.projectionist_heuristics = {
     },
 }
 
-if not PdfOpened then
-    PdfOpened = true
-    vim.cmd("VimtexView")
-end
-
 require('cmp').setup.buffer({
     sources = {
         { name = "luasnip" },
@@ -195,8 +190,3 @@ require('cmp').setup.buffer({
         { name = "dictionary", keyword_lenght = 2},
     },
 })
-vim.cmd([[
-augroup vimtex_events
-    au!
-    au User VimtexEventCompileSuccess silent! !cp build/OML-Thesis.pdf ./
-]])

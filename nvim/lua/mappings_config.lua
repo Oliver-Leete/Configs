@@ -59,7 +59,7 @@ noremap("C", "<nop>")
 noremap("D", "<nop>")
 noremap("S", "<nop>")
 
--- NOTE: _, =, |, :, ^, ¬ and # are free to map
+-- NOTE: _, =, |, :, ^ are free to map
 
 -- Mappings
 -- WARNING : very experimental
@@ -357,19 +357,19 @@ mapxName.name("v", "View")
 --     nmap("Vu", "vu<cmd>WhichKey V<cr>", "Half Page Up")
 --     nmap("Vd", "vd<cmd>WhichKey V<cr>", "Half Page Down")
 
-mapxName.name("z", "Select Mode")
-    nmap("z{", "<m-v>{", "Left Outside")
-    nmap("z(", "<m-v>(", "Left Inside")
-    nmap("z)", "<m-v>)", "Right Inside")
-    nmap("z}", "<m-v>}", "Right Outside")
-    nmap("zi", "<m-v>i", "Inside")
-    nmap("zo", "<m-v>a", "Outside")
-    xmap("z{", "<esc><m-v>{", "Left Outside")
-    xmap("z(", "<esc><m-v>(", "Left Inside")
-    xmap("z)", "<esc><m-v>)", "Right Inside")
-    xmap("z}", "<esc><m-v>}", "Right Outside")
-    xmap("zi", "<esc><m-v>i", "Inside")
-    xmap("zo", "<esc><m-v>a", "Outside")
+mapxName.name("m", "Select Mode")
+    nmap("mk", "<m-v>{", "Left Outside")
+    nmap("mh", "<m-v>(", "Left Inside")
+    nmap("ml", "<m-v>)", "Right Inside")
+    nmap("mj", "<m-v>}", "Right Outside")
+    nmap("mi", "<m-v>i", "Inside")
+    nmap("mo", "<m-v>a", "Outside")
+    xmap("mk", "<esc><m-v>{", "Left Outside")
+    xmap("mh", "<esc><m-v>(", "Left Inside")
+    xmap("ml", "<esc><m-v>)", "Right Inside")
+    xmap("mj", "<esc><m-v>}", "Right Outside")
+    xmap("mi", "<esc><m-v>i", "Inside")
+    xmap("mo", "<esc><m-v>a", "Outside")
 
 mapxName.name(",", "User Commands")
 nnoremap(",;", "q:", "Command Buffer")
@@ -661,7 +661,7 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
     nnoremap("<leader>,/", "<cmd>let @/=''<cr>", "Clear Search")
 
 nnoremap("<leader>ok", [[":silent !kitty @ launch --type=tab --tab-title 'Kak %:t' kak %:p +" . line(".") . ":" . col(".") . "<cr>"]], "Open file in Kak", expr)
-nnoremap("<leader>ov", [[":silent !kitty @ launch --type=tab --tab-title 'Vis %:t' vis %:p<cr>"]], "Open file in Kak", expr)
+nnoremap("<leader>ov", [[":silent !kitty @ launch --type=tab --tab-title 'Vis %:t' vis %:p<cr>"]], "Open file in Vis", expr)
 nnoremap("<leader>oh", [[":silent !kitty @ launch --type=tab --tab-title 'Helix %:t' hx %:p<cr>"]], "Open file in Helix", expr)
 nnoremap("<leader>z", "<cmd>ZenMode<cr>", "Zen Mode")
 

@@ -68,6 +68,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'williamboman/nvim-lsp-installer'
     Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'ray-x/lsp_signature.nvim'
+    Plug 'j-hui/fidget.nvim'
     Plug 'brymer-meneses/grammar-guard.nvim'
     Plug 'p00f/clangd_extensions.nvim'
 
@@ -85,6 +86,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'rafamadriz/friendly-snippets'
     Plug 'windwp/nvim-autopairs'
     Plug 'abecodes/tabout.nvim'
+
     Plug 'nvim-telescope/telescope-file-browser.nvim'
     Plug 'nvim-telescope/telescope.nvim'
     Plug 'nvim-telescope/telescope-symbols.nvim'
@@ -99,6 +101,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-treesitter/playground'
     Plug 'ThePrimeagen/refactoring.nvim'
+
+    Plug 'renerocksai/telekasten.nvim'
 call plug#end()]])
 
 -- Disable builtins

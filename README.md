@@ -146,12 +146,17 @@ function _G.paste_away()
 end
 ```
 
+Turns out I don't ever actually use this, I'm not even sure if I even still have
+it bound to anything. Although I have considered making everything targeted by
+default, like insert mode, ext. Maybe that would make me use it.
+
 ## Diff View Mappings
 
-I have a few commands to let me pick what to diff against in diff view, so I added a variation of
-the above to give me a mapping of reopening diff view using the last command. The telescope commands
-come from someone from the Neovim subreddit, the only extra bit is the bit that stores the command
-(and in the actual config there are more of them, for picking things like branches).
+I have a few commands to let me pick what to diff against in diff view, so I
+added a variation of the repeat mappings to give me a mapping of reopening diff
+view using the last command. The telescope commands come from someone from the
+Neovim subreddit, the only extra bit is the bit that stores the command (and in
+the actual config there are more of them, for picking things like branches).
 
 ```lua
 vim.api.nvim_set_var("DiffviewLast", "DiffviewOpen")
@@ -182,20 +187,23 @@ end
 
 ## Some Other Mappings
 
-These two make j and k respect wrapped lines, unless a count is given, in which case j and k act on
-true lines. This means that normally they make the cursor go where you'd expect (if you've ever used
-any other editor), but relative line numbers can still be used for fast jumping. In addition, they
-also add to the jump list if a count greater than 5 is given.
+These two make j and k respect wrapped lines, unless a count is given, in which
+case j and k act on true lines. This means that normally they make the cursor
+go where you'd expect (if you've ever used any other editor), but relative line
+numbers can still be used for fast jumping. In addition, they also add to the
+jump list if a count greater than 5 is given.
 
 ```vim
 nnoremap <expr> j v:count?(v:count>5?"m'".v:count:'').'j':'gj'
 nnoremap <expr> k v:count?(v:count>5?"m'".v:count:'').'k':'gk'
 ```
 
-It makes sense to me to have 'big' h and l do a bigger version of the h or l movement. So this
-mapping makes H and L go to the start and end of the line respectively. It's a little more than that
-though, they go to the first or last non-whitespace character. If the cursor is already on the first
-or last non-whitespace character then it instead goes to the true first or last character.
+It makes sense to me to have 'big' h and l do a bigger version of the h or
+l movement. So this mapping makes H and L go to the start and end of the
+line respectively. It's a little more than that though, they go to the first
+or last non-whitespace character. If the cursor is already on the first or
+last non-whitespace character then it instead goes to the true first or last
+character.
 
 ```vim
 nnoremap <expr> H getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^'
@@ -204,8 +212,9 @@ nnoremap <expr> L getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_'
 
 ## The Slow Road To Kak
 
-I really like the ideas behind Kakoune, and will at some point have another try at moving to it. But
-for the mean time I'm just taking a few ideas from it.
+I really like the ideas behind Kakoune, and will at some point have another try
+at moving to it (or Helix). But for the mean time I'm just taking a few ideas
+from it.
 
 ### Kak Mappings
 
@@ -254,29 +263,34 @@ my current plans), would jump to the start or end of the current text object, li
 Having this would allow for things like yanking the next two functions, deleting to the next bracket
 and then changing to the end of the quote the cursor is currently in.
 
-I have started working on this now. I'm trying to think about how to make it customisable, both for
-easy changes for my own config, but also to be able to make it into an extension. At the moment it
-uses custom methods for some of the built in text objects, like words, paragraphs ect., targets is
-used for brackets, arguments and quotes, vim-word-motion is used for subwords and treesitter text
-objects is used for functions and that stuff. I have altered the queries in TSTextobjects to
-simplyfy them a bit, using just three instead of the many, parameters is the same as it is. Scope
-takes over for function and objects and block takes over for conditionals, loops and blocks.
+I have started working on this now. I'm trying to think about how to make it
+customisable, both for easy changes for my own config, but also to be able
+to make it into an extension. At the moment it uses custom methods for some
+of the built in text objects, like words, paragraphs ect., targets is used
+for brackets, arguments and quotes, vim-word-motion is used for subwords and
+treesitter text objects is used for functions and that stuff. I have altered the
+queries in TSTextobjects to simplyfy them a bit, using just three instead of the
+many, parameters is the same as it is. Scope takes over for function and objects
+and block takes over for conditionals, loops and blocks.
 
 ### Other editors
 
-For when I actually want the full powers of Kakoune I have a shortcut that uses kitty's remote
-control to open a new tab with Kak running. This tab is opened to the same cursor position in the
-same file as I ran the shortcut from.
+For when I actually want the full powers of Kakoune I have a shortcut that uses
+kitty's remote control to open a new tab with Kak running. This tab is opened
+to the same cursor position in the same file as I ran the shortcut from. I also
+have shortcuts for opening in vis and helix, but I don't tend to use any of
+these.
 
 ## Insert Mappings
 
 ### Snippets and Completion
 
-With a bunch of completion stuff comes a lot of mapping overlaps This is how I've tried to fix them.
+With a bunch of completion stuff comes a lot of mapping overlaps This is how
+I've tried to fix them.
 
-First up is the usual multi-purpose tab mappings. Nothing too special here, I don't use tab for
-scrolling completions (my arrow keys are just too easy to get to) but I do use it for tabbing out of
-brackets.
+First up is the usual multi-purpose tab mappings. Nothing too special here, I
+don't use tab for scrolling completions (my arrow keys are just too easy to get
+to) but I do use it for tabbing out of brackets.
 
 ```lua
 local luasnip = require("luasnip")

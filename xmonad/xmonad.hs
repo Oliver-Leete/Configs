@@ -30,7 +30,7 @@ import qualified XMonad.StackSet as W
 
 import XMonad.Actions.ConditionalKeys as C
 import XMonad.Actions.CycleWSLocal
-import XMonad.Actions.CycleWS (nextScreen)
+import XMonad.Actions.CycleWS (nextScreen, shiftNextScreen)
 import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.Navigation2D
@@ -114,6 +114,7 @@ ws3D     = "Print"
 wsDND    = "Dnd"
 wsCON    = "Configs"
 wsQMK    = "QMK"
+wsZMK    = "ZMK"
 wsWRK    = "Wrk"
 wsWRK1   = "Wrk1"
 wsSIM    = "Sim"
@@ -124,7 +125,7 @@ wsCOMMENTS = "Comments"
 wsWRKN   = "WrkNotes"
 
 myWorkspaces :: [[Char]]
-myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1, wsQMK, wsANSYS, wsCOMMENTS, wsWRKN]
+myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1, wsQMK, wsANSYS, wsCOMMENTS, wsWRKN, wsZMK]
 
 projects :: [Project]
 projects =
@@ -154,6 +155,11 @@ projects =
                 , projectDirectory  = "~/Projects/qmk_firmware"
                 , projectStartHook  = Just $ do spawnOn wsQMK myTerminal
                                                 spawnOn wsQMK ("sleep .5; " ++ myBrowser)
+                }
+    , Project   { projectName       = wsZMK
+                , projectDirectory  = "~/Projects/zmk-config"
+                , projectStartHook  = Just $ do spawnOn wsZMK myTerminal
+                                                spawnOn wsZMK ("sleep .5; " ++ myBrowser)
                 }
     , Project   { projectName       = wsPER
                 , projectDirectory  = "~/PersonalDrive"
@@ -332,8 +338,8 @@ toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ 
 myKeys :: [(String, X ())]
 myKeys =
     [ ("M-q"                , spawn "xmonad --restart")
-    , ("M-M1-q"             , spawn "cd /home/oleete/.config/xmonad; stack install; xmonad --recompile; xmonad --restart; cd -")
-    , ("M-S-q"              , confirmPrompt myPromptTheme "Quit XMonad" $ io exitSuccess)
+    , ("M-S-q"              , spawn "cd /home/oleete/.config/xmonad; stack install; xmonad --recompile; xmonad --restart; cd -")
+    , ("M-C-q"              , confirmPrompt myPromptTheme "Quit XMonad" $ io exitSuccess)
 
     , ("M-f"            , spawn "/home/oleete/.config/bin/rofiScript")
 
@@ -352,22 +358,22 @@ myKeys =
     , ("<XF86AudioNext>"          , spawn "playerctl next")
     , ("<Print>"                  , spawn "/home/oleete/.config/bin/screencapt area")
 
-    , ("M-<Return>"         , bF $ kt " 'kitty @ launch'" $ l(upPointer $ spawn myTerminal))
-    , ("M-M1-<Return>"      , upPointer $ spawn myTerminal)
+    , ("M-<Return>"         , bF $ kt " kittyWin" $ l(upPointer $ spawn myTerminal))
+    , ("M-S-<Return>"       , upPointer $ spawn myTerminal)
 
-    , ("M-n"                , bF $ rNv (spawn (myTerminalRemote ++ " 'kitty @ launch'")) $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")]))
-    , ("M-M1-n"             , upPointer $ spawn myTerminal)
+    , ("M-n"                , bF $ rNv (spawn (myTerminalRemote ++ " kittyWin")) $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")]))
+    , ("M-S-n"              , upPointer $ spawn myTerminal)
 
     , ("M-i"                , bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
-    , ("M-M1-i"             , upPointer $ spawn myBrowser)
+    , ("M-S-i"              , upPointer $ spawn myBrowser)
 
     , ("M-e"                , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
 
     , ("M-o"                , upPointer $ bindOn C.WS [(wsCOMMENTS, runOrRaise "foxitreader" (className =? "Foxit Reader"))])
 
     , ("M-<Backspace>"      , bF $ nv "DeleteBuffer" $ rKt (P.sendKey (controlMask .|. shiftMask) xK_BackSpace) $ crm (P.sendKey controlMask xK_w) $ l kill)
-    , ("M-M1-<Backspace>"   , kill)
-    , ("M-S-<Backspace>"    , confirmPrompt hotPromptTheme "kill all" killAll)
+    , ("M-S-<Backspace>"    , kill)
+    , ("M-C-<Backspace>"    , confirmPrompt hotPromptTheme "kill all" killAll)
 
     , ("M-<Left>"           , bF $ rKt (P.sendKey (controlMask .|. shiftMask) xK_Left)  $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
     , ("M-<Right>"          , bF $ rKt (P.sendKey (controlMask .|. shiftMask) xK_Right) $ l (P.sendKey controlMask xK_Tab))
@@ -385,44 +391,45 @@ myKeys =
     , ("M-k"                , bF $ nv "KittyNavigatetop"    $ kt " moveWindow top"    $ l (upPointer $ windowGo U True))
     , ("M-l"                , bF $ nv "KittyNavigateright"  $ kt " moveWindow right"  $ l (upPointer $ windowGo R True))
 
-    , ("M-M1-h"             , upPointer $ windowSwap L True)
-    , ("M-M1-j"             , upPointer $ windowSwap D True)
-    , ("M-M1-k"             , upPointer $ windowSwap U True)
-    , ("M-M1-l"             , upPointer $ windowSwap R True)
+    , ("M-S-h"              , upPointer $ windowSwap L True)
+    , ("M-S-j"              , upPointer $ windowSwap D True)
+    , ("M-S-k"              , upPointer $ windowSwap U True)
+    , ("M-S-l"              , upPointer $ windowSwap R True)
 
     , ("M-m"                , bF $ kt " mainMove" $ l (upPointer $ swapPromote' False))
-    , ("M-M1-m"             , upPointer $ swapPromote' False)
+    , ("M-S-m"              , upPointer $ swapPromote' False)
     , ("M-v"                , myFocusMaster)
 
     , ("M-y"                , upPointer $ withFocused toggleFloat)
-    , ("M-M1-y"             , upFocus sinkAll)
+    , ("M-S-y"              , upFocus sinkAll)
 
     , ("M-,"                , sendMessage (IncMasterN (-1)))
     , ("M-."                , sendMessage (IncMasterN 1))
-    , ("M-M1-,"             , sendMessage (IncColumnN (-1)))
-    , ("M-M1-."             , sendMessage (IncColumnN 1))
+    , ("M-S-,"              , sendMessage (IncColumnN (-1)))
+    , ("M-S-."              , sendMessage (IncColumnN 1))
     , ("M-["                , sendMessage Shrink)
     , ("M-]"                , sendMessage Expand)
-    , ("M-M1-["             , sendMessage MirrorShrink)
-    , ("M-M1-]"             , sendMessage MirrorExpand)
+    , ("M-S-["              , sendMessage MirrorShrink)
+    , ("M-S-]"              , sendMessage MirrorExpand)
 
     , ("M-a"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 1")
     , ("M-r"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 2")
     , ("M-s"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 3")
     , ("M-t"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 4")
-    , ("M-M1-a"             , spawn "/home/oleete/.config/bin/wsHarpoon move 1")
-    , ("M-M1-r"             , spawn "/home/oleete/.config/bin/wsHarpoon move 2")
-    , ("M-M1-s"             , spawn "/home/oleete/.config/bin/wsHarpoon move 3")
-    , ("M-M1-t"             , spawn "/home/oleete/.config/bin/wsHarpoon move 4")
+    , ("M-S-a"              , spawn "/home/oleete/.config/bin/wsHarpoon move 1")
+    , ("M-S-r"              , spawn "/home/oleete/.config/bin/wsHarpoon move 2")
+    , ("M-S-s"              , spawn "/home/oleete/.config/bin/wsHarpoon move 3")
+    , ("M-S-t"              , spawn "/home/oleete/.config/bin/wsHarpoon move 4")
 
-    , ("M-p p"                , spawn "/home/oleete/.config/bin/wsHarpoon add")
-    , ("M-p M-p"                , spawn "/home/oleete/.config/bin/wsHarpoon add")
+    , ("M-p p"              , spawn "/home/oleete/.config/bin/wsHarpoon add")
+    , ("M-p M-p"            , spawn "/home/oleete/.config/bin/wsHarpoon add")
     , ("M-p M-e"            , spawn "/home/oleete/.config/bin/wsHarpoon modify")
     , ("M-p e"              , spawn "/home/oleete/.config/bin/wsHarpoon modify")
 
-    , ("M-g"                , upPointer nextScreen)
+    , ("M-<Tab>"            , upPointer nextScreen)
+    , ("M-S-<Tab>"          , upPointer shiftNextScreen)
     , ("M-<Space>"          , upFocus $ toggleWS' ["NSP"])
-    , ("M-M1-<Space>"       , upFocus $ shiftToggleWS' ["NSP"])
+    , ("M-S-<Space>"        , upFocus $ shiftToggleWS' ["NSP"])
     ]
     where
         toggleFloat w = windows (\s -> if M.member w (W.floating s)

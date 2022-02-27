@@ -85,3 +85,18 @@ require("colorizer").setup({ "*" }, {
     css_fn = false,
     mode = "background",
 })
+
+local home = vim.fn.expand("~/UniversityDrive/Thesis/notes")
+require('telekasten').setup({
+    home         = home,
+    take_over_my_home = true,
+    auto_set_filetype = true,
+
+    dailies      = home .. '/' .. 'daily',
+    weeklies     = home .. '/' .. 'weekly',
+    templates    = home .. '/' .. 'templates',
+    image_subdir = "img",
+    extension    = ".md",
+
+    image_link_style = "wiki",
+})
