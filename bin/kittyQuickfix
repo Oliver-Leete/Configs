@@ -1,4 +1,4 @@
 #!/bin/bash
 
 kitty @ get-text --match title:$1 --extent last_cmd_output > /tmp/n-quickfix
-nvrTab -q /tmp/n-quickfix
+nvrTab -q /tmp/n-quickfix &
