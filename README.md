@@ -343,32 +343,6 @@ This next bit is depreciated since moving to compe. I just use the standard CMP 
 mappings. Ctrl+] is used for next snippet selection, and expanding is just done with the completion
 menu.
 
-Enter is possibly the most used key, used for line breaks, nvim-autopairs splitting, completion
-confirmation and changing the choices in luasnip. I've let autopairs deal with most of it, just
-adding in a check for luasnip changeability (and now an extra check for luasnip expandability). I
-think this might cause some issues in some snippets, but none that I've used so far. Furthermore,
-I'm currently trying out this without the snippet choice part, to try and limit the amount of
-accidental snippet overwriting I do.
-
-```lua
-_G.enter_complete = function()
-    if vim.fn.pumvisible() == 1 then
-        if luasnip and luasnip.expandable() then
-            return replace_keycodes("<plug>luasnip-expand-snippet")
-        else
-            return replace_keycodes("<cr>")
-        end
-    elseif luasnip and luasnip.choice_active() then
-        return replace_keycodes("<plug>luasnip-next-choice")
-    else
-        return require('nvim-autopairs').autopairs_cr()
-    end
-end
-
-vim.api.nvim_set_keymap("i", "<cr>", "v:lua.enter_complete()", { expr = true })
-vim.api.nvim_set_keymap("s", "<cr>", "v:lua.enter_complete()", { expr = true })
-```
-
 #### Copy from above
 
 This mapping takes the word from above (c-y) or below (c-l) the cursor. Credit goes to someone
@@ -477,112 +451,40 @@ Super+tab and super+shift+tab always swap tabs backward and forward, in programs
 tabs. These can be forced to OS versions of the shortcut by adding control. So Super+Control+tab
 will always go to the next OS tab, even if I'm focused on chrome or my terminal.
 
-Other 'Magic' keys include window movements. When focused on any none terminal window, super+hjkl
-move between window manager windows. If kitty is focused then it will run a script. This script
-sends a command to move within kitty windows, and if the focused window didn't change (the movement
-is in a direction that would take it out of the terminal window) then moves within window manager
-windows instead. It goes a step further by checking if the running process is a Neovim instance and
-moving within that if possible (using a modified version of the vim-kitty-navigator extension). This
-is done using NVR if the vim instance is the main editor, or by sending keypresses if not.
+Other 'Magic' keys include window movements. When focused on any none terminal
+window, super+hjkl move between window manager windows. If neovim is focused
+then nvr remote is used to move between windows in neovim, with a function that
+moves out of neovim; if kitty is focused then kitty's remote protocol is used
+to move between kitty windows, but run from a bash script that moves out of
+the kitty window if the command is run on the edge window.
 
-```haskell
-    ("M-h"             ,  bindFirst [(className =? "kitty", spawn (myTerminalRemote ++ " moveWindow left h"))
-                                    ,(className =? "kittyconsole", spawn (myTerminalRemote ++ " moveWindow left h"))
-                                    ,(pure True, windowGo L True)])
+Super+backspace closes Neovim windows (or buffers if it's on the last window),
+terminal windows, or window manager windows depending on what is focused.
+Super+m moves the window to the master pane, unless the terminal is focused, in
+which case it moves the terminal window to the terminal master. If the terminal
+window is already in the terminal's master window then it will move to the
+window manager master (this is super hacky, relying on the terminal master and
+stack windows having different dimensions and also relying on a sleep in the
+script, I hope to fix this at some point).
 
-```
-
-This is done using the above XMonad key binding and the bellow bash script.
-
-```bash
-if [ "$#" -ne "3" ]; then
-
-    kittyStore=$(kitty @ ls)
-    commands=$(echo $kittyStore | jq ".[].tabs[].windows[] | select(.is_focused) | .foreground_processes[].cmdline[0]")
-
-    if [[ "$commands" == *"vim"* ]]; then
-        titles=$(echo $kittyStore | jq ".[].tabs[].windows[] | select(.is_focused) | .title")
-
-        if [[ "$titles" =~ \"MainEditor\" ]]; then
-            tabID=$(echo $kittyStore | jq ".[].tabs[] | select(.is_focused) | .id")
-            nvr --servername /tmp/nvr-$WS --nostart -c "KittyNavigate$1"
-            exit
-        else
-            kitty @ send-text ";KittyNavigate$1\n"
-            exit
-        fi
-    fi
-fi
-
-old_id=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .id")
-
-kitty @ kitten neighboring_window.py $1
-
-new_id=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .id")
-
-if [ "$old_id" -eq "$new_id" ]; then
-    xdotool key super+shift+ctrl+$2
-fi
-```
-
-Super+backspace closes Neovim windows, terminal windows, or window manager windows depending on
-what is focused. Super+m moves the window to the master pane, unless the terminal is focused, in
-which case it moves the terminal window to the terminal master. If the terminal window is already in
-the terminal's master window then it will move to the window manager master (this is super hacky,
-relying on the terminal master and stack windows having different dimensions and also relying on a
-sleep in the script, I hope to fix this at some point). The tab key also uses a really hacky way to
-move in terminal tabs unless there are none, in which case it moves in window manager tabs (still
-less hacky than the master moving binding, counting the number of tabs in the focused terminal to
-see if there are any to switch to).
-
-Super+enter opens a new terminal (or it should, not working atm for some reason) if there isn't one
-on the workspace already, it focuses the terminal if there is, and it opens a new terminal window if
-the terminal is already focused. Same for super+b with browsers and browser tabs.
+Super+n focuses the main editor for the workspace, or creates a new terminal
+split if the editor is focused.
 
 ## Other
 
 ### Local Modules
 
-ConditionalKeys is from Ethan (where my XMonad config originated from). CycleWSLocal strips out
-everything I don't use and adds a function to send the current window to the previous workspace, I
-use this a lot now that I'm not using multiple monitors any more (I find it a lot easier than using
-numbers to send windows). WindowGoLocal just changes the runOrRaise function to only look on the
-current workspace.
+ConditionalKeys is from Ethan (where my XMonad config originated from).
+CycleWSLocal strips out everything I don't use and adds a function to send the
+current window to the previous workspace, as well as using all none focused
+workspaces as possible ones to switch to (instead of just the non-visible), so
+it also works for moving workspaces between monitors. WindowGoLocal just changes
+the runOrRaise function to only look on the current workspace. NamedScratchpad
+has been modified to add a function that sends any scratchpad back to the NSP
+workspace, so I can use a rofi script to summon scratchpads, but still send them
+away quickly.
 
-# Current Keyboard
-
-My current board is an ez-Planck board. Nothing too special on the mechanical side, just a 40%
-ortholinear settup.
-
-## Layers
-
-# Planed Keyboard
-
-Recently I've noticed slight hints of RSI, so I've decided to use it as an excuse to change to a
-split keyboard so I can use some tenting. I've started work on a Kyria based keyboard, with the
-intent to add a few different switches to get a bit more functionality out of it.
-
-## Hardware
-
-Ok, none of this happened
-
-### Discrete Rotary Encoder
-
-One of my most used shortcuts is tab and shift tab, so in place of a tab key I'm putting a rotary
-wheel. Each click of the rotary encoder ccw will send a tab key, and each cw a shift-tab. This will
-allow for easier magic tabbing in xmonad, and for super tabbing in Neovim.
-
-### Smooth Rotary Encoder
-
-The main reason I still reach for my mouse is the scroll wheel, even though in chrome and neovim I
-have keyboard shortcuts for it I still feel the need to use the scroll wheel. I'm hoping that the
-addition of a scroll wheel to the keyboard will further reduce the use of my mouse.
-
-### Trackball
-
-In addtion to the scroll wheel, having a small trackball on the keyboard should stop jumping to the
-mouse for small tasks. I have xmonad update my pointer position based on window swaps, so the cursor
-should already be close to where I need it.
+# Hellslide (Current Keyboard)
 
 # Laptop Stuff
 

@@ -47,8 +47,10 @@ import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.ServerMode
+import XMonad.Hooks.ShowWName
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
+import XMonad.Hooks.StatusBar.WorkspaceScreen
 
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
@@ -56,7 +58,6 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.Notebook
 import XMonad.Layout.PerScreen
 import XMonad.Layout.PerWorkspace
-import XMonad.Layout.ShowWName
 import XMonad.Layout.SimpleFocus
 import XMonad.Layout.Spacing
 
@@ -301,7 +302,6 @@ instance Transformer FULLCENTER Window where
 centerFull = SimpleFocus (1/3) (reSize/2) 1280
 
 myLayoutHook= smartBorders
-            $ showWName' myShowWNameTheme
             $ mkToggle (single FULL)
             $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
             $ mkToggle (single FULLBAR)
@@ -335,6 +335,11 @@ upFocus a = sequence_ [a, focusUnderPointer]
 upPointer a = sequence_ [a, updatePointer (0.5, 0.5) (0.25, 0.25)]
 toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle layout, focusUnderPointer ]
 
+-- ---------------------------------------------------------------------------------------------------------------------
+-- |restart|fullWin| finder|project|   -   |-----------------------------------|winDown|winRght|   -   | float |   -   |
+-- |  ws1  |  ws2  |  ws3  |  ws4  |   -   |-----------------------------------|winLeft|  app1 |  app2 |  app3 |  app4 |
+-- |fullScr|fullBar|fullCen|focMast|   -   |nspAway|nextScr|---|   -   |  kill | winUp |movMast| decCol| incCol|   -   |
+-- |-------|   -   |   -   |-------|tabPrev| wsLast|winPrev|---|winNext|  term |tabNext|-------|   -   |   -   |-------|
 myKeys :: [(String, X ())]
 myKeys =
     [ ("M-q"                , spawn "xmonad --restart")
@@ -481,36 +486,20 @@ myStartupHook = do
 -- Log                                                                                            --
 ----------------------------------------------------------------------------------------------------
 
-type WindowScreen
-  = W.Screen WorkspaceId (Layout Window) Window ScreenId ScreenDetail
-
-type WorkspaceScreenCombiner = String -> WindowScreen -> String
-
 monitorIds :: IO [(ScreenId, String)]
 monitorIds = return [(S 0, "¹"), (S 1, "²"), (S 2, "³"), (S 3, "⁴")]
 
-combineWithScreenName :: X WorkspaceScreenCombiner
-combineWithScreenName = do
+myScreenCombiner :: X WorkspaceScreenCombiner
+myScreenCombiner = do
   screenNames <- io monitorIds
   return
     $ \w sc -> w <> fromJust (W.screen sc `lookup` screenNames)
-
-renameWithScreen :: X WorkspaceScreenCombiner -> X (String -> WindowSpace -> String)
-renameWithScreen xCombiner = do
-  combiner <- xCombiner
-  ss       <- withWindowSet (return . W.screens)
-  return $ \s w ->
-    maybe s (combiner s) (find ((== W.tag w) . W.tag . W.workspace) ss)
-
-addScreen :: X WorkspaceScreenCombiner -> PP -> X PP
-addScreen xcombiner pp =
-  renameWithScreen xcombiner <&> \ren -> pp { ppRename = ppRename pp <=< ren }
 
 barSpawner :: ScreenId -> IO StatusBarConfig
 barSpawner (S sid) = pure $
   statusBarPropTo ("_XMONAD_LOG_" ++ show sid) ( "/home/oleete/.config/xmobar/xmobarLaunch " ++ show sid) myPP
 
-myPP = addScreen combineWithScreenName $ filterOutWsPP ["NSP"] $ def
+myPP = combineWithScreen myScreenCombiner $ filterOutWsPP ["NSP"] $ def
     { ppCurrent = xmobarColor active "" . wrap ("<box type=Bottom width=2 mt=2 color=" ++ active ++ ">") "</box>"
     , ppVisible = xmobarColor active ""
     , ppHidden  = xmobarColor dull  ""
@@ -525,6 +514,7 @@ myLogHook = do
     workspaceHistoryHookExclude ["NSP"]
     -- nsHideOnFocusLoss scratchpads
     refocusLastLogHook
+    showWNameLogHook myShowWNameTheme 
 
 ----------------------------------------------------------------------------------------------------
 -- New Window Actions                                                                             --
