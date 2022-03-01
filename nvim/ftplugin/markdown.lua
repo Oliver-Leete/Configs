@@ -1,6 +1,6 @@
 mapxName.group(mapxName.buffer, function()
 nnoremap("<localleader>h",  "<cmd>Telescope heading<cr>", "Headings")
-nnoremap("<localleader>p",  "<plug>MarkdownPreviewToggle", "Preview File")
+nnoremap("<localleader><localleader>",  "<plug>MarkdownPreviewToggle", "Preview File")
 nnoremap("<localleader>,", function() require'telescope'.extensions.dict.synonyms() end, "Synonyms")
 nnoremap(",fw", "m1!ippar w80<cr>`1", "Wrap Paragraph to Textwidth", silent)
 end)
