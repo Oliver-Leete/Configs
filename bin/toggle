@@ -4,7 +4,7 @@ sound() {
 		pkill pavucontrol
 	else
 		pavucontrol &
-        sleep 0.1
+        sleep 0.2
         RESOLUTIONS=$(xrandr | rg -e "^$(/home/oleete/.config/bin/get-focused-monitor.pl)" | rg -o -e '\d*x\d*\+\d*\+\d*' | rg -o -e '\d+')
         X=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f3)" + 8)
         Y=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f4)" + 31)

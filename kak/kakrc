@@ -1,4 +1,5 @@
 source "%val{config}/plugins/plug.kak/rc/plug.kak"
+colorscheme gruvbox-dark
 
 plug "andreyorst/plug.kak" noload
 plug "evanrelf/number-toggle.kak" config %{
@@ -6,15 +7,11 @@ plug "evanrelf/number-toggle.kak" config %{
 }
 plug 'delapouite/kakoune-auto-percent'
 plug 'Delapouite/kakoune-auto-star'
+
 plug 'alexherbo2/auto-pairs.kak'
 set-option global auto_pairs ( ) { } [ ] '"' '"' "'" "'" ` ` “ ” ‘ ’ « » ‹ ›
 enable-auto-pairs
-
 plug 'h-youhei/kakoune-surround'
-
-plug "HeavyRain266/tokyonight.kak" config %{
-    colorscheme tokyonight
-}
 
 plug 'occivink/kakoune-phantom-selection'
 plug 'occivink/kakoune-sort-selections'
@@ -29,13 +26,6 @@ plug 'occivink/kakoune-vertical-selection' %{
 
 plug 'delapouite/kakoune-text-objects' %{
     map global normal 'z' ': enter-user-mode selectors<ret>' -docstring 'selectors'
-}
-
-plug 'delapouite/kakoune-select-view' %{
-  # Suggested mappings
-  map global normal <a-%> ': select-view<ret>' -docstring 'select view'
-  map global view s '<esc>: select-view<ret>' -docstring 'select view'
-  map global selectors v '<esc>: select-view<ret>' -docstring 'select view'
 }
 
 plug 'delapouite/kakoune-mirror' %{

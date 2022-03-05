@@ -133,8 +133,8 @@ menu () {
         goto-move-project) /home/oleete/.config/bin/wsHarpoon goMoveMenu ;;
 
         presets) /home/oleete/.config/bin/wsHarpoon preset ;;
-        edit-preset)/home/oleete/.config/bin/wsHarpoon modify ;;
-        make-preset)/home/oleete/.config/bin/wsHarpoon makePreset ;;
+        modify-preset) /home/oleete/.config/bin/wsHarpoon modify ;;
+        make-preset) /home/oleete/.config/bin/wsHarpoon makePreset ;;
 
         mirror) /home/oleete/.cabal/bin/xmonadctl-exe layout-dir ;;
         mirror_stack) /home/oleete/.cabal/bin/xmonadctl-exe layout-stack-dir ;;

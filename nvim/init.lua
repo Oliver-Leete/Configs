@@ -70,7 +70,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'ray-x/lsp_signature.nvim'
     Plug 'j-hui/fidget.nvim'
     Plug 'brymer-meneses/grammar-guard.nvim'
-    Plug 'p00f/clangd_extensions.nvim'
 
     Plug 'hrsh7th/nvim-cmp'
     Plug 'hrsh7th/cmp-buffer'
@@ -103,6 +102,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'ThePrimeagen/refactoring.nvim'
 
     Plug 'renerocksai/telekasten.nvim'
+
+    Plug 'mg979/vim-visual-multi'
 call plug#end()]])
 
 -- Disable builtins
@@ -135,6 +136,7 @@ end
 require('settings_config')
 require('misc_config')
 require('mappings_config')
+require('visual-multi')
 require('jump_config')
 require('telescope_config')
 require('compleation_config')

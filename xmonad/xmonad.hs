@@ -61,7 +61,6 @@ import XMonad.Layout.PerWorkspace
 import XMonad.Layout.SimpleFocus
 import XMonad.Layout.Spacing
 
--- import XMonad.Util.ClickableWorkspaces
 import XMonad.Util.EZConfig
 import XMonad.Util.Hacks
 import XMonad.Util.NamedScratchpad
@@ -514,7 +513,7 @@ myLogHook = do
     workspaceHistoryHookExclude ["NSP"]
     -- nsHideOnFocusLoss scratchpads
     refocusLastLogHook
-    showWNameLogHook myShowWNameTheme 
+    showWNameLogHook myShowWNameTheme
 
 ----------------------------------------------------------------------------------------------------
 -- New Window Actions                                                                             --
@@ -550,7 +549,7 @@ myManageHook =
             , className =? "GCal"                 -?> doRectFloat thirdNthird
             , className =? "WrkGCal"              -?> doRectFloat thirdNthird
             , resource  =? "sysMon"               -?> doRectFloat (W.RationalRect (1 / 8) (1 / 8) (3 / 4) (3 / 4))
-            , resource  =? "wsHarpoon"            -?> doRectFloat (W.RationalRect (3 / 10) (3 / 10) (2 / 5) (2 / 5))
+            , resource  =? "wsHarpoon"            -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4))
             , resource  =? "console"              -?> doRectFloat (W.RationalRect (4 / 7) (4 / 7) (2 / 5) (2 / 5))
             , resource  =? "youtube music"        -?> doRectFloat halfNhalf
             , className =? "discord"              -?> doRectFloat halfNhalf
