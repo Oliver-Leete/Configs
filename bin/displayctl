@@ -72,10 +72,6 @@ CONFIG=/home/oleete/.config/displayctl
 # Lock
 # ----------------------------------------------------------------------
 
-LOCKFILE=/tmp/${SCRIPTNAME}.lock
-exec 200>$LOCKFILE
-flock -n 200 || { (>&2 echo "$SCRIPTNAME already running (locked)"); exit 1; }
-
 # ----------------------------------------------------------------------
 # Main
 # ----------------------------------------------------------------------
@@ -95,18 +91,27 @@ main () {
     CONNECTED_ACTIVE_OUTPUTS="$(echo $(echo "$XRANDRV" | awk '/ connected.*[[:digit:]]/ {print $1}') | sed 's/ \+/|/g')"
     DISCONNECTED_ACTIVE_OUTPUTS="$(echo $(echo "$XRANDRV" | awk '/disconnected.*[[:digit:]]/ {print $1}') | sed 's/ \+/|/g')"
 
+    if [[ ${1:-false} == "fingOnly" ]]; then
+        report_fingerprint_small
+        exit
+    fi
+
+    LOCKFILE=/tmp/${SCRIPTNAME}.lock
+    exec 200>$LOCKFILE
+    flock -n 200 || { (>&2 echo "$SCRIPTNAME already running (locked)"); exit 1; }
+
     # execute function based on command line arguments
     case ${1:-menu} in
-        menu)        menu               ;;
-        in*)         internal           ;;
-        ex*)         external           ;;
-        span)        span               ;;
-        spanAbove)   spanAbove          ;;
-        spanex)      spanex             ;;
-        mirror)      mirror             ;;
-        auto)        auto               ;;
-        fing*)       report_fingerprint ;;
-        *)           usage              ;;
+        menu)        menu                     ;;
+        in*)         internal                 ;;
+        ex*)         external                 ;;
+        span)        span                     ;;
+        spanAbove)   spanAbove                ;;
+        spanex)      spanex                   ;;
+        mirror)      mirror                   ;;
+        auto)        auto                     ;;
+        fing*)       report_fingerprint       ;;
+        *)           usage                    ;;
     esac
 
 }
@@ -207,6 +212,11 @@ generate_fingerprint () {
     LID=$(cat /proc/acpi/button/lid/LID/state)
     EDID_FINGERPRINT="$(echo "$XRANDRV" | get_edids)"
     echo FINGERPRINT_$(echo $EDID_FINGERPRINT$LID | sha1sum - | cut -d " " -f 1)
+}
+
+report_fingerprint_small () {
+    fingerprint=$(generate_fingerprint)
+    echo "${fingerprint##FINGERPRINT_}"
 }
 
 report_fingerprint () {

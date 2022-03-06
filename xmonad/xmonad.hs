@@ -123,9 +123,11 @@ wsEXP    = "Exp"
 wsANSYS  = "ANSYS"
 wsCOMMENTS = "Comments"
 wsWRKN   = "WrkNotes"
+wsSCN    = "Scintilla"
+wsCODE   = "CodeTuts"
 
 myWorkspaces :: [[Char]]
-myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1, wsQMK, wsANSYS, wsCOMMENTS, wsWRKN, wsZMK]
+myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1, wsQMK, wsANSYS, wsCOMMENTS, wsWRKN, wsZMK, wsSCN, wsCODE]
 
 projects :: [Project]
 projects =
@@ -198,6 +200,16 @@ projects =
                 , projectDirectory  = "~/Projects/ANSYSpowderModel"
                 , projectStartHook  = Just $ do spawnOn wsANSYS myTerminal
                                                 spawnOn wsANSYS ("sleep .2; " ++ myBrowser)
+                }
+    , Project   { projectName       = wsCODE
+                , projectDirectory  = "~/Projects/rustBook"
+                , projectStartHook  = Just $ do spawnOn wsCODE myTerminal
+                                                spawnOn wsCODE ("sleep .2; " ++ myBrowser)
+                }
+    , Project   { projectName       = wsSCN
+                , projectDirectory  = "~/Projects/Scintilla"
+                , projectStartHook  = Just $ do spawnOn wsSCN myTerminal
+                                                spawnOn wsSCN ("sleep .2; " ++ myBrowser)
                 }
     ]
 
@@ -475,7 +487,7 @@ myStartupHook :: X ()
 myStartupHook = do
     killAllStatusBars
     spawn "feh --bg-fill --randomize ~/Pictures/wallpapers/"
-    spawnOnce "xsetroot -cursor_name left_ptr"
+    spawn "xsetroot -cursor_name left_ptr"
     spawnOnce "picom -b --config ~/.config/picom/picom.conf"
     spawnOnce "insync start; insync hide"
     spawnOnce "/home/oleete/.config/bin/startupScript"

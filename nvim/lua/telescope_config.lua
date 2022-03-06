@@ -57,6 +57,7 @@ local openAndList = function(prompt_bufnr)
     actions.select_default(prompt_bufnr)
 end
 
+require("telescope").load_extension('lsp_handlers')
 require("telescope").load_extension("bibtex")
 require("telescope").load_extension("gh")
 require("telescope").load_extension("media_files")
@@ -130,12 +131,16 @@ require("telescope").setup({
             case_mode = "smart_case",
         },
         media_files = {},
+        ["ui-select"] = {
+            require("telescope.themes").get_dropdown {}
+        }
     },
 })
 
 require("telescope").load_extension("file_browser")
 require("telescope").load_extension("fzf")
 require("telescope").load_extension("bibtex")
+require("telescope").load_extension("ui-select")
 
 local open_dif = function()
     local selected_entry = action_state.get_selected_entry()

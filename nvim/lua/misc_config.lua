@@ -100,3 +100,11 @@ require('telekasten').setup({
 
     image_link_style = "wiki",
 })
+local perfanno = require("perfanno")
+local util = require("perfanno.util")
+
+require("perfanno").setup({
+    line_highlights = util.make_bg_highlights("#1F1F28", "#C34043", 10),
+    vt_highlight = util.make_fg_highlights("#DCD7BA", "#C34043", 10),
+})
+require('crates').setup()

@@ -184,6 +184,17 @@ require("nvim-lsp-installer").on_server_ready(function(server)
         opts.filetypes = { "haskell", "lhaskell" }
         opts.root_dir = nvim_lsp.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml", ".git")
     end
+    if server.name == "rust_analyzer" then
+        require("rust-tools").setup {
+            server = vim.tbl_deep_extend("force", server:get_default_options(), opts),
+            tools = {
+                executor = require("rust-tools/executors").kitty,
+            }
+        }
+        server:attach_buffers()
+        require("rust-tools").start_standalone_if_required()
+        return
+    end
     server:setup(opts)
 end)
 

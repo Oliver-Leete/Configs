@@ -49,6 +49,9 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
     Plug 'fladson/vim-kitty'
     Plug 'anufrievroman/vim-angry-reviewer'
+    Plug 'simrat39/rust-tools.nvim'
+    Plug 'saecki/crates.nvim'
+
 
     Plug 'rebelot/kanagawa.nvim'
     Plug 'folke/tokyonight.nvim'
@@ -101,9 +104,16 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-treesitter/playground'
     Plug 'ThePrimeagen/refactoring.nvim'
 
+    Plug 'nvim-telescope/telescope-ui-select.nvim'
+
+    Plug 'mfussenegger/nvim-dap'
+    Plug 't-troebst/perfanno.nvim'
+
     Plug 'renerocksai/telekasten.nvim'
 
-    Plug 'mg979/vim-visual-multi'
+    Plug 'gbrlsnchs/telescope-lsp-handlers.nvim'
+
+    " Plug 'mg979/vim-visual-multi'
 call plug#end()]])
 
 -- Disable builtins
@@ -136,7 +146,7 @@ end
 require('settings_config')
 require('misc_config')
 require('mappings_config')
-require('visual-multi')
+-- require('visual-multi')
 require('jump_config')
 require('telescope_config')
 require('compleation_config')
