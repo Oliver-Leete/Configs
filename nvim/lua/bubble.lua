@@ -139,6 +139,21 @@ basic.git = {
     end,
 }
 
+basic.dap = {
+    name = "dap",
+    width = 90,
+    hl_colors = {
+        red = { "red", "ActiveBg" },
+    },
+    text = function(bufnr)
+        return {
+            { " " },
+            { require'dap'.status, "red" },
+        }
+    end,
+
+}
+
 local default = {
     filetypes = { "default" },
     active = {
@@ -147,6 +162,7 @@ local default = {
         { vim_components.search_count(), { "black", "blue" } },
         { sep.right_rounded, hl_list.Black },
         basic.lsp_diagnos,
+        basic.dap,
         basic.divider,
         basic.git,
         { git_comps.git_branch({ icon = "  " }), { "green", "ActiveBg" }, 90 },

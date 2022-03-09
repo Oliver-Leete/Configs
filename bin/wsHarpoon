@@ -15,32 +15,33 @@ main () {
         move)       moveToWS "$2" ;;
         preset)     preset "$2" ;;
         makePreset) makePreset ;;
+        closeWSMenu) closeWSMenu ;;
     esac
 }
 
 menu () {
-    items="$(wmctrl -d | cut -c33-)"
+    items="$(wmctrl -d | awk '{print $9}')"
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
     if [ ! -z "$result" ]; then
-        WS="$(wmctrl -d | rg -w "$result" | cut -d' ' -f1)"
+        WS="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
         $XMONADCTL jump-to-"$WS"
     fi
 }
 
 moveMenu () {
-    items="$(wmctrl -d | cut -c33-)"
+    items="$(wmctrl -d | awk '{print $9}')"
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
     if [ ! -z "$result" ]; then
-        WS="$(wmctrl -d | rg -w "$result" | cut -d' ' -f1)"
+        WS="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
         $XMONADCTL move-to-"$WS"
     fi
 }
 
 goMoveMenu () {
-    items="$(wmctrl -d | cut -c33-)"
+    items="$(wmctrl -d | awk '{print $9}')"
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
     if [ ! -z "$result" ]; then
-        WS="$(wmctrl -d | rg -w "$result" | cut -d' ' -f1)"
+        WS="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
         $XMONADCTL move-to-"$WS"
         $XMONADCTL jump-to-"$WS"
     fi
@@ -51,8 +52,8 @@ modifyWS () {
 }
 
 addWS () {
-    WSnum="$(wmctrl -d | grep '*' | cut -d' ' -f1)"
-    WSname="$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')"
+    WSnum="$(wmctrl -d | grep '*' | awk '{print $1}')"
+    WSname="$(wmctrl -d | grep '*' | awk '{print $9}' | sed 's/ /-/')"
     if ! rg -q "$WSname" "$HARPFILE"; then
         echo "$WSnum" "$WSname" >> "$HARPFILE"
     fi
@@ -73,15 +74,28 @@ makePreset () {
 
 jumpToWS () {
     if [[ $(wc -l <"$HARPFILE") -ge $1 ]]; then
-        WS="$(cat "$HARPFILE" | head -"$1" | tail -1 | cut -d' ' -f1)"
+        WS="$(cat "$HARPFILE" | head -"$1" | tail -1 | awk '{print $1}')"
         $XMONADCTL jump-to-"$WS"
     fi
 }
 
 moveToWS () {
-    WS="$(cat "$HARPFILE" | head -"$1" | tail -1 | cut -d' ' -f1)"
+    WS="$(cat "$HARPFILE" | head -"$1" | tail -1 | awk '{print $1}')"
     $XMONADCTL move-to-"$WS"
 }
 
+closeWSMenu () {
+    wsNum="$(wmctrl -l | awk '{print $2}' | uniq)"
+    items=$(for item in $wsNum; do wmctrl -d | rg -e "^$item" | awk '{print $9}'; done)
+    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
+    if [ ! -z "$result" ]; then
+        wsNum=$(wmctrl -d | rg -e "$result$" | rg -o -e "^\d*")
+        for item in $(wmctrl -l | rg $wsNum | awk '{print $1}'); do 
+            wmctrl -i -c $item
+        done
+        sleep 0.5
+        closeWSMenu
+    fi
+}
 
 main "$@"

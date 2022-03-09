@@ -124,10 +124,12 @@ wsANSYS  = "ANSYS"
 wsCOMMENTS = "Comments"
 wsWRKN   = "WrkNotes"
 wsSCN    = "Scintilla"
+wsSCNN   = "Scin-Docs"
 wsCODE   = "CodeTuts"
+wsGAME   = "Games"
 
 myWorkspaces :: [[Char]]
-myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1, wsQMK, wsANSYS, wsCOMMENTS, wsWRKN, wsZMK, wsSCN, wsCODE]
+myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1, wsQMK, wsANSYS, wsCOMMENTS, wsWRKN, wsZMK, wsSCN, wsCODE, wsGAME, wsSCNN]
 
 projects :: [Project]
 projects =
@@ -207,9 +209,18 @@ projects =
                                                 spawnOn wsCODE ("sleep .2; " ++ myBrowser)
                 }
     , Project   { projectName       = wsSCN
-                , projectDirectory  = "~/Projects/Scintilla"
+                , projectDirectory  = "~/Projects/Scintilla/Scintilla"
                 , projectStartHook  = Just $ do spawnOn wsSCN myTerminal
                                                 spawnOn wsSCN ("sleep .2; " ++ myBrowser)
+                }
+    , Project   { projectName       = wsSCNN
+                , projectDirectory  = "~/Projects/Scintilla/docs"
+                , projectStartHook  = Just $ do spawnOn wsSCNN myTerminal
+                                                spawnOn wsSCNN ("sleep .2; " ++ myBrowser)
+                }
+    , Project   { projectName       = wsGAME
+                , projectDirectory  = "~/Documents"
+                , projectStartHook  = Just $ do spawnOn wsGAME "steam"
                 }
     ]
 

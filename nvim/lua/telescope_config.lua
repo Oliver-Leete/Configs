@@ -57,6 +57,7 @@ local openAndList = function(prompt_bufnr)
     actions.select_default(prompt_bufnr)
 end
 
+require('telescope').load_extension('dap')
 require("telescope").load_extension('lsp_handlers')
 require("telescope").load_extension("bibtex")
 require("telescope").load_extension("gh")

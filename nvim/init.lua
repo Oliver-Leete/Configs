@@ -56,7 +56,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'rebelot/kanagawa.nvim'
     Plug 'folke/tokyonight.nvim'
     Plug 'folke/zen-mode.nvim'
-    Plug 'lukas-reineke/indent-blankline.nvim',
+    " Plug 'lukas-reineke/indent-blankline.nvim',
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'windwp/windline.nvim'
@@ -107,6 +107,10 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-telescope/telescope-ui-select.nvim'
 
     Plug 'mfussenegger/nvim-dap'
+    Plug 'Pocco81/DAPInstall.nvim'
+    Plug 'rcarriga/nvim-dap-ui'
+    Plug 'theHamsta/nvim-dap-virtual-text'
+    Plug 'nvim-telescope/telescope-dap.nvim'
     Plug 't-troebst/perfanno.nvim'
 
     Plug 'renerocksai/telekasten.nvim'
@@ -154,6 +158,7 @@ require('panels_config')
 require('myfuncs_config')
 require('lsp_config')
 require('treesitter_config')
+require('dap_config')
 require('git_config')
 require('snippets_config')
 require('bubble')

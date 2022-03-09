@@ -65,8 +65,8 @@ require("zen-mode").setup({
         }
     },
     on_open = function()
-        vim.cmd("IndentBlanklineDisable")
-        vim.cmd("WindLineFloatToggle")
+        -- vim.cmd("IndentBlanklineDisable")
+        -- vim.cmd("WindLineFloatToggle")
     end,
     on_close = function()
         vim.cmd("IndentBlanklineEnable")
@@ -75,12 +75,12 @@ require("zen-mode").setup({
 })
 
 -- Indent Blankline Settings
-require("indent_blankline").setup({
-    char = "│",
-    use_treesitter = true,
-    show_current_context = true,
-    show_first_indent_level = false,
-    indent_level = 6,
-    filetype_exclude = { "qf", "outline", "vimplug", "undotree", "help", "DiffviewFiles", "juliadoc" },
-    buftype_exclude = { "teriminal" },
-})
+-- require("indent_blankline").setup({
+--     char = "│",
+--     use_treesitter = true,
+--     show_current_context = true,
+--     show_first_indent_level = false,
+--     indent_level = 6,
+--     filetype_exclude = { "qf", "outline", "vimplug", "undotree", "help", "DiffviewFiles", "juliadoc" },
+--     buftype_exclude = { "teriminal" },
+-- })

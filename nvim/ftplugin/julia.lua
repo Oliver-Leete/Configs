@@ -63,6 +63,11 @@ nnoremap("<leader>jB", [["<cmd>silent !kittyPersistent debugterm juliadebug 'bp 
     nnoremap("<leader>jrr", "<cmd>silent !kittyPersistent debugterm juliadebug bp<cr>", "List Breakpoints")
     nnoremap("<leader>jrb", [["<cmd>silent !kittyPersistent debugterm juliadebug bp rm " . input("Point to Remove > ") . "<cr>"]], "Remove Breapoint")
     nnoremap("<leader>jrw", [["<cmd>silent !kittyPersistent debugterm juliadebug w rm " . input("Item to Remove > ") . "<cr>"]], "Remove Watchlist")
+
+    mapxName.name("<leader>lr", "Run Profiler")
+    nnoremap("<leader>lrf", [["<cmd>silent !kittyOneShot maketerm julia ~/.config/nvim/filetype/julia/prof.jl '" . expand('%:p') . "'<cr>"]], "Profile File", expr)
+    nnoremap("<leader>loo", function() require("perfanno").load_traces(jul_perf_flat("/tmp/julprof.data")) end, "Load Julia profile data")
+
 nnoremap("<leader>/d", "<cmd>Edoc<cr>", "Documentation")
 nnoremap("<leader>/D", "<cmd>EmainDoc<cr>", "Main Documentation")
 nnoremap("<leader>/s", "<cmd>Esource<cr>", "Source")
@@ -112,3 +117,38 @@ vim.g.projectionist_heuristics = {
         ["docs/src/index.md"] = { type = "mainDoc" },
     }
 }
+
+local function get_command_output(cmd, silent)
+    if silent then
+        cmd = cmd .. " 2>/dev/null"
+    end
+
+    local data_file = assert(io.popen(cmd, "r"))
+    data_file:flush()
+    local output = data_file:read("*all")
+    data_file:close()  -- TODO: can we get the return code and use it?
+
+    return output
+end
+function _G.jul_perf_flat(perf_data)
+    local esc = vim.fn.fnameescape(perf_data)
+    local raw_data = get_command_output("cat " .. perf_data, true)
+
+    local result = {}
+    local current_event = 1
+    result[1] = {}
+
+    for line in raw_data:gmatch("[^\r\n]+") do
+        local count, file, linenr, symbol =
+        line:match("^%s*(%d+)%s+%d+%s+(.-)%s+(%d+)%s+(.*)")
+        local success = count and file and linenr and symbol
+
+        if success and tonumber(count) > 0 then
+            local trace = {symbol = symbol, file = file, linenr = tonumber(linenr)}
+
+            table.insert(result[current_event], {count = tonumber(count), frames = {trace}})
+        end
+    end
+
+    return result
+end

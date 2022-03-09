@@ -4,7 +4,7 @@ battery () {
     bat_stat=$(upower -i $(upower -e | rg battery | head -1)| rg state)
     percent=$(upower -i $(upower -e | rg battery | head -1)| rg percent | rg -o -e "[0-9]{1,3}")
     dunstify -r 105 "$(echo $bat_stat | sed 's/state:/Battery:/') - $percent%
-$(upower -i $(upower -e | rg battery | head -1) | rg time | sed 's/\s*//g')"
+$(upower -i $(upower -e | rg battery | head -1) | rg time | sed 's/.*/\L&/; s/[a-z]*/\u&/g' | sed 's/[\t ]*/ /')"
 }
 
 network () {

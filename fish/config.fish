@@ -13,28 +13,19 @@ export PAGER="nvr --servername /tmp/nvr-$WORKSPACE -c 'Man!|set nowrap' -"
 alias neovim nvim
 alias n nvrStart
 alias k kak
-alias reboot "sudo ~/.config/bin/shutdownupdate reboot now"
+alias h hx
 
-function shutdown
-    argparse 'y' -- $argv
-    if set -q _flag_y
-        yes | sudo ~/.config/bin/shutdownupdate shutdown $argv
-    else
-        sudo ~/.config/bin/shutdownupdate shutdown now $argv
-    end
-end
 alias exa "exa --colour=always --group-directories-first --icons"
 
 abbr vidir "vidir -v"
-abbr ns "n -S"
 abbr mv "mv -iv"
 abbr cp "cp -riv"
 abbr rm "rm -i"
 
-abbr  fd "fd -H -L -I"
+abbr  fd "fd -HLI"
 
-abbr  lcd "exa -1 --icons"
-abbr  ls "exa -a -l --icons"
+abbr  ls "exa -1 --icons"
+abbr  ll "exa -a -l --icons"
 abbr  lt "exa -a -l -T --level=2 --icons"
 abbr  lg "exa -a -l -T --level=2 --git --git-ignore --icons"
 

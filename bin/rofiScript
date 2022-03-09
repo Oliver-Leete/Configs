@@ -67,6 +67,7 @@ menu () {
     goto-project
     move-project
     goto-move-project
+    close-project
 
     presets
     modify-preset
@@ -131,6 +132,7 @@ menu () {
         goto-project) /home/oleete/.config/bin/wsHarpoon menu ;;
         move-project) /home/oleete/.config/bin/wsHarpoon moveMenu ;;
         goto-move-project) /home/oleete/.config/bin/wsHarpoon goMoveMenu ;;
+        close-project) /home/oleete/.config/bin/wsHarpoon closeWSMenu ;;
 
         presets) /home/oleete/.config/bin/wsHarpoon preset ;;
         modify-preset) /home/oleete/.config/bin/wsHarpoon modify ;;

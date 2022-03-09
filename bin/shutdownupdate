@@ -1,20 +1,13 @@
 #!/bin/bash
 
-echo -n "Would you like to update before you $1 y/n?"
-read reply
+su -c 'yay' oleete
+# snap refresh
+flatpak update
 
-if [ "$reply" = y -o "$reply" = Y ]; then
-	xdotool key super+meta+f
-	pacman -Syu
-	su -c 'yay -Syu' oleete
-	snap refresh
-	flatpak update
-	cargo install-update -a
-	su -c 'tldr -u' oleete
-	/home/oleete/.config/bin/xmonad-update
-	/home/oleete/.config/bin/nvim-update
-	/home/oleete/.config/bin/kak-update
-	/home/oleete/.config/bin/confirm $@
-else
-	/home/oleete/.config/bin/confirm $@
-fi
+cargo install-update -a
+
+su -c 'tldr -u' oleete
+updatedb
+/home/oleete/.config/bin/xmonad-update
+su -c 'yay neovim-git kakoune-git helix-git picom-git tlpui-git jc-git' oleete
+
