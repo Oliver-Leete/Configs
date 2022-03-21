@@ -1,78 +1,83 @@
 #!/bin/bash
 
+good="<box type=Bottom width=2 mt=2 color=#76946A><fc=#76946A>"
+bad="<box type=Bottom width=2 mt=2 color=#DCA561><fc=#DCA561>"
+ugly="<box type=Bottom width=2 mt=2 color=#C34043><fc=#C34043>"
+end="</fc></box>"
+
 # Battery
 bat_stat=$(upower -i $(upower -e | rg battery | head -1)| rg state)
 percent=$(upower -i $(upower -e | rg battery | head -1)| rg percent | rg -o -e "[0-9]{1,3}")
 if [[ "$bat_stat" == *"discharging"* ]]; then
     if   ((0<=percent && percent<10)); then
-        bat_icon=""
+        bat_icon="$ugly$end"
     elif ((10<=percent && percent<20)); then
-        bat_icon=""
+        bat_icon="$ugly$end"
     elif ((20<=percent && percent<30)); then
-        bat_icon=""
+        bat_icon="$bad$end"
     elif ((30<=percent && percent<40)); then
-        bat_icon=""
+        bat_icon="$bad$end"
     elif ((40<=percent && percent<50)); then
-        bat_icon=""
+        bat_icon="$bad$end"
     elif ((50<=percent && percent<60)); then
-        bat_icon=""
+        bat_icon="$bad$end"
     elif ((60<=percent && percent<70)); then
-        bat_icon=""
+        bat_icon="$good$end"
     elif ((70<=percent && percent<80)); then
-        bat_icon=""
+        bat_icon="$good$end"
     elif ((80<=percent && percent<90)); then
-        bat_icon=""
+        bat_icon="$good$end"
     elif ((90<=percent && percent<=100)); then
-        bat_icon=""
+        bat_icon="$good$end"
     fi
 elif [[ "$bat_stat" == *"charg"* ]]; then
     if   ((0<=percent && percent<10)); then
-        bat_icon=""
+        bat_icon="$bad$end"
     elif ((10<=percent && percent<20)); then
-        bat_icon=""
+        bat_icon="$bad$end"
     elif ((20<=percent && percent<30)); then
-        bat_icon=""
+        bat_icon="$bad$end"
     elif ((30<=percent && percent<40)); then
-        bat_icon=""
+        bat_icon="$bad$end"
     elif ((40<=percent && percent<50)); then
-        bat_icon=""
+        bat_icon="$bad$end"
     elif ((50<=percent && percent<60)); then
-        bat_icon=""
+        bat_icon="$good$end"
     elif ((60<=percent && percent<70)); then
-        bat_icon=""
+        bat_icon="$good$end"
     elif ((70<=percent && percent<80)); then
-        bat_icon=""
+        bat_icon="$good$end"
     elif ((80<=percent && percent<90)); then
-        bat_icon=""
+        bat_icon="$good$end"
     elif ((90<=percent && percent<98)); then
-        bat_icon=""
+        bat_icon="$good$end"
     else
-        bat_icon=""
+        bat_icon="$good$end"
     fi
 elif [[ "$bat_stat" == *"full"* ]]; then
-    bat_icon=""
+    bat_icon="$good$end"
 else
-    bat_icon=""
+    bat_icon="$bad$end"
 fi
 
 net_stat=$(nmcli -t device)
 if [[ "$net_stat" == *"ethernet"*"connected"* ]]; then
-    net_icon=""
+    net_icon="$good$end"
 elif [[ "$net_stat" == *"wifi"*"connected"* ]]; then
-    net_icon=""
+    net_icon="$bad$end"
 else
-    net_icon="睊"
+    net_icon="$ugly睊$end"
 fi
 
 vol_stat=$(pactl get-sink-volume @DEFAULT_SINK@ | rg -o -e "[0-9]{1,3}%" | head -n 1 | rg -o -e "[0-9]{1,3}")
 if (( vol_stat==0 )); then
-    vol_icon="婢"
+    vol_icon="$good婢$end"
 elif (( vol_stat<=33)); then
-    vol_icon="奄"
+    vol_icon="$bad奄$end"
 elif (( vol_stat<=66)); then
-    vol_icon="奔"
+    vol_icon="$bad奔$end"
 else
-    vol_icon="墳"
+    vol_icon="$ugly墳$end"
 fi
 
 blu_stat=$(bluetooth status)
@@ -80,27 +85,27 @@ if [[ "$blu_stat" == *"on"* ]]; then
     blu_xm4=$(bluetoothctl info 14:3F:A6:91:FC:17 | rg Connected)
     blu_dev=$(bluetoothctl devices | cut -f2 -d' ' | while read uuid; do bluetoothctl info $uuid; done|rg -e "Connected")
     if [[ "$blu_xm4" == *"yes"* ]]; then
-        blu_icon=""
+        blu_icon="$good$end"
     elif [[ "$blu_dev" == *"yes"* ]]; then
-        blu_icon=""
+        blu_icon="$bad$end"
     else
-        blu_icon=""
+        blu_icon="$ugly$end"
     fi
 else
-    blu_icon=""
+    blu_icon="$ugly$end"
 fi
 
 dnd_stat=$(dunstctl is-paused)
 if [[ "$(dunstctl is-paused)" == "true" ]]; then
-    dnd_icon="ﮖ"
+    dnd_icon="$uglyﮖ$end"
 else
     dnd_icon=""
 fi
 
-men_icon=""
+men_icon="$good$end"
 
 if [ -f /tmp/screencast.pid ]; then
-    cap_icon=" <box type=Bottom width=2 mt=2 color=#C34043><fc=#C34043> REC</fc></box>"
+    cap_icon=" $ugly REC$end"
 fi
 
 action_end='</action>'
@@ -120,4 +125,4 @@ vol=$action_vol$vol_icon$action_end
 blu=$action_blu$blu_icon$action_end
 cap=$action_cap$cap_icon$action_end
 
-echo "<box type=Bottom width=2 mt=2 color=#DCA561><fc=#DCA561>$men $bat $net $vol $blu $dnd</fc></box>$cap"
+echo "$men $bat $net $vol $blu $dnd $cap"

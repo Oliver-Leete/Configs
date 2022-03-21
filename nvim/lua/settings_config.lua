@@ -15,6 +15,16 @@ vim.opt.hidden = true
 vim.opt.lazyredraw = true
 vim.opt.shortmess = "Iflmnrwxt"
 vim.opt.showmode = false
+vim.opt.laststatus=3
+vim.opt.fillchars:append({
+    horiz = '━',
+    horizup = '┻',
+    horizdown = '┳',
+    vert = '┃',
+    vertleft = '┨',
+    vertright = '┣',
+    verthoriz = '╋',
+})
 
 -- Saving
 vim.opt.confirm = true

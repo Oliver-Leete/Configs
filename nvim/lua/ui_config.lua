@@ -38,6 +38,8 @@ require('kanagawa').setup({
     transparent = false,
     colors = {},
     overrides = {},
+    dimInactive = true,
+    globalStatus = true,
 })
 
 vim.cmd("colorscheme kanagawa")

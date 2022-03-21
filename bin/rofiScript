@@ -51,7 +51,6 @@ menu () {
     discord
 
     tasks
-    notes
     calendar
     gmail
 
@@ -115,8 +114,7 @@ menu () {
         discord) /home/oleete/.cabal/bin/xmonadctl-exe nsp-disc ;;
         music) /home/oleete/.cabal/bin/xmonadctl-exe nsp-musc ;;
 
-        tasks) workLauncher task ;;
-        notes) workLauncher note ;;
+        tasks) /home/oleete/.cabal/bin/xmonadctl-exe nsp-task ;;
         gmail) workLauncher gmail ;;
         calendar) workLauncher gcal ;;
 
@@ -152,7 +150,7 @@ menu () {
 
 workLauncher () {
     WS=$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')
-    WSS="Wrk Wrk1 Thesis Comments Sim Exp ANSYS" 
+    WSS="Wrk Wrk1 Thesis Comments Sim Exp ANSYS WrkNotes Scinilla Scin-Docs"
     if [[ "$WSS" == *"$WS"* ]]; then
         /home/oleete/.cabal/bin/xmonadctl-exe nsp-$1-wrk
     else

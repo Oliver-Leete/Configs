@@ -40,6 +40,7 @@ nnoremap("<leader>md", [[<cmd>silent !kittyOneShot maketerm "~/.config/nvim/file
 nnoremap("<leader>mu", [[<cmd>silent !kittyOneShot maketerm "~/.config/nvim/filetype/julia/docTest"<cr>]], "Run Doctests")
 
 nnoremap("<leader>jj", "<cmd>silent !kittyPersistent debugterm juliadebug<cr>", "Open Debug Terminal")
+nnoremap("<leader>jq", "<cmd>silent !kitty @ close-window --match title:debugterm<cr>", "Close Debug Terms")
 nnoremap("<leader>je", [["<cmd>silent !kittyPersistent debugterm juliadebug '@enter . input("Debug? > ") . <cr>"]], "Enter Function")
 nnoremap("<leader>jE", [["<cmd>silent !kittyPersistent debugterm juliadebug '@enter . getline(".") . <cr>"]], "Enter Function (Line)")
 nnoremap("<leader>jn", "<cmd>silent !kittyPersistent debugterm juliadebug n<cr>", "Step to the Next Line")

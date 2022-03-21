@@ -141,7 +141,7 @@ require("telescope").setup({
 require("telescope").load_extension("file_browser")
 require("telescope").load_extension("fzf")
 require("telescope").load_extension("bibtex")
-require("telescope").load_extension("ui-select")
+-- require("telescope").load_extension("ui-select")
 
 local open_dif = function()
     local selected_entry = action_state.get_selected_entry()

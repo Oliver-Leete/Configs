@@ -207,4 +207,4 @@ windline.setup({
     tabline = {}
 })
 
-vim.cmd("WindLineFloatToggle")
+-- vim.cmd("WindLineFloatToggle")

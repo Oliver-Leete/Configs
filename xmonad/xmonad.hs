@@ -232,24 +232,17 @@ myTerminalRemote = "/home/oleete/.config/bin/kittyRemote"
 myBrowser      = "/home/oleete/.config/bin/browser"
 myBrowserClass = "google-chrome-stable"
 
-discordCommand   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/discord  --class=discord  --app=https://discord.com/channels/@me                              "
-gTasksCommand    = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/task     --class=Tasks    --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html"
-gTasksWrkCommand = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/taskWrk  --class=WrkTasks --app=chrome-extension://ndbaejgcaecffnhlmdghchfehkflgfkj/index.html"
-keepCommand      = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/keep     --class=Keep     --app=https://keep.google.com/#home                                 "
-keepWrkCommand   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/keepWrk  --class=WrkKeep  --app=https://keep.google.com/#home                                 "
-gmailCommand     = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmail    --class=GMail          https://mail.google.com                                       "
-gmailCommandWrk  = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmailWrk --class=WrkGMail       https://mail.google.com                                       "
-gcalCommand      = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcal     --class=GCal           https://calendar.google.com                                   "
-gcalCommandWrk   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcalWrk  --class=WrkGCal        https://calendar.google.com                                   "
+discordCommand   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/discord  --class=discord  --app=https://discord.com/channels/@me"
+gTasksCommand    = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/task     --class=Tasks    --app=https://todoist.com/app         "
+gmailCommand     = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmail    --class=GMail          https://mail.google.com         "
+gmailCommandWrk  = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmailWrk --class=WrkGMail       https://mail.google.com         "
+gcalCommand      = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcal     --class=GCal           https://calendar.google.com     "
+gcalCommandWrk   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcalWrk  --class=WrkGCal        https://calendar.google.com     "
 ytmCommand       = "youtube-music"
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
     [   NS "tasks" gTasksCommand (className =? "Tasks") nonFloating
-    ,   NS "tasksWork"  gTasksWrkCommand (className =? "WrkTasks") nonFloating
-    ,   NS "keep" keepCommand (className =? "Keep") nonFloating
-    ,   NS "keepWork"  keepWrkCommand (className =? "WrkKeep") nonFloating
-
     ,   NS "gmail" gmailCommand (className =? "GMail") nonFloating
     ,   NS "gmailWork"  gmailCommandWrk (className =? "WrkGMail") nonFloating
     ,   NS "gcal" gcalCommand (className =? "GCal") nonFloating
@@ -630,9 +623,6 @@ myCommands =
     , ("nsp-sysm"            , upPointer $ namedScratchpadAction scratchpads "sysMon")
 
     , ("nsp-task"            , upPointer $ namedScratchpadAction scratchpads "tasks")
-    , ("nsp-task-wrk"        , upPointer $ namedScratchpadAction scratchpads "tasksWork")
-    , ("nsp-note"            , upPointer $ namedScratchpadAction scratchpads "keep")
-    , ("nsp-note-wrk"        , upPointer $ namedScratchpadAction scratchpads "keepWork")
     , ("nsp-gmail"           , upPointer $ namedScratchpadAction scratchpads "gmail")
     , ("nsp-gmail-wrk"       , upPointer $ namedScratchpadAction scratchpads "gmailWork")
     , ("nsp-gcal"            , upPointer $ namedScratchpadAction scratchpads "gcal")
