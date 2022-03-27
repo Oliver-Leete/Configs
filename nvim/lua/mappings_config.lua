@@ -550,8 +550,7 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
     nnoremap("<leader>wq", "<c-w>c", "Close Window")
 
     mapxName.name("<leader>g", "Git")
-    nnoremap("<leader>gg", "<cmd>silent !kitty @ launch --cwd=current --type=window --window-title 'LazyGit' lazygit<cr>", "LazyGit")
-    nnoremap("<leader>gG", "<cmd>silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit<cr>", "LazyGit")
+    nnoremap("<leader>gg", "<cmd>silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit<cr>", "LazyGit")
     nnoremap("<leader>ga", function() require'gitsigns'.blame_line({full=true})end, "Blame Line")
     nnoremap("<leader>gA", "<cmd>Gitsigns toggle_current_line_blame<CR>", "Blame Toggle")
 
