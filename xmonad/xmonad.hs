@@ -234,23 +234,25 @@ myBrowserClass = "google-chrome-stable"
 
 discordCommand   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/discord  --class=discord  --app=https://discord.com/channels/@me"
 gTasksCommand    = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/task     --class=Tasks    --app=https://todoist.com/app         "
+gTasksCommandWrk = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/taskWrk  --class=WrkTasks --app=https://todoist.com/app         "
 gmailCommand     = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmail    --class=GMail          https://mail.google.com         "
 gmailCommandWrk  = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmailWrk --class=WrkGMail       https://mail.google.com         "
-gcalCommand      = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcal     --class=GCal           https://calendar.google.com     "
-gcalCommandWrk   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcalWrk  --class=WrkGCal        https://calendar.google.com     "
+gcalCommand      = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcal     --class=GCal           https://app.sunsama.com         "
+gcalCommandWrk   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcalWrk  --class=WrkGCal        https://app.sunsama.com         "
 ytmCommand       = "youtube-music"
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
     [   NS "tasks" gTasksCommand (className =? "Tasks") nonFloating
+    ,   NS "tasksWork" gTasksCommandWrk (className =? "WrkTasks") nonFloating
     ,   NS "gmail" gmailCommand (className =? "GMail") nonFloating
     ,   NS "gmailWork"  gmailCommandWrk (className =? "WrkGMail") nonFloating
     ,   NS "gcal" gcalCommand (className =? "GCal") nonFloating
-    ,   NS "gcalWork"  gcalCommandWrk (className =? "WrkGCal") nonFloating
+    ,   NS "gcalWork" gcalCommandWrk (className =? "WrkGCal") nonFloating
 
     ,   NS "discord"  discordCommand (className =? "discord") defaultFloating
     ,   NS "youtubeMusic"  ytmCommand (className =? "YouTube Music") nonFloating
-    ,   NS "calc"  "gnome-calculator --class=calcu" (className =? "calcu") nonFloating
+    ,   NS "calc"  "gnome-calculator" (className =? "gnome-calculator") nonFloating
     ,   NS "console"  "alacritty --class console" (resource =? "console") nonFloating
     ,   NS "sysMon"  "alacritty --class sysMon -t 'System Monitor' -e btop" (resource =? "sysMon") nonFloating
     ]
@@ -346,110 +348,102 @@ myNav2DConf = def
 
 myModMask = mod4Mask
 
-upFocus a = sequence_ [a, focusUnderPointer]
-upPointer a = sequence_ [a, updatePointer (0.5, 0.5) (0.25, 0.25)]
-toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle layout, focusUnderPointer ]
-
 -- ---------------------------------------------------------------------------------------------------------------------
 -- |restart|fullWin| finder|project|   -   |-----------------------------------|winDown|winRght|   -   | float |   -   |
 -- |  ws1  |  ws2  |  ws3  |  ws4  |   -   |-----------------------------------|winLeft|  app1 |  app2 |  app3 |  app4 |
--- |fullScr|fullBar|fullCen|focMast|   -   |nspAway|nextScr|---|   -   |  kill | winUp |movMast| decCol| incCol|   -   |
+-- |fullScr|fullBar|fullCen|   -   |   -   |nspAway|nextScr|---|   -   |  kill | winUp | Master| decCol| incCol|   -   |
 -- |-------|   -   |   -   |-------|tabPrev| wsLast|winPrev|---|winNext|  term |tabNext|-------|   -   |   -   |-------|
 myKeys :: [(String, X ())]
 myKeys =
-    [ ("M-q"                , spawn "xmonad --restart")
-    , ("M-S-q"              , spawn "cd /home/oleete/.config/xmonad; stack install; xmonad --recompile; xmonad --restart; cd -")
-    , ("M-C-q"              , confirmPrompt myPromptTheme "Quit XMonad" $ io exitSuccess)
+    [ ("<XF86MonBrightnessDown>" , spawn "/home/oleete/.config/bin/brightness -dec 5")
+    , ("<XF86MonBrightnessUp>"   , spawn "/home/oleete/.config/bin/brightness -inc 5")
+    , ("<XF86AudioLowerVolume>"  , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ -5%" )
+    , ("<XF86AudioRaiseVolume>"  , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ +5%" )
+    , ("<XF86AudioMute>"         , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ 0%" )
+    , ("<XF86Display>"           , spawn "/home/oleete/.config/bin/displayctl" )
+    , ("<XF86AudioPlay>"         , spawn "playerctl play")
+    , ("<XF86AudioStop>"         , spawn "playerctl stop")
+    , ("<XF86AudioPause>"        , spawn "playerctl pause")
+    , ("<XF86AudioPrev>"         , spawn "playerctl previous")
+    , ("<XF86AudioNext>"         , spawn "playerctl next")
+    , ("<Print>"                 , spawn "/home/oleete/.config/bin/screencapt area")
 
-    , ("M-f"            , spawn "/home/oleete/.config/bin/rofiScript")
+    , ("M-q"             , spawn "xmonad --restart")
+    , ("M-S-q"           , spawn "cd /home/oleete/.config/xmonad; stack install; xmonad --recompile; xmonad --restart; cd -")
+    , ("M-C-q"           , confirmPrompt myPromptTheme "Quit XMonad" $ io exitSuccess)
 
-    , ("M-<Esc>"            , upPointer $ sequence_ $ hideAllNamedScratchPads scratchpads)
+    , ("M-p"             , spawn "/home/oleete/.config/bin/rofiScript")
+    , ("M-f"             , spawn "/home/oleete/.config/bin/wsHarpoon mainMenu")
 
-    , ("<XF86MonBrightnessDown>"  , spawn "/home/oleete/.config/bin/brightness -dec 5")
-    , ("<XF86MonBrightnessUp>"    , spawn "/home/oleete/.config/bin/brightness -inc 5")
-    , ("<XF86AudioLowerVolume>"   , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ -5%" )
-    , ("<XF86AudioRaiseVolume>"   , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ +5%" )
-    , ("<XF86AudioMute>"          , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ 0%" )
-    , ("<XF86Display>"            , spawn "/home/oleete/.config/bin/displayctl" )
-    , ("<XF86AudioPlay>"          , spawn "playerctl play")
-    , ("<XF86AudioStop>"          , spawn "playerctl stop")
-    , ("<XF86AudioPause>"         , spawn "playerctl pause")
-    , ("<XF86AudioPrev>"          , spawn "playerctl previous")
-    , ("<XF86AudioNext>"          , spawn "playerctl next")
-    , ("<Print>"                  , spawn "/home/oleete/.config/bin/screencapt area")
-
-    , ("M-<Return>"         , bF $ kt " kittyWin" $ l(upPointer $ spawn myTerminal))
-    , ("M-S-<Return>"       , upPointer $ spawn myTerminal)
-
-    , ("M-n"                , bF $ rNv (spawn (myTerminalRemote ++ " kittyWin")) $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")]))
-    , ("M-S-n"              , upPointer $ spawn myTerminal)
-
-    , ("M-i"                , bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
-    , ("M-S-i"              , upPointer $ spawn myBrowser)
-
-    , ("M-e"                , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
-
-    , ("M-o"                , upPointer $ bindOn C.WS [(wsCOMMENTS, runOrRaise "foxitreader" (className =? "Foxit Reader"))])
-
-    , ("M-<Backspace>"      , bF $ nv "DeleteBuffer" $ rKt (P.sendKey (controlMask .|. shiftMask) xK_BackSpace) $ crm (P.sendKey controlMask xK_w) $ l kill)
-    , ("M-S-<Backspace>"    , kill)
-    , ("M-C-<Backspace>"    , confirmPrompt hotPromptTheme "kill all" killAll)
-
-    , ("M-<Left>"           , bF $ rKt (P.sendKey (controlMask .|. shiftMask) xK_Left)  $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
-    , ("M-<Right>"          , bF $ rKt (P.sendKey (controlMask .|. shiftMask) xK_Right) $ l (P.sendKey controlMask xK_Tab))
-    , ("M-<Down>"           , windows W.focusDown)
-    , ("M-<Up>"             , windows W.focusUp)
+    , ("M-<Esc>"         , upPointer $ sequence_ $ hideAllNamedScratchPads scratchpads)
 
 
-    , ("M-w"                , bF $ kt " kittyFullscreen" $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
-    , ("M-z"                , toggleLayout FULL)
-    , ("M-x"                , toggleLayout FULLBAR)
-    , ("M-c"                , toggleLayout FULLCENTER)
+    , ("M-<Return>"      , bF $ kt " kittyWin" $ l(upPointer $ spawn myTerminal))
+    , ("M-S-<Return>"    , upPointer $ spawn myTerminal)
 
-    , ("M-h"                , bF $ nv "KittyNavigateleft"   $ kt " moveWindow left"   $ l (upPointer $ windowGo L True))
-    , ("M-j"                , bF $ nv "KittyNavigatebottom" $ kt " moveWindow bottom" $ l (upPointer $ windowGo D True))
-    , ("M-k"                , bF $ nv "KittyNavigatetop"    $ kt " moveWindow top"    $ l (upPointer $ windowGo U True))
-    , ("M-l"                , bF $ nv "KittyNavigateright"  $ kt " moveWindow right"  $ l (upPointer $ windowGo R True))
+    , ("M-n"             , bF $ rNv (spawn (myTerminalRemote ++ " kittyWin")) $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")]))
+    , ("M-S-n"           , upPointer $ spawn myTerminal)
 
-    , ("M-S-h"              , upPointer $ windowSwap L True)
-    , ("M-S-j"              , upPointer $ windowSwap D True)
-    , ("M-S-k"              , upPointer $ windowSwap U True)
-    , ("M-S-l"              , upPointer $ windowSwap R True)
+    , ("M-i"             , bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
+    , ("M-S-i"           , upPointer $ spawn myBrowser)
 
-    , ("M-m"                , bF $ kt " mainMove" $ l (upPointer $ swapPromote' False))
-    , ("M-S-m"              , upPointer $ swapPromote' False)
-    , ("M-v"                , myFocusMaster)
+    , ("M-e"             , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
 
-    , ("M-y"                , upPointer $ withFocused toggleFloat)
-    , ("M-S-y"              , upFocus sinkAll)
+    , ("M-o"             , upPointer $ bindOn C.WS [(wsCOMMENTS, runOrRaise "foxitreader" (className =? "Foxit Reader"))])
 
-    , ("M-,"                , sendMessage (IncMasterN (-1)))
-    , ("M-."                , sendMessage (IncMasterN 1))
-    , ("M-S-,"              , sendMessage (IncColumnN (-1)))
-    , ("M-S-."              , sendMessage (IncColumnN 1))
-    , ("M-["                , sendMessage Shrink)
-    , ("M-]"                , sendMessage Expand)
-    , ("M-S-["              , sendMessage MirrorShrink)
-    , ("M-S-]"              , sendMessage MirrorExpand)
+    , ("M-<Backspace>"   , bF $ nv "DeleteBuffer" $ rKt (P.sendKey (controlMask .|. shiftMask) xK_BackSpace) $ crm (P.sendKey controlMask xK_w) $ l kill)
+    , ("M-S-<Backspace>" , kill)
+    , ("M-C-<Backspace>" , confirmPrompt hotPromptTheme "kill all" killAll)
 
-    , ("M-a"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 1")
-    , ("M-r"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 2")
-    , ("M-s"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 3")
-    , ("M-t"                , spawn "/home/oleete/.config/bin/wsHarpoon jump 4")
-    , ("M-S-a"              , spawn "/home/oleete/.config/bin/wsHarpoon move 1")
-    , ("M-S-r"              , spawn "/home/oleete/.config/bin/wsHarpoon move 2")
-    , ("M-S-s"              , spawn "/home/oleete/.config/bin/wsHarpoon move 3")
-    , ("M-S-t"              , spawn "/home/oleete/.config/bin/wsHarpoon move 4")
+    , ("M-<Left>"        , bF $ rKt (P.sendKey (controlMask .|. shiftMask) xK_Left)  $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
+    , ("M-<Right>"       , bF $ rKt (P.sendKey (controlMask .|. shiftMask) xK_Right) $ l (P.sendKey controlMask xK_Tab))
+    , ("M-<Down>"        , windows W.focusDown)
+    , ("M-<Up>"          , windows W.focusUp)
 
-    , ("M-p p"              , spawn "/home/oleete/.config/bin/wsHarpoon add")
-    , ("M-p M-p"            , spawn "/home/oleete/.config/bin/wsHarpoon add")
-    , ("M-p M-e"            , spawn "/home/oleete/.config/bin/wsHarpoon modify")
-    , ("M-p e"              , spawn "/home/oleete/.config/bin/wsHarpoon modify")
 
-    , ("M-<Tab>"            , upPointer nextScreen)
-    , ("M-S-<Tab>"          , upPointer shiftNextScreen)
-    , ("M-<Space>"          , upFocus $ toggleWS' ["NSP"])
-    , ("M-S-<Space>"        , upFocus $ shiftToggleWS' ["NSP"])
+    , ("M-w"             , bF $ kt " kittyFullscreen" $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
+    , ("M-z"             , toggleLayout FULL)
+    , ("M-x"             , toggleLayout FULLBAR)
+    , ("M-c"             , toggleLayout FULLCENTER)
+
+    , ("M-h"             , bF $ nv "KittyNavigateleft"   $ kt " moveWindow left"   $ l (upPointer $ windowGo L True))
+    , ("M-j"             , bF $ nv "KittyNavigatebottom" $ kt " moveWindow bottom" $ l (upPointer $ windowGo D True))
+    , ("M-k"             , bF $ nv "KittyNavigatetop"    $ kt " moveWindow top"    $ l (upPointer $ windowGo U True))
+    , ("M-l"             , bF $ nv "KittyNavigateright"  $ kt " moveWindow right"  $ l (upPointer $ windowGo R True))
+
+    , ("M-S-h"           , upPointer $ windowSwap L True)
+    , ("M-S-j"           , upPointer $ windowSwap D True)
+    , ("M-S-k"           , upPointer $ windowSwap U True)
+    , ("M-S-l"           , upPointer $ windowSwap R True)
+
+    , ("M-m"             , myFocusMaster)
+    , ("M-S-m"           , bF $ kt " mainMove" $ l (upPointer $ swapPromote' False))
+
+    , ("M-y"             , upPointer $ withFocused toggleFloat)
+    , ("M-S-y"           , upFocus sinkAll)
+
+    , ("M-,"             , sendMessage (IncMasterN (-1)))
+    , ("M-."             , sendMessage (IncMasterN 1))
+    , ("M-S-,"           , sendMessage (IncColumnN (-1)))
+    , ("M-S-."           , sendMessage (IncColumnN 1))
+    , ("M-["             , sendMessage Shrink)
+    , ("M-]"             , sendMessage Expand)
+    , ("M-S-["           , sendMessage MirrorShrink)
+    , ("M-S-]"           , sendMessage MirrorExpand)
+
+    , ("M-a"             , spawn "/home/oleete/.config/bin/wsHarpoon jump 1")
+    , ("M-r"             , spawn "/home/oleete/.config/bin/wsHarpoon jump 2")
+    , ("M-s"             , spawn "/home/oleete/.config/bin/wsHarpoon jump 3")
+    , ("M-t"             , spawn "/home/oleete/.config/bin/wsHarpoon jump 4")
+    , ("M-S-a"           , spawn "/home/oleete/.config/bin/wsHarpoon move 1")
+    , ("M-S-r"           , spawn "/home/oleete/.config/bin/wsHarpoon move 2")
+    , ("M-S-s"           , spawn "/home/oleete/.config/bin/wsHarpoon move 3")
+    , ("M-S-t"           , spawn "/home/oleete/.config/bin/wsHarpoon move 4")
+
+    , ("M-<Tab>"         , upPointer nextScreen)
+    , ("M-S-<Tab>"       , upPointer shiftNextScreen)
+    , ("M-<Space>"       , upFocus $ toggleWS' ["NSP"])
+    , ("M-S-<Space>"     , upFocus $ shiftToggleWS' ["NSP"])
     ]
     where
         toggleFloat w = windows (\s -> if M.member w (W.floating s)
@@ -461,7 +455,7 @@ myKeys =
         rNv n o = (title =? "MainEditor", n) : o
         kt k o = (className =? "kitty", spawn (myTerminalRemote ++ k)) : o
         rKt k o = (className =? "kitty", k) : o
-        crm c o = (className =? "Google-chrome", c) : o
+        crm c o = (isRole =? "browser", c) : o
 
         bF o = bindFirst o
 
@@ -555,15 +549,13 @@ myManageHook =
             , className =? "Blueberry.py"         -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
             , className =? "Insync"               -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
 
-            , resource  =? "galculator"           -?> doCenterFloat
+            , resource  =? "gnome-calculator"     -?> doCenterFloat
             , className =? "Tasks"                -?> doRectFloat halfNhalf
             , className =? "WrkTasks"             -?> doRectFloat halfNhalf
-            , className =? "Keep"                 -?> doRectFloat halfNhalf
-            , className =? "WrkKeep"              -?> doRectFloat halfNhalf
             , className =? "GMail"                -?> doRectFloat thirdNthird
             , className =? "WrkGMail"             -?> doRectFloat thirdNthird
-            , className =? "GCal"                 -?> doRectFloat thirdNthird
-            , className =? "WrkGCal"              -?> doRectFloat thirdNthird
+            , className =? "GCal"                 -?> doRectFloat bigFloat
+            , className =? "WrkGCal"              -?> doRectFloat bigFloat
             , resource  =? "sysMon"               -?> doRectFloat (W.RationalRect (1 / 8) (1 / 8) (3 / 4) (3 / 4))
             , resource  =? "wsHarpoon"            -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4))
             , resource  =? "console"              -?> doRectFloat (W.RationalRect (4 / 7) (4 / 7) (2 / 5) (2 / 5))
@@ -582,12 +574,12 @@ myManageHook =
             , fmap not isDialog -?> insertPosition End Newer
             ]
         isBrowserDialog = isDialog <&&> className =? myBrowserClass
-        isRole = stringProperty "WM_WINDOW_ROLE"
         halfNhalf = W.RationalRect (1/4) (1/4) (1/2) (1/2)
         thirdNthird = W.RationalRect (1/5) (1/5) (3/5) (3/5)
+        bigFloat = W.RationalRect (1/8) (1/8) (3/4) (3/4)
 
 ----------------------------------------------------------------------------------------------------
--- HangleEventHook
+-- HangleEventHook                                                                                --
 ----------------------------------------------------------------------------------------------------
 
 myHandleEventHook :: Event -> X All
@@ -597,7 +589,22 @@ myHandleEventHook = handleEventHook def
                 -- <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn)
 
 ----------------------------------------------------------------------------------------------------
--- Server Commands
+-- Helper Functions                                                                               --
+----------------------------------------------------------------------------------------------------
+
+isRole :: Query String
+isRole = stringProperty "WM_WINDOW_ROLE"
+
+upFocus :: X () -> X ()
+upFocus a = sequence_ [a, focusUnderPointer]
+
+upPointer :: X () -> X ()
+upPointer a = sequence_ [a, updatePointer (0.5, 0.5) (0.25, 0.25)]
+
+toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle layout, focusUnderPointer ]
+
+----------------------------------------------------------------------------------------------------
+-- Server Commands                                                                                --
 ----------------------------------------------------------------------------------------------------
 
 myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
@@ -623,6 +630,7 @@ myCommands =
     , ("nsp-sysm"            , upPointer $ namedScratchpadAction scratchpads "sysMon")
 
     , ("nsp-task"            , upPointer $ namedScratchpadAction scratchpads "tasks")
+    , ("nsp-task-wrk"        , upPointer $ namedScratchpadAction scratchpads "tasksWork")
     , ("nsp-gmail"           , upPointer $ namedScratchpadAction scratchpads "gmail")
     , ("nsp-gmail-wrk"       , upPointer $ namedScratchpadAction scratchpads "gmailWork")
     , ("nsp-gcal"            , upPointer $ namedScratchpadAction scratchpads "gcal")

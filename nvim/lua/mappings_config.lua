@@ -129,14 +129,12 @@ onoremap("=", "<cmd>WhichKey = o<cr>")
 xnoremap("I", "I")
 xnoremap("A", "A")
 
-nnoremap("<c-p>p", function() require'harpoon.mark'.add_file() end)
-nnoremap("<c-p><c-p>", function() require'harpoon.mark'.add_file() end)
-nnoremap("<c-p>e", function() require("harpoon.ui").toggle_quick_menu()end)
-nnoremap("<c-p><c-e>", function() require("harpoon.ui").toggle_quick_menu()end)
-nnoremap("<c-a>", function() require'harpoon.ui'.nav_file(1)end)
-nnoremap("<c-r>", function() require'harpoon.ui'.nav_file(2)end)
-nnoremap("<c-s>", function() require'harpoon.ui'.nav_file(3)end)
-nnoremap("<c-t>", function() require'harpoon.ui'.nav_file(4)end)
+nnoremap("<leader>pp", function() require'harpoon.mark'.add_file() end)
+nnoremap("<leader>pe", function() require("harpoon.ui").toggle_quick_menu()end)
+nnoremap("<leader>a", function() require'harpoon.ui'.nav_file(1)end)
+nnoremap("<leader>r", function() require'harpoon.ui'.nav_file(2)end)
+nnoremap("<leader>s", function() require'harpoon.ui'.nav_file(3)end)
+nnoremap("<leader>t", function() require'harpoon.ui'.nav_file(4)end)
 
 nmap("<c-_>", ",cc")
 xmap("<c-_>", ",c")
@@ -163,19 +161,22 @@ inoremap("!", "!<c-g>u")
 inoremap("?", "?<c-g>u")
 
 -- Panel Specific Mappings
-vim.cmd([[augroup panelMappings
-    autocmd!
-    autocmd filetype qf                  map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype help                map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype vim-plug            map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype juliadoc            map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype undotree            map <buffer> <esc> <cmd>UndotreeHide<cr>
-    autocmd filetype lspinfo             map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype DiffviewFiles       map <buffer> <esc> <cmd>DiffviewClose<cr>
-    autocmd filetype DiffviewFileHistory map <buffer> <esc> <cmd>DiffviewClose<cr>
-    autocmd filetype tsplayground        map <buffer> <esc> <cmd>q<cr>
-    autocmd filetype harpoon-menu        map <buffer> <esc> <cmd>wq<cr>
-augroup END]])
+local panelMappings = vim.api.nvim_create_augroup("panelMappings", { clear = true})
+vim.api.nvim_create_autocmd("filetype", {
+    pattern = {"qf", "help", "vim-plug", "juliadoc", "lspinfo", "tsplayground", "harpoon-menu"},
+    callback = function() vim.keymap.set("n", "<esc>", "<cmd>q<cr>", { buffer = 0 }) end,
+    group = panelMappings,
+})
+vim.api.nvim_create_autocmd("filetype", {
+    pattern = {"DiffviewFiles", "DiffviewFileHistory"},
+    callback = function() vim.keymap.set("n", "<esc>", "<cmd>DiffviewClose<cr>", { buffer = 0 }) end,
+    group = panelMappings,
+})
+vim.api.nvim_create_autocmd("filetype", {
+    pattern = "undotree",
+    callback = function() vim.keymap.set("n", "<esc>", "<cmd>UndotreeHide<cr>", { buffer = 0 }) end,
+    group = panelMappings,
+})
 
 vim.api.nvim_set_var("wordmotion_prefix", "$")
 
@@ -297,14 +298,6 @@ mapxName.name("g", "Goto")
     nnoremap("gD", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>", "Type Deffinition")
     nnoremap("go", function() vim.lsp.buf.outgoing_calls() end, "Outgoing Calls")
     nnoremap("gi", function() vim.lsp.buf.incoming_calls() end, "Incoming Calls")
-
-
-    -- nmap("gp", "<plug>(paste-away-after)", "Paste After Object")
-    -- nmap("gP", "<plug>(paste-away-before)", "Paste Before Object")
-    -- nmap("g{", "<Plug>(ninja-insert)a", "Go Insert Left Outside")
-    -- nmap("g(", "<Plug>(ninja-insert)i", "Go Insert Left Inside")
-    -- nmap("g)", "<Plug>(ninja-append)i", "Go Insert Right Inside")
-    -- nmap("g}", "<Plug>(ninja-append)a", "Go Insert Right Outside")
 
 mapxName.name("G", "Goto (Select)")
     nnoremap("Gg", "vgg", "Buffer Top")

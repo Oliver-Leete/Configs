@@ -65,33 +65,22 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
 vim.cmd([[call matchadd('TabLine', '\%101v', 203)]])
-vim.cmd([[augroup numbertoggle
-    autocmd!
-    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
-    autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu                  | set nornu | endif
-    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * setlocal cursorline
-    autocmd BufLeave,FocusLost,InsertEnter,WinLeave * setlocal nocursorline
-augroup END]])
+
+local numbertoggle = vim.api.nvim_create_augroup("numbertoggle", { clear = true})
+vim.api.nvim_create_autocmd({ "BufEnter","FocusGained","InsertLeave","WinEnter" }, {group = numbertoggle, command = "if &nu && mode() != 'i' | set rnu   | endif"})
+vim.api.nvim_create_autocmd({ "BufLeave","FocusLost","InsertEnter","WinLeave" },   {group = numbertoggle, command = "if &nu                  | set nornu | endif"})
+vim.api.nvim_create_autocmd({ "BufEnter","FocusGained","InsertLeave","WinEnter" }, {group = numbertoggle, command = "setlocal cursorline"})
+vim.api.nvim_create_autocmd({ "BufLeave","FocusLost","InsertEnter","WinLeave" },   {group = numbertoggle, command = "setlocal nocursorline"})
 
 -- Splitting
 vim.opt.splitbelow = true
 vim.opt.splitright = true
-vim.cmd([[augroup windowPositioning
-    autocmd!
-    autocmd FileType help :wincmd H | vertical resize 90<cr>
-    autocmd FileType juliadoc wincmd H
-    autocmd FileType qf wincmd J
-augroup END]])
+
+local windowPositioning = vim.api.nvim_create_augroup("windowPositioning", { clear = true})
+vim.api.nvim_create_autocmd({ "FileType" }, {group = windowPositioning, pattern = "help",  command = ":wincmd H | vertical resize 90<cr>"})
+vim.api.nvim_create_autocmd({ "FileType" }, {group = windowPositioning, pattern = "juliadoc",  command = "wincmd H"})
+vim.api.nvim_create_autocmd({ "FileType" }, {group = windowPositioning, pattern = "qf",  command = "windcmd J"})
 
 -- Yank
-vim.cmd([[augroup LuaHighlight
-    autocmd!
-    autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
-augroup END]])
-
--- Set Filetype
-vim.cmd([[augroup myfiletypes
-    autocmd!
-    au BufNewFile,BufRead *.fish set filetype=fish
-    au BufNewFile,BufRead *.jl set filetype=julia
-augroup end]])
+local LuaHighlight = vim.api.nvim_create_augroup("LuaHighlight", { clear = true})
+vim.api.nvim_create_autocmd({ "TextYankPost" }, {group = LuaHighlight, callback = function() require("vim.highlight").on_yank() end})

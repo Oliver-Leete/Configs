@@ -95,7 +95,19 @@ require("lspconfig").grammar_guard.setup({
             },
             latex = {
                 environments = { Fortran = "ignore", jllisting = "ignore", algorithmic = "ignore"},
-                commands = { ["\\subfile{}"] = "ignore", ["\\glsname{}"] = "ignore", ["\\gls{}"] = "ignore", ["\\glsfirst{}"] = "ignore"},
+                commands = {
+                    ["\\subfile{}"] = "ignore",
+                    ["\\glsname{}"] = "ignore",
+                    ["\\gls{}"] = "ignore",
+                    ["\\glsfirst{}"] = "ignore",
+                    ["\\pgls{}"] = "ignore",
+                    ["\\ac{}"] = "ignore",
+                    ["\\acl{}"] = "ignore",
+                    ["\\acs{}"] = "ignore",
+                    ["\\acf{}"] = "ignore",
+                    ["\\pac{}"] = "ignore",
+                    ["\\Pac{}"] = "ignore",
+                },
             },
             dictionary = { ["en-GB"] = { "ANSYS", "UPF" }  },
             disabledRules = { ["en-GB"] = { "OXFORD_SPELLING_Z_NOT_S" } },
@@ -216,11 +228,6 @@ function _G.toggle_diagnostics()
             update_in_insert = false,
             severity_sort = true,
         })
-        vim.cmd([[
-        augroup ErrorHover
-            autocmd!
-        augroup END
-        ]])
         -- vim.diagnostic.show()
     else
         vim.g.diagnostics_active = true
@@ -234,11 +241,6 @@ function _G.toggle_diagnostics()
             update_in_insert = false,
             severity_sort = true,
         })
-        vim.cmd([[
-        augroup ErrorHover
-            autocmd CursorHold * :lua vim.lsp.diagnostic.show_line_diagnostics({ focusable = false ,  border = 'single' })
-        augroup END
-        ]])
         -- vim.diagnostic.show()
     end
 end

@@ -125,6 +125,7 @@ require("cmp").setup({
 		{ name = "luasnip" },
 		{ name = "cmp_git" },
 		{ name = "nvim_lsp" },
+        { name = 'fish' },
 		{ name = "path" },
 		{ name = "nvim_lua" },
 		{ name = "buffer", keyword_lenght = 3 },
@@ -134,10 +135,12 @@ require("cmp").setup({
 		format = function(entry, vim_item)
 			vim_item.menu = ({
 				luasnip = "(LSnip)",
+				git = "(GIT)",
 				nvim_lsp = "(LSP)",
-				path = "(Path)",
-				nvim_lua = "(Lua)",
-				buffer = "(Buffer)",
+				fish = "(FISH)",
+				path = "(PATH)",
+				nvim_lua = "(NVIM)",
+				buffer = "(BUFF)",
 				cmdline = "(CMD)",
 				dictionary = "(DICT)",
 				omni = "(TEX?)",

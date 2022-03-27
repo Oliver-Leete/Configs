@@ -45,9 +45,9 @@ require("todo-comments").setup({
         NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
     },
     highlight = {
-        before = "fg",
+        before = "",
         keyword = "bg",
-        after = "fg",
+        after = "bg",
     },
     colors = {
         error = { "LspDiagnosticsDefaultError", "ErrorMsg", "#DC2626" },

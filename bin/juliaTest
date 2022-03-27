@@ -1,0 +1,5 @@
+#!/bin/bash
+project="$(basename "$PWD")Tests.jl"
+cd test
+# julia --project -i -e "include(\"$project\")"
+julia --threads=16 --project -i -e 'using Revise; using ReTest; using Debugger; using Infiltrator; ReTest.load("'"$project"'", revise=true)'

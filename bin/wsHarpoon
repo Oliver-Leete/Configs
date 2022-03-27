@@ -15,7 +15,9 @@ main () {
         move)       moveToWS "$2" ;;
         preset)     preset "$2" ;;
         makePreset) makePreset ;;
+        modfiyPreset) modfiyPreset ;;
         closeWSMenu) closeWSMenu ;;
+        mainMenu) mainMenu ;;
     esac
 }
 
@@ -24,7 +26,7 @@ menu () {
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
     if [ ! -z "$result" ]; then
         WS="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
-        $XMONADCTL jump-to-"$WS"
+        "$XMONADCTL" jump-to-"$WS"
     fi
 }
 
@@ -33,7 +35,7 @@ moveMenu () {
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
     if [ ! -z "$result" ]; then
         WS="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
-        $XMONADCTL move-to-"$WS"
+        "$XMONADCTL" move-to-"$WS"
     fi
 }
 
@@ -42,8 +44,8 @@ goMoveMenu () {
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
     if [ ! -z "$result" ]; then
         WS="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
-        $XMONADCTL move-to-"$WS"
-        $XMONADCTL jump-to-"$WS"
+        "$XMONADCTL" move-to-"$WS"
+        "$XMONADCTL" jump-to-"$WS"
     fi
 }
 
@@ -60,42 +62,92 @@ addWS () {
 }
 
 preset () {
-    FILE=$((for item in "$HARPFOLDER"/*; do echo $(basename $item); done) | rofi -matching fuzzy -window-title "Workspace Presets" -dmenu "WorkspacePresets")
+    FILE=$((for item in "$HARPFOLDER"/*; do echo $(basename "$item"); done) | rofi -matching fuzzy -window-title "Workspace Presets" -dmenu "WorkspacePresets")
     cat "$HARPFOLDER/$FILE" > "$HARPFILE"
     jumpToWS 1
 }
 
 makePreset () {
-    NAME=$((for item in "$HARPFOLDER"/*; do echo $(basename $item); done) | rofi -matching fuzzy -window-title "Make Preset" -dmenu "Make Preset")
+    NAME=$((for item in "$HARPFOLDER"/*; do echo $(basename "$item"); done) | rofi -matching fuzzy -window-title "Make Preset" -dmenu "Make Preset")
     if [ ! -z "$NAME" ]; then
         cat "$HARPFILE" > "$HARPFOLDER/$NAME"
     fi
 }
 
+modifyPreset () {
+    FILE=$((for item in "$HARPFOLDER"/*; do echo $(basename "$item"); done) | rofi -matching fuzzy -window-title "Workspace Presets" -dmenu "WorkspacePresets")
+    alacritty --class wsHarpoon -t 'System Monitor' -e "nvim" +"nnoremap <esc> :wq<cr>|nnoremap q :wq<cr>" "$HARPFOLDER/$FILE"
+}
+
 jumpToWS () {
     if [[ $(wc -l <"$HARPFILE") -ge $1 ]]; then
         WS="$(cat "$HARPFILE" | head -"$1" | tail -1 | awk '{print $1}')"
-        $XMONADCTL jump-to-"$WS"
+        "$XMONADCTL" jump-to-"$WS"
     fi
 }
 
 moveToWS () {
     WS="$(cat "$HARPFILE" | head -"$1" | tail -1 | awk '{print $1}')"
-    $XMONADCTL move-to-"$WS"
+    "$XMONADCTL" move-to-"$WS"
 }
 
 closeWSMenu () {
     wsNum="$(wmctrl -l | awk '{print $2}' | uniq)"
-    items=$(for item in $wsNum; do wmctrl -d | rg -e "^$item" | awk '{print $9}'; done)
+    items=$(for item in "${wsNum[@]}"; do wmctrl -d | rg -e "^$item" | awk '{print $9}'; done | rg --invert-match "NSP")
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
     if [ ! -z "$result" ]; then
         wsNum=$(wmctrl -d | rg -e "$result$" | rg -o -e "^\d*")
-        for item in $(wmctrl -l | rg $wsNum | awk '{print $1}'); do 
-            wmctrl -i -c $item
+        for item in "$(wmctrl -l | rg "$wsNum" | awk '{print $1}')"; do
+            wmctrl -i -c "$item"
         done
         sleep 0.5
         closeWSMenu
     fi
+}
+
+mainMenu () {
+    items="add $(wmctrl -d | awk '{print $9}') modify presets make-preset modify-preset"
+    result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu" -i)
+    if [[ $result == "add" ]]; then
+        addWS
+    elif [[ $result == "modify" ]]; then
+        modifyWS
+    elif [[ $result == "presets" ]]; then
+        preset
+    elif [[ $result == "make-preset" ]]; then
+        makePreset
+    elif [[ $result == "modify-preset" ]]; then
+        modifyPreset
+    elif [[ ! -z "$result" && "$items" == *"$result"* ]]; then
+        actions="goto move-to go-and-move add close"
+        mode=$((for action in $actions; do echo $action; done) | rofi -matching fuzzy -window-title "$result" -dmenu "$result" -i)
+        if [[ $mode == "goto" ]]; then
+            WS="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
+            "$XMONADCTL" jump-to-"$WS"
+        elif [[ $mode == "move-to" ]]; then
+            WS="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
+            "$XMONADCTL" move-to-"$WS"
+        elif [[ $mode == "go-and-move" ]]; then
+            WS="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
+            "$XMONADCTL" move-to-"$WS"
+            "$XMONADCTL" jump-to-"$WS"
+        elif [[ $mode == "close" ]]; then
+            wsNum="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
+            wmctrl -l | rg -e "^\S+\s+$wsNum" | awk '{print $1}' | xargs -n1 wmctrl -i -c
+            mainMenu
+        elif [[ $mode == "add" ]]; then
+            wsNum="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
+            if ! rg -q "$result" "$HARPFILE"; then
+                echo "$wsNum" "$result" >> "$HARPFILE"
+            fi
+    if ! rg -q "$WSname" "$HARPFILE"; then
+        echo "$WSnum" "$WSname" >> "$HARPFILE"
+    fi
+        fi
+    elif [[ ! -z "$result" ]]; then
+        notify-send "Invalid Project"
+    fi
+
 }
 
 main "$@"

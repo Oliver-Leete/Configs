@@ -45,17 +45,17 @@ menu () {
     brightness
 
     sys-mon
-    terminal
-    calculator
-    music
-    discord
 
     tasks
     calendar
     gmail
 
-    colour-picker
+    terminal
     calculator
+    music
+    discord
+    colour-picker
+
     screenshot
     screenshot-area
     screencap
@@ -63,18 +63,11 @@ menu () {
     screenkey
     screenkey-settings
 
-    goto-project
-    move-project
-    goto-move-project
-    close-project
-
-    presets
-    modify-preset
-    make-preset
-
     mirror
     mirror_stack
     centre_main
+
+    status
 
     logout
     suspend
@@ -84,67 +77,62 @@ menu () {
     "
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Menu" -dmenu "Menu")
     case ${result:-} in
-        lock)       slock           ;;
-        play) playerctl play ;;
-        pause) playerctl pause ;;
-        dnd) /home/oleete/.config/bin/toggle DND_menu ;;
 
-        apps) rofi -matching fuzzy -show drun -show-icons ;;
-        utilities)  utilities       ;;
-        commands) rofi -matching fuzzy -show run ;;
-        windows) rofi -matching fuzzy -show window ;;
+        lock)               slock           ;;
+        play)               playerctl play ;;
+        pause)              playerctl pause ;;
+        dnd)                /home/oleete/.config/bin/toggle DND_menu ;;
 
-        next|skip) playerctl next ;;
-        prev) playerctl previous ;;
-        music) /home/oleete/.cabal/bin/xmonadctl-exe nsp-musc ;;
+        apps)               rofi -matching fuzzy -show drun -show-icons ;;
+        utilities)          utilities       ;;
+        commands)           rofi -matching fuzzy -show run ;;
+        windows)            rofi -matching fuzzy -show window ;;
 
-        sound) /home/oleete/.config/bin/soundctl sink-menu;;
-        sound-input) /home/oleete/.config/bin/soundctl source-menu;;
-        display)    /home/oleete/.config/bin/displayctl ;;
-        network)    network         ;;
-        bluetooth)  /home/oleete/.config/bin/rofi-bluetooth ;;
-        settings)   settings        ;;
+        next|skip)          playerctl next ;;
+        prev)               playerctl previous ;;
+        music)              /home/oleete/.cabal/bin/xmonadctl-exe nsp-musc ;;
 
-        volume)     vol             ;;
-        brightness) brightness      ;;
+        sound)              /home/oleete/.config/bin/soundctl sink-menu;;
+        sound-input)        /home/oleete/.config/bin/soundctl source-menu;;
+        display)            /home/oleete/.config/bin/displayctl ;;
+        network)            network         ;;
+        bluetooth)          /home/oleete/.config/bin/rofi-bluetooth ;;
+        settings)           settings        ;;
 
-        sys-mon) /home/oleete/.cabal/bin/xmonadctl-exe nsp-sysm ;;
-        terminal) /home/oleete/.cabal/bin/xmonadctl-exe nsp-cons ;;
-        calculator) /home/oleete/.cabal/bin/xmonadctl-exe nsp-calc ;;
-        discord) /home/oleete/.cabal/bin/xmonadctl-exe nsp-disc ;;
-        music) /home/oleete/.cabal/bin/xmonadctl-exe nsp-musc ;;
+        volume)             vol             ;;
+        brightness)         brightness      ;;
 
-        tasks) /home/oleete/.cabal/bin/xmonadctl-exe nsp-task ;;
-        gmail) workLauncher gmail ;;
-        calendar) workLauncher gcal ;;
+        sys-mon)            /home/oleete/.cabal/bin/xmonadctl-exe nsp-sysm ;;
 
-        colour-picker) /home/oleete/.config/bin/colorPicker ;;
-        calculator) xmonadctl-exe nsp-calc ;;
-        screenshot) /home/oleete/.config/bin/screencapt ;;
-        screenshot-area) /home/oleete/.config/bin/screencapt area ;;
-        screencap) /home/oleete/.config/bin/screencast ;;
-        screencap-area) /home/oleete/.config/bin/screencast area ;;
-        screenkey) screenkey ;;
+        tasks)              workLauncher task ;;
+        calendar)           workLauncher gcal ;;
+        gmail)              workLauncher gmail ;;
+
+        terminal)           /home/oleete/.cabal/bin/xmonadctl-exe nsp-cons ;;
+        calculator)         /home/oleete/.cabal/bin/xmonadctl-exe nsp-calc ;;
+        discord)            /home/oleete/.cabal/bin/xmonadctl-exe nsp-disc ;;
+        music)              /home/oleete/.cabal/bin/xmonadctl-exe nsp-musc ;;
+        colour-picker)      /home/oleete/.config/bin/colorPicker ;;
+
+        screenshot)         /home/oleete/.config/bin/screencapt ;;
+        screenshot-area)    /home/oleete/.config/bin/screencapt area ;;
+        screencap)          /home/oleete/.config/bin/screencast ;;
+        screencap-area)     /home/oleete/.config/bin/screencast area ;;
+        screenkey)          screenkey ;;
         screenkey-settings) screenkey --show-settings ;;
 
-        goto-project) /home/oleete/.config/bin/wsHarpoon menu ;;
-        move-project) /home/oleete/.config/bin/wsHarpoon moveMenu ;;
-        goto-move-project) /home/oleete/.config/bin/wsHarpoon goMoveMenu ;;
-        close-project) /home/oleete/.config/bin/wsHarpoon closeWSMenu ;;
+        mirror)             /home/oleete/.cabal/bin/xmonadctl-exe layout-dir ;;
+        mirror_stack)       /home/oleete/.cabal/bin/xmonadctl-exe layout-stack-dir ;;
+        centre_main)        /home/oleete/.cabal/bin/xmonadctl-exe layout-style ;;
 
-        presets) /home/oleete/.config/bin/wsHarpoon preset ;;
-        modify-preset) /home/oleete/.config/bin/wsHarpoon modify ;;
-        make-preset) /home/oleete/.config/bin/wsHarpoon makePreset ;;
+        status)             /home/oleete/.config/bin/statusNotify ;;
 
-        mirror) /home/oleete/.cabal/bin/xmonadctl-exe layout-dir ;;
-        mirror_stack) /home/oleete/.cabal/bin/xmonadctl-exe layout-stack-dir ;;
-        centre_main) /home/oleete/.cabal/bin/xmonadctl-exe layout-style ;;
+        logout)             pkill xmonad      ;;
+        suspend)            systemctl suspend   ;;
+        hibernate)          systemctl hibernate ;;
+        shutdown)           systemctl poweroff  ;;
+        reboot)             systemctl reboot    ;;
 
-        logout)     pkill xmonad      ;;
-        suspend)    systemctl suspend   ;;
-        hibernate)  systemctl hibernate ;;
-        shutdown)   systemctl poweroff  ;;
-        reboot)     systemctl reboot    ;;
     esac
 }
 

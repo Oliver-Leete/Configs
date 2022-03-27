@@ -86,3 +86,12 @@ require("zen-mode").setup({
 --     filetype_exclude = { "qf", "outline", "vimplug", "undotree", "help", "DiffviewFiles", "juliadoc" },
 --     buftype_exclude = { "teriminal" },
 -- })
+
+require('dressing').setup({
+  select = {
+    backend = { "telescope" },
+    telescope = {
+      telescope = require('telescope.themes').get_dropdown({})
+    },
+  },
+})

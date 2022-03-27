@@ -76,6 +76,8 @@ require("telescope").setup({
             "--line-number",
             "--column",
             "--smart-case",
+            "--multiline",
+            "--vimgrep",
         },
         -- layout_strategy = "vertical",
         -- layout_config = {
@@ -133,15 +135,14 @@ require("telescope").setup({
         },
         media_files = {},
         ["ui-select"] = {
-            require("telescope.themes").get_dropdown {}
-        }
+            require("telescope.themes").get_dropdown({})
+        },
     },
 })
 
 require("telescope").load_extension("file_browser")
 require("telescope").load_extension("fzf")
 require("telescope").load_extension("bibtex")
--- require("telescope").load_extension("ui-select")
 
 local open_dif = function()
     local selected_entry = action_state.get_selected_entry()

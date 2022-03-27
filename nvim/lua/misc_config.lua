@@ -106,5 +106,9 @@ local util = require("perfanno.util")
 require("perfanno").setup({
     line_highlights = util.make_bg_highlights("#1F1F28", "#C34043", 10),
     vt_highlight = util.make_fg_highlights("#DCD7BA", "#C34043", 10),
+    formats = {
+        {percent = true, format = "%.2f%%", minimum = 0.0},
+        {percent = false, format = "%d", minimum = 0.0001}
+    },
 })
 require('crates').setup()

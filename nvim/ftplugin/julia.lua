@@ -12,6 +12,11 @@ vim.b[0].replName = "JuliaREPL"
 vim.b[0].debugCommand = "juliadebug"
 vim.b[0].debugName = "JuliaDebug"
 
+local handle = io.popen([[echo "$(basename "$PWD")"]])
+local project = handle:read("*a")
+handle:close()
+vim.b[0].project = string.gsub(project, "\n", "")
+
 local expr = mapxName.expr
 local buffer = mapxName.buffer
 
@@ -75,9 +80,9 @@ nnoremap("<leader>/s", "<cmd>Esource<cr>", "Source")
 nnoremap("<leader>/b", "<cmd>Ebench<cr>", "Benchmark")
 nnoremap("<leader>/B", "<cmd>EmainBench<cr>", "Main Benchmark")
 nnoremap("<leader>/t", "<cmd>Etest<cr>", "Test")
-nnoremap("<leader>/T", "<cmd>EmainTest<cr>", "Main Test")
+nnoremap("<leader>/T", [["<cmd>e test/" . b:project . "Tests.jl<cr>"]], "Main Test", expr)
 nnoremap("<leader>/p", "<cmd>Edeps<cr>", "Project Dependencies")
-nnoremap("<leader>/S", [["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Main Source", expr)
+nnoremap("<leader>/S", [["<cmd>Esource " . b:project . "<cr>"]], "Main Source", expr)
     nnoremap("<leader>/nS", [["<cmd>Esource " . split(getcwd(), '/')[-1] . "<cr>"]], "Main Source", expr)
     nnoremap("<leader>/nd", [["<cmd>Edoc " . input('File Name > ') . "<cr>"]], "Documentation", expr)
     nnoremap("<leader>/nD", [[<cmd>EmainDoc<cr>]], "Main Documentation")
@@ -113,7 +118,6 @@ vim.g.projectionist_heuristics = {
         },
         ["README.md"] = { type = "readme" },
         ["Project.toml"] = { type = "deps" },
-        ["test/runtests.jl"] = { type = "mainTest" },
         ["benchmark/benchmarks.jl"] = { type = "mainBench" },
         ["docs/src/index.md"] = { type = "mainDoc" },
     }
@@ -127,7 +131,7 @@ local function get_command_output(cmd, silent)
     local data_file = assert(io.popen(cmd, "r"))
     data_file:flush()
     local output = data_file:read("*all")
-    data_file:close()  -- TODO: can we get the return code and use it?
+    data_file:close()
 
     return output
 end
@@ -153,3 +157,49 @@ function _G.jul_perf_flat(perf_data)
 
     return result
 end
+
+-- Test selector function
+vim.g.lastRun = "precompile"
+
+local function runnable(selection)
+    if not selection then
+        return
+    end
+    vim.g.lastRun = selection
+
+    vim.cmd([[silent !kittyPersistent testterm juliaTest ']] .. vim.b[0].project .. [[Tests.runtests("]] .. selection .. [[")']])
+end
+local function select_runnables()
+    local handle = io.popen([[rg --no-filename --no-heading --no-line-number -e "^\s*@testset\s*\"(.*)\"\s*begin.*\$" -r "\$1"]])
+    local tests = handle:read("*a")
+    handle:close()
+    local test_list = {}
+    for s in tests:gmatch("([^\r\n]+)") do
+        table.insert(test_list, s)
+    end
+    vim.ui.select(test_list, { prompt = "Select Test" }, runnable)
+end
+
+local function debuggable(selection)
+    if not selection then
+        return
+    end
+    vim.g.lastRun = selection
+
+    vim.cmd([[silent !kittyPersistent testterm juliaTest '@enter ]] .. vim.b[0].project .. [[Tests.runtests("]] .. selection .. [[")']])
+end
+local function select_debuggables()
+    local handle = io.popen([[rg --no-filename --no-heading --no-line-number -e "^\s*@testset\s*\"(.*)\"\s*begin.*\$" -r "\$1"]])
+    local tests = handle:read("*a")
+    handle:close()
+    local test_list = {}
+    for s in tests:gmatch("([^\r\n]+)") do
+        table.insert(test_list, s)
+    end
+    vim.ui.select(test_list, { prompt = "Select Test" }, debuggable)
+end
+
+nnoremap("<leader>mm", function() select_runnables() end, buffer)
+nnoremap("<leader>M", function() runnable(vim.g.lastRun) end, buffer)
+nnoremap("<leader>jj", function() select_debuggables() end, buffer)
+nnoremap("<leader>J", function() debuggable(vim.g.lastRun) end, buffer)

@@ -2,8 +2,8 @@
 
 good="<box type=Bottom width=2 mt=2 color=#76946A><fc=#76946A>"
 bad="<box type=Bottom width=2 mt=2 color=#DCA561><fc=#DCA561>"
-ugly="<box type=Bottom width=2 mt=2 color=#C34043><fc=#C34043>"
-end="</fc></box>"
+ugly="<box type=Bottom width=2 mt=2 color=#C34043><fc=#C34043> "
+end=" </fc></box>"
 
 # Battery
 bat_stat=$(upower -i $(upower -e | rg battery | head -1)| rg state)
@@ -125,4 +125,4 @@ vol=$action_vol$vol_icon$action_end
 blu=$action_blu$blu_icon$action_end
 cap=$action_cap$cap_icon$action_end
 
-echo "$men $bat $net $vol $blu $dnd $cap"
+echo "$men$bat$net$vol$blu$dnd$cap"
