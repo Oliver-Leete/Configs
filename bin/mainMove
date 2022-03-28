@@ -3,7 +3,7 @@ windows=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length"
 
 if (($windows > 1)); then
     old=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .lines")
-	xdotool key --clearmodifiers "ctrl+shift+m"
+	xdotool key --clearmodifiers "ctrl+alt+m"
     new=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.is_focused) | .lines")
     if [[ "$old" == "$new" ]]; then
         /home/oleete/.cabal/bin/xmonadctl-exe winGo-main

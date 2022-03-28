@@ -391,12 +391,12 @@ myKeys =
 
     , ("M-o"             , upPointer $ bindOn C.WS [(wsCOMMENTS, runOrRaise "foxitreader" (className =? "Foxit Reader"))])
 
-    , ("M-<Backspace>"   , bF $ nv "DeleteBuffer" $ rKt (P.sendKey (controlMask .|. shiftMask) xK_BackSpace) $ crm (P.sendKey controlMask xK_w) $ l kill)
+    , ("M-<Backspace>"   , bF $ nv "DeleteBuffer" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_BackSpace) $ crm (P.sendKey controlMask xK_w) $ l kill)
     , ("M-S-<Backspace>" , kill)
     , ("M-C-<Backspace>" , confirmPrompt hotPromptTheme "kill all" killAll)
 
-    , ("M-<Left>"        , bF $ rKt (P.sendKey (controlMask .|. shiftMask) xK_Left)  $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
-    , ("M-<Right>"       , bF $ rKt (P.sendKey (controlMask .|. shiftMask) xK_Right) $ l (P.sendKey controlMask xK_Tab))
+    , ("M-<Left>"        , bF $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_Left)  $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
+    , ("M-<Right>"       , bF $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_Right) $ l (P.sendKey controlMask xK_Tab))
     , ("M-<Down>"        , windows W.focusDown)
     , ("M-<Up>"          , windows W.focusUp)
 

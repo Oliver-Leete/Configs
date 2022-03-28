@@ -2,7 +2,7 @@
 windows=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length")
 
 if (($windows > 1)); then
-	xdotool key --clearmodifiers "ctrl+shift+f"
+	xdotool key --clearmodifiers "ctrl+alt+f"
 else
 	/home/oleete/.cabal/bin/xmonadctl-exe layout-full
 fi
