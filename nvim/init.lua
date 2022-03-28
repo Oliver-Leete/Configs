@@ -45,18 +45,17 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'wellle/line-targets.vim'
 
     Plug 'lervag/vimtex'
-    Plug 'JuliaEditorSupport/julia-vim'
-    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-    Plug 'fladson/vim-kitty'
     Plug 'anufrievroman/vim-angry-reviewer'
+    Plug 'JuliaEditorSupport/julia-vim'
+    Plug 'fladson/vim-kitty'
     Plug 'simrat39/rust-tools.nvim'
     Plug 'saecki/crates.nvim'
-
+    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+    Plug 'renerocksai/telekasten.nvim'
 
     Plug 'rebelot/kanagawa.nvim'
     Plug 'folke/tokyonight.nvim'
     Plug 'folke/zen-mode.nvim'
-    " Plug 'lukas-reineke/indent-blankline.nvim',
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'windwp/windline.nvim'
@@ -85,7 +84,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'uga-rosa/cmp-dictionary'
     Plug 'mtoohey31/cmp-fish'
 
-
     Plug 'L3MON4D3/LuaSnip'
     Plug 'danymat/neogen'
     Plug 'saadparwaiz1/cmp_luasnip'
@@ -102,16 +100,13 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-telescope/telescope-github.nvim'
     Plug 'crispgm/telescope-heading.nvim'
     Plug 'rudism/telescope-dict.nvim'
-
-    Plug 'LinArcX/telescope-command-palette.nvim'
+    Plug 'gbrlsnchs/telescope-lsp-handlers.nvim'
+    Plug 'stevearc/dressing.nvim'
 
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-treesitter/playground'
     Plug 'ThePrimeagen/refactoring.nvim'
-
-    " Plug 'nvim-telescope/telescope-ui-select.nvim'
-    Plug 'stevearc/dressing.nvim'
 
     Plug 'mfussenegger/nvim-dap'
     Plug 'Pocco81/DAPInstall.nvim'
@@ -119,12 +114,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'theHamsta/nvim-dap-virtual-text'
     Plug 'nvim-telescope/telescope-dap.nvim'
     Plug 't-troebst/perfanno.nvim'
-
-    Plug 'renerocksai/telekasten.nvim'
-
-    Plug 'gbrlsnchs/telescope-lsp-handlers.nvim'
-
-    " Plug 'mg979/vim-visual-multi'
+    Plug 'andythigpen/nvim-coverage'
 call plug#end()]])
 
 -- Disable builtins

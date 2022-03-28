@@ -49,66 +49,86 @@ augroup END]])
 
 -- Close Buffers Setup
 require("close_buffers").setup({
-    preserve_window_layout = { "this" },
+	preserve_window_layout = { "this" },
 })
 
 require("Comment").setup({
-    ignore = "^$",
-    toggler = {
-        line = ",cc",
-        block = ",bb",
-    },
-    opleader = {
-        line = ",c",
-        block = ",b",
-    },
-    extra = {
-        above = ",cO",
-        below = ",co",
-        eol = ",cA",
-    },
-    mappings = {
-        basic = true,
-        extra = true,
-        extended = false,
-    }
+	ignore = "^$",
+	toggler = {
+		line = ",cc",
+		block = ",bb",
+	},
+	opleader = {
+		line = ",c",
+		block = ",b",
+	},
+	extra = {
+		above = ",cO",
+		below = ",co",
+		eol = ",cA",
+	},
+	mappings = {
+		basic = true,
+		extra = true,
+		extended = false,
+	},
 })
 
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
 require("colorizer").setup({ "*" }, {
-    RGB = true,
-    RRGGBB = true,
-    names = false,
-    RRGGBBAA = true,
-    rgb_fn = true,
-    hsl_fn = true,
-    css_fn = false,
-    mode = "background",
+	RGB = true,
+	RRGGBB = true,
+	names = false,
+	RRGGBBAA = true,
+	rgb_fn = true,
+	hsl_fn = true,
+	css_fn = false,
+	mode = "background",
 })
 
 local home = vim.fn.expand("~/UniversityDrive/Thesis/notes")
-require('telekasten').setup({
-    home         = home,
-    take_over_my_home = true,
-    auto_set_filetype = true,
+require("telekasten").setup({
+	home = home,
+	take_over_my_home = true,
+	auto_set_filetype = true,
 
-    dailies      = home .. '/' .. 'daily',
-    weeklies     = home .. '/' .. 'weekly',
-    templates    = home .. '/' .. 'templates',
-    image_subdir = "img",
-    extension    = ".md",
+	dailies = home .. "/" .. "daily",
+	weeklies = home .. "/" .. "weekly",
+	templates = home .. "/" .. "templates",
+	image_subdir = "img",
+	extension = ".md",
 
-    image_link_style = "wiki",
+	image_link_style = "wiki",
 })
 local perfanno = require("perfanno")
 local util = require("perfanno.util")
 
 require("perfanno").setup({
-    line_highlights = util.make_bg_highlights("#1F1F28", "#C34043", 10),
-    vt_highlight = util.make_fg_highlights("#DCD7BA", "#C34043", 10),
-    formats = {
-        {percent = true, format = "%.2f%%", minimum = 0.0},
-        {percent = false, format = "%d", minimum = 0.0001}
-    },
+	line_highlights = util.make_bg_highlights("#1F1F28", "#C34043", 10),
+	vt_highlight = util.make_fg_highlights("#DCD7BA", "#C34043", 10),
+	formats = {
+		{ percent = true, format = "%.2f%%", minimum = 0.0 },
+		{ percent = false, format = "%d", minimum = 0.0001 },
+	},
 })
-require('crates').setup()
+require("coverage").setup({
+	commands = true, -- create commands
+	highlights = {
+		-- customize highlight groups created by the plugin
+		covered = { fg = "#C3E88D" }, -- supports style, fg, bg, sp (see :h highlight-gui)
+		uncovered = { fg = "#F07178" },
+	},
+	signs = {
+		-- use your own highlight groups or text markers
+		covered = { hl = "CoverageCovered", text = "▎" },
+		uncovered = { hl = "CoverageUncovered", text = "▎" },
+	},
+	summary = {
+		-- customize the summary pop-up
+		min_coverage = 80.0, -- minimum coverage threshold (used for highlighting)
+	},
+	lang = {
+		-- customize language specific settings
+	},
+})
+require("crates").setup()
