@@ -167,7 +167,7 @@ local function runnable(selection)
     end
     vim.g.lastRun = selection
 
-    vim.cmd([[silent !kittyPersistent testterm juliaTest ']] .. vim.b[0].project .. [[Tests.runtests("]] .. selection .. [[")']])
+    vim.cmd([[silent !kittyPersistent testterm juliaTest ']] .. vim.b[0].project .. [[Tests.runtests("]] .. selection .. [[",spin=false)']])
 end
 local function select_runnables()
     local handle = io.popen([[rg --no-filename --no-heading --no-line-number -e "^\s*@testset\s*\"(.*)\"\s*begin.*\$" -r "\$1"]])
@@ -186,7 +186,7 @@ local function debuggable(selection)
     end
     vim.g.lastRun = selection
 
-    vim.cmd([[silent !kittyPersistent testterm juliaTest '@enter ]] .. vim.b[0].project .. [[Tests.runtests("]] .. selection .. [[")']])
+    vim.cmd([[silent !kittyPersistent testterm juliaTest '@enter ]] .. vim.b[0].project .. [[Tests.runtests("]] .. selection .. [[",spin=false)']])
 end
 local function select_debuggables()
     local handle = io.popen([[rg --no-filename --no-heading --no-line-number -e "^\s*@testset\s*\"(.*)\"\s*begin.*\$" -r "\$1"]])
