@@ -46,9 +46,7 @@ menu () {
 
     sys-mon
 
-    tasks
-    calendar
-    gmail
+    admin
 
     terminal
     calculator
@@ -66,6 +64,10 @@ menu () {
     mirror
     mirror_stack
     centre_main
+
+    full-screen
+    full-bar
+    centre-screen
 
     status
 
@@ -104,9 +106,9 @@ menu () {
 
         sys-mon)            /home/oleete/.cabal/bin/xmonadctl-exe nsp-sysm ;;
 
-        tasks)              workLauncher task ;;
-        calendar)           workLauncher gcal ;;
-        gmail)              workLauncher gmail ;;
+        # tasks)              workLauncher task ;;
+        admin)           workLauncher gcal ;;
+        # gmail)              workLauncher gmail ;;
 
         terminal)           /home/oleete/.cabal/bin/xmonadctl-exe nsp-cons ;;
         calculator)         /home/oleete/.cabal/bin/xmonadctl-exe nsp-calc ;;
@@ -124,6 +126,9 @@ menu () {
         mirror)             /home/oleete/.cabal/bin/xmonadctl-exe layout-dir ;;
         mirror_stack)       /home/oleete/.cabal/bin/xmonadctl-exe layout-stack-dir ;;
         centre_main)        /home/oleete/.cabal/bin/xmonadctl-exe layout-style ;;
+        full-screen)        /home/oleete/.cabal/bin/xmonadctl-exe layout-full ;;
+        full-bar)           /home/oleete/.cabal/bin/xmonadctl-exe layout-fullbar ;;
+        centre-screen)      /home/oleete/.cabal/bin/xmonadctl-exe layout-fullcentre ;;
 
         status)             /home/oleete/.config/bin/statusNotify ;;
 

@@ -1,5 +1,5 @@
 mapxName.group(mapxName.buffer, function()
-nnoremap("<localleader><localleader>", "<cmd>TexlabForward<cr>", "Forward Search", mapxName.silent) 
+nnoremap("<localleader><localleader>", "<cmd>TexlabForward<cr>", "Forward Search", mapxName.silent)
 nnoremap("<localleader>r", "<cmd>Telescope bibtex bibtex theme=get_cursor<cr>", "References")
 nnoremap("<localleader>c", "<cmd>VimtexTocToggle<cr>", "Open TOC")
 nnoremap("<localleader>l", "<cmd>call g:custom_toc1.toggle()<cr>", "Open TOL")
@@ -189,4 +189,4 @@ require('cmp').setup.buffer({
         { name = "buffer", keyword_lenght = 3 },
         { name = "dictionary", keyword_lenght = 2},
     },
-})
+}

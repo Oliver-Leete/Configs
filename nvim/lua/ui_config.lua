@@ -90,8 +90,6 @@ require("zen-mode").setup({
 require('dressing').setup({
   select = {
     backend = { "telescope" },
-    telescope = {
-      telescope = require('telescope.themes').get_dropdown({})
-    },
+    telescope = require('telescope.themes').get_dropdown({})
   },
 })

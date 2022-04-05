@@ -22,6 +22,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug '907th/vim-auto-save'
     Plug 'b0o/mapx.nvim'
 
+    " Plug 'github/copilot.vim'
+
     Plug 'knubie/vim-kitty-navigator'
     Plug 'kazhala/close-buffers.nvim'
     Plug 'tpope/vim-projectionist'
@@ -83,13 +85,14 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'hrsh7th/cmp-cmdline'
     Plug 'uga-rosa/cmp-dictionary'
     Plug 'mtoohey31/cmp-fish'
+    Plug 'zbirenbaum/copilot.lua'
 
     Plug 'L3MON4D3/LuaSnip'
     Plug 'danymat/neogen'
     Plug 'saadparwaiz1/cmp_luasnip'
     Plug 'rafamadriz/friendly-snippets'
     Plug 'windwp/nvim-autopairs'
-    Plug 'abecodes/tabout.nvim'
+    " Plug 'abecodes/tabout.nvim'
 
     Plug 'nvim-telescope/telescope-file-browser.nvim'
     Plug 'nvim-telescope/telescope.nvim'
@@ -147,7 +150,6 @@ end
 require('settings_config')
 require('misc_config')
 require('mappings_config')
--- require('visual-multi')
 require('jump_config')
 require('telescope_config')
 require('compleation_config')
@@ -157,10 +159,10 @@ require('lsp_config')
 require('treesitter_config')
 require('dap_config')
 require('git_config')
-require('snippets_config')
 require('bubble')
 require('ui_config')
 
 
 local enterAndExitVim = vim.api.nvim_create_augroup("enterAndExitVim", { clear = true})
 vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-window-title ""', group = enterAndExitVim})
+

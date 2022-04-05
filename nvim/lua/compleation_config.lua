@@ -15,6 +15,8 @@
 
 vim.o.completeopt = "menuone,noselect"
 
+-- vim.defer_fn(function() require("copilot") end, 100)
+
 local M = {}
 M.icons = {
 	Class = "ﴯ",
@@ -62,59 +64,37 @@ require("cmp").setup({
 	mapping = {
 		["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
 		["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-		["<down>"] = cmp.mapping({
+		["<tab>"] = cmp.mapping({
 			c = function()
-				if cmp.visible() then
 					cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-				else
-					vim.api.nvim_feedkeys(t("<Down>"), "n", true)
-				end
 			end,
+		}),
+		["<s-tab>"] = cmp.mapping({
+			c = function()
+					cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
+			end,
+		}),
+		["<down>"] = cmp.mapping({
 			i = function()
 				if cmp.visible() then
 					cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-				elseif luasnip.expand_or_jumpable() then
-					luasnip.expand_or_jump()
-					-- elseif has_words_before() then
-					--     cmp.complete()
-				else
-					vim.api.nvim_feedkeys(t("<tab>"), "n", true)
 				end
 			end,
 			s = function()
 				if cmp.visible() then
 					cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-				elseif luasnip.expand_or_jumpable() then
-					luasnip.expand_or_jump()
-				else
-					vim.api.nvim_feedkeys(t("<tab>"), "n", true)
 				end
 			end,
 		}),
 		["<up>"] = cmp.mapping({
-			c = function()
-				if cmp.visible() then
-					cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
-				else
-					vim.api.nvim_feedkeys(t("<up>"), "n", true)
-				end
-			end,
 			i = function()
 				if cmp.visible() then
 					cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
-				elseif luasnip.jumpable(-1) then
-					luasnip.jump(-1)
-				else
-					vim.api.nvim_feedkeys(t("<s-tab>"), "n", true)
 				end
 			end,
 			s = function()
 				if cmp.visible() then
 					cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
-				elseif luasnip.jumpable(-1) then
-					luasnip.jump(-1)
-				else
-					vim.api.nvim_feedkeys(t("<s-tab>"), "n", true)
 				end
 			end,
 		}),
@@ -125,7 +105,7 @@ require("cmp").setup({
 		{ name = "luasnip" },
 		{ name = "cmp_git" },
 		{ name = "nvim_lsp" },
-        { name = 'fish' },
+		{ name = "fish" },
 		{ name = "path" },
 		{ name = "nvim_lua" },
 		{ name = "buffer", keyword_lenght = 3 },
@@ -212,22 +192,6 @@ vim.g.diagnostic_auto_popup_while_jump = 0
 vim.g.diagnostic_enable_virtual_text = 0
 vim.g.diagnostic_enable_underline = 0
 vim.g.completion_timer_cycle = 200
-
-require("tabout").setup({
-	tabouts = {
-		{ open = "'", close = "'" },
-		{ open = '"', close = '"' },
-		{ open = "`", close = "`" },
-		{ open = "(", close = ")" },
-		{ open = "[", close = "]" },
-		{ open = "{", close = "}" },
-		{ open = "[[", close = "]]" },
-		{ open = "\\[", close = "\\]" },
-		{ open = "\\(", close = "\\)" },
-		{ open = "```", close = "```" },
-		{ open = '"""', close = '"""' },
-	},
-})
 
 local function replace_keycodes(str)
 	return vim.api.nvim_replace_termcodes(str, true, true, true)

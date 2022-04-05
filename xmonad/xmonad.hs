@@ -233,21 +233,21 @@ myBrowser      = "/home/oleete/.config/bin/browser"
 myBrowserClass = "google-chrome-stable"
 
 discordCommand   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/discord  --class=discord  --app=https://discord.com/channels/@me"
-gTasksCommand    = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/task     --class=Tasks    --app=https://todoist.com/app         "
-gTasksCommandWrk = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/taskWrk  --class=WrkTasks --app=https://todoist.com/app         "
-gmailCommand     = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmail    --class=GMail          https://mail.google.com         "
-gmailCommandWrk  = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmailWrk --class=WrkGMail       https://mail.google.com         "
-gcalCommand      = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcal     --class=GCal           https://app.sunsama.com         "
-gcalCommandWrk   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcalWrk  --class=WrkGCal        https://app.sunsama.com         "
+-- gTasksCommand    = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/task     --class=Tasks    --app=https://todoist.com/app         "
+-- gTasksCommandWrk = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/taskWrk  --class=WrkTasks --app=https://todoist.com/app         "
+-- gmailCommand     = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmail    --class=GMail          https://mail.google.com         "
+-- gmailCommandWrk  = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmailWrk --class=WrkGMail       https://mail.google.com         "
+gcalCommand      = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcal     --class=GCal"
+gcalCommandWrk   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcalWrk  --class=WrkGCal"
 ytmCommand       = "youtube-music"
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
-    [   NS "tasks" gTasksCommand (className =? "Tasks") nonFloating
-    ,   NS "tasksWork" gTasksCommandWrk (className =? "WrkTasks") nonFloating
-    ,   NS "gmail" gmailCommand (className =? "GMail") nonFloating
-    ,   NS "gmailWork"  gmailCommandWrk (className =? "WrkGMail") nonFloating
-    ,   NS "gcal" gcalCommand (className =? "GCal") nonFloating
+    -- [   NS "tasks" gTasksCommand (className =? "Tasks") nonFloating
+    -- ,   NS "tasksWork" gTasksCommandWrk (className =? "WrkTasks") nonFloating
+    -- ,   NS "gmail" gmailCommand (className =? "GMail") nonFloating
+    -- ,   NS "gmailWork"  gmailCommandWrk (className =? "WrkGMail") nonFloating
+    [   NS "gcal" gcalCommand (className =? "GCal") nonFloating
     ,   NS "gcalWork" gcalCommandWrk (className =? "WrkGCal") nonFloating
 
     ,   NS "discord"  discordCommand (className =? "discord") defaultFloating
@@ -401,7 +401,7 @@ myKeys =
     , ("M-<Up>"          , windows W.focusUp)
 
 
-    , ("M-w"             , bF $ kt " kittyFullscreen" $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
+    , ("M-w"             , bF $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_f) $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
     , ("M-z"             , toggleLayout FULL)
     , ("M-x"             , toggleLayout FULLBAR)
     , ("M-c"             , toggleLayout FULLCENTER)
@@ -550,10 +550,10 @@ myManageHook =
             , className =? "Insync"               -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
 
             , resource  =? "gnome-calculator"     -?> doCenterFloat
-            , className =? "Tasks"                -?> doRectFloat halfNhalf
-            , className =? "WrkTasks"             -?> doRectFloat halfNhalf
-            , className =? "GMail"                -?> doRectFloat thirdNthird
-            , className =? "WrkGMail"             -?> doRectFloat thirdNthird
+            -- , className =? "Tasks"                -?> doRectFloat halfNhalf
+            -- , className =? "WrkTasks"             -?> doRectFloat halfNhalf
+            -- , className =? "GMail"                -?> doRectFloat thirdNthird
+            -- , className =? "WrkGMail"             -?> doRectFloat thirdNthird
             , className =? "GCal"                 -?> doRectFloat bigFloat
             , className =? "WrkGCal"              -?> doRectFloat bigFloat
             , resource  =? "sysMon"               -?> doRectFloat (W.RationalRect (1 / 8) (1 / 8) (3 / 4) (3 / 4))
@@ -575,7 +575,7 @@ myManageHook =
             ]
         isBrowserDialog = isDialog <&&> className =? myBrowserClass
         halfNhalf = W.RationalRect (1/4) (1/4) (1/2) (1/2)
-        thirdNthird = W.RationalRect (1/5) (1/5) (3/5) (3/5)
+        -- thirdNthird = W.RationalRect (1/5) (1/5) (3/5) (3/5)
         bigFloat = W.RationalRect (1/8) (1/8) (3/4) (3/4)
 
 ----------------------------------------------------------------------------------------------------
@@ -629,14 +629,16 @@ myCommands =
     , ("nsp-musc"            , upPointer $ namedScratchpadAction scratchpads "youtubeMusic")
     , ("nsp-sysm"            , upPointer $ namedScratchpadAction scratchpads "sysMon")
 
-    , ("nsp-task"            , upPointer $ namedScratchpadAction scratchpads "tasks")
-    , ("nsp-task-wrk"        , upPointer $ namedScratchpadAction scratchpads "tasksWork")
-    , ("nsp-gmail"           , upPointer $ namedScratchpadAction scratchpads "gmail")
-    , ("nsp-gmail-wrk"       , upPointer $ namedScratchpadAction scratchpads "gmailWork")
+    -- , ("nsp-task"            , upPointer $ namedScratchpadAction scratchpads "tasks")
+    -- , ("nsp-task-wrk"        , upPointer $ namedScratchpadAction scratchpads "tasksWork")
+    -- , ("nsp-gmail"           , upPointer $ namedScratchpadAction scratchpads "gmail")
+    -- , ("nsp-gmail-wrk"       , upPointer $ namedScratchpadAction scratchpads "gmailWork")
     , ("nsp-gcal"            , upPointer $ namedScratchpadAction scratchpads "gcal")
     , ("nsp-gcal-wrk"        , upPointer $ namedScratchpadAction scratchpads "gcalWork")
 
     , ("layout-full"         , toggleLayout FULL)
+    , ("layout-fullbar"      , toggleLayout FULLBAR)
+    , ("layout-fullcentre"   , toggleLayout FULLCENTER)
     , ("layout-dir"          , upFocus $ sendMessage ToggleSide)
     , ("layout-stack-dir"    , upFocus $ sendMessage ToggleStackDir)
     , ("layout-style"        , upFocus $ sendMessage ToggleMiddle)

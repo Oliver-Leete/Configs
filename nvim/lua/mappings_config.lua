@@ -664,7 +664,7 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
 
     mapxName.name("<leader>,", "Settings")
     nnoremap("<leader>,,", "<cmd>Telescope vim_options<cr>", "Vim Options")
-    nnoremap("<leader>,s", "<cmd>set spell!<cr>", "Toggle Spelling")
+    -- nnoremap("<leader>,s", "<cmd>set spell!<cr>", "Toggle Spelling")
     nnoremap("<leader>,k", "<cmd>Telescope keymaps<cr>", "Keymaps")
     nnoremap("<leader>,C", "<cmd>Telescope colorscheme<cr>", "Color Schemes")
     nnoremap("<leader>,c", "<cmd>Telescope highlights<cr>", "Highlight Groups")
@@ -714,3 +714,25 @@ cmap("<c-space>", "v:lua.cmp_toggle()", expr)
 
 noremap("<c-leftmouse>", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
 noremap("<c-rightmouse>", "gf")
+
+ls = require("luasnip")
+vim.keymap.set("n", "<leader>,s", "<cmd>source ~/.config/nvim/after/plugin/luasnip.lua<cr>")
+vim.keymap.set("n", "<leader>,S", "<cmd>vsplit ~/.config/nvim/after/plugin/luasnip.lua<cr>")
+
+vim.keymap.set({ "i", "s" }, "<c-e>", function()
+    if ls.expand_or_jumpable() then
+      ls.expand_or_jump()
+    end
+end, { silent = true })
+
+vim.keymap.set({ "i", "s" }, "<c-h>", function()
+    if ls.jumpable(-1) then
+      ls.jump(-1)
+    end
+end, { silent = true })
+
+vim.keymap.set("i", "<c-n>", function()
+    if ls.choice_active() then
+        ls.change_choice(1)
+    end
+end)

@@ -33,6 +33,7 @@ zsh/
 !/alacritty.yml
 !/broot/conf.hjson
 !/vifm/vifmrc
+!/nvim/after/plugin/*
 
 /rofi-themes
 /bin/startupScript

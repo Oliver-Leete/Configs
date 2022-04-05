@@ -1,51 +1,210 @@
--------------------------------------------------------------------------------------------------------
---                      _   _   ______    ____   __      __  _____   __  __                        --
---                     | \ | | |  ____|  / __ \  \ \    / / |_   _| |  \/  |                       --
---                     |  \| | | |__    | |  | |  \ \  / /    | |   | \  / |                       --
---                     | . ` | |  __|   | |  | |   \ \/ /     | |   | |\/| |                       --
---                     | |\  | | |____  | |__| |    \  /     _| |_  | |  | |                       --
---                     |_| \_| |______|  \____/      \/     |_____| |_|  |_|                       --
---                                                                                                 --
--------------------------------------------------------------------------------------------------------
--- Oliver Leete <oliverleete@gmail.com>                                                            --
--- https://github.com/oliver-leete                                                                 --
--------------------------------------------------------------------------------------------------------
-
-
 local ls = require("luasnip")
+
+ls.config.set_config({
+	history = false,
+	updateevents = "TextChanged,TextChangedI",
+})
+
 local s = ls.snippet
 local sn = ls.snippet_node
+local isn = ls.indent_snippet_node
 local t = ls.text_node
 local i = ls.insert_node
 local f = ls.function_node
 local c = ls.choice_node
 local d = ls.dynamic_node
-local l = require("luasnip.extras").lambda
-local r = require("luasnip.extras").rep
-local p = require("luasnip.extras").partial
-local m = require("luasnip.extras").match
-local n = require("luasnip.extras").nonempty
-local dl = require("luasnip.extras").dynamic_lambda
+local r = ls.restore_node
+local events = require("luasnip.util.events")
+local ai = require("luasnip.nodes.absolute_indexer")
+local lse = require("luasnip.extras")
+local fmt = require("luasnip.extras.fmt").fmt
+local rep = lse.rep
+local m = lse.match
 
--- Every unspecified option will be set to the default.
-ls.config.set_config({
-    history = false,
-    updateevents = "TextChanged,TextChangedI",
+-- local lse = require("luasnip.extras")
+-- local l = lse.lambda
+-- local r = lse.rep
+-- local p = lse.partial
+-- local n = lse.nonempty
+-- local dl = lse.dynamic_lambda
+
+-- NOTE : LUA
+ls.add_snippets("lua", {
+    lua = {
+        s({trig="sn", name="snippet", dscr="The snippet to make snippets"}, {
+            t({"s({trig=\""}), i(1), t({"\", name=\""}), i(2), t({"\", dscr=\""}), i(3), t({"\"}, {", ""}),
+            t("\t"), i(0),
+            t({"", "}),"})
+        })
+    },
 })
 
--- args is a table, where 1 is the text in Placeholder 1, 2 the text in
--- placeholder 2,...
-local function copy(args)
-    return args[1]
+-- NOTE : JULIA
+
+local rec_elseif
+rec_elseif = function()
+    return sn( nil, c(1, { t({"end"}),
+            sn(nil, {
+                t({"else", "\t"}),
+                i(1),
+                t({"","end"})
+            }),
+            sn(nil, {
+                t("elseif "), i(1, "condition"),
+                t({"", "\t"}), i(2), t({"",""}),
+                d(3, rec_elseif, {})
+            }), }))
 end
 
--- stylua: ignore start
+local rec_exam = function()
+    return sn(nil, c(1, { t(""),
+            fmt([[
+            juila>{}
+            {}{}
+            ]],
+            {
+                i(2, "Command"),
+                i(3, "Return Value"), d(4, rec_exam, {})
+            })
+        })
+    )
+end
+
+ls.add_snippets("julia", {
+        s({trig="docs", name="documentation"}, {
+            t({'"""', "\t"}),
+            i(0),
+            t({"", '"""'})
+        }),
+        s({trig="abst", name="abstract"}, {
+            t("abstract type "), i(0), t(" end")
+        }),
+        s({trig="bare", name="baremodule"}, {
+            t("baremodule "), i(1),
+            t({"", "\t"}), i(0),
+            t({"", "end"})
+        }),
+        s({trig="beg", name="begin"}, {
+            t({"begin", "\t"}),
+            i(0),
+            t({"","end"})
+        }),
+        s({trig="do", name="do"}, {
+            t("do "), i(1),
+            t({"", "\t"}), i(0),
+            t({"", "end"})
+        }),
+        s({trig="for", name="for"}, {
+            t("for "), i(1), t(" in "), i(2),
+            t({"", "\t"}),  i(3),
+            t({"", "end"}), i(0)
+        }),
+s({trig="fun", name="function", dscr="function deffinition with ever expaing documentation"},
+fmt([[
+"""
+    {}({})
+
+{}{}{}
+"""
+function {}({})
+    {}
+end{}
+]], {
+    rep(1), rep(2),
+    i(3, "a short description"), d(4, function(args)
+        local nodes = {t({"", "", "# Arguments"}), i(1)}
+        local args = vim.split(args[1][1], ",", false)
+        for index, arg in ipairs(args) do
+            local arg = string.gsub(arg, "%s+", "")
+            table.insert(nodes, t({"", "- `" .. arg .. "` : "}))
+            table.insert(nodes, i(index+1))
+        end
+        return sn(nil, c(1, {t(""), sn(nil, nodes)}))
+    end, {2}),
+    c(5, {
+        t(""),
+        fmt([[ 
+
+
+# Examples
+```jldoctest
+julia> {}
+{}{}
+```
+]],
+        {
+            i(1, "Command"),
+            i(2, "Return Value"), d(3, rec_exam, {})
+        })
+    }),
+    i(1), i(2, "arguments"),
+    i(6),
+    i(0),
+})),
+        s({trig="exam", name="documentation example"}, {
+            t({"", "# Examples", "", "```jldoctest", "julia> "}),
+            i(1, "command"), t({"",""}),
+            -- i(2, "return"), t({"",""}), d(3, rec_exam, {}),
+            t({"", "", "```"})
+        }),
+        -- s({trig="args", name="documentation arguments"}, {
+        --     t({"", "# Arguments", ""}),
+        --     t("- `"), i(1, "args"), t("` :"), i(2, "discription"), t({"",""}), d(3, rec_args, {}),
+        --     t({"", ""})
+        -- }),
+        s({trig="if", name="if"}, {
+            t("if "), i(1, "conditon"),
+            t({"", "\t"}), i(2),
+            t({"",""}),
+			c(3, {
+                t("end"),
+				sn(nil, {
+                    t({"else", "\t"}),
+                    i(1),
+                    t({"","end"})
+				}),
+				sn(nil, {
+                    t("elseif "), i(1, "condition"),
+                    t({"", "\t"}), i(2), t({"",""}),
+                    d(3, rec_elseif, {})
+				}),
+			}),
+        }),
+        s({trig="let", name="let"}, {
+            t("let "), i(1),
+            t({"", "\t"}),  i(0),
+            t({"", "end"})
+        }),
+        s({trig="mac", name="macro"}, {
+            t("macro "), i(1), t("("), i(2),
+            t({")", "\t"}),  i(0),
+            t({"", "end"})
+        }),
+        s({trig="mod", name="module"}, {
+            t("module "), i(1),
+            t({"", "\t"}),  i(0),
+            t({"", "end"})
+        }),
+        s({trig="mut", name="mutable"}, {
+            t("mutable struct "), i(0),
+            t({"", "end"})
+        }),
+        s({trig="?", name="ternary", dscr="this is just so I remember which way around they go"}, {
+            t("? "), i(1, "true condition"), t(" : "), i(2, "false condition")
+        }),
+})
+
+-- NOTE : TEX
+
+local function copy(args)
+	return args[1]
+end
+
 local rec_ls
 rec_ls = function()
     return sn(
         nil,
         c(1, {
-            -- Order is important, sn(...) first would cause infinite loop of expansion.
             t(""),
             sn(nil, { t({ "", "\t\\item " }), i(1), d(2, rec_ls, {}) }),
         })
@@ -56,7 +215,6 @@ rec_ds = function()
     return sn(
         nil,
         c(1, {
-            -- Order is important, sn(...) first would cause infinite loop of expansion.
             t(""),
             sn(nil, {
                 t({"", "", ""}),
@@ -108,60 +266,7 @@ rec_tab = function()
         })
     })
 end
-
-local rec_exam
-rec_exam = function()
-    return sn(
-        nil,
-        c(1, {
-            t(""),
-            sn(nil, {
-                t({"", "julia> "}),
-                i(1, "command"), t({"", ""}),
-                i(2, "return"), t({"",""}), d(3, rec_exam, {})
-            }),
-        })
-    )
-end
-local rec_args
-rec_args = function()
-    return sn(
-        nil,
-        c(1, {
-            t(""),
-            sn(nil, { t("- `"), i(1, "args"), t("` : "), i(2, "discription"), t({"",""}), d(3, rec_args, {}) }),
-        })
-    )
-end
-local rec_elseif
-rec_elseif = function()
-    return sn(
-        nil,
-        c(1, {
-            t({"end"}),
-            sn(nil, {
-                t({"else", "\t"}),
-                i(1),
-                t({"","end"})
-            }),
-            sn(nil, {
-                t("elseif "), i(1, "condition"),
-                t({"", "\t"}), i(2), t({"",""}),
-                d(3, rec_elseif, {})
-            }),
-        })
-    )
-end
-
-ls.snippets = {
-    lua = {
-        s({trig="sn", name="snippet", dscr="The snippet to make snippets"}, {
-            t({"s({trig=\""}), i(1), t({"\", name=\""}), i(2), t({"\", dscr=\""}), i(3), t({"\"}, {", ""}),
-            t("\t"), i(0),
-            t({"", "}),"})
-        })
-    },
-    tex = {
+ls.add_snippets("tex", {
         s({trig="fig", name="figure reference", dscr="figure reference"}, {
             t({ "Figure~\\ref{fig:" }), i(1), t({ "}" }),
         }),
@@ -292,137 +397,4 @@ ls.snippets = {
         s({trig="node", name="tikz Node", dscr="Flowchart Node"}, {
             t("\\node ("), i(1, "nodeID"), t(") ["), i(2, "style"), t(", "), i(3, "position"), t("] {"), i(4, "text"), t("};")
         }),
-    },
-    julia = {
-        s({trig="docs", name="documentation"}, {
-            t({'"""', "\t"}),
-            i(0),
-            t({"", '"""'})
-        }),
-        s({trig="abst", name="abstract"}, {
-            t("abstract type "), i(0), t(" end")
-        }),
-        s({trig="bare", name="baremodule"}, {
-            t("baremodule "), i(1),
-            t({"", "\t"}), i(0),
-            t({"", "end"})
-        }),
-        s({trig="beg", name="begin"}, {
-            t({"begin", "\t"}),
-            i(0),
-            t({"","end"})
-        }),
-        s({trig="do", name="do"}, {
-            t("do "), i(1),
-            t({"", "\t"}), i(0),
-            t({"", "end"})
-        }),
-        s({trig="for", name="for"}, {
-            t("for "), i(1), t(" in "), i(2),
-            t({"", "\t"}),  i(3),
-            t({"", "end"}), i(0)
-        }),
-        s({trig="fun", name="function", dscr="function deffinition with ever expaing documentation"}, {
-            t({'"""', "\t"}),
-            f(copy, 1), t("("), f(copy, 2), t(")"),
-            t({"", "",""}), i(3, "a short description"),
-            c(4, {
-                t(""),
-                sn(nil, {
-                    t({"", "# Arguments", ""}),
-                    t("- `"), i(1, "args"), t("` : "), i(2, "discription"), t({"",""}), d(3, rec_args, {}),
-                    t({"", ""}),
-                    c(4, {
-                        t(""),
-                        sn(nil, {
-                            t({"# Examples", "```jldoctest", "julia> "}),
-                            i(1, "command"), t({"",""}),
-                            i(2, "return"), t({"",""}), d(3, rec_exam, {}),
-                            t({"", "```"})
-                        })
-                    }),
-                }),
-                sn(nil, {
-                        t({"", "# Examples", "", "```jldoctest", "julia> "}),
-                        i(1, "command"), t({"",""}),
-                        i(2, "return"), t({"",""}), d(3, rec_exam, {}),
-                        t({"", "", "```"})
-                })
-            }),
-            t({"", '"""', ""}),
-            t("function "), i(1), t("("), i(2),
-            t({")", "\t"}),  i(5),
-            t({"", "end"}), i(0)
-        }),
-        s({trig="exam", name="documentation example"}, {
-            t({"", "# Examples", "", "```jldoctest", "julia> "}),
-            i(1, "command"), t({"",""}),
-            i(2, "return"), t({"",""}), d(3, rec_exam, {}),
-            t({"", "", "```"})
-        }),
-        s({trig="args", name="documentation arguments"}, {
-            t({"", "# Arguments", ""}),
-            t("- `"), i(1, "args"), t("` :"), i(2, "discription"), t({"",""}), d(3, rec_args, {}),
-            t({"", ""})
-        }),
-        s({trig="if", name="if"}, {
-            t("if "), i(1, "conditon"),
-            t({"", "\t"}), i(2),
-            t({"",""}),
-			c(3, {
-                t("end"),
-				sn(nil, {
-                    t({"else", "\t"}),
-                    i(1),
-                    t({"","end"})
-				}),
-				sn(nil, {
-                    t("elseif "), i(1, "condition"),
-                    t({"", "\t"}), i(2), t({"",""}),
-                    d(3, rec_elseif, {})
-				}),
-			}),
-        }),
-        s({trig="let", name="let"}, {
-            t("let "), i(1),
-            t({"", "\t"}),  i(0),
-            t({"", "end"})
-        }),
-        s({trig="mac", name="macro"}, {
-            t("macro "), i(1), t("("), i(2),
-            t({")", "\t"}),  i(0),
-            t({"", "end"})
-        }),
-        s({trig="mod", name="module"}, {
-            t("module "), i(1),
-            t({"", "\t"}),  i(0),
-            t({"", "end"})
-        }),
-        s({trig="mut", name="mutable"}, {
-            t("mutable struct "), i(0),
-            t({"", "end"})
-        }),
-        s({trig="?", name="ternary", dscr="this is just so I remember which way around they go"}, {
-            t("? "), i(1, "true condition"), t(" : "), i(2, "false condition")
-        }),
-    }
-}
--- stylua: ignore end
-
-require("luasnip/loaders/from_vscode").load({exclude={"tex"}})
-
--- \begin{algorithm}[t]
---     \begin{algorithmic}[1]
---         \Procedure{Time Step Solver}{previous results, boundary conditions}
---         \State previous temperature array $\gets$ array Setup(previous results)
---         \State current temperature array $\gets$ empty
-
---         \State conduction Solver(current temperature, previous temperature)
---         \State boundary Solver(current temperature, previous temperature)
-
---         \State \Return{current temperature array}
-
---         \EndProcedure
---     \end{algorithmic}
---     \caption{Time step solver pseudocode}
--- \end{algorithm}
+})

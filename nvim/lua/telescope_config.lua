@@ -79,14 +79,6 @@ require("telescope").setup({
             "--multiline",
             "--vimgrep",
         },
-        -- layout_strategy = "vertical",
-        -- layout_config = {
-        --     vertical = {
-        --         width = 100,
-        --         preview_height = 40,
-        --         height = 80,
-        --     },
-        -- },
         path_display = { shorten = 3 },
         pickers = {
             buffers = {
@@ -134,9 +126,6 @@ require("telescope").setup({
             case_mode = "smart_case",
         },
         media_files = {},
-        ["ui-select"] = {
-            require("telescope.themes").get_dropdown({})
-        },
     },
 })
 
