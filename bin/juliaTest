@@ -1,5 +1,8 @@
 #!/bin/bash
-project="$(basename "$PWD")Tests.jl"
+project="$(basename "$PWD")"
 cd test
 # julia --project -i -e "include(\"$project\")"
-julia --threads=16 --project -i -e 'using Revise, ReTest, Debugger, Infiltrator; ReTest.load("'"$project"'", revise=true)'
+julia --threads=16 --project -i -e '
+using Revise, ReTest, BenchmarkTools, Debugger, Infiltrator, Profile, ProfileView, '"$project"';
+ReTest.load("'"$project"'Tests.jl", revise=true);
+'"$@"

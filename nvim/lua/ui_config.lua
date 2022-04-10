@@ -14,17 +14,6 @@
 -- Theme
 vim.opt.termguicolors = true
 
--- vim.api.nvim_set_var("tokyonight_style", "night")
--- vim.api.nvim_set_var("tokyonight_terminal_colors", "v:true")
--- vim.api.nvim_set_var("tokyonight_dark_float", false)
--- vim.api.nvim_set_var("tokyonight_dark_sidebar", true)
--- vim.api.nvim_set_var("tokyonight_italic_comments", true)
--- vim.api.nvim_set_var("tokyonight_italic_keywords", false)
--- vim.api.nvim_set_var("tokyonight_sidebars", { "qf", "Outline", "terminal", "vim-plug", "undotree", "help", "DiffviewFiles", "DiffviewFileHistory", "juliadoc"})
--- vim.api.nvim_set_var("tokyonight_hide_inactive_statusline", true)
-
--- vim.cmd("colorscheme tokyonight")
-
 require('kanagawa').setup({
     undercurl = true,
     commentStyle = "italic",
@@ -76,20 +65,11 @@ require("zen-mode").setup({
     end,
 })
 
--- Indent Blankline Settings
--- require("indent_blankline").setup({
---     char = "│",
---     use_treesitter = true,
---     show_current_context = true,
---     show_first_indent_level = false,
---     indent_level = 6,
---     filetype_exclude = { "qf", "outline", "vimplug", "undotree", "help", "DiffviewFiles", "juliadoc" },
---     buftype_exclude = { "teriminal" },
--- })
-
 require('dressing').setup({
   select = {
     backend = { "telescope" },
-    telescope = require('telescope.themes').get_dropdown({})
+    telescope = require('telescope.themes').get_dropdown({
+        height = 30,
+    })
   },
 })

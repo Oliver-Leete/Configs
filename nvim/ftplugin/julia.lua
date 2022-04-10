@@ -36,13 +36,12 @@ nnoremap("<localleader>iw", [["<cmd>silent !kittyPersistent JuliaPersistant juli
 nnoremap("<localleader>iW", [["<cmd>silent !kittyPersistent JuliaPersistant juliainfil '@descend_code_warntype " . getline(".") . "'<cr>"]], "Cthulu's Warning (Line)")
 nnoremap("<localleader>iq", "<cmd>silent !kittyPersistent JuliaPersistant juliainfil @exit<cr>", "Quit")
 
-nnoremap("<leader>mm", [[<cmd>silent !kittyOneShot OneShot "~/.config/nvim/filetype/julia/runExample"<cr>]], "Run Example Script")
-nnoremap("<leader>mp", [[<cmd>silent !kittyOneShot OneShot "~/.config/nvim/filetype/julia/precompile"<cr>]], "Precompile")
-nnoremap("<leader>mt", [[<cmd>silent !kittyOneShot OneShot "~/.config/nvim/filetype/julia/test"<cr>]], "Test Package")
-nnoremap("<leader>mc", [[<cmd>silent !kittyOneShot OneShot "~/.config/nvim/filetype/julia/testCov"<cr>]], "Coverage Check Package")
-nnoremap("<leader>mb", [[<cmd>silent !kittyOneShot OneShot "~/.config/nvim/filetype/julia/benchmark"<cr>]], "Benckmark Package")
-nnoremap("<leader>md", [[<cmd>silent !kittyOneShot OneShot "~/.config/nvim/filetype/julia/docBuild"<cr>]], "Build Package Documentation")
-nnoremap("<leader>mu", [[<cmd>silent !kittyOneShot OneShot "~/.config/nvim/filetype/julia/docTest"<cr>]], "Run Doctests")
+-- nnoremap("<leader>mm", [[<cmd>silent !kittyOneShot "~/.config/nvim/filetype/julia/precompile"<cr>]], "Precompile")
+-- nnoremap("<leader>mt", [[<cmd>silent !kittyOneShot "~/.config/nvim/filetype/julia/test"<cr>]], "Test Package")
+-- nnoremap("<leader>mc", [[<cmd>silent !kittyOneShot "~/.config/nvim/filetype/julia/testCov"<cr>]], "Coverage Check Package")
+-- nnoremap("<leader>mb", [[<cmd>silent !kittyOneShot "~/.config/nvim/filetype/julia/benchmark"<cr>]], "Benckmark Package")
+-- nnoremap("<leader>md", [[<cmd>silent !kittyOneShot "~/.config/nvim/filetype/julia/docBuild"<cr>]], "Build Package Documentation")
+-- nnoremap("<leader>mu", [[<cmd>silent !kittyOneShot "~/.config/nvim/filetype/julia/docTest"<cr>]], "Run Doctests")
 
 nnoremap("<leader>jj", "<cmd>silent !kittyPersistent JuliaPersistant juliadebug<cr>", "Open Debug Terminal")
 nnoremap("<leader>jq", "<cmd>silent !kitty @ close-window --match title:JuliaPersistant<cr>", "Close Debug Terms")
@@ -71,7 +70,7 @@ nnoremap("<leader>jB", [["<cmd>silent !kittyPersistent JuliaPersistant juliadebu
     nnoremap("<leader>jrw", [["<cmd>silent !kittyPersistent JuliaPersistant juliadebug w rm " . input("Item to Remove > ") . "<cr>"]], "Remove Watchlist")
 
     mapxName.name("<leader>lr", "Run Profiler")
-    nnoremap("<leader>lrf", [["<cmd>silent !kittyOneShot OneShot julia ~/.config/nvim/filetype/julia/prof.jl '" . expand('%:p') . "'<cr>"]], "Profile File", expr)
+    nnoremap("<leader>lrf", [["<cmd>silent !kittyOneShot julia ~/.config/nvim/filetype/julia/prof.jl '" . expand('%:p') . "'<cr>"]], "Profile File", expr)
     nnoremap("<leader>loo", function() require("perfanno").load_traces(jul_perf_flat("/tmp/julprof.data")) end, "Load Julia profile data")
 
 nnoremap("<leader>/d", "<cmd>Edoc<cr>", "Documentation")
@@ -149,9 +148,12 @@ function _G.jul_perf_flat(perf_data)
         local success = count and file and linenr and symbol
 
         if success and tonumber(count) > 0 then
-            local trace = {symbol = symbol, file = file, linenr = tonumber(linenr)}
+            if file:find("@" .. vim.b[0].project) then
+                file = "/home/oleete/Projects/" .. file.match(file, "@(" .. vim.b[0].project .. ".*)")
+                local trace = {symbol = symbol, file = file, linenr = tonumber(linenr)}
 
-            table.insert(result[current_event], {count = tonumber(count), frames = {trace}})
+                table.insert(result[current_event], {count = tonumber(count), frames = {trace}})
+            end
         end
     end
 
@@ -159,47 +161,118 @@ function _G.jul_perf_flat(perf_data)
 end
 
 -- Test selector function
-vim.g.lastRun = "precompile"
+LastCommand = {
+    name = "Precompile Package",
+    type = "misc",
+    label = "[Misc] ",
+    command = function() vim.cmd([[silent !kittyOneShot "~/.config/nvim/filetype/julia/precompile"]]) end
+}
 
 local function runnable(selection)
     if not selection then
         return
     end
-    vim.g.lastRun = selection
+    LastCommand = selection
 
-    vim.cmd([[silent !kittyPersistent JuliaPersistant juliaTest ']] .. vim.b[0].project .. [[Tests.runtests("]] .. selection .. [[",spin=false)']])
+    if selection.type == "test" then
+        vim.cmd([[silent !kittyPersistent JuliaPersistant juliaTest ']] .. vim.b[0].project .. [[Tests.runtests("]] .. selection.name .. [[",spin=false)']])
+    elseif selection.type == "benchmark" then
+        vim.cmd([[silent !kittyPersistent JuliaPersistant juliaTest 'run(]] .. vim.b[0].project .. [[Tests.suite["]] .. selection.name .. [["], verbose=true)']])
+    elseif selection.type == "debug" then
+        vim.cmd([[silent !kittyPersistent JuliaPersistant juliaTest '@run run(]] .. vim.b[0].project .. [[Tests.suite["]] .. selection.name .. [["], verbose=true)']])
+    elseif selection.type == "profile" then
+        vim.cmd([[silent !kittyPersistent JuliaPersistant juliaTest 'a = @bprofile ]] .. selection.command .. [[; Profile.print(IOContext(open("/tmp/julprof.data", "w"), :displaysize=>(100000,1000)), format=:flat); ProfileView.view(); a']])
+    else
+        selection.command()
+    end
 end
+
 local function select_runnables()
+    -- Misc Runnables
+    local runnables_list = {
+        {
+            name = "Open Runnable Terminal",
+            type = "misc",
+            label = "[Misc] ",
+            command = function() vim.cmd([[silent !kittyPersistent JuliaPersistant juliaTest]]) end
+        },
+        {
+            name = "Precompile Package",
+            type = "misc",
+            label = "[Misc] ",
+            command = function() vim.cmd([[silent !kittyOneShot "~/.config/nvim/filetype/julia/precompile"]]) end
+        },
+        {
+            name = "Build Documentation",
+            type = "misc",
+            label = "[Misc] ",
+            command = function() vim.cmd([[<cmd>silent !kittyOneShot "~/.config/nvim/filetype/julia/docBuild"<cr>]]) end
+        },
+        {
+            name = "Run Documentation Tests",
+            type = "misc",
+            label = "[Misc] ",
+            command = function() vim.cmd([[silent !kittyOneShot "~/.config/nvim/filetype/julia/docTest"]]) end
+        },
+    }
+    -- Tests
+    table.insert(runnables_list, {
+            name = "Run All Tests",
+            type = "misc",
+            label = "[Test] ",
+            command = function() vim.cmd([[silent !kittyPersistent JuliaPersistant juliaTest ']] ..vim.b[0].project .. [[Tests.runtests(;spin=false)']]) end
+    })
     local handle1 = io.popen([[rg --no-filename --no-heading --no-line-number -e "^\s*@testitem\s*\"(.*)\"\s*begin.*\$" -r "\$1"]])
     local tests = handle1:read("*a")
     handle1:close()
-    local test_list = {}
+
     for s in tests:gmatch("([^\r\n]+)") do
-        table.insert(test_list, s)
+        table.insert(runnables_list, {name = s, type = "test", label = "[Test] "})
     end
-    vim.ui.select(test_list, { prompt = "Select Test" }, runnable)
+
+    -- Benchmarks
+    table.insert(runnables_list, {
+            name = "Run All Benchmarks",
+            type = "misc",
+            label = "[Bench]",
+            command = function() vim.cmd([[silent !kittyPersistent JuliaPersistant juliaTest 'run(]] ..vim.b[0].project .. [[Tests.suite, verbose=true)']]) end
+    })
+    table.insert(runnables_list, {
+            name = "Retune Benchmarks",
+            type = "misc",
+            label = "[Bench]",
+            command = function() vim.cmd([[silent !kittyPersistent JuliaPersistant juliaTest 'let suite=]] .. vim.b[0].project .. [[Tests.suite; tune\!(suite); BenchmarkTools.save(joinpath(dirname(@__FILE__), "params.json"), params(suite));end']]) end
+    })
+
+    local handle2 = io.popen([[rg --no-filename --no-heading --no-line-number -e ".*\[\"(.*?)\"\].*@benchmarkable(.*)\$" -r "\$1	\$2"]])
+    local benches = handle2:read("*a")
+    handle2:close()
+
+    for s in benches:gmatch("([^\r\n]+)") do
+        name, command = s:match("([^\t]+)\t([^\t]+)")
+        table.insert(runnables_list, {name = name, type = "benchmark", label = "[Bench]"})
+        table.insert(runnables_list, {name = name, type = "debug", label = "[Debug]"})
+        table.insert(runnables_list, {name = name, type = "profile", label = "[Prof] ", command = command})
+    end
+
+    table.insert(runnables_list, {
+            name = "Load Profile Data",
+            type = "misc",
+            label = "[Prof] ",
+            command = function() require("perfanno").load_traces(jul_perf_flat("/tmp/julprof.data")) end
+    })
+
+    -- Selection
+    vim.ui.select(
+        runnables_list,
+        {
+            prompt = "Select Runnable",
+            format_item = function(item)
+                return item.label .. " " .. item.name
+            end,
+        },
+        runnable)
 end
 
-local function debuggable(selection)
-    if not selection then
-        return
-    end
-    vim.g.lastRun = selection
-
-    vim.cmd([[silent !kittyPersistent JuliaPersistant juliaTest '@enter ]] .. vim.b[0].project .. [[Tests.runtests("]] .. selection .. [[",spin=false)']])
-end
-local function select_debuggables()
-    local handle1 = io.popen([[rg --no-filename --no-heading --no-line-number -e "^\s*@testitem\s*\"(.*)\"\s*begin.*\$" -r "\$1"]])
-    local tests = handle1:read("*a")
-    handle1:close()
-    local test_list = {}
-    for s in tests:gmatch("([^\r\n]+)") do
-        table.insert(test_list, s)
-    end
-    vim.ui.select(test_list, { prompt = "Select Test" }, debuggable)
-end
-
-nnoremap("<leader>mm", function() select_runnables() end, buffer)
-nnoremap("<leader>M", function() runnables(vim.g.lastRun) end, buffer)
-nnoremap("<leader>jj", function() select_debuggables() end, buffer)
-nnoremap("<leader>J", function() debuggables(vim.g.lastRun) end, buffer)
+nnoremap("<leader>p", function() select_runnables() end, buffer)
+nnoremap("<leader>P", function() runnable(LastCommand) end, buffer)

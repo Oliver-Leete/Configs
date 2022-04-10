@@ -28,13 +28,13 @@ import Graphics.X11.Types
 import XMonad hiding ( (|||) )
 import qualified XMonad.StackSet as W
 
-import XMonad.Actions.ConditionalKeys as C
 import XMonad.Actions.CycleWSLocal
 import XMonad.Actions.CycleWS (nextScreen, shiftNextScreen)
 import XMonad.Actions.DynamicProjects
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.Navigation2D
 import XMonad.Actions.PerWindowKeys
+import XMonad.Actions.PerWorkspaceKeys
 import XMonad.Actions.SinkAll
 import XMonad.Actions.SpawnOn
 import XMonad.Actions.SwapPromote
@@ -63,7 +63,7 @@ import XMonad.Layout.Spacing
 
 import XMonad.Util.EZConfig
 import XMonad.Util.Hacks
-import XMonad.Util.NamedScratchpad
+import XMonad.Util.NamedScratchpadLocal
 import XMonad.Util.Paste as P
 import XMonad.Util.SpawnOnce
 
@@ -233,20 +233,12 @@ myBrowser      = "/home/oleete/.config/bin/browser"
 myBrowserClass = "google-chrome-stable"
 
 discordCommand   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/discord  --class=discord  --app=https://discord.com/channels/@me"
--- gTasksCommand    = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/task     --class=Tasks    --app=https://todoist.com/app         "
--- gTasksCommandWrk = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/taskWrk  --class=WrkTasks --app=https://todoist.com/app         "
--- gmailCommand     = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmail    --class=GMail          https://mail.google.com         "
--- gmailCommandWrk  = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gmailWrk --class=WrkGMail       https://mail.google.com         "
 gcalCommand      = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcal     --class=GCal"
 gcalCommandWrk   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcalWrk  --class=WrkGCal"
 ytmCommand       = "youtube-music"
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
-    -- [   NS "tasks" gTasksCommand (className =? "Tasks") nonFloating
-    -- ,   NS "tasksWork" gTasksCommandWrk (className =? "WrkTasks") nonFloating
-    -- ,   NS "gmail" gmailCommand (className =? "GMail") nonFloating
-    -- ,   NS "gmailWork"  gmailCommandWrk (className =? "WrkGMail") nonFloating
     [   NS "gcal" gcalCommand (className =? "GCal") nonFloating
     ,   NS "gcalWork" gcalCommandWrk (className =? "WrkGCal") nonFloating
 
@@ -389,7 +381,7 @@ myKeys =
 
     , ("M-e"             , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
 
-    , ("M-o"             , upPointer $ bindOn C.WS [(wsCOMMENTS, runOrRaise "foxitreader" (className =? "Foxit Reader"))])
+    , ("M-o"             , upPointer $ bindOn [(wsCOMMENTS, runOrRaise "foxitreader" (className =? "Foxit Reader"))])
 
     , ("M-<Backspace>"   , bF $ nv "DeleteBuffer" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_BackSpace) $ crm (P.sendKey controlMask xK_w) $ l kill)
     , ("M-S-<Backspace>" , kill)
@@ -550,10 +542,6 @@ myManageHook =
             , className =? "Insync"               -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
 
             , resource  =? "gnome-calculator"     -?> doCenterFloat
-            -- , className =? "Tasks"                -?> doRectFloat halfNhalf
-            -- , className =? "WrkTasks"             -?> doRectFloat halfNhalf
-            -- , className =? "GMail"                -?> doRectFloat thirdNthird
-            -- , className =? "WrkGMail"             -?> doRectFloat thirdNthird
             , className =? "GCal"                 -?> doRectFloat bigFloat
             , className =? "WrkGCal"              -?> doRectFloat bigFloat
             , resource  =? "sysMon"               -?> doRectFloat (W.RationalRect (1 / 8) (1 / 8) (3 / 4) (3 / 4))
@@ -563,8 +551,6 @@ myManageHook =
             , className =? "discord"              -?> doRectFloat halfNhalf
 
             , transience
-            -- , isBrowserDialog -?> forceCenterFloat
-            -- , isRole =? "GtkFileChooserDialog" -?> forceCenterFloat
             , isBrowserDialog -?> doCenterFloat
             , isRole =? "GtkFileChooserDialog" -?> doCenterFloat
             , isRole =? "pop-up" -?> doCenterFloat
@@ -629,10 +615,6 @@ myCommands =
     , ("nsp-musc"            , upPointer $ namedScratchpadAction scratchpads "youtubeMusic")
     , ("nsp-sysm"            , upPointer $ namedScratchpadAction scratchpads "sysMon")
 
-    -- , ("nsp-task"            , upPointer $ namedScratchpadAction scratchpads "tasks")
-    -- , ("nsp-task-wrk"        , upPointer $ namedScratchpadAction scratchpads "tasksWork")
-    -- , ("nsp-gmail"           , upPointer $ namedScratchpadAction scratchpads "gmail")
-    -- , ("nsp-gmail-wrk"       , upPointer $ namedScratchpadAction scratchpads "gmailWork")
     , ("nsp-gcal"            , upPointer $ namedScratchpadAction scratchpads "gcal")
     , ("nsp-gcal-wrk"        , upPointer $ namedScratchpadAction scratchpads "gcalWork")
 

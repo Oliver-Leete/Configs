@@ -1,7 +1,6 @@
 #!/bin/bash
 
-WINTITLE=$1
-shift
+WINTITLE="OneShot"
 
 TITLES=$(kitty @ ls | jq ".[].tabs[].windows[].title")
 

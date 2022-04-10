@@ -34,8 +34,8 @@ require("nvim-treesitter.configs").setup({
             enable = true,
             border = "single",
             peek_definition_code = {
-                ["<leader>pf"] = "@function.outer",
-                ["<leader>po"] = "@class.outer",
+                ["<leader>kf"] = "@function.outer",
+                ["<leader>ko"] = "@class.outer",
             },
         },
         swap = {
