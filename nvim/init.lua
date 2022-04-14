@@ -22,8 +22,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug '907th/vim-auto-save'
     Plug 'b0o/mapx.nvim'
 
-    " Plug 'github/copilot.vim'
-
     Plug 'knubie/vim-kitty-navigator'
     Plug 'kazhala/close-buffers.nvim'
     Plug 'tpope/vim-projectionist'
@@ -105,6 +103,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'rudism/telescope-dict.nvim'
     Plug 'gbrlsnchs/telescope-lsp-handlers.nvim'
     Plug 'stevearc/dressing.nvim'
+    Plug 'FeiyouG/command_center.nvim'
 
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'

@@ -5,7 +5,7 @@ X=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f3)" + 8)
 Y=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f4)" - 10)
 
 COMMANDS='[Run UnsafeXPropertyLog "_XMONAD_LOG_'$1'"]'
-TEMPLATE="   %panel%%playing%}{ %_XMONAD_LOG_$1% | <box type=Bottom width=2 mt=2 color=#DCA561><fc=#DCA561>%date%</fc></box>   "
+TEMPLATE="   %panel%%playing%}%cpu%{ %_XMONAD_LOG_$1%  | <box type=Bottom width=2 mt=2 color=#DCA561><fc=#DCA561>%date%</fc></box>   "
 POSITION="Static { xpos = $X , ypos = $Y, width = 1269, height = 40 }"
 
 xmobar -p "$POSITION" --screen "$1" -C "$COMMANDS" -t "$TEMPLATE" ~/.config/xmobar/xmobar.conf

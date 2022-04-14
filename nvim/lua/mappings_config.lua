@@ -701,3 +701,49 @@ vim.keymap.set("i", "<c-n>", function()
         ls.change_choice(1)
     end
 end)
+
+GlobalCommands = {
+    {name = "Lazygit", command = "silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit"}
+}
+
+function CommandCentre(argCommands)
+    local commands = {}
+    if argCommands == nil then
+        for _, v in pairs(GlobalCommands) do
+            table.insert(commands, v)
+        end
+        if vim.b[0].localCommands ~= nil then
+            for _, v in pairs(vim.b[0].localCommands) do
+                table.insert(commands, v)
+            end
+        end
+    else
+        commands = argCommands
+    end
+
+    vim.ui.select(
+        commands,
+        {
+            prompt = "Select Commands",
+            format_item = function(item)
+                return item.name
+            end,
+        }, function(choice)
+
+            if not choice then
+                return
+            end
+
+            if choice.func ~= nil then
+                choice.func()
+            elseif choice.command ~= nil then
+                vim.cmd(choice.command)
+            elseif choice.binding ~= nil then
+                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(choice.binding, true, true, true), "n", false)
+            else
+                return
+            end
+
+        end
+    )
+end

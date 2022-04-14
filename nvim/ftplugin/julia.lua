@@ -160,19 +160,24 @@ function _G.jul_perf_flat(perf_data)
     return result
 end
 
+vim.b[0].localCommands = {
+    {name = "Tasks", func =  function() select_runnables() end}
+}
+
+
 -- Test selector function
-LastCommand = {
+vim.b[0].LastCommand = {
     name = "Precompile Package",
     type = "misc",
     label = "[Misc] ",
     command = function() vim.cmd([[silent !kittyOneShot "~/.config/nvim/filetype/julia/precompile"]]) end
 }
 
-local function runnable(selection)
+function runnable(selection)
     if not selection then
         return
     end
-    LastCommand = selection
+    vim.b[0].LastCommand = selection
 
     if selection.type == "test" then
         vim.cmd([[silent !kittyPersistent JuliaPersistant juliaTest ']] .. vim.b[0].project .. [[Tests.runtests("]] .. selection.name .. [[",spin=false)']])
@@ -181,13 +186,13 @@ local function runnable(selection)
     elseif selection.type == "debug" then
         vim.cmd([[silent !kittyPersistent JuliaPersistant juliaTest '@run run(]] .. vim.b[0].project .. [[Tests.suite["]] .. selection.name .. [["], verbose=true)']])
     elseif selection.type == "profile" then
-        vim.cmd([[silent !kittyPersistent JuliaPersistant juliaTest 'a = @bprofile ]] .. selection.command .. [[; Profile.print(IOContext(open("/tmp/julprof.data", "w"), :displaysize=>(100000,1000)), format=:flat); ProfileView.view(); a']])
+        vim.cmd([[silent !kittyPersistent JuliaPersistant juliaTest 'a = @bprofile ]] .. selection.command .. [[; Profile.print(IOContext(open("/tmp/julprof.data", "w"), :displaysize=>(100000,1000)), format=:flat); ProfileView.view(); loadProfData(); a']])
     else
         selection.command()
     end
 end
 
-local function select_runnables()
+function select_runnables()
     -- Misc Runnables
     local runnables_list = {
         {
@@ -206,7 +211,7 @@ local function select_runnables()
             name = "Build Documentation",
             type = "misc",
             label = "[Misc] ",
-            command = function() vim.cmd([[<cmd>silent !kittyOneShot "~/.config/nvim/filetype/julia/docBuild"<cr>]]) end
+            command = function() vim.cmd([[silent !kittyOneShot "~/.config/nvim/filetype/julia/docBuild"]]) end
         },
         {
             name = "Run Documentation Tests",
@@ -275,4 +280,4 @@ local function select_runnables()
 end
 
 nnoremap("<leader>p", function() select_runnables() end, buffer)
-nnoremap("<leader>P", function() runnable(LastCommand) end, buffer)
+nnoremap("<leader>P", function() runnable(vim.b[0].LastCommand) end, buffer)
