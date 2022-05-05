@@ -109,7 +109,6 @@ require("cmp").setup({
 		{ name = "path" },
 		{ name = "nvim_lua" },
 		{ name = "buffer", keyword_lenght = 3 },
-		{ name = "dictionary", keyword_lenght = 2 },
 	},
 	formatting = {
 		format = function(entry, vim_item)
@@ -143,6 +142,16 @@ cmp.setup.cmdline(":", {
 		{ name = "buffer" },
 		{ name = "cmdline" },
 	}),
+})
+require('cmp').setup.filetype("tex", {
+    sources = {
+        { name = "luasnip" },
+        { name = 'omni' },
+        { name = "nvim_lsp" },
+        { name = "path" },
+        { name = "buffer", keyword_lenght = 3 },
+        { name = "dictionary", keyword_lenght = 2},
+    },
 })
 
 require("cmp_git").setup({})

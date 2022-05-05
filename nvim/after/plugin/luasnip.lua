@@ -196,6 +196,14 @@ julia> {}
 
 -- NOTE : TEX
 
+local tex = {}
+tex.in_mathzone = function()
+        return vim.fn['vimtex#syntax#in_mathzone']() == 1
+end
+tex.in_text = function()
+        return not tex.in_mathzone()
+end
+
 local function copy(args)
 	return args[1]
 end
@@ -267,6 +275,7 @@ rec_tab = function()
     })
 end
 ls.add_snippets("tex", {
+        -- NOTE : LABEL REFERENCES
         s({trig="fig", name="figure reference", dscr="figure reference"}, {
             t({ "Figure~\\ref{fig:" }), i(1), t({ "}" }),
         }),
@@ -291,6 +300,8 @@ ls.add_snippets("tex", {
         s({trig="lst", name="listing reference", dscr="listing reference"}, {
             t({ "Listing~\\ref{lst:" }), i(1), t({ "}" }),
         }),
+
+        -- NOTE : ENVIROMENTS
         s({trig="ls", name="list", dscr="An infinite list of items"}, {
             t({ "\\begin{itemize}", "\t\\item " }), i(1), d(2, rec_ls, {}),
             t({ "", "\\end{itemize}" }),
@@ -381,19 +392,39 @@ ls.add_snippets("tex", {
         s({trig="dm", name="Multiline Maths", dscr="Start a multiline math enviroment"}, {
             t({"\\[", "\t"}), i(0), t({"", "\\]"})
         }),
-        s({trig="//", name="fraction"}, {
+
+        -- NOTE : MATHS
+        s({trig="%s/", name="fraction", regTrig=true}, {
             t("\\frac{"), i(1), t("}{"), i(2), t("}")
-        }),
-        s({trig=[[%((.*)%)/]], regTrig=true, name="frac keep"}, {
-            t("\\frac{"), f(function(args)
-                return args[1].captures[1]
+        },
+        {show_condition = tex.in_mathzone, condition = tex.in_mathzone}
+        ),
+        s({trig=[[%((.*)%)/]], name="frac keep", regTrig=true}, {
+            t("\\frac{"), f(function(_, par)
+                return par.snippet.captures[1]
             end, {}), t("}{"), i(1), t("}"),
-        }),
-        s({trig=[[([^%s]*[^%)%/])/]], regTrig=true, name="frac keep brackets"}, {
-            t("\\frac{"), f(function(args)
-                return args[1].captures[1]
+        },
+        {show_condition = tex.in_mathzone, condition = tex.in_mathzone}
+        ),
+        s({trig=[[([^%s]+)/]], name="frac keep brackets", regTrig=true}, {
+            t("\\frac{"), f(function(_, par)
+                return par.snippet.captures[1]
             end, {}), t("}{"), i(1), t("}"),
-        }),
+        },
+        {show_condition = tex.in_mathzone, condition = tex.in_mathzone}
+        ),
+        s({trig=[[%((.*)%)/%((.*)%)]], name="full frac", regTrig=true}, {
+            t("\\frac{"), f(function(_, par)
+                return par.snippet.captures[1]
+            end, {}), t("}{"),
+            f(function(_, par)
+                return par.snippet.captures[2]
+            end, {}), t("}"), i(0)
+        },
+        {show_condition = tex.in_mathzone, condition = tex.in_mathzone}
+        ),
+
+        -- NOTE : FLOWCHARTS
         s({trig="node", name="tikz Node", dscr="Flowchart Node"}, {
             t("\\node ("), i(1, "nodeID"), t(") ["), i(2, "style"), t(", "), i(3, "position"), t("] {"), i(4, "text"), t("};")
         }),

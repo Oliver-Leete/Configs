@@ -55,20 +55,12 @@ require("zen-mode").setup({
             showcmd = true,
         }
     },
-    on_open = function()
-        -- vim.cmd("IndentBlanklineDisable")
-        -- vim.cmd("WindLineFloatToggle")
-    end,
-    on_close = function()
-        vim.cmd("IndentBlanklineEnable")
-        vim.cmd("WindLineFloatToggle")
-    end,
 })
 
 require('dressing').setup({
   select = {
     backend = { "telescope" },
-    telescope = require('telescope.themes').get_dropdown({
+    telescope = require('telescope.themes').get_ivy({
         height = 30,
     })
   },

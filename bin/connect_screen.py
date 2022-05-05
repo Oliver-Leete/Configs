@@ -9,6 +9,8 @@ lid_open_command = "/home/oleete/.config/bin/displayctl auto"
 lid_closed_command = "/home/oleete/.config/bin/displayctl auto"
 #---
 
+time.sleep(1)
+
 # read the input from some commands
 def get(cmd): return subprocess.check_output(cmd).decode("utf-8")
 

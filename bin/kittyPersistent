@@ -8,6 +8,7 @@ TITLES=$(kitty @ ls | jq ".[].tabs[].windows[].title")
 if ! [[ "$TITLES" =~ \"$WINTITLE\" ]]; then
 	kitty @ launch --type=window --window-title="$WINTITLE" --keep-focus fish -c "$1"
 fi
+kitty @ goto-layout fat:bias=70
 shift
 
 if [ "$#" -eq 0 ]; then

@@ -9,10 +9,6 @@
 
 (if_statement) @block.outer
 
-(function_call
-  (arguments) @call.inner)
-(function_call) @call.outer
-
 (arguments
   "," @_start .
   (_) @parameter.inner
@@ -43,8 +39,6 @@
     . ","? @_end
    (#make-range! "parameter.outer" @parameter.inner @_end))
   . ) 
-
-(comment) @comment.outer
 
 ((function
   . (function_name) . (parameters) . (_) @_start

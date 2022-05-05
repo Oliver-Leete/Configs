@@ -178,15 +178,9 @@ vim.g.projectionist_heuristics = {
     },
 }
 
-require('cmp').setup.buffer({
-    sources = {
-        { name = "luasnip" },
-        { name = "cmp_git" },
-        { name = 'omni' },
-        { name = "nvim_lsp" },
-        { name = "path" },
-        { name = "nvim_lua" },
-        { name = "buffer", keyword_lenght = 3 },
-        { name = "dictionary", keyword_lenght = 2},
-    },
-}
+if vim.g.viewerOpen ~= 1 then
+    vim.g.viewerOpen = 1
+    vim.cmd("VimtexView")
+    vim.cmd("sleep 200m")
+    vim.cmd("silent !xdotool key super+n")
+end

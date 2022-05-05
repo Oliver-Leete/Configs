@@ -25,12 +25,12 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'knubie/vim-kitty-navigator'
     Plug 'kazhala/close-buffers.nvim'
     Plug 'tpope/vim-projectionist'
+    Plug 'ThePrimeagen/harpoon'
 
     Plug 'phaazon/hop.nvim'
     Plug 'mizlan/iswap.nvim'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
-    Plug 'ThePrimeagen/harpoon'
     Plug 'numToStr/Comment.nvim'
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
@@ -48,13 +48,9 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'anufrievroman/vim-angry-reviewer'
     Plug 'JuliaEditorSupport/julia-vim'
     Plug 'fladson/vim-kitty'
-    Plug 'simrat39/rust-tools.nvim'
-    Plug 'saecki/crates.nvim'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-    Plug 'renerocksai/telekasten.nvim'
 
     Plug 'rebelot/kanagawa.nvim'
-    Plug 'folke/tokyonight.nvim'
     Plug 'folke/zen-mode.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'lewis6991/gitsigns.nvim'
@@ -69,9 +65,11 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/nvim-lsp-installer'
     Plug 'jose-elias-alvarez/null-ls.nvim'
+    Plug 'brymer-meneses/grammar-guard.nvim'
+    Plug 'simrat39/rust-tools.nvim'
+    
     Plug 'ray-x/lsp_signature.nvim'
     Plug 'j-hui/fidget.nvim'
-    Plug 'brymer-meneses/grammar-guard.nvim'
 
     Plug 'hrsh7th/nvim-cmp'
     Plug 'hrsh7th/cmp-buffer'
@@ -83,14 +81,11 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'hrsh7th/cmp-cmdline'
     Plug 'uga-rosa/cmp-dictionary'
     Plug 'mtoohey31/cmp-fish'
-    Plug 'zbirenbaum/copilot.lua'
 
     Plug 'L3MON4D3/LuaSnip'
     Plug 'danymat/neogen'
     Plug 'saadparwaiz1/cmp_luasnip'
-    Plug 'rafamadriz/friendly-snippets'
     Plug 'windwp/nvim-autopairs'
-    " Plug 'abecodes/tabout.nvim'
 
     Plug 'nvim-telescope/telescope-file-browser.nvim'
     Plug 'nvim-telescope/telescope.nvim'
@@ -98,7 +93,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make'}
     Plug 'nvim-telescope/telescope-media-files.nvim'
     Plug 'nvim-telescope/telescope-bibtex.nvim'
-    Plug 'nvim-telescope/telescope-github.nvim'
     Plug 'crispgm/telescope-heading.nvim'
     Plug 'rudism/telescope-dict.nvim'
     Plug 'gbrlsnchs/telescope-lsp-handlers.nvim'

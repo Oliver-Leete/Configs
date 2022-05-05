@@ -34,6 +34,7 @@ zsh/
 !/broot/conf.hjson
 !/vifm/vifmrc
 !/nvim/after/plugin/*
+!topgrade.toml
 
 /rofi-themes
 /bin/startupScript

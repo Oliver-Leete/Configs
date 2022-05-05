@@ -14,34 +14,6 @@
 -- Git Signs Settup
 
 require("gitsigns").setup({
-	signs = {
-		add = { hl = "GitSignsAdd", numhl = "GitSignsAdd", linehl = "GitSignsAdd", text = "▋" },
-		change = { hl = "GitSignsChange", numhl = "GitSignsChange", linehl = "GitSignsChange", text = "▋" },
-		delete = { hl = "GitSignsDelete", numhl = "GitSignsDelete", linehl = "GitSignsDelete", text = "▂" },
-		topdelete = { hl = "GitSignsDelete", numhl = "GitSignsDelete", linehl = "GitSignsDelete", text = "▔" },
-		changedelete = { hl = "GitSignsDelete", numhl = "GitSignsDelete", linehl = "GitSignsDelete", text = "▋" },
-		empty = {}, -- Unused
-
-		base = nil, -- Use index
-		signcolumn = true,
-		numhl = true,
-		linehl = false,
-	},
-	--     signs_sec = {
-	--         add          = {hl = 'GitSignsAdd'   , numhl='GitSignsAdd'   , linehl='GitSignsAdd'   , text = '▎' },
-	--         change       = {hl = 'GitSignsChange', numhl='GitSignsChange', linehl='GitSignsChange', text = '▎' },
-	--         delete       = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete', text = '_' },
-	--         topdelete    = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete', text = '‾' },
-	--         changedelete = {hl = 'GitSignsDelete', numhl='GitSignsDelete', linehl='GitSignsDelete', text = '▎' },
-	--         empty        = {},
-
-	--         base       = nil,
-	--         signcolumn = true,
-	--         numhl      = true,
-	--         linehl     = false,
-	--     },
-	keymaps = {},
-	numhl = true,
 	sign_priority = 6,
 })
 -- DiffView.nvim

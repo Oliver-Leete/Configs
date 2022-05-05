@@ -140,12 +140,6 @@ nmap("<c-_>", ",cc")
 xmap("<c-_>", ",c")
 
 nnoremap("£", [[:exe "let @/='" . expand("<cWORD>") . ", "<cr>]])
-nmap("<c-p>", "a<c-p>")
-
--- inoremap( "<c-y>", [[matchstr(getline(line('.')-1),'\%'.virtcol('.').'v\%(\k\+\\|.\)']], {nowait, expr})
--- inoremap( "<c-l>", [[matchstr(getline(line('.')+1),'\%'.virtcol('.').'v\%(\k\+\\|.\)']], {nowait, expr})
--- snoremap( "<c-y>", [[matchstr(getline(line('.')-1),'\%'.virtcol('.').'v\%(\k\+\\|.\)']], {nowait, expr})
--- snoremap( "<c-l>", [[matchstr(getline(line('.')+1),'\%'.virtcol('.').'v\%(\k\+\\|.\)']], {nowait, expr})
 
 vim.cmd([[inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
 vim.cmd([[inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
@@ -299,17 +293,6 @@ mapxName.name("g", "Goto")
     nnoremap("go", function() vim.lsp.buf.outgoing_calls() end, "Outgoing Calls")
     nnoremap("gi", function() vim.lsp.buf.incoming_calls() end, "Incoming Calls")
 
-mapxName.name("G", "Goto (Select)")
-    nnoremap("Gg", "vgg", "Buffer Top")
-    nnoremap("Gj", "vG", "Buffer Bottom")
-    nnoremap("Gk", "vgg", "Buffer Top")
-    nnoremap("Gh", "v^", "Line Begining")
-    nnoremap("Gl", "v$", "Line End")
-
-    nnoremap("Gt", "vH", "Window Top")
-    nnoremap("Gc", "vM", "Window Bottom")
-    nnoremap("Gb", "vL", "Window Center")
-
 mapxName.name("v", "View")
     nnoremap("vt", "zt", "Cursor On Top")
     nnoremap("vv", "zz", "Centre Cursor (Vertically)")
@@ -344,23 +327,6 @@ mapxName.name("v", "View")
     nnoremap("vs", "<cmd>normal! HVL<cr>", "Select Viewport")
     xnoremap("vs", "<cmd>normal! HVL<cr>", "Select Viewport")
 
--- mapxName.name("V", "View (Lock)")
---     nmap("Vt", "vt<cmd>WhichKey V<cr>", "Cursor On Top")
---     nmap("Vv", "vv<cmd>WhichKey V<cr>", "Centre Cursor (Vertically)")
---     nmap("Vb", "vb<cmd>WhichKey V<cr>", "Cursor On Bottom")
-
---     nmap("Vf", "vf<cmd>WhichKey V<cr>", "Cursor At First")
---     nmap("Vm", "vm<cmd>WhichKey V<cr>", "Centre Cursor (Horizontally)")
---     nmap("Ve", "ve<cmd>WhichKey V<cr>", "Cursor At End")
-
---     nmap("Vh", "vh<cmd>WhichKey V<cr>", "Scroll Left")
---     nmap("Vl", "vl<cmd>WhichKey V<cr>", "Scroll Right")
---     nmap("Vj", "vj<cmd>WhichKey V<cr>", "Scroll Down")
---     nmap("Vk", "vk<cmd>WhichKey V<cr>", "Scroll Up")
-
---     nmap("Vu", "vu<cmd>WhichKey V<cr>", "Half Page Up")
---     nmap("Vd", "vd<cmd>WhichKey V<cr>", "Half Page Down")
-
 mapxName.name("m", "Select Mode")
     nmap("mk", "<m-v>{", "Left Outside")
     nmap("mh", "<m-v>(", "Left Inside")
@@ -390,8 +356,20 @@ nmap("R", "<plug>(SubversiveSubstitute)", "Substitute")
 xmap("R", "<plug>(SubversiveSubstitute)", "Substitute")
 
 mapxName.name(",c", "Comment")
-nnoremap(",r", "R", "Overwrite")
-xnoremap(",r", "R", "Overwrite")
+-- nnoremap(",r", "R", "Overwrite")
+-- xnoremap(",r", "R", "Overwrite")
+nnoremap(",c", function() vim.lsp.buf.rename()end, "Rename")
+
+    -- xnoremap("<leader>ce", function() require('refactoring').refactor('Extract Function')end, "Extract Function")
+    -- xnoremap("<leader>cf", function() require('refactoring').refactor('Extract Function to File')end, "Extract Function to File")
+    -- xnoremap("<leader>cv", function() require('refactoring').refactor('Extract Variable')end, "Extract Variable")
+    -- xnoremap("<leader>ci", function() require('refactoring').refactor('Inline Variable')end, "Inline Variable")
+    -- nmap("<leader>ce", "zii<cmd>lua require('refactoring').refactor('Extract Function')<cr>", "Extract Function")
+    -- nmap("<leader>cf", "zii<cmd>lua require('refactoring').refactor('Extract Function to File')<cr>", "Extract Function to File")
+    -- nmap("<leader>cv", "zi,<cmd>lua require('refactoring').refactor('Extract Variable')<cr>", "Extract Variable")
+    -- nmap("<leader>ci", "zi,<cmd>lua require('refactoring').refactor('Inline Variable')<cr>", "Inline Variable")
+    -- nnoremap("<leader>cd", "<cmd>Neogen<cr>", "Create Docstrings")
+
 nmap(",t", "<Plug>(EasyAlign)", "Easy Allign")
 xmap(",t", "<Plug>(EasyAlign)", "Align")
 
@@ -481,15 +459,8 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
 
     nnoremap("<leader>f", "<cmd>call v:lua.project_files()<cr>", "Find Files")
     nnoremap("<leader>F", "<cmd>Telescope resume<cr>", "Resume Picker")
-    mapxName.name("<leader>w", "Telescope")
-    nnoremap("<leader>wb", "<cmd>Telescope buffers<cr>", "Buffers")
-    nnoremap("<leader>wn", "<cmd>TodoTelescope theme=get_ivy<cr>", "Todo Items")
-    nnoremap("<leader>wo", "<cmd>Telescope oldfiles<cr>", "Old Files")
-    nnoremap("<leader>wr", "<cmd>Telescope live_grep theme=get_ivy<cr>", "Grep")
-    nnoremap("<leader>wx", "<cmd>Telescope file_browser respect_gitignore=false<cr>", "File Browser")
-    nnoremap("<leader>wX", function() require'telescope'.extensions.file_browser.file_browser{cwd=require'telescope.utils'.buffer_dir(), respect_gitignore=false}end, "File Browser (Relative)")
 
-    mapxName.name("<leader>y", "Benchmark")
+    mapxName.name("<leader>w", "Telescope")
 
     mapxName.name("<leader>l", "ProfiLe")
     nnoremap("<leader>le", "<cmd>PerfPickEvent<cr>")
@@ -507,40 +478,16 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
         nnoremap("<leader>loo", "<cmd>PerfLoadFlameGraph<cr>")
         nnoremap("<leader>loc", "<cmd>PerfCycleFormat<cr>")
 
-    mapxName.name("<leader>c", "Refactor (Change)")
-    xnoremap("<leader>ce", function() require('refactoring').refactor('Extract Function')end, "Extract Function")
-    xnoremap("<leader>cf", function() require('refactoring').refactor('Extract Function to File')end, "Extract Function")
-    xnoremap("<leader>cv", function() require('refactoring').refactor('Extract Variable')end, "Extract Variable")
-    xnoremap("<leader>ci", function() require('refactoring').refactor('Inline Variable')end, "Inline Variable")
-    nmap("<leader>ce", "zib<cmd>lua require('refactoring').refactor('Extract Function')<cr>", "Extract Function")
-    nmap("<leader>cf", "zib<cmd>lua require('refactoring').refactor('Extract Function to File')<cr>", "Extract Function")
-    nmap("<leader>cv", "zi,<cmd>lua require('refactoring').refactor('Extract Variable')<cr>", "Extract Variable")
-    nmap("<leader>ci", "zi,<cmd>lua require('refactoring').refactor('Inline Variable')<cr>", "Inline Variable")
-    nnoremap("<leader>cd", "<cmd>Neogen<cr>", "Create Docstrings")
-    nmap("<leader>ca", ",cA", "Append Documentation")
-    nnoremap("<leader>cc", function() vim.lsp.buf.rename()end, "Rename (LSP)")
-
-    nnoremap("<leader>d", "<cmd>bdelete<cr>", "Delete the current buffer")
-    nnoremap("<leader>D", "<cmd>tabclose<cr>", "Close the Current Tab")
-
     mapxName.name("<leader>g", "Git")
-    nnoremap("<leader>gg", "<cmd>silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit<cr>", "LazyGit")
-    nnoremap("<leader>ga", function() require'gitsigns'.blame_line({full=true})end, "Blame Line")
-    nnoremap("<leader>gA", "<cmd>Gitsigns toggle_current_line_blame<CR>", "Blame Toggle")
-
     nnoremap("<leader>gb", "<cmd>Telescope git_branches<cr>", "Branches")
     nnoremap("<leader>gC", "<cmd>Telescope git_bcommits<cr>", "Commits (buffer)")
     nnoremap("<leader>gc", "<cmd>Telescope git_commits<cr>", "Commits")
     nnoremap("<leader>gq", "<cmd>Gitsigns setqflist<cr><cmd>let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>", "Send diffs to qf")
 
-    nnoremap("<leader>gp", "<cmd>Gitsigns preview_hunk<CR>", "Hunk Preview")
     nnoremap("<leader>gr", "<cmd>Gitsigns reset_hunk<CR>", "Hunk Reset")
     nnoremap("<leader>gR", "<cmd>Gitsigns reset_buffer<CR>", "Reset Buffer")
     nnoremap("<leader>gS", "<cmd>Gitsigns stage_buffer<CR>", "Stage File")
     nnoremap("<leader>gs", "<cmd>Gitsigns stage_hunk<CR>", "Hunk Stage")
-    nnoremap("<leader>gv", "<cmd>Gitsigns select_hunk<CR>", "Select Current Hunk")
-    xnoremap("<leader>gs", "<cmd>lua require'gitsigns'.stage_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Stage Hunks in Range")
-    xnoremap("<leader>gr", "<cmd>lua require'gitsigns'.reset_hunk({vim.fn.line('.'), vim.fn.line('.')})", "Reset Hunks in Range")
 
         mapxName.name("<leader>gd", "Git Diff")
         nnoremap("<leader>gdl", "<cmd>call v:lua.diff_repeat()<cr>", "Repeat Last Diff")
@@ -555,16 +502,6 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
         nnoremap("<leader>gdh", "<cmd>let g:DiffviewLast='DiffviewFileHistory'<cr><cmd>DiffviewFileHistory<CR>", "View File History")
         nnoremap("<leader>gdH", [["<cmd>let g:DiffviewLast='DiffviewFileHistory" . getcwd() . "'<cr><cmd>DiffviewFileHistory" . getcwd() . "<CR>"]], "View Directory History", expr)
 
-        mapxName.name("<leader>gh", "GitHub")
-        nnoremap("<leader>ghe", [["<cmd>RepoEdit git@github.com:" . input("What repo would you like to browse > ") . "<cr>"]], "Browse Repo", expr)
-        nnoremap("<leader>ghi", "<cmd>Telescope gh issues<cr>", "Search Issues")
-        nnoremap("<leader>ghp", "<cmd>Telescope gh pull_request<cr>", "Search Pull Requests")
-        nnoremap("<leader>ghg", "<cmd>Telescope gh gist<cr>", "Search Gists")
-        nnoremap("<leader>ghr", "<cmd>Telescope gh run<cr>", "Search GH Runs")
-        mapxName.name("<leader>g,", "Git Settings")
-        nnoremap("<leader>g,b", "<cmd>call v:lua.gitsign_change_base()<cr>", "Change Gitsigns Base")
-        nnoremap("<leader>g,B", "<cmd>call v:lua.gitsign_bchange_base()<cr>", "Change Gitsigns Base")
-
     mapxName.name("<leader>k", "Preview")
     nnoremap("<leader>ka", function() require'gitsigns'.blame_line({full=true})end, "Blame Line")
     nnoremap("<leader>kk", function() vim.lsp.buf.hover({ focusable = false})end, "Documentation")
@@ -572,38 +509,14 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
     nnoremap("<leader>kd", function() PeekDefinition()end, "Definition")
     nnoremap("<leader>kE", "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown")
     nnoremap("<leader>ke", function() vim.diagnostic.open_float(0, {border='single', scope='line', source='always'})end, "Diagnostics")
-    nnoremap("<leader>kW", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders()))end, "Workspace Directory")
+    -- nnoremap("<leader>kW", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders()))end, "Workspace Directory")
     nnoremap("<leader>kg", function() require'gitsigns'.preview_hunk()end, "Hunk Preview")
 
-    nnoremap("<leader>x", "<cmd>silent !kitty @ launch --cwd=current --type=window --window-title 'Broot' fish -c br<cr>", "Broot")
     mapxName.name("<leader>v", "View Panels")
     nmap("v:lua.commandRepeat('<leader>v', 'panelRepeat')", "Repeat Panel", expr)
     nnoremap("<leader>ve", "<cmd>let g:panelRepeat='e'<cr><cmd>TroubleToggle workspace_diagnostics<CR>", "Error List (Workspace)")
     nnoremap("<leader>vE", "<cmd>let g:panelRepeat='E'<cr><cmd>TroubleToggle document_diagnostics<CR>", "Error List")
     nnoremap("<leader>vq", "<cmd>let g:panelRepeat='q'<cr><cmd>TroubleToggle quickfix<CR>", "QuickFix List")
-    nnoremap("<leader>vn", "<cmd>let g:panelRepeat='n'<cr><cmd>TodoTrouble<cr>", "Todo List")
-    nnoremap("<leader>vg", "<cmd>let g:panelRepeat='g'<cr><cmd>DiffviewOpen<CR>", "Git")
-    nnoremap("<leader>vu", "<cmd>let g:panelRepeat='u'<cr><cmd>UndotreeToggle<CR>", "Undo Tree")
-
-    mapxName.name("<leader>q", "Quickfix List")
-    nnoremap("<leader>ql", "<cmd>cnewer<cr>", "Newer List")
-    nnoremap("<leader>qh", "<cmd>colder<cr>", "Older List")
-    nmap("<leader>qq", "<cmd>let g:panelRepeat='q'<cr><cmd>TroubleToggle quickfix<CR>", "QuickFix List")
-    nnoremap("<leader>qn", "<cmd>TodoQuickFix<cr><let g:panelRepeat='q'<cr><cmd>Trouble quickfix<cr>", "Populate with todo items")
-    nnoremap("<leader>qt", [[<cmd>!kittyQuickfix normterm<cr>]], "Fetch Errors From Term")
-    nnoremap("<leader>qi", [[<cmd>!kittyQuickfix replterm<cr>]], "Fetch Errors From REPL")
-    nnoremap("<leader>qm", [[<cmd>!kittyQuickfix maketerm<cr>]], "Fetch Errors From Make")
-    nnoremap("<leader>qd", [[<cmd>!kittyQuickfix debugterm<cr>]], "Fetch Errors From Debug")
-
-    -- mapxName.name("<leader>e", "Errors")
-    -- nnoremap("<leader>ep", "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown")
-    -- nnoremap("<leader>er", "<cmd>TroubleRefresh<cr>", "Refresh Errors")
-    -- nnoremap("<leader>ee", "<cmd>let g:panelRepeat='e'<cr><cmd>TroubleToggle lsp_workspace_diagnostics<CR>", "Error List")
-    -- nnoremap("<leader>eE", "<cmd>let g:panelRepeat='E'<cr><cmd>TroubleToggle lsp_document_diagnostics<CR>", "Error List (buffer)")
-    -- nnoremap("<leader>en", "<cmd>let g:panelRepeat='n'<cr><cmd>TodoTrouble<cr>", "Todo List")
-
-    mapxName.name("<leader>u", "Unit Tests")
-    nnoremap("<leader>uq", "<cmd>silent !kitty @ close-window --match title:testterm<cr>", "Close Test Terms")
 
     mapxName.name("<leader>j", "Debugging")
     nnoremap("<leader>J", "<cmd>tabedit %<cr><cmd>lua require'dapui'.open()<cr>", "Open Debug Panels")
@@ -623,59 +536,20 @@ xnoremap("<leader>.", "<cmd>Telescope lsp_range_code_actions theme=get_cursor<CR
         xnoremap("<leader>jd", function() require('refactoring').debug.print_var({})end, "Print Var")
         nnoremap("<leader>jq", function() require('refactoring').debug.cleanup({})end, "Cleanup")
 
-    mapxName.name("<leader>i", "REPL")
-    nnoremap("<leader>iq", "<cmd>silent !kitty @ close-window --match title:replterm<cr>", "Close REPL Terms")
-
-
-    mapxName.name("<leader>,", "Settings")
-    nnoremap("<leader>,,", "<cmd>Telescope vim_options<cr>", "Vim Options")
-    -- nnoremap("<leader>,s", "<cmd>set spell!<cr>", "Toggle Spelling")
-    nnoremap("<leader>,k", "<cmd>Telescope keymaps<cr>", "Keymaps")
-    nnoremap("<leader>,C", "<cmd>Telescope colorscheme<cr>", "Color Schemes")
-    nnoremap("<leader>,c", "<cmd>Telescope highlights<cr>", "Highlight Groups")
-    nnoremap("<leader>,a", "<cmd>Telescope autocommands<cr>", "AutoCommands")
-    nnoremap("<leader>,f", "<cmd>Telescope filetypes<cr>", "FileTypes")
-    nnoremap("<leader>,h", "<cmd>Telescope help_tags<cr>", "Help Tags")
-    nnoremap("<leader>,m", "<cmd>Telescope man_pages<cr>", "Man Pages")
-    nnoremap("<leader>,d", "<cmd>call v:lua.toggle_diagnostics()<cr>", "Toggle Diagnostics Shown")
-    nnoremap("<leader>,w", "<cmd>set wrap!<cr>", "Toggle Text Wraping")
-    nnoremap("<leader>,/", "<cmd>let @/=''<cr>", "Clear Search")
-
-nnoremap("<leader>ok", [[":silent !kitty @ launch --type=tab --tab-title 'Kak %:t' kak %:p +" . line(".") . ":" . col(".") . "<cr>"]], "Open file in Kak", expr)
-nnoremap("<leader>ov", [[":silent !kitty @ launch --type=tab --tab-title 'Vis %:t' vis %:p<cr>"]], "Open file in Vis", expr)
-nnoremap("<leader>oh", [[":silent !kitty @ launch --type=tab --tab-title 'Helix %:t' hx %:p<cr>"]], "Open file in Helix", expr)
-nnoremap("<leader>z", "<cmd>ZenMode<cr>", "Zen Mode")
-
-mapxName.name("<localleader>", "Local Leader")
-
 -- Git Diff Bindings
 if vim.api.nvim_win_get_option(0, "diff") then
-    nnoremap("<leader>[", "<cmd>diffget LOCAL<cr>", "Take From Local Change")
-    nnoremap("<leader>]", "<cmd>diffget REMOTE<cr>", "Take From Remote Change")
-    nnoremap("<leader><leader>", "<cmd>diffget BASE<cr>", "Take From Base" )
+    vim.keymap.set("n", "<leader>[", "<cmd>diffget LOCAL<cr>", "Take From Local Change")
+    vim.keymap.set("n", "<leader>]", "<cmd>diffget REMOTE<cr>", "Take From Remote Change")
+    vim.keymap.set("n", "<leader><leader>", "<cmd>diffget BASE<cr>", "Take From Base" )
 end
 
-imap("<c-a>", "<C-O>^")
-imap("<c-e>", "<END>")
-cmap("<c-a>", "<HOME>")
-cmap("<c-e>", "<END>")
+-- Insert Bindings
 
-imap("<c-]>", "<plug>luasnip-next-choice")
-smap("<c-]>", "<plug>luasnip-next-choice")
+vim.keymap.set({"i", "s", "c"}, "<c-a>", "<HOME>")
+vim.keymap.set({"i", "s", "c"}, "<c-e>", "<END>")
 
-imap("<c-space>", "v:lua.cmp_toggle()", expr)
-smap("<c-space>", "v:lua.cmp_toggle()", expr)
-cmap("<c-space>", "v:lua.cmp_toggle()", expr)
-
--- imap("<Up>", "v:lua.s_tab_complete()", expr)
--- imap("<Down>", "v:lua.tab_complete()", expr)
--- smap("<Up>", "v:lua.s_tab_complete()", expr)
--- smap("<Down>", "v:lua.tab_complete()", expr)
-
--- inoremap("<Down>", [[<cmd>lua require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]])
--- inoremap("<Up>", [[<cmd>lua require("cmp").select_prev_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]])
--- snoremap("<Down>", [[<cmd>lua require("cmp").select_next_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]])
--- snoremap("<Up>", [[<cmd>lua require("cmp").select_prev_item({ behavior = require("cmp").SelectBehavior.Insert })<cr>]])
+vim.keymap.set({"i", "s"}, "<c-]>", "<plug>luasnip-next-choice")
+vim.keymap.set({"i", "s", "c"}, "<c-space>", "v:lua.cmp_toggle()", {expr = true})
 
 noremap("<c-leftmouse>", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
 noremap("<c-rightmouse>", "gf")
@@ -684,28 +558,48 @@ ls = require("luasnip")
 vim.keymap.set("n", "<leader>,s", "<cmd>source ~/.config/nvim/after/plugin/luasnip.lua<cr>")
 vim.keymap.set("n", "<leader>,S", "<cmd>vsplit ~/.config/nvim/after/plugin/luasnip.lua<cr>")
 
-vim.keymap.set({ "i", "s" }, "<c-e>", function()
+vim.keymap.set({ "i", "s" }, "<c-n>", function()
     if ls.expand_or_jumpable() then
       ls.expand_or_jump()
     end
 end, { silent = true })
 
-vim.keymap.set({ "i", "s" }, "<c-h>", function()
+vim.keymap.set({ "i", "s" }, "<c-p>", function()
     if ls.jumpable(-1) then
       ls.jump(-1)
     end
 end, { silent = true })
 
-vim.keymap.set("i", "<c-n>", function()
+vim.keymap.set("i", "<c-h>", function()
     if ls.choice_active() then
         ls.change_choice(1)
     end
 end)
 
+-- Command Panel Bindings
+
 GlobalCommands = {
-    {name = "Lazygit", command = "silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit"}
+    {name = "Lazygit", command = "silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit"},
+
+    {name = "Quickfix", command = "Telescope quickfix theme=get_ivy"},
+    {name = "Todo List", command = "TodoTelescope theme=get_ivy"},
+    {name = "Undo Tree", command = "UndotreeToggle"},
+
+    {name = "Grep", command = "Telescope live_grep theme=get_ivy theme=get_ivy"},
+    {name = "Buffer Finder", command = "Telescope buffers theme=get_ivy"},
+    {name = "Old Files Finder", command = "Telescope oldfiles theme=get_ivy"},
+    {name = "Symbols Finder", command = "Telescope lsp_document_symbols theme=get_ivy"},
+    {name = "Workspace Symbols Finder", command = "Telescope lsp_workspace_symbols theme=get_ivy"},
+    {name = "File Browser", command = "<cmd>Telescope file_browser respect_gitignore=false"},
+    {name = "File Browser (Relative)", func = function() require'telescope'.extensions.file_browser.file_browser{cwd=require'telescope.utils'.buffer_dir(), respect_gitignore=false}end},
+
+    {name = "Close Tab", command = "tabclose"},
+    {name = "Zen Mode", command = "ZenMode"},
+    {name = "Toggle Text Wraping", "set wrap!"},
+    {name = "Clear Search", command = "let @/=''"},
 }
 
+vim.keymap.set("n", "<leader>p", function() CommandCentre() end)
 function CommandCentre(argCommands)
     local commands = {}
     if argCommands == nil then
@@ -738,8 +632,12 @@ function CommandCentre(argCommands)
                 choice.func()
             elseif choice.command ~= nil then
                 vim.cmd(choice.command)
-            elseif choice.binding ~= nil then
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(choice.binding, true, true, true), "n", false)
+            elseif choice.keymap ~= nil then
+                vim.api.nvim_feedkeys(
+                    vim.api.nvim_replace_termcodes(choice.keymap, true, true, true),
+                    "n",
+                    false
+                )
             else
                 return
             end

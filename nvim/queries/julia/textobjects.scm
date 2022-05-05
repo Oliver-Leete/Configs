@@ -8,10 +8,6 @@
   (_) @_end .)
 (#make-range! "block.inner" @_start @_end)) @block.outer
 
-; Calls
-(call_expression
-  (argument_list) @call.inner) @call.outer
-
 ; Objects (class)
 ((struct_definition
   name: (_)
@@ -26,9 +22,6 @@
   (_) @_end .
   "end"
 )(#make-range! "function.inner" @_start @_end)) @function.outer
-
-; Comments
-[(comment) (block_comment) (triple_string)]@comment.outer
 
 ; Conditionals
 ((if_statement condition: (_)
