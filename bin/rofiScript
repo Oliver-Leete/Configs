@@ -142,7 +142,7 @@ menu () {
 }
 
 workLauncher () {
-    WS=$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')
+    WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
     WSS="Wrk Wrk1 Thesis Comments Sim Exp ANSYS WrkNotes Scinilla Scin-Docs"
     if [[ "$WSS" == *"$WS"* ]]; then
         /home/oleete/.cabal/bin/xmonadctl-exe nsp-$1-wrk

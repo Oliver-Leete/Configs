@@ -11,7 +11,7 @@
 
 BROWSER="google-chrome-stable"
 # WSTAG=$(/home/oleete/.config/bin/ws)
-WSTAG=$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')
+WSTAG=$(wmctrl -d | grep '*' | awk '{print $NF}')
 WSPORT=$(/home/oleete/.config/bin/ws port)
 
 CONFIGDIR=${XDG_CONFIG_HOME:-${HOME}/.config/browser}

@@ -1,5 +1,5 @@
 #!/bin/sh
 
-WS=$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')
+WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
 kitty @ goto-layout fat:bias=70
 kitty --single-instance --instance-group=$WS --listen-on=unix:/tmp/kitty-$WS $@

@@ -4,7 +4,6 @@ nnoremap("<localleader>r", "<cmd>Telescope bibtex bibtex theme=get_cursor<cr>", 
 nnoremap("<localleader>c", "<cmd>VimtexTocToggle<cr>", "Open TOC")
 nnoremap("<localleader>l", "<cmd>call g:custom_toc1.toggle()<cr>", "Open TOL")
 nnoremap("<localleader>t", "<cmd>call g:custom_toc2.toggle()<cr>", "Open TODO List")
-nnoremap("<localleader>v", "<cmd>VimtexView<cr>", "View Document")
 nnoremap("<localleader>w", "<cmd>VimtexCountWord<cr>", "Word Count")
 nnoremap("<localleader>W", "<cmd>VimtexCountWord!<cr>", "Word Count Report")
 nnoremap("<localleader>m", "<cmd>VimtexToggleMain<cr>", "Toggle the Main File")

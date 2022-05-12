@@ -1,39 +1,3 @@
--- Trouble Config
-
-require("trouble").setup({
-    height = 20,
-    icons = true,
-    mode = "workspace_diagnostics",
-    fold_open = "",
-    fold_closed = "",
-    action_keys = {
-        cancel = "q", -- cancel the preview and get back to your last window / buffer / cursor
-        close = "<esc>", -- close the list
-        refresh = "r", -- manually refresh
-        jump = "o", -- jump to the diagnostic or open / close folds
-        jump_close = { "<cr>" }, -- jump to the diagnostic and close the list
-        toggle_mode = "m", -- toggle between "workspace" and "document" mode
-        preview = "P", -- preview the diagnostic location
-        toggle_preview = "p", -- preview the diagnostic location
-        close_folds = { "zM", "zm" }, -- close all folds
-        open_folds = { "zR", "zr" }, -- open all folds
-        toggle_fold = { "zA", "za" }, -- toggle fold of current file
-        previous = "k", -- preview item
-        next = "j", -- next item
-    },
-    indent_lines = true, -- add an indent guide below the fold icons
-    auto_open = false,
-    auto_close = false,
-    auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back
-    signs = {
-        error = "",
-        warning = "",
-        information = "",
-        hint = "",
-    },
-    use_lsp_diagnstic_signs = false, -- enabling this will use the s
-})
-
 require("todo-comments").setup({
     signs = true,
     keywords = {
@@ -57,31 +21,3 @@ require("todo-comments").setup({
         default = { "Identifier", "#7C3AED" },
     },
 })
-
--- Toggle Quickfix list
-function _G.toggle_qflist()
-    local qf_open = false
-    for _, win in pairs(vim.fn.getwininfo()) do
-        if win["quickfix"] == 1 then
-            qf_open = true
-        end
-    end
-    if qf_open == true then
-        vim.cmd("cclose")
-    elseif not vim.tbl_isempty(vim.fn.getqflist()) then
-        vim.cmd("copen")
-    end
-end
-function _G.toggle_loclist()
-    local loc_open = false
-    for _, win in pairs(vim.fn.getwininfo()) do
-        if win["loclist"] == 1 then
-            loc_open = true
-        end
-    end
-    if loc_open == true then
-        vim.cmd("lclose")
-    else
-        vim.cmd("lopen")
-    end
-end

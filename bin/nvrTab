@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TITLES=$(kitty @ ls | jq ".[].tabs[].windows[].title")
-WS=$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')
+WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
 serverID="nvr-$WS"
 
 if ! [[ "$TITLES" =~ \"MainEditor\" ]]; then

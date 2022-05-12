@@ -1,4 +1,4 @@
 #!/bin/sh
 
-WS=$(wmctrl -d | grep '*' | cut -c33- | sed 's/ /-/')
+WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
 kitty @ --to unix:/tmp/kitty-$WS launch --type=background $@

@@ -32,30 +32,6 @@ require('kanagawa').setup({
 })
 
 vim.cmd("colorscheme kanagawa")
--- Zen Mode
-
-require("zen-mode").setup({
-    window = {
-        backdrop = 0.9, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
-        width = 105,
-        height = 1,
-        options = {
-            signcolumn = "no",
-            number = false, -- disable number column
-            relativenumber = false, -- disable relative numbers
-            -- scrolloff = 999,
-            wrap = true,
-        },
-    },
-    plugins = {
-        gitsigns = true, -- disables git signs
-        options = {
-            enabled = true,
-            ruler = true,
-            showcmd = true,
-        }
-    },
-})
 
 require('dressing').setup({
   select = {
@@ -65,3 +41,75 @@ require('dressing').setup({
     })
   },
 })
+
+stages_util = require("notify.stages.util")
+
+require("notify").setup({
+    stages = {function(state)
+    local next_height = state.message.height + 2
+    local next_row = stages_util.available_slot(
+      state.open_windows,
+      next_height,
+      stages_util.DIRECTION.BOTTOM_UP
+    )
+    if not next_row then
+      return nil
+    end
+    return {
+      relative = "editor",
+      anchor = "NE",
+      width = state.message.width,
+      height = state.message.height,
+      col = vim.opt.columns:get(),
+      row = next_row,
+      border = "rounded",
+      style = "minimal",
+      opacity = 0,
+    }
+  end,
+  function()
+    return {
+      opacity = { 100 },
+      col = { vim.opt.columns:get() },
+    }
+  end,
+  function()
+    return {
+      col = { vim.opt.columns:get() },
+      time = true,
+    }
+  end,
+  function()
+    return {
+      width = {
+        1,
+        frequency = 2.5,
+        damping = 0.9,
+        complete = function(cur_width)
+          return cur_width < 3
+        end,
+      },
+      opacity = {
+        0,
+        frequency = 2,
+        complete = function(cur_opacity)
+          return cur_opacity <= 4
+        end,
+      },
+      col = { vim.opt.columns:get() },
+    }
+  end}
+})
+
+vim.notify = require("notify")
+
+-- LSP integration
+local severity = {
+  "error",
+  "warn",
+  "info",
+  "info", -- map both hint and info to info?
+}
+vim.lsp.handlers["window/showMessage"] = function(_, method, params, _)
+             vim.notify(method.message, severity[params.type])
+end

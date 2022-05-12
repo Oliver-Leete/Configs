@@ -26,16 +26,7 @@ local function preview_location_callback(_, _, result)
     vim.lsp.util.preview_location(result[1], { focusable = false, border = "single" })
 end
 
-function PeekDefinition()
-    local params = vim.lsp.util.make_position_params()
-    return vim.lsp.buf_request(0, "textDocument/definition", params, preview_location_callback)
-end
-
 vim.cmd([[
-    " sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticSignError
-    " sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=DiagnosticSignWarn
-    " sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=DiagnosticSignInfo
-    " sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=DiagnosticSignHint
     sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticSignError
     sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=DiagnosticSignWarn
     sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=DiagnosticSignInfo
@@ -49,9 +40,14 @@ vim.diagnostic.config({
     update_in_insert = false,
     severity_sort = true,
 })
+Notification_Dict = {}
 
 local custom_attach = function(client)
-    print("LSP: " .. client.name .. " Started")
+    Notification_Dict[client.name] = pcall(vim.notify(client.name .. " started", "info", {title="LSP", replace=Notification_Dict[client.name]}))
+
+    -- LSP Binding Override
+    vim.keymap.set("n", "KK", function() vim.lsp.buf.hover({ focusable = false})end)
+    vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
 
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
         border = "single",
@@ -96,17 +92,19 @@ require("lspconfig").grammar_guard.setup({
             latex = {
                 environments = { Fortran = "ignore", jllisting = "ignore", algorithmic = "ignore"},
                 commands = {
+                    ["\\twosubfigures{}{}{}{}{}{}"] = "ignore",
+                    ["\\threesubfigures{}{}{}{}{}{}{}{}{}"] = "ignore",
                     ["\\subfile{}"] = "ignore",
-                    ["\\glsname{}"] = "ignore",
-                    ["\\gls{}"] = "ignore",
-                    ["\\glsfirst{}"] = "ignore",
-                    ["\\pgls{}"] = "ignore",
-                    ["\\ac{}"] = "ignore",
-                    ["\\acl{}"] = "ignore",
-                    ["\\acs{}"] = "ignore",
-                    ["\\acf{}"] = "ignore",
-                    ["\\pac{}"] = "ignore",
-                    ["\\Pac{}"] = "ignore",
+                    ["\\glsname{}"] = "dummy",
+                    ["\\gls{}"] = "dummy",
+                    ["\\glsfirst{}"] = "dummy",
+                    ["\\pgls{}"] = "dummy",
+                    ["\\ac{}"] = "dummy",
+                    ["\\acl{}"] = "dummy",
+                    ["\\acs{}"] = "dummy",
+                    ["\\acf{}"] = "dummy",
+                    ["\\pac{}"] = "dummy",
+                    ["\\Pac{}"] = "dummy",
                 },
             },
             dictionary = { ["en-GB"] = { "ANSYS", "UPF" }  },
@@ -116,134 +114,101 @@ require("lspconfig").grammar_guard.setup({
     },
 })
 
-require("nvim-lsp-installer").on_server_ready(function(server)
-    local opts = {
+require("nvim-lsp-installer").setup({})
+
+local lspconfig = require("lspconfig")
+local default = {
+    on_attach = custom_attach,
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 500 },
+}
+
+lspconfig.bashls.setup(default)
+lspconfig.ccls.setup(default)
+lspconfig.fortls.setup(default)
+lspconfig.julials.setup(default)
+lspconfig.pyright.setup(default)
+
+lspconfig.sumneko_lua.setup({
+    on_attach = custom_attach,
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 500 },
+    root_dir = nvim_lsp.util.root_pattern("init.lua"),
+    settings = {
+        Lua = {
+            runtime = {
+                version = "LuaJIT",
+                path = vim.split(package.path, ";"),
+            },
+            diagnostics = {
+                -- enable = false,
+                globals = { "vim" },
+            },
+            workspace = {
+                library = {
+                    [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                    [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+                },
+                maxPreload = 3000,
+                preloadFileSize = 500,
+            },
+            telemetry = {
+                enable = false,
+            },
+        },
+    }
+})
+
+lspconfig.texlab.setup({
+    on_attach = custom_attach,
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 500 },
+    root_dir = nvim_lsp.util.root_pattern(".git"),
+    settings = {
+        texlab = {
+            build = {
+                args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+                executable = "latexmk",
+                onSave = false,
+                forwardSearchAfter = true,
+            },
+            forwardSearch = {
+                executable = "zathura",
+                args = { "--synctex-forward", "%l:1:%f", "%p" },
+                onSave = false,
+            },
+            chktex = {
+                onEdit = false,
+                onOpenAndSave = false,
+            },
+        },
+    }
+})
+lspconfig.hls.setup({
+    on_attach = custom_attach,
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 500 },
+    filetypes = { "haskell", "lhaskell" },
+    root_dir = nvim_lsp.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml", ".git")
+})
+
+require("rust-tools").setup({
+    server = {
         on_attach = custom_attach,
         capabilities = capabilities,
-        flags = { debounce_text_changes = 500 },
-    }
-    if server.name == "ltex" then
-        return
-    elseif server.name == "texlab" then
-        opts.root_dir = nvim_lsp.util.root_pattern(".git")
-        opts.settings = {
-            texlab = {
-                build = {
-                    args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
-                    executable = "latexmk",
-                    onSave = false,
-                    forwardSearchAfter = true,
-                },
-                forwardSearch = {
-                    executable = "zathura",
-                    args = { "--synctex-forward", "%l:1:%f", "%p" },
-                    onSave = false,
-                },
-                chktex = {
-                    onEdit = false,
-                    onOpenAndSave = false,
-                },
-            },
-        }
-    elseif server.name == "sumneko_lua" then
-        opts.root_dir = nvim_lsp.util.root_pattern("init.lua")
-        opts.settings = {
-            Lua = {
-                runtime = {
-                    version = "LuaJIT",
-                    path = vim.split(package.path, ";"),
-                },
-                diagnostics = {
-                    -- enable = false,
-                    globals = {
-                        "vim",
-                        "map",
-                        "nmap",
-                        "vmap",
-                        "xmap",
-                        "smap",
-                        "omap",
-                        "imap",
-                        "lmap",
-                        "cmap",
-                        "tmap",
-                        "noremap",
-                        "nnoremap",
-                        "vnoremap",
-                        "xnoremap",
-                        "snoremap",
-                        "onoremap",
-                        "inoremap",
-                        "lnoremap",
-                        "cnoremap",
-                        "tnoremap",
-                    },
-                },
-                workspace = {
-                    library = {
-                        [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                        [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-                    },
-                    maxPreload = 3000,
-                    preloadFileSize = 500,
-                },
-                telemetry = {
-                    enable = false,
-                },
-            },
-        }
-    elseif server.name == "hls" then
-        opts.filetypes = { "haskell", "lhaskell" }
-        opts.root_dir = nvim_lsp.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml", ".git")
-    end
-    if server.name == "rust_analyzer" then
-        require("rust-tools").setup({
-            server = vim.tbl_deep_extend("force", server:get_default_options(), opts),
-            tools = {
-                executor = require("rust-tools/executors").kitty,
-            },
-            dap = {
-                adapter = require('rust-tools.dap').get_codelldb_adapter(
-                    '/home/oleete/.local/share/nvim/dapinstall/codelldb/extension/adapter/codelldb',
-                    '/home/oleete/.local/share/nvim/dapinstall/codelldb/extension/lldb/lib/liblldb.so'
-                )
-            },
-        })
-        server:attach_buffers()
-        require("rust-tools").start_standalone_if_required()
-        return
-    end
-    server:setup(opts)
-end)
-
--- Toggle Lsp
-vim.g.diagnostics_active = false
-function _G.toggle_diagnostics()
-    if vim.g.diagnostics_active then
-        vim.g.diagnostics_active = false
-        vim.diagnostic.config({
-            underline = false,
-            virtual_text = { severity = "Error" },
-            signs = true,
-            update_in_insert = false,
-            severity_sort = true,
-        })
-        -- vim.diagnostic.show()
-    else
-        vim.g.diagnostics_active = true
-        vim.diagnostic.config({
-            underline = true,
-            virtual_text = {
-                prefix = " ",
-                spacing = 4,
-            },
-            signs = true,
-            update_in_insert = false,
-            severity_sort = true,
-        })
-        -- vim.diagnostic.show()
-    end
-end
+        flags = { debounce_text_changes = 501 },
+        standalone = true,
+    },
+    tools = {
+        executor = require("rust-tools/executors").kitty,
+    },
+    dap = {
+        adapter = require('rust-tools.dap').get_codelldb_adapter(
+            '/home/oleete/.local/share/nvim/dapinstall/codelldb/extension/adapter/codelldb',
+            '/home/oleete/.local/share/nvim/dapinstall/codelldb/extension/lldb/lib/liblldb.so'
+        )
+    },
+})
 
 -- Null LS
 require("null-ls").setup({
@@ -264,5 +229,3 @@ require("null-ls").setup({
         require("null-ls").builtins.code_actions.refactoring,
     },
 })
-
-require("fidget").setup({})

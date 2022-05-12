@@ -59,11 +59,8 @@ end
 
 require('telescope').load_extension('dap')
 require("telescope").load_extension('lsp_handlers')
-require("telescope").load_extension("bibtex")
-require("telescope").load_extension("media_files")
 require("telescope").load_extension("heading")
 require("telescope").load_extension("refactoring")
--- require("telescope").load_extension("")
 
 require("telescope").setup({
     defaults = {
@@ -115,10 +112,6 @@ require("telescope").setup({
         },
     },
     extensions = {
-        bibtex = {
-            depth = 2,
-            global_files = { "/home/oleete/UniDrive/Thesis/thesis/Citations.bib" },
-        },
         fzf = {
             override_generic_sorter = true,
             override_file_sorter = true,
@@ -130,7 +123,6 @@ require("telescope").setup({
 
 require("telescope").load_extension("file_browser")
 require("telescope").load_extension("fzf")
-require("telescope").load_extension("bibtex")
 
 local open_dif = function()
     local selected_entry = action_state.get_selected_entry()
@@ -138,7 +130,6 @@ local open_dif = function()
     -- close Telescope window properly prior to switching windows
     vim.api.nvim_win_close(0, true)
     local cmd = "DiffviewOpen " .. value
-    vim.api.nvim_set_var("DiffviewLast", cmd)
     vim.cmd(cmd)
 end
 local open_dif_mergebase = function()
@@ -147,7 +138,6 @@ local open_dif_mergebase = function()
     -- close Telescope window properly prior to switching windows
     vim.api.nvim_win_close(0, true)
     local cmd = "DiffviewOpen ..." .. value
-    vim.api.nvim_set_var("DiffviewLast", cmd)
     vim.cmd(cmd)
 end
 local open_single_dif = function()
@@ -156,34 +146,7 @@ local open_single_dif = function()
     -- close Telescope window properly prior to switching windows
     vim.api.nvim_win_close(0, true)
     local cmd = "DiffviewOpen " .. value .. "~1.." .. value
-    vim.api.nvim_set_var("DiffviewLast", cmd)
     vim.cmd(cmd)
-end
-local change_gitsign_base = function()
-    local selected_entry = action_state.get_selected_entry()
-    local value = selected_entry["value"]
-    vim.api.nvim_win_close(0, true)
-    local cmd = "Gitsigns change_base " .. value
-    vim.cmd(cmd)
-end
-
-function _G.gitsign_change_base()
-    require("telescope.builtin").git_commits({
-        attach_mappings = function(_, map)
-            map("n", "<cr>", change_gitsign_base)
-            map("i", "<cr>", change_gitsign_base)
-            return true
-        end,
-    })
-end
-function _G.gitsign_bchange_base()
-    require("telescope.builtin").git_bcommits({
-        attach_mappings = function(_, map)
-            map("n", "<cr>", change_gitsign_base)
-            map("i", "<cr>", change_gitsign_base)
-            return true
-        end,
-    })
 end
 
 function _G.git_commits_againsthead()
@@ -223,14 +186,6 @@ function _G.git_branch_mergebase()
         end,
     })
 end
-
--- function _G.project_files()
---     local opts = {}
---     local ok = pcall(require("telescope.builtin").git_files, opts)
---     if not ok then
---         require("telescope.builtin").find_files(opts)
---     end
--- end
 
 function _G.project_files()
     local results = require("telescope.utils").get_os_command_output({ "git", "rev-parse", "--git-dir" })

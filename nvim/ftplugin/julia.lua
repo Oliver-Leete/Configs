@@ -7,6 +7,9 @@ vim.cmd([[set errorformat+=%-G%.%#]])
 vim.api.nvim_set_option("makeprg", [[julia\ -e\ \'using\ Pkg;\ Pkg.precompile()\']])
 vim.api.nvim_buf_set_option(0, "commentstring", [[#%s]])
 
+vim.g.latex_to_unicode_tab = 0
+vim.g.latex_to_unicode_auto = 1
+
 vim.b[0].replCommand = "juliaREPL"
 vim.b[0].replName = "JuliaPersistant"
 vim.b[0].debugCommand = "juliadebug"
@@ -61,9 +64,6 @@ nnoremap("<leader>jB", [["<cmd>silent !kittyPersistent JuliaPersistant juliadebu
     nnoremap("<leader>jrr", "<cmd>silent !kittyPersistent JuliaPersistant juliadebug bp<cr>", "List Breakpoints")
     nnoremap("<leader>jrb", [["<cmd>silent !kittyPersistent JuliaPersistant juliadebug bp rm " . input("Point to Remove > ") . "<cr>"]], "Remove Breapoint")
     nnoremap("<leader>jrw", [["<cmd>silent !kittyPersistent JuliaPersistant juliadebug w rm " . input("Item to Remove > ") . "<cr>"]], "Remove Watchlist")
-
-    mapxName.name("<leader>lr", "Run Profiler")
-    nnoremap("<leader>lrf", [["<cmd>silent !kittyOneShot julia ~/.config/nvim/filetype/julia/prof.jl '" . expand('%:p') . "'<cr>"]], "Profile File", expr)
 
 nnoremap("<leader>/d", "<cmd>Edoc<cr>", "Documentation")
 nnoremap("<leader>/D", "<cmd>EmainDoc<cr>", "Main Documentation")
@@ -200,10 +200,6 @@ function select_runnables()
         {
             name = "[Prof]  Profile File",
             command = [[silent !kittyOneShot julia ~/.config/nvim/filetype/julia/prof.jl ']] .. vim.fn.expand('%:p') "'"
-        },
-        {
-            name = "[Prof]  Load Profile Data",
-            func = function() require("perfanno").load_traces(jul_perf_flat("/tmp/julprof.data")) end
         },
     }
 

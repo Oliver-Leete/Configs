@@ -308,7 +308,7 @@ data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
     transform FULLCENTER x k = k centerFull (const x)
 
-centerFull = SimpleFocus (1/3) (reSize/2) 1280
+centerFull = SimpleFocus (1/2) (reSize/2) 600
 
 myLayoutHook= smartBorders
             $ mkToggle (single FULL)
@@ -373,7 +373,7 @@ myKeys =
     , ("M-<Return>"      , bF $ kt " kittyWin" $ l(upPointer $ spawn myTerminal))
     , ("M-S-<Return>"    , upPointer $ spawn myTerminal)
 
-    , ("M-n"             , bF $ rNv (spawn (myTerminalRemote ++ " kittyWin")) $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")]))
+    , ("M-n"             , bF $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")]))
     , ("M-S-n"           , upPointer $ spawn myTerminal)
 
     , ("M-i"             , bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))

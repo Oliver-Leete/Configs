@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WS=$(wmctrl -d | cut -c33- | sed 's/ /-/')
+WS=$(wmctrl -d | awk '{print $NF}'awk '{print $NF}')
 
 #Groups
 # Home - Home, Wrk, tmp

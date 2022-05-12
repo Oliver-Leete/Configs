@@ -22,13 +22,15 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug '907th/vim-auto-save'
     Plug 'b0o/mapx.nvim'
 
+    Plug 'stevearc/dressing.nvim'
+    Plug 'rcarriga/nvim-notify'
+
     Plug 'knubie/vim-kitty-navigator'
     Plug 'kazhala/close-buffers.nvim'
     Plug 'tpope/vim-projectionist'
     Plug 'ThePrimeagen/harpoon'
 
     Plug 'phaazon/hop.nvim'
-    Plug 'mizlan/iswap.nvim'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
     Plug 'numToStr/Comment.nvim'
@@ -39,6 +41,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'inkarkat/vim-unconditionalpaste'
     Plug 'tpope/vim-abolish'
     Plug 'tpope/vim-surround'
+    Plug 'andymass/vim-matchup'
 
     Plug 'tommcdo/vim-ninja-feet'
     Plug 'wellle/targets.vim'
@@ -51,15 +54,12 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
     Plug 'rebelot/kanagawa.nvim'
-    Plug 'folke/zen-mode.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'windwp/windline.nvim'
 
     Plug 'mbbill/undotree'
-    Plug 'folke/trouble.nvim'
     Plug 'folke/todo-comments.nvim'
-    Plug 'folke/which-key.nvim'
     Plug 'sindrets/diffview.nvim'
 
     Plug 'neovim/nvim-lspconfig'
@@ -67,9 +67,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'brymer-meneses/grammar-guard.nvim'
     Plug 'simrat39/rust-tools.nvim'
-    
+
     Plug 'ray-x/lsp_signature.nvim'
-    Plug 'j-hui/fidget.nvim'
 
     Plug 'hrsh7th/nvim-cmp'
     Plug 'hrsh7th/cmp-buffer'
@@ -89,26 +88,22 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'nvim-telescope/telescope-file-browser.nvim'
     Plug 'nvim-telescope/telescope.nvim'
-    Plug 'nvim-telescope/telescope-symbols.nvim'
     Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make'}
-    Plug 'nvim-telescope/telescope-media-files.nvim'
-    Plug 'nvim-telescope/telescope-bibtex.nvim'
     Plug 'crispgm/telescope-heading.nvim'
-    Plug 'rudism/telescope-dict.nvim'
     Plug 'gbrlsnchs/telescope-lsp-handlers.nvim'
-    Plug 'stevearc/dressing.nvim'
-    Plug 'FeiyouG/command_center.nvim'
 
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-    Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'nvim-treesitter/playground'
+    Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'ThePrimeagen/refactoring.nvim'
+    Plug 'mizlan/iswap.nvim'
 
     Plug 'mfussenegger/nvim-dap'
     Plug 'Pocco81/DAPInstall.nvim'
     Plug 'rcarriga/nvim-dap-ui'
     Plug 'theHamsta/nvim-dap-virtual-text'
     Plug 'nvim-telescope/telescope-dap.nvim'
+
     Plug 't-troebst/perfanno.nvim'
     Plug 'andythigpen/nvim-coverage'
 call plug#end()]])
@@ -158,4 +153,3 @@ require('ui_config')
 
 local enterAndExitVim = vim.api.nvim_create_augroup("enterAndExitVim", { clear = true})
 vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-window-title ""', group = enterAndExitVim})
-

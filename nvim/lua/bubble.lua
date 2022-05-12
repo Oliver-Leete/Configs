@@ -176,7 +176,7 @@ local default = {
 }
 
 local quickfix = {
-    filetypes = { "qf", "Trouble" },
+    filetypes = { "qf" },
     active = {
         { " ", hl_list.Black },
         { sep.left_rounded, hl_list.Black },
