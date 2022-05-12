@@ -116,60 +116,60 @@ function Select_runnables()
 	-- Misc Runnables
 	local runnables_list = {
 		{
-            source = "Misc",
+			source = "Misc",
 			name = "Open Runnable Terminal",
 			command = [[silent !kittyPersistent JuliaPersistant juliaTest]],
 		},
 		{
-            source = "Misc",
+			source = "Misc",
 			name = "Precompile Package",
 			command = [[silent !kittyOneShot "~/.config/nvim/filetype/julia/precompile"]],
 		},
 		{
-            source = "Misc",
+			source = "Misc",
 			name = "Build Documentation",
 			command = [[silent !kittyOneShot "~/.config/nvim/filetype/julia/docBuild"]],
 		},
 		{
-            source = "Misc",
+			source = "Misc",
 			name = "Run Documentation Tests",
 			command = [[silent !kittyOneShot "~/.config/nvim/filetype/julia/docTest"]],
 		},
 		{
-            source = "Test",
+			source = "Test",
 			name = "Run All Tests",
 			command = [[silent !kittyPersistent JuliaPersistant juliaTest ']]
 				.. vim.b[0].project
 				.. [[Tests.runtests(;spin=false)']],
 		},
 		{
-            source = "Test",
+			source = "Test",
 			name = "Run All Tests",
 			command = [[silent !kittyPersistent JuliaPersistant juliaTest ']]
 				.. vim.b[0].project
 				.. [[Tests.runtests(;spin=false)']],
 		},
 		{
-            source = "Bench",
+			source = "Bench",
 			name = "Run All Benchmarks",
 			command = [[silent !kittyPersistent JuliaPersistant juliaTest 'run(]]
 				.. vim.b[0].project
 				.. [[Tests.suite, verbose=true)']],
 		},
 		{
-            source = "Bench",
+			source = "Bench",
 			name = "Retune Benchmarks",
 			command = [[silent !kittyPersistent JuliaPersistant juliaTest 'let suite=]]
 				.. vim.b[0].project
 				.. [[Tests.suite; tune\!(suite); BenchmarkTools.save(joinpath(dirname(@__FILE__), "params.json"), params(suite));end']],
 		},
 		{
-            source = "Run",
+			source = "Run",
 			name = "Run File",
 			command = [[silent !kittyOneShot julia ']] .. vim.fn.expand("%:p") .. "'",
 		},
 		{
-            source = "Prof",
+			source = "Prof",
 			name = "Profile File",
 			command = [[silent !kittyOneShot julia ~/.config/nvim/filetype/julia/prof.jl ']]
 				.. vim.fn.expand("%:p")
@@ -186,7 +186,7 @@ function Select_runnables()
 
 	for name in tests:gmatch("([^\r\n]+)") do
 		table.insert(runnables_list, {
-            source = "Test",
+			source = "Test",
 			name = name,
 			command = [[silent !kittyPersistent JuliaPersistant juliaTest ']]
 				.. vim.b[0].project
@@ -207,7 +207,7 @@ function Select_runnables()
 	for s in benches:gmatch("([^\r\n]+)") do
 		local name, command = s:match("([^\t]+)\t([^\t]+)")
 		table.insert(runnables_list, {
-            source = "Bench",
+			source = "Bench",
 			name = name,
 			command = [[silent !kittyPersistent JuliaPersistant juliaTest 'run(]]
 				.. vim.b[0].project
@@ -216,14 +216,14 @@ function Select_runnables()
 				.. [["], verbose=true)']],
 		})
 		table.insert(runnables_list, {
-            source = "Prof",
+			source = "Prof",
 			name = name,
 			command = [[silent !kittyPersistent JuliaPersistant juliaTest 'a = @bprofile ]]
 				.. command
 				.. [[; Profile.print(IOContext(open("/tmp/julprof.data", "w"), :displaysize=>(100000,1000)), format=:flat); ProfileView.view(); loadProfData(); a']],
 		})
 		table.insert(runnables_list, {
-            source = "Debug",
+			source = "Debug",
 			name = name,
 			command = [[silent !kittyPersistent JuliaPersistant juliaTest '@run run(]]
 				.. vim.b[0].project

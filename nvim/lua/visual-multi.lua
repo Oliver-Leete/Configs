@@ -1,5 +1,5 @@
 vim.g.VM_mouse_mappings = true
-vim.g.VM_leader="="
+vim.g.VM_leader = "="
 
 vim.cmd([[
     let g:VM_maps = {}

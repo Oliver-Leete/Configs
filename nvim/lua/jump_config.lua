@@ -179,6 +179,7 @@ function _G.ts_target(count, object)
     end
     vim.cmd("TSTextobjectSelect " .. object)
 end
+
 function _G.ts_target_back(count, object)
     vim.cmd("TSTextobjectGotoPreviousEnd " .. object)
     count = count - 1
@@ -216,6 +217,7 @@ function _G.mapped_targets(count, movement, selection)
     cmd = cmd .. "v" .. selection
     vim.cmd([[normal ]] .. cmd)
 end
+
 function _G.mapped_targets_back(count, movement, end_movement, selection)
     local cmd = end_movement
     count = count - 1
@@ -237,6 +239,7 @@ function _G.plug_targets(count, movement, selection)
     cmd = cmd .. [[v\<plug>]] .. selection
     vim.cmd([[exe "normal ]] .. cmd .. [["]])
 end
+
 function _G.plug_targets_back(count, movement, end_movement, selection)
     local cmd = [[\<plug>]] .. movement
     count = count - 1

@@ -58,12 +58,12 @@ require("cmp").setup({
 		["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
 		["<tab>"] = cmp.mapping({
 			c = function()
-					cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+				cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
 			end,
 		}),
 		["<s-tab>"] = cmp.mapping({
 			c = function()
-					cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
+				cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
 			end,
 		}),
 		["<down>"] = cmp.mapping({
@@ -135,15 +135,15 @@ cmp.setup.cmdline(":", {
 		{ name = "cmdline" },
 	}),
 })
-require('cmp').setup.filetype("tex", {
-    sources = {
-        { name = "luasnip" },
-        { name = 'omni' },
-        { name = "nvim_lsp" },
-        { name = "path" },
-        { name = "buffer", keyword_lenght = 3 },
-        { name = "dictionary", keyword_lenght = 2},
-    },
+require("cmp").setup.filetype("tex", {
+	sources = {
+		{ name = "luasnip" },
+		{ name = "omni" },
+		{ name = "nvim_lsp" },
+		{ name = "path" },
+		{ name = "buffer", keyword_lenght = 3 },
+		{ name = "dictionary", keyword_lenght = 2 },
+	},
 })
 
 require("cmp_git").setup({})

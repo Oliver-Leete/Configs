@@ -29,7 +29,7 @@ vim.cmd([[augroup mywellle
         \ 'q': {'quote': [{'d':"'"}, {'d':'"'}, {'d':'`'}]},
         \ })
 augroup end]])
-vim.g.matchup_matchparen_offscreen = {method = false}
+vim.g.matchup_matchparen_offscreen = { method = false }
 vim.g.matchup_text_obj_enabled = false
 
 vim.api.nvim_set_var("targets_seekRanges", "cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al")
