@@ -1,1 +1,1 @@
-vis:command('map! normal ; :')
+vis:command("map! normal ; :")
