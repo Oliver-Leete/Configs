@@ -15,47 +15,6 @@
 
 local action_state = require("telescope.actions.state")
 local actions = require("telescope.actions")
-local from_entry = require("telescope.from_entry")
-local entry_to_qf = function(entry)
-    local text = entry.text
-
-    if not text then
-        if type(entry.value) == "table" then
-            text = entry.value.text
-        else
-            text = entry.value
-        end
-    end
-
-    return {
-        bufnr = entry.bufnr,
-        filename = from_entry.path(entry, false),
-        lnum = vim.F.if_nil(entry.lnum, 1),
-        col = vim.F.if_nil(entry.col, 1),
-        text = text,
-    }
-end
-
-local openAndList = function(prompt_bufnr)
-    local picker = action_state.get_current_picker(prompt_bufnr)
-    local qf_entries = {}
-
-    if table.getn(picker:get_multi_selection()) > 0 then
-        for _, entry in ipairs(picker:get_multi_selection()) do
-            table.insert(qf_entries, entry_to_qf(entry))
-        end
-        vim.fn.setqflist(qf_entries, "r")
-    else
-        local manager = picker.manager
-        for entry in manager:iter() do
-            table.insert(qf_entries, entry_to_qf(entry))
-        end
-
-        vim.fn.setqflist(qf_entries, "r")
-    end
-
-    actions.select_default(prompt_bufnr)
-end
 
 require('telescope').load_extension('dap')
 require("telescope").load_extension('lsp_handlers')
@@ -117,7 +76,6 @@ require("telescope").setup({
             override_file_sorter = true,
             case_mode = "smart_case",
         },
-        media_files = {},
     },
 })
 

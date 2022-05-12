@@ -18,9 +18,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-lua/plenary.nvim'
     Plug 'tpope/vim-repeat'
     Plug 'kyazdani42/nvim-web-devicons'
-    Plug 'nvim-lua/popup.nvim'
     Plug '907th/vim-auto-save'
-    Plug 'b0o/mapx.nvim'
 
     Plug 'stevearc/dressing.nvim'
     Plug 'rcarriga/nvim-notify'
@@ -48,7 +46,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'wellle/line-targets.vim'
 
     Plug 'lervag/vimtex'
-    Plug 'anufrievroman/vim-angry-reviewer'
     Plug 'JuliaEditorSupport/julia-vim'
     Plug 'fladson/vim-kitty'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
@@ -110,46 +107,44 @@ call plug#end()]])
 
 -- Disable builtins
 local disabled_built_ins = {
-    "netrw",
-    "netrwPlugin",
-    "netrwSettings",
-    "netrwFileHandlers",
-    "gzip",
-    "zip",
-    "zipPlugin",
-    "tar",
-    "tarPlugin",
-    "getscript",
-    "getscriptPlugin",
-    "vimball",
-    "vimballPlugin",
-    "2html_plugin",
-    "logipat",
-    "rrhelper",
-    "spellfile_plugin",
-    "matchit",
+	"netrw",
+	"netrwPlugin",
+	"netrwSettings",
+	"netrwFileHandlers",
+	"gzip",
+	"zip",
+	"zipPlugin",
+	"tar",
+	"tarPlugin",
+	"getscript",
+	"getscriptPlugin",
+	"vimball",
+	"vimballPlugin",
+	"2html_plugin",
+	"logipat",
+	"rrhelper",
+	"spellfile_plugin",
+	"matchit",
 }
 
 for _, plugin in pairs(disabled_built_ins) do
-    vim.g["loaded_" .. plugin] = 1
+	vim.g["loaded_" .. plugin] = 1
 end
 
+require("settings_config")
+require("misc_config")
+require("mappings_config")
+require("jump_config")
+require("telescope_config")
+require("compleation_config")
+require("panels_config")
+require("myfuncs_config")
+require("lsp_config")
+require("treesitter_config")
+require("dap_config")
+require("git_config")
+require("bubble")
+require("ui_config")
 
-require('settings_config')
-require('misc_config')
-require('mappings_config')
-require('jump_config')
-require('telescope_config')
-require('compleation_config')
-require('panels_config')
-require('myfuncs_config')
-require('lsp_config')
-require('treesitter_config')
-require('dap_config')
-require('git_config')
-require('bubble')
-require('ui_config')
-
-
-local enterAndExitVim = vim.api.nvim_create_augroup("enterAndExitVim", { clear = true})
-vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-window-title ""', group = enterAndExitVim})
+local enterAndExitVim = vim.api.nvim_create_augroup("enterAndExitVim", { clear = true })
+vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-window-title ""', group = enterAndExitVim })

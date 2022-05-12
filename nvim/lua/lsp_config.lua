@@ -19,13 +19,6 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
-local function preview_location_callback(_, _, result)
-    if result == nil or vim.tbl_isempty(result) then
-        return nil
-    end
-    vim.lsp.util.preview_location(result[1], { focusable = false, border = "single" })
-end
-
 vim.cmd([[
     sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticSignError
     sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=DiagnosticSignWarn
@@ -43,7 +36,9 @@ vim.diagnostic.config({
 Notification_Dict = {}
 
 local custom_attach = function(client)
-    Notification_Dict[client.name] = pcall(vim.notify(client.name .. " started", "info", {title="LSP", replace=Notification_Dict[client.name]}))
+    if client.name ~= "null-ls" then
+        Notification_Dict[client.name] = pcall(vim.notify(client.name .. " started", "info", {title="LSP", replace=Notification_Dict[client.name]}))
+    end
 
     -- LSP Binding Override
     vim.keymap.set("n", "KK", function() vim.lsp.buf.hover({ focusable = false})end)

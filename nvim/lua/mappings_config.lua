@@ -1,5 +1,3 @@
-mapxName = require("mapx").setup({ global = true })
-local silent = mapxName.silent
 Map = vim.keymap.set
 
 -- Leader Mapping
@@ -71,9 +69,9 @@ Map("n", "<leader>n", require("harpoon.mark").add_file)
 Map("n", "<leader>e", require("harpoon.ui").toggle_quick_menu)
 local harpoon_keys = { "a", "r", "s", "t" }
 for i, key in pairs(harpoon_keys) do
-    Map("n", "<leader>" .. key, function()
-        require("harpoon.ui").nav_file(i)
-    end)
+	Map("n", "<leader>" .. key, function()
+		require("harpoon.ui").nav_file(i)
+	end)
 end
 
 Map("n", "<c-/>", ",cc", { remap = true })
@@ -81,41 +79,28 @@ Map("x", "<c-/>", ",c", { remap = true })
 
 Map("n", "£", [[:exe "let @/='" . expand("<cWORD>") . "' "<cr>]], { silent = true })
 
-vim.cmd([[inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
-vim.cmd([[inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
-vim.cmd([[snoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
-vim.cmd([[snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
-
-Map("i", "<c-g>", "<c-o>%")
-Map("i", "<c-s>", require("lsp_signature").toggle_float_win)
-
-Map("i", ",", ",<c-g>u")
-Map("i", ".", ".<c-g>u")
-Map("i", "!", "!<c-g>u")
-Map("i", "?", "?<c-g>u")
-
 -- Panel Specific Mappings
 local panelMappings = vim.api.nvim_create_augroup("panelMappings", { clear = true })
 vim.api.nvim_create_autocmd("filetype", {
-    pattern = { "qf", "help", "vim-plug", "juliadoc", "lspinfo", "tsplayground", "harpoon-menu" },
-    callback = function()
-        Map("n", "<esc>", "<cmd>q<cr>", { buffer = 0 })
-    end,
-    group = panelMappings,
+	pattern = { "qf", "help", "vim-plug", "juliadoc", "lspinfo", "tsplayground", "harpoon-menu" },
+	callback = function()
+		Map("n", "<esc>", "<cmd>q<cr>", { buffer = 0 })
+	end,
+	group = panelMappings,
 })
 vim.api.nvim_create_autocmd("filetype", {
-    pattern = { "DiffviewFiles", "DiffviewFileHistory" },
-    callback = function()
-        Map("n", "<esc>", "<cmd>DiffviewClose<cr>", { buffer = 0 })
-    end,
-    group = panelMappings,
+	pattern = { "DiffviewFiles", "DiffviewFileHistory" },
+	callback = function()
+		Map("n", "<esc>", "<cmd>DiffviewClose<cr>", { buffer = 0 })
+	end,
+	group = panelMappings,
 })
 vim.api.nvim_create_autocmd("filetype", {
-    pattern = "undotree",
-    callback = function()
-        Map("n", "<esc>", "<cmd>UndotreeHide<cr>", { buffer = 0 })
-    end,
-    group = panelMappings,
+	pattern = "undotree",
+	callback = function()
+		Map("n", "<esc>", "<cmd>UndotreeHide<cr>", { buffer = 0 })
+	end,
+	group = panelMappings,
 })
 
 vim.api.nvim_set_var("wordmotion_prefix", "$")
@@ -142,10 +127,10 @@ Map("n", "K", "<nop>")
 Map("n", "KK", "K")
 Map("n", "KG", require("gitsigns").preview_hunk)
 Map("n", "KA", function()
-    require("gitsigns").blame_line({ full = true })
+	require("gitsigns").blame_line({ full = true })
 end)
 Map("n", "KE", function()
-    vim.diagnostic.open_float(0, { border = "single", scope = "line", source = "always" })
+	vim.diagnostic.open_float(0, { border = "single", scope = "line", source = "always" })
 end)
 
 Map("x", "J", ":move '>+1<cr>gv=gv")
@@ -157,7 +142,7 @@ Map("x", "Q", ":norm! @q<cr>")
 Map("n", "s", require("hop").hint_char1)
 Map("n", "S", "<cmd>ISwapWith<cr>")
 Map({ "x", "o" }, "s", function()
-    require("hop").hint_char1({ inclusive_jump = true })
+	require("hop").hint_char1({ inclusive_jump = true })
 end)
 
 Map({ "n", "x", "o" }, "'", "`")
@@ -230,12 +215,6 @@ Map({ "n", "x" }, "vd", "<c-d>")
 Map({ "n", "x" }, "vs", "<cmd>normal! HVL<cr>")
 
 Map({ "n", "x" }, "m", "v")
-Map({ "n", "x" }, "mk", "<m-v>{")
-Map({ "n", "x" }, "mh", "<m-v>(")
-Map({ "n", "x" }, "ml", "<m-v>)")
-Map({ "n", "x" }, "mj", "<m-v>}")
-Map({ "n", "x" }, "mi", "<m-v>i")
-Map({ "n", "x" }, "ma", "<m-v>a")
 
 Map("n", ",.", vim.lsp.buf.code_action)
 Map("x", ",.", vim.lsp.buf.range_code_action)
@@ -250,16 +229,16 @@ Map({ "n", "x" }, "R", "<plug>(SubversiveSubstitute)")
 Map("n", ",rr", vim.lsp.buf.rename)
 
 Map("x", "<leader>re", function()
-    require("refactoring").refactor("Extract Function")
+	require("refactoring").refactor("Extract Function")
 end)
 Map("x", "<leader>rf", function()
-    require("refactoring").refactor("Extract Function to File")
+	require("refactoring").refactor("Extract Function to File")
 end)
 Map("x", "<leader>rv", function()
-    require("refactoring").refactor("Extract Variable")
+	require("refactoring").refactor("Extract Variable")
 end)
 Map("x", "<leader>ri", function()
-    require("refactoring").refactor("Inline Variable")
+	require("refactoring").refactor("Inline Variable")
 end)
 Map("n", "<leader>re", "zii<cmd>lua require('refactoring').refactor('Extract Function')<cr>")
 Map("n", "<leader>rf", "zii<cmd>lua require('refactoring').refactor('Extract Function to File')<cr>")
@@ -322,11 +301,8 @@ Map("n", "<leader>/r", "<cmd>Ereadme<cr>")
 Map("n", "<leader>f", "<cmd>call v:lua.project_files()<cr>")
 Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
 
-nnoremap("<leader>gr", "<cmd>Gitsigns reset_hunk<CR>")
-nnoremap("<leader>gs", "<cmd>Gitsigns stage_hunk<CR>")
-
-nnoremap("<leader>gdh", "<cmd>let g:DiffviewLast='DiffviewFileHistory'<cr><cmd>DiffviewFileHistory<CR>")
-Map("n", "<leader>gdH", [["<cmd>DiffviewFileHistory" . getcwd() . "<CR>"]], { expr = true })
+Map("n", ",gr", "<cmd>Gitsigns reset_hunk<CR>")
+Map("n", ",gs", "<cmd>Gitsigns stage_hunk<CR>")
 
 -- mapxName.name("<leader>j", "Debugging")
 -- nnoremap("<leader>J", "<cmd>tabedit %<cr><cmd>lua require'dapui'.open()<cr>", "Open Debug Panels")
@@ -348,12 +324,25 @@ Map("n", "<leader>gdH", [["<cmd>DiffviewFileHistory" . getcwd() . "<CR>"]], { ex
 
 -- Git Diff Bindings
 if vim.api.nvim_win_get_option(0, "diff") then
-    Map("n", "<leader>[", "<cmd>diffget LOCAL<cr>", "Take From Local Change")
-    Map("n", "<leader>]", "<cmd>diffget REMOTE<cr>", "Take From Remote Change")
-    Map("n", "<leader><leader>", "<cmd>diffget BASE<cr>", "Take From Base")
+	Map("n", "<leader>[", "<cmd>diffget LOCAL<cr>", "Take From Local Change")
+	Map("n", "<leader>]", "<cmd>diffget REMOTE<cr>", "Take From Remote Change")
+	Map("n", "<leader><leader>", "<cmd>diffget BASE<cr>", "Take From Base")
 end
 
 -- Insert Bindings
+
+vim.cmd([[inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
+vim.cmd([[inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
+vim.cmd([[snoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
+vim.cmd([[snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
+
+Map("i", "<c-g>", "<c-o>%")
+Map("i", "<c-s>", require("lsp_signature").toggle_float_win)
+
+Map("i", ",", ",<c-g>u")
+Map("i", ".", ".<c-g>u")
+Map("i", "!", "!<c-g>u")
+Map("i", "?", "?<c-g>u")
 
 Map({ "i", "s", "c" }, "<c-a>", "<HOME>")
 Map({ "i", "s", "c" }, "<c-e>", "<END>")
@@ -361,147 +350,173 @@ Map({ "i", "s", "c" }, "<c-e>", "<END>")
 Map({ "i", "s" }, "<c-]>", "<plug>luasnip-next-choice")
 Map({ "i", "s", "c" }, "<c-space>", "v:lua.cmp_toggle()", { expr = true })
 
-noremap("<c-leftmouse>", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
-noremap("<c-rightmouse>", "gf")
+Map("n", "<c-leftmouse>", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
+Map("n", "<c-rightmouse>", "gf")
 
 Ls = require("luasnip")
 Map("n", "<leader>,s", "<cmd>source ~/.config/nvim/after/plugin/luasnip.lua<cr>")
 Map("n", "<leader>,S", "<cmd>vsplit ~/.config/nvim/after/plugin/luasnip.lua<cr>")
 
 Map({ "i", "s" }, "<tab>", function()
-    if Ls.expand_or_jumpable() then
-        Ls.expand_or_jump()
-    end
+	if Ls.expand_or_jumpable() then
+		Ls.expand_or_jump()
+	end
 end, { silent = true })
 
 Map({ "i", "s" }, "<s-tab>", function()
-    if Ls.jumpable(-1) then
-        Ls.jump(-1)
-    end
+	if Ls.jumpable(-1) then
+		Ls.jump(-1)
+	end
 end, { silent = true })
 
 Map("i", "<c-n>", function()
-    if Ls.choice_active() then
-        Ls.change_choice(1)
-    end
+	if Ls.choice_active() then
+		Ls.change_choice(1)
+	end
 end)
 
 -- Command Panel Bindings
 
 GlobalCommands = {
-    { name = "Lazygit", command = "silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit" },
+	{
+		source = "default",
+		name = "Lazygit",
+		command = "silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit",
+	},
 
-    { name = "Quickfix", command = "Telescope quickfix theme=get_ivy" },
-    { name = "Todo list", command = "TodoTelescope theme=get_ivy" },
-    { name = "Undo tree", command = "UndotreeToggle" },
+	{ source = "default", name = "Quickfix", command = "Telescope quickfix theme=get_ivy" },
+	{ source = "default", name = "Todo list", command = "TodoTelescope theme=get_ivy" },
+	{ source = "default", name = "Undo tree", command = "UndotreeToggle" },
 
-    { name = "Grep", command = "Telescope live_grep theme=get_ivy theme=get_ivy" },
-    { name = "Buffers", command = "Telescope buffers theme=get_ivy" },
-    { name = "Old files finder", command = "Telescope oldfiles theme=get_ivy" },
-    { name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
-    { name = "Workspace diagnostics", command = "Telescope diagnostics theme=get_ivy" },
-    { name = "Symbols", command = "Telescope lsp_document_symbols theme=get_ivy" },
-    { name = "Workspace symbols", command = "Telescope lsp_workspace_symbols theme=get_ivy" },
-    { name = "Notifications", command = "Telescope notify theme=get_ivy" },
-    { name = "Files", command = "Telescope git_file theme=get_ivy" },
-    { name = "File browser", command = "Telescope file_browser respect_gitignore=fals theme=get_ivy" },
-    {
-        name = "File browser (relative)",
-        func = function()
-            require("telescope").extensions.file_browser.file_browser({
-                cwd = require("telescope.utils").buffer_dir(),
-                respect_gitignore = false,
-            })
-        end,
-    },
+	{ source = "default", name = "Grep", command = "Telescope live_grep theme=get_ivy theme=get_ivy" },
+	{ source = "default", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
+	{ source = "default", name = "Old files finder", command = "Telescope oldfiles theme=get_ivy" },
+	{ source = "default", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
+	{ source = "default", name = "Workspace diagnostics", command = "Telescope diagnostics theme=get_ivy" },
+	{ source = "default", name = "Symbols", command = "Telescope lsp_document_symbols theme=get_ivy" },
+	{ source = "default", name = "Workspace symbols", command = "Telescope lsp_workspace_symbols theme=get_ivy" },
+	{ source = "default", name = "Notifications", command = "Telescope notify theme=get_ivy" },
+	{ source = "default", name = "Files", command = "Telescope git_file theme=get_ivy" },
+	{
+		source = "default",
+		name = "File browser",
+		command = "Telescope file_browser respect_gitignore=false theme=get_ivy",
+	},
+	{
+		source = "default",
+		name = "File browser (relative)",
+		command = "Telescope file_browser respect_gitignore=false theme=get_ivy cwd=%:p:h",
+	},
 
-    { name = "Reset File", command = "Gitsigns reset_buffer" },
-    { name = "Stage File", command = "Gitsigns stage_buffer" },
+	{ source = "profiling", name = "Profile Pick Event", command = "PerfPickEvent" },
+	{ source = "profiling", name = "Profile Annotate Function", command = "PerfAnnotateFunction" },
+	{ source = "profiling", name = "Profile Toggle Annotations", command = "PerfToggleAnnotations" },
+	{ source = "profiling", name = "Profile Hottest Lines", command = "PerfHottestLines" },
+	{ source = "profiling", name = "Profile Hottest Symbols", command = "PerfHottestSymbols" },
+	{ source = "profiling", name = "Profile Hottest Callers Function", command = "PerfHottestCallersFunction" },
+	{ source = "profiling", name = "Profile Hottest Callers Selection", command = "PerfHottestCallersSelection" },
+	{ source = "profiling", name = "Profile Load Flat", command = "PerfLoadFlat" },
+	{ source = "profiling", name = "Profile Load Call Graph", command = "PerfLoadCallGraph" },
+	{ source = "profiling", name = "Profile Load Flame Graph", command = "PerfLoadFlameGraph" },
+	{ source = "profiling", name = "Profile Cycle Format", command = "PerfCycleFormat" },
 
-    { name = "File history", command = "DiffviewFileHistory" },
-    { name = "Diff of unstaged", command = "DiffviewOpen" },
-    {
-        name = "Diff of a commit",
-        func = function()
-            git_commits_onechange()
-        end,
-    },
-    {
-        name = "Diff against a commit",
-        func = function()
-            git_commits_againsthead()
-        end,
-    },
-    {
-        name = "Diff of a branch from current",
-        func = function()
-            git_branch_dif()
-        end,
-    },
-    {
-        name = "Diff of a branch from master",
-        func = function()
-            git_branch_mergebase()
-        end,
-    },
+	{ source = "git", name = "Reset File", command = "Gitsigns reset_buffer" },
+	{ source = "git", name = "Stage File", command = "Gitsigns stage_buffer" },
 
-    { name = "Close tab", command = "tabclose" },
-    { name = "Toggle text wraping", "set wrap!" },
-    { name = "Clear search", command = "let @/=''" },
+	{ source = "git", name = "File history", command = "DiffviewFileHistory" },
+	{ source = "git", name = "Diff of unstaged", command = "DiffviewOpen" },
+	{
+		source = "git",
+		name = "Diff of a commit",
+		func = function()
+			git_commits_onechange()
+		end,
+	},
+	{
+		source = "git",
+		name = "Diff against a commit",
+		func = function()
+			git_commits_againsthead()
+		end,
+	},
+	{
+		source = "git",
+		name = "Diff of a branch from current",
+		func = function()
+			git_branch_dif()
+		end,
+	},
+	{
+		source = "git",
+		name = "Diff of a branch from master",
+		func = function()
+			git_branch_mergebase()
+		end,
+	},
+
+	{ source = "default", name = "Close tab", command = "tabclose" },
+	{ source = "default", name = "Toggle text wraping", "set wrap!" },
+	{ source = "default", name = "Clear search", command = "let @/=''" },
 }
 
-mapxName.name("<leader>l", "ProfiLe")
-nnoremap("<leader>le", "<cmd>PerfPickEvent<cr>")
-nnoremap("<leader>la", "<cmd>PerfAnnotate<cr>")
-nnoremap("<leader>lf", "<cmd>PerfAnnotateFunction<cr>")
-xnoremap("<leader>la", "<cmd>PerfAnnotateSelection<cr>")
-nnoremap("<leader>lt", "<cmd>PerfToggleAnnotations<cr>")
-nnoremap("<leader>lh", "<cmd>PerfHottestLines<cr>")
-nnoremap("<leader>ls", "<cmd>PerfHottestSymbols<cr>")
-nnoremap("<leader>lc", "<cmd>PerfHottestCallersFunction<cr>")
-xnoremap("<leader>lc", "<cmd>PerfHottestCallersSelection<cr>")
-mapxName.name("<leader>lo", "Open Profile Data")
-nnoremap("<leader>lof", "<cmd>PerfLoadFlat<cr>")
-nnoremap("<leader>log", "<cmd>PerfLoadCallGraph<cr>")
-nnoremap("<leader>loo", "<cmd>PerfLoadFlameGraph<cr>")
-nnoremap("<leader>loc", "<cmd>PerfCycleFormat<cr>")
-
 Map("n", "<leader>p", function()
-    CommandCentre()
+	CommandCentre()
 end)
 function CommandCentre(argCommands)
-    local commands = {}
-    if argCommands == nil then
-        for _, v in pairs(GlobalCommands) do
-            table.insert(commands, v)
-        end
-        if vim.b[0].localCommands ~= nil then
-            for _, v in pairs(vim.b[0].localCommands) do
-                table.insert(commands, v)
-            end
-        end
-    else
-        commands = argCommands
-    end
+	local commands = {}
+	if argCommands == nil then
+		for _, v in pairs(GlobalCommands) do
+			table.insert(commands, v)
+		end
+		if vim.b[0].localCommands ~= nil then
+			for _, v in pairs(vim.b[0].localCommands) do
+				table.insert(commands, v)
+			end
+		end
+	else
+		commands = argCommands
+	end
 
-    vim.ui.select(commands, {
-        prompt = "Select Commands",
-        format_item = function(item)
-            return item.name
-        end,
-    }, function(choice)
-        if not choice then
-            return
-        end
+	table.sort(commands, function(a, b)
+		return a.name < b.name
+	end)
 
-        if choice.func ~= nil then
-            choice.func()
-        elseif choice.command ~= nil then
-            vim.cmd(choice.command)
-        elseif choice.keymap ~= nil then
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(choice.keymap, true, true, true), "n", false)
-        else
-            return
-        end
-    end)
+	table.sort(commands, function(a, b)
+		return a.source < b.source
+	end)
+
+	vim.ui.select(commands, {
+		prompt = "Select Commands",
+		format_item = function(item)
+			return "[" .. item.source:sub(1, 3) .. "] " .. item.name
+		end,
+	}, function(choice)
+		if not choice then
+			Notification_Dict["no-command"] = pcall(
+				vim.notify(
+					"No command entered",
+					"warn",
+					{ title = "Command Centre", replace = Notification_Dict["no-command"] }
+				)
+			)
+			return
+		end
+
+		if choice.func ~= nil then
+			choice.func()
+		elseif choice.command ~= nil then
+			vim.cmd(choice.command)
+		elseif choice.keymap ~= nil then
+			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(choice.keymap, true, true, true), "n", false)
+		else
+			Notification_Dict["no-command"] = pcall(
+				vim.notify(
+					"Command does not have an action",
+					"warn",
+					{ title = "Command Centre", replace = Notification_Dict["no-command"] }
+				)
+			)
+			return
+		end
+	end)
 end
