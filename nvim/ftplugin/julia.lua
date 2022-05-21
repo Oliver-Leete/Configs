@@ -20,16 +20,6 @@ local project = handle:read("*a")
 handle:close()
 vim.b[0].project = string.gsub(project, "\n", "")
 
-Map("n", "<leader>/d", "<cmd>Edoc<cr>", { buffer = 0 })
-Map("n", "<leader>/D", "<cmd>EmainDoc<cr>", { buffer = 0 })
-Map("n", "<leader>/s", "<cmd>Esource<cr>", { buffer = 0 })
-Map("n", "<leader>/t", "<cmd>Etest<cr>", { buffer = 0 })
-Map("n", "<leader>/T", [["<cmd>e test/" . b:project . "Tests.jl<cr>"]], { expr = true, buffer = 0 })
-Map("n", "<leader>/p", "<cmd>Edeps<cr>", { buffer = 0 })
-Map("n", "<leader>/S", [["<cmd>Esource " . b:project . "<cr>"]], { expr = true, buffer = 0 })
-
-Map("n", ",rb", "<cmd>call julia#toggle_function_blockassign()<cr>")
-
 vim.g.projectionist_heuristics = {
 	["src/*.jl"] = {
 		["src/*.jl"] = {
@@ -90,19 +80,6 @@ function _G.jul_perf_flat(perf_data)
 
 	return result
 end
-
-vim.b[0].localCommands = {
-	{ source = "julia", name = "Tasks", func = Select_runnables },
-	{ source = "julia", name = "Fetch errors from persistant", command = "silent !kittyQuickfix juliaTest" },
-	{ source = "julia", name = "Fetch errors from one shot", command = "silent !kittyQuickfix OneShot" },
-	{
-		source = "julia",
-		name = "Load profile data",
-		func = function()
-			require("perfanno").load_traces(jul_perf_flat("/tmp/julprof.data"))
-		end,
-	},
-}
 
 -- Test selector function
 vim.b[0].LastCommand = {
@@ -241,18 +218,37 @@ function Select_runnables()
 	CommandCentre(runnables_list)
 end
 
-Map("n", "<leader>d", Select_runnables, { buffer = 0 })
--- Map("n", "<leader>D", function() runnable(vim.b[0].LastCommand) end, {buffer=0})
+Run_closest = function()
+	local func_pat = "function [^%s]"
+	local func_num = vim.fn.search(func_pat, "nbWc")
 
-Map("n", ",dd", function()
-	BP_Toggle("Debugger", "@bp")
-end, { buffer = 0 })
-Map("n", ",di", function()
-	BP_Toggle("Infiltrator", "@infiltrate")
-end, { buffer = 0 })
-Map("n", ",dq", function()
-	BP_Remove_All({ "Debugger", "Infiltrator" }, { "@bp", "@infiltrate" })
-end, { buffer = 0 })
+	local ass_pat = "[^%s](.*) = "
+	local ass_num = vim.fn.search(ass_pat, "nbWc")
+
+	local struct_pat = "struct [^%s]"
+	local struct_num = vim.fn.search(struct_pat, "nbWc")
+
+	local line_num = math.max(func_num, ass_num, struct_num)
+
+	if line_num == 0 then
+		return
+	end
+
+	local line = vim.fn.getline(line_num)
+	local name
+	if struct_num < math.max(func_num, ass_num) then
+		name = line:match("([^%s]+)%(")
+	else
+		name = line:match("struct ([%w^_-]+)")
+	end
+	vim.cmd(
+		[[silent !kittyPersistent JuliaPersistant juliaTest ']]
+			.. vim.b[0].project
+			.. [[Tests.runtests("]]
+			.. name
+			.. [[",spin=false)']]
+	)
+end
 
 local bp_remover = function(imp_line, bp_pattern, mod_pat)
 	vim.cmd("delete")
@@ -278,7 +274,6 @@ local bp_remover = function(imp_line, bp_pattern, mod_pat)
 end
 
 local bp_adder = function(bp, imp_line, mod_pat)
-	-- if there isn't already an import statement in this module in this doc, add it
 	local mod_num = vim.fn.search(mod_pat, "nbW")
 	local imp_num = vim.fn.search(imp_line, "nbW")
 	if imp_num == 0 or imp_num < mod_num then
@@ -325,3 +320,38 @@ BP_Remove_All = function(imp_names, bp_names)
 	vim.fn.cursor(cur_pos[2] - 2, cur_pos[3])
 end
 
+Map("n", "<leader>/d", "<cmd>Edoc<cr>", { buffer = 0 })
+Map("n", "<leader>/D", "<cmd>EmainDoc<cr>", { buffer = 0 })
+Map("n", "<leader>/s", "<cmd>Esource<cr>", { buffer = 0 })
+Map("n", "<leader>/t", "<cmd>Etest<cr>", { buffer = 0 })
+Map("n", "<leader>/T", [["<cmd>e test/" . b:project . "Tests.jl<cr>"]], { expr = true, buffer = 0 })
+Map("n", "<leader>/p", "<cmd>Edeps<cr>", { buffer = 0 })
+Map("n", "<leader>/S", [["<cmd>Esource " . b:project . "<cr>"]], { expr = true, buffer = 0 })
+
+Map("n", ",rb", "<cmd>call julia#toggle_function_blockassign()<cr>")
+
+Map("n", "<leader>d", Select_runnables, { buffer = 0 })
+Map("n", "<leader>D", Run_closest, { expr = true, buffer = 0 })
+
+Map("n", ",dd", function()
+	BP_Toggle("Debugger", "@bp")
+end, { buffer = 0 })
+Map("n", ",di", function()
+	BP_Toggle("Infiltrator", "@infiltrate")
+end, { buffer = 0 })
+Map("n", ",dq", function()
+	BP_Remove_All({ "Debugger", "Infiltrator" }, { "@bp", "@infiltrate" })
+end, { buffer = 0 })
+
+vim.b[0].localCommands = {
+	{ source = "julia", name = "Tasks", func = Select_runnables },
+	{ source = "julia", name = "Fetch errors from persistant", command = "silent !kittyQuickfix juliaTest" },
+	{ source = "julia", name = "Fetch errors from one shot", command = "silent !kittyQuickfix OneShot" },
+	{
+		source = "julia",
+		name = "Load profile data",
+		func = function()
+			require("perfanno").load_traces(jul_perf_flat("/tmp/julprof.data"))
+		end,
+	},
+}
