@@ -15,11 +15,14 @@
 
 require("nvim-treesitter.configs").setup({
 	autopairs = { enable = true },
-	-- indent = { enable = true },
+	indent = { enable = false },
 	matchup = { enable = true },
 	highlight = {
 		enable = true,
 		addditional_vim_regex_highlighting = false,
+        disable = function(lang)
+                return lang == "tex" or lang == "latex"
+        end,
 	},
 	textobjects = {
 		select = {
@@ -69,3 +72,13 @@ require("nvim-treesitter.configs").setup({
 })
 
 require("iswap").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
+require("trevj").setup({
+	containers = {
+		julia = {
+			matrix_expression = { final_separator = ";", final_end_line = true, skip = {matrix_row = false} },
+			tuple_expression = { final_separator = ",", final_end_line = true },
+			argument_list = { final_separator = false, final_end_line = true },
+			parameter_list = { final_separator = false, final_end_line = true },
+		},
+	},
+})

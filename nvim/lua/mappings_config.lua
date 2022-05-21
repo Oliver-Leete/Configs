@@ -114,11 +114,12 @@ vim.api.nvim_set_var("julia_blocks", false)
 vim.api.nvim_set_var("surround_no_mappings", true)
 vim.api.nvim_set_var("wordmotion_nomap", true)
 
-Map({ "n", "x", "o" }, "H", [[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], { expr = true })
-Map({ "n", "x", "o" }, "L", [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], { expr = true })
+Map({ "n", "x", "o" }, "j", [[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], { expr = true })
+Map({ "n", "x", "o" }, "k", [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], { expr = true })
 
 Map({ "n", "x", "o" }, "H", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true })
-Map({ "n", "x", "o" }, "L", [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], { expr = true })
+Map({ "n", "x" }, "L", [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], { expr = true })
+Map("o", "L", "$")
 
 Map("n", "J", "gi")
 Map({ "n", "x" }, "U", "<c-r>")
@@ -153,6 +154,7 @@ Map("x", ">", ">gv")
 
 Map("n", "<c-v>", "<cmd>vsplit %<cr>")
 Map("n", "<c-x>", "<cmd>split %<cr>")
+Map("n", "<c-p>", "<cmd>pedit %<cr>")
 
 Map("n", "<cr><cr>", "<cmd>call v:lua.sendLines(v:count)<cr>", { silent = true })
 Map("n", "<cr>", "<plug>(sendOp)", { silent = true })
@@ -175,7 +177,8 @@ Map({ "n", "x", "o" }, "gg", "gg")
 Map({ "n", "x", "o" }, "gj", "G")
 Map({ "n", "x", "o" }, "gk", "gg")
 Map({ "n", "x", "o" }, "gh", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true })
-Map({ "n", "x", "o" }, "gl", [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], { expr = true })
+Map({ "n", "x" }, "gl", [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], { expr = true })
+Map("o", "gl", "$")
 
 Map({ "n", "x", "o" }, "gt", "H")
 Map({ "n", "x", "o" }, "gm", "M")
@@ -220,31 +223,33 @@ Map("n", ",.", vim.lsp.buf.code_action)
 Map("x", ",.", vim.lsp.buf.range_code_action)
 
 Map("n", ",j", "m1J`1")
-Map("n", ",k", "i<cr><esc>")
+Map("n", ",k", require("trevj").format_at_cursor)
 Map("x", ",j", "J")
-Map("x", ",k", "c<cr><esc>")
 
 Map({ "n", "x" }, "R", "<plug>(SubversiveSubstitute)")
 
 Map("n", ",rr", vim.lsp.buf.rename)
 
-Map("x", "<leader>re", function()
-	require("refactoring").refactor("Extract Function")
-end)
-Map("x", "<leader>rf", function()
-	require("refactoring").refactor("Extract Function to File")
-end)
-Map("x", "<leader>rv", function()
-	require("refactoring").refactor("Extract Variable")
-end)
-Map("x", "<leader>ri", function()
-	require("refactoring").refactor("Inline Variable")
-end)
-Map("n", "<leader>re", "zii<cmd>lua require('refactoring').refactor('Extract Function')<cr>")
-Map("n", "<leader>rf", "zii<cmd>lua require('refactoring').refactor('Extract Function to File')<cr>")
-Map("n", "<leader>rv", "zi,<cmd>lua require('refactoring').refactor('Extract Variable')<cr>")
-Map("n", "<leader>ri", "zi,<cmd>lua require('refactoring').refactor('Inline Variable')<cr>")
-Map("n", "<leader>rd", "<cmd>Neogen<cr>")
+Map("n", ",rf", function() require("refactoring").refactor("Extract Block") end)
+Map("x", ",rf", function() require("refactoring").refactor("Extract Function") end)
+Map("n", ",rF", function() require("refactoring").refactor("Extract Block to File") end)
+Map("x", ",rF", function() require("refactoring").refactor("Extract Function to File") end)
+Map("n", ",re", "mi,:lua require('refactoring').refactor('Extract Variable')<cr>", { remap = true })
+Map("x", ",re", function() require("refactoring").refactor("Extract Variable") end)
+Map("n", ",ri", function() require("refactoring").refactor("Inline Variable") end)
+Map("x", ",ri", function() require("refactoring").refactor("Inline Variable") end)
+
+Map("n", ",rd", "<cmd>Neogen<cr>")
+Map("n", ",ra", ",ca,", { remap = true })
+
+Map("n", ",dd", function() require('refactoring').debug.printf({})end)
+Map("n", ",dv", "miw:lua require('refactoring').debug.print_var({})<cr>", { remap = false })
+Map("x", ",dv", function() require('refactoring').debug.print_var({})end)
+Map("n", ",dq", function() require('refactoring').debug.cleanup({})end)
+
+Map("n", ",s", "<Plug>SortMotion", { remap = true })
+Map("n", ",ss", "<Plug>SortLines", { remap = true })
+Map("x", ",s", "<Plug>SortMotionVisual", { remap = true })
 
 Map({ "n", "x" }, ",t", "<Plug>(EasyAlign)")
 
@@ -317,10 +322,6 @@ Map("n", ",gs", "<cmd>Gitsigns stage_hunk<CR>")
 -- nnoremap("<leader>jq", function() dap.close() end, "Quit")
 -- nnoremap("<leader>jb", function() dap.toggle_breakpoint() end, "Set Breakpoint")
 -- nnoremap("<leader>je", function() require'dapui'.eval() end, "Eval Exression")
--- mapxName.name("<leader>jp", "Print Debugging")
---     nnoremap("<leader>jd", function() require('refactoring').debug.printf({})end, "Printf")
---     xnoremap("<leader>jd", function() require('refactoring').debug.print_var({})end, "Print Var")
---     nnoremap("<leader>jq", function() require('refactoring').debug.cleanup({})end, "Cleanup")
 
 -- Git Diff Bindings
 if vim.api.nvim_win_get_option(0, "diff") then
@@ -378,60 +379,37 @@ end)
 -- Command Panel Bindings
 
 GlobalCommands = {
-	{
-		source = "default",
-		name = "Lazygit",
-		command = "silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit",
-	},
+    { source = "coverage", name = "Coverage summary", command = "CoverageSummary"},
+    { source = "coverage", name = "Load coverage", command = "Coverage"},
+    { source = "coverage", name = "Toggle coverage", command = "CoverageToggle"},
 
-	{ source = "default", name = "Quickfix", command = "Telescope quickfix theme=get_ivy" },
-	{ source = "default", name = "Todo list", command = "TodoTelescope theme=get_ivy" },
+	{ source = "default", name = "Clear search", command = "let @/=''" },
+	{ source = "default", name = "Close tab", command = "tabclose" },
+	{ source = "default", name = "Toggle text wraping", "set wrap!" },
 	{ source = "default", name = "Undo tree", command = "UndotreeToggle" },
 
-	{ source = "default", name = "Grep", command = "Telescope live_grep theme=get_ivy theme=get_ivy" },
-	{ source = "default", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
-	{ source = "default", name = "Old files finder", command = "Telescope oldfiles theme=get_ivy" },
-	{ source = "default", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
-	{ source = "default", name = "Workspace diagnostics", command = "Telescope diagnostics theme=get_ivy" },
-	{ source = "default", name = "Symbols", command = "Telescope lsp_document_symbols theme=get_ivy" },
-	{ source = "default", name = "Workspace symbols", command = "Telescope lsp_workspace_symbols theme=get_ivy" },
-	{ source = "default", name = "Notifications", command = "Telescope notify theme=get_ivy" },
-	{ source = "default", name = "Files", command = "Telescope git_file theme=get_ivy" },
+	{ source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
+	{ source = "finders", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
 	{
-		source = "default",
-		name = "File browser",
-		command = "Telescope file_browser respect_gitignore=false theme=get_ivy",
-	},
-	{
-		source = "default",
+		source = "finders",
 		name = "File browser (relative)",
 		command = "Telescope file_browser respect_gitignore=false theme=get_ivy cwd=%:p:h",
 	},
-
-	{ source = "profiling", name = "Profile Pick Event", command = "PerfPickEvent" },
-	{ source = "profiling", name = "Profile Annotate Function", command = "PerfAnnotateFunction" },
-	{ source = "profiling", name = "Profile Toggle Annotations", command = "PerfToggleAnnotations" },
-	{ source = "profiling", name = "Profile Hottest Lines", command = "PerfHottestLines" },
-	{ source = "profiling", name = "Profile Hottest Symbols", command = "PerfHottestSymbols" },
-	{ source = "profiling", name = "Profile Hottest Callers Function", command = "PerfHottestCallersFunction" },
-	{ source = "profiling", name = "Profile Hottest Callers Selection", command = "PerfHottestCallersSelection" },
-	{ source = "profiling", name = "Profile Load Flat", command = "PerfLoadFlat" },
-	{ source = "profiling", name = "Profile Load Call Graph", command = "PerfLoadCallGraph" },
-	{ source = "profiling", name = "Profile Load Flame Graph", command = "PerfLoadFlameGraph" },
-	{ source = "profiling", name = "Profile Cycle Format", command = "PerfCycleFormat" },
-
-	{ source = "git", name = "Reset File", command = "Gitsigns reset_buffer" },
-	{ source = "git", name = "Stage File", command = "Gitsigns stage_buffer" },
-
-	{ source = "git", name = "File history", command = "DiffviewFileHistory" },
-	{ source = "git", name = "Diff of unstaged", command = "DiffviewOpen" },
 	{
-		source = "git",
-		name = "Diff of a commit",
-		func = function()
-			git_commits_onechange()
-		end,
+		source = "finders",
+		name = "File browser",
+		command = "Telescope file_browser respect_gitignore=false theme=get_ivy",
 	},
+	{ source = "finders", name = "Files", command = "Telescope git_file theme=get_ivy" },
+	{ source = "finders", name = "Grep", command = "Telescope live_grep theme=get_ivy theme=get_ivy" },
+	{ source = "finders", name = "Notifications", command = "Telescope notify theme=get_ivy" },
+	{ source = "finders", name = "Old files finder", command = "Telescope oldfiles theme=get_ivy" },
+	{ source = "finders", name = "Quickfix", command = "Telescope quickfix theme=get_ivy" },
+	{ source = "finders", name = "Symbols", command = "Telescope lsp_document_symbols theme=get_ivy" },
+	{ source = "finders", name = "Todo list", command = "TodoTelescope theme=get_ivy" },
+	{ source = "finders", name = "Workspace diagnostics", command = "Telescope diagnostics theme=get_ivy" },
+	{ source = "finders", name = "Workspace symbols", command = "Telescope lsp_workspace_symbols theme=get_ivy" },
+
 	{
 		source = "git",
 		name = "Diff against a commit",
@@ -453,10 +431,34 @@ GlobalCommands = {
 			git_branch_mergebase()
 		end,
 	},
+	{
+		source = "git",
+		name = "Diff of a commit",
+		func = function()
+			git_commits_onechange()
+		end,
+	},
+	{ source = "git", name = "Diff of unstaged", command = "DiffviewOpen" },
+	{ source = "git", name = "File history", command = "DiffviewFileHistory" },
+	{
+		source = "git",
+		name = "Lazygit",
+		command = "silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit",
+	},
+	{ source = "git", name = "Reset File", command = "Gitsigns reset_buffer" },
+	{ source = "git", name = "Stage File", command = "Gitsigns stage_buffer" },
 
-	{ source = "default", name = "Close tab", command = "tabclose" },
-	{ source = "default", name = "Toggle text wraping", "set wrap!" },
-	{ source = "default", name = "Clear search", command = "let @/=''" },
+	{ source = "profiling", name = "Profile Annotate Function", command = "PerfAnnotateFunction" },
+	{ source = "profiling", name = "Profile Cycle Format", command = "PerfCycleFormat" },
+	{ source = "profiling", name = "Profile Hottest Callers Function", command = "PerfHottestCallersFunction" },
+	{ source = "profiling", name = "Profile Hottest Callers Selection", command = "PerfHottestCallersSelection" },
+	{ source = "profiling", name = "Profile Hottest Lines", command = "PerfHottestLines" },
+	{ source = "profiling", name = "Profile Hottest Symbols", command = "PerfHottestSymbols" },
+	{ source = "profiling", name = "Profile Load Call Graph", command = "PerfLoadCallGraph" },
+	{ source = "profiling", name = "Profile Load Flame Graph", command = "PerfLoadFlameGraph" },
+	{ source = "profiling", name = "Profile Load Flat", command = "PerfLoadFlat" },
+	{ source = "profiling", name = "Profile Pick Event", command = "PerfPickEvent" },
+	{ source = "profiling", name = "Profile Toggle Annotations", command = "PerfToggleAnnotations" },
 }
 
 Map("n", "<leader>p", function()
@@ -474,7 +476,7 @@ function CommandCentre(argCommands)
 			end
 		end
 	else
-		commands = argCommands
+        commands = argCommands
 	end
 
 	table.sort(commands, function(a, b)

@@ -4,4 +4,10 @@
 artist=$(playerctl metadata | grep artist | cut -d' ' -f 3- | awk -v len=35 '{ if (length($0) > len) print substr($0, 1, len-3) "..."; else print; }' | xargs)
 title=$(playerctl metadata | grep title | cut -d' ' -f 3- | awk -v len=35 '{ if (length($0) > len) print substr($0, 1, len-3) "..."; else print; }' | xargs)
 
-[ -z "$title"] && echo "" || echo " | <action=playerctl play-pause><box type=Bottom width=2 mt=2 color=#76946A><fc=#76946A>$title - $artist</fc></box></action>"
+if $(playerctl -a status | rg -q Playing); then
+    color="#76946A"
+else
+    color="#C34043"
+fi
+
+[ -z "$title"] && echo "" || echo " | <box type=Bottom width=2 mt=2 color=$color><fc=$color><action=playerctl previous>玲</action><action=playerctl play-pause>$title - $artist</action><action=playerctl next>怜</action></fc></box>"

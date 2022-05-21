@@ -24,6 +24,7 @@ menu () {
     play
     pause
     dnd
+    discord
 
     apps
     utilities
@@ -33,6 +34,7 @@ menu () {
     next
     skip
     prev
+    music
 
     sound
     sound-input
@@ -50,8 +52,6 @@ menu () {
 
     terminal
     calculator
-    music
-    discord
     colour-picker
 
     screenshot
@@ -84,6 +84,7 @@ menu () {
         play)               playerctl play ;;
         pause)              playerctl pause ;;
         dnd)                /home/oleete/.config/bin/toggle DND_menu ;;
+        discord)            /home/oleete/.cabal/bin/xmonadctl-exe nsp-disc ;;
 
         apps)               rofi -matching fuzzy -show drun -show-icons ;;
         utilities)          utilities       ;;
@@ -106,21 +107,17 @@ menu () {
 
         sys-mon)            /home/oleete/.cabal/bin/xmonadctl-exe nsp-sysm ;;
 
-        # tasks)              workLauncher task ;;
-        admin)           workLauncher gcal ;;
-        # gmail)              workLauncher gmail ;;
+        admin)              workLauncher gcal ;;
 
         terminal)           /home/oleete/.cabal/bin/xmonadctl-exe nsp-cons ;;
         calculator)         /home/oleete/.cabal/bin/xmonadctl-exe nsp-calc ;;
-        discord)            /home/oleete/.cabal/bin/xmonadctl-exe nsp-disc ;;
-        music)              /home/oleete/.cabal/bin/xmonadctl-exe nsp-musc ;;
         colour-picker)      /home/oleete/.config/bin/colorPicker ;;
 
         screenshot)         /home/oleete/.config/bin/screencapt ;;
         screenshot-area)    /home/oleete/.config/bin/screencapt area ;;
         screencap)          /home/oleete/.config/bin/screencast ;;
         screencap-area)     /home/oleete/.config/bin/screencast area ;;
-        screenkey)          screenkey ;;
+        screenkey)          killall screenkey || screenkey ;;
         screenkey-settings) screenkey --show-settings ;;
 
         mirror)             /home/oleete/.cabal/bin/xmonadctl-exe layout-dir ;;

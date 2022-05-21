@@ -28,6 +28,8 @@ Map("n", "<leader>/T", [["<cmd>e test/" . b:project . "Tests.jl<cr>"]], { expr =
 Map("n", "<leader>/p", "<cmd>Edeps<cr>", { buffer = 0 })
 Map("n", "<leader>/S", [["<cmd>Esource " . b:project . "<cr>"]], { expr = true, buffer = 0 })
 
+Map("n", ",rb", "<cmd>call julia#toggle_function_blockassign()<cr>")
+
 vim.g.projectionist_heuristics = {
 	["src/*.jl"] = {
 		["src/*.jl"] = {
@@ -220,7 +222,8 @@ function Select_runnables()
 			name = name,
 			command = [[silent !kittyPersistent JuliaPersistant juliaTest 'a = @bprofile ]]
 				.. command
-				.. [[; Profile.print(IOContext(open("/tmp/julprof.data", "w"), :displaysize=>(100000,1000)), format=:flat); ProfileView.view(); loadProfData(); a']],
+				.. [[; Profile.print(IOContext(open("/tmp/julprof.data", "w"), :displaysize=>(100000,1000)), format=:flat); ]]
+				.. [[ProfileView.view(); loadProfData(); a']],
 		})
 		table.insert(runnables_list, {
 			source = "Debug",
@@ -240,3 +243,85 @@ end
 
 Map("n", "<leader>d", Select_runnables, { buffer = 0 })
 -- Map("n", "<leader>D", function() runnable(vim.b[0].LastCommand) end, {buffer=0})
+
+Map("n", ",dd", function()
+	BP_Toggle("Debugger", "@bp")
+end, { buffer = 0 })
+Map("n", ",di", function()
+	BP_Toggle("Infiltrator", "@infiltrate")
+end, { buffer = 0 })
+Map("n", ",dq", function()
+	BP_Remove_All({ "Debugger", "Infiltrator" }, { "@bp", "@infiltrate" })
+end, { buffer = 0 })
+
+local bp_remover = function(imp_line, bp_pattern, mod_pat)
+	vim.cmd("delete")
+
+	-- if there are no bps left, remove the import
+	local mod_1 = vim.fn.search(mod_pat, "nbW")
+	local mod_2 = vim.fn.search(mod_pat, "ncW")
+
+	local bp_1 = vim.fn.search(bp_pattern, "nbW")
+	local bp_2 = vim.fn.search(bp_pattern, "ncW")
+
+	if (bp_1 == 0 or (bp_1 < mod_1 and mod_1 ~= 0)) and (bp_2 == 0 or (bp_2 > mod_2 and mod_2 ~= 0)) then
+		local imp_num = vim.fn.search(imp_line, "nbW")
+
+		if imp_num < mod_1 then
+			return
+		end
+
+		local cur_pos = vim.fn.getcurpos()
+		vim.cmd(imp_num .. "delete")
+		vim.fn.cursor(cur_pos[2] - 2, cur_pos[3])
+	end
+end
+
+local bp_adder = function(bp, imp_line, mod_pat)
+	-- if there isn't already an import statement in this module in this doc, add it
+	local mod_num = vim.fn.search(mod_pat, "nbW")
+	local imp_num = vim.fn.search(imp_line, "nbW")
+	if imp_num == 0 or imp_num < mod_num then
+		vim.fn.append(mod_num, imp_line)
+	end
+
+	vim.cmd("normal! o" .. bp)
+end
+
+BP_Toggle = function(imp_name, bp)
+	local mod_pat = "^[%s]*module .*"
+
+	local imp_line = "using " .. imp_name
+	local bp_pattern = "^[%s]*" .. bp .. ".*"
+
+	if string.match(vim.fn.getline("."), bp_pattern) then
+		bp_remover(imp_line, bp_pattern, mod_pat)
+	else
+		bp_adder(bp, imp_line, mod_pat)
+	end
+end
+
+BP_Remove_All = function(imp_names, bp_names)
+	local cur_pos = vim.fn.getcurpos()
+	for _, imp_name in pairs(imp_names) do
+		local imp_line = "using " .. imp_name
+		local imp_num = vim.fn.search(imp_line, "nw")
+
+		while imp_num ~= 0 do
+			vim.cmd(imp_num .. "delete")
+			imp_num = vim.fn.search(imp_line, "nw")
+		end
+	end
+
+	for _, bp_name in pairs(bp_names) do
+		local bp_line = "[%s]*" .. bp_name .. ".*"
+		local bp_num = vim.fn.search(bp_line, "nw")
+
+		while bp_num ~= 0 do
+			vim.cmd(bp_num .. "delete")
+			bp_num = vim.fn.search(bp_line, "nw")
+		end
+	end
+	vim.fn.cursor(cur_pos[2] - 2, cur_pos[3])
+end
+

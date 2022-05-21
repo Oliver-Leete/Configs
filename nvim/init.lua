@@ -28,12 +28,14 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'tpope/vim-projectionist'
     Plug 'ThePrimeagen/harpoon'
 
+    Plug 'ap/vim-you-keep-using-that-word'
     Plug 'phaazon/hop.nvim'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
     Plug 'numToStr/Comment.nvim'
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
+    Plug 'christoomey/vim-sort-motion'
     Plug 'Konfekt/vim-CtrlXA'
     Plug 'svermeulen/vim-subversive'
     Plug 'inkarkat/vim-unconditionalpaste'
@@ -50,20 +52,24 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'fladson/vim-kitty'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
+    Plug 'lewis6991/gitsigns.nvim'
+    Plug 'sindrets/diffview.nvim'
+    Plug 'akinsho/git-conflict.nvim'
+
     Plug 'rebelot/kanagawa.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
-    Plug 'lewis6991/gitsigns.nvim'
     Plug 'windwp/windline.nvim'
 
     Plug 'mbbill/undotree'
     Plug 'folke/todo-comments.nvim'
-    Plug 'sindrets/diffview.nvim'
 
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/nvim-lsp-installer'
     Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'brymer-meneses/grammar-guard.nvim'
     Plug 'simrat39/rust-tools.nvim'
+    Plug 'p00f/clangd_extensions.nvim'
+    Plug 'b0o/schemastore.nvim'
 
     Plug 'ray-x/lsp_signature.nvim'
 
@@ -77,10 +83,10 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'hrsh7th/cmp-cmdline'
     Plug 'uga-rosa/cmp-dictionary'
     Plug 'mtoohey31/cmp-fish'
+    Plug 'saadparwaiz1/cmp_luasnip'
 
     Plug 'L3MON4D3/LuaSnip'
     Plug 'danymat/neogen'
-    Plug 'saadparwaiz1/cmp_luasnip'
     Plug 'windwp/nvim-autopairs'
 
     Plug 'nvim-telescope/telescope-file-browser.nvim'
@@ -94,6 +100,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-treesitter/nvim-treesitter-textobjects'
     Plug 'ThePrimeagen/refactoring.nvim'
     Plug 'mizlan/iswap.nvim'
+    Plug 'AckslD/nvim-trevJ.lua'
+    Plug 'SmiteshP/nvim-gps'
 
     Plug 'mfussenegger/nvim-dap'
     Plug 'Pocco81/DAPInstall.nvim'
@@ -142,9 +150,9 @@ require("myfuncs_config")
 require("lsp_config")
 require("treesitter_config")
 require("dap_config")
-require("git_config")
 require("bubble")
 require("ui_config")
+require("git_config")
 
 local enterAndExitVim = vim.api.nvim_create_augroup("enterAndExitVim", { clear = true })
 vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-window-title ""', group = enterAndExitVim })

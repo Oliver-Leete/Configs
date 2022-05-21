@@ -59,7 +59,8 @@ repos = [
 # Custom commands
 [commands]
 #"Python Environment" = "~/dev/.env/bin/pip install -i https://pypi.python.org/simple -U --upgrade-strategy eager jupyter"
-"Julia Packages" = "julia -e 'using Pkg; Pkg.update()'"
+"Julia" = "juliaup update; juliaup gc"
+"Julia Packages" = "julia -e 'using Pkg; Pkg.update()'; julia +beta -e 'using Pkg; Pkg.update()'"
 "Xmonad" = "cd ~/.config/xmonad; stack install; xmonad --recompile; xmonad --restart"
 "Xmobar" = "cd ~/.config/xmobar/xmobar-git; stack install; xmonad --recompile; xmonad --restart"
 "TLDR" = "tldr -u"

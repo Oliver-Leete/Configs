@@ -1,16 +1,16 @@
 vim.b[0].localCommands = {
-	{ source = "tex", name = "Build project", command = "<leader>mm", "<cmd>VimtexCompileSS<cr>" },
+	{ source = "tex", name = "Build project", command = "VimtexCompileSS" },
 	{ source = "tex", name = "Table of content", command = "VimtexTocToggle" },
 	{ source = "tex", name = "Forward Search", command = "TexlabForward" },
-	{ source = "tex", name = "Table of labels", "call g:custom_toc1.toggle()" },
-	{ source = "tex", name = "Table of todos", "call g:custom_toc2.toggle()" },
+	{ source = "tex", name = "Table of labels", command = "call g:custom_toc1.toggle()" },
+	{ source = "tex", name = "Table of todos", command = "call g:custom_toc2.toggle()" },
 	{ source = "tex", name = "Word Count", command = "VimtexCountWord" },
 }
 
 Map("n", "<localleader><localleader>", "<cmd>TexlabForward<cr>", { buffer = 0, silent = true })
+Map("n", "<leader>d", "<cmd>VimtexCompileSS<cr>", { buffer = 0, silent = true })
 
 Map("n", "KK", "<cmd>VimtexDocPackage<cr>", { buffer = 0 })
-Map("n", "d", "<cmd>VimtexCompileSS<cr>", { buffer = 0 })
 
 Map("n", "[s", "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-[[)zz", { buffer = 0 })
 Map("n", "[S", "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-[])zz", { buffer = 0 })

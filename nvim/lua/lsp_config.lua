@@ -89,6 +89,7 @@ require("lspconfig").grammar_guard.setup({
 					["\\acf{}"] = "dummy",
 					["\\pac{}"] = "dummy",
 					["\\Pac{}"] = "dummy",
+					["\\subref{}"] = "dummy",
 				},
 			},
 			dictionary = { ["en-GB"] = { "ANSYS", "UPF" } },
@@ -108,10 +109,20 @@ local default = {
 }
 
 lspconfig.bashls.setup(default)
-lspconfig.ccls.setup(default)
 lspconfig.fortls.setup(default)
 lspconfig.julials.setup(default)
 lspconfig.pyright.setup(default)
+
+lspconfig.jsonls.setup({
+	on_attach = custom_attach,
+	capabilities = capabilities,
+	flags = { debounce_text_changes = 500 },
+	settings = {
+		json = {
+			schemas = require("schemastore").json.schemas(),
+		},
+	},
+})
 
 lspconfig.sumneko_lua.setup({
 	on_attach = custom_attach,
@@ -176,11 +187,19 @@ lspconfig.hls.setup({
 	root_dir = nvim_lsp.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml", ".git"),
 })
 
+require("clangd_extensions").setup({
+	server = {
+		on_attach = custom_attach,
+		capabilities = capabilities,
+		flags = { debounce_text_changes = 500 },
+	},
+})
+
 require("rust-tools").setup({
 	server = {
 		on_attach = custom_attach,
 		capabilities = capabilities,
-		flags = { debounce_text_changes = 501 },
+		flags = { debounce_text_changes = 500 },
 		standalone = true,
 	},
 	tools = {
@@ -194,22 +213,24 @@ require("rust-tools").setup({
 	},
 })
 
+local null_ls = require("null-ls")
 -- Null LS
 require("null-ls").setup({
 	on_attach = custom_attach,
 	diagnostics_format = "[#{c}] #{m} (#{s})",
 	sources = {
-		require("null-ls").builtins.code_actions.gitsigns.with({ filetypes = { "kitty" } }),
-		require("null-ls").builtins.formatting.trim_whitespace,
-		require("null-ls").builtins.formatting.trim_newlines,
-		require("null-ls").builtins.formatting.shfmt,
-		require("null-ls").builtins.formatting.shellharden,
-		require("null-ls").builtins.formatting.stylua,
-		require("null-ls").builtins.formatting.fish_indent,
-		require("null-ls").builtins.formatting.latexindent,
-		require("null-ls").builtins.diagnostics.markdownlint,
-		require("null-ls").builtins.diagnostics.chktex,
-		require("null-ls").builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
-		require("null-ls").builtins.code_actions.refactoring,
+		null_ls.builtins.code_actions.gitsigns.with({ filetypes = { "kitty" } }),
+		null_ls.builtins.formatting.trim_whitespace,
+		null_ls.builtins.formatting.trim_newlines,
+		null_ls.builtins.formatting.shfmt,
+		null_ls.builtins.formatting.shellharden,
+		null_ls.builtins.formatting.stylua,
+		null_ls.builtins.formatting.fish_indent,
+		null_ls.builtins.formatting.latexindent,
+		null_ls.builtins.diagnostics.markdownlint,
+		null_ls.builtins.diagnostics.chktex,
+		null_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
+		null_ls.builtins.code_actions.refactoring,
+		null_ls.builtins.diagnostics.gitlint,
 	},
 })
