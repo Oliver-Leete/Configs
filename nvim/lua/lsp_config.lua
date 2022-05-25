@@ -60,45 +60,6 @@ local custom_attach = function(client)
 end
 
 require("grammar-guard").init()
-require("lspconfig").grammar_guard.setup({
-	cmd = { "/home/oleete/.local/share/nvim/lsp_servers/ltex/ltex-ls/bin/ltex-ls" },
-	settings = {
-		ltex = {
-			enabled = { "latex", "tex", "bib", "markdown" },
-			checkFrequency = "save",
-			language = "en-GB",
-			setenceCacheSize = 2000,
-			diagnosticSeverity = { MORFOLOGIK_RULE_EN_GB = "hint", default = "info" },
-			additionalRules = {
-				enablePickyRules = false,
-				motherTongue = "en-GB",
-			},
-			latex = {
-				environments = { Fortran = "ignore", jllisting = "ignore", algorithmic = "ignore" },
-				commands = {
-					["\\twosubfigures{}{}{}{}{}{}"] = "ignore",
-					["\\threesubfigures{}{}{}{}{}{}{}{}{}"] = "ignore",
-					["\\subfile{}"] = "ignore",
-					["\\glsname{}"] = "dummy",
-					["\\gls{}"] = "dummy",
-					["\\glsfirst{}"] = "dummy",
-					["\\pgls{}"] = "dummy",
-					["\\ac{}"] = "dummy",
-					["\\acl{}"] = "dummy",
-					["\\acs{}"] = "dummy",
-					["\\acf{}"] = "dummy",
-					["\\pac{}"] = "dummy",
-					["\\Pac{}"] = "dummy",
-					["\\subref{}"] = "dummy",
-				},
-			},
-			dictionary = { ["en-GB"] = { "ANSYS", "UPF" } },
-			disabledRules = { ["en-GB"] = { "OXFORD_SPELLING_Z_NOT_S" } },
-			hiddenFalsePositives = {},
-		},
-	},
-})
-
 require("nvim-lsp-installer").setup({})
 
 local lspconfig = require("lspconfig")
@@ -107,11 +68,26 @@ local default = {
 	capabilities = capabilities,
 	flags = { debounce_text_changes = 500 },
 }
-
 lspconfig.bashls.setup(default)
 lspconfig.fortls.setup(default)
 lspconfig.julials.setup(default)
-lspconfig.pyright.setup(default)
+lspconfig.jedi_language_server.setup(default)
+
+local jedi_capabilities = vim.lsp.protocol.make_client_capabilities()
+jedi_capabilities.textDocument.completion.completionItem.snippetSupport = true
+jedi_capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+jedi_capabilities['textDocument']['codeAction'] = false
+
+lspconfig.sourcery.setup({
+    on_attach = custom_attach,
+    capabilities = capabilities,
+	flags = { debounce_text_changes = 500 },
+    init_options = {
+        token = "user_ncjcsKxRD7LGXBwHUwLWu7iSmWgu81zaRMbDjwNZqfGkUhRaDVMuZ9pwVyA",
+        extension_version = 'vim.lsp',
+        editor_version = 'vim',
+    },
+})
 
 lspconfig.jsonls.setup({
 	on_attach = custom_attach,
@@ -156,7 +132,7 @@ lspconfig.sumneko_lua.setup({
 
 lspconfig.texlab.setup({
 	on_attach = custom_attach,
-	capabilities = capabilities,
+	-- capabilities = capabilities,
 	flags = { debounce_text_changes = 500 },
 	root_dir = nvim_lsp.util.root_pattern(".git"),
 	settings = {
@@ -179,6 +155,7 @@ lspconfig.texlab.setup({
 		},
 	},
 })
+
 lspconfig.hls.setup({
 	on_attach = custom_attach,
 	capabilities = capabilities,
@@ -213,6 +190,48 @@ require("rust-tools").setup({
 	},
 })
 
+lspconfig.grammar_guard.setup({
+	cmd = { "/home/oleete/.local/share/nvim/lsp_servers/ltex/ltex-ls/bin/ltex-ls" },
+    on_attach = custom_attach,
+    flags = { debounce_text_changes = 500},
+	settings = {
+		ltex = {
+			enabled = { "latex", "tex", "bib", "markdown" },
+			checkFrequency = "save",
+			language = "en-GB",
+			setenceCacheSize = 2000,
+			diagnosticSeverity = { MORFOLOGIK_RULE_EN_GB = "hint", default = "info" },
+			additionalRules = {
+				enablePickyRules = false,
+				motherTongue = "en-GB",
+			},
+			latex = {
+				environments = { Fortran = "ignore", jllisting = "ignore", algorithmic = "ignore" },
+				commands = {
+					["\\twosubfigures{}{}{}{}{}{}"] = "ignore",
+					["\\threesubfigures{}{}{}{}{}{}{}{}{}"] = "ignore",
+					["\\subfile{}"] = "ignore",
+					["\\glsname{}"] = "dummy",
+					["\\gls{}"] = "dummy",
+					["\\glsfirst{}"] = "dummy",
+					["\\pgls{}"] = "dummy",
+					["\\ac{}"] = "dummy",
+					["\\acl{}"] = "dummy",
+					["\\acs{}"] = "dummy",
+					["\\acf{}"] = "dummy",
+					["\\pac{}"] = "dummy",
+					["\\Pac{}"] = "dummy",
+					["\\subref{}"] = "dummy",
+				},
+			},
+			dictionary = { ["en-GB"] = { "ANSYS", "UPF" } },
+			disabledRules = { ["en-GB"] = { "OXFORD_SPELLING_Z_NOT_S" } },
+			hiddenFalsePositives = {},
+		},
+	},
+})
+
+
 local null_ls = require("null-ls")
 -- Null LS
 require("null-ls").setup({
@@ -230,7 +249,7 @@ require("null-ls").setup({
 		null_ls.builtins.diagnostics.markdownlint,
 		null_ls.builtins.diagnostics.chktex,
 		null_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
-		null_ls.builtins.code_actions.refactoring,
+		-- null_ls.builtins.code_actions.refactoring,
 		null_ls.builtins.diagnostics.gitlint,
 	},
 })

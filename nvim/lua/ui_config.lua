@@ -124,29 +124,25 @@ vim.api.nvim_set_hl(0, "WinBarIcon", { fg = "#957FB8", bg = "#181820", bold = fa
 vim.api.nvim_set_hl(0, "WinBarAltIcon", { fg = "#7E9CD8", bg = "#181820", bold = false })
 vim.api.nvim_set_hl(0, "WinBarSep", { fg = "#DCD7BA", bg = "#181820", bold = true })
 
-local gpsGroup = vim.api.nvim_create_augroup("gps_group", { clear = true })
+function GPS_Bar()
+    local winbar = ""
+    if vim.fn.expand("%") ~= "" then
+        local icon = require("nvim-web-devicons").get_icon(vim.fn.expand("%:t"), vim.fn.expand("%:e"))
+        if icon == "" or icon == nil then
+            icon = ""
+        end
+        winbar = winbar .. "%#WinBarIcon#" .. icon .. "%#WinBarText# " .. "%f"
+    end
+    if require("nvim-gps").is_available() then
+        local location = require("nvim-gps").get_location()
+        if location ~= "" then
+            winbar = winbar .. " %#WinBarSep#>%#WinBarText# " .. location
+        end
+    end
+    if winbar ~= "" then
+        winbar = "%=" .. winbar .. "%="
+    end
+    return winbar
+end
 
-vim.api.nvim_create_autocmd({ "CursorMoved", "BufEnter" }, {
-    pattern = "*",
-    group = gpsGroup,
-    callback = function()
-        local winbar = ""
-        if vim.fn.expand("%") ~= "" then
-            local icon = require("nvim-web-devicons").get_icon(vim.fn.expand("%:t"), vim.fn.expand("%:e"))
-            if icon == "" or icon == nil then
-                icon = ""
-            end
-            winbar = winbar .. "%#WinBarIcon#" .. icon .. "%#WinBarText# " .. "%f"
-        end
-        if require("nvim-gps").is_available() then
-            local location = require("nvim-gps").get_location()
-            if location ~= "" then
-                winbar = winbar .. " %#WinBarSep#>%#WinBarText# " .. location
-            end
-        end
-        if winbar ~= "" then
-            winbar = "%=" .. winbar .. "%="
-        end
-        vim.wo.winbar = winbar
-    end,
-})
+vim.wo.winbar = "%{%v:lua.GPS_Bar()%}"

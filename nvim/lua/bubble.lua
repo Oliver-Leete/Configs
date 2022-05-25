@@ -117,6 +117,9 @@ basic.right = {
 			{ " ", state.mode[2] },
 		}
 	end,
+    click = function()
+        vim.cmd("LspInfo")
+    end,
 }
 basic.git = {
 	name = "git",
@@ -137,6 +140,9 @@ basic.git = {
 		end
 		return ""
 	end,
+    click = function()
+        require("telescope.builtin").git_status(require("telescope.themes").get_ivy())
+    end
 }
 
 basic.dap = {

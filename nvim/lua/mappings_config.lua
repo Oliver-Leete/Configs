@@ -59,8 +59,8 @@ Map({ "n", "x" }, "<m-d>", [["_d]])
 
 Map("n", "<m-o>", "m1o<esc>`1")
 Map("n", "<m-O>", "m1O<esc>`1")
-Map("n", "<m-o>", "<esc>`>o<esc>gv")
-Map("n", "<m-O>", "<esc>`<O<esc>gv")
+Map("x", "<m-o>", "<esc>`>o<esc>gv")
+Map("x", "<m-O>", "<esc>`<O<esc>gv")
 
 Map("x", "I", "I")
 Map("x", "A", "A")

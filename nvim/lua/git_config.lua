@@ -3,35 +3,13 @@ require("gitsigns").setup({
 })
 -- DiffView.nvim
 
-local cb = require("diffview.config").diffview_callback
+local actions = require("diffview.config").actions
 require("diffview").setup({
 	diff_binaries = false,
 	use_icons = true,
 	key_bindings = {
 		view = {
-			["<tab>"] = cb("select_next_entry"),
-			["<s-tab>"] = cb("select_prev_entry"),
-			["<leader>x"] = cb("focus_files"),
-			["<esc>"] = cb("focus_files"),
-		},
-		file_panel = {
-			["j"] = cb("next_entry"),
-			["<down>"] = cb("next_entry"),
-			["k"] = cb("prev_entry"),
-			["<up>"] = cb("prev_entry"),
-			["<cr>"] = cb("select_entry"),
-			["o"] = cb("select_entry") .. "<cmd>sleep 100m<cr><cmd>DiffviewToggleFiles<cr>",
-			["p"] = cb("select_entry") .. "<cmd>DiffviewFocusFiles<cr>",
-			["<2-LeftMouse>"] = cb("select_entry"),
-			["-"] = cb("toggle_stage_entry"),
-			["S"] = cb("stage_all"),
-			["U"] = cb("unstage_all"),
-			["XX"] = cb("restore_entry"),
-			["R"] = cb("refresh_files"),
-			["<s-tab>"] = cb("select_prev_entry"),
-			["<leader>t"] = cb("focus_files"),
-			["<leader>x"] = cb("toggle_files"),
-			["<esc>"] = "<cmd>DiffviewClose<cr>",
+			["<esc>"] = actions.focus_files,
 		},
 	},
 })
@@ -64,12 +42,16 @@ vim.api.nvim_create_autocmd("User", {
 				},
 			}
 		end
-        vim.keymap.set('n', 'co', '<Plug>(git-conflict-ours)')
-        vim.keymap.set('n', 'cb', '<Plug>(git-conflict-both)')
-        vim.keymap.set('n', 'c0', '<Plug>(git-conflict-none)')
-        vim.keymap.set('n', 'ct', '<Plug>(git-conflict-theirs)')
-        vim.keymap.set('n', '[x', function() markGoCentre("GitConflictPrevConflict", "x")end)
-        vim.keymap.set('n', ']x', function() markGoCentre("GitConflictNextConflict", "x")end)
+		vim.keymap.set("n", "co", "<Plug>(git-conflict-ours)")
+		vim.keymap.set("n", "cb", "<Plug>(git-conflict-both)")
+		vim.keymap.set("n", "c0", "<Plug>(git-conflict-none)")
+		vim.keymap.set("n", "ct", "<Plug>(git-conflict-theirs)")
+		vim.keymap.set("n", "[x", function()
+			markGoCentre("GitConflictPrevConflict", "x")
+		end)
+		vim.keymap.set("n", "]x", function()
+			markGoCentre("GitConflictNextConflict", "x")
+		end)
 	end,
 })
 
