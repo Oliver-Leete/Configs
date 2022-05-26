@@ -65,15 +65,6 @@ Map("x", "<m-O>", "<esc>`<O<esc>gv")
 Map("x", "I", "I")
 Map("x", "A", "A")
 
-Map("n", "<leader>n", require("harpoon.mark").add_file)
-Map("n", "<leader>e", require("harpoon.ui").toggle_quick_menu)
-local harpoon_keys = { "a", "r", "s", "t" }
-for i, key in pairs(harpoon_keys) do
-	Map("n", "<leader>" .. key, function()
-		require("harpoon.ui").nav_file(i)
-	end)
-end
-
 Map("n", "<c-/>", ",cc", { remap = true })
 Map("x", "<c-/>", ",c", { remap = true })
 
@@ -85,6 +76,14 @@ vim.api.nvim_create_autocmd("filetype", {
 	pattern = { "qf", "help", "vim-plug", "juliadoc", "lspinfo", "tsplayground", "harpoon-menu" },
 	callback = function()
 		Map("n", "<esc>", "<cmd>q<cr>", { buffer = 0 })
+	end,
+	group = panelMappings,
+})
+vim.api.nvim_create_autocmd("BufEnter", {
+	callback = function()
+		if vim.bo.buftype == "nofile" then
+			Map("n", "<esc>", "<cmd>q<cr>", { buffer = 0 })
+		end
 	end,
 	group = panelMappings,
 })
@@ -188,15 +187,6 @@ Map("n", "gf", "gf")
 Map("n", "gF", ":edit <cfile><cr>")
 Map("n", "gx", ":!xdg-open <cfile> &<cr><cr>")
 
-Map("n", "gs", "<cmd>Telescope lsp_workspace_symbols theme=get_ivy<cr>")
-Map("n", "gS", "<cmd>Telescope lsp_document_symbols theme=get_ivy<cr>")
-Map("n", "ge", "<cmd>Telescope diagnostics theme=get_ivy<cr>")
-Map("n", "gr", "<cmd>Telescope lsp_references theme=get_ivy<cr>")
-Map("n", "gI", "<cmd>Telescope lsp_implementations theme=get_ivy<cr>")
-Map("n", "gD", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>")
-Map("n", "go", vim.lsp.buf.outgoing_calls)
-Map("n", "gi", vim.lsp.buf.incoming_calls)
-
 -- VIEW
 Map({ "n", "x" }, "vt", "zt")
 Map({ "n", "x" }, "vv", "zz")
@@ -219,9 +209,6 @@ Map({ "n", "x" }, "vs", "<cmd>normal! HVL<cr>")
 
 Map({ "n", "x" }, "m", "v")
 
-Map("n", ",.", vim.lsp.buf.code_action)
-Map("x", ",.", vim.lsp.buf.range_code_action)
-
 Map("n", ",j", "m1J`1")
 Map("n", ",k", require("trevj").format_at_cursor)
 Map("x", ",j", "J")
@@ -230,22 +217,42 @@ Map({ "n", "x" }, "R", "<plug>(SubversiveSubstitute)")
 
 Map("n", ",rr", vim.lsp.buf.rename)
 
-Map("n", ",rf", function() require("refactoring").refactor("Extract Block") end)
-Map("x", ",rf", function() require("refactoring").refactor("Extract Function") end)
-Map("n", ",rF", function() require("refactoring").refactor("Extract Block to File") end)
-Map("x", ",rF", function() require("refactoring").refactor("Extract Function to File") end)
+Map("n", ",rf", function()
+	require("refactoring").refactor("Extract Block")
+end)
+Map("x", ",rf", function()
+	require("refactoring").refactor("Extract Function")
+end)
+Map("n", ",rF", function()
+	require("refactoring").refactor("Extract Block to File")
+end)
+Map("x", ",rF", function()
+	require("refactoring").refactor("Extract Function to File")
+end)
 Map("n", ",re", "mi,:lua require('refactoring').refactor('Extract Variable')<cr>", { remap = true })
-Map("x", ",re", function() require("refactoring").refactor("Extract Variable") end)
-Map("n", ",ri", function() require("refactoring").refactor("Inline Variable") end)
-Map("x", ",ri", function() require("refactoring").refactor("Inline Variable") end)
+Map("x", ",re", function()
+	require("refactoring").refactor("Extract Variable")
+end)
+Map("n", ",ri", function()
+	require("refactoring").refactor("Inline Variable")
+end)
+Map("x", ",ri", function()
+	require("refactoring").refactor("Inline Variable")
+end)
 
 Map("n", ",rd", "<cmd>Neogen<cr>")
 Map("n", ",ra", ",ca,", { remap = true })
 
-Map("n", ",dd", function() require('refactoring').debug.printf({})end)
+Map("n", ",dd", function()
+	require("refactoring").debug.printf({})
+end)
 Map("n", ",dv", "miw:lua require('refactoring').debug.print_var({})<cr>", { remap = false })
-Map("x", ",dv", function() require('refactoring').debug.print_var({})end)
-Map("n", ",dq", function() require('refactoring').debug.cleanup({})end)
+Map("x", ",dv", function()
+	require("refactoring").debug.print_var({})
+end)
+Map("n", ",dq", function()
+	require("refactoring").debug.cleanup({})
+end)
 
 Map("n", ",s", "<Plug>SortMotion", { remap = true })
 Map("n", ",ss", "<Plug>SortLines", { remap = true })
@@ -297,8 +304,15 @@ Map("x", ",fk", "<Plug>CaserVTitleKebabCase", { remap = true })
 Map("x", ",f.", "<Plug>CaserVDotCase", { remap = true })
 
 Map("n", "<leader><leader>", "<cmd>e #<cr>")
-Map("n", "<leader>.", vim.lsp.buf.code_action)
-Map("x", "<leader>.", vim.lsp.buf.range_code_action)
+
+Map("n", "<leader>n", require("harpoon.mark").add_file)
+Map("n", "<leader>e", require("harpoon.ui").toggle_quick_menu)
+local harpoon_keys = { "a", "r", "s", "t" }
+for i, key in pairs(harpoon_keys) do
+	Map("n", "<leader>" .. key, function()
+		require("harpoon.ui").nav_file(i)
+	end)
+end
 
 Map("n", "<leader>//", "<cmd>A<cr>")
 Map("n", "<leader>/r", "<cmd>Ereadme<cr>")
@@ -379,9 +393,9 @@ end)
 -- Command Panel Bindings
 
 GlobalCommands = {
-    { source = "coverage", name = "Coverage summary", command = "CoverageSummary"},
-    { source = "coverage", name = "Load coverage", command = "Coverage"},
-    { source = "coverage", name = "Toggle coverage", command = "CoverageToggle"},
+	{ source = "coverage", name = "Coverage summary", command = "CoverageSummary" },
+	{ source = "coverage", name = "Load coverage", command = "Coverage" },
+	{ source = "coverage", name = "Toggle coverage", command = "CoverageToggle" },
 
 	{ source = "default", name = "Clear search", command = "let @/=''" },
 	{ source = "default", name = "Close tab", command = "tabclose" },
@@ -395,14 +409,20 @@ GlobalCommands = {
 		name = "File browser (relative)",
 		command = "Telescope file_browser respect_gitignore=false theme=get_ivy cwd=%:p:h",
 	},
+	{ source = "finders", name = "Files", command = "Telescope git_files theme=get_ivy" },
 	{
 		source = "finders",
 		name = "File browser",
 		command = "Telescope file_browser respect_gitignore=false theme=get_ivy",
 	},
-	{ source = "finders", name = "Files", command = "Telescope git_file theme=get_ivy" },
 	{ source = "finders", name = "Grep", command = "Telescope live_grep theme=get_ivy theme=get_ivy" },
-	{ source = "finders", name = "Notifications", command = "Telescope notify theme=get_ivy" },
+	{
+		source = "finders",
+		name = "Notifications",
+		func = function()
+			require("telescope").extensions.notify.notify(require("telescope.themes").get_ivy())
+		end,
+	},
 	{ source = "finders", name = "Old files finder", command = "Telescope oldfiles theme=get_ivy" },
 	{ source = "finders", name = "Quickfix", command = "Telescope quickfix theme=get_ivy" },
 	{ source = "finders", name = "Symbols", command = "Telescope lsp_document_symbols theme=get_ivy" },
@@ -476,7 +496,7 @@ function CommandCentre(argCommands)
 			end
 		end
 	else
-        commands = argCommands
+		commands = argCommands
 	end
 
 	table.sort(commands, function(a, b)
@@ -494,12 +514,10 @@ function CommandCentre(argCommands)
 		end,
 	}, function(choice)
 		if not choice then
-			Notification_Dict["no-command"] = pcall(
-				vim.notify(
-					"No command entered",
-					"warn",
-					{ title = "Command Centre", replace = Notification_Dict["no-command"] }
-				)
+			Notification_Dict["no-command"] = vim.notify(
+				"No command entered",
+				"warn",
+				{ title = "Command Centre", replace = Notification_Dict["no-command"] }
 			)
 			return
 		end

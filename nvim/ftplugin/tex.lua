@@ -90,7 +90,8 @@ end
 vim.api.nvim_buf_set_option(0, "textwidth", 100)
 
 -- vim.cmd([[let g:vimtex_toc_config=[{"mode":3, "split_width":60}]]])
-vim.cmd([[let g:vimtex_quickfix_mode=0]])
+vim.g.tex_flavor = "latex"
+vim.b.vimtex_quickfix_mode = 0
 vim.cmd([[let g:vimtex_view_general_viewer='zathura']])
 vim.cmd([[let g:vimtex_view_forward_search_on_start=1]])
 vim.cmd([[let g:vimtex_view_automatic = 0]])
@@ -184,3 +185,5 @@ if vim.g.viewerOpen ~= 1 then
 	vim.cmd("sleep 200m")
 	vim.cmd("silent !xdotool key super+n")
 end
+
+vim.wo.winbar = "%{%v:lua.GPS_Bar()%}"

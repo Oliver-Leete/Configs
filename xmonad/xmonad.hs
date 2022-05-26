@@ -61,6 +61,7 @@ import XMonad.Layout.PerWorkspace
 import XMonad.Layout.SimpleFocus
 import XMonad.Layout.Spacing
 
+import XMonad.Util.Cursor
 import XMonad.Util.EZConfig
 import XMonad.Util.Hacks
 import XMonad.Util.NamedScratchpadLocal
@@ -477,7 +478,7 @@ myStartupHook :: X ()
 myStartupHook = do
     killAllStatusBars
     spawn "feh --bg-fill --randomize ~/Pictures/wallpapers/"
-    spawn "xsetroot -cursor_name left_ptr"
+    setDefaultCursor xC_left_ptr
     spawnOnce "picom -b --config ~/.config/picom/picom.conf"
     spawnOnce "insync start; insync hide"
     spawnOnce "/home/oleete/.config/bin/startupScript"
