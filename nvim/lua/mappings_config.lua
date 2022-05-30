@@ -393,6 +393,7 @@ GlobalCommands = {
 	{ source = "coverage", name = "Load coverage", command = "Coverage" },
 	{ source = "coverage", name = "Toggle coverage", command = "CoverageToggle" },
 
+	{ source = "default", name = "Close buffer", command = "bdelete!" },
 	{ source = "default", name = "Clear search", command = "let @/=''" },
 	{ source = "default", name = "Close tab", command = "tabclose" },
 	{ source = "default", name = "Toggle text wraping", "set wrap!" },
