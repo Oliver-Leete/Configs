@@ -30,7 +30,7 @@ import qualified XMonad.StackSet as W
 
 import XMonad.Actions.CycleWSLocal
 import XMonad.Actions.CycleWS (nextScreen, shiftNextScreen)
-import XMonad.Actions.DynamicProjects
+import XMonad.Actions.DynamicProjectsLocal
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.Navigation2D
 import XMonad.Actions.PerWindowKeys
@@ -137,93 +137,230 @@ projects =
 
     [ Project   { projectName       = wsTMP
                 , projectDirectory  = "/tmp"
+                , projectApp1       = kitty
+                , projectApp1Force  = kittyForce
+                , projectApp2       = return ()
+                , projectApp2Force  = return ()
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ return ()
                 }
+
     , Project   { projectName       = wsTMP2
                 , projectDirectory  = "/tmp"
+                , projectApp1       = kitty
+                , projectApp1Force  = kittyForce
+                , projectApp2       = return ()
+                , projectApp2Force  = return ()
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ return ()
                 }
+
     , Project   { projectName       = ws3D
                 , projectDirectory  = "~/Projects/Printing"
-                , projectStartHook  = Just $ do spawnOn ws3D "prusa-slicer"
+                , projectApp1       = upPointer $ runOrRaise "flatpak run com.prusa3d.PrusaSlicer" (className =? "PrusaSlicer")
+                , projectApp1Force  = upPointer $ spawn "flatpak run com.prusa3d.PrusaSlicer"
+                , projectApp2       = return ()
+                , projectApp2Force  = return ()
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
+                , projectStartHook  = Just $ do spawnOn ws3D "flatpak run com.prusa3d.PrusaSlicer"
                 }
+
     , Project   { projectName       = wsDND
                 , projectDirectory  = "~/Projects/Rpgs"
+                , projectApp1       = kitty
+                , projectApp1Force  = kittyForce
+                , projectApp2       = zathura
+                , projectApp2Force  = zathuraForce
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ spawnOn wsDND myBrowser
                 }
+
     , Project   { projectName       = wsCON
                 , projectDirectory  = "~/.config"
+                , projectApp1       = nvim
+                , projectApp1Force  = nvimForce
+                , projectApp2       = return ()
+                , projectApp2Force  = return ()
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsCON myTerminal
                                                 spawnOn wsCON ("sleep .5; " ++ myBrowser)
                 }
+
     , Project   { projectName       = wsQMK
                 , projectDirectory  = "~/Projects/qmk_firmware"
+                , projectApp1       = nvim
+                , projectApp1Force  = nvimForce
+                , projectApp2       = return ()
+                , projectApp2Force  = return ()
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsQMK myTerminal
                                                 spawnOn wsQMK ("sleep .5; " ++ myBrowser)
                 }
+
     , Project   { projectName       = wsZMK
                 , projectDirectory  = "~/Projects/zmk-config"
+                , projectApp1       = nvim
+                , projectApp1Force  = nvimForce
+                , projectApp2       = return ()
+                , projectApp2Force  = return ()
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsZMK myTerminal
                                                 spawnOn wsZMK ("sleep .5; " ++ myBrowser)
                 }
+
     , Project   { projectName       = wsPER
                 , projectDirectory  = "~/PersonalDrive"
+                , projectApp1       = kitty
+                , projectApp1Force  = kittyForce
+                , projectApp2       = zathura
+                , projectApp2Force  = zathuraForce
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsPER myBrowser
                 }
+
     , Project   { projectName       = wsWRK
                 , projectDirectory  = "~/UniDrive"
+                , projectApp1       = kitty
+                , projectApp1Force  = kittyForce
+                , projectApp2       = zathura
+                , projectApp2Force  = zathuraForce
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsWRK myBrowser
                 }
+
     , Project   { projectName       = wsSIM
                 , projectDirectory  = "~/Projects/PowderModel"
+                , projectApp1       = nvim
+                , projectApp1Force  = nvimForce
+                , projectApp2       = return ()
+                , projectApp2Force  = return ()
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsSIM myTerminal
                                                 spawnOn wsSIM ("sleep .2; " ++ myBrowser)
                 }
     , Project   { projectName       = wsEXP
                 , projectDirectory  = "~/Projects/JuliaPlotting"
+                , projectApp1       = nvim
+                , projectApp1Force  = nvimForce
+                , projectApp2       = return ()
+                , projectApp2Force  = return ()
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsEXP myTerminal
                                                 spawnOn wsEXP ("sleep .2; " ++ myBrowser)
                 }
     , Project   { projectName       = wsTHESIS
                 , projectDirectory  = "~/Projects/Thesis/thesis"
+                , projectApp1       = nvim
+                , projectApp1Force  = nvimForce
+                , projectApp2       = zathura
+                , projectApp2Force  = zathuraForce
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsTHESIS myTerminal
                                                 spawnOn wsTHESIS ("sleep .2; " ++ myBrowser)
                 }
+
     , Project   { projectName       = wsCOMMENTS
                 , projectDirectory  = "~/Projects/Thesis/thesis"
+                , projectApp1       = nvim
+                , projectApp1Force  = nvimForce
+                , projectApp2       = zathura
+                , projectApp2Force  = zathuraForce
+                , projectApp3       = upPointer $ runOrRaise "foxitreader" (className =? "Foxit Reader")
+                , projectApp3Force  = upPointer $ spawn "foxitreader"
                 , projectStartHook  = Just $ do spawnOn wsCOMMENTS myTerminal
                                                 spawnOn wsCOMMENTS ("sleep .2; " ++ myBrowser)
                                                 spawnOn wsCOMMENTS "sleep .4; foxitreader"
                 }
+
     , Project   { projectName       = wsWRKN
                 , projectDirectory  = "~/Projects/Thesis/Notes"
-                , projectStartHook  = Just $ do spawnOn wsCOMMENTS "obsidian"
+                , projectApp1       = upPointer $ runOrRaise "flatpak run md.obsidian.Obsidian" (className =? "obsidian")
+                , projectApp1Force  = upPointer $ spawn "flatpak run md.obsidian.Obsidian"
+                , projectApp2       = zathura
+                , projectApp2Force  = zathuraForce
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
+                , projectStartHook  = Just $ do spawnOn wsCOMMENTS "flatpak run md.obsidian.Obsidian"
                 }
+
     , Project   { projectName       = wsANSYS
                 , projectDirectory  = "~/Projects/ANSYSpowderModel"
+                , projectApp1       = nvim
+                , projectApp1Force  = nvimForce
+                , projectApp2       = upPointer $ runOrRaise "flatpak run org.paraview.Paraview" (className =? "ParaView")
+                , projectApp2Force  = upPointer $ spawn "flatpak run org.paraview.Paraview"
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsANSYS myTerminal
                                                 spawnOn wsANSYS ("sleep .2; " ++ myBrowser)
                 }
+
     , Project   { projectName       = wsCODE
                 , projectDirectory  = "~/Projects/rustBook"
+                , projectApp1       = nvim
+                , projectApp1Force  = nvimForce
+                , projectApp2       = return ()
+                , projectApp2Force  = return ()
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsCODE myTerminal
                                                 spawnOn wsCODE ("sleep .2; " ++ myBrowser)
                 }
+
     , Project   { projectName       = wsSCN
                 , projectDirectory  = "~/Projects/Scintilla/Scintilla"
+                , projectApp1       = nvim
+                , projectApp1Force  = nvimForce
+                , projectApp2       = return ()
+                , projectApp2Force  = return ()
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsSCN myTerminal
                                                 spawnOn wsSCN ("sleep .2; " ++ myBrowser)
                 }
+
     , Project   { projectName       = wsSCNN
                 , projectDirectory  = "~/Projects/Scintilla/docs"
+                , projectApp1       = nvim
+                , projectApp1Force  = nvimForce
+                , projectApp2       = return ()
+                , projectApp2Force  = return ()
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsSCNN myTerminal
                                                 spawnOn wsSCNN ("sleep .2; " ++ myBrowser)
                 }
+
     , Project   { projectName       = wsGAME
                 , projectDirectory  = "~/Documents"
+                , projectApp1       = upPointer $ runOrRaise "steam" (className =? "Steam")
+                , projectApp1Force  = upPointer $ spawn "steam"
+                , projectApp2       = return ()
+                , projectApp2Force  = return ()
+                , projectApp3       = return ()
+                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsGAME "steam"
                 }
     ]
+    where
+        nvim = bF $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")])
+        nvimForce = upPointer $ spawn myTerminal
+        zathura = upPointer $ runOrRaise "zathura" (className =? "Zathura")
+        zathuraForce = upPointer $ spawn "zathura"
+        kitty = upPointer $ runOrRaise "kittyMaker" (className =? "kitty")
+        kittyForce = upPointer $ spawn "kitty"
 
 ----------------------------------------------------------------------------------------------------
 -- Applications                                                                                   --
@@ -374,13 +511,13 @@ myKeys =
     , ("M-<Return>"      , bF $ kt " kittyWin" $ l(upPointer $ spawn myTerminal))
     , ("M-S-<Return>"    , upPointer $ spawn myTerminal)
 
-    , ("M-n"             , bF $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")]))
-    , ("M-e"             , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
-    , ("M-i"             , upPointer $ bindOn [(wsCOMMENTS, runOrRaise "foxitreader" (className =? "Foxit Reader"))])
+    , ("M-n"             , runProjectApp1)
+    , ("M-e"             , runProjectApp2)
+    , ("M-i"             , runProjectApp3)
     , ("M-o"             , bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
-    , ("M-S-n"           , upPointer $ spawn myTerminal)
-    , ("M-S-e"           , upPointer $ spawn "zathura")
-    , ("M-S-i"           , upPointer $ bindOn [(wsCOMMENTS, spawn "foxitreader")])
+    , ("M-S-n"           , runProjectApp1Force)
+    , ("M-S-e"           , runProjectApp2Force)
+    , ("M-S-i"           , runProjectApp3Force)
     , ("M-S-o"           , upPointer $ spawn myBrowser)
 
     , ("M-<Backspace>"   , bF $ nv "DeleteBuffer" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_BackSpace) $ crm (P.sendKey controlMask xK_w) $ l kill)
@@ -441,15 +578,6 @@ myKeys =
         toggleFloat w = windows (\s -> if M.member w (W.floating s)
                             then W.sink w s
                             else W.float w (W.RationalRect (1/4) (1/4) (1/2) (1/2)) s)
-
-        l leftover = [(pure True, leftover)]
-        nv n o = (title =? "MainEditor", spawn ("/home/oleete/.config/bin/nvrWS " ++ n)) : o
-        rNv n o = (title =? "MainEditor", n) : o
-        kt k o = (className =? "kitty", spawn (myTerminalRemote ++ k)) : o
-        rKt k o = (className =? "kitty", k) : o
-        crm c o = (isRole =? "browser", c) : o
-
-        bF o = bindFirst o
 
 myFocusMaster :: X ()
 myFocusMaster = withWindowSet $ \wset ->
@@ -588,6 +716,15 @@ upPointer :: X () -> X ()
 upPointer a = sequence_ [a, updatePointer (0.5, 0.5) (0.25, 0.25)]
 
 toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle layout, focusUnderPointer ]
+
+l leftover = [(pure True, leftover)]
+nv n o = (title =? "MainEditor", spawn ("/home/oleete/.config/bin/nvrWS " ++ n)) : o
+rNv n o = (title =? "MainEditor", n) : o
+kt k o = (className =? "kitty", spawn (myTerminalRemote ++ k)) : o
+rKt k o = (className =? "kitty", k) : o
+crm c o = (isRole =? "browser", c) : o
+
+bF o = bindFirst o
 
 ----------------------------------------------------------------------------------------------------
 -- Server Commands                                                                                --
