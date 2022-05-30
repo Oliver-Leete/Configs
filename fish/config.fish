@@ -4,7 +4,14 @@ starship init fish | source
 
 set -Ux EDITOR "/home/oleete/.config/bin/nvrTab --remote-tab-wait"
 set -Ux VISUAL "/home/oleete/.config/bin/nvrTab --remote-tab-wait"
-fish_add_path --path /home/oleete/.cargo/bin /home/oleete/.yarn/bin /home/oleete/go/bin /home/oleete/.config/nvim/node_modules/tree-sitter-cli /home/oleete/.local/bin /home/oleete/.config/bin /home/oleete/.cabal/bin /home/oleete/.ghcup/bin
+fish_add_path --path /home/oleete/.cargo/bin
+fish_add_path --path /home/oleete/.yarn/bin
+fish_add_path --path /home/oleete/go/bin
+fish_add_path --path /home/oleete/.config/nvim/node_modules/tree-sitter-cli
+fish_add_path --path /home/oleete/.local/bin
+fish_add_path --path /home/oleete/.config/bin
+fish_add_path --path /home/oleete/.cabal/bin
+fish_add_path --path /home/oleete/.ghcup/bin
 
 set WORKSPACE (wmctrl -d | grep '*' | awk "{print $NF}")
 export PAGER="/home/oleete/.config/bin/nvrTab --remote-tab-wait"

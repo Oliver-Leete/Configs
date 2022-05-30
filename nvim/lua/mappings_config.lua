@@ -233,10 +233,7 @@ Map("n", ",re", "mi,:lua require('refactoring').refactor('Extract Variable')<cr>
 Map("x", ",re", function()
 	require("refactoring").refactor("Extract Variable")
 end)
-Map("n", ",ri", function()
-	require("refactoring").refactor("Inline Variable")
-end)
-Map("x", ",ri", function()
+Map({ "n", "x" }, ",ri", function()
 	require("refactoring").refactor("Inline Variable")
 end)
 
@@ -246,10 +243,9 @@ Map("n", ",ra", ",ca,", { remap = true })
 Map("n", ",dd", function()
 	require("refactoring").debug.printf({})
 end)
-Map("n", ",dv", "miw:lua require('refactoring').debug.print_var({})<cr>", { remap = false })
-Map("x", ",dv", function()
+Map({ "n", "x" }, ",dv", function()
 	require("refactoring").debug.print_var({})
-end)
+end, { remap = false })
 Map("n", ",dq", function()
 	require("refactoring").debug.cleanup({})
 end)
@@ -479,11 +475,14 @@ GlobalCommands = {
 	{ source = "profiling", name = "Profile Load Flat", command = "PerfLoadFlat" },
 	{ source = "profiling", name = "Profile Pick Event", command = "PerfPickEvent" },
 	{ source = "profiling", name = "Profile Toggle Annotations", command = "PerfToggleAnnotations" },
+
+	{ source = "tasks", name = "Tasks", func = Select_runnables },
 }
 
 Map("n", "<leader>p", function()
 	CommandCentre()
 end)
+
 function CommandCentre(argCommands)
 	local commands = {}
 	if argCommands == nil then
@@ -508,17 +507,14 @@ function CommandCentre(argCommands)
 	end)
 
 	vim.ui.select(commands, {
-		prompt = "Select Commands",
+		prompt = "Command Centre",
 		format_item = function(item)
 			return "[" .. item.source:sub(1, 3) .. "] " .. item.name
 		end,
+		telescope = require("telescope.themes").get_ivy(),
 	}, function(choice)
 		if not choice then
-			Notification_Dict["no-command"] = vim.notify(
-				"No command entered",
-				"warn",
-				{ title = "Command Centre", replace = Notification_Dict["no-command"] }
-			)
+			pcall(vim.notify("No command entered", "warn", { title = "Command Centre" }))
 			return
 		end
 
@@ -529,14 +525,53 @@ function CommandCentre(argCommands)
 		elseif choice.keymap ~= nil then
 			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(choice.keymap, true, true, true), "n", false)
 		else
-			Notification_Dict["no-command"] = pcall(
-				vim.notify(
-					"Command does not have an action",
-					"warn",
-					{ title = "Command Centre", replace = Notification_Dict["no-command"] }
-				)
-			)
+			pcall(vim.notify("Command does not have an action", "warn", { title = "Command Centre" }))
 			return
 		end
 	end)
 end
+
+Global_Runnables = function()
+	return {}
+end
+
+function Select_runnables()
+	local runnables = {}
+
+	if Global_Runnables then
+		for _, v in pairs(Global_Runnables()) do
+			table.insert(runnables, v)
+		end
+	end
+
+	if vim.b[0].runnables then
+		for _, v in pairs(vim.b[0].runnables()) do
+			table.insert(runnables, v)
+		end
+	end
+
+	local handle1 = io.popen([[fd -I tasks.lua]])
+	local task_files = handle1:read("*a")
+	handle1:close()
+
+    if task_files then
+        local project_tasks
+        for name in task_files:gmatch("([^\r\n]+)") do
+            name = name:gsub("%./", ""):gsub("%.lua", "")
+            project_tasks = require(name)
+            if type(project_tasks) == "table" then
+                for _, v in pairs(project_tasks) do
+                    table.insert(runnables, v)
+                end
+            end
+        end
+    end
+
+	if #runnables ~= 0 then
+		CommandCentre(runnables)
+	else
+		pcall(vim.notify("Nothing to Run", "warn", { title = "Command Centre" }))
+	end
+end
+
+Map("n", "<leader>d", Select_runnables)

@@ -91,7 +91,7 @@ vim.b[0].LastCommand = {
 	end,
 }
 
-function Select_runnables()
+vim.b[0].runnables = function()
 	-- Misc Runnables
 	local runnables_list = {
 		{
@@ -145,7 +145,7 @@ function Select_runnables()
 		{
 			source = "Run",
 			name = "Run File",
-			command = [[silent !kittyOneShot julia ']] .. vim.fn.expand("%:p") .. "'",
+			command = [[silent !kittyOneShot "julia ']] .. vim.fn.expand("%:p") .. [['"]],
 		},
 		{
 			source = "Prof",
@@ -215,7 +215,7 @@ function Select_runnables()
 
 	-- table.sort(runnables_list, function(a, b) return a.name < b.name end)
 	-- Selection
-	CommandCentre(runnables_list)
+	return runnables_list
 end
 
 Run_closest = function()
@@ -330,7 +330,6 @@ Map("n", "<leader>/S", [["<cmd>Esource " . b:project . "<cr>"]], { expr = true, 
 
 Map("n", ",rb", "<cmd>call julia#toggle_function_blockassign()<cr>")
 
-Map("n", "<leader>d", Select_runnables, { buffer = 0 })
 Map("n", "<leader>D", Run_closest, { expr = true, buffer = 0 })
 
 Map("n", ",dd", function()
@@ -344,7 +343,6 @@ Map("n", ",dq", function()
 end, { buffer = 0 })
 
 vim.b[0].localCommands = {
-	{ source = "julia", name = "Tasks", func = Select_runnables },
 	{ source = "julia", name = "Fetch errors from persistant", command = "silent !kittyQuickfix juliaTest" },
 	{ source = "julia", name = "Fetch errors from one shot", command = "silent !kittyQuickfix OneShot" },
 	{

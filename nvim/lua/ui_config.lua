@@ -123,17 +123,18 @@ require("nvim-gps").setup({
 	},
 })
 
-vim.api.nvim_set_hl(0, "WinBarSigActParm", { fg = "#727169", bg = "#7E9CD8" })
+vim.api.nvim_set_hl(0, "WinBarSigActParm", { fg = "#7E9CD8", bg = "#262626" })
 
-vim.api.nvim_set_hl(0, "WinBar", { fg = "#727169", bg = "#181820", bold = true })
-vim.api.nvim_set_hl(0, "WinBarNC", { fg = "#727169", bg = "#181820", bold = true })
+vim.api.nvim_set_hl(0, "WinBar", { fg = "#727169", bg = "#262626", bold = true })
+vim.api.nvim_set_hl(0, "WinBarNC", { fg = "#727169", bg = "#262626", bold = true })
 
-vim.api.nvim_set_hl(0, "WinBarText", { fg = "#727169", bg = "#181820", bold = true })
-vim.api.nvim_set_hl(0, "WinBarIcon", { fg = "#957FB8", bg = "#181820", bold = false })
-vim.api.nvim_set_hl(0, "WinBarAltIcon", { fg = "#7E9CD8", bg = "#181820", bold = false })
+vim.api.nvim_set_hl(0, "WinBarText", { fg = "#727169", bg = "#262626", bold = true })
+vim.api.nvim_set_hl(0, "WinBarIcon", { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "WinBarAltIcon", { fg = "#7E9CD8", bg = "#262626", bold = false })
 function GPS_Bar()
 	local winbar = ""
-	local sig = require("lsp_signature").status_line(vim.api.nvim_get_option("columns"))
+	local columns = vim.api.nvim_get_option("columns")
+	local sig = require("lsp_signature").status_line(columns)
 
 	if vim.fn.expand("%") ~= "" then
 		local icon = require("nvim-web-devicons").get_icon(vim.fn.expand("%:t"), vim.fn.expand("%:e"))
@@ -152,15 +153,15 @@ function GPS_Bar()
 		local label1 = sig.label
 		local label2 = ""
 		local range = {}
-		if sig.range then
+		if sig.range and (sig.range["start"] ~= 0 and sig.range["end"] ~= 0) then
 			range[1] = sig.range["start"]
 			range[2] = sig.range["end"]
 		elseif sig.hint ~= "" then
 			range[1], range[2] = label1:find(sig.hint)
 		end
-		if range then
-			label1 = sig.label:sub(1, range[1] - 1)
-			label2 = sig.label:sub(range[2] + 1, #sig.label)
+		if range[1] and range[2] then
+			label1 = sig.label:sub(1, sig.range["start"] - 1)
+			label2 = sig.label:sub(sig.range["end"] + 1, #sig.label)
 		end
 		winbar = winbar
 			.. " > "

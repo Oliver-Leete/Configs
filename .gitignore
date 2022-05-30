@@ -35,6 +35,8 @@ zsh/
 !/vifm/vifmrc
 !/nvim/after/plugin/*
 !topgrade.toml
+!/**/tasks.lua
+!tasks.lua
 
 /rofi-themes
 /bin/startupScript
@@ -44,4 +46,3 @@ zsh/
 /xmobar/xmobar-git
 /nvim/neovim
 /kak/kakoune
-

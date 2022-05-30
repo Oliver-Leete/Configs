@@ -156,3 +156,6 @@ require("git_config")
 
 local enterAndExitVim = vim.api.nvim_create_augroup("enterAndExitVim", { clear = true })
 vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-window-title ""', group = enterAndExitVim })
+
+vim.api.nvim_create_autocmd("VimEnter", { command = 'silent! !kitty @ set-colors background=\\#262626', group = enterAndExitVim })
+vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-colors background=\\#1F1F28', group = enterAndExitVim })

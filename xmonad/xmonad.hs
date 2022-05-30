@@ -375,14 +375,13 @@ myKeys =
     , ("M-S-<Return>"    , upPointer $ spawn myTerminal)
 
     , ("M-n"             , bF $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")]))
-    , ("M-S-n"           , upPointer $ spawn myTerminal)
-
-    , ("M-i"             , bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
-    , ("M-S-i"           , upPointer $ spawn myBrowser)
-
     , ("M-e"             , upPointer $ runOrRaise "zathura" (className =? "Zathura"))
-
-    , ("M-o"             , upPointer $ bindOn [(wsCOMMENTS, runOrRaise "foxitreader" (className =? "Foxit Reader"))])
+    , ("M-i"             , upPointer $ bindOn [(wsCOMMENTS, runOrRaise "foxitreader" (className =? "Foxit Reader"))])
+    , ("M-o"             , bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
+    , ("M-S-n"           , upPointer $ spawn myTerminal)
+    , ("M-S-e"           , upPointer $ spawn "zathura")
+    , ("M-S-i"           , upPointer $ bindOn [(wsCOMMENTS, spawn "foxitreader")])
+    , ("M-S-o"           , upPointer $ spawn myBrowser)
 
     , ("M-<Backspace>"   , bF $ nv "DeleteBuffer" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_BackSpace) $ crm (P.sendKey controlMask xK_w) $ l kill)
     , ("M-S-<Backspace>" , kill)
