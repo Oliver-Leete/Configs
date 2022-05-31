@@ -1,6 +1,18 @@
 -- Theme
 vim.opt.termguicolors = true
 
+ZenOrFull = function()
+	local handle = io.popen([[kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length"]])
+	local num_windows = tonumber(handle:read("*a"))
+	handle:close()
+	if num_windows > 1 then
+		vim.cmd([[silent !xdotool key --clearmodifiers "ctrl+alt+f"]])
+	else
+		require("zen-mode").toggle({})
+	end
+end
+vim.api.nvim_create_user_command("ZenOrFull", ZenOrFull, { nargs = 0 })
+
 require("zen-mode").setup({
 	window = {
 		options = {

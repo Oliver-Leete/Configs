@@ -34,7 +34,6 @@ import XMonad.Actions.DynamicProjectsLocal
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.Navigation2D
 import XMonad.Actions.PerWindowKeys
-import XMonad.Actions.PerWorkspaceKeys
 import XMonad.Actions.SinkAll
 import XMonad.Actions.SpawnOn
 import XMonad.Actions.SwapPromote
@@ -530,7 +529,7 @@ myKeys =
     , ("M-<Up>"          , windows W.focusUp)
 
 
-    , ("M-w"             , bF $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_f) $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
+    , ("M-w"             , bF $ nv "ZenOrFull" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_f) $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
     , ("M-z"             , toggleLayout FULL)
     , ("M-x"             , toggleLayout FULLBAR)
     , ("M-c"             , toggleLayout FULLCENTER)
@@ -638,6 +637,7 @@ myPP = combineWithScreen myScreenCombiner $ filterOutWsPP ["NSP"] $ def
     , ppOrder = reverse
     }
 
+myLogHook :: X ()
 myLogHook = do
     masterHistoryHook
     workspaceHistoryHookExclude ["NSP"]
@@ -700,7 +700,6 @@ myHandleEventHook :: Event -> X All
 myHandleEventHook = handleEventHook def
                 <+> XMonad.Util.Hacks.windowedFullscreenFixEventHook
                 <+> myServerModeEventHook
-                -- <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn)
 
 ----------------------------------------------------------------------------------------------------
 -- Helper Functions                                                                               --
@@ -709,28 +708,39 @@ myHandleEventHook = handleEventHook def
 isRole :: Query String
 isRole = stringProperty "WM_WINDOW_ROLE"
 
+-- binding shortcuts
 upFocus :: X () -> X ()
 upFocus a = sequence_ [a, focusUnderPointer]
-
 upPointer :: X () -> X ()
 upPointer a = sequence_ [a, updatePointer (0.5, 0.5) (0.25, 0.25)]
-
+toggleLayout :: (Transformer t a, Typeable a) => t -> X ()
 toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle layout, focusUnderPointer ]
 
-l leftover = [(pure True, leftover)]
-nv n o = (title =? "MainEditor", spawn ("/home/oleete/.config/bin/nvrWS " ++ n)) : o
-rNv n o = (title =? "MainEditor", n) : o
-kt k o = (className =? "kitty", spawn (myTerminalRemote ++ k)) : o
-rKt k o = (className =? "kitty", k) : o
-crm c o = (isRole =? "browser", c) : o
+-- app bindings
+l :: Applicative f => b -> [(f Bool, b)]
+l raw = [(pure True, raw)] -- leftover
+nv :: MonadIO m => [Char] -> [(Query Bool, m ())] -> [(Query Bool, m ())]
+nv command list = (title =? "MainEditor", spawn ("/home/oleete/.config/bin/nvrWS " ++ command)) : list -- neovim
+-- rNv :: b -> [(Query Bool, b)] -> [(Query Bool, b)]
+-- rNv raw list = (title =? "MainEditor", raw) : list -- neovim raw
+kt :: MonadIO m => [Char] -> [(Query Bool, m ())] -> [(Query Bool, m ())]
+kt command list = (className =? "kitty", spawn (myTerminalRemote ++ command)) : list -- kitty
+rKt :: b -> [(Query Bool, b)] -> [(Query Bool, b)]
+rKt raw list = (className =? "kitty", raw) : list -- kitty raw
+crm :: b -> [(Query Bool, b)] -> [(Query Bool, b)]
+crm raw list = (isRole =? "browser", raw) : list -- chrome
 
-bF o = bindFirst o
+bF :: [(Query Bool, X ())] -> X ()
+bF = bindFirst
 
 ----------------------------------------------------------------------------------------------------
 -- Server Commands                                                                                --
 ----------------------------------------------------------------------------------------------------
 
+myServerModeEventHook :: Event -> X All
 myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
+
+myCommands' :: [(String, X ())]
 myCommands' = myCommands ++ sendTo ++ swapTo
     where sendTo = zipM "move-to-" nums (withNthWorkspace W.shift)
           swapTo = zipM "jump-to-" nums (withNthWorkspace W.greedyView)
