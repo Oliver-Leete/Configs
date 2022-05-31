@@ -11,6 +11,12 @@ require("diffview").setup({
 		view = {
 			["<esc>"] = actions.focus_files,
 		},
+        file_panel = {
+                ["<esc>"] = function() vim.cmd("DiffviewClose") end,
+        },
+        file_history_panel = {
+                ["<esc>"] = function() vim.cmd("DiffviewClose") end,
+        },
 	},
 })
 

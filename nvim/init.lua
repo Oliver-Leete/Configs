@@ -59,8 +59,10 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'rebelot/kanagawa.nvim'
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'windwp/windline.nvim'
+    Plug 'folke/zen-mode.nvim'
 
     Plug 'mbbill/undotree'
+    Plug 'kyazdani42/nvim-tree.lua'
     Plug 'folke/todo-comments.nvim'
 
     Plug 'neovim/nvim-lspconfig'

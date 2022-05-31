@@ -69,7 +69,7 @@ Map({"n", "x", "o"}, "[i", function() markGoCentre("TSTextobjectGotoPreviousStar
 Map({"n", "x", "o"}, "[<", function() markGoCentre("TSTextobjectGotoPreviousEnd @parameter.inner", "<")end)
 Map({"n", "x", "o"}, "[I", function() markGoCentre("TSTextobjectGotoPreviousEnd @block.outer", "I")end)
 
-Map({"n", "x", "o"}, "[h", function() markGoCentre("lua require'gitsigns'.prev_hunk()", "h")end)
+Map({"n", "x", "o"}, "[c", function() markGoCentre("lua require'gitsigns'.prev_hunk()", "h")end)
 Map({"n", "x", "o"}, "[l", function() markGoCentre("try|cprevious|catch/E553/|clast|endtry", "l")end)
 Map({"n", "x", "o"}, "[/", function() markGoCentre("Nzz", "search")end)
 
@@ -93,7 +93,7 @@ Map({"n", "x", "o"}, "]<", function() markGoCentre("TSTextobjectGotoNextEnd @par
 Map({"n", "x", "o"}, "]i", function() markGoCentre("TSTextobjectGotoNextStart @block.outer", "i")end)
 Map({"n", "x", "o"}, "]I", function() markGoCentre("TSTextobjectGotoNextEnd @block.outer", "I")end)
 
-Map({"n", "x", "o"}, "]h", function() markGoCentre("lua require'gitsigns'.next_hunk()", "h")end)
+Map({"n", "x", "o"}, "]c", function() markGoCentre("lua require'gitsigns'.next_hunk()", "h")end)
 Map({"n", "x", "o"}, "]l", function() markGoCentre("try|cnext|catch/E553/|cfirst|endtry", "l")end)
 Map({"n", "x", "o"}, "]/", function() markGoCentre("nzz", "search")end)
 
@@ -109,8 +109,8 @@ Map({"n", "x", "o"}, "]$e", function() markAndGo("norm $e", "$e")end)
 Map({"n", "x", "o"}, "]d", function() markGoCentre("lua vim.diagnostic.goto_next({float={border='single',scope='cursor',source='always'}})", "d")end)
 
 if vim.api.nvim_win_get_option(0, "diff") then
-    Map({"n", "x", "o"}, "[h", function() markGoCentre("norm! [c", "h")end)
-    Map({"n", "x", "o"}, "]h", function() markGoCentre("norm! ]c", "h")end)
+    Map({"n", "x", "o"}, "[c", function() markGoCentre("norm! [c", "h")end)
+    Map({"n", "x", "o"}, "]c", function() markGoCentre("norm! ]c", "h")end)
 end
 
 Map("o", "an", "v:lua.commandRepeat('a]', 'dirJumps')", {expr=true})

@@ -1,6 +1,22 @@
 -- Theme
 vim.opt.termguicolors = true
 
+require("zen-mode").setup({
+	window = {
+		options = {
+			signcolumn = "no",
+			number = false,
+			relativenumber = false,
+		},
+	},
+	on_open = function()
+		vim.diagnostic.disable(0)
+	end,
+	on_close = function()
+		vim.diagnostic.enable(0)
+	end,
+})
+
 require("kanagawa").setup({
 	undercurl = true,
 	commentStyle = "italic",

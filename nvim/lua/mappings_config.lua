@@ -81,16 +81,9 @@ vim.api.nvim_create_autocmd("filetype", {
 })
 vim.api.nvim_create_autocmd("BufEnter", {
 	callback = function()
-		if vim.bo.buftype == "nofile" then
+		if vim.bo.buftype == "nofile" and vim.bo.filetype == "" then
 			Map("n", "<esc>", "<cmd>q<cr>", { buffer = 0 })
 		end
-	end,
-	group = panelMappings,
-})
-vim.api.nvim_create_autocmd("filetype", {
-	pattern = { "DiffviewFiles", "DiffviewFileHistory" },
-	callback = function()
-		Map("n", "<esc>", "<cmd>DiffviewClose<cr>", { buffer = 0 })
 	end,
 	group = panelMappings,
 })
@@ -397,6 +390,7 @@ GlobalCommands = {
 	{ source = "default", name = "Clear search", command = "let @/=''" },
 	{ source = "default", name = "Close tab", command = "tabclose" },
 	{ source = "default", name = "Toggle text wraping", "set wrap!" },
+	{ source = "default", name = "File tree", command = "NvimTreeToggle" },
 	{ source = "default", name = "Undo tree", command = "UndotreeToggle" },
 
 	{ source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
