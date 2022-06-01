@@ -17,13 +17,13 @@ vim.opt.shortmess = "Iflmnrwxt"
 vim.opt.showmode = false
 vim.opt.laststatus = 3
 vim.opt.fillchars:append({
-	horiz = "━",
-	horizup = "┻",
-	horizdown = "┳",
-	vert = "┃",
-	vertleft = "┨",
-	vertright = "┣",
-	verthoriz = "╋",
+    horiz = "━",
+    horizup = "┻",
+    horizdown = "┳",
+    vert = "┃",
+    vertleft = "┨",
+    vertright = "┣",
+    verthoriz = "╋",
 })
 
 -- Saving
@@ -68,20 +68,20 @@ vim.cmd([[call matchadd('TabLine', '\%101v', 203)]])
 
 local numbertoggle = vim.api.nvim_create_augroup("numbertoggle", { clear = true })
 vim.api.nvim_create_autocmd(
-	{ "BufEnter", "FocusGained", "InsertLeave", "WinEnter" },
-	{ group = numbertoggle, command = "if &nu && mode() != 'i' | set rnu   | endif" }
+    { "BufEnter", "FocusGained", "InsertLeave", "WinEnter" },
+    { group = numbertoggle, command = "if &nu && mode() != 'i' | set rnu   | endif" }
 )
 vim.api.nvim_create_autocmd(
-	{ "BufLeave", "FocusLost", "InsertEnter", "WinLeave" },
-	{ group = numbertoggle, command = "if &nu                  | set nornu | endif" }
+    { "BufLeave", "FocusLost", "InsertEnter", "WinLeave" },
+    { group = numbertoggle, command = "if &nu                  | set nornu | endif" }
 )
 vim.api.nvim_create_autocmd(
-	{ "BufEnter", "FocusGained", "InsertLeave", "WinEnter" },
-	{ group = numbertoggle, command = "setlocal cursorline" }
+    { "BufEnter", "FocusGained", "InsertLeave", "WinEnter" },
+    { group = numbertoggle, command = "setlocal cursorline" }
 )
 vim.api.nvim_create_autocmd(
-	{ "BufLeave", "FocusLost", "InsertEnter", "WinLeave" },
-	{ group = numbertoggle, command = "setlocal nocursorline" }
+    { "BufLeave", "FocusLost", "InsertEnter", "WinLeave" },
+    { group = numbertoggle, command = "setlocal nocursorline" }
 )
 
 -- Splitting
@@ -90,8 +90,8 @@ vim.opt.splitright = true
 
 local windowPositioning = vim.api.nvim_create_augroup("windowPositioning", { clear = true })
 vim.api.nvim_create_autocmd(
-	{ "FileType" },
-	{ group = windowPositioning, pattern = "help", command = ":wincmd H | vertical resize 90<cr>" }
+    { "FileType" },
+    { group = windowPositioning, pattern = "help", command = ":wincmd H | vertical resize 90<cr>" }
 )
 vim.api.nvim_create_autocmd({ "FileType" }, { group = windowPositioning, pattern = "juliadoc", command = "wincmd H" })
 vim.api.nvim_create_autocmd({ "FileType" }, { group = windowPositioning, pattern = "qf", command = "windcmd J" })
@@ -99,8 +99,6 @@ vim.api.nvim_create_autocmd({ "FileType" }, { group = windowPositioning, pattern
 -- Yank
 local LuaHighlight = vim.api.nvim_create_augroup("LuaHighlight", { clear = true })
 vim.api.nvim_create_autocmd({ "TextYankPost" }, {
-	group = LuaHighlight,
-	callback = function()
-		require("vim.highlight").on_yank()
-	end,
+    group = LuaHighlight,
+    callback = function() require("vim.highlight").on_yank() end,
 })

@@ -73,26 +73,22 @@ Map("n", "£", [[:exe "let @/='" . expand("<cWORD>") . "' "<cr>]], { silent = tr
 -- Panel Specific Mappings
 local panelMappings = vim.api.nvim_create_augroup("panelMappings", { clear = true })
 vim.api.nvim_create_autocmd("filetype", {
-	pattern = { "qf", "help", "vim-plug", "juliadoc", "lspinfo", "tsplayground", "harpoon-menu" },
-	callback = function()
-		Map("n", "<esc>", "<cmd>q<cr>", { buffer = 0 })
-	end,
-	group = panelMappings,
+    pattern = { "qf", "help", "vim-plug", "juliadoc", "lspinfo", "tsplayground", "harpoon-menu" },
+    callback = function() Map("n", "<esc>", "<cmd>q<cr>", { buffer = 0 }) end,
+    group = panelMappings,
 })
 vim.api.nvim_create_autocmd("BufEnter", {
-	callback = function()
-		if vim.bo.buftype == "nofile" and vim.bo.filetype == "" then
-			Map("n", "<esc>", "<cmd>q<cr>", { buffer = 0 })
-		end
-	end,
-	group = panelMappings,
+    callback = function()
+        if vim.bo.buftype == "nofile" and vim.bo.filetype == "" then
+            Map("n", "<esc>", "<cmd>q<cr>", { buffer = 0 })
+        end
+    end,
+    group = panelMappings,
 })
 vim.api.nvim_create_autocmd("filetype", {
-	pattern = "undotree",
-	callback = function()
-		Map("n", "<esc>", "<cmd>UndotreeHide<cr>", { buffer = 0 })
-	end,
-	group = panelMappings,
+    pattern = "undotree",
+    callback = function() Map("n", "<esc>", "<cmd>UndotreeHide<cr>", { buffer = 0 }) end,
+    group = panelMappings,
 })
 
 vim.api.nvim_set_var("wordmotion_prefix", "$")
@@ -119,12 +115,8 @@ Map({ "n", "x" }, "U", "<c-r>")
 Map("n", "K", "<nop>")
 Map("n", "KK", "K")
 Map("n", "KG", require("gitsigns").preview_hunk)
-Map("n", "KA", function()
-	require("gitsigns").blame_line({ full = true })
-end)
-Map("n", "KE", function()
-	vim.diagnostic.open_float(0, { border = "single", scope = "line", source = "always" })
-end)
+Map("n", "KA", function() require("gitsigns").blame_line({ full = true }) end)
+Map("n", "KE", function() vim.diagnostic.open_float(0, { border = "single", scope = "line", source = "always" }) end)
 
 Map("x", "J", ":move '>+1<cr>gv=gv")
 Map("x", "K", ":move '<-2<cr>gv=gv")
@@ -134,9 +126,7 @@ Map("x", "Q", ":norm! @q<cr>")
 
 Map("n", "s", require("hop").hint_char1)
 Map("n", "S", "<cmd>ISwapWith<cr>")
-Map({ "x", "o" }, "s", function()
-	require("hop").hint_char1({ inclusive_jump = true })
-end)
+Map({ "x", "o" }, "s", function() require("hop").hint_char1({ inclusive_jump = true }) end)
 
 Map({ "n", "x", "o" }, "'", "`")
 Map({ "n", "x", "o" }, "`", "'")
@@ -210,38 +200,20 @@ Map({ "n", "x" }, "R", "<plug>(SubversiveSubstitute)")
 
 Map("n", ",rr", vim.lsp.buf.rename)
 
-Map("n", ",rf", function()
-	require("refactoring").refactor("Extract Block")
-end)
-Map("x", ",rf", function()
-	require("refactoring").refactor("Extract Function")
-end)
-Map("n", ",rF", function()
-	require("refactoring").refactor("Extract Block to File")
-end)
-Map("x", ",rF", function()
-	require("refactoring").refactor("Extract Function to File")
-end)
+Map("n", ",rf", function() require("refactoring").refactor("Extract Block") end)
+Map("x", ",rf", function() require("refactoring").refactor("Extract Function") end)
+Map("n", ",rF", function() require("refactoring").refactor("Extract Block to File") end)
+Map("x", ",rF", function() require("refactoring").refactor("Extract Function to File") end)
 Map("n", ",re", "mi,:lua require('refactoring').refactor('Extract Variable')<cr>", { remap = true })
-Map("x", ",re", function()
-	require("refactoring").refactor("Extract Variable")
-end)
-Map({ "n", "x" }, ",ri", function()
-	require("refactoring").refactor("Inline Variable")
-end)
+Map("x", ",re", function() require("refactoring").refactor("Extract Variable") end)
+Map({ "n", "x" }, ",ri", function() require("refactoring").refactor("Inline Variable") end)
 
 Map("n", ",rd", "<cmd>Neogen<cr>")
-Map("n", ",ra", ",ca,", { remap = true })
+Map("n", ",ra", ",cA", { remap = true })
 
-Map("n", ",dd", function()
-	require("refactoring").debug.printf({})
-end)
-Map({ "n", "x" }, ",dv", function()
-	require("refactoring").debug.print_var({})
-end, { remap = false })
-Map("n", ",dq", function()
-	require("refactoring").debug.cleanup({})
-end)
+Map("n", ",dd", function() require("refactoring").debug.printf({}) end)
+Map({ "n", "x" }, ",dv", function() require("refactoring").debug.print_var({}) end, { remap = false })
+Map("n", ",dq", function() require("refactoring").debug.cleanup({}) end)
 
 Map("n", ",s", "<Plug>SortMotion", { remap = true })
 Map("n", ",ss", "<Plug>SortLines", { remap = true })
@@ -298,9 +270,7 @@ Map("n", "<leader>n", require("harpoon.mark").add_file)
 Map("n", "<leader>e", require("harpoon.ui").toggle_quick_menu)
 local harpoon_keys = { "a", "r", "s", "t" }
 for i, key in pairs(harpoon_keys) do
-	Map("n", "<leader>" .. key, function()
-		require("harpoon.ui").nav_file(i)
-	end)
+    Map("n", "<leader>" .. key, function() require("harpoon.ui").nav_file(i) end)
 end
 
 Map("n", "<leader>//", "<cmd>A<cr>")
@@ -328,9 +298,9 @@ Map("n", ",gs", "<cmd>Gitsigns stage_hunk<CR>")
 
 -- Git Diff Bindings
 if vim.api.nvim_win_get_option(0, "diff") then
-	Map("n", "<leader>[", "<cmd>diffget LOCAL<cr>", "Take From Local Change")
-	Map("n", "<leader>]", "<cmd>diffget REMOTE<cr>", "Take From Remote Change")
-	Map("n", "<leader><leader>", "<cmd>diffget BASE<cr>", "Take From Base")
+    Map("n", "<leader>[", "<cmd>diffget LOCAL<cr>", "Take From Local Change")
+    Map("n", "<leader>]", "<cmd>diffget REMOTE<cr>", "Take From Remote Change")
+    Map("n", "<leader><leader>", "<cmd>diffget BASE<cr>", "Take From Base")
 end
 
 -- Insert Bindings
@@ -358,196 +328,155 @@ Map("n", "<c-leftmouse>", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
 Map("n", "<c-rightmouse>", "gf")
 
 Ls = require("luasnip")
-Map("n", "<leader>,s", "<cmd>source ~/.config/nvim/after/plugin/luasnip.lua<cr>")
-Map("n", "<leader>,S", "<cmd>vsplit ~/.config/nvim/after/plugin/luasnip.lua<cr>")
-
 Map({ "i", "s" }, "<tab>", function()
-	if Ls.expand_or_jumpable() then
-		Ls.expand_or_jump()
-	end
+    if Ls.expand_or_jumpable() then
+        Ls.expand_or_jump()
+    end
 end, { silent = true })
 
 Map({ "i", "s" }, "<s-tab>", function()
-	if Ls.jumpable(-1) then
-		Ls.jump(-1)
-	end
+    if Ls.jumpable(-1) then
+        Ls.jump(-1)
+    end
 end, { silent = true })
 
 Map("i", "<c-n>", function()
-	if Ls.choice_active() then
-		Ls.change_choice(1)
-	end
+    if Ls.choice_active() then
+        Ls.change_choice(1)
+    end
 end)
 
 -- Command Panel Bindings
 
 GlobalCommands = {
-	{ source = "coverage", name = "Coverage summary", command = "CoverageSummary" },
-	{ source = "coverage", name = "Load coverage", command = "Coverage" },
-	{ source = "coverage", name = "Toggle coverage", command = "CoverageToggle" },
+    { source = "coverage", name = "Coverage summary", command = "CoverageSummary" },
+    { source = "coverage", name = "Load coverage", command = "Coverage" },
+    { source = "coverage", name = "Toggle coverage", command = "CoverageToggle" },
 
-	{ source = "default", name = "Close buffer", command = "bdelete!" },
-	{ source = "default", name = "Clear search", command = "let @/=''" },
-	{ source = "default", name = "Close tab", command = "tabclose" },
-	{ source = "default", name = "Toggle text wraping", "set wrap!" },
-	{ source = "default", name = "File tree", command = "NvimTreeToggle" },
-	{ source = "default", name = "Undo tree", command = "UndotreeToggle" },
+    { source = "default", name = "Close buffer", command = "bdelete!" },
+    { source = "default", name = "Clear search", command = "let @/=''" },
+    { source = "default", name = "Close tab", command = "tabclose" },
+    { source = "default", name = "Toggle text wraping", "set wrap!" },
+    { source = "default", name = "File tree", command = "NvimTreeToggle" },
+    { source = "default", name = "Undo tree", command = "UndotreeToggle" },
+    { source = "default", name = "Reload Snippets", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
+    { source = "default", name = "Reload Snippets", command = "vsplit ~/.config/nvim/after/plugin/luasnip.lua" },
 
-	{ source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
-	{ source = "finders", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
-	{
-		source = "finders",
-		name = "File browser (relative)",
-		command = "Telescope file_browser respect_gitignore=false theme=get_ivy cwd=%:p:h",
-	},
-	{ source = "finders", name = "Files", command = "Telescope git_files theme=get_ivy" },
-	{
-		source = "finders",
-		name = "File browser",
-		command = "Telescope file_browser respect_gitignore=false theme=get_ivy",
-	},
-	{ source = "finders", name = "Grep", command = "Telescope live_grep theme=get_ivy theme=get_ivy" },
-	{
-		source = "finders",
-		name = "Notifications",
-		func = function()
-			require("telescope").extensions.notify.notify(require("telescope.themes").get_ivy())
-		end,
-	},
-	{ source = "finders", name = "Old files finder", command = "Telescope oldfiles theme=get_ivy" },
-	{ source = "finders", name = "Quickfix", command = "Telescope quickfix theme=get_ivy" },
-	{ source = "finders", name = "Symbols", command = "Telescope lsp_document_symbols theme=get_ivy" },
-	{ source = "finders", name = "Todo list", command = "TodoTelescope theme=get_ivy" },
-	{ source = "finders", name = "Workspace diagnostics", command = "Telescope diagnostics theme=get_ivy" },
-	{ source = "finders", name = "Workspace symbols", command = "Telescope lsp_workspace_symbols theme=get_ivy" },
+    { source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
+    { source = "finders", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
+    { source = "finders", name = "File browser (relative)", command = "Telescope file_browser respect_gitignore=false theme=get_ivy cwd=%:p:h" },
+    { source = "finders", name = "Files", command = "Telescope git_files theme=get_ivy" },
+    { source = "finders", name = "File browser", command = "Telescope file_browser respect_gitignore=false theme=get_ivy" },
+    { source = "finders", name = "Grep", command = "Telescope live_grep theme=get_ivy theme=get_ivy" },
+    { source = "finders", name = "Notifications", func = function() require("telescope").extensions.notify.notify(require("telescope.themes").get_ivy()) end },
+    { source = "finders", name = "Old files finder", command = "Telescope oldfiles theme=get_ivy" },
+    { source = "finders", name = "Quickfix", command = "Telescope quickfix theme=get_ivy" },
+    { source = "finders", name = "Symbols", command = "Telescope lsp_document_symbols theme=get_ivy" },
+    { source = "finders", name = "Todo list", command = "TodoTelescope theme=get_ivy" },
+    { source = "finders", name = "Workspace diagnostics", command = "Telescope diagnostics theme=get_ivy" },
+    { source = "finders", name = "Workspace symbols", command = "Telescope lsp_workspace_symbols theme=get_ivy" },
 
-	{
-		source = "git",
-		name = "Diff against a commit",
-		func = function()
-			git_commits_againsthead()
-		end,
-	},
-	{
-		source = "git",
-		name = "Diff of a branch from current",
-		func = function()
-			git_branch_dif()
-		end,
-	},
-	{
-		source = "git",
-		name = "Diff of a branch from master",
-		func = function()
-			git_branch_mergebase()
-		end,
-	},
-	{
-		source = "git",
-		name = "Diff of a commit",
-		func = function()
-			git_commits_onechange()
-		end,
-	},
-	{ source = "git", name = "Diff of unstaged", command = "DiffviewOpen" },
-	{ source = "git", name = "File history", command = "DiffviewFileHistory" },
-	{
-		source = "git",
-		name = "Lazygit",
-		command = "silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit",
-	},
-	{ source = "git", name = "Reset File", command = "Gitsigns reset_buffer" },
-	{ source = "git", name = "Stage File", command = "Gitsigns stage_buffer" },
+    { source = "git", name = "Diff against a commit", func = function() git_commits_againsthead() end, },
+    { source = "git", name = "Diff of a branch from current", func = function() git_branch_dif() end, },
+    { source = "git", name = "Diff of a branch from master", func = function() git_branch_mergebase() end, },
+    { source = "git", name = "Diff of a commit", func = function() git_commits_onechange() end, },
+    { source = "git", name = "Diff of unstaged", command = "DiffviewOpen" },
+    { source = "git", name = "File history", command = "DiffviewFileHistory" },
+    {
+        source = "git",
+        name = "Lazygit",
+        command = "silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit",
+    },
+    { source = "git", name = "Reset File", command = "Gitsigns reset_buffer" },
+    { source = "git", name = "Stage File", command = "Gitsigns stage_buffer" },
 
-	{ source = "profiling", name = "Profile Annotate Function", command = "PerfAnnotateFunction" },
-	{ source = "profiling", name = "Profile Cycle Format", command = "PerfCycleFormat" },
-	{ source = "profiling", name = "Profile Hottest Callers Function", command = "PerfHottestCallersFunction" },
-	{ source = "profiling", name = "Profile Hottest Callers Selection", command = "PerfHottestCallersSelection" },
-	{ source = "profiling", name = "Profile Hottest Lines", command = "PerfHottestLines" },
-	{ source = "profiling", name = "Profile Hottest Symbols", command = "PerfHottestSymbols" },
-	{ source = "profiling", name = "Profile Load Call Graph", command = "PerfLoadCallGraph" },
-	{ source = "profiling", name = "Profile Load Flame Graph", command = "PerfLoadFlameGraph" },
-	{ source = "profiling", name = "Profile Load Flat", command = "PerfLoadFlat" },
-	{ source = "profiling", name = "Profile Pick Event", command = "PerfPickEvent" },
-	{ source = "profiling", name = "Profile Toggle Annotations", command = "PerfToggleAnnotations" },
+    { source = "profiling", name = "Profile Annotate Function", command = "PerfAnnotateFunction" },
+    { source = "profiling", name = "Profile Cycle Format", command = "PerfCycleFormat" },
+    { source = "profiling", name = "Profile Hottest Callers Function", command = "PerfHottestCallersFunction" },
+    { source = "profiling", name = "Profile Hottest Callers Selection", command = "PerfHottestCallersSelection" },
+    { source = "profiling", name = "Profile Hottest Lines", command = "PerfHottestLines" },
+    { source = "profiling", name = "Profile Hottest Symbols", command = "PerfHottestSymbols" },
+    { source = "profiling", name = "Profile Load Call Graph", command = "PerfLoadCallGraph" },
+    { source = "profiling", name = "Profile Load Flame Graph", command = "PerfLoadFlameGraph" },
+    { source = "profiling", name = "Profile Load Flat", command = "PerfLoadFlat" },
+    { source = "profiling", name = "Profile Pick Event", command = "PerfPickEvent" },
+    { source = "profiling", name = "Profile Toggle Annotations", command = "PerfToggleAnnotations" },
 
-	{ source = "tasks", name = "Tasks", func = Select_runnables },
+    { source = "tasks", name = "Tasks", func = Select_runnables },
 }
 
-Map("n", "<leader>p", function()
-	CommandCentre()
-end)
+Map("n", "<leader>p", function() CommandCentre() end)
 
 function CommandCentre(argCommands)
-	local commands = {}
-	if argCommands == nil then
-		for _, v in pairs(GlobalCommands) do
-			table.insert(commands, v)
-		end
-		if vim.b[0].localCommands ~= nil then
-			for _, v in pairs(vim.b[0].localCommands) do
-				table.insert(commands, v)
-			end
-		end
-	else
-		commands = argCommands
-	end
+    local commands = {}
+    if argCommands == nil then
+        for _, v in pairs(GlobalCommands) do
+            table.insert(commands, v)
+        end
+        if vim.b[0].localCommands ~= nil then
+            for _, v in pairs(vim.b[0].localCommands) do
+                table.insert(commands, v)
+            end
+        end
+    else
+        commands = argCommands
+    end
 
-	table.sort(commands, function(a, b)
-		return a.name < b.name
-	end)
+    table.sort(commands, function(a, b)
+        return a.name < b.name
+    end)
 
-	table.sort(commands, function(a, b)
-		return a.source < b.source
-	end)
+    table.sort(commands, function(a, b)
+        return a.source < b.source
+    end)
 
-	vim.ui.select(commands, {
-		prompt = "Command Centre",
-		format_item = function(item)
-			return "[" .. item.source:sub(1, 3) .. "] " .. item.name
-		end,
-		telescope = require("telescope.themes").get_ivy(),
-	}, function(choice)
-		if not choice then
-			pcall(vim.notify("No command entered", "warn", { title = "Command Centre" }))
-			return
-		end
+    vim.ui.select(commands, {
+        prompt = "Command Centre",
+        format_item = function(item)
+            return "[" .. item.source:sub(1, 3) .. "] " .. item.name
+        end,
+        telescope = require("telescope.themes").get_ivy(),
+    }, function(choice)
+        if not choice then
+            pcall(vim.notify("No command entered", "warn", { title = "Command Centre" }))
+            return
+        end
 
-		if choice.func ~= nil then
-			choice.func()
-		elseif choice.command ~= nil then
-			vim.cmd(choice.command)
-		elseif choice.keymap ~= nil then
-			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(choice.keymap, true, true, true), "n", false)
-		else
-			pcall(vim.notify("Command does not have an action", "warn", { title = "Command Centre" }))
-			return
-		end
-	end)
+        if choice.func ~= nil then
+            choice.func()
+        elseif choice.command ~= nil then
+            vim.cmd(choice.command)
+        elseif choice.keymap ~= nil then
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(choice.keymap, true, true, true), "n", false)
+        else
+            pcall(vim.notify("Command does not have an action", "warn", { title = "Command Centre" }))
+            return
+        end
+    end)
 end
 
 Global_Runnables = function()
-	return {}
+    return {}
 end
 
 function Select_runnables()
-	local runnables = {}
+    local runnables = {}
 
-	if Global_Runnables then
-		for _, v in pairs(Global_Runnables()) do
-			table.insert(runnables, v)
-		end
-	end
+    if Global_Runnables then
+        for _, v in pairs(Global_Runnables()) do
+            table.insert(runnables, v)
+        end
+    end
 
-	if vim.b[0].runnables then
-		for _, v in pairs(vim.b[0].runnables()) do
-			table.insert(runnables, v)
-		end
-	end
+    if vim.b[0].runnables then
+        for _, v in pairs(vim.b[0].runnables()) do
+            table.insert(runnables, v)
+        end
+    end
 
-	local handle1 = io.popen([[fd -I tasks.lua]])
-	local task_files = handle1:read("*a")
-	handle1:close()
+    local handle1 = io.popen([[fd -I tasks.lua]])
+    local task_files = handle1:read("*a")
+    handle1:close()
 
     if task_files then
         local project_tasks
@@ -562,11 +491,11 @@ function Select_runnables()
         end
     end
 
-	if #runnables ~= 0 then
-		CommandCentre(runnables)
-	else
-		pcall(vim.notify("Nothing to Run", "warn", { title = "Command Centre" }))
-	end
+    if #runnables ~= 0 then
+        CommandCentre(runnables)
+    else
+        pcall(vim.notify("Nothing to Run", "warn", { title = "Command Centre" }))
+    end
 end
 
 Map("n", "<leader>d", Select_runnables)

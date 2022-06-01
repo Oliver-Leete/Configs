@@ -207,9 +207,9 @@ go where you'd expect (if you've ever used any other editor), but relative line
 numbers can still be used for fast jumping. In addition, they also add to the
 jump list if a count greater than 5 is given.
 
-```vim
-nnoremap <expr> j v:count?(v:count>5?"m'".v:count:'').'j':'gj'
-nnoremap <expr> k v:count?(v:count>5?"m'".v:count:'').'k':'gk'
+```lua
+Map({ "n", "x", "o" }, "j", [[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], { expr = true })
+Map({ "n", "x", "o" }, "k", [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], { expr = true })
 ```
 
 It makes sense to me to have 'big' h and l do a bigger version of the h or
@@ -217,11 +217,13 @@ l movement. So this mapping makes H and L go to the start and end of the
 line respectively. It's a little more than that though, they go to the first
 or last non-whitespace character. If the cursor is already on the first or
 last non-whitespace character then it instead goes to the true first or last
-character.
+character. The exception is for operator pending mode, where L goes to the
+proper end of line, I ended up with a lot of trailing whitespace without that.
 
-```vim
-nnoremap <expr> H getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^'
-nnoremap <expr> L getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_'
+```lua
+Map({ "n", "x", "o" }, "H", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true })
+Map({ "n", "x" }, "L", [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], { expr = true })
+Map("o", "L", "$")
 ```
 
 ## The Slow Road To Kak
@@ -238,19 +240,30 @@ based stuff to x and C, inspired by the Kak mappings. These mappings also allow
 for quickly expanding the selections (Why would you go into column mode if you
 aren't going to select another column?)
 
-```vim
-nnoremap x V
-nnoremap X V
-nnoremap C <c-v>j
-nnoremap <m-C> <c-v>k
+```lua
+Map({ "n", "x", "o" }, "v", "<nop>")
+Map({ "n", "x", "o" }, "V", "<nop>")
+Map({ "n", "x", "o" }, "<c-v>", "<nop>")
 
+Map("n", "x", "V")
+Map("n", "X", "V")
+Map("n", "C", "<c-v>j")
+Map("n", "<m-C>", "<c-v>k")
+Map("n", "<m-C>", "<c-v>k")
 
-xnoremap x j$
-xnoremap X <esc>`<kV`>
-xnoremap C j
-xnoremap <m-C> <esc>`<k<c-v>`>
-xnoremap <M-x> v
-xnoremap <M-;> o
+Map("x", "x", "j$")
+Map("x", "X", "<esc>`<kV`>")
+Map("x", "C", "j")
+Map("x", "<m-C>", "<esc>`<k<c-v>`>")
+Map("x", "<M-;>", "o")
+
+Map({ "n", "x" }, "<m-c>", [["_c]])
+Map({ "n", "x" }, "<m-d>", [["_d]])
+
+Map("n", "<m-o>", "m1o<esc>`1")
+Map("n", "<m-O>", "m1O<esc>`1")
+Map("x", "<m-o>", "<esc>`>o<esc>gv")
+Map("x", "<m-O>", "<esc>`<O<esc>gv")
 ```
 
 ### Remote Terminal Tasks
@@ -309,38 +322,15 @@ these.
 
 ## Insert Mappings
 
-This little function handles toggling of the completion pop-up. I didn't want
-two separate mappings for opening and closing, so this makes control space a
-toggle instead. This uses a bit of a hacky approach of first making the compe
-close command a plug mapping, but I couldn't get it to work any other way.
+### Copy from above
 
-```lua
-_G.compe_toggle = function()
-    if vim.fn.pumvisible() == 1 then
-        -- return replace_keycodes("<esc>:call compe#close()<cr>a")
-        return replace_keycodes("<plug>(compe-close)")
-    else
-        return replace_keycodes("<cmd>call compe#complete()<cr>")
-    end
-end
+This mapping extends the normal c-y mapping to take the whole word from above
+the cursor and adds a mapping for below (c-l) the cursor. Credit goes to someone
+online for the control y mapping, I've simply extended it to work from below as
+well.
 
-vim.api.nvim_set_keymap("i", "<c-space>", "v:lua.compe_toggle()", {expr = true})
-vim.api.nvim_set_keymap("s", "<c-space>", "v:lua.compe_toggle()", {expr = true})
-```
-
-```vim
-inoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
-snoremap <silent><expr> <plug>(compe-close) compe#close('<c-e>')
-```
-
-I just use the standard CMP and autopairs mappings. Ctrl+] is used for next
-snippet selection, and expanding is just done with the completion menu.
-
-#### Copy from above
-
-This mapping takes the word from above (c-y) or below (c-l) the cursor. Credit
-goes to someone online for the control y mapping, I've simply extended it to
-work from below as well.
+This is the last vimscript holdout in my mappings and one of the last at all.
+I've had a little go getting it to map in lua, but no success so far.
 
 ```vim
 inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')

@@ -5,8 +5,13 @@ vim.b[0].localCommands = {
     { source = "tex", name = "Word Count", command = "VimtexCountWord" },
 }
 
+vim.b[0].runnables = function()
+    return {
+        { source = "tex", name = "Compile document", command = "VimtexCompileSS" },
+    }
+end
+
 Map("n", "<localleader><localleader>", "<cmd>TexlabForward<cr>", { buffer = 0, silent = true })
-Map("n", "<leader>d", "<cmd>VimtexCompileSS<cr>", { buffer = 0, silent = true })
 
 Map("n", "KK", "<cmd>VimtexDocPackage<cr>", { buffer = 0 })
 
@@ -32,54 +37,24 @@ Map("n", "]R", "<cmd>let g:dirJumps='R'<cr>m`<plug>(vimtex-]R)zz", { buffer = 0 
 Map("n", "][", "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-][)zz", { buffer = 0 })
 Map("n", "]]", "<cmd>let g:dirJumps='S'<cr>m`<plug>(vimtex-]])zz", { buffer = 0 })
 
-Map({ "x", "o" }, "iP", "<plug>(vimtex-iP)", { buffer = 0, remap = true })
+Map({ "x", "o" }, "is", "<plug>(vimtex-iP)", { buffer = 0, remap = true })
 Map({ "x", "o" }, "im", "<plug>(vimtex-ie)", { buffer = 0, remap = true })
 Map({ "x", "o" }, "in", "<plug>(vimtex-i$)", { buffer = 0, remap = true })
-Map({ "x", "o" }, "aP", "<plug>(vimtex-aP)", { buffer = 0, remap = true })
+Map({ "x", "o" }, "as", "<plug>(vimtex-aP)", { buffer = 0, remap = true })
 Map({ "x", "o" }, "am", "<plug>(vimtex-ae)", { buffer = 0, remap = true })
 Map({ "x", "o" }, "an", "<plug>(vimtex-a$)", { buffer = 0, remap = true })
-Map({ "x", "o" }, "i]P", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-iP)')<cr>", { buffer = 0 })
+Map({ "x", "o" }, "i]s", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-iP)')<cr>", { buffer = 0 })
 Map({ "x", "o" }, "i]m", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ie)')<cr>", { buffer = 0 })
 Map({ "x", "o" }, "i]n", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-i$)')<cr>", { buffer = 0 })
-Map(
-    { "x", "o" },
-    "i[P",
-    ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-iP)')<cr>",
-    { buffer = 0 }
-)
-Map(
-    { "x", "o" },
-    "i[m",
-    ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ie)')<cr>",
-    { buffer = 0 }
-)
-Map(
-    { "x", "o" },
-    "i[n",
-    ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-i$)')<cr>",
-    { buffer = 0 }
-)
-Map({ "x", "o" }, "a]P", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-aP)')<cr>", { buffer = 0 })
+Map({ "x", "o" }, "i[s", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-iP)')<cr>", { buffer = 0 })
+Map({ "x", "o" }, "i[m", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ie)')<cr>", { buffer = 0 })
+Map({ "x", "o" }, "i[n", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-i$)')<cr>", { buffer = 0 })
+Map({ "x", "o" }, "a]s", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-aP)')<cr>", { buffer = 0 })
 Map({ "x", "o" }, "a]m", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ae)')<cr>", { buffer = 0 })
 Map({ "x", "o" }, "a]n", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-a$)')<cr>", { buffer = 0 })
-Map(
-    { "x", "o" },
-    "a[P",
-    ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-aP)')<cr>",
-    { buffer = 0 }
-)
-Map(
-    { "x", "o" },
-    "a[m",
-    ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ae)')<cr>",
-    { buffer = 0 }
-)
-Map(
-    { "x", "o" },
-    "a[n",
-    ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-a$)')<cr>",
-    { buffer = 0 }
-)
+Map({ "x", "o" }, "a[s", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[])', '(vimtex-[])', '(vimtex-aP)')<cr>", { buffer = 0 })
+Map({ "x", "o" }, "a[m", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[m)', '(vimtex-[M)', '(vimtex-ae)')<cr>", { buffer = 0 })
+Map({ "x", "o" }, "a[n", ":<c-u>call v:lua.plug_targets_back(v:count, '(vimtex-[n)', '(vimtex-[N)', '(vimtex-a$)')<cr>", { buffer = 0 })
 
 if vim.api.nvim_get_var("panelRepeat") == "q" then
     vim.api.nvim_set_var("panelRepeat", "c")

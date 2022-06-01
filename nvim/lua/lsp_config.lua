@@ -19,8 +19,18 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.s
 })
 
 vim.diagnostic.config({
-    underline = false,
-    virtual_text = { severity = "Error" },
+    underline = {
+        severity = {
+            min = "Warn",
+        },
+    },
+    virtual_text = {
+        severity = {
+            min = "Warn",
+        },
+        source = "if_many",
+        prefix = "",
+    },
     signs = true,
     update_in_insert = false,
     severity_sort = true,
@@ -40,9 +50,19 @@ local custom_attach = function(client, buf_num)
     -- LSP Binding Override
     if client.name ~= "null-ls" then
         Map("n", "gd", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>", buf)
+        Map("n", "gs", "<cmd>Telescope lsp_workspace_symbols theme=get_ivy<cr>", buf)
+        Map("n", "gS", "<cmd>Telescope lsp_document_symbols theme=get_ivy<cr>", buf)
+        Map("n", "gr", "<cmd>Telescope lsp_references theme=get_ivy<cr>", buf)
+        Map("n", "gI", "<cmd>Telescope lsp_implementations theme=get_ivy<cr>", buf)
+        Map("n", "gD", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>", buf)
+        Map("n", "go", vim.lsp.buf.outgoing_calls, buf)
+        Map("n", "gi", vim.lsp.buf.incoming_calls, buf)
+
+        Map("n", "KK", vim.lsp.buf.hover, buf)
     end
     if client.server_capabilities.codeLensProvider ~= nil then
         Map("n", "<C-,>", vim.lsp.codelens.run, buf)
+        Map("n", "<leader>,", vim.lsp.codelens.run, buf)
         vim.api.nvim_create_autocmd(
             "CursorHold",
             { callback = vim.lsp.codelens.refresh, buffer = buf_num, group = lsp_auto }
@@ -50,17 +70,10 @@ local custom_attach = function(client, buf_num)
     end
     if client.server_capabilities.codeActionProvider then
         Map("n", "<C-.>", vim.lsp.buf.code_action, buf)
+        Map("n", "<leader>.", vim.lsp.buf.code_action, buf)
         Map("x", "<C-.>", vim.lsp.buf.range_code_action, buf)
+        Map("x", "<leader>.", vim.lsp.buf.range_code_action, buf)
     end
-    Map("n", "gs", "<cmd>Telescope lsp_workspace_symbols theme=get_ivy<cr>", buf)
-    Map("n", "gS", "<cmd>Telescope lsp_document_symbols theme=get_ivy<cr>", buf)
-    Map("n", "gr", "<cmd>Telescope lsp_references theme=get_ivy<cr>", buf)
-    Map("n", "gI", "<cmd>Telescope lsp_implementations theme=get_ivy<cr>", buf)
-    Map("n", "gD", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>", buf)
-    Map("n", "go", vim.lsp.buf.outgoing_calls, buf)
-    Map("n", "gi", vim.lsp.buf.incoming_calls, buf)
-
-    Map("n", "KK", vim.lsp.buf.hover, buf)
 
     require("lsp_signature").on_attach({
         bind = true,
@@ -256,7 +269,7 @@ require("null-ls").setup({
         null_ls.builtins.formatting.trim_newlines,
         null_ls.builtins.formatting.shfmt,
         null_ls.builtins.formatting.shellharden,
-        null_ls.builtins.formatting.stylua,
+        -- null_ls.builtins.formatting.stylua,
         null_ls.builtins.formatting.fish_indent,
         null_ls.builtins.formatting.latexindent,
         null_ls.builtins.diagnostics.markdownlint,
