@@ -1,0 +1,9 @@
+#!/bin/bash
+
+[ "$folder" = "" ] && folder="."
+
+lsv "$folder" | sort >/tmp/film_list.films
+
+nvim /tmp/film_list.films
+
+cat /tmp/film_list.films | cut -c12- | mpv --playlist=-

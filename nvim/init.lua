@@ -161,3 +161,34 @@ vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-window
 
 vim.api.nvim_create_autocmd("VimEnter", { command = 'silent! !kitty @ set-colors background=\\#262626', group = enterAndExitVim })
 vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-colors background=\\#1F1F28', group = enterAndExitVim })
+
+local qfDiag = vim.api.nvim_create_namespace("qfDiag")
+local qfToDiag = vim.api.nvim_create_augroup("qfToDiag", { clear = true })
+
+local function UpdateDiagnostics(diagnostics, namespace)
+    vim.diagnostic.reset(namespace)
+    local buffers = {}
+    local tmp = {}
+    for i, item in pairs(diagnostics) do
+        if (tmp[item.bufnr] ~= nil) then
+            table.insert(buffers, item.bufnr)
+        end
+        tmp[item.bufnr] = i
+    end
+
+    for _, buffer in pairs(buffers) do
+        local diag = {}
+        for _, d in pairs(diagnostics) do
+            if d.bufnr == buffer then
+                table.insert(diag, d)
+            end
+        end
+        vim.diagnostic.set(namespace, buffer, diag)
+    end
+end
+
+QFtoDiag = function()
+    local qf = vim.diagnostic.fromqflist(vim.fn.getqflist())
+    UpdateDiagnostics(qf, qfDiag)
+end
+vim.api.nvim_create_autocmd("QuickFixCmdPost", { pattern = "*", callback = QFtoDiag, group = qfToDiag })

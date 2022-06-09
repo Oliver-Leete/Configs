@@ -107,7 +107,7 @@ basic.right = {
         ReplaceAfter = { "blue_light", "blue" },
         CommandAfter = { "magenta", "blue" },
     },
-    text = function(bufnr)
+    text = function(_)
         return {
             { sep.left_rounded, state.mode[2] .. "Before" },
             { lsp_comps.lsp_name(), state.mode[2] },
@@ -151,7 +151,7 @@ basic.dap = {
     hl_colors = {
         red = { "red", "ActiveBg" },
     },
-    text = function(bufnr)
+    text = function(_)
         return {
             { " " },
             { require("dap").status, "red" },

@@ -3,8 +3,14 @@ vim.opt.termguicolors = true
 
 ZenOrFull = function()
     local handle = io.popen([[kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length"]])
-    local num_windows = tonumber(handle:read("*a"))
-    handle:close()
+    local num_windows
+    if handle then
+        num_windows = tonumber(handle:read("*a"))
+        handle:close()
+    else
+        return
+    end
+
     if num_windows > 1 then
         vim.cmd([[silent !xdotool key --clearmodifiers "ctrl+alt+f"]])
     else
@@ -216,3 +222,27 @@ function GPS_Bar()
 end
 
 vim.go.winbar = "%{%v:lua.GPS_Bar()%}"
+
+function Film_bar()
+    local line1 = vim.fn.search([[\(\%^\|^$\)]], "nbWc") - 1
+    local line2 = vim.fn.search([[\(\%$\|^$\)]], "nW")
+
+    local lines = vim.api.nvim_buf_get_lines(0, line1, line2, false)
+    local pattern = "(%d+):(%d+):(%d+)"
+    local runtime = 0
+    for _, line in pairs(lines) do
+        local time_string = line:sub(1, 8)
+        local hour, minute, second = time_string:match(pattern)
+        if hour and minute and second then
+            runtime = runtime + hour * 3600 + minute * 60 + second
+        end
+    end
+    local hours = math.floor(runtime / 3600)
+    local minutes = math.floor(math.fmod(runtime, 3600) / 60)
+    local seconds = math.floor(math.fmod(runtime, 60))
+
+    return "%=%#WinBarSigActParm#" .. string.format("%02d:%02d:%02d", hours, minutes, seconds) .. "%="
+end
+
+local winbars = vim.api.nvim_create_augroup("winbars ", { clear = true })
+vim.api.nvim_create_autocmd("BufEnter", { pattern = "*.films", callback = function() vim.go.winbar = "%{%v:lua.Film_bar()%}" end, group = winbars })

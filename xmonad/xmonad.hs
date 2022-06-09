@@ -127,9 +127,10 @@ wsSCN    = "Scintilla"
 wsSCNN   = "Scin-Docs"
 wsCODE   = "CodeTuts"
 wsGAME   = "Games"
+wsFILM   = "Films"
 
 myWorkspaces :: [[Char]]
-myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1, wsQMK, wsANSYS, wsCOMMENTS, wsWRKN, wsZMK, wsSCN, wsCODE, wsGAME, wsSCNN]
+myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1, wsQMK, wsANSYS, wsCOMMENTS, wsWRKN, wsZMK, wsSCN, wsCODE, wsGAME, wsSCNN, wsFILM]
 
 projects :: [Project]
 projects =
@@ -351,6 +352,17 @@ projects =
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsGAME "steam"
+                }
+    , Project   { projectName       = wsFILM
+                , projectDirectory  = "~/Videos/films"
+                , projectApp1       = upPointer $ runOrRaise "mpv /home/oleete/Videos/films/*" (className =? "mpv")
+                , projectApp1Force  = upPointer $ spawn "mpv /home/oleete/Videos/films/*"
+                , projectApp2       = upPointer $ runOrRaise "thunar" (className =? "Thunar")
+                , projectApp2Force  = upPointer $ spawn "thunar"
+                , projectApp3       = upPointer $ runOrRaise "deluge" (className =? "Deluge-gtk")
+                , projectApp3Force  = upPointer $ spawn "deluge"
+                , projectStartHook  = Just $ do spawnOn wsFILM "thunar"
+                                                spawnOn wsFILM "deluge"
                 }
     ]
     where

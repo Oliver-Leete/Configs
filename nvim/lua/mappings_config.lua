@@ -475,8 +475,11 @@ function Select_runnables()
     end
 
     local handle1 = io.popen([[fd -I tasks.lua]])
-    local task_files = handle1:read("*a")
-    handle1:close()
+    local task_files
+    if handle1 then
+        task_files = handle1:read("*a")
+        handle1:close()
+    end
 
     if task_files then
         local project_tasks

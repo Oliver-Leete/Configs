@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# NOTE: Assumes you have avprobe installed and the full path
+# to it is /usr/bin/avprobe - if not, edit.
+
+# Get a list of files
+LIST=$(find "$1" -type f)
+
+# In case of a space in file names, split on return
+IFS_ORIG=$IFS
+IFS="
+"
+
+# Loop over the file list and probe each file.
+for v in $LIST; do
+	dur=$(ffprobe -i "$v" -show_entries format=duration -v quiet -of csv="p=0")
+	dur=${dur%.*}
+	dur=$(date -d@"$dur" -u +%H:%M:%S)
+	printf "$dur - ${v:2}\n"
+done
+
+exit

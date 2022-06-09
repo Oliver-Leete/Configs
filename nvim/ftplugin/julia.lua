@@ -16,9 +16,14 @@ vim.b[0].debugCommand = "juliadebug"
 vim.b[0].debugName = "JuliaPersistant"
 
 local handle = io.popen([[echo "$(basename "$PWD")"]])
-local project = handle:read("*a")
-handle:close()
-vim.b[0].project = string.gsub(project, "\n", "")
+local project
+if handle then
+    project = handle:read("*a")
+    handle:close()
+    vim.b[0].project = string.gsub(project, "\n", "")
+else
+    pcall(vim.notify("Couldn't find project name", "Warn", { title = "Julia" }))
+end
 
 vim.g.projectionist_heuristics = {
     ["src/*.jl"] = {
@@ -56,8 +61,8 @@ local function get_command_output(cmd, silent)
     return output
 end
 
-function _G.jul_perf_flat(perf_data)
-    -- local esc = vim.fn.fnameescape(perf_data)
+function _G.jul_perf_flat()
+    local perf_data = "/tmp/julprof.data"
     local raw_data = get_command_output("cat " .. perf_data, true)
 
     local result = {}
@@ -77,8 +82,7 @@ function _G.jul_perf_flat(perf_data)
             end
         end
     end
-
-    return result
+    require("perfanno").load_traces(result)
 end
 
 -- Test selector function
@@ -158,58 +162,66 @@ vim.b[0].runnables = function()
     local handle1 = io.popen(
         [[rg --no-filename --no-heading --no-line-number -e "^\s*@testitem\s*\"(.*)\"\s*begin.*\$" -r "\$1"]]
     )
-    local tests = handle1:read("*a")
-    handle1:close()
+    local tests
+    if handle1 then
+        tests = handle1:read("*a")
+        handle1:close()
 
-    for name in tests:gmatch("([^\r\n]+)") do
-        table.insert(runnables_list, {
-            source = "Test",
-            name = name,
-            command = [[silent !kittyPersistent JuliaPersistant juliaTest ']]
-                .. vim.b[0].project
-                .. [[Tests.runtests("]]
-                .. name
-                .. [[",spin=false)']],
-        })
+        for name in tests:gmatch("([^\r\n]+)") do
+            table.insert(runnables_list, {
+                source = "Test",
+                name = name,
+                command = [[silent !kittyPersistent JuliaPersistant juliaTest ']]
+                    .. vim.b[0].project
+                    .. [[Tests.runtests("]]
+                    .. name
+                    .. [[",spin=false)']],
+            })
+        end
     end
+
 
     -- Benchmarks
 
     local handle2 = io.popen(
         [[rg --no-filename --no-heading --no-line-number -e ".*\[\"(.*?)\"\].*@benchmarkable(.*)\$" -r "\$1	\$2"]]
     )
-    local benches = handle2:read("*a")
-    handle2:close()
+    local benches
+    if handle2 then
+        benches = handle2:read("*a")
+        handle2:close()
 
-    for s in benches:gmatch("([^\r\n]+)") do
-        local name, command = s:match("([^\t]+)\t([^\t]+)")
-        table.insert(runnables_list, {
-            source = "Bench",
-            name = name,
-            command = [[silent !kittyPersistent JuliaPersistant juliaTest 'run(]]
-                .. vim.b[0].project
-                .. [[Tests.suite["]]
-                .. name
-                .. [["], verbose=true)']],
-        })
-        table.insert(runnables_list, {
-            source = "Prof",
-            name = name,
-            command = [[silent !kittyPersistent JuliaPersistant juliaTest 'a = @bprofile ]]
-                .. command
-                .. [[; Profile.print(IOContext(open("/tmp/julprof.data", "w"), :displaysize=>(100000,1000)), format=:flat); ]]
-                .. [[ProfileView.view(); loadProfData(); a']],
-        })
-        table.insert(runnables_list, {
-            source = "Debug",
-            name = name,
-            command = [[silent !kittyPersistent JuliaPersistant juliaTest '@run run(]]
-                .. vim.b[0].project
-                .. [[Tests.suite["]]
-                .. name
-                .. [["], verbose=true)']],
-        })
+        for s in benches:gmatch("([^\r\n]+)") do
+            local name, command = s:match("([^\t]+)\t([^\t]+)")
+            table.insert(runnables_list, {
+                source = "Bench",
+                name = name,
+                command = [[silent !kittyPersistent JuliaPersistant juliaTest 'run(]]
+                    .. vim.b[0].project
+                    .. [[Tests.suite["]]
+                    .. name
+                    .. [["], verbose=true)']],
+            })
+            table.insert(runnables_list, {
+                source = "Prof",
+                name = name,
+                command = [[silent !kittyPersistent JuliaPersistant juliaTest 'a = @bprofile ]]
+                    .. command
+                    .. [[; Profile.print(IOContext(open("/tmp/julprof.data", "w"), :displaysize=>(100000,1000)), format=:flat); ]]
+                    .. [[ProfileView.view(); loadProfData(); a']],
+            })
+            table.insert(runnables_list, {
+                source = "Debug",
+                name = name,
+                command = [[silent !kittyPersistent JuliaPersistant juliaTest '@run run(]]
+                    .. vim.b[0].project
+                    .. [[Tests.suite["]]
+                    .. name
+                    .. [["], verbose=true)']],
+            })
+        end
     end
+
 
     -- table.sort(runnables_list, function(a, b) return a.name < b.name end)
     -- Selection
@@ -322,11 +334,17 @@ ReadLastOutput = function()
     local handleRLO = io.popen(
         [[kitty @ get-text --match title:JuliaPersistant --extent last_cmd_output | rg --multiline --pcre2 "julia>(?!(.|\\n)*(julia>))(.|\\n)*?\Z"]]
     )
-    local last_output = handleRLO:read("*a")
-    handleRLO:close()
-    for name in last_output:gmatch("([^\r\n]+)") do
-        print(name)
+    local last_output
+    if handleRLO then
+        last_output = handleRLO:read("*a")
+        handleRLO:close()
+    else
+        return
     end
+
+    vim.diagnostic.match(last_output)
+    local filename
+    vim.fn.bufnr(filename, true)
 end
 
 Map("n", "<leader>/d", "<cmd>Edoc<cr>", { buffer = 0 })
@@ -348,5 +366,5 @@ Map("n", ",dq", function() BP_Remove_All({ "Debugger", "Infiltrator" }, { "@bp",
 vim.b[0].localCommands = {
     { source = "julia", name = "Fetch errors from persistant", command = "silent !kittyQuickfix juliaTest" },
     { source = "julia", name = "Fetch errors from one shot", command = "silent !kittyQuickfix OneShot" },
-    { source = "julia", name = "Load profile data", func = function() require("perfanno").load_traces(jul_perf_flat("/tmp/julprof.data")) end },
+    { source = "julia", name = "Load profile data", func = jul_perf_flat },
 }
