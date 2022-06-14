@@ -45,6 +45,7 @@ basic.vi_mode = {
     },
     text = function()
         return {
+            { sep.left_rounded, state.mode[2] .. "Before" },
             { " ", state.mode[2] },
             { state.mode[1] .. " ", state.mode[2] },
             { sep.right_rounded, state.mode[2] .. "After" },
@@ -115,6 +116,7 @@ basic.right = {
             { "", state.mode[2] },
             { b_components.progress_lua, state.mode[2] },
             { " ", state.mode[2] },
+            { sep.right_rounded, state.mode[2] .. "Before"}
         }
     end,
     click = function()
@@ -168,6 +170,12 @@ local default = {
         { sep.right_rounded, hl_list.Black },
         basic.lsp_diagnos,
         basic.dap,
+        { function()
+            local reg = vim.fn.reg_recording()
+            if reg and reg ~= "" then
+                return "Recording @" .. reg
+            end
+        end, { "red", "black" }},
         basic.divider,
         basic.git,
         { git_comps.git_branch({ icon = "  " }), { "green", "ActiveBg" }, 90 },

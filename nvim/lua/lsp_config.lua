@@ -38,41 +38,48 @@ vim.diagnostic.config({
 Notification_Dict = {}
 
 local lsp_auto = vim.api.nvim_create_augroup("lsp_autocmd", { clear = true })
-local custom_attach = function(client, buf_num)
+local custom_attach = function(client, bufnr)
     if client.name ~= "null-ls" then
         if not Notification_Dict[client.name] then
             Notification_Dict[client.name] = true
-            pcall(vim.notify(client.name .. " started", "info", { title = "LSP" }))
+            ---@diagnostic disable-next-line: redundant-parameter
+            pcall(vim.notify(client.name .. " started", "info", {
+                title = "LSP",
+                on_close = function() Notification_Dict[client.name] = false end,
+            }))
         end
     end
+    if client.server_capabilities.documentSymbolProvider then
+        require("nvim-navic").attach(client, bufnr)
+    end
 
-    local buf = { buffer = buf_num }
+    local bmap = function(mode, key, action) Map(mode, key, action, { buffer = bufnr }) end
     -- LSP Binding Override
     if client.name ~= "null-ls" then
-        Map("n", "gd", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>", buf)
-        Map("n", "gs", "<cmd>Telescope lsp_workspace_symbols theme=get_ivy<cr>", buf)
-        Map("n", "gS", "<cmd>Telescope lsp_document_symbols theme=get_ivy<cr>", buf)
-        Map("n", "gr", "<cmd>Telescope lsp_references theme=get_ivy<cr>", buf)
-        Map("n", "gI", "<cmd>Telescope lsp_implementations theme=get_ivy<cr>", buf)
-        Map("n", "gD", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>", buf)
-        Map("n", "go", vim.lsp.buf.outgoing_calls, buf)
-        Map("n", "gi", vim.lsp.buf.incoming_calls, buf)
+        bmap("n", "gd", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
+        bmap("n", "gs", "<cmd>Telescope lsp_workspace_symbols theme=get_ivy<cr>")
+        bmap("n", "gS", "<cmd>Telescope lsp_document_symbols theme=get_ivy<cr>")
+        bmap("n", "gr", "<cmd>Telescope lsp_references theme=get_ivy<cr>")
+        bmap("n", "gI", "<cmd>Telescope lsp_implementations theme=get_ivy<cr>")
+        bmap("n", "gD", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>")
+        bmap("n", "go", vim.lsp.buf.outgoing_calls)
+        bmap("n", "gi", vim.lsp.buf.incoming_calls)
 
-        Map("n", "KK", vim.lsp.buf.hover, buf)
+        bmap("n", "KK", vim.lsp.buf.hover)
     end
     if client.server_capabilities.codeLensProvider ~= nil then
-        Map("n", "<C-,>", vim.lsp.codelens.run, buf)
-        Map("n", "<leader>,", vim.lsp.codelens.run, buf)
+        bmap("n", "<C-,>", vim.lsp.codelens.run)
+        bmap("n", "<leader>,", vim.lsp.codelens.run)
         vim.api.nvim_create_autocmd(
             "CursorHold",
-            { callback = vim.lsp.codelens.refresh, buffer = buf_num, group = lsp_auto }
+            { callback = vim.lsp.codelens.refresh, buffer = bufnr, group = lsp_auto }
         )
     end
     if client.server_capabilities.codeActionProvider then
-        Map("n", "<C-.>", vim.lsp.buf.code_action, buf)
-        Map("n", "<leader>.", vim.lsp.buf.code_action, buf)
-        Map("x", "<C-.>", vim.lsp.buf.range_code_action, buf)
-        Map("x", "<leader>.", vim.lsp.buf.range_code_action, buf)
+        bmap("n", "<C-.>", vim.lsp.buf.code_action)
+        bmap("n", "<leader>.", vim.lsp.buf.code_action)
+        bmap("x", "<C-.>", vim.lsp.buf.range_code_action)
+        bmap("x", "<leader>.", vim.lsp.buf.range_code_action)
     end
 
     require("lsp_signature").on_attach({

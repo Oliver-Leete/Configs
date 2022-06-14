@@ -51,6 +51,7 @@ import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.StatusBar.WorkspaceScreen
 
+import XMonad.Layout.FourColumns
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.NoBorders
@@ -165,7 +166,7 @@ projects =
                 , projectApp2Force  = return ()
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn ws3D "flatpak run com.prusa3d.PrusaSlicer"
+                , projectStartHook  = Just $ do spawnOn ws3D $ sl "flatpak run com.prusa3d.PrusaSlicer"
                 }
 
     , Project   { projectName       = wsDND
@@ -187,7 +188,7 @@ projects =
                 , projectApp2Force  = return ()
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn wsCON myTerminal
+                , projectStartHook  = Just $ do spawnOn wsCON $ sl myTerminal
                                                 spawnOn wsCON ("sleep .5; " ++ myBrowser)
                 }
 
@@ -199,7 +200,7 @@ projects =
                 , projectApp2Force  = return ()
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn wsQMK myTerminal
+                , projectStartHook  = Just $ do spawnOn wsQMK $ sl myTerminal
                                                 spawnOn wsQMK ("sleep .5; " ++ myBrowser)
                 }
 
@@ -211,7 +212,7 @@ projects =
                 , projectApp2Force  = return ()
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn wsZMK myTerminal
+                , projectStartHook  = Just $ do spawnOn wsZMK $ sl myTerminal
                                                 spawnOn wsZMK ("sleep .5; " ++ myBrowser)
                 }
 
@@ -223,7 +224,7 @@ projects =
                 , projectApp2Force  = zathuraForce
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn wsPER myBrowser
+                , projectStartHook  = Just $ do spawnOn wsPER $ sl myBrowser
                 }
 
     , Project   { projectName       = wsWRK
@@ -234,7 +235,7 @@ projects =
                 , projectApp2Force  = zathuraForce
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn wsWRK myBrowser
+                , projectStartHook  = Just $ do spawnOn wsWRK $ sl myBrowser
                 }
 
     , Project   { projectName       = wsSIM
@@ -245,7 +246,7 @@ projects =
                 , projectApp2Force  = return ()
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn wsSIM myTerminal
+                , projectStartHook  = Just $ do spawnOn wsSIM $ sl myTerminal
                                                 spawnOn wsSIM ("sleep .2; " ++ myBrowser)
                 }
     , Project   { projectName       = wsEXP
@@ -256,7 +257,7 @@ projects =
                 , projectApp2Force  = return ()
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn wsEXP myTerminal
+                , projectStartHook  = Just $ do spawnOn wsEXP $ sl myTerminal
                                                 spawnOn wsEXP ("sleep .2; " ++ myBrowser)
                 }
     , Project   { projectName       = wsTHESIS
@@ -267,7 +268,7 @@ projects =
                 , projectApp2Force  = zathuraForce
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn wsTHESIS myTerminal
+                , projectStartHook  = Just $ do spawnOn wsTHESIS $ sl myTerminal
                                                 spawnOn wsTHESIS ("sleep .2; " ++ myBrowser)
                 }
 
@@ -279,9 +280,9 @@ projects =
                 , projectApp2Force  = zathuraForce
                 , projectApp3       = upPointer $ runOrRaise "foxitreader" (className =? "Foxit Reader")
                 , projectApp3Force  = upPointer $ spawn "foxitreader"
-                , projectStartHook  = Just $ do spawnOn wsCOMMENTS myTerminal
+                , projectStartHook  = Just $ do spawnOn wsCOMMENTS $ sl myTerminal
                                                 spawnOn wsCOMMENTS ("sleep .2; " ++ myBrowser)
-                                                spawnOn wsCOMMENTS "sleep .4; foxitreader"
+                                                spawnOn wsCOMMENTS $ sl "sleep .4; foxitreader"
                 }
 
     , Project   { projectName       = wsWRKN
@@ -292,7 +293,7 @@ projects =
                 , projectApp2Force  = zathuraForce
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn wsCOMMENTS "flatpak run md.obsidian.Obsidian"
+                , projectStartHook  = Just $ do spawnOn wsCOMMENTS $ sl "flatpak run md.obsidian.Obsidian"
                 }
 
     , Project   { projectName       = wsANSYS
@@ -303,7 +304,7 @@ projects =
                 , projectApp2Force  = upPointer $ spawn "flatpak run org.paraview.Paraview"
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn wsANSYS myTerminal
+                , projectStartHook  = Just $ do spawnOn wsANSYS $ sl myTerminal
                                                 spawnOn wsANSYS ("sleep .2; " ++ myBrowser)
                 }
 
@@ -315,7 +316,7 @@ projects =
                 , projectApp2Force  = return ()
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn wsCODE myTerminal
+                , projectStartHook  = Just $ do spawnOn wsCODE $ sl myTerminal
                                                 spawnOn wsCODE ("sleep .2; " ++ myBrowser)
                 }
 
@@ -327,7 +328,7 @@ projects =
                 , projectApp2Force  = return ()
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn wsSCN myTerminal
+                , projectStartHook  = Just $ do spawnOn wsSCN $ sl myTerminal
                                                 spawnOn wsSCN ("sleep .2; " ++ myBrowser)
                 }
 
@@ -339,7 +340,7 @@ projects =
                 , projectApp2Force  = return ()
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn wsSCNN myTerminal
+                , projectStartHook  = Just $ do spawnOn wsSCNN $ sl myTerminal
                                                 spawnOn wsSCNN ("sleep .2; " ++ myBrowser)
                 }
 
@@ -351,7 +352,7 @@ projects =
                 , projectApp2Force  = return ()
                 , projectApp3       = return ()
                 , projectApp3Force  = return ()
-                , projectStartHook  = Just $ do spawnOn wsGAME "steam"
+                , projectStartHook  = Just $ do spawnOn wsGAME $ sl "steam"
                 }
     , Project   { projectName       = wsFILM
                 , projectDirectory  = "~/Videos/films"
@@ -361,17 +362,19 @@ projects =
                 , projectApp2Force  = upPointer $ spawn "thunar"
                 , projectApp3       = upPointer $ runOrRaise "deluge" (className =? "Deluge-gtk")
                 , projectApp3Force  = upPointer $ spawn "deluge"
-                , projectStartHook  = Just $ do spawnOn wsFILM "thunar"
-                                                spawnOn wsFILM "deluge"
+                , projectStartHook  = Just $ do spawnOn wsFILM $ sl myBrowser
+                                                spawnOn wsFILM ("sleep .2; " ++ myTerminal)
+                                                spawnOn wsFILM $ sl "deluge"
                 }
     ]
     where
         nvim = bF $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")])
-        nvimForce = upPointer $ spawn myTerminal
+        nvimForce = upPointer $ spawn (myTerminal ++ " fish -C nvrStart")
         zathura = upPointer $ runOrRaise "zathura" (className =? "Zathura")
         zathuraForce = upPointer $ spawn "zathura"
         kitty = upPointer $ runOrRaise "kittyMaker" (className =? "kitty")
         kittyForce = upPointer $ spawn "kitty"
+        sl i = "sleep .1; " ++ i
 
 ----------------------------------------------------------------------------------------------------
 -- Applications                                                                                   --
@@ -459,21 +462,23 @@ instance Transformer FULLCENTER Window where
 
 centerFull = SimpleFocus (1/2) (reSize/2) 600
 
-myLayoutHook= smartBorders
-            $ mkToggle (single FULL)
-            $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
-            $ mkToggle (single FULLBAR)
-            $ mkToggle (single FULLCENTER)
-              notebookLayout
+myLayoutHook = smartBorders
+             $ mkToggle (single FULL)
+             $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
+             $ mkToggle (single FULLBAR)
+             $ mkToggle (single FULLCENTER)
+               notebookLayout
     where
     notebookMulti   = Notebook True True True 1 2 reSize 2 (2/3)
     notebookThesis  = Notebook True True True 1 3 reSize 2 (2/3)
     notebookColumns = Notebook False True True 4 4 reSize 2 (2/3)
-    notebookLaptop = Notebook True False False 1 2 reSize 2 (2/3)
+    -- notebookLaptop = Notebook True False False 1 2 reSize 2 (2/3)
     notebookTwoMain = Notebook False True True 2 3 reSize 2 (2/3)
     notebookDifferent = onWorkspaces [wsTHESIS, ws3D] notebookThesis $ onWorkspaces [wsCOMMENTS] notebookTwoMain notebookMulti
+
+    notbookLaptop = FourTall 1 reSize (2/3)
     notebookLayout = onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns
-                   $ ifWider 1920 notebookDifferent notebookLaptop
+                   $ ifWider 1920 notebookDifferent notbookLaptop
 
 ----------------------------------------------------------------------------------------------------
 -- Keybindings                                                                                    --

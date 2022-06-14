@@ -15,13 +15,13 @@ Map(
     { buffer = 0 }
 )
 
-Map("n", "<leader>/s", "<cmd>Esource<cr>", { buffer = 0 })
-Map("n", "<leader>/S", "<cmd>EmainSource", { buffer = 0, expr = 0 })
-Map("n", "<leader>/b", "<cmd>Ebench<cr>", { buffer = 0 })
-Map("n", "<leader>/B", "<cmd>EmainBench<cr>", { buffer = 0 })
-Map("n", "<leader>/t", "<cmd>Etest<cr>", { buffer = 0 })
-Map("n", "<leader>/T", "<cmd>EmainTest<cr>", { buffer = 0 })
-Map("n", "<leader>/p", "<cmd>Edeps<cr>", { buffer = 0 })
+Map("n", "<leader>/s", "<cmd>silent Esource<cr>", { buffer = 0 })
+Map("n", "<leader>/S", "<cmd>silent EmainSource", { buffer = 0, expr = 0 })
+Map("n", "<leader>/b", "<cmd>silent Ebench<cr>", { buffer = 0 })
+Map("n", "<leader>/B", "<cmd>silent EmainBench<cr>", { buffer = 0 })
+Map("n", "<leader>/t", "<cmd>silent Etest<cr>", { buffer = 0 })
+Map("n", "<leader>/T", "<cmd>silent EmainTest<cr>", { buffer = 0 })
+Map("n", "<leader>/p", "<cmd>silent Edeps<cr>", { buffer = 0 })
 
 vim.g.projectionist_heuristics = {
     ["src/*.rs"] = {

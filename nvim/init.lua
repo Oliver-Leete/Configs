@@ -67,11 +67,13 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/nvim-lsp-installer'
-    Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'brymer-meneses/grammar-guard.nvim'
     Plug 'simrat39/rust-tools.nvim'
     Plug 'p00f/clangd_extensions.nvim'
     Plug 'b0o/schemastore.nvim'
+
+    Plug 'jose-elias-alvarez/null-ls.nvim'
+    " Plug 'kdheepak/JET.nvim'
 
     Plug 'ray-x/lsp_signature.nvim'
 
@@ -83,6 +85,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'hrsh7th/cmp-omni'
     Plug 'petertriho/cmp-git'
     Plug 'hrsh7th/cmp-cmdline'
+    Plug 'dmitmel/cmp-cmdline-history'
     Plug 'uga-rosa/cmp-dictionary'
     Plug 'mtoohey31/cmp-fish'
     Plug 'saadparwaiz1/cmp_luasnip'
@@ -103,7 +106,9 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'ThePrimeagen/refactoring.nvim'
     Plug 'mizlan/iswap.nvim'
     Plug 'AckslD/nvim-trevJ.lua'
+
     Plug 'SmiteshP/nvim-gps'
+    Plug 'SmiteshP/nvim-navic'
 
     Plug 'mfussenegger/nvim-dap'
     Plug 'Pocco81/DAPInstall.nvim'

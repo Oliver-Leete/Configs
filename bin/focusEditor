@@ -7,5 +7,5 @@ TITLES=$(kitty @ ls | jq ".[].tabs[].windows[].title")
 if [[ "$TITLES" == *"$winTitle"* ]]; then
     kitty @ focus-window --match title:$winTitle
 else
-    kitty @ launch --location before nvrStart
+    kitty @ launch --location before "fish -c nvrStart"
 fi

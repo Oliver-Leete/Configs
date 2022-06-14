@@ -22,12 +22,14 @@ module XMonad.Layout.FourColumns (
                               -- * Screenshots
                               -- $screenshot
                               FourCol(..),
-                              ToggleMid(..)
+                              ToggleMid(..),
+                              FourTall(..)
                              ) where
 
 import XMonad
     ( fromMessage,
       splitHorizontally,
+      splitHorizontallyBy,
       splitVertically,
       splitVerticallyBy,
       Rectangle(Rectangle),
@@ -137,10 +139,40 @@ split3HorizontallyBy middle f (Rectangle sx sy sw sh) =
               r3w = sw - r1w - r2w
 
 modY :: Rectangle -> Rectangle -> Rectangle
-modY (Rectangle sx sy sw sh) (Rectangle bx _ bw _)=
+modY (Rectangle sx sy sw sh) (Rectangle bx _ _ _)=
     Rectangle sx y sw h
-    where ymoddifier = if (toInteger (fromIntegral sx + sw - 8) < toInteger ( bx + ceiling (1/3 * toRational bw))) || (toInteger (8 + sx) > toInteger ( bx + ceiling (2/3 * toRational bw)))
-              then 31
-              else 0
-          y = sy - ymoddifier
-          h = sh + fromIntegral ymoddifier
+    where   ymoddifier= if toInteger (8 + sx) < toInteger bx + 1280
+                        then 31
+                        else 0
+            y = sy + ymoddifier
+            h = sh - fromIntegral ymoddifier
+
+data FourTall a = FourTall { fourTallNMaster :: !Int, fourTallDelta :: !Rational, fourTallFrac :: !Rational}
+    deriving (Show,Read)
+
+instance LayoutClass FourTall a where
+    pureLayout (FourTall n _ f) r    = doL2 n f r
+    handleMessage l m =
+        return $ msum [fmap resize     (fromMessage m)
+                      ,fmap incmastern (fromMessage m)]
+            where resize Shrink = l { fourTallFrac = max (-0.5) $ f-d }
+                  resize Expand = l { fourTallFrac = min 1 $ f+d }
+                  incmastern (IncMasterN x) = l { fourTallNMaster = max 0 (n+x) }
+                  n = fourTallNMaster l
+                  d = fourTallDelta l
+                  f = fourTallFrac l
+    description _ = "FourTall"
+
+doL2 :: Int-> Rational-> Rectangle-> W.Stack a-> [(a, Rectangle)]
+doL2 n f r = ap zip (tile2 f r n . length) . W.integrate
+
+tile2 :: Rational -> Rectangle -> Int -> Int -> [Rectangle]
+tile2 f r nmaster n
+    | n <= nmaster || nmaster == 0 = map (`modY` r) (splitHorizontally n r)
+    | n == nmaster+2 = splitHorizontally nmaster m1 ++ [r21, r22]
+    | otherwise = splitHorizontally nmaster m1 ++ splitVertically nstack m2
+        where (r1, r2) = splitHorizontallyBy (if f<0 then 1+2*f else f) r
+              m1 = modY r1 r
+              m2 = modY r2 r
+              (r21, r22) = splitVerticallyBy (2/3) m2
+              nstack = n - nmaster

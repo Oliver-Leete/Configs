@@ -219,6 +219,27 @@ vim.b[0].runnables = function()
                     .. name
                     .. [["], verbose=true)']],
             })
+
+            -- TODO: Add back in when I've made the proper runner
+            -- table.insert(runnables_list, {
+            --     source = "JET",
+            --     name = name,
+            --     command = [[silent !kittyPersistent JuliaPersistant juliaTest '@report_call run(]]
+            --         .. vim.b[0].project
+            --         .. [[Tests.suite["]]
+            --         .. name
+            --         .. [["], verbose=true)']],
+            -- })
+            -- table.insert(runnables_list, {
+            --     source = "JET",
+            --     name = name,
+            --     command = [[silent !kittyPersistent JuliaPersistant juliaTest '@report_opt run(]]
+            --         .. vim.b[0].project
+            --         .. [[Tests.suite["]]
+            --         .. name
+            --         .. [["], verbose=true)']],
+            -- })
+
         end
     end
 
@@ -347,13 +368,13 @@ ReadLastOutput = function()
     vim.fn.bufnr(filename, true)
 end
 
-Map("n", "<leader>/d", "<cmd>Edoc<cr>", { buffer = 0 })
-Map("n", "<leader>/D", "<cmd>EmainDoc<cr>", { buffer = 0 })
-Map("n", "<leader>/s", "<cmd>Esource<cr>", { buffer = 0 })
-Map("n", "<leader>/t", "<cmd>Etest<cr>", { buffer = 0 })
-Map("n", "<leader>/T", [["<cmd>e test/" . b:project . "Tests.jl<cr>"]], { expr = true, buffer = 0 })
-Map("n", "<leader>/p", "<cmd>Edeps<cr>", { buffer = 0 })
-Map("n", "<leader>/S", [["<cmd>Esource " . b:project . "<cr>"]], { expr = true, buffer = 0 })
+Map("n", "<leader>/d", "<cmd>silent Edoc<cr>", { buffer = 0 })
+Map("n", "<leader>/D", "<cmd>silent EmainDoc<cr>", { buffer = 0 })
+Map("n", "<leader>/s", "<cmd>silent Esource<cr>", { buffer = 0 })
+Map("n", "<leader>/t", "<cmd>silent Etest<cr>", { buffer = 0 })
+Map("n", "<leader>/T", [["<cmd>silent e test/" . b:project . "Tests.jl<cr>"]], { expr = true, buffer = 0 })
+Map("n", "<leader>/p", "<cmd>silent Edeps<cr>", { buffer = 0 })
+Map("n", "<leader>/S", [["<cmd>silent Esource " . b:project . "<cr>"]], { expr = true, buffer = 0 })
 
 Map("n", ",rb", "<cmd>call julia#toggle_function_blockassign()<cr>")
 

@@ -33,6 +33,10 @@ Map({ "n", "x", "o" }, "<m-F>", ",")
 Map({ "n", "x", "o" }, "<m-t>", ";")
 Map({ "n", "x", "o" }, "<m-T>", ",")
 
+Map({ "n", "x", "o" }, ":", "q:")
+Map({ "n", "x", "o" }, ";", ":")
+-- Map({ "n", "x", "o" }, "/", "q/")
+
 Map({ "n", "x" }, "+", "<c-a>")
 Map({ "n", "x" }, "-", "<c-x>")
 Map({ "n", "x" }, "g+", "g<c-a>")
@@ -90,6 +94,74 @@ vim.api.nvim_create_autocmd("filetype", {
     callback = function() Map("n", "<esc>", "<cmd>UndotreeHide<cr>", { buffer = 0 }) end,
     group = panelMappings,
 })
+local cmp = require("cmp")
+Opt_save = {}
+vim.api.nvim_create_autocmd("CmdwinEnter", {
+    callback = function()
+        Opt_save["number"] = vim.o.number
+        vim.wo.number = false
+        Opt_save["relativenumber"] = vim.o.relativenumber
+        vim.wo.relativenumber = false
+        Opt_save["signcolumn"] = vim.o.signcolumn
+        vim.wo.signcolumn = "no"
+        Opt_save["backspace"] = vim.o.backspace
+        vim.o.backspace = "indent,start"
+
+        Map("n", "<esc>", "<cmd>q<cr>", { buffer = 0 })
+        Map("n", "<cr>", "<cr>", { buffer = 0, nowait = true })
+        Map("n", ":", "<nop>", { buffer = 0 })
+        Map("n", "/", "<nop>", { buffer = 0 })
+        cmp.setup.buffer({
+            mapping = {
+                ["<down>"] = cmp.mapping({
+                    i = function()
+                        if cmp.visible() then
+                            cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+                        else
+                            cmp.complete()
+                            cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+                        end
+                    end,
+                }),
+                ["<up>"] = cmp.mapping({
+                    i = function()
+                        if cmp.visible() then
+                            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
+                        else
+                            cmp.complete()
+                            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
+                        end
+                    end,
+                })
+            },
+            sources = {
+                { name = 'cmdline_history' },
+                { name = "cmdline" },
+                { name = "path" },
+                { name = "buffer", option = {
+                    get_bufnrs = function()
+                        local bufs = {}
+                        for _, win in ipairs(vim.api.nvim_list_wins()) do
+                            bufs[vim.api.nvim_win_get_buf(win)] = true
+                        end
+                        return vim.tbl_keys(bufs)
+                    end
+                } },
+            }
+        })
+        vim.cmd("startinsert")
+    end,
+    group = panelMappings,
+})
+vim.api.nvim_create_autocmd("CmdwinLeave", {
+    callback = function()
+        vim.o.number = Opt_save["number"]
+        vim.o.relativenumber = Opt_save["relativenumber"]
+        vim.o.signcolumn = Opt_save["signcolumn"]
+        vim.o.backspace = Opt_save["backspace"]
+    end,
+    group = panelMappings,
+})
 
 vim.api.nvim_set_var("wordmotion_prefix", "$")
 
@@ -134,9 +206,9 @@ Map({ "n", "x", "o" }, "`", "'")
 Map("x", "<", "<gv")
 Map("x", ">", ">gv")
 
-Map("n", "<c-v>", "<cmd>vsplit %<cr>")
-Map("n", "<c-x>", "<cmd>split %<cr>")
-Map("n", "<c-p>", "<cmd>pedit %<cr>")
+Map("n", "<c-v>", "<cmd>silent vsplit %<cr>")
+Map("n", "<c-x>", "<cmd>silent split %<cr>")
+Map("n", "<c-p>", "<cmd>silent pedit %<cr>")
 
 Map("n", "<cr><cr>", "<cmd>call v:lua.sendLines(v:count)<cr>", { silent = true })
 Map("n", "<cr>", "<plug>(sendOp)", { silent = true })
@@ -264,7 +336,7 @@ Map("x", ",f-", "<Plug>CaserVKebabCase", { remap = true })
 Map("x", ",fk", "<Plug>CaserVTitleKebabCase", { remap = true })
 Map("x", ",f.", "<Plug>CaserVDotCase", { remap = true })
 
-Map("n", "<leader><leader>", "<cmd>e #<cr>")
+Map("n", "<leader><leader>", "<cmd>silent e #<cr>")
 
 Map("n", "<leader>n", require("harpoon.mark").add_file)
 Map("n", "<leader>e", require("harpoon.ui").toggle_quick_menu)
@@ -273,8 +345,8 @@ for i, key in pairs(harpoon_keys) do
     Map("n", "<leader>" .. key, function() require("harpoon.ui").nav_file(i) end)
 end
 
-Map("n", "<leader>//", "<cmd>A<cr>")
-Map("n", "<leader>/r", "<cmd>Ereadme<cr>")
+Map("n", "<leader>//", "<cmd>silent A<cr>")
+Map("n", "<leader>/r", "<cmd>silent Ereadme<cr>")
 
 Map("n", "<leader>f", "<cmd>call v:lua.project_files()<cr>")
 Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
@@ -322,7 +394,7 @@ Map({ "i", "s", "c" }, "<c-a>", "<HOME>")
 Map({ "i", "s", "c" }, "<c-e>", "<END>")
 
 Map({ "i", "s" }, "<c-]>", "<plug>luasnip-next-choice")
-Map({ "i", "s", "c" }, "<c-space>", "v:lua.cmp_toggle()", { expr = true })
+Map({ "i", "s", "c" }, "<c-space>", function() _G.cmp_toggle() end)
 
 Map("n", "<c-leftmouse>", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
 Map("n", "<c-rightmouse>", "gf")

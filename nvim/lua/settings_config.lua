@@ -13,9 +13,10 @@ vim.opt.spelllang = "en_gb"
 vim.opt.termguicolors = true
 vim.opt.hidden = true
 vim.opt.lazyredraw = true
-vim.opt.shortmess = "Iflmnrwxt"
+vim.opt.shortmess = "TWAcIFSs"
 vim.opt.showmode = false
 vim.opt.laststatus = 3
+vim.opt.cmdheight = 0
 vim.opt.fillchars:append({
     horiz = "━",
     horizup = "┻",

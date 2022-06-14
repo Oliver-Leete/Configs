@@ -56,16 +56,6 @@ require("cmp").setup({
     mapping = {
         ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
         ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-        ["<tab>"] = cmp.mapping({
-            c = function()
-                cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-            end,
-        }),
-        ["<s-tab>"] = cmp.mapping({
-            c = function()
-                cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
-            end,
-        }),
         ["<down>"] = cmp.mapping({
             i = function()
                 if cmp.visible() then
@@ -76,6 +66,9 @@ require("cmp").setup({
                 if cmp.visible() then
                     cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
                 end
+            end,
+            c = function()
+                cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
             end,
         }),
         ["<up>"] = cmp.mapping({
@@ -88,6 +81,9 @@ require("cmp").setup({
                 if cmp.visible() then
                     cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
                 end
+            end,
+            c = function()
+                cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
             end,
         }),
         ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "i" }),
@@ -113,6 +109,7 @@ require("cmp").setup({
                 nvim_lua = "(NVIM)",
                 buffer = "(BUFF)",
                 cmdline = "(CMD)",
+                cmdline_history = "(CMDH)",
                 dictionary = "(DICT)",
                 omni = "(TEX?)",
             })[entry.source.name]
@@ -120,11 +117,15 @@ require("cmp").setup({
             return vim_item
         end,
     },
+    view = {
+        -- entries = { name = 'custom', selection_order = 'near_cursor' }
+    },
 })
 
 cmp.setup.cmdline("/", {
     sources = {
         { name = "buffer" },
+        { name = "cmdline_history" },
     },
 })
 
@@ -132,6 +133,7 @@ cmp.setup.cmdline(":", {
     sources = cmp.config.sources({
         { name = "path" },
         { name = "buffer" },
+        { name = "cmdline_history" },
         { name = "cmdline" },
     }),
 })
@@ -200,9 +202,9 @@ end
 
 _G.cmp_toggle = function()
     if require("cmp").visible() then
-        return replace_keycodes([[<cmd>lua require("cmp").close()<cr>]])
+        require("cmp").close()
     else
-        return replace_keycodes([[<cmd>lua require("cmp").complete()<cr>]])
+        require("cmp").complete()
     end
 end
 

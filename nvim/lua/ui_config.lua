@@ -44,12 +44,12 @@ require("zen-mode").setup({
 
 require("kanagawa").setup({
     undercurl = true,
-    commentStyle = "italic",
-    functionStyle = "NONE",
-    keywordStyle = "NONE",
-    statementStyle = "NONE",
-    typeStyle = "NONE",
-    variablebuiltinStyle = "NONE",
+    commentStyle = {italic = true},
+    functionStyle = {},
+    keywordStyle = {},
+    statementStyle = {},
+    typeStyle = {},
+    variablebuiltinStyle = {},
     specialReturn = true,
     specialException = true,
     transparent = false,
@@ -172,6 +172,37 @@ vim.api.nvim_set_hl(0, "WinBarNC", { fg = "#727169", bg = "#262626", bold = true
 vim.api.nvim_set_hl(0, "WinBarText", { fg = "#727169", bg = "#262626", bold = true })
 vim.api.nvim_set_hl(0, "WinBarIcon", { fg = "#957FB8", bg = "#262626", bold = false })
 vim.api.nvim_set_hl(0, "WinBarAltIcon", { fg = "#7E9CD8", bg = "#262626", bold = false })
+
+require("nvim-navic").setup({ highlight = true })
+vim.api.nvim_set_hl(0, "NavicFile",          { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicModule",        { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicNamespace",     { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicPackage",       { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicClass",         { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicMethod",        { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicProperty",      { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicField",         { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicConstructor",   { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicEnum",          { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicInterface",     { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicFunction",      { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicVariable",      { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicConstant",      { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicString",        { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicNumber",        { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicBoolean",       { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicArray",         { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicObject",        { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicKey",           { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicNull",          { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicEnumMember",    { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicStruct",        { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicEvent",         { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicOperator",      { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicTypeParameter", { fg = "#957FB8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "NavicText",          {link = "WinBarText"})
+vim.api.nvim_set_hl(0, "NavicSeparator",     {link = "WinBarText"})
+
 function GPS_Bar()
     local winbar = ""
     local columns = vim.api.nvim_get_option("columns")
@@ -184,7 +215,12 @@ function GPS_Bar()
         end
         winbar = winbar .. "%#WinBarIcon#" .. icon .. "%#WinBarText# " .. "%f"
     end
-    if require("nvim-gps").is_available() then
+    if require("nvim-navic").is_available() then
+        local location = require("nvim-navic").get_location()
+        if location ~= "" then
+            winbar = winbar .. " > " .. location
+        end
+    elseif require("nvim-gps").is_available() then
         local location = require("nvim-gps").get_location()
         if location ~= "" then
             winbar = winbar .. " > " .. location
