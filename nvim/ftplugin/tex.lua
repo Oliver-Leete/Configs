@@ -5,12 +5,6 @@ vim.b[0].localCommands = {
     { source = "tex", name = "Word Count", command = "VimtexCountWord" },
 }
 
-vim.b[0].runnables = function()
-    return {
-        { source = "tex", name = "Compile document", command = "VimtexCompileSS" },
-    }
-end
-
 Map("n", "<localleader><localleader>", "<cmd>TexlabForward<cr>", { buffer = 0, silent = true })
 
 Map("n", "KK", "<cmd>VimtexDocPackage<cr>", { buffer = 0 })

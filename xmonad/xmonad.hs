@@ -20,6 +20,7 @@
 
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# OPTIONS_GHC -Wno-missing-fields #-}
 import qualified Data.Map as M
 import Data.Monoid
 import System.Exit
@@ -140,10 +141,6 @@ projects =
                 , projectDirectory  = "/tmp"
                 , projectApp1       = kitty
                 , projectApp1Force  = kittyForce
-                , projectApp2       = return ()
-                , projectApp2Force  = return ()
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ return ()
                 }
 
@@ -151,10 +148,6 @@ projects =
                 , projectDirectory  = "/tmp"
                 , projectApp1       = kitty
                 , projectApp1Force  = kittyForce
-                , projectApp2       = return ()
-                , projectApp2Force  = return ()
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ return ()
                 }
 
@@ -162,10 +155,6 @@ projects =
                 , projectDirectory  = "~/Projects/Printing"
                 , projectApp1       = upPointer $ runOrRaise "flatpak run com.prusa3d.PrusaSlicer" (className =? "PrusaSlicer")
                 , projectApp1Force  = upPointer $ spawn "flatpak run com.prusa3d.PrusaSlicer"
-                , projectApp2       = return ()
-                , projectApp2Force  = return ()
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn ws3D $ sl "flatpak run com.prusa3d.PrusaSlicer"
                 }
 
@@ -175,8 +164,6 @@ projects =
                 , projectApp1Force  = kittyForce
                 , projectApp2       = zathura
                 , projectApp2Force  = zathuraForce
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ spawnOn wsDND myBrowser
                 }
 
@@ -184,10 +171,6 @@ projects =
                 , projectDirectory  = "~/.config"
                 , projectApp1       = nvim
                 , projectApp1Force  = nvimForce
-                , projectApp2       = return ()
-                , projectApp2Force  = return ()
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsCON $ sl myTerminal
                                                 spawnOn wsCON ("sleep .5; " ++ myBrowser)
                 }
@@ -196,10 +179,6 @@ projects =
                 , projectDirectory  = "~/Projects/qmk_firmware"
                 , projectApp1       = nvim
                 , projectApp1Force  = nvimForce
-                , projectApp2       = return ()
-                , projectApp2Force  = return ()
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsQMK $ sl myTerminal
                                                 spawnOn wsQMK ("sleep .5; " ++ myBrowser)
                 }
@@ -208,10 +187,6 @@ projects =
                 , projectDirectory  = "~/Projects/zmk-config"
                 , projectApp1       = nvim
                 , projectApp1Force  = nvimForce
-                , projectApp2       = return ()
-                , projectApp2Force  = return ()
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsZMK $ sl myTerminal
                                                 spawnOn wsZMK ("sleep .5; " ++ myBrowser)
                 }
@@ -222,8 +197,6 @@ projects =
                 , projectApp1Force  = kittyForce
                 , projectApp2       = zathura
                 , projectApp2Force  = zathuraForce
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsPER $ sl myBrowser
                 }
 
@@ -233,8 +206,6 @@ projects =
                 , projectApp1Force  = kittyForce
                 , projectApp2       = zathura
                 , projectApp2Force  = zathuraForce
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsWRK $ sl myBrowser
                 }
 
@@ -242,10 +213,6 @@ projects =
                 , projectDirectory  = "~/Projects/PowderModel"
                 , projectApp1       = nvim
                 , projectApp1Force  = nvimForce
-                , projectApp2       = return ()
-                , projectApp2Force  = return ()
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsSIM $ sl myTerminal
                                                 spawnOn wsSIM ("sleep .2; " ++ myBrowser)
                 }
@@ -253,10 +220,6 @@ projects =
                 , projectDirectory  = "~/Projects/JuliaPlotting"
                 , projectApp1       = nvim
                 , projectApp1Force  = nvimForce
-                , projectApp2       = return ()
-                , projectApp2Force  = return ()
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsEXP $ sl myTerminal
                                                 spawnOn wsEXP ("sleep .2; " ++ myBrowser)
                 }
@@ -266,8 +229,6 @@ projects =
                 , projectApp1Force  = nvimForce
                 , projectApp2       = zathura
                 , projectApp2Force  = zathuraForce
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsTHESIS $ sl myTerminal
                                                 spawnOn wsTHESIS ("sleep .2; " ++ myBrowser)
                 }
@@ -291,8 +252,6 @@ projects =
                 , projectApp1Force  = upPointer $ spawn "flatpak run md.obsidian.Obsidian"
                 , projectApp2       = zathura
                 , projectApp2Force  = zathuraForce
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsCOMMENTS $ sl "flatpak run md.obsidian.Obsidian"
                 }
 
@@ -302,8 +261,6 @@ projects =
                 , projectApp1Force  = nvimForce
                 , projectApp2       = upPointer $ runOrRaise "flatpak run org.paraview.Paraview" (className =? "ParaView")
                 , projectApp2Force  = upPointer $ spawn "flatpak run org.paraview.Paraview"
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsANSYS $ sl myTerminal
                                                 spawnOn wsANSYS ("sleep .2; " ++ myBrowser)
                 }
@@ -312,10 +269,6 @@ projects =
                 , projectDirectory  = "~/Projects/rustBook"
                 , projectApp1       = nvim
                 , projectApp1Force  = nvimForce
-                , projectApp2       = return ()
-                , projectApp2Force  = return ()
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsCODE $ sl myTerminal
                                                 spawnOn wsCODE ("sleep .2; " ++ myBrowser)
                 }
@@ -324,10 +277,6 @@ projects =
                 , projectDirectory  = "~/Projects/Scintilla/Scintilla"
                 , projectApp1       = nvim
                 , projectApp1Force  = nvimForce
-                , projectApp2       = return ()
-                , projectApp2Force  = return ()
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsSCN $ sl myTerminal
                                                 spawnOn wsSCN ("sleep .2; " ++ myBrowser)
                 }
@@ -336,10 +285,6 @@ projects =
                 , projectDirectory  = "~/Projects/Scintilla/docs"
                 , projectApp1       = nvim
                 , projectApp1Force  = nvimForce
-                , projectApp2       = return ()
-                , projectApp2Force  = return ()
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsSCNN $ sl myTerminal
                                                 spawnOn wsSCNN ("sleep .2; " ++ myBrowser)
                 }
@@ -348,18 +293,14 @@ projects =
                 , projectDirectory  = "~/Documents"
                 , projectApp1       = upPointer $ runOrRaise "steam" (className =? "Steam")
                 , projectApp1Force  = upPointer $ spawn "steam"
-                , projectApp2       = return ()
-                , projectApp2Force  = return ()
-                , projectApp3       = return ()
-                , projectApp3Force  = return ()
                 , projectStartHook  = Just $ do spawnOn wsGAME $ sl "steam"
                 }
     , Project   { projectName       = wsFILM
                 , projectDirectory  = "~/Videos/films"
-                , projectApp1       = upPointer $ runOrRaise "mpv /home/oleete/Videos/films/*" (className =? "mpv")
-                , projectApp1Force  = upPointer $ spawn "mpv /home/oleete/Videos/films/*"
-                , projectApp2       = upPointer $ runOrRaise "thunar" (className =? "Thunar")
-                , projectApp2Force  = upPointer $ spawn "thunar"
+                , projectApp1       = upPointer $ runOrRaise myTerminal (className =? "kitty")
+                , projectApp1Force  = upPointer $ spawn myTerminal
+                , projectApp2       = upPointer $ runOrRaise "mpv /home/oleete/Videos/films/*" (className =? "mpv")
+                , projectApp2Force  = upPointer $ spawn "mpv /home/oleete/Videos/films/*"
                 , projectApp3       = upPointer $ runOrRaise "deluge" (className =? "Deluge-gtk")
                 , projectApp3Force  = upPointer $ spawn "deluge"
                 , projectStartHook  = Just $ do spawnOn wsFILM $ sl myBrowser
@@ -561,7 +502,8 @@ myKeys =
     , ("M-S-k"           , upPointer $ windowSwap U True)
     , ("M-S-l"           , upPointer $ windowSwap R True)
 
-    , ("M-m"             , myFocusMaster)
+    -- , ("M-m"             , myFocusMaster)
+    , ("M-m"             , bF $ kt " mainMove" $ l (upPointer $ swapPromote' False))
     , ("M-S-m"           , bF $ kt " mainMove" $ l (upPointer $ swapPromote' False))
 
     , ("M-y"             , upPointer $ withFocused toggleFloat)
@@ -595,13 +537,13 @@ myKeys =
                             then W.sink w s
                             else W.float w (W.RationalRect (1/4) (1/4) (1/2) (1/2)) s)
 
-myFocusMaster :: X ()
-myFocusMaster = withWindowSet $ \wset ->
-  case W.index wset of
-    []      -> pure ()
-    (x : _) -> if   Just x == W.peek wset
-               then toggleFocus
-               else windows W.focusMaster
+-- myFocusMaster :: X ()
+-- myFocusMaster = withWindowSet $ \wset ->
+--   case W.index wset of
+--     []      -> pure ()
+--     (x : _) -> if   Just x == W.peek wset
+--                then toggleFocus
+--                else windows W.focusMaster
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {} = M.fromList

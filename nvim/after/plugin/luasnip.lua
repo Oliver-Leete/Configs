@@ -1,19 +1,17 @@
-local ls = require("luasnip")
-
-ls.config.set_config({
+Ls.config.set_config({
     history = false,
     updateevents = "TextChanged,TextChangedI",
 })
 
-local s = ls.snippet
-local sn = ls.snippet_node
-local isn = ls.indent_snippet_node
-local t = ls.text_node
-local i = ls.insert_node
-local f = ls.function_node
-local c = ls.choice_node
-local d = ls.dynamic_node
-local r = ls.restore_node
+local s = Ls.snippet
+local sn = Ls.snippet_node
+local isn = Ls.indent_snippet_node
+local t = Ls.text_node
+local i = Ls.insert_node
+local f = Ls.function_node
+local c = Ls.choice_node
+local d = Ls.dynamic_node
+local r = Ls.restore_node
 local events = require("luasnip.util.events")
 local ai = require("luasnip.nodes.absolute_indexer")
 local lse = require("luasnip.extras")
@@ -29,7 +27,7 @@ local m = lse.match
 -- local dl = lse.dynamic_lambda
 
 -- NOTE : LUA
-ls.add_snippets("lua", {
+Ls.add_snippets("lua", {
     lua = {
         s({ trig = "sn", name = "snippet", dscr = "The snippet to make snippets" }, {
             t({ "s({trig=\"" }), i(1), t({ "\", name=\"" }), i(2), t({ "\", dscr=\"" }), i(3), t({ "\"}, {", "" }),
@@ -71,7 +69,7 @@ rec_exam = function()
     )
 end
 
-ls.add_snippets("julia", {
+Ls.add_snippets("julia", {
     s({ trig = "docs", name = "documentation" }, {
         t({ '"""', "\t" }),
         i(0),
@@ -275,7 +273,7 @@ rec_tab = function()
         })
     })
 end
-ls.add_snippets("tex", {
+Ls.add_snippets("tex", {
     s({ trig = "label", name = "label", dscr = "Insert a label" }, {
         t("\\label{"),
         c(1, { t("sect"), t("ch"), t("ap"), t("fig"), t("eq"), t("tab"), t("alg"), t("lst") }),

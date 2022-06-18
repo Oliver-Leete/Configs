@@ -2,6 +2,8 @@
 
 starship init fish | source
 
+set -Ux BROWSER "/home/oleete/.config/bin/browser"
+set -gx BROWSER "/home/oleete/.config/bin/browser"
 set -Ux EDITOR "/home/oleete/.config/bin/nvrTab --remote-tab-wait"
 set -Ux VISUAL "/home/oleete/.config/bin/nvrTab --remote-tab-wait"
 fish_add_path --path /home/oleete/.cargo/bin

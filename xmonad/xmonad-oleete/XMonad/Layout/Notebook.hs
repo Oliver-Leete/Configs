@@ -32,8 +32,6 @@ module XMonad.Layout.Notebook (
 import XMonad
     ( fromMessage,
       splitHorizontally,
-      splitVertically,
-      splitHorizontallyBy,
       splitVerticallyBy,
       LayoutClass(pureLayout, description, handleMessage),
       IncMasterN(IncMasterN),

@@ -106,3 +106,23 @@ require("nvim-tree").setup({
         },
     },
 })
+
+require("toggleterm").setup({
+    size = function()
+        local height = vim.api.nvim_list_uis()[1].height
+        return math.floor(height * 0.3)
+    end,
+    shade_terminals = false,
+    hide_numbers = true,
+    start_in_insert = true,
+    insert_mappings = true,
+    terminal_mappings = true,
+    persist_size = true,
+    persist_mode = true,
+    direction = "horizontal",
+    close_on_exit = true,
+    shell = "fish",
+    float_opts = {
+        border = "curved",
+    }
+})

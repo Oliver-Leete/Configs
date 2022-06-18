@@ -51,6 +51,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'JuliaEditorSupport/julia-vim'
     Plug 'fladson/vim-kitty'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+    Plug 'wilriker/gcode.vim'
 
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'sindrets/diffview.nvim'
@@ -71,11 +72,10 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'simrat39/rust-tools.nvim'
     Plug 'p00f/clangd_extensions.nvim'
     Plug 'b0o/schemastore.nvim'
-
     Plug 'jose-elias-alvarez/null-ls.nvim'
-    " Plug 'kdheepak/JET.nvim'
 
     Plug 'ray-x/lsp_signature.nvim'
+    Plug 'SmiteshP/nvim-navic'
 
     Plug 'hrsh7th/nvim-cmp'
     Plug 'hrsh7th/cmp-buffer'
@@ -107,9 +107,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'mizlan/iswap.nvim'
     Plug 'AckslD/nvim-trevJ.lua'
 
-    Plug 'SmiteshP/nvim-gps'
-    Plug 'SmiteshP/nvim-navic'
-
     Plug 'mfussenegger/nvim-dap'
     Plug 'Pocco81/DAPInstall.nvim'
     Plug 'rcarriga/nvim-dap-ui'
@@ -118,6 +115,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 't-troebst/perfanno.nvim'
     Plug 'andythigpen/nvim-coverage'
+
+    Plug 'akinsho/toggleterm.nvim'
 call plug#end()]])
 
 -- Disable builtins
@@ -160,12 +159,16 @@ require("dap_config")
 require("bubble")
 require("ui_config")
 require("git_config")
+require("projects_config")
+require("terminal_config")
 
 local enterAndExitVim = vim.api.nvim_create_augroup("enterAndExitVim", { clear = true })
 vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-window-title ""', group = enterAndExitVim })
 
-vim.api.nvim_create_autocmd("VimEnter", { command = 'silent! !kitty @ set-colors background=\\#262626', group = enterAndExitVim })
-vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-colors background=\\#1F1F28', group = enterAndExitVim })
+-- vim.api.nvim_create_autocmd("VimEnter",
+--     { command = 'silent! !kitty @ set-colors background=\\#262626', group = enterAndExitVim })
+-- vim.api.nvim_create_autocmd("VimLeave",
+--     { command = 'silent! !kitty @ set-colors background=\\#1F1F28', group = enterAndExitVim })
 
 local qfDiag = vim.api.nvim_create_namespace("qfDiag")
 local qfToDiag = vim.api.nvim_create_augroup("qfToDiag", { clear = true })
@@ -197,3 +200,5 @@ QFtoDiag = function()
     UpdateDiagnostics(qf, qfDiag)
 end
 vim.api.nvim_create_autocmd("QuickFixCmdPost", { pattern = "*", callback = QFtoDiag, group = qfToDiag })
+vim.api.nvim_create_autocmd("User", { pattern = "VimtexEventCompileFailed", callback = QFtoDiag, group = qfToDiag })
+vim.api.nvim_create_autocmd("User", { pattern = "VimtexEventCompileSuccess", callback = QFtoDiag, group = qfToDiag })

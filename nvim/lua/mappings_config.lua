@@ -135,8 +135,8 @@ vim.api.nvim_create_autocmd("CmdwinEnter", {
                 })
             },
             sources = {
-                { name = 'cmdline_history' },
                 { name = "cmdline" },
+                { name = 'cmdline_history' },
                 { name = "path" },
                 { name = "buffer", option = {
                     get_bufnrs = function()
@@ -347,26 +347,21 @@ end
 
 Map("n", "<leader>//", "<cmd>silent A<cr>")
 Map("n", "<leader>/r", "<cmd>silent Ereadme<cr>")
+Map("n", "<leader>/d", "<cmd>silent Edoc<cr>")
+Map("n", "<leader>/D", "<cmd>silent EmainDoc<cr>")
+Map("n", "<leader>/s", "<cmd>silent Esource<cr>")
+Map("n", "<leader>/S", "<cmd>silent EmainSource<cr>")
+Map("n", "<leader>/t", "<cmd>silent Etest<cr>")
+Map("n", "<leader>/T", "<cmd>silent EmainTest<cr>")
+Map("n", "<leader>/p", "<cmd>silent Edeps<cr>")
+Map("n", "<leader>/b", "<cmd>silent Ebench<cr>")
+Map("n", "<leader>/B", "<cmd>silent EmainBench<cr>")
 
 Map("n", "<leader>f", "<cmd>call v:lua.project_files()<cr>")
 Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
 
 Map("n", ",gr", "<cmd>Gitsigns reset_hunk<CR>")
 Map("n", ",gs", "<cmd>Gitsigns stage_hunk<CR>")
-
--- mapxName.name("<leader>j", "Debugging")
--- nnoremap("<leader>J", "<cmd>tabedit %<cr><cmd>lua require'dapui'.open()<cr>", "Open Debug Panels")
--- nnoremap("<leader>jo", "<cmd>tabedit %<cr><cmd>lua require'dapui'.open()<cr>", "Open Debug Panels")
--- nnoremap("<leader>jn", function() dap.step_over() end, "Step to the Next Line")
--- nnoremap("<leader>jN", function() dap.continue() end, "Step to the Next Breakpoint")
--- nnoremap("<leader>ji", function() dap.step_into() end, "Step In")
--- nnoremap("<leader>jo", function() dap.step_out() end, "Step Out")
--- nnoremap("<leader>jr", function() dap.step_back() end, "Reverse")
--- nnoremap("<leader>jc", function() dap.continue() end, "Run to Cursor")
--- nnoremap("<leader>jl", function() dap.repl.toggle() end, "Toggle REPL")
--- nnoremap("<leader>jq", function() dap.close() end, "Quit")
--- nnoremap("<leader>jb", function() dap.toggle_breakpoint() end, "Set Breakpoint")
--- nnoremap("<leader>je", function() require'dapui'.eval() end, "Eval Exression")
 
 -- Git Diff Bindings
 if vim.api.nvim_win_get_option(0, "diff") then
@@ -403,12 +398,16 @@ Ls = require("luasnip")
 Map({ "i", "s" }, "<tab>", function()
     if Ls.expand_or_jumpable() then
         Ls.expand_or_jump()
+    else
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<tab>", true, true, true), "n", false)
     end
 end, { silent = true })
 
 Map({ "i", "s" }, "<s-tab>", function()
     if Ls.jumpable(-1) then
         Ls.jump(-1)
+    else
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<s-tab>", true, true, true), "n", false)
     end
 end, { silent = true })
 
@@ -417,6 +416,15 @@ Map("i", "<c-n>", function()
         Ls.change_choice(1)
     end
 end)
+
+-- Terminal mappings
+
+Map("n", "<leader>n", "<cmd>ToggleTerm 1<cr>")
+Map("n", "<leader>e", "<cmd>ToggleTerm 2<cr>")
+Map("n", "<leader>i", "<cmd>ToggleTerm 3<cr>")
+Map("n", "<leader>o", "<cmd>ToggleTerm 4<cr>")
+
+Map("t", "<esc>", "<c-\\><c-n>")
 
 -- Command Panel Bindings
 
@@ -434,13 +442,17 @@ GlobalCommands = {
     { source = "default", name = "Reload Snippets", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
     { source = "default", name = "Reload Snippets", command = "vsplit ~/.config/nvim/after/plugin/luasnip.lua" },
 
+    -- { source = "terminal", name = "Start Pommodoro Timer", command = [[4TermExec cmd="focus"]] },
+
     { source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
     { source = "finders", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
-    { source = "finders", name = "File browser (relative)", command = "Telescope file_browser respect_gitignore=false theme=get_ivy cwd=%:p:h" },
+    { source = "finders", name = "File browser (relative)",
+        command = "Telescope file_browser respect_gitignore=false theme=get_ivy cwd=%:p:h" },
     { source = "finders", name = "Files", command = "Telescope git_files theme=get_ivy" },
     { source = "finders", name = "File browser", command = "Telescope file_browser respect_gitignore=false theme=get_ivy" },
     { source = "finders", name = "Grep", command = "Telescope live_grep theme=get_ivy theme=get_ivy" },
-    { source = "finders", name = "Notifications", func = function() require("telescope").extensions.notify.notify(require("telescope.themes").get_ivy()) end },
+    { source = "finders", name = "Notifications",
+        func = function() require("telescope").extensions.notify.notify(require("telescope.themes").get_ivy()) end },
     { source = "finders", name = "Old files finder", command = "Telescope oldfiles theme=get_ivy" },
     { source = "finders", name = "Quickfix", command = "Telescope quickfix theme=get_ivy" },
     { source = "finders", name = "Symbols", command = "Telescope lsp_document_symbols theme=get_ivy" },
@@ -531,21 +543,30 @@ Global_Runnables = function()
     return {}
 end
 
+local function append_Runables(to_add, runnables)
+    if to_add then
+        if type(to_add) == "table" then
+            for _, v in pairs(to_add) do
+                table.insert(runnables, v)
+            end
+        elseif type(to_add) == "function" then
+            for _, v in pairs(to_add()) do
+                table.insert(runnables, v)
+            end
+        end
+    end
+end
+
 function Select_runnables()
     local runnables = {}
+    -- global runnables
+    append_Runables(Global_Runnables, runnables)
+    -- runnables from projcet type (see projects_config)
+    append_Runables(vim.g.runnables, runnables)
+    -- runnables from buffer types
+    append_Runables(vim.b[0].runnables, runnables)
 
-    if Global_Runnables then
-        for _, v in pairs(Global_Runnables()) do
-            table.insert(runnables, v)
-        end
-    end
-
-    if vim.b[0].runnables then
-        for _, v in pairs(vim.b[0].runnables()) do
-            table.insert(runnables, v)
-        end
-    end
-
+    -- runnables from tasks.lua files in directory
     local handle1 = io.popen([[fd -I tasks.lua]])
     local task_files
     if handle1 then
@@ -554,15 +575,9 @@ function Select_runnables()
     end
 
     if task_files then
-        local project_tasks
         for name in task_files:gmatch("([^\r\n]+)") do
             name = name:gsub("%./", ""):gsub("%.lua", "")
-            project_tasks = require(name)
-            if type(project_tasks) == "table" then
-                for _, v in pairs(project_tasks) do
-                    table.insert(runnables, v)
-                end
-            end
+            append_Runables(require(name), runnables)
         end
     end
 

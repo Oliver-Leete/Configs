@@ -44,7 +44,7 @@ require("zen-mode").setup({
 
 require("kanagawa").setup({
     undercurl = true,
-    commentStyle = {italic = true},
+    commentStyle = { italic = true },
     functionStyle = {},
     keywordStyle = {},
     statementStyle = {},
@@ -55,7 +55,7 @@ require("kanagawa").setup({
     transparent = false,
     colors = {},
     overrides = {},
-    dimInactive = true,
+    dimInactive = false,
     globalStatus = true,
 })
 
@@ -141,115 +141,110 @@ local severity = {
     "info", -- map both hint and info to info?
 }
 vim.lsp.handlers["window/showMessage"] = function(_, method, params, _)
+---@diagnostic disable-next-line: redundant-parameter
     vim.notify(method.message, severity[params.type])
 end
 
-require("nvim-gps").setup({
-    icons = {
-        ["module-name"] = "%#WinBarIcon#%#WinBarText# ",
-        ["class-name"] = "%#WinBarIcon#%#WinBarText# ",
-        ["function-name"] = "%#WinBarIcon#%#WinBarText# ",
-        ["method-name"] = "%#WinBarIcon#%#WinBarText# ",
-        ["macro-name"] = "%#WinBarIcon#亮%#WinBarText#",
-        ["container-name"] = "%#WinBarAltIcon#%#WinBarText# ",
-        ["tag-name"] = "%#WinBarIcon#炙%#WinBarText#",
-    },
-    languages = {
-        ["latex"] = {
-            icons = {
-                ["title-name"] = "%#WinBarIcon## %#WinBarText#",
-                ["label-name"] = "%#WinBarIcon# %#WinBarText# ",
-            },
-        },
-    },
-})
+vim.api.nvim_set_hl(0, "WinBarSigActParm", { fg = "#7E9CD8" })
 
-vim.api.nvim_set_hl(0, "WinBarSigActParm", { fg = "#7E9CD8", bg = "#262626" })
 
-vim.api.nvim_set_hl(0, "WinBar", { fg = "#727169", bg = "#262626", bold = true })
-vim.api.nvim_set_hl(0, "WinBarNC", { fg = "#727169", bg = "#262626", bold = true })
+vim.api.nvim_set_hl(0, "WinBarActive", { fg = "#FF9E3B", bg = "#1F1F28", bold = true })
+vim.api.nvim_set_hl(0, "WinBar", { fg = "#727169", bg = "#1F1F28", bold = true })
+vim.api.nvim_set_hl(0, "WinBarNC", { fg = "#727169", bg = "#1F1F28", bold = true })
+vim.api.nvim_set_hl(0, "WinBarIcon", { fg = "#957FB8", bg = "#1F1F28", bold = false })
+vim.api.nvim_set_hl(0, "WinBarIconNC", { fg = "#957FB8", bg = "#1F1F28", bold = true })
 
-vim.api.nvim_set_hl(0, "WinBarText", { fg = "#727169", bg = "#262626", bold = true })
-vim.api.nvim_set_hl(0, "WinBarIcon", { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "WinBarAltIcon", { fg = "#7E9CD8", bg = "#262626", bold = false })
+vim.api.nvim_set_hl(0, "WinBarAltIcon", { fg = "#7E9CD8", bold = false })
 
 require("nvim-navic").setup({ highlight = true })
-vim.api.nvim_set_hl(0, "NavicFile",          { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicModule",        { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicNamespace",     { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicPackage",       { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicClass",         { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicMethod",        { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicProperty",      { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicField",         { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicConstructor",   { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicEnum",          { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicInterface",     { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicFunction",      { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicVariable",      { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicConstant",      { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicString",        { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicNumber",        { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicBoolean",       { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicArray",         { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicObject",        { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicKey",           { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicNull",          { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicEnumMember",    { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicStruct",        { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicEvent",         { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicOperator",      { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicTypeParameter", { fg = "#957FB8", bg = "#262626", bold = false })
-vim.api.nvim_set_hl(0, "NavicText",          {link = "WinBarText"})
-vim.api.nvim_set_hl(0, "NavicSeparator",     {link = "WinBarText"})
+vim.api.nvim_set_hl(0, "NavicText", { link = "WinBar" })
+vim.api.nvim_set_hl(0, "NavicSeparator", { link = "WinBar" })
 
 function GPS_Bar()
+    local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
     local winbar = ""
-    local columns = vim.api.nvim_get_option("columns")
-    local sig = require("lsp_signature").status_line(columns)
+    local hld = "%#WinBar#"
+    local hl = "%#WinBar#"
+    local hli = "%#WinBarIcon#"
+    if is_active then
+        hl = "%#WinBarActive#"
+    end
 
-    if vim.fn.expand("%") ~= "" then
-        local icon = require("nvim-web-devicons").get_icon(vim.fn.expand("%:t"), vim.fn.expand("%:e"))
-        if icon == "" or icon == nil then
-            icon = ""
+    -- Special winbar for filmpicker script
+    if vim.bo[vim.api.nvim_get_current_buf()].filetype == "filmlist" then
+        local line1 = vim.fn.search([[\(\%^\|^$\)]], "nbWc") - 1
+        local line2 = vim.fn.search([[\(\%$\|^$\)]], "nW")
+
+        local lines = vim.api.nvim_buf_get_lines(0, line1, line2, false)
+        local pattern = "(%d+):(%d+):(%d+)"
+        local runtime = 0
+        for _, line in pairs(lines) do
+            local time_string = line:sub(1, 8)
+            local hour, minute, second = time_string:match(pattern)
+            if hour and minute and second then
+                runtime = runtime + hour * 3600 + minute * 60 + second
+            end
         end
-        winbar = winbar .. "%#WinBarIcon#" .. icon .. "%#WinBarText# " .. "%f"
-    end
-    if require("nvim-navic").is_available() then
-        local location = require("nvim-navic").get_location()
-        if location ~= "" then
-            winbar = winbar .. " > " .. location
+        local hours = math.floor(runtime / 3600)
+        local minutes = math.floor(math.fmod(runtime, 3600) / 60)
+        local seconds = math.floor(math.fmod(runtime, 60))
+        winbar = winbar .. hl .. string.format("%02d:%02d:%02d", hours, minutes, seconds) .. hld
+
+    -- Special winbar for terminals
+    elseif vim.bo[vim.api.nvim_get_current_buf()].filetype == "toggleterm" then
+        local term_name
+        if vim.b[0].my_term_title then
+            term_name = vim.b[0].my_term_title
+        else
+            term_name = "Terminal " .. tostring(vim.b[0].toggle_number)
         end
-    elseif require("nvim-gps").is_available() then
-        local location = require("nvim-gps").get_location()
-        if location ~= "" then
-            winbar = winbar .. " > " .. location
+        winbar = winbar .. hl .. term_name .. hld
+
+    -- Default winbar
+    else
+        local columns = vim.api.nvim_get_option("columns")
+        local sig = require("lsp_signature").status_line(columns)
+
+        if vim.fn.expand("%") ~= "" then
+            local icon = require("nvim-web-devicons").get_icon(vim.fn.expand("%:t"), vim.fn.expand("%:e"))
+            if icon == "" or icon == nil then
+                icon = ""
+            end
+            winbar = winbar .. hli .. icon .. hl .. " %f" .. hld
         end
-    end
-    if sig.label ~= nil and sig.label ~= "" and vim.api.nvim_get_mode().mode == "i" then
-        local label1 = sig.label
-        local label2 = ""
-        local range = {}
-        if sig.range and (sig.range["start"] ~= 0 and sig.range["end"] ~= 0) then
-            range[1] = sig.range["start"]
-            range[2] = sig.range["end"]
-        elseif sig.hint ~= "" then
-            range[1], range[2] = label1:find(sig.hint)
+        if is_active then
+            if require("nvim-navic").is_available() then
+                local location = require("nvim-navic").get_location()
+                if location ~= "" then
+                    winbar = winbar .. " > " .. location
+                end
+            end
+            if sig.label ~= nil and sig.label ~= "" and vim.api.nvim_get_mode().mode == "i" then
+                local label1 = sig.label
+                local label2 = ""
+                local range = {}
+                if sig.range and (sig.range["start"] ~= 0 and sig.range["end"] ~= 0) then
+                    range[1] = sig.range["start"]
+                    range[2] = sig.range["end"]
+                elseif sig.hint ~= "" then
+                    range[1], range[2] = label1:find(sig.hint)
+                end
+                if range[1] and range[2] then
+                    label1 = sig.label:sub(1, sig.range["start"] - 1)
+                    label2 = sig.label:sub(sig.range["end"] + 1, #sig.label)
+                end
+                winbar = winbar
+                    .. " > "
+                    .. "%#WinBarText#"
+                    .. label1
+                    .. "%*"
+                    .. "%#WinBarSigActParm#"
+                    .. sig.hint
+                    .. "%*"
+                    .. "%#WinBarText#"
+                    .. label2
+            end
         end
-        if range[1] and range[2] then
-            label1 = sig.label:sub(1, sig.range["start"] - 1)
-            label2 = sig.label:sub(sig.range["end"] + 1, #sig.label)
-        end
-        winbar = winbar
-            .. " > "
-            .. "%#WinBarText#"
-            .. label1
-            .. "%*"
-            .. "%#WinBarSigActParm#"
-            .. sig.hint
-            .. "%*"
-            .. "%#WinBarText#"
-            .. label2
     end
     if winbar ~= "" then
         winbar = "%=" .. winbar .. "%="
@@ -259,26 +254,6 @@ end
 
 vim.go.winbar = "%{%v:lua.GPS_Bar()%}"
 
-function Film_bar()
-    local line1 = vim.fn.search([[\(\%^\|^$\)]], "nbWc") - 1
-    local line2 = vim.fn.search([[\(\%$\|^$\)]], "nW")
-
-    local lines = vim.api.nvim_buf_get_lines(0, line1, line2, false)
-    local pattern = "(%d+):(%d+):(%d+)"
-    local runtime = 0
-    for _, line in pairs(lines) do
-        local time_string = line:sub(1, 8)
-        local hour, minute, second = time_string:match(pattern)
-        if hour and minute and second then
-            runtime = runtime + hour * 3600 + minute * 60 + second
-        end
-    end
-    local hours = math.floor(runtime / 3600)
-    local minutes = math.floor(math.fmod(runtime, 3600) / 60)
-    local seconds = math.floor(math.fmod(runtime, 60))
-
-    return "%=%#WinBarSigActParm#" .. string.format("%02d:%02d:%02d", hours, minutes, seconds) .. "%="
-end
-
-local winbars = vim.api.nvim_create_augroup("winbars ", { clear = true })
-vim.api.nvim_create_autocmd("BufEnter", { pattern = "*.films", callback = function() vim.go.winbar = "%{%v:lua.Film_bar()%}" end, group = winbars })
+local filetypes = vim.api.nvim_create_augroup("winbars ", { clear = true })
+vim.api.nvim_create_autocmd("BufEnter",
+    { pattern = "*.films", callback = function() vim.b[0].filetype = "filmlist" end, group = filetypes })

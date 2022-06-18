@@ -11,18 +11,14 @@ local git_comps = require("windline.components.git")
 local git_rev = require("windline.components.git_rev")
 
 local hl_list = {
-    Black = { "blue", "ActiveBg" },
+    Black = { "blue", "NormalBg" },
     White = { "black", "blue" },
-    Inactive = { "VertSplit", "InactiveBg" },
-    Active = { "ActiveFg", "ActiveBg" },
+    Active = { "ActiveFg", "NormalBg" },
 }
 local basic = {}
 
 basic.divider = { b_components.divider, "" }
 basic.underline = { b_components.divider, "_" }
-basic.file_name_inactive = { b_components.full_file_name, hl_list.Inactive }
-basic.line_col_inactive = { b_components.line_col, hl_list.Inactive }
-basic.progress_inactive = { b_components.progress, hl_list.Inactive }
 
 basic.vi_mode = {
     name = "vi_mode",
@@ -32,11 +28,11 @@ basic.vi_mode = {
         Visual = { "black", "yellow" },
         Replace = { "black", "blue_light" },
         Command = { "black", "magenta" },
-        NormalBefore = { "red", "ActiveBg" },
-        InsertBefore = { "green", "ActiveBg" },
-        VisualBefore = { "yellow", "ActiveBg" },
-        ReplaceBefore = { "blue_light", "ActiveBg" },
-        CommandBefore = { "magenta", "ActiveBg" },
+        NormalBefore = { "red", "NormalBg" },
+        InsertBefore = { "green", "NormalBg" },
+        VisualBefore = { "yellow", "NormalBg" },
+        ReplaceBefore = { "blue_light", "NormalBg" },
+        CommandBefore = { "magenta", "NormalBg" },
         NormalAfter = { "red", "blue" },
         InsertAfter = { "green", "blue" },
         VisualAfter = { "yellow", "blue" },
@@ -56,9 +52,9 @@ basic.vi_mode = {
 basic.lsp_diagnos = {
     name = "diagnostic",
     hl_colors = {
-        red = { "red", "ActiveBg" },
-        yellow = { "yellow", "ActiveBg" },
-        blue = { "blue", "ActiveBg" },
+        red = { "red", "NormalBg" },
+        yellow = { "yellow", "NormalBg" },
+        blue = { "blue", "NormalBg" },
     },
     width = 90,
     text = function(bufnr)
@@ -97,11 +93,11 @@ basic.right = {
         Visual = { "black", "yellow" },
         Replace = { "black", "blue_light" },
         Command = { "black", "magenta" },
-        NormalBefore = { "red", "ActiveBg" },
-        InsertBefore = { "green", "ActiveBg" },
-        VisualBefore = { "yellow", "ActiveBg" },
-        ReplaceBefore = { "blue_light", "ActiveBg" },
-        CommandBefore = { "magenta", "ActiveBg" },
+        NormalBefore = { "red", "NormalBg" },
+        InsertBefore = { "green", "NormalBg" },
+        VisualBefore = { "yellow", "NormalBg" },
+        ReplaceBefore = { "blue_light", "NormalBg" },
+        CommandBefore = { "magenta", "NormalBg" },
         NormalAfter = { "red", "blue" },
         InsertAfter = { "green", "blue" },
         VisualAfter = { "yellow", "blue" },
@@ -123,13 +119,14 @@ basic.right = {
         vim.cmd("LspInfo")
     end,
 }
+
 basic.git = {
     name = "git",
     width = 90,
     hl_colors = {
-        green = { "green", "ActiveBg" },
-        red = { "red", "ActiveBg" },
-        blue = { "blue", "ActiveBg" },
+        green = { "green", "NormalBg" },
+        red = { "red", "NormalBg" },
+        blue = { "blue", "NormalBg" },
     },
     text = function(bufnr)
         if git_comps.is_git(bufnr) then
@@ -151,7 +148,7 @@ basic.dap = {
     name = "dap",
     width = 90,
     hl_colors = {
-        red = { "red", "ActiveBg" },
+        red = { "red", "NormalBg" },
     },
     text = function(_)
         return {
@@ -175,11 +172,11 @@ local default = {
             if reg and reg ~= "" then
                 return "Recording @" .. reg
             end
-        end, { "red", "black" }},
+        end, { "red", "NormalBg" }},
         basic.divider,
         basic.git,
-        { git_comps.git_branch({ icon = "  " }), { "green", "ActiveBg" }, 90 },
-        { git_rev.git_rev({ format = " ⇡%s⇣%s", interval = 10000 }), { "green", "ActiveBg" } },
+        { git_comps.git_branch({ icon = "  " }), { "green", "NormalBg" }, 90 },
+        { git_rev.git_rev({ format = " ⇡%s⇣%s", interval = 10000 }), { "green", "NormalBg" } },
         { " ", hl_list.Black },
         basic.right,
     },
@@ -188,36 +185,14 @@ local default = {
     },
 }
 
-local quickfix = {
-    filetypes = { "qf" },
-    active = {
-        { " ", hl_list.Black },
-        { sep.left_rounded, hl_list.Black },
-        { "🚦 Quickfix ", { "ActiveBg", "blue" } },
-        { sep.right_rounded, hl_list.Black },
-        {
-            function()
-                return vim.fn.getqflist({ title = 0 }).title
-            end,
-            { "cyan", "InactiveBg" },
-        },
-        { " Total : %L ", { "cyan", "InactiveBg" } },
-        { " ", { "InactiveFg", "InactiveBg" } },
-        basic.divider,
-    },
-    always_active = true,
-    show_last_status = true,
-}
-
 windline.setup({
     colors_name = function(colors)
+        colors.NormalBg = "#1F1F28"
+        colors.black = "#1F1F28"
         return colors
     end,
     statuslines = {
         default,
-        quickfix,
     },
     tabline = {},
 })
-
--- vim.cmd("WindLineFloatToggle")

@@ -11,9 +11,9 @@ function _G.commandRepeat(leader, varName)
     local key = vim.api.nvim_get_var(varName)
     if key == "search" then
         if leader == "]" then
-            return replace_keycodes("nzz")
+            return replace_keycodes("nvv")
         elseif leader == "[" then
-            return replace_keycodes("Nzz")
+            return replace_keycodes("Nvv")
         end
     end
     return replace_keycodes(leader .. key)

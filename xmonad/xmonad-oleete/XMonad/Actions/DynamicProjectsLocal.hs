@@ -131,12 +131,12 @@ data Project = Project
   { projectName      :: !ProjectName    -- ^ Workspace name.
   , projectDirectory :: !FilePath       -- ^ Working directory.
   , projectStartHook :: !(Maybe (X ())) -- ^ Optional start-up hook.
-  , projectApp1      :: !(X ()) -- ^ Optional app
-  , projectApp1Force :: !(X ()) -- ^ Optional app forced version
-  , projectApp2      :: !(X ()) -- ^ Optional app
-  , projectApp2Force :: !(X ()) -- ^ Optional app forced version
-  , projectApp3      :: !(X ()) -- ^ Optional app
-  , projectApp3Force :: !(X ()) -- ^ Optional app forced version
+  , projectApp1      :: X () -- ^ Optional app
+  , projectApp1Force :: X () -- ^ Optional app forced version
+  , projectApp2      :: X () -- ^ Optional app
+  , projectApp2Force :: X () -- ^ Optional app forced version
+  , projectApp3      :: X () -- ^ Optional app
+  , projectApp3Force :: X () -- ^ Optional app forced version
   }
 
 --------------------------------------------------------------------------------
@@ -367,21 +367,27 @@ activateProject p = do
 
 --------------------------------------------------------------------------------
 -- | Run the first app of the current project
+runProjectApp1 :: X ()
 runProjectApp1 = do
   p  <- currentProject
   projectApp1 p
+runProjectApp2 :: X ()
 runProjectApp2 = do
   p  <- currentProject
   projectApp2 p
+runProjectApp3 :: X ()
 runProjectApp3 = do
   p  <- currentProject
   projectApp3 p
+runProjectApp1Force :: X ()
 runProjectApp1Force = do
   p  <- currentProject
   projectApp1Force p
+runProjectApp2Force :: X ()
 runProjectApp2Force = do
   p  <- currentProject
   projectApp2Force p
+runProjectApp3Force :: X ()
 runProjectApp3Force = do
   p  <- currentProject
   projectApp3Force p
