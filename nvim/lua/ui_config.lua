@@ -1,6 +1,13 @@
 -- Theme
 vim.opt.termguicolors = true
 
+require("stickybuf").setup({
+  buftype = {
+    help     = "buftype",
+    terminal = "bufnr",
+  },
+})
+
 ZenOrFull = function()
     local handle = io.popen([[kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length"]])
     local num_windows
@@ -144,6 +151,18 @@ vim.lsp.handlers["window/showMessage"] = function(_, method, params, _)
 ---@diagnostic disable-next-line: redundant-parameter
     vim.notify(method.message, severity[params.type])
 end
+
+require('satellite').setup {
+  current_only = true,
+  width = 2,
+  handlers = {
+    search = { enable = true, },
+    diagnostic = { enable = true, },
+    gitsigns = { enable = true, },
+    marks = { enable = false, },
+  },
+}
+
 
 vim.api.nvim_set_hl(0, "WinBarSigActParm", { fg = "#7E9CD8" })
 

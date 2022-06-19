@@ -6,10 +6,10 @@ require("toggleterm").setup({
     shade_terminals = false,
     hide_numbers = true,
     start_in_insert = true,
+    persist_mode = false,
     insert_mappings = true,
     terminal_mappings = true,
     persist_size = true,
-    persist_mode = true,
     direction = "horizontal",
     close_on_exit = true,
     shell = "fish",
@@ -97,6 +97,14 @@ JuliaREPL = Terminal:new({
     on_open = function() vim.b[0].my_term_title = "Julia REPL" end
 })
 
+FocusTerm = Terminal:new({
+    cmd = "focus",
+})
+
+LZGTerm = Terminal:new({
+    cmd = "lazygit",
+    on_open = function() vim.b[0].my_term_title = "Lazy Git" end
+})
 
 
 Map("n", "<cr>n", function() Harp_Term_1:sendLines(vim.v.count) end)

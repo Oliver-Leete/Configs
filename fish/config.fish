@@ -4,8 +4,8 @@ starship init fish | source
 
 set -Ux BROWSER "/home/oleete/.config/bin/browser"
 set -gx BROWSER "/home/oleete/.config/bin/browser"
-set -Ux EDITOR "/home/oleete/.config/bin/nvrTab --remote-tab-wait"
-set -Ux VISUAL "/home/oleete/.config/bin/nvrTab --remote-tab-wait"
+set -Ux EDITOR "/home/oleete/.config/bin/nvrTab --remote-wait"
+set -Ux VISUAL "/home/oleete/.config/bin/nvrTab --remote-wait"
 fish_add_path --path /home/oleete/.cargo/bin
 fish_add_path --path /home/oleete/.yarn/bin
 fish_add_path --path /home/oleete/go/bin
@@ -16,7 +16,7 @@ fish_add_path --path /home/oleete/.cabal/bin
 fish_add_path --path /home/oleete/.ghcup/bin
 
 set WORKSPACE (wmctrl -d | grep '*' | awk "{print $NF}")
-export PAGER="/home/oleete/.config/bin/nvrTab --remote-tab-wait"
+export PAGER="/home/oleete/.config/bin/nvrTab --remote-wait"
 
 # aliases
 alias neovim nvim

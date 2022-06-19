@@ -444,8 +444,6 @@ GlobalCommands = {
     { source = "default", name = "Reload Snippets", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
     { source = "default", name = "Reload Snippets", command = "vsplit ~/.config/nvim/after/plugin/luasnip.lua" },
 
-    -- { source = "terminal", name = "Start Pommodoro Timer", command = [[4TermExec cmd="focus"]] },
-
     { source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
     { source = "finders", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
     { source = "finders", name = "File browser (relative)",
@@ -468,11 +466,7 @@ GlobalCommands = {
     { source = "git", name = "Diff of a commit", func = function() git_commits_onechange() end, },
     { source = "git", name = "Diff of unstaged", command = "DiffviewOpen" },
     { source = "git", name = "File history", command = "DiffviewFileHistory" },
-    {
-        source = "git",
-        name = "Lazygit",
-        command = "silent !kitty @ launch --cwd=current --type=tab --tab-title 'LazyGit' lazygit",
-    },
+    { source = "git", name = "Lazygit", func = function() LZGTerm:toggle() end, },
     { source = "git", name = "Reset File", command = "Gitsigns reset_buffer" },
     { source = "git", name = "Stage File", command = "Gitsigns stage_buffer" },
 
