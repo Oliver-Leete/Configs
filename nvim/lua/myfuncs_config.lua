@@ -70,55 +70,55 @@ end
 
 vim.cmd([[command DeleteBuffer call v:lua.delete_buffer()]])
 
-function _G.KittySend(text)
-    vim.fn.system("kittyrepl " .. vim.b[0].replName .. " " .. vim.b[0].replCommand, text)
-end
+-- function _G.KittySend(text)
+--     vim.fn.system("kittyrepl " .. vim.b[0].replName .. " " .. vim.b[0].replCommand, text)
+-- end
 
-function _G.sendRange(startline, endline)
-    local regStore = vim.fn.getreg('"')
-    local regType = vim.fn.getregtype('"')
-    vim.cmd(startline .. "," .. endline .. " yank")
-    KittySend(vim.fn.getreg('"'))
-    vim.fn.setreg('"', regStore, regType)
-end
+-- function _G.sendRange(startline, endline)
+--     local regStore = vim.fn.getreg('"')
+--     local regType = vim.fn.getregtype('"')
+--     vim.cmd(startline .. "," .. endline .. " yank")
+--     KittySend(vim.fn.getreg('"'))
+--     vim.fn.setreg('"', regStore, regType)
+-- end
 
-function _G.sendLines(count)
-    count = count + 1
-    local regStore = vim.fn.getreg('"')
-    local regType = vim.fn.getregtype('"')
-    vim.cmd("normal! " .. count .. "yy")
-    KittySend(vim.fn.getreg('"'))
-    vim.fn.setreg('"', regStore, regType)
-end
+-- function _G.sendLines(count)
+--     count = count + 1
+--     local regStore = vim.fn.getreg('"')
+--     local regType = vim.fn.getregtype('"')
+--     vim.cmd("normal! " .. count .. "yy")
+--     KittySend(vim.fn.getreg('"'))
+--     vim.fn.setreg('"', regStore, regType)
+-- end
 
-function _G.sendOp()
-    local regStore = vim.fn.getreg('"')
-    local regType = vim.fn.getregtype('"')
-    if type == "line" then
-        vim.cmd([[normal! '[V']y]])
-    elseif type == "block" then
-        vim.cmd([[normal! `[\<C-v>`]\y]])
-    else
-        vim.cmd([[normal! `[v`]y]])
-    end
-    KittySend(vim.fn.getreg('"') .. [[
+-- function _G.sendOp()
+--     local regStore = vim.fn.getreg('"')
+--     local regType = vim.fn.getregtype('"')
+--     if type == "line" then
+--         vim.cmd([[normal! '[V']y]])
+--     elseif type == "block" then
+--         vim.cmd([[normal! `[\<C-v>`]\y]])
+--     else
+--         vim.cmd([[normal! `[v`]y]])
+--     end
+--     KittySend(vim.fn.getreg('"') .. [[
 
-    ]])
-    vim.fn.setreg('"', regStore, regType)
-    vim.cmd("normal! `z")
-end
+--     ]])
+--     vim.fn.setreg('"', regStore, regType)
+--     vim.cmd("normal! `z")
+-- end
 
-function _G.sendRegion(type)
-    local regStore = vim.fn.getreg('"')
-    local regType = vim.fn.getregtype('"')
-    vim.cmd([[silent normal! `<]] .. type .. [[`>y]])
-    KittySend(vim.fn.getreg('"'))
-    vim.fn.setreg('"', regStore, regType)
-    vim.cmd("normal! `>")
-end
+-- function _G.sendRegion(type)
+--     local regStore = vim.fn.getreg('"')
+--     local regType = vim.fn.getregtype('"')
+--     vim.cmd([[silent normal! `<]] .. type .. [[`>y]])
+--     KittySend(vim.fn.getreg('"'))
+--     vim.fn.setreg('"', regStore, regType)
+--     vim.cmd("normal! `>")
+-- end
 
-vim.api.nvim_set_keymap("x", "<Plug>(sendReg)", [[:<c-u>call v:lua.sendRegion(visualmode())<cr>]], { noremap = true })
-vim.api.nvim_set_keymap("n", "<Plug>(sendOp)", [[mz:set opfunc=v:lua.sendOp<cr>g@]], { noremap = true })
+-- vim.api.nvim_set_keymap("x", "<Plug>(sendReg)", [[:<c-u>call v:lua.sendRegion(visualmode())<cr>]], { noremap = true })
+-- vim.api.nvim_set_keymap("n", "<Plug>(sendOp)", [[mz:set opfunc=v:lua.sendOp<cr>g@]], { noremap = true })
 
 -- https://www.reddit.com/r/neovim/comments/nrz9hp/can_i_close_all_floating_windows_without_closing/h0lg5m1/
 function _G.closeFloatWins()

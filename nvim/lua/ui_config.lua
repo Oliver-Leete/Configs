@@ -196,7 +196,7 @@ function GPS_Bar()
         if vim.b[0].my_term_title then
             term_name = vim.b[0].my_term_title
         else
-            term_name = "Terminal " .. tostring(vim.b[0].toggle_number)
+            term_name = "Terminal " .. tostring(vim.b[0].term_title)
         end
         winbar = winbar .. hl .. term_name .. hld
 

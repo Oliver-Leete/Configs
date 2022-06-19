@@ -5,5 +5,5 @@ cd test
 julia --threads=16 --project -i -e '
 using Revise, ReTest, BenchmarkTools, Debugger, Infiltrator, Profile, ProfileView, JET, '"$project"';
 ReTest.load("'"$project"'Tests.jl", revise=true);
-loadProfData() = run(`/home/oleete/.config/bin/nvrWS "lua jul_perf_flat()"`);
+loadProfData() = run(`/home/oleete/.config/bin/nvrWS "lua _G.jul_perf_flat()"`);
 '"$@"

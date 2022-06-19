@@ -55,14 +55,16 @@ vim.b[0].runnables = function()
         {
             source = "Run",
             name = "Run File",
-            command = [[silent !kittyOneShot "julia ']] .. vim.fn.expand("%:p") .. [['"]],
+            func = function()
+                Harp_Term_2:send_open([[julia ']] .. vim.fn.expand("%:p") .. [[']])
+            end,
         },
         {
             source = "Prof",
             name = "Profile File",
-            command = [[silent !kittyOneShot julia ~/.config/nvim/filetype/julia/prof.jl ']]
-                .. vim.fn.expand("%:p")
-                .. "'",
+            func = function()
+                Harp_Term_2:send_open([[julia ~/.config/nvim/filetype/julia/prof.jl ']] .. vim.fn.expand("%:p") .. "'", true)
+            end,
         },
     }
     return runnables_list
@@ -91,13 +93,7 @@ Run_closest = function()
     else
         name = line:match("struct ([%w^_-]+)")
     end
-    vim.cmd(
-        [[silent !kittyPersistent JuliaPersistant juliaTest ']]
-        .. vim.g.project
-        .. [[Tests.runtests("]]
-        .. name
-        .. [[",spin=false)']]
-    )
+    JuliaTest:send_open(vim.g.project .. [[Tests.runtests("]] .. name .. [[",spin=false)]], true, 1)
 end
 
 local bp_remover = function(imp_line, bp_pattern, mod_pat)

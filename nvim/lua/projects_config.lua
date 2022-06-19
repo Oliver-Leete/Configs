@@ -55,51 +55,52 @@ local juliaProjectRunnables = function()
     local runnables_list = {
         {
             source = "Misc",
-            name = "Open Runnable Terminal",
-            command = [[silent !kittyPersistent JuliaPersistant juliaTest]],
+            name = "Open REPL",
+            func = function() JuliaREPL:set_toggle(3) end,
+        },
+        {
+            source = "Misc",
+            name = "Open Test Terminal",
+            func = function() JuliaTest:set_toggle(1) end,
         },
         {
             source = "Misc",
             name = "Precompile Package",
-            command = [[silent !kittyOneShot "~/.config/nvim/filetype/julia/precompile"]],
+            func = function() Harp_Term_2:send_open("~/.config/nvim/filetype/julia/precompile") end,
         },
         {
             source = "Misc",
             name = "Build Documentation",
-            command = [[silent !kittyOneShot "~/.config/nvim/filetype/julia/docBuild"]],
+            func = function() Harp_Term_2:send_open("~/.config/nvim/filetype/julia/docBuild") end,
         },
         {
             source = "Misc",
             name = "Live Build Documentation",
-            command = [[silent !kittyOneShot "julia --project=docs -ie 'using ]] ..
-                vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)'"]]
+            func = function() JuliaLiveDocs:open_add() end,
         },
         {
             source = "Misc",
             name = "Run Documentation Tests",
-            command = [[silent !kittyOneShot "~/.config/nvim/filetype/julia/docTest"]],
+            func = function() Harp_Term_2:send_open("~/.config/nvim/filetype/julia/docTest") end,
         },
         {
             source = "Test",
             name = "Run All Tests",
-            command = [[silent !kittyPersistent JuliaPersistant juliaTest ']]
-                .. vim.g.project
-                .. [[Tests.runtests(;spin=false)']],
+            func = function() JuliaTest:send_open(vim.g.project .. [[Tests.runtests(;spin=false)]], true, 1) end,
         },
         {
             source = "Bench",
             name = "Run All Benchmarks",
-            command = [[silent !kittyPersistent JuliaPersistant juliaTest 'run(]]
-                .. vim.g.project
-                .. [[Tests.suite, verbose=true)']],
+            func = function() JuliaTest:send_open("run(" .. vim.g.project .. [[Tests.suite, verbose=true)]], true, 1) end,
         },
         {
             source = "Bench",
             name = "Retune Benchmarks",
-            command = [[silent !kittyPersistent JuliaPersistant juliaTest 'let suite=]]
-                .. vim.g.project
-                ..
-                [[Tests.suite; tune\!(suite); BenchmarkTools.save(joinpath(dirname(@__FILE__), "params.json"), params(suite));end']],
+            func = function() JuliaTest:send_open("let suite=" ..
+                    vim.g.project ..
+                    [[Tests.suite; tune!(suite); BenchmarkTools.save(joinpath(dirname(@__FILE__), "params.json"), params(suite));end]]
+                    , true, 1)
+            end,
         },
     }
 
@@ -116,18 +117,14 @@ local juliaProjectRunnables = function()
             table.insert(runnables_list, {
                 source = "Test",
                 name = name,
-                command = [[silent !kittyPersistent JuliaPersistant juliaTest ']]
-                    .. vim.g.project
-                    .. [[Tests.runtests("]]
-                    .. name
-                    .. [[",spin=false)']],
+                func = function()
+                    JuliaTest:send_open(vim.g.project .. [[Tests.runtests("]] .. name .. [[",spin=false)]], true, 1)
+                end,
             })
         end
     end
 
-
     -- Benchmarks
-
     local handle2 = io.popen(
         [[rg --no-filename --no-heading --no-line-number -e ".*\[\"(.*?)\"\].*@benchmarkable(.*)\$" -r "\$1	\$2"]]
     )
@@ -141,29 +138,29 @@ local juliaProjectRunnables = function()
             table.insert(runnables_list, {
                 source = "Bench",
                 name = name,
-                command = [[silent !kittyPersistent JuliaPersistant juliaTest 'run(]]
-                    .. vim.g.project
-                    .. [[Tests.suite["]]
-                    .. name
-                    .. [["], verbose=true)']],
+                func = function()
+                    JuliaTest:send_open("run(" .. vim.g.project .. [[Tests.suite["]] .. name .. [["], verbose=true)]],
+                        true, 1)
+                end,
             })
             table.insert(runnables_list, {
                 source = "Prof",
                 name = name,
-                command = [[silent !kittyPersistent JuliaPersistant juliaTest 'a = @bprofile ]]
-                    .. command
-                    ..
-                    [[; Profile.print(IOContext(open("/tmp/julprof.data", "w"), :displaysize=>(100000,1000)), format=:flat); ]]
-                    .. [[ProfileView.view(); loadProfData(); a']],
+                func = function()
+                    JuliaTest:send_open("a = @bprofile " .. command
+                        ..
+                        [[; Profile.print(IOContext(open("/tmp/julprof.data", "w"), :displaysize=>(100000,1000)), format=:flat); ]]
+                        .. [[ProfileView.view(); loadProfData(); a]], true, 1)
+                end,
             })
             table.insert(runnables_list, {
                 source = "Debug",
                 name = name,
-                command = [[silent !kittyPersistent JuliaPersistant juliaTest '@run run(]]
-                    .. vim.g.project
-                    .. [[Tests.suite["]]
-                    .. name
-                    .. [["], verbose=true)']],
+                func = function()
+                    JuliaTest:send_open("@run run(" ..
+                        vim.g.project .. [[Tests.suite["]] .. name .. [["], verbose=true)]],
+                        true, 1)
+                end,
             })
 
         end
@@ -206,6 +203,15 @@ vim.g.projectionist_heuristics = {
 function ActivateProject()
     if vim.fn.filereadable("src/" .. vim.g.project .. ".jl") ~= 0 then
         vim.g.runnables = juliaProjectRunnables
+        JuliaTest:set_harp(1)
+        JuliaREPL:set_harp(3)
+
+        JuliaLiveDocs = Terminal:new({
+            on_open = function() vim.b[0].my_term_title = "Julia Doc Server" end,
+            cmd = [[julia --project=docs -ie 'using ]] .. vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']],
+            runnable = { source = "Julia", name = "Julia Doc Server", func = function() JuliaLiveDocs:set_toggle(4) end }
+        })
+
     else
     end
 end

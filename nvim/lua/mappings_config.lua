@@ -77,7 +77,7 @@ Map("n", "£", [[:exe "let @/='" . expand("<cWORD>") . "' "<cr>]], { silent = tr
 -- Panel Specific Mappings
 local panelMappings = vim.api.nvim_create_augroup("panelMappings", { clear = true })
 vim.api.nvim_create_autocmd("filetype", {
-    pattern = { "qf", "help", "vim-plug", "juliadoc", "lspinfo", "tsplayground", "harpoon-menu" },
+    pattern = { "qf", "help", "vim-plug", "juliadoc", "lspinfo", "tsplayground", "harpoon-menu", "toggleterm" },
     callback = function() Map("n", "<esc>", "<cmd>q<cr>", { buffer = 0 }) end,
     group = panelMappings,
 })
@@ -210,9 +210,9 @@ Map("n", "<c-v>", "<cmd>silent vsplit %<cr>")
 Map("n", "<c-x>", "<cmd>silent split %<cr>")
 Map("n", "<c-p>", "<cmd>silent pedit %<cr>")
 
-Map("n", "<cr><cr>", "<cmd>call v:lua.sendLines(v:count)<cr>", { silent = true })
-Map("n", "<cr>", "<plug>(sendOp)", { silent = true })
-Map("x", "<cr>", "<plug>(sendReg)", { silent = true })
+-- Map("n", "<cr><cr>", "<cmd>call v:lua.sendLines(v:count)<cr>", { silent = true })
+-- Map("n", "<cr>", "<plug>(sendOp)", { silent = true })
+-- Map("x", "<cr>", "<plug>(sendReg)", { silent = true })
 
 Map("n", "dp", "<plug>Dsurround")
 Map("n", "yp", "<plug>Ysurround")
@@ -419,10 +419,12 @@ end)
 
 -- Terminal mappings
 
-Map("n", "<leader>n", "<cmd>ToggleTerm 1<cr>")
-Map("n", "<leader>e", "<cmd>ToggleTerm 2<cr>")
-Map("n", "<leader>i", "<cmd>ToggleTerm 3<cr>")
-Map("n", "<leader>o", "<cmd>ToggleTerm 4<cr>")
+Map("n", "<leader>n", function() Harp_Term_1:toggle() end)
+Map("n", "<leader>e", function() Harp_Term_2:toggle() end)
+Map("n", "<leader>i", function() Harp_Term_3:toggle() end)
+Map("n", "<leader>o", function() Harp_Term_4:toggle() end)
+
+Map("n", "<leader>:", function() CommandCentre(Background_Term_List) end)
 
 Map("t", "<esc>", "<c-\\><c-n>")
 
