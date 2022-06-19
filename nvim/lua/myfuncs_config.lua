@@ -55,20 +55,90 @@ vim.api.nvim_set_keymap(
     ":<c-u>call v:lua.pre_paste_away(v:register,'P')<cr>:set opfunc=v:lua.paste_away<cr>g@",
     { noremap = true }
 )
+function Set(list)
+    local set = {}
+    for _, l in ipairs(list) do set[l] = true end
+    return set
+end
 
+local filter = vim.tbl_filter
 function _G.delete_buffer()
-    if vim.bo.filetype == "man" then
-        vim.cmd([[bdelete]])
-    elseif vim.fn.winnr("$") >= 2 then
+    print('hi')
+    local cur_tab = vim.api.nvim_get_current_tabpage()
+    local cur_win = vim.api.nvim_get_current_win()
+    local cur_buf = vim.api.nvim_get_current_buf()
+
+    local num_tabs = #vim.api.nvim_list_tabpages()
+
+    local special_types = Set({ "qf", "help", "vim-plug", "juliadoc", "tsplayground", "toggleterm", "notify" })
+    local is_special = function(bufnr) return special_types[vim.bo[bufnr].filetype] end
+
+    -- Count loaded normal buffers
+    local bufnrs = filter(function(b)
+        if 1 ~= vim.fn.buflisted(b) then
+            return false
+        end
+        -- only hide unloaded buffers if opts.show_all_buffers is false, keep them listed if true or nil
+        if not vim.api.nvim_buf_is_loaded(b) then
+            return false
+        end
+        return true
+    end, vim.api.nvim_list_bufs())
+    local num_bufs = #bufnrs
+
+    -- Find if the current buffer is in another window
+    local wins = vim.api.nvim_list_wins()
+    local is_dup = false
+    for _, win in pairs(wins) do
+        if win ~= cur_win and cur_buf == vim.api.nvim_win_get_buf(win) then
+            is_dup = true
+            break
+        end
+    end
+
+    local tab_wins = filter(function(win)
+        local win_buf = vim.api.nvim_win_get_buf(win)
+        if is_special(win_buf) then
+            return false
+        end
+        if 1 ~= vim.fn.buflisted(win_buf) then
+            return false
+        end
+        return true
+    end, vim.api.nvim_tabpage_list_wins(cur_tab))
+    local num_tab_wins = #tab_wins
+
+    -- Count normal windows on current tab page
+    print("num_bufs = " .. num_bufs .. ", num_tab_wins = " .. num_tab_wins .. ", is_dup = " .. tostring(is_dup))
+    if is_special(cur_buf) then
         vim.cmd([[wincmd c]])
-    elseif #vim.fn.getbufinfo({ buflisted = true }) == 1 then
-        vim.cmd([[quit]])
+    elseif num_tab_wins > 1 then
+        if is_dup then
+            vim.cmd([[wincmd c]])
+        else
+            require("close_buffers").delete({ type = "this" })
+            vim.cmd([[wincmd c]])
+        end
     else
-        require("close_buffers").delete({ type = "this" })
+        if num_tabs > 1 then
+            if is_dup then
+                vim.cmd([[tabclose]])
+            else
+                require("close_buffers").delete({ type = "this" })
+                vim.cmd([[tabclose]])
+            end
+        else
+            if num_bufs > 1 then
+                require("close_buffers").delete({ type = "this" })
+            else
+                vim.cmd([[quitall]])
+            end
+        end
+
     end
 end
 
-vim.cmd([[command DeleteBuffer call v:lua.delete_buffer()]])
+vim.cmd([[command! DeleteBuffer call v:lua.delete_buffer()]])
 
 -- function _G.KittySend(text)
 --     vim.fn.system("kittyrepl " .. vim.b[0].replName .. " " .. vim.b[0].replCommand, text)
