@@ -37,9 +37,16 @@ function _G.jul_perf_flat()
         local count, file, linenr, symbol = line:match("^%s*(%d+)%s+%d+%s+(.-)%s+(%d+)%s+(.*)")
         local success = count and file and linenr and symbol
 
+        local cur_file_name = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
+
         if success and tonumber(count) > 0 then
             if file:find("@" .. vim.g.project) then
                 file = "/home/oleete/Projects/" .. file.match(file, "@(" .. vim.g.project .. ".*)")
+                local trace = { symbol = symbol, file = file, linenr = tonumber(linenr) }
+
+                table.insert(result[current_event], { count = tonumber(count), frames = { trace } })
+            elseif file:find(cur_file_name) then
+                file = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
                 local trace = { symbol = symbol, file = file, linenr = tonumber(linenr) }
 
                 table.insert(result[current_event], { count = tonumber(count), frames = { trace } })
