@@ -1,18 +1,0 @@
-#!/bin/bash
-
-kittyStore=$(kitty @ ls)
-commands=$(echo $kittyStore | jq ".[].tabs[].windows[] | select(.is_focused) | .foreground_processes[].cmdline[0]")
-
-if [[ "$commands" == *"vim"* ]]; then
-	titles=$(echo $kittyStore | jq ".[].tabs[].windows[] | select(.is_focused) | .title")
-	if [[ "$titles" =~ \"MainEditor\" ]]; then
-        WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
-        nvr --servername "/tmp/nvr-$WS" --nostart -c "call v:lua.delete_buffer()"
-		exit
-	else
-		kitty @ send-text ";call v:lua.delete_buffer()"
-		exit
-	fi
-else
-	kitty @ close_window
-fi

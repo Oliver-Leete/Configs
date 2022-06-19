@@ -1,4 +1,0 @@
-#!/bin/bash
-
-WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
-nvr --servername /tmp/nvr-$WS --nostart -c 'Man!|set nowrap' $@
