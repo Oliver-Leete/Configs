@@ -5,7 +5,7 @@ require("toggleterm").setup({
     end,
     shade_terminals = false,
     hide_numbers = true,
-    start_in_insert = true,
+    start_in_insert = false,
     persist_mode = false,
     insert_mappings = true,
     terminal_mappings = true,
