@@ -25,6 +25,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'knubie/vim-kitty-navigator'
     Plug 'kazhala/close-buffers.nvim'
+    Plug 'stevearc/stickybuf.nvim'
     Plug 'tpope/vim-projectionist'
     Plug 'ThePrimeagen/harpoon'
 
@@ -61,8 +62,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'norcalli/nvim-colorizer.lua'
     Plug 'windwp/windline.nvim'
     Plug 'folke/zen-mode.nvim'
-    Plug 'lewis6991/satellite.nvim'
-    Plug 'stevearc/stickybuf.nvim'
 
     Plug 'mbbill/undotree'
     Plug 'kyazdani42/nvim-tree.lua'

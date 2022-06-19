@@ -1,4 +1,0 @@
-#!/bin/bash
-
-projectName=$(basename $(pwd))
-julia --project ~/.config/nvim/filetype/julia/task_test.jl $projectName

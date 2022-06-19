@@ -1,3 +1,0 @@
-#!/bin/bash
-projectName=$(basename $(pwd))
-julia --project -e 'using PkgBenchmark; benchmarkpkg(Base.ARGS[1], resultfile="benchmark/results.json")' $projectName

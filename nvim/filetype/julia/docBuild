@@ -1,7 +1,22 @@
 #!/bin/bash
 
-projectDir=$(pwd)
-docsBuild="$(pwd)/docs/make.jl"
-docsFile="$(pwd)/docs/build/index.html"
+projectDir=$PWD
+docsBuild="$projectDir/docs/make.jl"
+docsFile="$projectDir/docs/build/index.html"
 
-julia --project ~/.config/nvim/filetype/julia/task_docbuild.jl $docsBuild $docsFile
+julia --project -e '
+using Pkg
+
+mktempdir() do p
+    cp(joinpath(pwd(), "docs", "Project.toml"), joinpath(p, "Project.toml"))
+
+    Pkg.activate(p)
+
+    Pkg.develop(PackageSpec(path = pwd()))
+    Pkg.instantiate()
+
+    include("'"$docsBuild"'")
+end
+
+Sys.isapple() ? run(`open $("'"$docsFile"'")`) : Sys.iswindows() ? run(`cmd /c start $("'"$docsFile"'")`) : Sys.islinux() ? run(`xdg-open $("'"$docsFile"'")`) : nothing
+'

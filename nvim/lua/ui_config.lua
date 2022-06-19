@@ -152,17 +152,6 @@ vim.lsp.handlers["window/showMessage"] = function(_, method, params, _)
     vim.notify(method.message, severity[params.type])
 end
 
-require('satellite').setup {
-  current_only = true,
-  width = 2,
-  handlers = {
-    search = { enable = true, },
-    diagnostic = { enable = true, },
-    gitsigns = { enable = true, },
-    marks = { enable = false, },
-  },
-}
-
 
 vim.api.nvim_set_hl(0, "WinBarSigActParm", { fg = "#7E9CD8" })
 
