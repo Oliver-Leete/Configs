@@ -72,9 +72,9 @@ function Terminal:send_open(cmd, go_back, term_num)
     end
 
     if not self:is_open() then
-        self:open()
+        self:toggle()
     end
-    self:send(cmd, go_back)
+    self:send(cmd, false)
 end
 
 Background_Term_List = {
@@ -103,39 +103,53 @@ FocusTerm = Terminal:new({
 
 LZGTerm = Terminal:new({
     cmd = "lazygit",
+    direction = "float",
     on_open = function() vim.b[0].my_term_title = "Lazy Git" end
 })
 
 
-Map("n", "<cr>n", function() Harp_Term_1:sendLines(vim.v.count) end)
-Map("n", "<cr>e", function() Harp_Term_2:sendLines(vim.v.count) end)
-Map("n", "<cr>i", function() Harp_Term_3:sendLines(vim.v.count) end)
-Map("n", "<cr>o", function() Harp_Term_4:sendLines(vim.v.count) end)
+Map("n", "<cr>n", function() _G.sendLines(vim.v.count, 1) end)
+Map("n", "<cr>e", function() _G.sendLines(vim.v.count, 2) end)
+Map("n", "<cr>i", function() _G.sendLines(vim.v.count, 3) end)
+Map("n", "<cr>o", function() _G.sendLines(vim.v.count, 4) end)
 
-Map("x", "<cr>n", "<Plug>(1sendReg)", { remap = true })
-Map("x", "<cr>e", "<Plug>(2sendReg)", { remap = true })
-Map("x", "<cr>i", "<Plug>(3sendReg)", { remap = true })
-Map("x", "<cr>o", "<Plug>(4sendReg)", { remap = true })
+Map("x", "<cr>n", ":<c-u>call v:lua.sendRegion(visualmode(), 1)<cr>", { remap = true })
+Map("x", "<cr>e", ":<c-u>call v:lua.sendRegion(visualmode(), 2)<cr>", { remap = true })
+Map("x", "<cr>i", ":<c-u>call v:lua.sendRegion(visualmode(), 3)<cr>", { remap = true })
+Map("x", "<cr>o", ":<c-u>call v:lua.sendRegion(visualmode(), 4)<cr>", { remap = true })
 
 Map("x", "<Plug>(1sendReg)", [[:<c-u>call v:lua.sendRegion(visualmode(), 1)<cr>]])
 Map("x", "<Plug>(2sendReg)", [[:<c-u>call v:lua.sendRegion(visualmode(), 2)<cr>]])
 Map("x", "<Plug>(3sendReg)", [[:<c-u>call v:lua.sendRegion(visualmode(), 3)<cr>]])
 Map("x", "<Plug>(4sendReg)", [[:<c-u>call v:lua.sendRegion(visualmode(), 4)<cr>]])
 
-function Terminal:sendRange(startline, endline)
+local function harpsend(num)
+    local to_send = vim.fn.getreg('"'):gsub("[\r\n]$", "")
+    if num == 1 then
+        Harp_Term_1:send_open(to_send, true, num)
+    elseif num == 2 then
+        Harp_Term_2:send_open(to_send, true, num)
+    elseif num == 3 then
+        Harp_Term_3:send_open(to_send, true, num)
+    elseif num == 4 then
+        Harp_Term_4:send_open(to_send, true, num)
+    end
+end
+
+function _G.sendRange(startline, endline, num)
     local regStore = vim.fn.getreg('"')
     local regType = vim.fn.getregtype('"')
     vim.cmd(startline .. "," .. endline .. " yank")
-    self:send(vim.fn.getreg('"'))
+    harpsend(num)
     vim.fn.setreg('"', regStore, regType)
 end
 
-function Terminal:sendLines(count)
+function _G.sendLines(count, num)
     count = count + 1
     local regStore = vim.fn.getreg('"')
     local regType = vim.fn.getregtype('"')
     vim.cmd("normal! " .. count .. "yy")
-    self:send(vim.fn.getreg('"'))
+    harpsend(num)
     vim.fn.setreg('"', regStore, regType)
 end
 
@@ -158,15 +172,7 @@ function _G.sendRegion(type, num)
     local regStore = vim.fn.getreg('"')
     local regType = vim.fn.getregtype('"')
     vim.cmd([[silent normal! `<]] .. type .. [[`>y]])
-    if num == 1 then
-        Harp_Term_1:send(vim.fn.getreg('"'))
-    elseif num == 2 then
-        Harp_Term_2:send(vim.fn.getreg('"'))
-    elseif num == 3 then
-        Harp_Term_3:send(vim.fn.getreg('"'))
-    elseif num == 4 then
-        Harp_Term_4:send(vim.fn.getreg('"'))
-    end
+    harpsend(num)
     vim.fn.setreg('"', regStore, regType)
     vim.cmd("normal! `>")
 end

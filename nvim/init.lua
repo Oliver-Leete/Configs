@@ -117,7 +117,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 't-troebst/perfanno.nvim'
     Plug 'andythigpen/nvim-coverage'
 
-    Plug 'akinsho/toggleterm.nvim'
+    Plug 'akinsho/toggleterm.nvim', {'commit': '8f2e78d'}
 call plug#end()]])
 
 -- Disable builtins

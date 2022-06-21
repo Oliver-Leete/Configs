@@ -61,7 +61,6 @@ function Set(list)
     return set
 end
 
-local filter = vim.tbl_filter
 function _G.delete_buffer()
     print('hi')
     local cur_tab = vim.api.nvim_get_current_tabpage()
@@ -70,11 +69,30 @@ function _G.delete_buffer()
 
     local num_tabs = #vim.api.nvim_list_tabpages()
 
-    local special_types = Set({ "qf", "help", "vim-plug", "juliadoc", "tsplayground", "toggleterm", "notify" })
-    local is_special = function(bufnr) return special_types[vim.bo[bufnr].filetype] end
+    local special_types = Set({
+        "qf",
+        "help",
+        "vim-plug",
+        "juliadoc",
+        "lspinfo",
+        "tsplayground",
+        "harpoon-menu",
+        "toggleterm",
+        "notify",
+        "undotree",
+        "NvimTree",
+        "DiffviewFileHistory",
+        "DiffviewFiles",
+    })
+
+    local is_special = function(bufnr)
+        local filetype = vim.bo[bufnr].filetype
+        local buftype = vim.bo[bufnr].buftype
+        return special_types[filetype] or (buftype == "nofile" and filetype == "")
+    end
 
     -- Count loaded normal buffers
-    local bufnrs = filter(function(b)
+    local bufnrs = vim.tbl_filter(function(b)
         if 1 ~= vim.fn.buflisted(b) then
             return false
         end
@@ -96,7 +114,7 @@ function _G.delete_buffer()
         end
     end
 
-    local tab_wins = filter(function(win)
+    local tab_wins = vim.tbl_filter(function(win)
         local win_buf = vim.api.nvim_win_get_buf(win)
         if is_special(win_buf) then
             return false
@@ -111,7 +129,7 @@ function _G.delete_buffer()
     -- Count normal windows on current tab page
     print("num_bufs = " .. num_bufs .. ", num_tab_wins = " .. num_tab_wins .. ", is_dup = " .. tostring(is_dup))
     if is_special(cur_buf) then
-        vim.cmd([[wincmd c]])
+        vim.cmd([[normal ]])
     elseif num_tab_wins > 1 then
         if is_dup then
             vim.cmd([[wincmd c]])
