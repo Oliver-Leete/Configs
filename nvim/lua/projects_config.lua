@@ -80,6 +80,16 @@ local juliaProjectRunnables = function()
         },
         {
             source = "Misc",
+            name = "Open Built Documentation",
+            func = function() Harp_Term_2:send_open("browser ./docs/build/index.html &") end,
+        },
+        {
+            source = "Misc",
+            name = "Open Documentation Server",
+            func = function() Harp_Term_2:send_open("browser http://localhost:8000 &") end,
+        },
+        {
+            source = "Misc",
             name = "Run Documentation Tests",
             func = function() Harp_Term_2:send_open("~/.config/nvim/filetype/julia/docTest") end,
         },

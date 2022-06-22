@@ -169,6 +169,7 @@ end
 -- end
 
 function _G.sendRegion(type, num)
+    vim.cmd("normal <esc>")
     local regStore = vim.fn.getreg('"')
     local regType = vim.fn.getregtype('"')
     vim.cmd([[silent normal! `<]] .. type .. [[`>y]])

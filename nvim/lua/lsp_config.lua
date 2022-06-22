@@ -4,11 +4,15 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
+vim.api.nvim_set_hl(0, "CursorLineError", { fg = "#E82424", bg = "#363646" })
+vim.api.nvim_set_hl(0, "CursorLineWarn", { fg = "#FF9E3B", bg = "#363646" })
+vim.api.nvim_set_hl(0, "CursorLineInfo", { fg = "#658494", bg = "#363646" })
+vim.api.nvim_set_hl(0, "CursorLineHint", { fg = "#6A9589", bg = "#363646" })
 vim.cmd([[
-    sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticSignError
-    sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=DiagnosticSignWarn
-    sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=DiagnosticSignInfo
-    sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=DiagnosticSignHint
+    sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl= culhl=CursorLineError
+    sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl= culhl=CursorLineWarn
+    sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl= culhl=CursorLineInfo
+    sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl= culhl=CursorLineHint
 ]])
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {

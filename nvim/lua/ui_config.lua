@@ -2,10 +2,10 @@
 vim.opt.termguicolors = true
 
 require("stickybuf").setup({
-  buftype = {
-    help     = "buftype",
-    terminal = "bufnr",
-  },
+    buftype = {
+        help     = "buftype",
+        terminal = "bufnr",
+    },
 })
 
 ZenOrFull = function()
@@ -67,6 +67,13 @@ require("kanagawa").setup({
 })
 
 vim.cmd("colorscheme kanagawa")
+
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#FF9E3B", bg = "#363646", bold = true })
+vim.api.nvim_set_hl(0, "CursorLineSign", { link = "CursorLine" })
+vim.api.nvim_set_hl(0, "CursorLineFold", { link = "CursorLine" })
+vim.api.nvim_set_hl(0, "GitSignsAddCul", { fg = "#76946A", bg = "#363646", bold = true })
+vim.api.nvim_set_hl(0, "GitSignsChangeCul", { fg = "#DCA561", bg = "#363646", bold = true })
+vim.api.nvim_set_hl(0, "GitSignsDeleteCul", { fg = "#C34043", bg = "#363646", bold = true })
 
 require("dressing").setup({
     select = {
@@ -148,7 +155,7 @@ local severity = {
     "info", -- map both hint and info to info?
 }
 vim.lsp.handlers["window/showMessage"] = function(_, method, params, _)
----@diagnostic disable-next-line: redundant-parameter
+    ---@diagnostic disable-next-line: redundant-parameter
     vim.notify(method.message, severity[params.type])
 end
 
@@ -198,7 +205,7 @@ function GPS_Bar()
         local seconds = math.floor(math.fmod(runtime, 60))
         winbar = winbar .. hl .. string.format("%02d:%02d:%02d", hours, minutes, seconds) .. hld
 
-    -- Special winbar for terminals
+        -- Special winbar for terminals
     elseif vim.bo[vim.api.nvim_get_current_buf()].filetype == "toggleterm" then
         local term_name
         if vim.b[0].my_term_title then
@@ -208,7 +215,7 @@ function GPS_Bar()
         end
         winbar = winbar .. hl .. term_name .. hld
 
-    -- Default winbar
+        -- Default winbar
     else
         local columns = vim.api.nvim_get_option("columns")
         local sig = require("lsp_signature").status_line(columns)

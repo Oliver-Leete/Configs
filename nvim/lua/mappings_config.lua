@@ -76,24 +76,6 @@ Map("n", "£", [[:exe "let @/='" . expand("<cWORD>") . "' "<cr>]], { silent = tr
 
 -- Panel Specific Mappings
 local panelMappings = vim.api.nvim_create_augroup("panelMappings", { clear = true })
-vim.api.nvim_create_autocmd("filetype", {
-    pattern = { "qf", "help", "vim-plug", "juliadoc", "lspinfo", "tsplayground", "harpoon-menu", "toggleterm" },
-    callback = function() Map("n", "<esc>", "<cmd>q<cr>", { buffer = 0 }) end,
-    group = panelMappings,
-})
-vim.api.nvim_create_autocmd("BufEnter", {
-    callback = function()
-        if vim.bo.buftype == "nofile" and vim.bo.filetype == "" then
-            Map("n", "<esc>", "<cmd>q<cr>", { buffer = 0 })
-        end
-    end,
-    group = panelMappings,
-})
-vim.api.nvim_create_autocmd("filetype", {
-    pattern = "undotree",
-    callback = function() Map("n", "<esc>", "<cmd>UndotreeHide<cr>", { buffer = 0 }) end,
-    group = panelMappings,
-})
 local cmp = require("cmp")
 Opt_save = {}
 vim.api.nvim_create_autocmd("CmdwinEnter", {
@@ -107,7 +89,6 @@ vim.api.nvim_create_autocmd("CmdwinEnter", {
         Opt_save["backspace"] = vim.o.backspace
         vim.o.backspace = "indent,start"
 
-        Map("n", "<esc>", "<cmd>q<cr>", { buffer = 0 })
         Map("n", "<cr>", "<cr>", { buffer = 0, nowait = true })
         Map("n", ":", "<nop>", { buffer = 0 })
         Map("n", "/", "<nop>", { buffer = 0 })
@@ -425,8 +406,6 @@ Map("n", "<leader>i", function() Harp_Term_3:toggle() end)
 Map("n", "<leader>o", function() Harp_Term_4:toggle() end)
 
 Map("n", "<leader>:", function() CommandCentre(Background_Term_List) end)
-
-Map("t", "<esc>", "<c-\\><c-n>")
 
 -- Command Panel Bindings
 
