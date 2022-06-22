@@ -407,6 +407,8 @@ Map("n", "<leader>o", function() Harp_Term_4:toggle() end)
 
 Map("n", "<leader>:", function() CommandCentre(Background_Term_List) end)
 
+Map("t", "<c-]>", "<c-\\><c-n>")
+
 -- Command Panel Bindings
 
 GlobalCommands = {
