@@ -13,10 +13,11 @@ IFS="
 
 # Loop over the file list and probe each file.
 for v in $LIST; do
+    size=$(stat -c "%s" "$v" | numfmt --to=iec-i --suffix=B --padding=6)
 	dur=$(ffprobe -i "$v" -show_entries format=duration -v quiet -of csv="p=0")
 	dur=${dur%.*}
 	dur=$(date -d@"$dur" -u +%H:%M:%S)
-	printf "$dur - ${v:2}\n"
+	printf "$dur - $size - ${v:2}\n"
 done
 
 exit

@@ -33,8 +33,8 @@ vim.opt.confirm = true
 vim.opt.swapfile = false
 vim.opt.undodir = "/home/oleete/.vim/undo//"
 vim.opt.undofile = true
-vim.api.nvim_set_var("auto_save", 1)
-vim.api.nvim_set_var("auto_save_silent", 1)
+vim.g.auto_save = 1
+vim.g.auto_save_silent = 1
 
 -- Search
 vim.opt.ignorecase = true

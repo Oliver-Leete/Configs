@@ -68,12 +68,25 @@ require("kanagawa").setup({
 
 vim.cmd("colorscheme kanagawa")
 
+local background = vim.api.nvim_get_hl_by_name("CursorLine", true).background
+
+local active = vim.api.nvim_get_hl_by_name("MatchParen", true)
+active.background = background
+
+local git_add = vim.api.nvim_get_hl_by_name("diffAdded", true)
+git_add.background = background
+local git_cha = vim.api.nvim_get_hl_by_name("diffChanged", true)
+git_cha.background = background
+local git_del = vim.api.nvim_get_hl_by_name("diffDeleted", true)
+git_del.background = background
+
 vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#FF9E3B", bg = "#363646", bold = true })
 vim.api.nvim_set_hl(0, "CursorLineSign", { link = "CursorLine" })
 vim.api.nvim_set_hl(0, "CursorLineFold", { link = "CursorLine" })
-vim.api.nvim_set_hl(0, "GitSignsAddCul", { fg = "#76946A", bg = "#363646", bold = true })
-vim.api.nvim_set_hl(0, "GitSignsChangeCul", { fg = "#DCA561", bg = "#363646", bold = true })
-vim.api.nvim_set_hl(0, "GitSignsDeleteCul", { fg = "#C34043", bg = "#363646", bold = true })
+
+vim.api.nvim_set_hl(0, "GitSignsAddCul", git_add)
+vim.api.nvim_set_hl(0, "GitSignsChangeCul", git_cha)
+vim.api.nvim_set_hl(0, "GitSignsDeleteCul", git_del)
 
 require("dressing").setup({
     select = {
@@ -163,30 +176,35 @@ end
 vim.api.nvim_set_hl(0, "WinBarSigActParm", { fg = "#7E9CD8" })
 
 
-vim.api.nvim_set_hl(0, "WinBarActive", { fg = "#FF9E3B", bg = "#1F1F28", bold = true })
-vim.api.nvim_set_hl(0, "WinBar", { fg = "#727169", bg = "#1F1F28", bold = true })
-vim.api.nvim_set_hl(0, "WinBarNC", { fg = "#727169", bg = "#1F1F28", bold = true })
-vim.api.nvim_set_hl(0, "WinBarIcon", { fg = "#957FB8", bg = "#1F1F28", bold = false })
-vim.api.nvim_set_hl(0, "WinBarIconNC", { fg = "#957FB8", bg = "#1F1F28", bold = true })
+vim.api.nvim_set_hl(0, "WinBarActive", { fg = "#1F1F28", bg = "#76946A", bold = true })
+vim.api.nvim_set_hl(0, "WinBarActiveEnds", { fg = "#76946A", bg = "#1F1F28", bold = true })
+vim.api.nvim_set_hl(0, "WinBarActiveIcon", { fg = "#1F1F28", bg = "#76946A", bold = true })
+vim.api.nvim_set_hl(0, "WinBar", { fg = "#1F1F28", bg = "#727169", bold = true })
+vim.api.nvim_set_hl(0, "WinBarEnds", { fg = "#727169", bg = "#1F1F28", bold = true })
+vim.api.nvim_set_hl(0, "WinBarIcon", { fg = "#1F1F28", bg = "#727169", bold = false })
+vim.api.nvim_set_hl(0, "WinBarBlank", { fg = "#1F1F28", bg = "#1F1F28", bold = false })
 
 vim.api.nvim_set_hl(0, "WinBarAltIcon", { fg = "#7E9CD8", bold = false })
 
-require("nvim-navic").setup({ highlight = true })
+require("nvim-navic").setup({ highlight = false })
 vim.api.nvim_set_hl(0, "NavicText", { link = "WinBar" })
 vim.api.nvim_set_hl(0, "NavicSeparator", { link = "WinBar" })
 
 function GPS_Bar()
     local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
     local winbar = ""
-    local hld = "%#WinBar#"
+    local hlb = "%#WinBarBlank#"
     local hl = "%#WinBar#"
     local hli = "%#WinBarIcon#"
+    local hle = "%#WinBarEnds#"
     if is_active then
         hl = "%#WinBarActive#"
+        hli = "%#WinBarActiveIcon#"
+        hle = "%#WinBarActiveEnds#"
     end
 
     -- Special winbar for filmpicker script
-    if vim.bo[vim.api.nvim_get_current_buf()].filetype == "filmlist" then
+    if vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()) == "/tmp/film_list.films" then
         local line1 = vim.fn.search([[\(\%^\|^$\)]], "nbWc") - 1
         local line2 = vim.fn.search([[\(\%$\|^$\)]], "nW")
 
@@ -203,7 +221,7 @@ function GPS_Bar()
         local hours = math.floor(runtime / 3600)
         local minutes = math.floor(math.fmod(runtime, 3600) / 60)
         local seconds = math.floor(math.fmod(runtime, 60))
-        winbar = winbar .. hl .. string.format("%02d:%02d:%02d", hours, minutes, seconds) .. hld
+        winbar = winbar .. hl .. string.format("%02d:%02d:%02d", hours, minutes, seconds)
 
         -- Special winbar for terminals
     elseif vim.bo[vim.api.nvim_get_current_buf()].filetype == "toggleterm" then
@@ -213,56 +231,28 @@ function GPS_Bar()
         else
             term_name = "Terminal " .. tostring(vim.b[0].term_title)
         end
-        winbar = winbar .. hl .. term_name .. hld
+        winbar = winbar .. hl .. term_name
 
         -- Default winbar
     else
-        local columns = vim.api.nvim_get_option("columns")
-        local sig = require("lsp_signature").status_line(columns)
-
         if vim.fn.expand("%") ~= "" then
             local icon = require("nvim-web-devicons").get_icon(vim.fn.expand("%:t"), vim.fn.expand("%:e"))
             if icon == "" or icon == nil then
                 icon = ""
             end
-            winbar = winbar .. hli .. icon .. hl .. " %f" .. hld
+            winbar = winbar .. hli .. icon .. hl .. " %f"
         end
-        if is_active then
-            if require("nvim-navic").is_available() then
+        if is_active and require("nvim-navic").is_available() then
                 local location = require("nvim-navic").get_location()
                 if location ~= "" then
                     winbar = winbar .. " > " .. location
                 end
-            end
-            if sig.label ~= nil and sig.label ~= "" and vim.api.nvim_get_mode().mode == "i" then
-                local label1 = sig.label
-                local label2 = ""
-                local range = {}
-                if sig.range and (sig.range["start"] ~= 0 and sig.range["end"] ~= 0) then
-                    range[1] = sig.range["start"]
-                    range[2] = sig.range["end"]
-                elseif sig.hint ~= "" then
-                    range[1], range[2] = label1:find(sig.hint)
-                end
-                if range[1] and range[2] then
-                    label1 = sig.label:sub(1, sig.range["start"] - 1)
-                    label2 = sig.label:sub(sig.range["end"] + 1, #sig.label)
-                end
-                winbar = winbar
-                    .. " > "
-                    .. "%#WinBarText#"
-                    .. label1
-                    .. "%*"
-                    .. "%#WinBarSigActParm#"
-                    .. sig.hint
-                    .. "%*"
-                    .. "%#WinBarText#"
-                    .. label2
-            end
         end
     end
     if winbar ~= "" then
-        winbar = "%=" .. winbar .. "%="
+        winbar = hlb .. "%=" .. hle .. "" .. winbar .. hle .. "" .. "%=" .. hlb
+    else
+        winbar = hlb
     end
     return winbar
 end

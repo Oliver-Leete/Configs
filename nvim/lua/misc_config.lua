@@ -32,10 +32,10 @@ augroup end]])
 vim.g.matchup_matchparen_offscreen = { method = false }
 vim.g.matchup_text_obj_enabled = false
 
-vim.api.nvim_set_var("targets_seekRanges", "cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al")
-vim.api.nvim_set_var("targets_jumpRanges", "rr rb rB bb bB BB ll al Al aa Aa AA")
-vim.api.nvim_set_var("targets_gracious", true)
-vim.api.nvim_set_var("targets_nl", "][")
+vim.g.targets_seekRanges = "cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al"
+vim.g.targets_jumpRanges = "rr rb rB bb bB BB ll al Al aa Aa AA"
+vim.g.targets_gracious = true
+vim.g.targets_nl = "nN"
 vim.cmd([[fu! s:lastplace()
 	if index(split("quickfix,nofile,help", ","), &buftype) != -1  | return | endif
 	if index(split("gitcommit,gitrebase,svn,hgcommit", ","), &filetype) != -1 | return | endif

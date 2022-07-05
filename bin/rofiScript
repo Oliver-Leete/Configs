@@ -30,6 +30,7 @@ menu () {
     utilities
     commands
     windows
+    workspaces
 
     next
     skip
@@ -90,6 +91,7 @@ menu () {
         utilities)          utilities       ;;
         commands)           rofi -matching fuzzy -show run ;;
         windows)            rofi -matching fuzzy -show window ;;
+        workspaces)         /home/oleete/.config/bin/wsHarpoon mainMenu ;;
 
         next|skip)          playerctl next ;;
         prev)               playerctl previous ;;

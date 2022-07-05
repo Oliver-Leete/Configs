@@ -6,4 +6,4 @@ lsv "$folder" | sort >/tmp/film_list.films
 
 nvim /tmp/film_list.films
 
-cat /tmp/film_list.films | sed '/^$/q' | cut -c12- | mpv --playlist=-
+cat /tmp/film_list.films | sed '/^$/q' | cut -c21- | mpv --playlist=-

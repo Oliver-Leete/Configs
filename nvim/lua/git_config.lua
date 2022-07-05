@@ -7,6 +7,7 @@ require("gitsigns").setup({
         topdelete = { hl = 'GitSignsDelete', text = '▔', numhl = 'GitSignsDeleteNr', linehl = 'GitSignsDeleteLn', culhl = 'GitSignsDeleteCul' },
         changedelete = { hl = 'GitSignsChange', text = '~', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn', culhl = 'GitSignsChangeCul' },
     },
+    culhl = true,
 })
 -- DiffView.nvim
 

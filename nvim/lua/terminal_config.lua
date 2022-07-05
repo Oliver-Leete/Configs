@@ -1,11 +1,18 @@
+Term_on_open = function(term)
+    vim.wo[term.window].signcolumn = "no"
+end
+
 require("toggleterm").setup({
     size = function()
         local height = vim.api.nvim_list_uis()[1].height
         return math.floor(height * 0.3)
     end,
+    on_open = function(term)
+        Term_on_open(term)
+    end,
     shade_terminals = false,
     hide_numbers = true,
-    start_in_insert = false,
+    start_in_insert = true,
     persist_mode = false,
     insert_mappings = true,
     terminal_mappings = true,
@@ -20,12 +27,12 @@ require("toggleterm").setup({
 
 Terminal = require("toggleterm.terminal").Terminal
 BackgroundTerm = Terminal:new({
-    on_open = function() vim.b[0].my_term_title = "Background" end,
+    on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "Background" end,
     runnable = { source = "Julia", name = "Julia Doc Server", func = function() JuliaLiveDocs:set_toggle(4) end }
 })
 
 Harp_Term_1 = Terminal:new()
-Harp_Term_2 = Terminal:new({ on_open = function() vim.b[0].my_term_title = "One Shots" end })
+Harp_Term_2 = Terminal:new({ on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "One Shots" end })
 Harp_Term_3 = Terminal:new()
 Harp_Term_4 = BackgroundTerm
 
@@ -82,19 +89,31 @@ Background_Term_List = {
 }
 
 function Terminal:open_add()
-    table.insert(Background_Term_List, self.runnable)
+    if not Background_Term_List[self.runnable.name] then
+        Background_Term_List[self] = self.runnable
+    end
     self:set_harp(4)
-    self:open()
+    if not self:is_open() then
+        self:toggle()
+    end
 end
 
-JuliaTest = Terminal:new({
-    cmd = "juliaTest",
-    on_open = function() vim.b[0].my_term_title = "Julia Test" end
+NvimLogTerm = Terminal:new({
+    on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "Neovim Log" end,
+    cmd = "tail --follow --retry ~/.local/state/nvim/log | less -S",
+    runnable = { source = "log", name = "Neovim Log", func = function() NvimLogTerm:set_toggle(4) end },
 })
 
-JuliaREPL = Terminal:new({
-    cmd = "julia",
-    on_open = function() vim.b[0].my_term_title = "Julia REPL" end
+LspLogTerm = Terminal:new({
+    on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "LSP Log" end,
+    cmd = "tail --follow --retry ~/.local/state/nvim/lsp.log | less -S",
+    runnable = { source = "log", name = "LSP Log", func = function() LspLogTerm:set_toggle(4) end },
+})
+
+XLogTerm = Terminal:new({
+    on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "X Session Log" end,
+    cmd = "tail --follow --retry ~/.xsession-errors | less -S",
+    runnable = { source = "log", name = "X Session Log", func = function() LspLogTerm:set_toggle(4) end },
 })
 
 FocusTerm = Terminal:new({
@@ -104,7 +123,7 @@ FocusTerm = Terminal:new({
 LZGTerm = Terminal:new({
     cmd = "lazygit",
     direction = "float",
-    on_open = function() vim.b[0].my_term_title = "Lazy Git" end
+    on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "Lazy Git" end
 })
 
 

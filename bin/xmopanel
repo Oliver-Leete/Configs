@@ -10,9 +10,9 @@ bat_stat=$(upower -i $(upower -e | rg battery | head -1)| rg state)
 percent=$(upower -i $(upower -e | rg battery | head -1)| rg percent | rg -o -e "[0-9]{1,3}")
 if [[ "$bat_stat" == *"discharging"* ]]; then
     if   ((0<=percent && percent<10)); then
-        bat_icon="$ugly$end"
+        bat_icon="$ugly$end"
     elif ((10<=percent && percent<20)); then
-        bat_icon="$ugly$end"
+        bat_icon="$ugly$end"
     elif ((20<=percent && percent<30)); then
         bat_icon="$bad$end"
     elif ((30<=percent && percent<40)); then

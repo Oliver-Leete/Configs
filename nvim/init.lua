@@ -41,7 +41,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'svermeulen/vim-subversive'
     Plug 'inkarkat/vim-unconditionalpaste'
     Plug 'tpope/vim-abolish'
-    Plug 'tpope/vim-surround'
+    Plug 'kylechui/nvim-surround'
     Plug 'andymass/vim-matchup'
 
     Plug 'tommcdo/vim-ninja-feet'
@@ -54,7 +54,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
     Plug 'wilriker/gcode.vim'
 
-    Plug 'lewis6991/gitsigns.nvim'
+    Plug 'Oliver-Leete/gitsigns.nvim'
     Plug 'sindrets/diffview.nvim'
     Plug 'akinsho/git-conflict.nvim'
 
@@ -75,7 +75,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'b0o/schemastore.nvim'
     Plug 'jose-elias-alvarez/null-ls.nvim'
 
-    Plug 'ray-x/lsp_signature.nvim'
+    " Plug 'ray-x/lsp_signature.nvim'
+    Plug 'Issafalcon/lsp-overloads.nvim'
     Plug 'SmiteshP/nvim-navic'
 
     Plug 'hrsh7th/nvim-cmp'
@@ -117,7 +118,10 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 't-troebst/perfanno.nvim'
     Plug 'andythigpen/nvim-coverage'
 
-    Plug 'akinsho/toggleterm.nvim', {'commit': '8f2e78d'}
+    Plug 'akinsho/toggleterm.nvim', {'commit': '04174e1'}
+
+    Plug 'anuvyklack/hydra.nvim'
+    Plug 'anuvyklack/keymap-layer.nvim'
 call plug#end()]])
 
 -- Disable builtins

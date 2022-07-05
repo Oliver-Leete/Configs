@@ -26,10 +26,13 @@ alias h hx
 
 alias exa "exa --colour=always --group-directories-first --icons"
 
-abbr vidir "vidir -v"
+abbr vidir "echo 'use edir'"
+abbr rm "echo use trm"
+abbr trm "trash-put -i"
+
+
 abbr mv "mv -iv"
 abbr cp "cp -riv"
-abbr rm "rm -i"
 
 abbr  fd "fd -HLI"
 
@@ -49,7 +52,7 @@ alias ..... "cd ../../../.."
 abbr  htop 'htop -t'
 alias lzg lazygit
 alias lzd lazydocker
-alias zathura zathura --fork
+alias zathura "zathura --fork"
 
 # Git abbreviations
 alias g git

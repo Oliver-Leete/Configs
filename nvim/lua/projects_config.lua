@@ -213,16 +213,27 @@ vim.g.projectionist_heuristics = {
 function ActivateProject()
     if vim.fn.filereadable("src/" .. vim.g.project .. ".jl") ~= 0 then
         vim.g.runnables = juliaProjectRunnables
-        JuliaTest:set_harp(1)
-        JuliaREPL:set_harp(3)
+
+        JuliaTest = Terminal:new({
+            cmd = "juliaTest",
+            on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "Julia Test" end
+        })
+
+        JuliaREPL = Terminal:new({
+            cmd = "julia",
+            on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "Julia REPL" end
+        })
 
         JuliaLiveDocs = Terminal:new({
-            on_open = function() vim.b[0].my_term_title = "Julia Doc Server" end,
+            on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "Julia Doc Server" end,
             cmd = [[julia --project=docs -ie 'using ]] .. vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']],
             runnable = { source = "Julia", name = "Julia Doc Server", func = function() JuliaLiveDocs:set_toggle(4) end }
         })
 
-    else
+        JuliaTest:set_harp(1)
+        JuliaREPL:set_harp(3)
+
+    elseif vim.fn.filereadable("src/main.rs") ~= 0 then
     end
 end
 

@@ -18,9 +18,9 @@ vim.cmd([[
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = "single",
 })
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-    border = "single",
-})
+-- vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+--     border = "single",
+-- })
 
 vim.diagnostic.config({
     underline = {
@@ -86,21 +86,25 @@ local custom_attach = function(client, bufnr)
         bmap("x", "<leader>.", vim.lsp.buf.range_code_action)
     end
 
-    require("lsp_signature").on_attach({
-        bind = true,
-        doc_lines = 10,
-        floating_window = true,
-        fixpos = true,
-        hint_enable = false,
-        use_lspsaga = false,
-        hi_parameter = "IncSearch",
-        max_height = 12,
-        max_width = 120,
-        extra_trigger_chars = { ";" },
-        handler_opts = {
-            border = "single",
-        },
-    })
+    if client.server_capabilities.signatureHelpProvider then
+        require('lsp-overloads').setup(client, {})
+    end
+
+    -- require("lsp_signature").on_attach({
+    --     bind = true,
+    --     doc_lines = 10,
+    --     floating_window = true,
+    --     fixpos = true,
+    --     hint_enable = false,
+    --     use_lspsaga = false,
+    --     hi_parameter = "IncSearch",
+    --     max_height = 12,
+    --     max_width = 120,
+    --     extra_trigger_chars = { ";" },
+    --     handler_opts = {
+    --         border = "single",
+    --     },
+    -- })
 end
 
 require("grammar-guard").init()
@@ -137,6 +141,26 @@ lspconfig.jsonls.setup({
             schemas = require("schemastore").json.schemas(),
         },
     },
+})
+
+-- HACK: replace once https://github.com/b0o/SchemaStore.nvim/pull/10 merged
+local json_schemas = require('schemastore').json.schemas {}
+local yaml_schemas = {}
+vim.tbl_map(function(schema)
+    yaml_schemas[schema.url] = schema.fileMatch
+end, json_schemas)
+
+lspconfig.yamlls.setup({
+    on_attach = custom_attach,
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 500 },
+    settings = {
+        yaml = {
+            schemaStore = {
+                enable = yaml_schemas,
+            }
+        }
+    }
 })
 
 lspconfig.sumneko_lua.setup({
@@ -286,14 +310,14 @@ require("null-ls").setup({
         null_ls.builtins.diagnostics.markdownlint,
         null_ls.builtins.diagnostics.chktex,
         null_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
-        -- null_ls.builtins.code_actions.refactoring,
+        null_ls.builtins.code_actions.refactoring,
         null_ls.builtins.diagnostics.gitlint,
     },
 })
 
 -- Non lsp diagnostics
-local qfDiag = vim.api.nvim_create_namespace("qfDiag")
-local qfToDiag = vim.api.nvim_create_augroup("qfToDiag", { clear = true })
+QfDiag = vim.api.nvim_create_namespace("qfDiag")
+QfToDiagGroup = vim.api.nvim_create_augroup("qfToDiag", { clear = true })
 
 local function UpdateDiagnostics(diagnostics, namespace)
     vim.diagnostic.reset(namespace)
@@ -319,8 +343,8 @@ end
 
 QFtoDiag = function()
     local qf = vim.diagnostic.fromqflist(vim.fn.getqflist())
-    UpdateDiagnostics(qf, qfDiag)
+    UpdateDiagnostics(qf, QfDiag)
 end
-vim.api.nvim_create_autocmd("QuickFixCmdPost", { pattern = "*", callback = QFtoDiag, group = qfToDiag })
-vim.api.nvim_create_autocmd("User", { pattern = "VimtexEventCompileFailed", callback = QFtoDiag, group = qfToDiag })
-vim.api.nvim_create_autocmd("User", { pattern = "VimtexEventCompileSuccess", callback = QFtoDiag, group = qfToDiag })
+vim.api.nvim_create_autocmd("QuickFixCmdPost", { pattern = "*", callback = QFtoDiag, group = QfToDiagGroup })
+vim.api.nvim_create_autocmd("User", { pattern = "VimtexEventCompileFailed", callback = QFtoDiag, group = QfToDiagGroup })
+vim.api.nvim_create_autocmd("User", { pattern = "VimtexEventCompileSuccess", callback = QFtoDiag, group = QfToDiagGroup })

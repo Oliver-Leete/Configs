@@ -1,4 +1,5 @@
 Map = vim.keymap.set
+local Hydra = require('hydra')
 
 -- Leader Mapping
 vim.opt.timeoutlen = 500
@@ -33,8 +34,8 @@ Map({ "n", "x", "o" }, "<m-F>", ",")
 Map({ "n", "x", "o" }, "<m-t>", ";")
 Map({ "n", "x", "o" }, "<m-T>", ",")
 
-Map({ "n", "x", "o" }, ":", "q:")
-Map({ "n", "x", "o" }, ";", ":")
+-- Map({ "n", "x", "o" }, ":", "q:")
+-- Map({ "n", "x", "o" }, ";", ":")
 -- Map({ "n", "x", "o" }, "/", "q/")
 
 Map({ "n", "x" }, "+", "<c-a>")
@@ -89,6 +90,7 @@ vim.api.nvim_create_autocmd("CmdwinEnter", {
         Opt_save["backspace"] = vim.o.backspace
         vim.o.backspace = "indent,start"
 
+        Map("n", "<esc>", "<cmd>close<cr>", { buffer = 0, nowait = true })
         Map("n", "<cr>", "<cr>", { buffer = 0, nowait = true })
         Map("n", ":", "<nop>", { buffer = 0 })
         Map("n", "/", "<nop>", { buffer = 0 })
@@ -144,16 +146,15 @@ vim.api.nvim_create_autocmd("CmdwinLeave", {
     group = panelMappings,
 })
 
-vim.api.nvim_set_var("wordmotion_prefix", "$")
+vim.g.wordmotion_prefix = "$"
 
 -- UnMap Plugins
-vim.api.nvim_set_var("kitty_navigator_no_mappings", true)
-vim.api.nvim_set_var("UnconditionalPaste_no_mappings", true)
-vim.api.nvim_set_var("caser_no_mappings	=", true)
-vim.api.nvim_set_var("textobj_markdown_no_default_key_mappings", true)
-vim.api.nvim_set_var("julia_blocks", false)
-vim.api.nvim_set_var("surround_no_mappings", true)
-vim.api.nvim_set_var("wordmotion_nomap", true)
+vim.g.kitty_navigator_no_mappings = true
+vim.g.UnconditionalPaste_no_mappings = true
+vim.g.caser_no_mappings = true
+vim.g.textobj_markdown_no_default_key_mappings = true
+vim.g.julia_blocks = false
+vim.g.wordmotion_nomap = true
 
 Map({ "n", "x", "o" }, "j", [[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], { expr = true })
 Map({ "n", "x", "o" }, "k", [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], { expr = true })
@@ -191,16 +192,31 @@ Map("n", "<c-v>", "<cmd>silent vsplit %<cr>")
 Map("n", "<c-x>", "<cmd>silent split %<cr>")
 Map("n", "<c-p>", "<cmd>silent pedit %<cr>")
 
--- Map("n", "<cr><cr>", "<cmd>call v:lua.sendLines(v:count)<cr>", { silent = true })
--- Map("n", "<cr>", "<plug>(sendOp)", { silent = true })
--- Map("x", "<cr>", "<plug>(sendReg)", { silent = true })
-
-Map("n", "dp", "<plug>Dsurround")
-Map("n", "yp", "<plug>Ysurround")
-Map("n", "yP", "<plug>YSurround")
-Map("n", "cp", "<plug>Csurround")
-Map("n", "cP", "<plug>CSurround")
-Map("x", "P", "<plug>Vsurround")
+require("nvim-surround").setup({
+    keymaps = {
+        insert = "yp",
+        delete = "dp",
+        change = "cp",
+        visual = "P",
+    },
+    delimiters = {
+        pairs = {
+            ["("] = { "(", ")" },
+            [")"] = { "( ", " )" },
+            ["{"] = { "{", "}" },
+            ["}"] = { "{ ", " }" },
+            ["["] = { "[", "]" },
+            ["]"] = { "[ ", " ]" },
+            ["<"] = { "<", ">" },
+            [">"] = { "< ", " >" },
+            ["a"] = { "function() ", " end" },
+        },
+        aliases = {
+            ["b"] = { '[', "{", "(" },
+            ["q"] = { '"', "'", "`" },
+        },
+    }
+})
 
 Map({ "n", "x", "o" }, "$w", "<plug>(WordMotion_w)")
 Map({ "n", "x", "o" }, "$b", "<plug>(WordMotion_b)")
@@ -224,24 +240,52 @@ Map("n", "gF", ":edit <cfile><cr>")
 Map("n", "gx", ":!xdg-open <cfile> &<cr><cr>")
 
 -- VIEW
-Map({ "n", "x" }, "vt", "zt")
-Map({ "n", "x" }, "vv", "zz")
-Map({ "n", "x" }, "vc", "zz")
-Map({ "n", "x" }, "vb", "zb")
+Hydra({
+    name = "View",
+    mode = { "n", "x" },
+    body = "v",
+    config = {
+        hint = {
+            position = "middle-right",
+            border = "single"
+        }
+    },
+    hint = [[
+ _h_/_j_/_k_/_l_: ←/↓/↑/→
+ _H_/_J_/_K_/_L_: ⇚/⟱/⤊/⇛
+       _t_: top
+       _v_: middle
+       _b_: bottom
+       _s_: start
+       _m_: middle
+       _e_: end
+]]   ,
+    heads = {
+        { "h", "zh" },
+        { "J", "<c-d>" },
+        { "K", "<c-u>" },
+        { "L", "zL" },
 
-Map({ "n", "x" }, "vf", "zs")
-Map({ "n", "x" }, "vm", "<cmd>set sidescrolloff=999<cr><cmd>set sidescrolloff=0<cr>")
-Map({ "n", "x" }, "ve", "ze")
+        { "H", "zH" },
+        { "j", "<c-e>" },
+        { "k", "<c-y>" },
+        { "l", "zl" },
 
-Map({ "n", "x" }, "vh", "zh")
-Map({ "n", "x" }, "vl", "zl")
-Map({ "n", "x" }, "vj", "<c-e>")
-Map({ "n", "x" }, "vk", "<c-y>")
+        { "t", "zt", { exit = true } },
+        { "v", "zz", { exit = true } },
+        { "b", "zb", { exit = true } },
 
-Map({ "n", "x" }, "vu", "<c-u>")
-Map({ "n", "x" }, "vd", "<c-d>")
-
-Map({ "n", "x" }, "vs", "<cmd>normal! HVL<cr>")
+        { "s", "zs", { exit = true } },
+        { "m", "<cm>set sidescrolloff=999<cr><cmd>set sidescrolloff=0<cr>", { exit = true } },
+        { "e", "ze", { exit = true } },
+    }
+})
+Map({"n", "x"}, "vt", "zt")
+Map({"n", "x"}, "vv", "zz")
+Map({"n", "x"}, "vb", "zb")
+Map({"n", "x"}, "vs", "zs")
+Map({"n", "x"}, "vm", "<cm>set sidescrolloff=999<cr><cmd>set sidescrolloff=0<cr>")
+Map({"n", "x"}, "ve", "ze")
 
 Map({ "n", "x" }, "m", "v")
 
@@ -359,7 +403,6 @@ vim.cmd([[snoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1),'\%'.virt
 vim.cmd([[snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
 
 Map("i", "<c-g>", "<c-o>%")
-Map("i", "<c-s>", require("lsp_signature").toggle_float_win)
 
 Map("i", ",", ",<c-g>u")
 Map("i", ".", ".<c-g>u")
@@ -423,7 +466,11 @@ GlobalCommands = {
     { source = "default", name = "File tree", command = "NvimTreeToggle" },
     { source = "default", name = "Undo tree", command = "UndotreeToggle" },
     { source = "default", name = "Reload Snippets", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
-    { source = "default", name = "Reload Snippets", command = "vsplit ~/.config/nvim/after/plugin/luasnip.lua" },
+    { source = "default", name = "Reload SnippetProxyts", command = "vsplit ~/.config/nvim/after/plugin/luasnip.lua" },
+
+    { source = "terminal", name = "Neovim Log", func = function() NvimLogTerm:open_add(4) end },
+    { source = "terminal", name = "LSP Log", func = function() LspLogTerm:open_add(4) end },
+    { source = "terminal", name = "X Session Log", func = function() XLogTerm:open_add(4) end },
 
     { source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
     { source = "finders", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
@@ -466,30 +513,46 @@ GlobalCommands = {
     { source = "tasks", name = "Tasks", func = Select_runnables },
 }
 
-Map("n", "<leader>p", function() CommandCentre() end)
+Map("n", "<leader>p", function() CommandCentre({}, true) end)
 
-function CommandCentre(argCommands)
-    local commands = {}
-    if argCommands == nil then
-        for _, v in pairs(GlobalCommands) do
-            table.insert(commands, v)
+
+local function append_command(runnables, to_add)
+    local function always_extend(dst, src)
+        if not vim.tbl_islist(src) then
+            src = vim.tbl_values(src)
         end
-        if vim.b[0].localCommands ~= nil then
-            for _, v in pairs(vim.b[0].localCommands) do
-                table.insert(commands, v)
-            end
-        end
-    else
-        commands = argCommands
+        vim.list_extend(dst, src)
     end
 
-    table.sort(commands, function(a, b)
-        return a.name < b.name
-    end)
+    if to_add then
+        if type(to_add) == "table" then
+            always_extend(runnables, to_add)
+        elseif type(to_add) == "function" then
+            always_extend(runnables, to_add())
+        end
+    end
+end
 
-    table.sort(commands, function(a, b)
-        return a.source < b.source
-    end)
+function CommandCentre(argCommands, extend)
+    if not extend then extend = false end
+    if not argCommands then argCommands = {} end
+
+    local commands = {}
+    local command_sources = { argCommands }
+
+    if extend then
+        local default_sources = { GlobalCommands, vim.b[0].localCommands }
+        for _, source in pairs(default_sources) do
+            table.insert(command_sources, source)
+        end
+    end
+
+    for _, source in pairs(command_sources) do
+        append_command(commands, source)
+    end
+
+    table.sort(commands, function(a, b) return a.name < b.name end)
+    table.sort(commands, function(a, b) return a.source < b.source end)
 
     vim.ui.select(commands, {
         prompt = "Command Centre",
@@ -499,7 +562,7 @@ function CommandCentre(argCommands)
         telescope = require("telescope.themes").get_ivy(),
     }, function(choice)
         if not choice then
-            pcall(vim.notify("No command entered", "warn", { title = "Command Centre" }))
+            vim.notify("No command entered", "warn", { title = "Command Centre" })
             return
         end
 
@@ -510,38 +573,20 @@ function CommandCentre(argCommands)
         elseif choice.keymap ~= nil then
             vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(choice.keymap, true, true, true), "n", false)
         else
-            pcall(vim.notify("Command does not have an action", "warn", { title = "Command Centre" }))
+            vim.notify("Command does not have an action", "warn", { title = "Command Centre" })
             return
         end
     end)
 end
 
-Global_Runnables = function()
-    return {}
-end
+Global_Runnables = {}
 
-local function append_Runables(to_add, runnables)
-    if to_add then
-        if type(to_add) == "table" then
-            for _, v in pairs(to_add) do
-                table.insert(runnables, v)
-            end
-        elseif type(to_add) == "function" then
-            for _, v in pairs(to_add()) do
-                table.insert(runnables, v)
-            end
-        end
-    end
-end
 
 function Select_runnables()
     local runnables = {}
-    -- global runnables
-    append_Runables(Global_Runnables, runnables)
-    -- runnables from projcet type (see projects_config)
-    append_Runables(vim.g.runnables, runnables)
-    -- runnables from buffer types
-    append_Runables(vim.b[0].runnables, runnables)
+
+    -- Config sources
+    local runnable_sources = { Global_Runnables, vim.g.runnables, vim.b[0].runnables }
 
     -- runnables from tasks.lua files in directory
     local handle1 = io.popen([[fd -I tasks.lua]])
@@ -554,14 +599,18 @@ function Select_runnables()
     if task_files then
         for name in task_files:gmatch("([^\r\n]+)") do
             name = name:gsub("%./", ""):gsub("%.lua", "")
-            append_Runables(require(name), runnables)
+            table.insert(runnable_sources, require(name))
         end
+    end
+
+    for _, source in pairs(runnable_sources) do
+        append_command(runnables, source)
     end
 
     if #runnables ~= 0 then
         CommandCentre(runnables)
     else
-        pcall(vim.notify("Nothing to Run", "warn", { title = "Command Centre" }))
+        vim.notify("Nothing to Run", "warn", { title = "Command Centre" })
     end
 end
 
