@@ -75,7 +75,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'b0o/schemastore.nvim'
     Plug 'jose-elias-alvarez/null-ls.nvim'
 
-    " Plug 'ray-x/lsp_signature.nvim'
     Plug 'Issafalcon/lsp-overloads.nvim'
     Plug 'SmiteshP/nvim-navic'
 
@@ -118,7 +117,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 't-troebst/perfanno.nvim'
     Plug 'andythigpen/nvim-coverage'
 
-    Plug 'akinsho/toggleterm.nvim', {'commit': '04174e1'}
+    Plug 'akinsho/toggleterm.nvim', {'commit': '8cba5c2'}
 
     Plug 'anuvyklack/hydra.nvim'
     Plug 'anuvyklack/keymap-layer.nvim'

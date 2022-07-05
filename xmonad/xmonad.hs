@@ -437,7 +437,7 @@ myModMask = mod4Mask
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- |restart|fullWin| finder|project|   -   |-----------------------------------|winDown|winRght|   -   | float |   -   |
--- |  ws1  |  ws2  |  ws3  |  ws4  |   -   |-----------------------------------|winLeft|  app1 |  app2 |  app3 |  app4 |
+-- |  ws1  |  ws2  |  ws3  |  ws4  | wsCONF|-----------------------------------|winLeft|  app1 |  app2 |  app3 |  app4 |
 -- |fullScr|fullBar|fullCen|   -   |   -   |nspAway|nextScr|---|   -   |  kill | winUp | Master| decCol| incCol|   -   |
 -- |-------|   -   |   -   |-------|tabPrev| wsLast|winPrev|---|winNext|  term |tabNext|-------|   -   |   -   |-------|
 myKeys :: [(String, X ())]
@@ -526,6 +526,9 @@ myKeys =
     , ("M-S-r"           , spawn "/home/oleete/.config/bin/wsHarpoon move 2")
     , ("M-S-s"           , spawn "/home/oleete/.config/bin/wsHarpoon move 3")
     , ("M-S-t"           , spawn "/home/oleete/.config/bin/wsHarpoon move 4")
+
+    , ("M-d"             , spawn ("/home/oleete/.config/bin/wsHarpoon jumpName " ++ wsCON))
+    , ("M-S-d"           , spawn ("/home/oleete/.config/bin/wsHarpoon moveName " ++ wsCON))
 
     , ("M-<Tab>"         , upPointer nextScreen)
     , ("M-S-<Tab>"       , upPointer shiftNextScreen)

@@ -8,6 +8,8 @@ main () {
     case ${1:-menu} in
         jump)         jumpToWS "$2"     ;;
         move)         moveToWS "$2"     ;;
+        jumpName)     jumpToWSName "$2" ;;
+        moveName)     moveToWSName "$2" ;;
         add)          addWS             ;;
         modify)       modifyWS          ;;
         selectPreset) selectPreset "$2" ;;
@@ -26,6 +28,16 @@ jumpToWS () {
 moveToWS () {
     WS="$(cat "$HARPFILE" | head -"$1" | tail -1 | awk '{print $1}')"
     WS="$(wmctrl -d | rg -w "$WS" | awk '{print $1}')"
+    "$XMONADCTL" move-to-"$WS"
+}
+
+jumpToWSName () {
+    WS="$(wmctrl -d | rg -w "$1" | awk '{print $1}')"
+    "$XMONADCTL" jump-to-"$WS"
+}
+
+moveToWSName () {
+    WS="$(wmctrl -d | rg -w "$1" | awk '{print $1}')"
     "$XMONADCTL" move-to-"$WS"
 }
 

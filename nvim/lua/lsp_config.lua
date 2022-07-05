@@ -47,10 +47,10 @@ local custom_attach = function(client, bufnr)
         if not Notification_Dict[client.name] then
             Notification_Dict[client.name] = true
             ---@diagnostic disable-next-line: redundant-parameter
-            pcall(vim.notify(client.name .. " started", "info", {
+            vim.notify(client.name .. " started", "info", {
                 title = "LSP",
                 on_close = function() Notification_Dict[client.name] = false end,
-            }))
+            })
         end
     end
     if client.server_capabilities.documentSymbolProvider then
@@ -89,22 +89,6 @@ local custom_attach = function(client, bufnr)
     if client.server_capabilities.signatureHelpProvider then
         require('lsp-overloads').setup(client, {})
     end
-
-    -- require("lsp_signature").on_attach({
-    --     bind = true,
-    --     doc_lines = 10,
-    --     floating_window = true,
-    --     fixpos = true,
-    --     hint_enable = false,
-    --     use_lspsaga = false,
-    --     hi_parameter = "IncSearch",
-    --     max_height = 12,
-    --     max_width = 120,
-    --     extra_trigger_chars = { ";" },
-    --     handler_opts = {
-    --         border = "single",
-    --     },
-    -- })
 end
 
 require("grammar-guard").init()

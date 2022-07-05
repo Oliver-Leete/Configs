@@ -6,13 +6,13 @@ vim.opt.timeoutlen = 500
 vim.api.nvim_set_var("mapleader", " ")
 vim.api.nvim_set_var("maplocalleader", "\\")
 
+-- Un-Mappings
 Map({ "n", "x", "o" }, "<BackSPACE>", "<Nop>")
 Map({ "n", "x", "o" }, "<SPACE>", "<Nop>")
 
 Map({ "n", "x", "o" }, ",", "<Nop>")
 Map({ "n", "x", "o" }, ";", "<Nop>")
 
--- Un-Mappings
 Map({ "n", "x", "o" }, "v", "<nop>")
 Map({ "n", "x", "o" }, "V", "<nop>")
 Map({ "n", "x", "o" }, "<c-v>", "<nop>")
@@ -26,17 +26,13 @@ Map({ "n", "x", "o" }, "C", "<nop>")
 Map({ "n", "x", "o" }, "D", "<nop>")
 Map({ "n", "x", "o" }, "S", "<nop>")
 
--- NOTE: _, =, |, :, ^, BS are free to map
+-- NOTE: _, =, |, ;, ^, BS are free to map
 
 -- Mappings
 Map({ "n", "x", "o" }, "<m-f>", ";")
 Map({ "n", "x", "o" }, "<m-F>", ",")
 Map({ "n", "x", "o" }, "<m-t>", ";")
 Map({ "n", "x", "o" }, "<m-T>", ",")
-
--- Map({ "n", "x", "o" }, ":", "q:")
--- Map({ "n", "x", "o" }, ";", ":")
--- Map({ "n", "x", "o" }, "/", "q/")
 
 Map({ "n", "x" }, "+", "<c-a>")
 Map({ "n", "x" }, "-", "<c-x>")
@@ -75,15 +71,9 @@ Map("x", "<c-/>", ",c", { remap = true })
 
 Map("n", "£", [[:exe "let @/='" . expand("<cWORD>") . "' "<cr>]], { silent = true })
 
-
-vim.g.wordmotion_prefix = "$"
 -- UnMap Plugins
 vim.g.kitty_navigator_no_mappings = true
-vim.g.UnconditionalPaste_no_mappings = true
-vim.g.caser_no_mappings = true
-vim.g.textobj_markdown_no_default_key_mappings = true
 vim.g.julia_blocks = false
-vim.g.wordmotion_nomap = true
 
 Map({ "n", "x", "o" }, "j", [[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], { expr = true })
 Map({ "n", "x", "o" }, "k", [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], { expr = true })
@@ -107,9 +97,16 @@ Map("x", "K", ":move '<-2<cr>gv=gv")
 Map("n", "Q", "@q")
 Map("x", "Q", ":norm! @q<cr>")
 
-Map("n", "s", require("hop").hint_char1)
 Map("n", "S", "<cmd>ISwapWith<cr>")
-Map({ "x", "o" }, "s", function() require("hop").hint_char1({ inclusive_jump = true }) end)
+
+Map({ "n", "x", "o" }, "s", require("hop").hint_char1)
+
+-- local before = require("hop.hint").HintDirection.BEFORE_CURSOR
+-- local after = require("hop.hint").HintDirection.AFTER_CURSOR
+-- Map({ "n", "x", "o" }, "f", function() require("hop").hint_char1({direction=after, current_line_only=true}) end)
+-- Map({ "n", "x", "o" }, "F", function() require("hop").hint_char1({direction=before, current_line_only=true}) end)
+-- Map({ "n", "x", "o" }, "t", function() require("hop").hint_char1({direction=after, current_line_only=true, hint_offset=-1}) end)
+-- Map({ "n", "x", "o" }, "T", function() require("hop").hint_char1({direction=before, current_line_only=true, hint_offset=-1}) end)
 
 Map({ "n", "x", "o" }, "'", "`")
 Map({ "n", "x", "o" }, "`", "'")
@@ -147,10 +144,14 @@ require("nvim-surround").setup({
     }
 })
 
-Map({ "n", "x", "o" }, "$w", "<plug>(WordMotion_w)")
-Map({ "n", "x", "o" }, "$b", "<plug>(WordMotion_b)")
-Map({ "n", "x", "o" }, "$e", "<plug>(WordMotion_e)")
-Map({ "n", "x", "o" }, "$ge", "<plug>(WordMotion_ge)")
+vim.g.wordmotion_nomap = true
+Map({ "n", "x", "o" }, "<m-w>", "<plug>(WordMotion_w)", {remap = true})
+Map({ "n", "x", "o" }, "<m-b>", "<plug>(WordMotion_b)", {remap = true})
+Map({ "n", "x", "o" }, "<m-e>", "<plug>(WordMotion_e)", {remap = true})
+Map({ "n", "x", "o" }, "<m-g>e", "<plug>(WordMotion_ge)", {remap = true})
+Map({ "n", "x", "o" }, "<m-g><m-e>", "<plug>(WordMotion_ge)", {remap = true})
+Map({ "x", "o" }, "i<m-w>", "<plug>(WordMotion_iw)", {remap = true})
+Map({ "x", "o" }, "a<m-w>", "<plug>(WordMotion_aw)", {remap = true})
 
 -- GOTO
 Map({ "n", "x", "o" }, "gg", "gg")
@@ -255,6 +256,7 @@ Map("x", ",ff", vim.lsp.buf.range_formatting)
 Map("x", ",f<space>", ":%s/\v[^^ ]\zs  / /g<cr>")
 Map("x", ",fw", [["!par w" . &textwidth . "<cr>"]], { expr = true })
 
+vim.g.UnconditionalPaste_no_mappings = true
 Map("n", ",Pb", "<Plug>UnconditionalPasteBlockBefore", { remap = true })
 Map("n", ",PB", "<Plug>UnconditionalPasteJaggedBefore", { remap = true })
 Map("n", ",Pi", "<Plug>UnconditionalPasteInlinedBefore", { remap = true })
@@ -269,6 +271,7 @@ Map("n", ",pl", "<plug>UnconditionalPasteLineAfter", { remap = true })
 Map("n", ",pS", "<Plug>UnconditionalPasteParagraphedAfter", { remap = true })
 Map("n", ",ps", "<Plug>UnconditionalPasteSpacedAfter", { remap = true })
 
+vim.g.caser_no_mappings = true
 Map("n", ",sp", "<Plug>CaserMixedCase", { remap = true })
 Map("n", ",sc", "<Plug>CaserCamelCase", { remap = true })
 Map("n", ",ss", "<Plug>CaserSnakeCase", { remap = true })
