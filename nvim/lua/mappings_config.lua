@@ -75,79 +75,8 @@ Map("x", "<c-/>", ",c", { remap = true })
 
 Map("n", "£", [[:exe "let @/='" . expand("<cWORD>") . "' "<cr>]], { silent = true })
 
--- Panel Specific Mappings
-local panelMappings = vim.api.nvim_create_augroup("panelMappings", { clear = true })
-local cmp = require("cmp")
-Opt_save = {}
-vim.api.nvim_create_autocmd("CmdwinEnter", {
-    callback = function()
-        Opt_save["number"] = vim.o.number
-        vim.wo.number = false
-        Opt_save["relativenumber"] = vim.o.relativenumber
-        vim.wo.relativenumber = false
-        Opt_save["signcolumn"] = vim.o.signcolumn
-        vim.wo.signcolumn = "no"
-        Opt_save["backspace"] = vim.o.backspace
-        vim.o.backspace = "indent,start"
-
-        Map("n", "<esc>", "<cmd>close<cr>", { buffer = 0, nowait = true })
-        Map("n", "<cr>", "<cr>", { buffer = 0, nowait = true })
-        Map("n", ":", "<nop>", { buffer = 0 })
-        Map("n", "/", "<nop>", { buffer = 0 })
-        cmp.setup.buffer({
-            mapping = {
-                ["<down>"] = cmp.mapping({
-                    i = function()
-                        if cmp.visible() then
-                            cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-                        else
-                            cmp.complete()
-                            cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-                        end
-                    end,
-                }),
-                ["<up>"] = cmp.mapping({
-                    i = function()
-                        if cmp.visible() then
-                            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
-                        else
-                            cmp.complete()
-                            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
-                        end
-                    end,
-                })
-            },
-            sources = {
-                { name = "cmdline" },
-                { name = 'cmdline_history' },
-                { name = "path" },
-                { name = "buffer", option = {
-                    get_bufnrs = function()
-                        local bufs = {}
-                        for _, win in ipairs(vim.api.nvim_list_wins()) do
-                            bufs[vim.api.nvim_win_get_buf(win)] = true
-                        end
-                        return vim.tbl_keys(bufs)
-                    end
-                } },
-            }
-        })
-        vim.cmd("startinsert")
-    end,
-    group = panelMappings,
-})
-vim.api.nvim_create_autocmd("CmdwinLeave", {
-    callback = function()
-        vim.o.number = Opt_save["number"]
-        vim.o.relativenumber = Opt_save["relativenumber"]
-        vim.o.signcolumn = Opt_save["signcolumn"]
-        vim.o.backspace = Opt_save["backspace"]
-    end,
-    group = panelMappings,
-})
 
 vim.g.wordmotion_prefix = "$"
-
 -- UnMap Plugins
 vim.g.kitty_navigator_no_mappings = true
 vim.g.UnconditionalPaste_no_mappings = true
