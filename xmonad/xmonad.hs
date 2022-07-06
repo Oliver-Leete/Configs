@@ -325,18 +325,13 @@ myTerminalRemote = "/home/oleete/.config/bin/kittyRemote"
 myBrowser      = "/home/oleete/.config/bin/browser"
 myBrowserClass = "google-chrome-stable"
 
-discordCommand   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/discord  --class=discord  --app=https://discord.com/channels/@me"
-gcalCommand      = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcal     --class=GCal"
-gcalCommandWrk   = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcalWrk  --class=WrkGCal"
-ytmCommand       = "youtube-music"
-
 scratchpads :: [NamedScratchpad]
 scratchpads =
-    [   NS "gcal" gcalCommand (className =? "GCal") nonFloating
-    ,   NS "gcalWork" gcalCommandWrk (className =? "WrkGCal") nonFloating
+    [   NS "gcal" (myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcal     --class=GCal") (className =? "GCal") nonFloating
+    ,   NS "gcalWork" (myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcalWrk  --class=WrkGCal") (className =? "WrkGCal") nonFloating
+    ,   NS "discord"  (myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/discord  --class=discord  --app=https://discord.com/channels/@me") (className =? "discord") defaultFloating
 
-    ,   NS "discord"  discordCommand (className =? "discord") defaultFloating
-    ,   NS "youtubeMusic"  ytmCommand (className =? "YouTube Music") nonFloating
+    ,   NS "youtubeMusic"  "youtube-music" (className =? "YouTube Music") nonFloating
     ,   NS "calc"  "gnome-calculator" (className =? "gnome-calculator") nonFloating
     ,   NS "console"  "alacritty --class console" (resource =? "console") nonFloating
     ,   NS "sysMon"  "alacritty --class sysMon -t 'System Monitor' -e btop" (resource =? "sysMon") nonFloating
@@ -358,6 +353,7 @@ gap    = 4
 reSize = 1/20
 myBorder = 3
 
+myWideFont :: [Char]
 myWideFont  = "xft:Eurostar Black Extended:"
             ++ "style=Regular:pixelsize=180:hinting=true"
 
@@ -395,12 +391,14 @@ data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
 
+barFull :: SimpleFocus a
 barFull = SimpleFocus 1 (reSize/2) 0
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
     transform FULLCENTER x k = k centerFull (const x)
 
+centerFull :: SimpleFocus a
 centerFull = SimpleFocus (1/2) (reSize/2) 600
 
 myLayoutHook = smartBorders
@@ -413,7 +411,7 @@ myLayoutHook = smartBorders
     notebookMulti   = Notebook True True True 1 2 reSize 2 (2/3)
     notebookThesis  = Notebook True True True 1 3 reSize 2 (2/3)
     notebookColumns = Notebook False True True 4 4 reSize 2 (2/3)
-    -- notebookLaptop = Notebook True False False 1 2 reSize 2 (2/3)
+
     notebookTwoMain = Notebook False True True 2 3 reSize 2 (2/3)
     notebookDifferent = onWorkspaces [wsTHESIS, ws3D] notebookThesis $ onWorkspaces [wsCOMMENTS] notebookTwoMain notebookMulti
 
@@ -433,6 +431,7 @@ myNav2DConf = def
     , unmappedWindowRect        = [("Full", singleWindowRect)]
     }
 
+myModMask :: KeyMask
 myModMask = mod4Mask
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -540,14 +539,6 @@ myKeys =
                             then W.sink w s
                             else W.float w (W.RationalRect (1/4) (1/4) (1/2) (1/2)) s)
 
--- myFocusMaster :: X ()
--- myFocusMaster = withWindowSet $ \wset ->
---   case W.index wset of
---     []      -> pure ()
---     (x : _) -> if   Just x == W.peek wset
---                then toggleFocus
---                else windows W.focusMaster
-
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {} = M.fromList
     [ ((myModMask,               button1) ,\w -> focus w
@@ -603,7 +594,6 @@ myLogHook :: X ()
 myLogHook = do
     masterHistoryHook
     workspaceHistoryHookExclude ["NSP"]
-    -- nsHideOnFocusLoss scratchpads
     refocusLastLogHook
     showWNameLogHook myShowWNameTheme
 
@@ -651,7 +641,6 @@ myManageHook =
             ]
         isBrowserDialog = isDialog <&&> className =? myBrowserClass
         halfNhalf = W.RationalRect (1/4) (1/4) (1/2) (1/2)
-        -- thirdNthird = W.RationalRect (1/5) (1/5) (3/5) (3/5)
         bigFloat = W.RationalRect (1/8) (1/8) (3/4) (3/4)
 
 ----------------------------------------------------------------------------------------------------
@@ -683,8 +672,6 @@ l :: Applicative f => b -> [(f Bool, b)]
 l raw = [(pure True, raw)] -- leftover
 nv :: MonadIO m => [Char] -> [(Query Bool, m ())] -> [(Query Bool, m ())]
 nv command list = (title =? "MainEditor", spawn ("/home/oleete/.config/bin/nvrWS " ++ command)) : list -- neovim
--- rNv :: b -> [(Query Bool, b)] -> [(Query Bool, b)]
--- rNv raw list = (title =? "MainEditor", raw) : list -- neovim raw
 kt :: MonadIO m => [Char] -> [(Query Bool, m ())] -> [(Query Bool, m ())]
 kt command list = (className =? "kitty", spawn (myTerminalRemote ++ command)) : list -- kitty
 rKt :: b -> [(Query Bool, b)] -> [(Query Bool, b)]
