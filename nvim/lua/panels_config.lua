@@ -2,7 +2,7 @@
 local hl = require("todo-comments.highlight")
 local highlight_win = hl.highlight_win
 hl.highlight_win = function(win, force)
-	pcall(highlight_win, win, force)
+    pcall(highlight_win, win, force)
 end
 require("todo-comments").setup({
     signs = true,
@@ -31,6 +31,10 @@ local lib = require("nvim-tree.lib")
 
 local git_add = function()
     local node = lib.get_node_at_cursor()
+    if not node then
+        vim.notify("git add failed", "error", { title = "my nvim tree" })
+        return
+    end
     local gs = node.git_status
 
     -- If the file is untracked, unstaged or partially staged, we stage it

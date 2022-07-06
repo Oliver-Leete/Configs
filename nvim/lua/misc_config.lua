@@ -36,6 +36,7 @@ vim.g.targets_seekRanges = "cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab A
 vim.g.targets_jumpRanges = "rr rb rB bb bB BB ll al Al aa Aa AA"
 vim.g.targets_gracious = true
 vim.g.targets_nl = "nN"
+
 vim.cmd([[fu! s:lastplace()
 	if index(split("quickfix,nofile,help", ","), &buftype) != -1  | return | endif
 	if index(split("gitcommit,gitrebase,svn,hgcommit", ","), &filetype) != -1 | return | endif
@@ -88,7 +89,6 @@ require("colorizer").setup({ "*" }, {
     mode = "background",
 })
 
-local perfanno = require("perfanno")
 local util = require("perfanno.util")
 
 require("perfanno").setup({

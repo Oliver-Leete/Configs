@@ -243,10 +243,10 @@ function GPS_Bar()
             winbar = winbar .. hli .. icon .. hl .. " %f"
         end
         if is_active and require("nvim-navic").is_available() then
-                local location = require("nvim-navic").get_location()
-                if location ~= "" then
-                    winbar = winbar .. " > " .. location
-                end
+            local location = require("nvim-navic").get_location()
+            if location ~= "" then
+                winbar = winbar .. " > " .. location
+            end
         end
     end
     if winbar ~= "" then

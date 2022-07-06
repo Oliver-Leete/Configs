@@ -101,13 +101,6 @@ Map("n", "S", "<cmd>ISwapWith<cr>")
 
 Map({ "n", "x", "o" }, "s", require("hop").hint_char1)
 
--- local before = require("hop.hint").HintDirection.BEFORE_CURSOR
--- local after = require("hop.hint").HintDirection.AFTER_CURSOR
--- Map({ "n", "x", "o" }, "f", function() require("hop").hint_char1({direction=after, current_line_only=true}) end)
--- Map({ "n", "x", "o" }, "F", function() require("hop").hint_char1({direction=before, current_line_only=true}) end)
--- Map({ "n", "x", "o" }, "t", function() require("hop").hint_char1({direction=after, current_line_only=true, hint_offset=-1}) end)
--- Map({ "n", "x", "o" }, "T", function() require("hop").hint_char1({direction=before, current_line_only=true, hint_offset=-1}) end)
-
 Map({ "n", "x", "o" }, "'", "`")
 Map({ "n", "x", "o" }, "`", "'")
 
@@ -145,13 +138,13 @@ require("nvim-surround").setup({
 })
 
 vim.g.wordmotion_nomap = true
-Map({ "n", "x", "o" }, "<m-w>", "<plug>(WordMotion_w)", {remap = true})
-Map({ "n", "x", "o" }, "<m-b>", "<plug>(WordMotion_b)", {remap = true})
-Map({ "n", "x", "o" }, "<m-e>", "<plug>(WordMotion_e)", {remap = true})
-Map({ "n", "x", "o" }, "<m-g>e", "<plug>(WordMotion_ge)", {remap = true})
-Map({ "n", "x", "o" }, "<m-g><m-e>", "<plug>(WordMotion_ge)", {remap = true})
-Map({ "x", "o" }, "i<m-w>", "<plug>(WordMotion_iw)", {remap = true})
-Map({ "x", "o" }, "a<m-w>", "<plug>(WordMotion_aw)", {remap = true})
+Map({ "n", "x", "o" }, "<m-w>", "<plug>(WordMotion_w)", { remap = true })
+Map({ "n", "x", "o" }, "<m-b>", "<plug>(WordMotion_b)", { remap = true })
+Map({ "n", "x", "o" }, "<m-e>", "<plug>(WordMotion_e)", { remap = true })
+Map({ "n", "x", "o" }, "<m-g>e", "<plug>(WordMotion_ge)", { remap = true })
+Map({ "n", "x", "o" }, "<m-g><m-e>", "<plug>(WordMotion_ge)", { remap = true })
+Map({ "x", "o" }, "i<m-w>", "<plug>(WordMotion_iw)", { remap = true })
+Map({ "x", "o" }, "a<m-w>", "<plug>(WordMotion_aw)", { remap = true })
 
 -- GOTO
 Map({ "n", "x", "o" }, "gg", "gg")
@@ -210,12 +203,12 @@ Hydra({
         { "e", "ze", { exit = true } },
     }
 })
-Map({"n", "x"}, "vt", "zt")
-Map({"n", "x"}, "vv", "zz")
-Map({"n", "x"}, "vb", "zb")
-Map({"n", "x"}, "vs", "zs")
-Map({"n", "x"}, "vm", "<cm>set sidescrolloff=999<cr><cmd>set sidescrolloff=0<cr>")
-Map({"n", "x"}, "ve", "ze")
+Map({ "n", "x" }, "vt", "zt")
+Map({ "n", "x" }, "vv", "zz")
+Map({ "n", "x" }, "vb", "zb")
+Map({ "n", "x" }, "vs", "zs")
+Map({ "n", "x" }, "vm", "<cm>set sidescrolloff=999<cr><cmd>set sidescrolloff=0<cr>")
+Map({ "n", "x" }, "ve", "ze")
 
 Map({ "n", "x" }, "m", "v")
 

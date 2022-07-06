@@ -117,9 +117,6 @@ require("cmp").setup({
             return vim_item
         end,
     },
-    view = {
-        -- entries = { name = 'custom', selection_order = 'near_cursor' }
-    },
 })
 
 cmp.setup.cmdline("/", {
@@ -175,8 +172,6 @@ require("nvim-autopairs").setup({
     },
 })
 
--- require('nvim-autopairs').remove_rule('"')
-
 local Rule = require("nvim-autopairs.rule")
 local cond = require("nvim-autopairs.conds")
 require("nvim-autopairs").add_rules(
@@ -205,14 +200,6 @@ _G.cmp_toggle = function()
         require("cmp").close()
     else
         require("cmp").complete()
-    end
-end
-
-_G.cmp_esc = function()
-    if require("cmp").visible() then
-        return replace_keycodes([[<cmd>lua require("cmp").close()<cr>]])
-    else
-        return replace_keycodes("<esc>")
     end
 end
 

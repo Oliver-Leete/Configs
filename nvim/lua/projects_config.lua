@@ -5,7 +5,7 @@ if handle then
     handle:close()
     vim.g.project = string.gsub(project, "\n", "")
 else
-    pcall(vim.notify("Couldn't find project name", "Warn", { title = "Julia" }))
+    vim.notify("Couldn't find project name", "Warn", { title = "Julia" })
 end
 
 -- JULIA
@@ -176,9 +176,6 @@ local juliaProjectRunnables = function()
         end
     end
 
-
-    -- table.sort(runnables_list, function(a, b) return a.name < b.name end)
-    -- Selection
     return runnables_list
 end
 
@@ -226,7 +223,8 @@ function ActivateProject()
 
         JuliaLiveDocs = Terminal:new({
             on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "Julia Doc Server" end,
-            cmd = [[julia --project=docs -ie 'using ]] .. vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']],
+            cmd = [[julia --project=docs -ie 'using ]] ..
+                vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']],
             runnable = { source = "Julia", name = "Julia Doc Server", func = function() JuliaLiveDocs:set_toggle(4) end }
         })
 

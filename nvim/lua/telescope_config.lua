@@ -153,7 +153,9 @@ end
 function _G.project_files()
     local results = require("telescope.utils").get_os_command_output({ "git", "rev-parse", "--git-dir" })
 
-    if results[1] then
+    if results == nil then
+        vim.notify("Something went wrong", "Error", "Project Files")
+    elseif results[1] then
         require("telescope.builtin").git_files(require("telescope.themes").get_ivy())
     else
         require("telescope.builtin").find_files(require("telescope.themes").get_ivy())

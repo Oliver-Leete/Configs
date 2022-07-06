@@ -9,8 +9,8 @@ require("gitsigns").setup({
     },
     culhl = true,
 })
--- DiffView.nvim
 
+-- DiffView.nvim
 local actions = require("diffview.config").actions
 require("diffview").setup({
     diff_binaries = false,

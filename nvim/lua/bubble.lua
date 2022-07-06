@@ -112,7 +112,7 @@ basic.right = {
             { "", state.mode[2] },
             { b_components.progress_lua, state.mode[2] },
             { " ", state.mode[2] },
-            { sep.right_rounded, state.mode[2] .. "Before"}
+            { sep.right_rounded, state.mode[2] .. "Before" }
         }
     end,
     click = function()
@@ -172,7 +172,7 @@ local default = {
             if reg and reg ~= "" then
                 return "Recording @" .. reg
             end
-        end, { "red", "NormalBg" }},
+        end, { "red", "NormalBg" } },
         basic.divider,
         basic.git,
         { git_comps.git_branch({ icon = "  " }), { "green", "NormalBg" }, 90 },
