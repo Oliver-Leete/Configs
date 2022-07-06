@@ -1,1 +1,0 @@
-vis:command("map! normal ; :")
