@@ -179,10 +179,21 @@ vim.api.nvim_set_hl(0, "WinBarSigActParm", { fg = "#7E9CD8" })
 vim.api.nvim_set_hl(0, "WinBarActive", { fg = "#1F1F28", bg = "#76946A", bold = true })
 vim.api.nvim_set_hl(0, "WinBarActiveEnds", { fg = "#76946A", bg = "#1F1F28", bold = true })
 vim.api.nvim_set_hl(0, "WinBarActiveIcon", { fg = "#1F1F28", bg = "#76946A", bold = true })
+
 vim.api.nvim_set_hl(0, "WinBar", { fg = "#1F1F28", bg = "#727169", bold = true })
 vim.api.nvim_set_hl(0, "WinBarEnds", { fg = "#727169", bg = "#1F1F28", bold = true })
 vim.api.nvim_set_hl(0, "WinBarIcon", { fg = "#1F1F28", bg = "#727169", bold = false })
 vim.api.nvim_set_hl(0, "WinBarBlank", { fg = "#1F1F28", bg = "#1F1F28", bold = false })
+
+vim.api.nvim_set_hl(0, "TermBarActive", { fg = "#15151C", bg = "#76946A", bold = true })
+vim.api.nvim_set_hl(0, "TermBarActiveEnds", { fg = "#76946A", bg = "#15151C", bold = true })
+vim.api.nvim_set_hl(0, "TermBarActiveIcon", { fg = "#15151C", bg = "#76946A", bold = true })
+
+vim.api.nvim_set_hl(0, "TermBar", { fg = "#15151C", bg = "#727169", bold = true })
+vim.api.nvim_set_hl(0, "TermBarEnds", { fg = "#727169", bg = "#15151C", bold = true })
+vim.api.nvim_set_hl(0, "TermBarIcon", { fg = "#15151C", bg = "#727169", bold = false })
+vim.api.nvim_set_hl(0, "TermBarBlank", { fg = "#1F1F28", bg = "#15151C", bold = false })
+
 
 vim.api.nvim_set_hl(0, "WinBarAltIcon", { fg = "#7E9CD8", bold = false })
 
@@ -191,6 +202,7 @@ vim.api.nvim_set_hl(0, "NavicText", { link = "WinBar" })
 vim.api.nvim_set_hl(0, "NavicSeparator", { link = "WinBar" })
 
 function GPS_Bar()
+    local bufnr = vim.api.nvim_get_current_buf()
     local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
     local winbar = ""
     local hlb = "%#WinBarBlank#"
@@ -204,7 +216,7 @@ function GPS_Bar()
     end
 
     -- Special winbar for filmpicker script
-    if vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()) == "/tmp/film_list.films" then
+    if vim.api.nvim_buf_get_name(bufnr) == "/tmp/film_list.films" then
         local line1 = vim.fn.search([[\(\%^\|^$\)]], "nbWc") - 1
         local line2 = vim.fn.search([[\(\%$\|^$\)]], "nW")
 
@@ -223,18 +235,37 @@ function GPS_Bar()
         local seconds = math.floor(math.fmod(runtime, 60))
         winbar = winbar .. hl .. string.format("%02d:%02d:%02d", hours, minutes, seconds)
 
-        -- Special winbar for terminals
-    elseif vim.bo[vim.api.nvim_get_current_buf()].filetype == "toggleterm" then
-        local term_name
-        if vim.b[0].my_term_title then
-            term_name = vim.b[0].my_term_title
+    elseif Is_special(bufnr) then
+        if vim.bo[bufnr].filetype == "toggleterm" then -- Special winbar for terminals
+            hlb = "%#TermBarBlank#"
+            if is_active then
+                hl = "%#TermBarActive#"
+                hli = "%#TermBarActiveIcon#"
+                hle = "%#TermBarActiveEnds#"
+            else
+                hl = "%#TermBar#"
+                hli = "%#TermBarIcon#"
+                hle = "%#TermBarEnds#"
+            end
+            local term_name
+            if vim.b[0].my_term_title then
+                term_name = vim.b[0].my_term_title
+            else
+                term_name = "Terminal " .. tostring(vim.b[0].term_title)
+            end
+            winbar = winbar .. hl .. term_name
+        elseif vim.bo[bufnr].filetype == "help" then
+            local help_title = vim.fn.expand("%:t:r")
+            help_title = help_title:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end)
+            winbar = winbar .. hl .. help_title .. " Help"
         else
-            term_name = "Terminal " .. tostring(vim.b[0].term_title)
-        end
-        winbar = winbar .. hl .. term_name
+            local filetype = Special_types[vim.bo[bufnr].filetype].name
+           if filetype then
+                winbar = winbar .. hl .. filetype
+            end
 
-        -- Default winbar
-    else
+        end
+    else -- Default winbar
         if vim.fn.expand("%") ~= "" then
             local icon = require("nvim-web-devicons").get_icon(vim.fn.expand("%:t"), vim.fn.expand("%:e"))
             if icon == "" or icon == nil then

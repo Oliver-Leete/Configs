@@ -10,10 +10,10 @@ require("toggleterm").setup({
     on_open = function(term)
         Term_on_open(term)
     end,
-    shade_terminals = false,
+    shade_terminals = true,
     hide_numbers = true,
     start_in_insert = true,
-    persist_mode = false,
+    persist_mode = true,
     insert_mappings = true,
     terminal_mappings = true,
     persist_size = true,
@@ -126,21 +126,6 @@ LZGTerm = Terminal:new({
     on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "Lazy Git" end
 })
 
-
-Map("n", "<cr>n", function() _G.sendLines(vim.v.count, 1) end)
-Map("n", "<cr>e", function() _G.sendLines(vim.v.count, 2) end)
-Map("n", "<cr>i", function() _G.sendLines(vim.v.count, 3) end)
-Map("n", "<cr>o", function() _G.sendLines(vim.v.count, 4) end)
-
-Map("x", "<cr>n", ":<c-u>call v:lua.sendRegion(visualmode(), 1)<cr>", { remap = true })
-Map("x", "<cr>e", ":<c-u>call v:lua.sendRegion(visualmode(), 2)<cr>", { remap = true })
-Map("x", "<cr>i", ":<c-u>call v:lua.sendRegion(visualmode(), 3)<cr>", { remap = true })
-Map("x", "<cr>o", ":<c-u>call v:lua.sendRegion(visualmode(), 4)<cr>", { remap = true })
-
-Map("x", "<Plug>(1sendReg)", [[:<c-u>call v:lua.sendRegion(visualmode(), 1)<cr>]])
-Map("x", "<Plug>(2sendReg)", [[:<c-u>call v:lua.sendRegion(visualmode(), 2)<cr>]])
-Map("x", "<Plug>(3sendReg)", [[:<c-u>call v:lua.sendRegion(visualmode(), 3)<cr>]])
-Map("x", "<Plug>(4sendReg)", [[:<c-u>call v:lua.sendRegion(visualmode(), 4)<cr>]])
 
 local function harpsend(num)
     local to_send = vim.fn.getreg('"'):gsub("[\r\n]$", "")

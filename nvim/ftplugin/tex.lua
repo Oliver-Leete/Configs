@@ -146,6 +146,21 @@ vim.g.projectionist_heuristics = {
     },
 }
 
+require("nvim-surround").buffer_setup({
+    delimiters = {
+        pairs = {
+            ["f"] = function()
+                return {
+                    "\\" .. require("nvim-surround.utils").get_input(
+                        "Enter the function name: "
+                    ) .. "{",
+                    "}"
+                }
+            end,
+        }
+    }
+})
+
 if vim.g.viewerOpen ~= 1 then
     vim.g.viewerOpen = 1
     vim.cmd("VimtexView")

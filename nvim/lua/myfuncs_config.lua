@@ -1,19 +1,19 @@
 Special_types = {
-    qf = function() vim.cmd("wincmd c") end,
-    help = function() vim.cmd("wincmd c") end,
-    ["vim-plug"] = function() vim.cmd("wincmd c") end,
-    juliadoc = function() vim.cmd("wincmd c") end,
-    lspinfo = function() vim.cmd("wincmd c") end,
-    tsplayground = function() vim.cmd("wincmd c") end,
-    ["harpoon-menu"] = function() vim.cmd("wincmd c") end,
-    toggleterm = function() vim.cmd("wincmd c") end,
-    notify = function() vim.cmd("wincmd c") end,
-    undotree = function() vim.cmd("UndotreeHide") end,
-    NvimTree = function() vim.cmd("wincmd c") end,
-    DiffviewFileHistory = function() vim.cmd("DiffviewClose") end,
-    DiffviewFiles = function() vim.cmd("DiffviewClose") end,
-    ["vim"] = function() vim.cmd("wincmd c") end,
-    [""] = function() vim.cmd("wincmd c") end,
+    qf = { name = "Quick Fix", exit_func = function() vim.cmd("wincmd c") end },
+    help = { name = "help", exit_func = function() vim.cmd("wincmd c") end },
+    ["vim-plug"] = { name = "Vim Plug", exit_func = function() vim.cmd("wincmd c") end },
+    juliadoc = { name = "Julia Documentation", exit_func = function() vim.cmd("wincmd c") end },
+    lspinfo = { exit_func = function() vim.cmd("wincmd c") end },
+    tsplayground = { name = "Tree Sitter Playground", exit_func = function() vim.cmd("wincmd c") end },
+    ["harpoon-menu"] = { exit_func = function() vim.cmd("wincmd c") end },
+    toggleterm = { exit_func = function() vim.cmd("wincmd c") end },
+    notify = { exit_func = function() vim.cmd("wincmd c") end },
+    undotree = { name = "Undo Tree", exit_func = function() vim.cmd("UndotreeHide") end },
+    NvimTree = { name = "File Tree", exit_func = function() vim.cmd("wincmd c") end },
+    DiffviewFileHistory = { name = "Diff History", exit_func = function() vim.cmd("DiffviewClose") end },
+    DiffviewFiles = { name = "Diff Tree", exit_func = function() vim.cmd("DiffviewClose") end },
+    ["vim"] = { exit_func = function() vim.cmd("wincmd c") end },
+    [""] = { exit_func = function() vim.cmd("wincmd c") end },
 }
 
 Is_special = function(bufnr)
@@ -24,23 +24,23 @@ Is_special = function(bufnr)
 end
 
 function _G.delete_buffer()
-    local cur_tab = vim.api.nvim_get_current_tabpage()
-    local cur_win = vim.api.nvim_get_current_win()
-    local cur_buf = vim.api.nvim_get_current_buf()
+    local tabnr = vim.api.nvim_get_current_tabpage()
+    local winnr = vim.api.nvim_get_current_win()
+    local bufnr = vim.api.nvim_get_current_buf()
 
     local num_tabs = #vim.api.nvim_list_tabpages()
 
-    if Is_special(cur_buf) then
-        local filetype = vim.bo[cur_buf].filetype
+    if Is_special(bufnr) then
+        local filetype = vim.bo[bufnr].filetype
 
         if filetype == "" or filetype == "vim" then
             vim.cmd("stopinsert | wincmd c")
         else
-            Special_types[filetype]()
+            Special_types[filetype].exit_func()
         end
 
         return
-    elseif vim.b[cur_buf].is_diffview_file then
+    elseif vim.b[bufnr].is_diffview_file then
         vim.cmd("DiffviewFocusFiles")
         return
     end
@@ -62,7 +62,7 @@ function _G.delete_buffer()
     local wins = vim.api.nvim_list_wins()
     local is_dup = false
     for _, win in pairs(wins) do
-        if win ~= cur_win and cur_buf == vim.api.nvim_win_get_buf(win) then
+        if win ~= winnr and bufnr == vim.api.nvim_win_get_buf(win) then
             is_dup = true
             break
         end
@@ -77,7 +77,7 @@ function _G.delete_buffer()
             return false
         end
         return true
-    end, vim.api.nvim_tabpage_list_wins(cur_tab))
+    end, vim.api.nvim_tabpage_list_wins(tabnr))
     local num_tab_wins = #tab_wins
 
     -- Count normal windows on current tab page

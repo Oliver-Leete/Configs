@@ -18,13 +18,13 @@ vim.opt.showmode = false
 vim.opt.laststatus = 3
 vim.opt.cmdheight = 0
 vim.opt.fillchars:append({
-    horiz = "━",
-    horizup = "┻",
-    horizdown = "┳",
-    vert = "┃",
-    vertleft = "┨",
-    vertright = "┣",
-    verthoriz = "╋",
+    horiz = "▁",
+    horizup = "🭿",
+    horizdown = "▁",
+    vert = "▕",
+    vertleft = "🭿",
+    vertright = "▕",
+    verthoriz = "🭿",
     diff = "╱",
 })
 

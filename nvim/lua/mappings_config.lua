@@ -128,7 +128,23 @@ require("nvim-surround").setup({
             ["]"] = { "[ ", " ]" },
             ["<"] = { "<", ">" },
             [">"] = { "< ", " >" },
-            ["a"] = { "function() ", " end" },
+            ["i"] = function()
+                return {
+                    require("nvim-surround.utils").get_input(
+                        "Enter the left delimiter: "
+                    ),
+                    require("nvim-surround.utils").get_input(
+                        "Enter the right delimiter: "
+                    )
+                }
+            end,
+            ["f"] = function()
+                return {
+                    require("nvim-surround.utils").get_input(
+                        "Enter the function name: "
+                    ) .. "(", ")"
+                }
+            end,
         },
         aliases = {
             ["b"] = { '[', "{", "(" },
@@ -288,8 +304,8 @@ Map("x", ",f.", "<Plug>CaserVDotCase", { remap = true })
 
 Map("n", "<leader><leader>", "<cmd>silent e #<cr>")
 
-Map("n", "<leader>n", require("harpoon.mark").add_file)
-Map("n", "<leader>e", require("harpoon.ui").toggle_quick_menu)
+Map("n", "<leader>c", require("harpoon.mark").add_file)
+Map("n", "<leader>v", require("harpoon.ui").toggle_quick_menu)
 local harpoon_keys = { "a", "r", "s", "t" }
 for i, key in pairs(harpoon_keys) do
     Map("n", "<leader>" .. key, function() require("harpoon.ui").nav_file(i) end)
@@ -367,6 +383,12 @@ Map("i", "<c-n>", function()
 end)
 
 -- Terminal mappings
+
+local term_keys = { "n", "e", "i", "o" }
+for i, key in pairs(term_keys) do
+    Map("n", "<cr>" .. key, function() _G.sendLines(vim.v.count, i) end)
+    Map("x", "<cr>" .. key, ":<c-u>call v:lua.sendRegion(visualmode(), " .. i .. ")<cr>", { remap = true })
+end
 
 Map("n", "<leader>n", function() Harp_Term_1:toggle() end)
 Map("n", "<leader>e", function() Harp_Term_2:toggle() end)
