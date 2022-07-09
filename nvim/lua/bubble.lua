@@ -11,8 +11,8 @@ local git_comps = require("windline.components.git")
 local git_rev = require("windline.components.git_rev")
 
 local hl_list = {
-    Black = { "blue", "NormalBg" },
-    White = { "black", "blue" },
+    Black = { "blue_light", "NormalBg" },
+    White = { "black", "blue_light" },
     Active = { "ActiveFg", "NormalBg" },
 }
 local basic = {}
@@ -23,28 +23,35 @@ basic.underline = { b_components.divider, "_" }
 basic.vi_mode = {
     name = "vi_mode",
     hl_colors = {
-        Normal = { "black", "red" },
+        Normal = { "black", "blue" },
         Insert = { "black", "green" },
-        Visual = { "black", "yellow" },
-        Replace = { "black", "blue_light" },
-        Command = { "black", "magenta" },
-        NormalBefore = { "red", "NormalBg" },
+        Visual = { "black", "magenta" },
+        Replace = { "black", "red" },
+        Command = { "black", "yellow" },
+        NormalBefore = { "blue", "NormalBg" },
         InsertBefore = { "green", "NormalBg" },
-        VisualBefore = { "yellow", "NormalBg" },
-        ReplaceBefore = { "blue_light", "NormalBg" },
-        CommandBefore = { "magenta", "NormalBg" },
-        NormalAfter = { "red", "blue" },
-        InsertAfter = { "green", "blue" },
-        VisualAfter = { "yellow", "blue" },
-        ReplaceAfter = { "blue_light", "blue" },
-        CommandAfter = { "magenta", "blue" },
+        VisualBefore = { "magenta", "NormalBg" },
+        ReplaceBefore = { "red", "NormalBg" },
+        CommandBefore = { "yellow", "NormalBg" },
+        NormalAfter = { "blue", "blue_light" },
+        InsertAfter = { "green", "blue_light" },
+        VisualAfter = { "magenta", "blue_light" },
+        ReplaceAfter = { "red", "blue_light" },
+        CommandAfter = { "yellow", "blue_light" },
     },
     text = function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local coltype
+        if Is_special(bufnr) and not SpecialName(bufnr) then
+            coltype = "Before"
+        else
+            coltype = "After"
+        end
         return {
             { sep.left_rounded, state.mode[2] .. "Before" },
             { " ", state.mode[2] },
             { state.mode[1] .. " ", state.mode[2] },
-            { sep.right_rounded, state.mode[2] .. "After" },
+            { sep.right_rounded, state.mode[2] .. coltype },
         }
     end,
 }
@@ -76,33 +83,53 @@ basic.file = {
         default = hl_list.White,
     },
     text = function()
-        return {
-            { " ", "default" },
-            { b_components.cache_file_icon({ default = "" }), "default" },
-            { " ", "default" },
-            { b_components.cache_file_name("[No Name]", "unique") },
-            { b_components.file_modified(" ") },
-        }
+        local bufnr = vim.api.nvim_get_current_buf()
+        if Is_special(bufnr) then
+            local specialname = SpecialName(bufnr)
+            if specialname then
+                return {
+                    { " ", "default" },
+                    { SpecialName(bufnr) },
+                    { " ", "default" },
+                    { vim_components.search_count(), { "black", "blue_light" } },
+                    { sep.right_rounded, hl_list.Black },
+                }
+            else
+                return {
+                    { " ", hl_list.Black },
+                }
+            end
+        else
+            return {
+                { " ", "default" },
+                { b_components.cache_file_icon({ default = "" }), "default" },
+                { " ", "default" },
+                { b_components.cache_file_name("[No Name]", "unique") },
+                { b_components.file_modified(" ") },
+                { vim_components.search_count(), { "black", "blue_light" } },
+                { sep.right_rounded, hl_list.Black },
+            }
+        end
     end,
 }
 
 basic.right = {
     hl_colors = {
-        Normal = { "black", "red" },
+        Normal = { "black", "blue" },
         Insert = { "black", "green" },
-        Visual = { "black", "yellow" },
-        Replace = { "black", "blue_light" },
-        Command = { "black", "magenta" },
-        NormalBefore = { "red", "NormalBg" },
+        Visual = { "black", "magenta" },
+        Replace = { "black", "red" },
+        Command = { "black", "yellow" },
+        NormalBefore = { "blue", "NormalBg" },
         InsertBefore = { "green", "NormalBg" },
-        VisualBefore = { "yellow", "NormalBg" },
-        ReplaceBefore = { "blue_light", "NormalBg" },
-        CommandBefore = { "magenta", "NormalBg" },
-        NormalAfter = { "red", "blue" },
-        InsertAfter = { "green", "blue" },
-        VisualAfter = { "yellow", "blue" },
-        ReplaceAfter = { "blue_light", "blue" },
-        CommandAfter = { "magenta", "blue" },
+        VisualBefore = { "magenta", "NormalBg" },
+        ReplaceBefore = { "red", "NormalBg" },
+        CommandBefore = { "yellow", "NormalBg" },
+        NormalAfter = { "blue", "NormalBg" },
+        InsertAfter = { "green", "NormalBg" },
+        VisualAfter = { "magenta", "NormalBg" },
+        ReplaceAfter = { "red", "NormalBg" },
+        CommandAfter = { "yellow", "NormalBg" },
     },
     text = function(_)
         return {
@@ -112,7 +139,7 @@ basic.right = {
             { "", state.mode[2] },
             { b_components.progress_lua, state.mode[2] },
             { " ", state.mode[2] },
-            { sep.right_rounded, state.mode[2] .. "Before" }
+            { sep.right_rounded, state.mode[2] .. "After" }
         }
     end,
     click = function()
@@ -163,8 +190,6 @@ local default = {
     active = {
         basic.vi_mode,
         basic.file,
-        { vim_components.search_count(), { "black", "blue" } },
-        { sep.right_rounded, hl_list.Black },
         basic.lsp_diagnos,
         basic.dap,
         { function()
@@ -185,14 +210,33 @@ local default = {
     },
 }
 
+local theme_colors = require("kanagawa.colors").setup()
 windline.setup({
     colors_name = function(colors)
-        colors.NormalBg = "#1F1F28"
-        colors.black = "#1F1F28"
+        colors.NormalBg = theme_colors.bg
+        colors.black = theme_colors.bg
+        colors.blue = theme_colors.crystalBlue
+        colors.blue_light = theme_colors.fujiGray
+        colors.green = theme_colors.autumnGreen
+        colors.magenta = theme_colors.oniViolet
+        colors.red = theme_colors.autumnRed
+        colors.yellow = theme_colors.boatYellow2
         return colors
     end,
     statuslines = {
         default,
     },
-    tabline = {},
+    tabline = {
+        template = {
+            select        = { '', { 'TabSelectionFg', 'TabSelectionBg', } },
+            select_start  = { sep.left_rounded, { 'TabSelectionBg', 'TabLineFillBg' } },
+            select_end    = { sep.right_rounded, { 'TabSelectionBg', 'TabLineFillBg' } },
+            select_last   = { sep.right_rounded, { 'TabSelectionBg', 'TabLineFillBg' } },
+            normal        = { '', { 'TabLineFg', 'TabLineBg' } },
+            normal_start  = { sep.left_rounded, { 'TabLineBg', 'TabLineFillBg' } },
+            normal_end    = { sep.right_rounded, { 'TabLineBg', 'TabLineFillBg' } },
+            normal_last   = { sep.right_rounded, { 'TabLineBg', 'TabLineFillBg' } },
+            normal_select = { sep.right_rounded, { 'TabLineBg', 'TabLineFillBg' } },
+        },
+    },
 })

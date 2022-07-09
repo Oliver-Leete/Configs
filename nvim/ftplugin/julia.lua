@@ -70,7 +70,8 @@ vim.b[0].runnables = function()
             source = "Prof",
             name = "Profile File",
             func = function()
-                Harp_Term_2:send_open([[julia ~/.config/nvim/filetype/julia/prof.jl ']] .. vim.fn.expand("%:p") .. "'", true)
+                Harp_Term_2:send_open([[julia ~/.config/nvim/filetype/julia/prof.jl ']] .. vim.fn.expand("%:p") .. "'",
+                    true)
             end,
         },
     }
@@ -177,13 +178,9 @@ ReadLastOutput = function()
     local handleRLO = io.popen(
         [[kitty @ get-text --match title:JuliaPersistant --extent last_cmd_output | rg --multiline --pcre2 "julia>(?!(.|\\n)*(julia>))(.|\\n)*?\Z"]]
     )
-    local last_output
-    if handleRLO then
-        last_output = handleRLO:read("*a")
-        handleRLO:close()
-    else
-        return
-    end
+    if not handleRLO then return end
+    local last_output = handleRLO:read("*a")
+    handleRLO:close()
 
     vim.diagnostic.match(last_output)
     local filename

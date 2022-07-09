@@ -10,7 +10,7 @@ require("toggleterm").setup({
     on_open = function(term)
         Term_on_open(term)
     end,
-    shade_terminals = true,
+    shade_terminals = false,
     hide_numbers = true,
     start_in_insert = true,
     persist_mode = true,

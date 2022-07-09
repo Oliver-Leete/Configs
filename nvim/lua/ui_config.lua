@@ -10,18 +10,20 @@ require("stickybuf").setup({
 
 ZenOrFull = function()
     local handle = io.popen([[kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length"]])
-    local num_windows
-    if handle then
-        num_windows = tonumber(handle:read("*a"))
-        handle:close()
-    else
-        return
-    end
+    if not handle then return end
+    local num_windows = tonumber(handle:read("*a"))
+    handle:close()
 
     if num_windows > 1 then
         vim.cmd([[silent !xdotool key --clearmodifiers "ctrl+alt+f"]])
     else
-        require("zen-mode").toggle({})
+        local num_tabs = #vim.api.nvim_list_tabpages()
+        local num_tab_wins = TabWinCount(vim.api.nvim_get_current_tabpage())
+        if num_tab_wins <= 1 and num_tabs > 1 then
+            vim.cmd("tabclose")
+        else
+            vim.cmd("tab split")
+        end
     end
 end
 vim.api.nvim_create_user_command("ZenOrFull", ZenOrFull, { nargs = 0 })
@@ -49,6 +51,15 @@ require("zen-mode").setup({
     end,
 })
 
+require("dressing").setup({
+    select = {
+        backend = { "telescope" },
+        telescope = require("telescope.themes").get_ivy({
+            height = 30,
+        }),
+    },
+})
+
 require("kanagawa").setup({
     undercurl = true,
     commentStyle = { italic = true },
@@ -67,35 +78,20 @@ require("kanagawa").setup({
 })
 
 vim.cmd("colorscheme kanagawa")
+local tc = require("kanagawa.colors").setup()
 
 local background = vim.api.nvim_get_hl_by_name("CursorLine", true).background
 
-local active = vim.api.nvim_get_hl_by_name("MatchParen", true)
-active.background = background
+local sign_colours = { Add = "Added", Change = "Changed", Delete = "Deleted" }
+for sign, colour in pairs(sign_colours) do
+    local highlight = vim.api.nvim_get_hl_by_name("diff" .. colour, true)
+    highlight.background = background
+    vim.api.nvim_set_hl(0, "GitSigns" .. sign .. "Cul", highlight)
+end
 
-local git_add = vim.api.nvim_get_hl_by_name("diffAdded", true)
-git_add.background = background
-local git_cha = vim.api.nvim_get_hl_by_name("diffChanged", true)
-git_cha.background = background
-local git_del = vim.api.nvim_get_hl_by_name("diffDeleted", true)
-git_del.background = background
-
-vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#FF9E3B", bg = "#363646", bold = true })
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = tc.roninYellow, bg = tc.sumiInk3, bold = true })
 vim.api.nvim_set_hl(0, "CursorLineSign", { link = "CursorLine" })
 vim.api.nvim_set_hl(0, "CursorLineFold", { link = "CursorLine" })
-
-vim.api.nvim_set_hl(0, "GitSignsAddCul", git_add)
-vim.api.nvim_set_hl(0, "GitSignsChangeCul", git_cha)
-vim.api.nvim_set_hl(0, "GitSignsDeleteCul", git_del)
-
-require("dressing").setup({
-    select = {
-        backend = { "telescope" },
-        telescope = require("telescope.themes").get_ivy({
-            height = 30,
-        }),
-    },
-})
 
 local stages_util = require("notify.stages.util")
 
@@ -172,47 +168,30 @@ vim.lsp.handlers["window/showMessage"] = function(_, method, params, _)
     vim.notify(method.message, severity[params.type])
 end
 
-
-vim.api.nvim_set_hl(0, "WinBarSigActParm", { fg = "#7E9CD8" })
-
-
-vim.api.nvim_set_hl(0, "WinBarActive", { fg = "#1F1F28", bg = "#76946A", bold = true })
-vim.api.nvim_set_hl(0, "WinBarActiveEnds", { fg = "#76946A", bg = "#1F1F28", bold = true })
-vim.api.nvim_set_hl(0, "WinBarActiveIcon", { fg = "#1F1F28", bg = "#76946A", bold = true })
-
-vim.api.nvim_set_hl(0, "WinBar", { fg = "#1F1F28", bg = "#727169", bold = true })
-vim.api.nvim_set_hl(0, "WinBarEnds", { fg = "#727169", bg = "#1F1F28", bold = true })
-vim.api.nvim_set_hl(0, "WinBarIcon", { fg = "#1F1F28", bg = "#727169", bold = false })
-vim.api.nvim_set_hl(0, "WinBarBlank", { fg = "#1F1F28", bg = "#1F1F28", bold = false })
-
-vim.api.nvim_set_hl(0, "TermBarActive", { fg = "#15151C", bg = "#76946A", bold = true })
-vim.api.nvim_set_hl(0, "TermBarActiveEnds", { fg = "#76946A", bg = "#15151C", bold = true })
-vim.api.nvim_set_hl(0, "TermBarActiveIcon", { fg = "#15151C", bg = "#76946A", bold = true })
-
-vim.api.nvim_set_hl(0, "TermBar", { fg = "#15151C", bg = "#727169", bold = true })
-vim.api.nvim_set_hl(0, "TermBarEnds", { fg = "#727169", bg = "#15151C", bold = true })
-vim.api.nvim_set_hl(0, "TermBarIcon", { fg = "#15151C", bg = "#727169", bold = false })
-vim.api.nvim_set_hl(0, "TermBarBlank", { fg = "#1F1F28", bg = "#15151C", bold = false })
-
-
-vim.api.nvim_set_hl(0, "WinBarAltIcon", { fg = "#7E9CD8", bold = false })
+local mode_colours = { Normal = tc.crystalBlue, Insert = tc.autumnGreen, Visual = tc.oniViolet, Replace = tc.autumnRed,
+    Command = tc.boatYellow2, Inactive = tc.fujiGray }
+for mode, colour in pairs(mode_colours) do
+    vim.api.nvim_set_hl(0, "WinBar" .. mode, { fg = tc.bg, bg = colour, bold = true })
+    vim.api.nvim_set_hl(0, "WinBar" .. mode .. "Ends", { fg = colour, bg = tc.bg, bold = true })
+    vim.api.nvim_set_hl(0, "WinBar" .. mode .. "Special", { fg = tc.bg, bg = colour, bold = true })
+end
+vim.api.nvim_set_hl(0, "WinBarBlank", { fg = tc.sumiInk, bg = tc.sumiInk })
+vim.api.nvim_set_hl(0, "WinBarBlank", { fg = tc.sumiInk, bg = tc.sumiInk })
 
 require("nvim-navic").setup({ highlight = false })
-vim.api.nvim_set_hl(0, "NavicText", { link = "WinBar" })
-vim.api.nvim_set_hl(0, "NavicSeparator", { link = "WinBar" })
 
 function GPS_Bar()
     local bufnr = vim.api.nvim_get_current_buf()
     local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
+    local mode = _G.WindLine.state.mode[2]
+    if not mode then return "" end
     local winbar = ""
     local hlb = "%#WinBarBlank#"
-    local hl = "%#WinBar#"
-    local hli = "%#WinBarIcon#"
-    local hle = "%#WinBarEnds#"
+    local hl = "%#WinBarInactive#"
+    local hle = "%#WinBarInactiveEnds#"
     if is_active then
-        hl = "%#WinBarActive#"
-        hli = "%#WinBarActiveIcon#"
-        hle = "%#WinBarActiveEnds#"
+        hl = "%#WinBar" .. mode .. "#"
+        hle = "%#WinBar" .. mode .. "Ends#"
     end
 
     -- Special winbar for filmpicker script
@@ -236,42 +215,22 @@ function GPS_Bar()
         winbar = winbar .. hl .. string.format("%02d:%02d:%02d", hours, minutes, seconds)
 
     elseif Is_special(bufnr) then
-        if vim.bo[bufnr].filetype == "toggleterm" then -- Special winbar for terminals
-            hlb = "%#TermBarBlank#"
-            if is_active then
-                hl = "%#TermBarActive#"
-                hli = "%#TermBarActiveIcon#"
-                hle = "%#TermBarActiveEnds#"
-            else
-                hl = "%#TermBar#"
-                hli = "%#TermBarIcon#"
-                hle = "%#TermBarEnds#"
-            end
-            local term_name
-            if vim.b[0].my_term_title then
-                term_name = vim.b[0].my_term_title
-            else
-                term_name = "Terminal " .. tostring(vim.b[0].term_title)
-            end
-            winbar = winbar .. hl .. term_name
-        elseif vim.bo[bufnr].filetype == "help" then
-            local help_title = vim.fn.expand("%:t:r")
-            help_title = help_title:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end)
-            winbar = winbar .. hl .. help_title .. " Help"
+        local specialname = SpecialName(bufnr)
+        if not specialname then return "%#WinBarBlank#" end
+        hlb = "%#SpecialBarBlank#"
+        if is_active then
+            hl = "%#WinBar" .. mode .. "Special#"
         else
-            local filetype = Special_types[vim.bo[bufnr].filetype].name
-           if filetype then
-                winbar = winbar .. hl .. filetype
-            end
-
+            hl = "%#WinBarInactiveSpecial#"
         end
+        winbar = winbar .. hl .. specialname
     else -- Default winbar
         if vim.fn.expand("%") ~= "" then
             local icon = require("nvim-web-devicons").get_icon(vim.fn.expand("%:t"), vim.fn.expand("%:e"))
             if icon == "" or icon == nil then
                 icon = ""
             end
-            winbar = winbar .. hli .. icon .. hl .. " %f"
+            winbar = winbar .. hl .. icon .. " %f"
         end
         if is_active and require("nvim-navic").is_available() then
             local location = require("nvim-navic").get_location()
@@ -293,3 +252,25 @@ vim.go.winbar = "%{%v:lua.GPS_Bar()%}"
 local filetypes = vim.api.nvim_create_augroup("winbars ", { clear = true })
 vim.api.nvim_create_autocmd("BufEnter",
     { pattern = "*.films", callback = function() vim.b[0].filetype = "filmlist" end, group = filetypes })
+
+SpecialName = function(bufnr)
+    if vim.bo[bufnr].filetype == "toggleterm" then
+        local term_name
+        if vim.b[0].my_term_title then
+            term_name = " " .. vim.b[0].my_term_title
+        else
+            term_name = " Terminal " .. tostring(vim.b[0].term_title)
+        end
+        return term_name
+    elseif vim.bo[bufnr].filetype == "help" then
+        local help_title = vim.fn.expand("%:t:r")
+        help_title = help_title:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end)
+        return help_title .. " Help"
+    else
+        local filetype = Special_types[vim.bo[bufnr].filetype].name
+        if filetype then
+            return filetype
+        end
+    end
+    return false
+end

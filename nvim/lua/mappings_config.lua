@@ -110,7 +110,6 @@ Map("x", ">", ">gv")
 Map("n", "<c-v>", "<cmd>silent vsplit %<cr>")
 Map("n", "<c-x>", "<cmd>silent split %<cr>")
 Map("n", "<c-p>", "<cmd>silent pedit %<cr>")
-
 require("nvim-surround").setup({
     keymaps = {
         insert = "yp",
@@ -440,7 +439,8 @@ GlobalCommands = {
     { source = "git", name = "Diff of a branch from master", func = function() git_branch_mergebase() end, },
     { source = "git", name = "Diff of a commit", func = function() git_commits_onechange() end, },
     { source = "git", name = "Diff of unstaged", command = "DiffviewOpen" },
-    { source = "git", name = "File history", command = "DiffviewFileHistory" },
+    { source = "git", name = "File diff history", command = "DiffviewFileHistory %" },
+    { source = "git", name = "Folder diff history", command = "DiffviewFileHistory" },
     { source = "git", name = "Lazygit", func = function() LZGTerm:toggle() end, },
     { source = "git", name = "Reset File", command = "Gitsigns reset_buffer" },
     { source = "git", name = "Stage File", command = "Gitsigns stage_buffer" },
