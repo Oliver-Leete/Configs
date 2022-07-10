@@ -180,78 +180,25 @@ vim.api.nvim_set_hl(0, "WinBarBlank", { fg = tc.sumiInk, bg = tc.sumiInk })
 
 require("nvim-navic").setup({ highlight = false })
 
-function GPS_Bar()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
-    local mode = _G.WindLine.state.mode[2]
-    if not mode then return "" end
-    local winbar = ""
-    local hlb = "%#WinBarBlank#"
-    local hl = "%#WinBarInactive#"
-    local hle = "%#WinBarInactiveEnds#"
-    if is_active then
-        hl = "%#WinBar" .. mode .. "#"
-        hle = "%#WinBar" .. mode .. "Ends#"
-    end
+local function filmpicker_winbar(hl)
+    local line1 = vim.fn.search([[\(\%^\|^$\)]], "nbWc") - 1
+    local line2 = vim.fn.search([[\(\%$\|^$\)]], "nW")
 
-    -- Special winbar for filmpicker script
-    if vim.api.nvim_buf_get_name(bufnr) == "/tmp/film_list.films" then
-        local line1 = vim.fn.search([[\(\%^\|^$\)]], "nbWc") - 1
-        local line2 = vim.fn.search([[\(\%$\|^$\)]], "nW")
-
-        local lines = vim.api.nvim_buf_get_lines(0, line1, line2, false)
-        local pattern = "(%d+):(%d+):(%d+)"
-        local runtime = 0
-        for _, line in pairs(lines) do
-            local time_string = line:sub(1, 8)
-            local hour, minute, second = time_string:match(pattern)
-            if hour and minute and second then
-                runtime = runtime + hour * 3600 + minute * 60 + second
-            end
-        end
-        local hours = math.floor(runtime / 3600)
-        local minutes = math.floor(math.fmod(runtime, 3600) / 60)
-        local seconds = math.floor(math.fmod(runtime, 60))
-        winbar = winbar .. hl .. string.format("%02d:%02d:%02d", hours, minutes, seconds)
-
-    elseif Is_special(bufnr) then
-        local specialname = SpecialName(bufnr)
-        if not specialname then return "%#WinBarBlank#" end
-        hlb = "%#SpecialBarBlank#"
-        if is_active then
-            hl = "%#WinBar" .. mode .. "Special#"
-        else
-            hl = "%#WinBarInactiveSpecial#"
-        end
-        winbar = winbar .. hl .. specialname
-    else -- Default winbar
-        if vim.fn.expand("%") ~= "" then
-            local icon = require("nvim-web-devicons").get_icon(vim.fn.expand("%:t"), vim.fn.expand("%:e"))
-            if icon == "" or icon == nil then
-                icon = ""
-            end
-            winbar = winbar .. hl .. icon .. " %f"
-        end
-        if is_active and require("nvim-navic").is_available() then
-            local location = require("nvim-navic").get_location()
-            if location ~= "" then
-                winbar = winbar .. " > " .. location
-            end
+    local lines = vim.api.nvim_buf_get_lines(0, line1, line2, false)
+    local pattern = "(%d+):(%d+):(%d+)"
+    local runtime = 0
+    for _, line in pairs(lines) do
+        local time_string = line:sub(1, 8)
+        local hour, minute, second = time_string:match(pattern)
+        if hour and minute and second then
+            runtime = runtime + hour * 3600 + minute * 60 + second
         end
     end
-    if winbar ~= "" then
-        winbar = hlb .. "%=" .. hle .. "" .. winbar .. hle .. "" .. "%=" .. hlb
-    else
-        winbar = hlb
-    end
-    return winbar
+    local hours = math.floor(runtime / 3600)
+    local minutes = math.floor(math.fmod(runtime, 3600) / 60)
+    local seconds = math.floor(math.fmod(runtime, 60))
+    return hl .. string.format("%02d:%02d:%02d", hours, minutes, seconds)
 end
-
-vim.go.winbar = "%{%v:lua.GPS_Bar()%}"
-
-local filetypes = vim.api.nvim_create_augroup("winbars ", { clear = true })
-vim.api.nvim_create_autocmd("BufEnter",
-    { pattern = "*.films", callback = function() vim.b[0].filetype = "filmlist" end, group = filetypes })
 
 SpecialName = function(bufnr)
     if vim.bo[bufnr].filetype == "toggleterm" then
@@ -274,3 +221,64 @@ SpecialName = function(bufnr)
     end
     return false
 end
+
+local function special_winbar(bufnr, hl, is_active)
+    local mode = _G.WindLine.state.mode[2]
+    local specialname = SpecialName(bufnr)
+    if not specialname then return "%#WinBarBlank#" end
+    if is_active then
+        hl = "%#WinBar" .. mode .. "Special#"
+    else
+        hl = "%#WinBarInactiveSpecial#"
+    end
+    return hl .. specialname
+end
+
+
+local function default_winbar(hl, is_active)
+    local winbar
+    if vim.fn.expand("%") ~= "" then
+        local icon = require("nvim-web-devicons").get_icon(vim.fn.expand("%:t"), vim.fn.expand("%:e"))
+        if icon == "" or icon == nil then
+            icon = ""
+        end
+        winbar = hl .. icon .. " %f"
+    end
+    if is_active and require("nvim-navic").is_available() then
+        local location = require("nvim-navic").get_location()
+        if location ~= "" then
+            winbar = winbar .. " > " .. location
+        end
+    end
+    return winbar
+end
+
+
+function GPS_Bar()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
+    local mode = _G.WindLine.state.mode[2]
+    if not mode then return "" end
+    local winbar
+    local hlb = "%#WinBarBlank#"
+    local hl = is_active and "%#WinBar" .. mode .. "#" or "%#WinBarInactive#"
+    local hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveEnds#"
+
+    -- Special winbar for filmpicker script
+    if vim.api.nvim_buf_get_name(bufnr) == "/tmp/film_list.films" then
+        winbar = filmpicker_winbar(hl)
+    elseif Is_special(bufnr) then
+        winbar = special_winbar(bufnr, hl, hlb, is_active)
+    else -- Default winbar
+        winbar = default_winbar(hl, is_active)
+    end
+    if winbar == "" then return winbar end
+
+    return hlb .. "%=" .. hle .. "" .. winbar .. hle .. "" .. "%=" .. hlb
+end
+
+vim.go.winbar = "%{%v:lua.GPS_Bar()%}"
+
+local filetypes = vim.api.nvim_create_augroup("winbars ", { clear = true })
+vim.api.nvim_create_autocmd("BufEnter",
+    { pattern = "*.films", callback = function() vim.b[0].filetype = "filmlist" end, group = filetypes })

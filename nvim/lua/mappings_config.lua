@@ -109,7 +109,7 @@ Map("x", ">", ">gv")
 
 Map("n", "<c-v>", "<cmd>silent vsplit %<cr>")
 Map("n", "<c-x>", "<cmd>silent split %<cr>")
-Map("n", "<c-p>", "<cmd>silent pedit %<cr>")
+
 require("nvim-surround").setup({
     keymaps = {
         insert = "yp",
@@ -412,11 +412,10 @@ GlobalCommands = {
     { source = "default", name = "File tree", command = "NvimTreeToggle" },
     { source = "default", name = "Undo tree", command = "UndotreeToggle" },
     { source = "default", name = "Reload Snippets", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
-    { source = "default", name = "Reload SnippetProxyts", command = "vsplit ~/.config/nvim/after/plugin/luasnip.lua" },
 
-    { source = "terminal", name = "Neovim Log", func = function() NvimLogTerm:open_add(4) end },
-    { source = "terminal", name = "LSP Log", func = function() LspLogTerm:open_add(4) end },
-    { source = "terminal", name = "X Session Log", func = function() XLogTerm:open_add(4) end },
+    { source = "log", name = "Neovim Log", func = function() NvimLogTerm:open_add(4) end },
+    { source = "log", name = "LSP Log", func = function() LspLogTerm:open_add(4) end },
+    { source = "log", name = "X Session Log", func = function() XLogTerm:open_add(4) end },
 
     { source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
     { source = "finders", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },

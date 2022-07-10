@@ -10,6 +10,8 @@ local lsp_comps = require("windline.components.lsp")
 local git_comps = require("windline.components.git")
 local git_rev = require("windline.components.git_rev")
 
+local theme_colors = require("kanagawa.colors").setup()
+
 local hl_list = {
     Black = { "blue_light", "NormalBg" },
     White = { "black", "blue_light" },
@@ -58,19 +60,14 @@ basic.vi_mode = {
 
 basic.lsp_diagnos = {
     name = "diagnostic",
-    hl_colors = {
-        red = { "red", "NormalBg" },
-        yellow = { "yellow", "NormalBg" },
-        blue = { "blue", "NormalBg" },
-    },
     width = 90,
     text = function(bufnr)
         if lsp_comps.check_lsp(bufnr) then
             return {
-                { lsp_comps.lsp_error({ format = "  %s" }), "red" },
-                { lsp_comps.lsp_warning({ format = "  %s" }), "yellow" },
-                { lsp_comps.lsp_hint({ format = "  %s" }), "blue" },
-                { lsp_comps.lsp_info({ format = "  %s" }), "blue" },
+                { lsp_comps.lsp_error({ format = "  %s" }), "DiagnosticError" },
+                { lsp_comps.lsp_warning({ format = "  %s" }), "DiagnosticWarn" },
+                { lsp_comps.lsp_hint({ format = "  %s" }), "DiagnosticHint" },
+                { lsp_comps.lsp_info({ format = "  %s" }), "DiagnosticInfo" },
             }
         end
         return ""
@@ -150,18 +147,13 @@ basic.right = {
 basic.git = {
     name = "git",
     width = 90,
-    hl_colors = {
-        green = { "green", "NormalBg" },
-        red = { "red", "NormalBg" },
-        blue = { "blue", "NormalBg" },
-    },
     text = function(bufnr)
         if git_comps.is_git(bufnr) then
             return {
                 { " " },
-                { git_comps.diff_added({ format = " %s" }), "green" },
-                { git_comps.diff_removed({ format = "  %s" }), "red" },
-                { git_comps.diff_changed({ format = "  %s" }), "blue" },
+                { git_comps.diff_added({ format = " %s" }), "diffAdded" },
+                { git_comps.diff_removed({ format = "  %s" }), "diffRemoved" },
+                { git_comps.diff_changed({ format = "  %s" }), "diffChanged" },
             }
         end
         return ""
@@ -185,32 +177,6 @@ basic.dap = {
     end,
 }
 
-local default = {
-    filetypes = { "default" },
-    active = {
-        basic.vi_mode,
-        basic.file,
-        basic.lsp_diagnos,
-        basic.dap,
-        { function()
-            local reg = vim.fn.reg_recording()
-            if reg and reg ~= "" then
-                return "Recording @" .. reg
-            end
-        end, { "red", "NormalBg" } },
-        basic.divider,
-        basic.git,
-        { git_comps.git_branch({ icon = "  " }), { "green", "NormalBg" }, 90 },
-        { git_rev.git_rev({ format = " ⇡%s⇣%s", interval = 10000 }), { "green", "NormalBg" } },
-        { " ", hl_list.Black },
-        basic.right,
-    },
-    inactive = {
-        basic.underline,
-    },
-}
-
-local theme_colors = require("kanagawa.colors").setup()
 windline.setup({
     colors_name = function(colors)
         colors.NormalBg = theme_colors.bg
@@ -224,7 +190,30 @@ windline.setup({
         return colors
     end,
     statuslines = {
-        default,
+        {
+            filetypes = { "default" },
+            active = {
+                basic.vi_mode,
+                basic.file,
+                basic.lsp_diagnos,
+                basic.dap,
+                { function()
+                    local reg = vim.fn.reg_recording()
+                    if reg and reg ~= "" then
+                        return "Recording @" .. reg
+                    end
+                end, { "red", "NormalBg" } },
+                basic.divider,
+                basic.git,
+                { git_comps.git_branch({ icon = "  " }), "normal", 90 },
+                { git_rev.git_rev({ format = " ⇡%s⇣%s", interval = 10000 }), { "green", "NormalBg" } },
+                { " ", hl_list.Black },
+                basic.right,
+            },
+            inactive = {
+                basic.underline,
+            },
+        },
     },
     tabline = {
         template = {
