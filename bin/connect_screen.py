@@ -5,8 +5,6 @@ import time
 #--- set commands below
 screen_command = "/home/oleete/.config/bin/displayctl auto"
 net_command = "/home/oleete/.config/bin/statusNotify net"
-lid_open_command = "/home/oleete/.config/bin/displayctl auto"
-lid_closed_command = "/home/oleete/.config/bin/displayctl auto"
 #---
 
 time.sleep(1)
@@ -36,10 +34,8 @@ while True:
     lid2 = get(["cat", "/proc/acpi/button/lid/LID/state"])
     # check if there is a change in the screen state
     if (xr2 != xr1) or (lid2 != lid1):
-        print("Displays Change")
         run_command(screen_command)
     if net2 != net1:
-        print("Net Change")
         run_command(net_command)
     # set the second count as initial state for the next loop
     xr1 = xr2

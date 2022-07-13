@@ -1,22 +1,16 @@
 local windline = require("windline")
 local helper = require("windline.helpers")
 local sep = helper.separators
-local vim_components = require("windline.components.vim")
 
 local b_components = require("windline.components.basic")
 local state = _G.WindLine.state
 
 local lsp_comps = require("windline.components.lsp")
 local git_comps = require("windline.components.git")
-local git_rev = require("windline.components.git_rev")
+local git_rev_components = require('windline.components.git_rev')
 
 local theme_colors = require("kanagawa.colors").setup()
 
-local hl_list = {
-    Black = { "blue_light", "NormalBg" },
-    White = { "black", "blue_light" },
-    Active = { "ActiveFg", "NormalBg" },
-}
 local basic = {}
 
 basic.divider = { b_components.divider, "" }
@@ -30,30 +24,21 @@ basic.vi_mode = {
         Visual = { "black", "magenta" },
         Replace = { "black", "red" },
         Command = { "black", "yellow" },
-        NormalBefore = { "blue", "NormalBg" },
-        InsertBefore = { "green", "NormalBg" },
-        VisualBefore = { "magenta", "NormalBg" },
-        ReplaceBefore = { "red", "NormalBg" },
-        CommandBefore = { "yellow", "NormalBg" },
-        NormalAfter = { "blue", "blue_light" },
-        InsertAfter = { "green", "blue_light" },
-        VisualAfter = { "magenta", "blue_light" },
-        ReplaceAfter = { "red", "blue_light" },
-        CommandAfter = { "yellow", "blue_light" },
+        NormalEnds = { "blue", "NormalBg" },
+        InsertEnds = { "green", "NormalBg" },
+        VisualEnds = { "magenta", "NormalBg" },
+        ReplaceEnds = { "red", "NormalBg" },
+        CommandEnds = { "yellow", "NormalBg" },
     },
     text = function()
-        local bufnr = vim.api.nvim_get_current_buf()
-        local coltype
-        if Is_special(bufnr) and not SpecialName(bufnr) then
-            coltype = "Before"
-        else
-            coltype = "After"
-        end
         return {
-            { sep.left_rounded, state.mode[2] .. "Before" },
+            { sep.left_rounded, state.mode[2] .. "Ends" },
             { " ", state.mode[2] },
             { state.mode[1] .. " ", state.mode[2] },
-            { sep.right_rounded, state.mode[2] .. coltype },
+            { "" },
+            { b_components.progress_lua },
+            { b_components.line_col_lua },
+            { sep.right_rounded, state.mode[2] .. "Ends" },
         }
     end,
 }
@@ -74,42 +59,6 @@ basic.lsp_diagnos = {
     end,
 }
 
-basic.file = {
-    name = "file",
-    hl_colors = {
-        default = hl_list.White,
-    },
-    text = function()
-        local bufnr = vim.api.nvim_get_current_buf()
-        if Is_special(bufnr) then
-            local specialname = SpecialName(bufnr)
-            if specialname then
-                return {
-                    { " ", "default" },
-                    { SpecialName(bufnr) },
-                    { " ", "default" },
-                    { vim_components.search_count(), { "black", "blue_light" } },
-                    { sep.right_rounded, hl_list.Black },
-                }
-            else
-                return {
-                    { " ", hl_list.Black },
-                }
-            end
-        else
-            return {
-                { " ", "default" },
-                { b_components.cache_file_icon({ default = "" }), "default" },
-                { " ", "default" },
-                { b_components.cache_file_name("[No Name]", "unique") },
-                { b_components.file_modified(" ") },
-                { vim_components.search_count(), { "black", "blue_light" } },
-                { sep.right_rounded, hl_list.Black },
-            }
-        end
-    end,
-}
-
 basic.right = {
     hl_colors = {
         Normal = { "black", "blue" },
@@ -117,30 +66,19 @@ basic.right = {
         Visual = { "black", "magenta" },
         Replace = { "black", "red" },
         Command = { "black", "yellow" },
-        NormalBefore = { "blue", "NormalBg" },
-        InsertBefore = { "green", "NormalBg" },
-        VisualBefore = { "magenta", "NormalBg" },
-        ReplaceBefore = { "red", "NormalBg" },
-        CommandBefore = { "yellow", "NormalBg" },
-        NormalAfter = { "blue", "NormalBg" },
-        InsertAfter = { "green", "NormalBg" },
-        VisualAfter = { "magenta", "NormalBg" },
-        ReplaceAfter = { "red", "NormalBg" },
-        CommandAfter = { "yellow", "NormalBg" },
+        NormalEnds = { "blue", "NormalBg" },
+        InsertEnds = { "green", "NormalBg" },
+        VisualEnds = { "magenta", "NormalBg" },
+        ReplaceEnds = { "red", "NormalBg" },
+        CommandEnds = { "yellow", "NormalBg" },
     },
     text = function(_)
         return {
-            { sep.left_rounded, state.mode[2] .. "Before" },
+            { sep.left_rounded, state.mode[2] .. "Ends" },
             { lsp_comps.lsp_name(), state.mode[2] },
-            { b_components.line_col_lua, state.mode[2] },
-            { "", state.mode[2] },
-            { b_components.progress_lua, state.mode[2] },
-            { " ", state.mode[2] },
-            { sep.right_rounded, state.mode[2] .. "After" }
+            { sep.right_rounded, state.mode[2] .. "Ends" },
+            { " " },
         }
-    end,
-    click = function()
-        vim.cmd("LspInfo")
     end,
 }
 
@@ -154,13 +92,13 @@ basic.git = {
                 { git_comps.diff_added({ format = " %s" }), "diffAdded" },
                 { git_comps.diff_removed({ format = "  %s" }), "diffRemoved" },
                 { git_comps.diff_changed({ format = "  %s" }), "diffChanged" },
+                { git_comps.git_branch(), { "white", "NormalBg" } },
+                { " " },
+                { git_rev_components.git_rev(), { "white", "NormalBg" } },
             }
         end
         return ""
     end,
-    click = function()
-        require("telescope.builtin").git_status(require("telescope.themes").get_ivy())
-    end
 }
 
 basic.dap = {
@@ -194,9 +132,9 @@ windline.setup({
             filetypes = { "default" },
             active = {
                 basic.vi_mode,
-                basic.file,
                 basic.lsp_diagnos,
                 basic.dap,
+                basic.divider,
                 { function()
                     local reg = vim.fn.reg_recording()
                     if reg and reg ~= "" then
@@ -205,9 +143,6 @@ windline.setup({
                 end, { "red", "NormalBg" } },
                 basic.divider,
                 basic.git,
-                { git_comps.git_branch({ icon = "  " }), "normal", 90 },
-                { git_rev.git_rev({ format = " ⇡%s⇣%s", interval = 10000 }), { "green", "NormalBg" } },
-                { " ", hl_list.Black },
                 basic.right,
             },
             inactive = {

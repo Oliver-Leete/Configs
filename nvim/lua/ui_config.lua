@@ -234,16 +234,22 @@ local function special_winbar(bufnr, hl, is_active)
     return hl .. specialname
 end
 
-
-local function default_winbar(hl, is_active)
-    local winbar
+local function default_winbar(bufnr, hl, is_active)
+    local winbar = hl
+    -- Ismodified icon
+    if vim.bo.modified or vim.bo.modifiable == false then
+        winbar = winbar .. " "
+    end
+    -- File icon
     if vim.fn.expand("%") ~= "" then
         local icon = require("nvim-web-devicons").get_icon(vim.fn.expand("%:t"), vim.fn.expand("%:e"))
         if icon == "" or icon == nil then
             icon = ""
         end
-        winbar = hl .. icon .. " %f"
+        winbar = winbar .. icon .. " "
+        winbar = winbar .. require("windline.utils").get_unique_bufname(bufnr)
     end
+    -- Code location
     if is_active and require("nvim-navic").is_available() then
         local location = require("nvim-navic").get_location()
         if location ~= "" then
@@ -253,26 +259,26 @@ local function default_winbar(hl, is_active)
     return winbar
 end
 
-
 function GPS_Bar()
     local bufnr = vim.api.nvim_get_current_buf()
     local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
+
     local mode = _G.WindLine.state.mode[2]
     if not mode then return "" end
-    local winbar
+
     local hlb = "%#WinBarBlank#"
     local hl = is_active and "%#WinBar" .. mode .. "#" or "%#WinBarInactive#"
     local hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveEnds#"
 
+    local winbar
     -- Special winbar for filmpicker script
     if vim.api.nvim_buf_get_name(bufnr) == "/tmp/film_list.films" then
         winbar = filmpicker_winbar(hl)
     elseif Is_special(bufnr) then
         winbar = special_winbar(bufnr, hl, hlb, is_active)
     else -- Default winbar
-        winbar = default_winbar(hl, is_active)
+        winbar = default_winbar(bufnr, hl, is_active)
     end
-    if winbar == "" then return winbar end
 
     return hlb .. "%=" .. hle .. "" .. winbar .. hle .. "" .. "%=" .. hlb
 end

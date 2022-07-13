@@ -23,7 +23,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'numToStr/Comment.nvim'
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
-    Plug 'christoomey/vim-sort-motion'
+    " Plug 'christoomey/vim-sort-motion'
+    Plug 'ralismark/opsort.vim'
     Plug 'Konfekt/vim-CtrlXA'
     Plug 'svermeulen/vim-subversive'
     Plug 'inkarkat/vim-unconditionalpaste'
@@ -40,6 +41,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'fladson/vim-kitty'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
     Plug 'wilriker/gcode.vim'
+    Plug 'LhKipp/nvim-nu', {'do': ':TSInstall nu'}
 
     Plug 'Oliver-Leete/gitsigns.nvim'
     Plug 'sindrets/diffview.nvim'
@@ -104,7 +106,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 't-troebst/perfanno.nvim'
     Plug 'andythigpen/nvim-coverage'
 
-    Plug 'akinsho/toggleterm.nvim', {'commit': '8cba5c2'}
+    Plug 'akinsho/toggleterm.nvim', {'commit': '8e6f938'}
 
     Plug 'anuvyklack/hydra.nvim'
     Plug 'anuvyklack/keymap-layer.nvim'

@@ -1,40 +1,42 @@
 #!/bin/bash
 
-battery () {
-    bat_stat=$(upower -i $(upower -e | rg battery | head -1)| rg state)
-    percent=$(upower -i $(upower -e | rg battery | head -1)| rg percent | rg -o -e "[0-9]{1,3}")
-    dunstify -r 105 "$(echo $bat_stat | sed 's/state:/Battery:/') - $percent%
-$(upower -i $(upower -e | rg battery | head -1) | rg time | sed 's/.*/\L&/; s/[a-z]*/\u&/g' | sed 's/[\t ]*/ /')"
+battery() {
+	bat_stat=$(upower -i "$(upower -e | rg battery | head -1)" | rg state)
+	percent=$(upower -i "$(upower -e | rg battery | head -1)" | rg percent | rg -o -e "[0-9]{1,3}")
+	dunstify -r 105 "$(echo "$bat_stat" | sed 's/state:/Battery:/') - $percent%
+$(upower -i "$(upower -e | rg battery | head -1)" | rg time | sed 's/.*/\L&/; s/[a-z]*/\u&/g' | sed 's/[\t ]*/ /')"
 }
 
-keyboardBattery () {
-    percent=$(upower -i $(upower -e | rg keyboard | head -1)| rg percent | rg -o -e "[0-9]{1,3}")
-    dunstify -r 115 "Keyboard Battery - $percent%"
+keyboardBattery() {
+	percent=$(upower -i "$(upower -e | rg keyboard | head -1)" | rg percent | rg -o -e "[0-9]{1,3}")
+	dunstify -r 115 "Keyboard Battery - $percent%"
 }
 
-network () {
-    dunstify -r 103 "$(nmcli -t device | rg -e "[^(dis)]connected" | rg -v -e "docker" | sed -E -e 's/.*(wifi|ethernet).*:([^:])/\1: \2/')"
+network() {
+	dunstify -r 103 "$(nmcli -t device | rg -e "[^(dis)]connected" | rg -v -e "docker" | sed -E -e 's/.*(wifi|ethernet).*:([^:])/\1: \2/')"
 }
 
-backlight () {
-    back_level=$(ybacklight -get)
-    dunstify --hints int:value:$back_level -r 101 "Backlight: $back_level%)"
+backlight() {
+	back_level=$(ybacklight -get)
+	dunstify --hints int:value:"$back_level" -r 101 "Backlight: $back_level%)"
 }
 
-volume () {
-    vol_level=$(pactl get-sink-volume @DEFAULT_SINK@ | rg -o -e "[0-9]{1,3}%" | head -n 1 | rg -o -e "[0-9]{1,3}")
-    dunstify --hints int:value:$vol_level -r 102 "Volume: $vol_level%"
+volume() {
+	vol_level=$(pactl get-sink-volume @DEFAULT_SINK@ | rg -o -e "[0-9]{1,3}%" | head -n 1 | rg -o -e "[0-9]{1,3}")
+	dunstify --hints int:value:"$vol_level" -r 102 "Volume: $vol_level%"
 }
 
-main () {
-    case ${1:-all} in
-    bat*)   battery ;;
-    key*)   keyboardBattery ;;
-    net*)   network ;;
-    bac*)   backlight ;;
-    vol*)   volumen ;;
-    all*)   battery; keyboardBattery; network; backlight; volume ;;
-    esac
-}
-
-main
+case ${1:-all} in
+bat*) battery ;;
+key*) keyboardBattery ;;
+net*) network ;;
+bac*) backlight ;;
+vol*) volumen ;;
+all*)
+	battery
+	keyboardBattery
+	network
+	backlight
+	volume
+	;;
+esac

@@ -37,6 +37,9 @@ zsh/
 !topgrade.toml
 !/**/tasks.lua
 !tasks.lua
+!git/*
+!nu/*
+!fish/conf.d/*
 
 /rofi-themes
 /bin/startupScript

@@ -36,10 +36,10 @@ abbr cp "cp -riv"
 
 abbr  fd "fd -HLI"
 
-abbr  ls "exa -1 --icons"
-abbr  ll "exa -a -l --icons"
-abbr  lt "exa -a -l -T --level=2 --icons"
-abbr  lg "exa -a -l -T --level=2 --git --git-ignore --icons"
+abbr  ls "exa -1 --icons --group-directories-first"
+abbr  ll "exa -a -l --icons --group-directories-first"
+abbr  lt "exa -a -l -T --level=2 --icons --group-directories-first"
+abbr  lg "exa -a -l -T --level=2 --git --git-ignore --icons --group-directories-first"
 
 abbr -a bk backup
 abbr -a re restore
