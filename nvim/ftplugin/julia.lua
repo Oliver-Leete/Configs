@@ -63,15 +63,22 @@ vim.b[0].runnables = function()
             source = "Run",
             name = "Run File",
             func = function()
-                Harp_Term_2:send_open([[julia ']] .. vim.fn.expand("%:p") .. [[']])
+                JuliaRunFile = Terminal:new({
+                    jobname = "Run File",
+                    cmd = [[julia ']] .. vim.fn.expand("%:p") .. [[']],
+                })
+                JuliaRunFile:set_background()
             end,
         },
         {
             source = "Prof",
             name = "Profile File",
             func = function()
-                Harp_Term_2:send_open([[julia ~/.config/nvim/filetype/julia/prof.jl ']] .. vim.fn.expand("%:p") .. "'",
-                    true)
+                JuliaProfFile = Terminal:new({
+                    jobname = "Profile File",
+                    cmd = [[julia ~/.config/nvim/filetype/julia/prof.jl ']] .. vim.fn.expand("%:p") .. "'",
+                })
+                JuliaProfFile:set_background()
             end,
         },
     }

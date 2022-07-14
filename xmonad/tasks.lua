@@ -4,7 +4,12 @@ return function()
             source = "xmonad",
             name = "Reload XMonad",
             func = function()
-                Harp_Term_2:send_open("cd /home/oleete/.config/xmonad; stack install; stack install; xmonad --recompile; xmonad --restart; cd -", true, 2)
+                XmoReload = Terminal:new({
+                    jobname = "Reload Xmonad",
+                    dir = "/home/oleete/.config/xmonad",
+                    cmd = "stack install && xmonad --recompile && xmonad --restart",
+                })
+                XmoReload:set_background()
             end
         },
     }

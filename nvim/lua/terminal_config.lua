@@ -1,5 +1,8 @@
 Term_on_open = function(term)
     vim.wo[term.window].signcolumn = "no"
+    if term.jobname then
+        vim.b[0].my_term_title = term.jobname
+    end
 end
 
 require("toggleterm").setup({
@@ -18,7 +21,18 @@ require("toggleterm").setup({
     terminal_mappings = true,
     persist_size = true,
     direction = "horizontal",
-    close_on_exit = true,
+    close_on_exit = false,
+    on_exit = function(t, _, exit_code, name)
+        if exit_code == 0 then
+            t:shutdown()
+            vim.notify(t.jobname .. " Succeded", "info", { title = "One Shots" })
+        else
+            if not t:is_open() then
+                t:open()
+            end
+            vim.notify(t.jobname .. " Failed", "info", { title = "One Shots" })
+        end
+    end,
     shell = "fish",
     float_opts = {
         border = "curved",
@@ -32,7 +46,7 @@ BackgroundTerm = Terminal:new({
 })
 
 Harp_Term_1 = Terminal:new()
-Harp_Term_2 = Terminal:new({ on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "One Shots" end })
+Harp_Term_2 = Terminal:new()
 Harp_Term_3 = Terminal:new()
 Harp_Term_4 = BackgroundTerm
 
@@ -73,7 +87,14 @@ function Terminal:set_toggle(term_num)
     self:toggle()
 end
 
-function Terminal:send_open(cmd, go_back, term_num)
+function Terminal:set_background()
+    self:set_harp(2)
+    self:shutdown()
+    self:open()
+    self:close()
+end
+
+function Terminal:send_open(cmd, _, term_num)
     if term_num then
         self:set_harp(term_num)
     end

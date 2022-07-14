@@ -5,7 +5,7 @@ if handle then
     handle:close()
     vim.g.project = string.gsub(project, "\n", "")
 else
-    vim.notify("Couldn't find project name", "Warn", { title = "Julia" })
+    vim.notify("Couldn't find project name", "Warn", { title = "Projects" })
 end
 
 -- JULIA
@@ -66,32 +66,32 @@ local juliaProjectRunnables = function()
         {
             source = "Misc",
             name = "Precompile Package",
-            func = function() Harp_Term_2:send_open("~/.config/nvim/filetype/julia/precompile") end,
+            func = function() JuliaPrecompile:set_background() end,
         },
         {
             source = "Misc",
             name = "Build Documentation",
-            func = function() Harp_Term_2:send_open("~/.config/nvim/filetype/julia/docBuild") end,
+            func = function() JuliaBuildDocs:set_background() end,
         },
         {
             source = "Misc",
-            name = "Live Build Documentation",
+            name = "Start Documentation Server",
             func = function() JuliaLiveDocs:open_add() end,
         },
         {
             source = "Misc",
             name = "Open Built Documentation",
-            func = function() Harp_Term_2:send_open("browser ./docs/build/index.html &") end,
+            func = function() JuliaOpenDocs:set_background() end,
         },
         {
             source = "Misc",
             name = "Open Documentation Server",
-            func = function() Harp_Term_2:send_open("browser http://localhost:8000 &") end,
+            func = function() JuliaOpenDocServ:set_background() end,
         },
         {
             source = "Misc",
             name = "Run Documentation Tests",
-            func = function() Harp_Term_2:send_open("~/.config/nvim/filetype/julia/docTest") end,
+            func = function() JuliaDocTests:set_background() end,
         },
         {
             source = "Test",
@@ -226,6 +226,31 @@ function ActivateProject()
             cmd = [[julia --project=docs -ie 'using ]] ..
                 vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']],
             runnable = { source = "Julia", name = "Julia Doc Server", func = function() JuliaLiveDocs:set_toggle(4) end }
+        })
+
+        JuliaPrecompile = Terminal:new({
+            jobname = "Package Precompile",
+            cmd = "~/.config/nvim/filetype/julia/precompile",
+        })
+
+        JuliaBuildDocs = Terminal:new({
+            jobname = "Build Documentation",
+            cmd = "~/.config/nvim/filetype/julia/docBuild",
+        })
+
+        JuliaOpenDocs = Terminal:new({
+            jobname = "Open Local Documentation",
+            cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
+        })
+
+        JuliaOpenDocServ = Terminal:new({
+            jobname = "Open Server Documentation",
+            cmd = "browser http://localhost:8000 & sleep 5",
+        })
+
+        JuliaDocTests = Terminal:new({
+            jobname = "Documentation Tests",
+            cmd = "~/.config/nvim/filetype/julia/docTest",
         })
 
         JuliaTest:set_harp(1)

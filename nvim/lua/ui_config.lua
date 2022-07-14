@@ -275,7 +275,7 @@ function GPS_Bar()
     if vim.api.nvim_buf_get_name(bufnr) == "/tmp/film_list.films" then
         winbar = filmpicker_winbar(hl)
     elseif Is_special(bufnr) then
-        winbar = special_winbar(bufnr, hl, hlb, is_active)
+        winbar = special_winbar(bufnr, hl, is_active)
     else -- Default winbar
         winbar = default_winbar(bufnr, hl, is_active)
     end
