@@ -106,7 +106,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 't-troebst/perfanno.nvim'
     Plug 'andythigpen/nvim-coverage'
 
-    Plug 'akinsho/toggleterm.nvim', {'commit': '8e6f938'}
+    Plug 'akinsho/toggleterm.nvim'
 
     Plug 'anuvyklack/hydra.nvim'
     Plug 'anuvyklack/keymap-layer.nvim'

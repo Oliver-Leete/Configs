@@ -8,26 +8,6 @@ require("stickybuf").setup({
     },
 })
 
-ZenOrFull = function()
-    local handle = io.popen([[kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length"]])
-    if not handle then return end
-    local num_windows = tonumber(handle:read("*a"))
-    handle:close()
-
-    if num_windows > 1 then
-        vim.cmd([[silent !xdotool key --clearmodifiers "ctrl+alt+f"]])
-    else
-        local num_tabs = #vim.api.nvim_list_tabpages()
-        local num_tab_wins = TabWinCount(vim.api.nvim_get_current_tabpage())
-        if num_tab_wins <= 1 and num_tabs > 1 then
-            vim.cmd("tabclose")
-        else
-            vim.cmd("tab split")
-        end
-    end
-end
-vim.api.nvim_create_user_command("ZenOrFull", ZenOrFull, { nargs = 0 })
-
 require("zen-mode").setup({
     window = {
         options = {
@@ -173,8 +153,9 @@ local mode_colours = { Normal = tc.crystalBlue, Insert = tc.autumnGreen, Visual 
 for mode, colour in pairs(mode_colours) do
     vim.api.nvim_set_hl(0, "WinBar" .. mode, { fg = tc.bg, bg = colour, bold = true })
     vim.api.nvim_set_hl(0, "WinBar" .. mode .. "Ends", { fg = colour, bg = tc.bg, bold = true })
-    vim.api.nvim_set_hl(0, "WinBar" .. mode .. "Special", { fg = tc.bg, bg = colour, bold = true })
 end
+vim.api.nvim_set_hl(0, "WinBarInactiveSpecial", { fg = tc.bg, bg = tc.waveBlue2, bold = true })
+vim.api.nvim_set_hl(0, "WinBarInactiveSpecialEnds", { fg = tc.waveBlue2, bg = tc.bg, bold = true })
 vim.api.nvim_set_hl(0, "WinBarBlank", { fg = tc.sumiInk, bg = tc.sumiInk })
 vim.api.nvim_set_hl(0, "WinBarBlank", { fg = tc.sumiInk, bg = tc.sumiInk })
 
@@ -201,15 +182,7 @@ local function filmpicker_winbar(hl)
 end
 
 SpecialName = function(bufnr)
-    if vim.bo[bufnr].filetype == "toggleterm" then
-        local term_name
-        if vim.b[0].my_term_title then
-            term_name = " " .. vim.b[0].my_term_title
-        else
-            term_name = " Terminal " .. tostring(vim.b[0].term_title)
-        end
-        return term_name
-    elseif vim.bo[bufnr].filetype == "help" then
+    if vim.bo[bufnr].filetype == "help" then
         local help_title = vim.fn.expand("%:t:r")
         help_title = help_title:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end)
         return help_title .. " Help"
@@ -225,9 +198,9 @@ end
 local function special_winbar(bufnr, hl, is_active)
     local mode = _G.WindLine.state.mode[2]
     local specialname = SpecialName(bufnr)
-    if not specialname then return "%#WinBarBlank#" end
+    if not specialname then return "" end
     if is_active then
-        hl = "%#WinBar" .. mode .. "Special#"
+        hl = "%#WinBar" .. mode .. "#"
     else
         hl = "%#WinBarInactiveSpecial#"
     end
@@ -259,6 +232,16 @@ local function default_winbar(bufnr, hl, is_active)
     return winbar
 end
 
+function _G.my_toggleterm_winbar_click(id)
+    local cur_win = math.floor(id / 1000)
+    print(cur_win)
+    local term_id = id - cur_win * 1000
+    print(term_id)
+    local term = require("toggleterm.terminal").get_or_create_term(term_id)
+    if not term then return end
+    vim.api.nvim_win_set_buf(cur_win, term.bufnr)
+end
+
 function GPS_Bar()
     local bufnr = vim.api.nvim_get_current_buf()
     local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
@@ -270,17 +253,41 @@ function GPS_Bar()
     local hl = is_active and "%#WinBar" .. mode .. "#" or "%#WinBarInactive#"
     local hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveEnds#"
 
-    local winbar
+    local winbar = ""
     -- Special winbar for filmpicker script
     if vim.api.nvim_buf_get_name(bufnr) == "/tmp/film_list.films" then
         winbar = filmpicker_winbar(hl)
+    elseif vim.bo[bufnr].filetype == "toggleterm" then
+        local term_name = vim.b[0].my_term_title
+        local term_list = require("toggleterm.terminal").get_all(true)
+        local cur_win = vim.api.nvim_get_current_win()
+        for _, term in pairs(term_list) do
+            local is_cur_term = term_name == term.jobname
+            if is_active and is_cur_term then
+                hl = "%#WinBar" .. mode .. "#"
+                hle = "%#WinBar" .. mode .. "Ends#"
+            elseif is_cur_term then
+                hl = "%#WinBarInactiveSpecial#"
+                hle = "%#WinBarInactiveSpecialEnds#"
+            else
+                hl = "%#WinBarInactive#"
+                hle = "%#WinBarInactiveEnds#"
+            end
+            winbar = winbar ..
+                hle ..
+                string.format("%%%d@v:lua.my_toggleterm_winbar_click@", term.id + cur_win * 1000) ..
+                "" .. hl .. " " .. term.jobname .. hle .. " "
+        end
+        return hlb .. winbar .. hlb .. "%="
     elseif Is_special(bufnr) then
         winbar = special_winbar(bufnr, hl, is_active)
+        hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveSpecialEnds#"
     else -- Default winbar
         winbar = default_winbar(bufnr, hl, is_active)
     end
 
-    return hlb .. "%=" .. hle .. "" .. winbar .. hle .. "" .. "%=" .. hlb
+    if winbar == "" then return "" end
+    return hlb .. hle .. "" .. winbar .. hle .. "" .. hlb .. "%=" .. hlb
 end
 
 vim.go.winbar = "%{%v:lua.GPS_Bar()%}"

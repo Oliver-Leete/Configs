@@ -72,13 +72,17 @@ basic.right = {
         ReplaceEnds = { "red", "NormalBg" },
         CommandEnds = { "yellow", "NormalBg" },
     },
-    text = function(_)
-        return {
-            { sep.left_rounded, state.mode[2] .. "Ends" },
-            { lsp_comps.lsp_name(), state.mode[2] },
-            { sep.right_rounded, state.mode[2] .. "Ends" },
-            { " " },
-        }
+    text = function(bufnr)
+        local lsp_names = lsp_comps.lsp_name()(bufnr)
+        if lsp_names and lsp_names ~= "" then
+            return {
+                { sep.left_rounded, state.mode[2] .. "Ends" },
+                { lsp_names, state.mode[2] },
+                { sep.right_rounded, state.mode[2] .. "Ends" },
+                { " " },
+            }
+        end
+        return ""
     end,
 }
 

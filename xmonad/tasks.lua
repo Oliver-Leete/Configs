@@ -8,6 +8,7 @@ return function()
                     jobname = "Reload Xmonad",
                     dir = "/home/oleete/.config/xmonad",
                     cmd = "stack install && xmonad --recompile && xmonad --restart",
+                    id = 15,
                 })
                 XmoReload:set_background()
             end

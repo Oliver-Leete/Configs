@@ -1,8 +1,9 @@
 Term_on_open = function(term)
     vim.wo[term.window].signcolumn = "no"
-    if term.jobname then
-        vim.b[0].my_term_title = term.jobname
+    if not term.jobname then
+        term.jobname = "Terminal " .. term.id
     end
+    vim.b[0].my_term_title = term.jobname
 end
 
 require("toggleterm").setup({
@@ -25,12 +26,12 @@ require("toggleterm").setup({
     on_exit = function(t, _, exit_code, _)
         if exit_code == 0 then
             t:shutdown()
-            vim.notify(t.jobname .. " Succeded", "info", { title = "One Shots" })
+            vim.notify(t.jobname .. " Succeded", "info", { title = "Terminal" })
         else
             if not t:is_open() then
                 t:open()
             end
-            vim.notify(t.jobname .. " Failed", "info", { title = "One Shots" })
+            vim.notify(t.jobname .. " Failed", "info", { title = "Terminal" })
         end
     end,
     shell = "fish",
@@ -41,13 +42,13 @@ require("toggleterm").setup({
 
 Terminal = require("toggleterm.terminal").Terminal
 BackgroundTerm = Terminal:new({
-    on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "Background" end,
-    runnable = { source = "Julia", name = "Julia Doc Server", func = function() JuliaLiveDocs:set_toggle(4) end }
+    id = 4,
+    runnable = { source = "def", name = "Background Terminal", func = function() BackgroundTerm:set_toggle(4) end }
 })
 
-Harp_Term_1 = Terminal:new()
-Harp_Term_2 = Terminal:new()
-Harp_Term_3 = Terminal:new()
+Harp_Term_1 = Terminal:new({id = 1})
+Harp_Term_2 = Terminal:new({id = 2})
+Harp_Term_3 = Terminal:new({id = 3})
 Harp_Term_4 = BackgroundTerm
 
 function Terminal:set_harp(term_num)
@@ -122,30 +123,34 @@ end
 NvimLogTerm = Terminal:new({
     cmd = "tail --follow --retry ~/.local/state/nvim/log | less -S",
     runnable = { source = "log", name = "Neovim Log", func = function() NvimLogTerm:set_toggle(4) end },
-    jobname = "Neovim Log"
+    jobname = "Neovim Log",
+    id = 5,
 })
 
 LspLogTerm = Terminal:new({
     cmd = "tail --follow --retry ~/.local/state/nvim/lsp.log | less -S",
     runnable = { source = "log", name = "LSP Log", func = function() LspLogTerm:set_toggle(4) end },
-    jobname = "LSP Log"
+    jobname = "LSP Log",
+    id = 6,
 })
 
 XLogTerm = Terminal:new({
     cmd = "tail --follow --retry ~/.xsession-errors | less -S",
     runnable = { source = "log", name = "X Session Log", func = function() LspLogTerm:set_toggle(4) end },
-    jobname = "X Session Log"
+    jobname = "X Session Log",
+    id = 6,
 })
 
 FocusTerm = Terminal:new({
     cmd = "focus",
-    jobname = "Focus"
+    jobname = "Focus",
+    id = 6,
 })
 
 LZGTerm = Terminal:new({
     cmd = "lazygit",
-    direction = "tab",
     jobname = "Lazygit",
+    id = 6,
 })
 
 

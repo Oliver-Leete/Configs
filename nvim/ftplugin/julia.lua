@@ -64,6 +64,7 @@ vim.b[0].runnables = function()
             name = "Run File",
             func = function()
                 JuliaRunFile = Terminal:new({
+                    id = 16,
                     jobname = "Run File",
                     cmd = [[julia ']] .. vim.fn.expand("%:p") .. [[']],
                 })
@@ -75,6 +76,7 @@ vim.b[0].runnables = function()
             name = "Profile File",
             func = function()
                 JuliaProfFile = Terminal:new({
+                    id = 17,
                     jobname = "Profile File",
                     cmd = [[julia ~/.config/nvim/filetype/julia/prof.jl ']] .. vim.fn.expand("%:p") .. "'",
                 })

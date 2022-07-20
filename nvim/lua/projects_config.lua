@@ -211,43 +211,51 @@ function ActivateProject()
         JuliaTest = Terminal:new({
             jobname = "Julia Test",
             cmd = "juliaTest",
+            id = 7,
         })
 
         JuliaREPL = Terminal:new({
             jobname = "Julia REPL",
             cmd = "julia",
+            id = 8,
         })
 
         JuliaLiveDocs = Terminal:new({
             jobname = "Julia Doc Server",
             cmd = [[julia --project=docs -ie 'using ]] ..
                 vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']],
-            runnable = { source = "Julia", name = "Julia Doc Server", func = function() JuliaLiveDocs:set_toggle(4) end }
+            runnable = { source = "Julia", name = "Julia Doc Server", func = function() JuliaLiveDocs:set_toggle(4) end },
+            id = 9,
         })
 
         JuliaPrecompile = Terminal:new({
             jobname = "Package Precompile",
             cmd = "~/.config/nvim/filetype/julia/precompile",
+            id = 10,
         })
 
         JuliaBuildDocs = Terminal:new({
             jobname = "Build Documentation",
             cmd = "~/.config/nvim/filetype/julia/docBuild",
+            id = 11,
         })
 
         JuliaOpenDocs = Terminal:new({
             jobname = "Open Local Documentation",
             cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
+            id = 12,
         })
 
         JuliaOpenDocServ = Terminal:new({
             jobname = "Open Server Documentation",
             cmd = "browser http://localhost:8000 & sleep 5",
+            id = 13,
         })
 
         JuliaDocTests = Terminal:new({
             jobname = "Documentation Tests",
             cmd = "~/.config/nvim/filetype/julia/docTest",
+            id = 14,
         })
 
         JuliaTest:set_harp(1)

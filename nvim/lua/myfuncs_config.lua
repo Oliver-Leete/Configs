@@ -125,3 +125,61 @@ function _G.delete_buffer()
 end
 
 vim.cmd([[command! DeleteBuffer call v:lua.delete_buffer()]])
+
+TabNext = function()
+    local handle = io.popen([[kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length"]])
+    if not handle then return end
+    local num_windows = tonumber(handle:read("*a"))
+    handle:close()
+
+    if num_windows > 1 then
+        vim.cmd([[silent !xdotool key --clearmodifiers "ctrl+alt+f"]])
+    else
+        local num_tabs = #vim.api.nvim_list_tabpages()
+        local num_tab_wins = TabWinCount(vim.api.nvim_get_current_tabpage())
+        if num_tab_wins <= 1 and num_tabs > 1 then
+            vim.cmd("tabclose")
+        else
+            vim.cmd("tab split")
+        end
+    end
+end
+vim.api.nvim_create_user_command("ZenOrFull", TabNext, { nargs = 0 })
+
+TabNext = function()
+    if vim.bo[0].filetype == "toggleterm" then
+        local term_name = vim.b[0].my_term_title
+        local term_list = require("toggleterm.terminal").get_all(true)
+        local cur_index
+        for i, term in pairs(term_list) do
+            if term_name == term.jobname then
+                cur_index = i
+            end
+        end
+        local next_index = cur_index == #term_list and 1 or cur_index+1
+        local cur_win = vim.api.nvim_get_current_win()
+        vim.api.nvim_win_set_buf(cur_win, term_list[next_index].bufnr)
+    else
+        vim.cmd("tabnext")
+    end
+end
+vim.api.nvim_create_user_command("TabNext", TabNext, { nargs = 0 })
+
+TabPrev = function()
+    if vim.bo[0].filetype == "toggleterm" then
+        local term_name = vim.b[0].my_term_title
+        local term_list = require("toggleterm.terminal").get_all(true)
+        local cur_index
+        for i, term in pairs(term_list) do
+            if term_name == term.jobname then
+                cur_index = i
+            end
+        end
+        local next_index = cur_index == 1 and #term_list or cur_index-1
+        local cur_win = vim.api.nvim_get_current_win()
+        vim.api.nvim_win_set_buf(cur_win, term_list[next_index].bufnr)
+    else
+        vim.cmd("tabprevious")
+    end
+end
+vim.api.nvim_create_user_command("TabPrev", TabPrev, { nargs = 0 })
