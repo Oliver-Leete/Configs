@@ -22,7 +22,7 @@ require("toggleterm").setup({
     persist_size = true,
     direction = "horizontal",
     close_on_exit = false,
-    on_exit = function(t, _, exit_code, name)
+    on_exit = function(t, _, exit_code, _)
         if exit_code == 0 then
             t:shutdown()
             vim.notify(t.jobname .. " Succeded", "info", { title = "One Shots" })
@@ -120,31 +120,32 @@ function Terminal:open_add()
 end
 
 NvimLogTerm = Terminal:new({
-    on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "Neovim Log" end,
     cmd = "tail --follow --retry ~/.local/state/nvim/log | less -S",
     runnable = { source = "log", name = "Neovim Log", func = function() NvimLogTerm:set_toggle(4) end },
+    jobname = "Neovim Log"
 })
 
 LspLogTerm = Terminal:new({
-    on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "LSP Log" end,
     cmd = "tail --follow --retry ~/.local/state/nvim/lsp.log | less -S",
     runnable = { source = "log", name = "LSP Log", func = function() LspLogTerm:set_toggle(4) end },
+    jobname = "LSP Log"
 })
 
 XLogTerm = Terminal:new({
-    on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "X Session Log" end,
     cmd = "tail --follow --retry ~/.xsession-errors | less -S",
     runnable = { source = "log", name = "X Session Log", func = function() LspLogTerm:set_toggle(4) end },
+    jobname = "X Session Log"
 })
 
 FocusTerm = Terminal:new({
     cmd = "focus",
+    jobname = "Focus"
 })
 
 LZGTerm = Terminal:new({
     cmd = "lazygit",
     direction = "float",
-    on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "Lazy Git" end
+    jobname = "Lazygit",
 })
 
 

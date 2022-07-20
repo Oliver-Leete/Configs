@@ -110,9 +110,17 @@ Map("x", ">", ">gv")
 Map("n", "<c-v>", "<cmd>silent vsplit %<cr>")
 Map("n", "<c-x>", "<cmd>silent split %<cr>")
 
+local get_input = function(prompt)
+    local ok, result = pcall(vim.fn.input, { prompt = prompt })
+    if not ok then
+        return nil
+    end
+    return result
+end
+
 require("nvim-surround").setup({
     keymaps = {
-        insert = "yp",
+        normal = "yp",
         delete = "dp",
         change = "cp",
         visual = "P",
@@ -129,23 +137,18 @@ require("nvim-surround").setup({
             [">"] = { "< ", " >" },
             ["i"] = function()
                 return {
-                    require("nvim-surround.utils").get_input(
-                        "Enter the left delimiter: "
-                    ),
-                    require("nvim-surround.utils").get_input(
-                        "Enter the right delimiter: "
-                    )
+                    get_input( "Enter the left delimiter: "),
+                    get_input( "Enter the right delimiter: ")
                 }
             end,
             ["f"] = function()
                 return {
-                    require("nvim-surround.utils").get_input(
-                        "Enter the function name: "
-                    ) .. "(", ")"
+                    get_input( "Enter the function name: ") .. "(", ")"
                 }
             end,
         },
         aliases = {
+            ["a"] = false,
             ["b"] = { '[', "{", "(" },
             ["q"] = { '"', "'", "`" },
         },
@@ -250,7 +253,7 @@ Map("n", ",dd", function() require("refactoring").debug.printf({}) end)
 Map({ "n", "x" }, ",dv", function() require("refactoring").debug.print_var({}) end, { remap = false })
 Map("n", ",dq", function() require("refactoring").debug.cleanup({}) end)
 
-Map({"n", "x"}, ",s", "<Plug>Opsort", { remap = true })
+Map({ "n", "x" }, ",s", "<Plug>Opsort", { remap = true })
 Map("n", ",ss", "<Plug>OpsortLines", { remap = true })
 -- Map("x", ",s", "<Plug>Opsort", { remap = true })
 

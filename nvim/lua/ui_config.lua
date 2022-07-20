@@ -4,7 +4,7 @@ vim.opt.termguicolors = true
 require("stickybuf").setup({
     buftype = {
         help     = "buftype",
-        terminal = "bufnr",
+        terminal = "buftype",
     },
 })
 
@@ -284,7 +284,3 @@ function GPS_Bar()
 end
 
 vim.go.winbar = "%{%v:lua.GPS_Bar()%}"
-
-local filetypes = vim.api.nvim_create_augroup("winbars ", { clear = true })
-vim.api.nvim_create_autocmd("BufEnter",
-    { pattern = "*.films", callback = function() vim.b[0].filetype = "filmlist" end, group = filetypes })

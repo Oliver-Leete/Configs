@@ -10,46 +10,6 @@ end
 
 -- JULIA
 
-vim.g.projectionist_heuristics = {
-    ["src/" .. vim.g.project .. ".jl"] = {
-        ["src/*.jl"] = {
-            type = "source",
-            alternate = "test/{}_tests.jl",
-            related = { "test/{}_tests.jl", "docs/src/{}.md" },
-        },
-        ["test/*_tests.jl"] = {
-            type = "test",
-            alternate = "src/{}.jl",
-            related = { "src/{}.jl", "docs/src/{}.md" },
-        },
-        ["docs/src/*.md"] = {
-            type = "doc",
-            alternate = "src/{}.jl",
-            related = { "test/{}_tests.jl", "src/{}.jl" },
-        },
-
-        ["src/" .. vim.g.project .. ".jl"] = {
-            type = "mainSource",
-            alternate = "test/" .. vim.g.project .. "Tests.jl",
-            related = { "test/" .. vim.g.project .. "Tests.jl", "docs/make.jl" },
-        },
-        ["test/" .. vim.g.project .. "Tests.jl"] = {
-            type = "mainTest",
-            alternate = "src/" .. vim.g.project .. ".jl",
-            related = { "src/" .. vim.g.project .. ".jl", "docs/make.jl" },
-        },
-        ["docs/make.jl"] = {
-            type = "mainDoc",
-            alternate = "src/}.jl",
-            related = { "src/" .. vim.g.project .. ".jl", "test/" .. vim.g.project .. "Tests.jl" },
-        },
-
-        ["README.md"] = { type = "readme" },
-        ["Project.toml"] = { type = "deps" },
-        type = "julia",
-    },
-}
-
 local juliaProjectRunnables = function()
     -- Misc Runnables
     local runnables_list = {
@@ -204,6 +164,43 @@ vim.g.projectionist_heuristics = {
         ["tests/main.rs"] = { type = "mainTest" },
         ["benches/main.rs"] = { type = "mainBench" },
     },
+    ["src/*.jl"] = {
+        ["src/*.jl"] = {
+            type = "source",
+            alternate = "test/{}_tests.jl",
+            related = { "test/{}_tests.jl", "docs/src/{}.md" },
+        },
+        ["test/*_tests.jl"] = {
+            type = "test",
+            alternate = "src/{}.jl",
+            related = { "src/{}.jl", "docs/src/{}.md" },
+        },
+        ["docs/src/*.md"] = {
+            type = "doc",
+            alternate = "src/{}.jl",
+            related = { "test/{}_tests.jl", "src/{}.jl" },
+        },
+
+        ["src/" .. vim.g.project .. ".jl"] = {
+            type = "mainSource",
+            alternate = "test/" .. vim.g.project .. "Tests.jl",
+            related = { "test/" .. vim.g.project .. "Tests.jl", "docs/make.jl" },
+        },
+        ["test/" .. vim.g.project .. "Tests.jl"] = {
+            type = "mainTest",
+            alternate = "src/" .. vim.g.project .. ".jl",
+            related = { "src/" .. vim.g.project .. ".jl", "docs/make.jl" },
+        },
+        ["docs/make.jl"] = {
+            type = "mainDoc",
+            alternate = "src/}.jl",
+            related = { "src/" .. vim.g.project .. ".jl", "test/" .. vim.g.project .. "Tests.jl" },
+        },
+
+        ["README.md"] = { type = "readme" },
+        ["Project.toml"] = { type = "deps" },
+        type = "julia",
+    },
 }
 
 
@@ -212,17 +209,17 @@ function ActivateProject()
         vim.g.runnables = juliaProjectRunnables
 
         JuliaTest = Terminal:new({
+            jobname = "Julia Test",
             cmd = "juliaTest",
-            on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "Julia Test" end
         })
 
         JuliaREPL = Terminal:new({
+            jobname = "Julia REPL",
             cmd = "julia",
-            on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "Julia REPL" end
         })
 
         JuliaLiveDocs = Terminal:new({
-            on_open = function(term) Term_on_open(term); vim.b[0].my_term_title = "Julia Doc Server" end,
+            jobname = "Julia Doc Server",
             cmd = [[julia --project=docs -ie 'using ]] ..
                 vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']],
             runnable = { source = "Julia", name = "Julia Doc Server", func = function() JuliaLiveDocs:set_toggle(4) end }

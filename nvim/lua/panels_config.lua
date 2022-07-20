@@ -49,6 +49,8 @@ local git_add = function()
     lib.refresh_tree()
 end
 
+
+vim.api.nvim_set_hl(0, "NvimTreeWinSeparator", { link = "WinSeparator" })
 require("nvim-tree").setup({
     view = {
         mappings = {
