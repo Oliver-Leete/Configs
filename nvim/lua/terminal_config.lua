@@ -144,7 +144,7 @@ FocusTerm = Terminal:new({
 
 LZGTerm = Terminal:new({
     cmd = "lazygit",
-    direction = "float",
+    direction = "tab",
     jobname = "Lazygit",
 })
 
