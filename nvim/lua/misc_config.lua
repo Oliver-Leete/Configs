@@ -78,16 +78,16 @@ require("Comment").setup({
 })
 
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
-require("colorizer").setup({ "*" }, {
-    RGB = true,
-    RRGGBB = true,
-    names = false,
-    RRGGBBAA = true,
-    rgb_fn = true,
-    hsl_fn = true,
-    css_fn = false,
-    mode = "background",
-})
+-- require("colorizer").setup({ "*" }, {
+--     RGB = true,
+--     RRGGBB = true,
+--     names = false,
+--     RRGGBBAA = true,
+--     rgb_fn = true,
+--     hsl_fn = true,
+--     css_fn = false,
+--     mode = "background",
+-- })
 
 local util = require("perfanno.util")
 

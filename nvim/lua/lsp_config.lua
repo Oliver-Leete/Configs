@@ -88,8 +88,8 @@ local custom_attach = function(client, bufnr)
     end
 end
 
+require("mason").setup({})
 require("grammar-guard").init()
-require("nvim-lsp-installer").setup({})
 
 local default = {
     on_attach = custom_attach,

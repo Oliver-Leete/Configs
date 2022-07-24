@@ -23,7 +23,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'numToStr/Comment.nvim'
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
-    " Plug 'christoomey/vim-sort-motion'
     Plug 'ralismark/opsort.vim'
     Plug 'Konfekt/vim-CtrlXA'
     Plug 'svermeulen/vim-subversive'
@@ -48,16 +47,17 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'akinsho/git-conflict.nvim'
 
     Plug 'rebelot/kanagawa.nvim'
-    Plug 'norcalli/nvim-colorizer.lua'
     Plug 'windwp/windline.nvim'
     Plug 'folke/zen-mode.nvim'
+    Plug 'lukas-reineke/indent-blankline.nvim'
 
     Plug 'mbbill/undotree'
     Plug 'kyazdani42/nvim-tree.lua'
     Plug 'folke/todo-comments.nvim'
 
+    Plug 'williamboman/mason.nvim'
+
     Plug 'neovim/nvim-lspconfig'
-    Plug 'williamboman/nvim-lsp-installer'
     Plug 'brymer-meneses/grammar-guard.nvim'
     Plug 'simrat39/rust-tools.nvim'
     Plug 'p00f/clangd_extensions.nvim'

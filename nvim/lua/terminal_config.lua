@@ -25,13 +25,12 @@ require("toggleterm").setup({
     close_on_exit = false,
     on_exit = function(t, _, exit_code, _)
         if exit_code == 0 then
-            t:shutdown()
             vim.notify(t.jobname .. " Succeded", "info", { title = "Terminal" })
         else
+            vim.notify(t.jobname .. " has errored", "info", { title = "Terminal" })
             if not t:is_open() then
                 t:open()
             end
-            vim.notify(t.jobname .. " Failed", "info", { title = "Terminal" })
         end
     end,
     shell = "fish",

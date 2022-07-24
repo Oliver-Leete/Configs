@@ -93,10 +93,34 @@ require("nvim-tree").setup({
         highlight_git = true,
         highlight_opened_files = "icon",
         special_files = { "Cargo.toml", "Makefile", "README.md", "readme.md", "Project.toml" },
+        indent_markers = {
+            enable = true,
+            icons = {
+                corner = "╰─",
+                edge = "│ ",
+                item = "├─",
+                none = "  ",
+            },
+        },
         icons = {
+            padding = " ",
+            show = {
+                folder = true,
+                folder_arrow = true,
+            },
             glyphs = {
                 git = {
                     unstaged = "",
+                },
+                folder = {
+                    arrow_closed = "",
+                    arrow_open = "╮",
+                    default = " ",
+                    open = "",
+                    empty = " ",
+                    empty_open = "",
+                    symlink = " ",
+                    symlink_open = "",
                 },
             },
         },

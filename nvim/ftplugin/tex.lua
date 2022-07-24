@@ -73,7 +73,7 @@ vim.g.vimtex_compiler_latexmk = {
     ["continuous"] = 0,
     ["executable"] = "latexmk",
     ["hooks"] = {},
-    ["options"] = { "-verbose", "-file-line-error", "-synctex=1", "-interaction=nonstopmode" },
+    ["options"] = { "-pdf", "-verbose", "-file-line-error", "-synctex=1", "-interaction=nonstopmode" },
 }
 
 vim.opt_local.conceallevel = 2
