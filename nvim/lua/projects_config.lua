@@ -267,3 +267,116 @@ end
 
 local projection = vim.api.nvim_create_augroup("projection", { clear = true })
 vim.api.nvim_create_autocmd("VimEnter", { callback = ActivateProject, group = projection })
+
+require("neotest").setup({
+    adapters = {
+        require("neotest-rust"),
+        require("neotest-julia")
+    }
+})
+
+local overseer = require("overseer")
+overseer.setup({
+    form = { win_opts = { winblend = 0, }, },
+    task_editor = { win_opts = { winblend = 0, }, },
+    task_win = { win_opts = { winblend = 0, }, },
+    confirm = { win_opts = { winblend = 0, }, },
+    bindings = {
+        ["?"] = "ShowHelp",
+        ["<CR>"] = "RunAction",
+        ["<C-e>"] = "Edit",
+        ["o"] = "OpenFloat",
+        -- ["o"] = "Open",
+        ["<C-v>"] = "OpenVsplit",
+        ["p"] = "TogglePreview",
+        ["<C-l>"] = "IncreaseDetail",
+        ["<C-h>"] = "DecreaseDetail",
+        ["L"] = "IncreaseAllDetail",
+        ["H"] = "DecreaseAllDetail",
+        ["{"] = "DecreaseWidth",
+        ["}"] = "IncreaseWidth",
+        ["["] = "PrevTask",
+        ["]"] = "NextTask",
+    },
+})
+
+overseer.register_template({
+    name = "Reload XMonad",
+    builder = function()
+        return {
+            name = "Reload XMonad",
+            cwd = "/home/oleete/.config/xmonad",
+            cmd = "/home/oleete/.config/bin/xmonadRebuild",
+        }
+    end,
+    priority = 50,
+    desc = "Recompile and reload XMonad",
+    tags = { overseer.TAG.BUILD },
+    params = {},
+    condition = {
+        dir = "/home/oleete/.config",
+    },
+})
+
+overseer.register_template({
+    name = "Reload Kitty",
+    builder = function()
+        return {
+            name = "Reload Kitty",
+            cmd = "pkill -10 kitty",
+        }
+    end,
+    priority = 0,
+    desc = "Refresh the config of the current session",
+    params = {},
+    condition = {},
+})
+
+overseer.register_template({
+    name = "Source File",
+    builder = function()
+        return {
+            name = "Source File",
+            cmd = "nvrStart +'source %'",
+        }
+    end,
+    priority = 50,
+    desc = "Source the current lua file",
+    params = {},
+    condition = {
+        dir = "/home/oleete/.config",
+        filetype = "lua",
+    },
+})
+
+overseer.register_template({
+    name = "Reload Neovim",
+    builder = function()
+        return {
+            name = "Reload Neovim",
+            cmd = "nvrStart +'source! /home/oleete/.config/nvim/init.lua'",
+        }
+    end,
+    priority = 0,
+    desc = "Source init.lua",
+    params = {},
+    condition = {},
+})
+
+overseer.register_template({
+    name = "Install Plugins",
+    builder = function()
+        return {
+            name = "Install Plugins",
+            cmd = "nvrStart +'PlugInstall'",
+            dependencies = "Reload Neovim"
+        }
+    end,
+    priority = 0,
+    desc = "Source init.lua",
+    params = {},
+    condition = {
+        dir = "/home/oleete/.config",
+        filetype = "lua",
+    },
+})

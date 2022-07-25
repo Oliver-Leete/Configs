@@ -1,4 +1,4 @@
-vim.b[0].runnables = function()
+vim.b[0].localCommands = function()
     return {
         { source = "lua", name = "Source file", command = "source %"}
     }

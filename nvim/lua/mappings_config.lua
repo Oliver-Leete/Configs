@@ -412,7 +412,8 @@ GlobalCommands = {
     { source = "default", name = "Toggle text wraping", "set wrap!" },
     { source = "default", name = "File tree", command = "NvimTreeToggle" },
     { source = "default", name = "Undo tree", command = "UndotreeToggle" },
-    { source = "default", name = "Reload Snippets", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
+    { source = "default", name = "Reload snippets", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
+    { source = "default", name = "Source init", command = "source /home/oleete/.config/nvim/init.lua" },
 
     { source = "log", name = "Neovim Log", func = function() NvimLogTerm:open_add(4) end },
     { source = "log", name = "LSP Log", func = function() LspLogTerm:open_add(4) end },

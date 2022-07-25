@@ -12,6 +12,8 @@ Special_types = {
     NvimTree = { name = " File Tree", exit_func = function() vim.cmd("wincmd c") end },
     DiffviewFileHistory = { name = " Diff History", exit_func = function() vim.cmd("DiffviewClose") end },
     DiffviewFiles = { name = " Diff Tree", exit_func = function() vim.cmd("DiffviewClose") end },
+    OverseerList = { name = " Task List", exit_func = function() vim.cmd("OverseerClose") end },
+    OverseerForm = { name = " Overseer Form", exit_func = function() vim.cmd("wincmd c") end },
     ["vim"] = { exit_func = function() vim.cmd("wincmd c") end },
     [""] = { exit_func = function() vim.cmd("wincmd c") end },
 }

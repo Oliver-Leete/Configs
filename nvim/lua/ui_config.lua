@@ -2,6 +2,9 @@
 vim.opt.termguicolors = true
 
 require("stickybuf").setup({
+    filetype = {
+        OverseerList = "filetype",
+    },
     buftype = {
         help     = "buftype",
         terminal = "buftype",

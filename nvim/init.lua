@@ -108,6 +108,9 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'andythigpen/nvim-coverage'
 
     Plug 'akinsho/toggleterm.nvim'
+    Plug 'stevearc/overseer.nvim'
+    Plug 'nvim-neotest/neotest'
+    Plug 'rouge8/neotest-rust'
 
     Plug 'anuvyklack/hydra.nvim'
     Plug 'anuvyklack/keymap-layer.nvim'
