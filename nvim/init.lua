@@ -56,6 +56,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'folke/todo-comments.nvim'
 
     Plug 'williamboman/mason.nvim'
+    Plug 'williamboman/mason-lspconfig.nvim'
 
     Plug 'neovim/nvim-lspconfig'
     Plug 'brymer-meneses/grammar-guard.nvim'

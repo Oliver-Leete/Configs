@@ -89,7 +89,7 @@ local custom_attach = function(client, bufnr)
 end
 
 require("mason").setup({})
-require("grammar-guard").init()
+require("mason-lspconfig").setup({})
 
 local default = {
     on_attach = custom_attach,
@@ -233,6 +233,7 @@ require("rust-tools").setup({
     },
 })
 
+require("grammar-guard").init()
 lspconfig.grammar_guard.setup({
     cmd = { "/home/oleete/.local/share/nvim/lsp_servers/ltex/ltex-ls/bin/ltex-ls" },
     on_attach = custom_attach,
