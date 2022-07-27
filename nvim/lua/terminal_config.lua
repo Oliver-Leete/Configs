@@ -1,7 +1,11 @@
+Temp_Num = 50
 Term_on_open = function(term)
     vim.wo[term.window].signcolumn = "no"
-    if not term.jobname then
+    if not term.jobname and term.id then
         term.jobname = "Terminal " .. term.id
+    elseif not term.jobname and not term.id then
+        Temp_Num = Temp_Num + 1
+        term.jobname = "Terminal " .. Temp_Num
     end
     vim.b[0].my_term_title = term.jobname
 end
@@ -45,9 +49,9 @@ BackgroundTerm = Terminal:new({
     runnable = { source = "def", name = "Background Terminal", func = function() BackgroundTerm:set_toggle(4) end }
 })
 
-Harp_Term_1 = Terminal:new({id = 1})
-Harp_Term_2 = Terminal:new({id = 2})
-Harp_Term_3 = Terminal:new({id = 3})
+Harp_Term_1 = Terminal:new({ id = 1 })
+Harp_Term_2 = Terminal:new({ id = 2 })
+Harp_Term_3 = Terminal:new({ id = 3 })
 Harp_Term_4 = BackgroundTerm
 
 function Terminal:set_harp(term_num)

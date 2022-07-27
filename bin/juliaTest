@@ -1,6 +1,6 @@
 #!/bin/bash
 project="$(basename "$PWD")"
-cd test
+cd test || exit
 # julia --project -i -e "include(\"$project\")"
 julia --threads=16 --project -i -e '
 using Revise, ReTest, BenchmarkTools, Debugger, Infiltrator, Profile, ProfileCanvas, JET, '"$project"';

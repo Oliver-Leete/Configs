@@ -96,10 +96,10 @@ require("nvim-tree").setup({
         indent_markers = {
             enable = true,
             icons = {
-                corner = "╰─",
-                edge = "│ ",
-                item = "├─",
-                none = "  ",
+                corner = "╰",
+                edge = "│",
+                item = "├",
+                none = "",
             },
         },
         icons = {
@@ -113,7 +113,7 @@ require("nvim-tree").setup({
                     unstaged = "",
                 },
                 folder = {
-                    arrow_closed = "",
+                    arrow_closed = "─",
                     arrow_open = "╮",
                     default = " ",
                     open = "",

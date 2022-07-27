@@ -59,7 +59,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'williamboman/mason-lspconfig.nvim'
 
     Plug 'neovim/nvim-lspconfig'
-    Plug 'brymer-meneses/grammar-guard.nvim'
+    " Plug 'brymer-meneses/grammar-guard.nvim'
+    Plug 'barreiroleo/ltex_extra.nvim'
     Plug 'simrat39/rust-tools.nvim'
     Plug 'p00f/clangd_extensions.nvim'
     Plug 'b0o/schemastore.nvim'
@@ -111,6 +112,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'stevearc/overseer.nvim'
     Plug 'nvim-neotest/neotest'
     Plug 'rouge8/neotest-rust'
+    Plug 'nvim-neotest/neotest-python'
 
     Plug 'anuvyklack/hydra.nvim'
     Plug 'anuvyklack/keymap-layer.nvim'

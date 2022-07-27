@@ -233,11 +233,25 @@ require("rust-tools").setup({
     },
 })
 
-require("grammar-guard").init()
-lspconfig.grammar_guard.setup({
-    cmd = { "/home/oleete/.local/share/nvim/lsp_servers/ltex/ltex-ls/bin/ltex-ls" },
-    on_attach = custom_attach,
+-- require("grammar-guard").init()
+-- lspconfig.grammar_guard.setup({
+--     cmd = { "/home/oleete/.local/share/nvim/lsp_servers/ltex/ltex-ls/bin/ltex-ls" },
+--     on_attach = custom_attach,
+--     flags = { debounce_text_changes = 500 },
+-- })
+
+require("lspconfig").ltex.setup({
+    capabilities = capabilities,
     flags = { debounce_text_changes = 500 },
+    on_attach = function(client, bufnr)
+        require("ltex_extra").setup({
+            load_langs = { "en-GB" },
+            init_check = true,
+            path = nil,
+            log_level = "none",
+        })
+        custom_attach(client, bufnr)
+    end,
     settings = {
         ltex = {
             enabled = { "latex", "tex", "bib", "markdown" },
@@ -268,7 +282,7 @@ lspconfig.grammar_guard.setup({
                     ["\\subref{}"] = "dummy",
                 },
             },
-            dictionary = { ["en-GB"] = { "ANSYS", "UPF" } },
+            dictionary = {},
             disabledRules = { ["en-GB"] = { "OXFORD_SPELLING_Z_NOT_S" } },
             hiddenFalsePositives = {},
         },
@@ -281,19 +295,23 @@ require("null-ls").setup({
     on_attach = custom_attach,
     diagnostics_format = "[#{c}] #{m} (#{s})",
     sources = {
-        null_ls.builtins.code_actions.gitsigns.with({ filetypes = { "kitty" } }),
-        null_ls.builtins.formatting.trim_whitespace,
-        null_ls.builtins.formatting.trim_newlines,
-        null_ls.builtins.formatting.shfmt,
-        null_ls.builtins.formatting.shellharden,
         -- null_ls.builtins.formatting.stylua,
-        null_ls.builtins.formatting.fish_indent,
-        null_ls.builtins.formatting.latexindent,
-        null_ls.builtins.diagnostics.markdownlint,
-        null_ls.builtins.diagnostics.chktex,
+        null_ls.builtins.code_actions.gitrebase, --no_mason_needed
+        null_ls.builtins.code_actions.gitsigns, --no_mason_needed
+        null_ls.builtins.code_actions.refactoring, --no_mason_needed
+        null_ls.builtins.diagnostics.chktex, --FIX:To_Mason
+        null_ls.builtins.diagnostics.fish, --no_mason_needed
+        null_ls.builtins.diagnostics.gitlint, --Mason
+        null_ls.builtins.diagnostics.markdownlint, --Mason
+        null_ls.builtins.formatting.fish_indent, --no_mason_needed
+        null_ls.builtins.formatting.isort, --Mason
+        null_ls.builtins.formatting.latexindent, --FIX:To_Mason
+        null_ls.builtins.formatting.markdownlint, --Mason
+        null_ls.builtins.formatting.shellharden, --Mason
+        null_ls.builtins.formatting.shfmt, --Mason
+        null_ls.builtins.formatting.trim_newlines, --no_mason_needed
+        null_ls.builtins.formatting.trim_whitespace, --no_mason_needed
         null_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
-        null_ls.builtins.code_actions.refactoring,
-        null_ls.builtins.diagnostics.gitlint,
     },
 })
 

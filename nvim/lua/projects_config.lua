@@ -269,10 +269,34 @@ local projection = vim.api.nvim_create_augroup("projection", { clear = true })
 vim.api.nvim_create_autocmd("VimEnter", { callback = ActivateProject, group = projection })
 
 require("neotest").setup({
+    default_strategy = "overseer",
     adapters = {
         require("neotest-rust"),
+        require("neotest-python"),
         require("neotest-julia")
-    }
+    },
+    floating = {
+        border = "rounded",
+        max_height = 0.9,
+        max_width = 0.9,
+        options = {},
+    },
+    mappings = {
+        expand = { "<CR>", "<2-LeftMouse>" },
+        expand_all = "e",
+        output = "p",
+        short = "P",
+        attach = "a",
+        jumpto = "i",
+        stop = "u",
+        run = "r",
+        mark = "m",
+        run_marked = "R",
+        clear_marked = "M",
+        target = "t",
+        clear_target = "T",
+    },
+
 })
 
 local overseer = require("overseer")
@@ -285,18 +309,18 @@ overseer.setup({
         ["?"] = "ShowHelp",
         ["<CR>"] = "RunAction",
         ["<C-e>"] = "Edit",
-        ["o"] = "OpenFloat",
-        -- ["o"] = "Open",
+        ["o"] = "Open",
         ["<C-v>"] = "OpenVsplit",
+        ["<C-f>"] = "OpenFloat",
         ["p"] = "TogglePreview",
         ["<C-l>"] = "IncreaseDetail",
         ["<C-h>"] = "DecreaseDetail",
         ["L"] = "IncreaseAllDetail",
         ["H"] = "DecreaseAllDetail",
-        ["{"] = "DecreaseWidth",
-        ["}"] = "IncreaseWidth",
-        ["["] = "PrevTask",
-        ["]"] = "NextTask",
+        ["["] = "DecreaseWidth",
+        ["]"] = "IncreaseWidth",
+        ["{"] = "PrevTask",
+        ["}"] = "NextTask",
     },
 })
 
@@ -309,7 +333,7 @@ overseer.register_template({
             cmd = "/home/oleete/.config/bin/xmonadRebuild",
         }
     end,
-    priority = 50,
+    priority = 1000,
     desc = "Recompile and reload XMonad",
     tags = { overseer.TAG.BUILD },
     params = {},
@@ -326,10 +350,12 @@ overseer.register_template({
             cmd = "pkill -10 kitty",
         }
     end,
-    priority = 0,
+    priority = 1000,
     desc = "Refresh the config of the current session",
     params = {},
-    condition = {},
+    condition = {
+        dir = "/home/oleete/.config",
+    },
 })
 
 overseer.register_template({
@@ -340,7 +366,7 @@ overseer.register_template({
             cmd = "nvrStart +'source %'",
         }
     end,
-    priority = 50,
+    priority = 1000,
     desc = "Source the current lua file",
     params = {},
     condition = {
@@ -357,26 +383,112 @@ overseer.register_template({
             cmd = "nvrStart +'source! /home/oleete/.config/nvim/init.lua'",
         }
     end,
-    priority = 0,
-    desc = "Source init.lua",
-    params = {},
-    condition = {},
-})
-
-overseer.register_template({
-    name = "Install Plugins",
-    builder = function()
-        return {
-            name = "Install Plugins",
-            cmd = "nvrStart +'PlugInstall'",
-            dependencies = "Reload Neovim"
-        }
-    end,
-    priority = 0,
+    priority = 1000,
     desc = "Source init.lua",
     params = {},
     condition = {
         dir = "/home/oleete/.config",
         filetype = "lua",
+    },
+})
+
+local function is_julia_project()
+    if vim.fn.filereadable("src/" .. vim.g.project .. ".jl") ~= 0 then
+        return true
+    end
+end
+
+overseer.register_template({
+    name = "Julia Doc Server",
+    builder = function()
+        return {
+            name = "Julia Doc Server",
+            cmd = [[julia --project=docs -ie 'using ]] ..
+                vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']]
+        }
+    end,
+    priority = 100,
+    desc = "Start up the documentation server",
+    params = {},
+    condition = {
+        callback = is_julia_project
+    },
+})
+
+overseer.register_template({
+    name = "Package Precompile",
+    builder = function()
+        return {
+            name = "Package Precompile",
+            cmd = "~/.config/nvim/filetype/julia/precompile",
+        }
+    end,
+    priority = 100,
+    params = {},
+    condition = {
+        callback = is_julia_project
+    },
+})
+
+overseer.register_template({
+    name = "Build Documentation",
+    builder = function()
+        return {
+            name = "Build Documentation",
+            cmd = "~/.config/nvim/filetype/julia/docBuild",
+        }
+    end,
+    priority = 100,
+    desc = "Do a single shot compilation of the documentation",
+    params = {},
+    condition = {
+        callback = is_julia_project
+    },
+})
+
+overseer.register_template({
+    name = "Open Local Documentation",
+    builder = function()
+        return {
+            name = "Open Local Documentation",
+            cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
+        }
+    end,
+    priority = 100,
+    desc = "Open the local documentation",
+    params = {},
+    condition = {
+        callback = is_julia_project
+    },
+})
+
+overseer.register_template({
+    name = "Open Server Documentation",
+    builder = function()
+        return {
+            name = "Open Server Documentation",
+            cmd = "browser http://localhost:8000 & sleep 5",
+        }
+    end,
+    priority = 100,
+    params = {},
+    condition = {
+        callback = is_julia_project
+    },
+})
+
+overseer.register_template({
+    name = "Documentation Tests",
+    builder = function()
+        return {
+            name = "Documentation Tests",
+            cmd = "~/.config/nvim/filetype/julia/docTest",
+        }
+    end,
+    priority = 100,
+    desc = "Run the julia documentation test",
+    params = {},
+    condition = {
+        callback = is_julia_project
     },
 })
