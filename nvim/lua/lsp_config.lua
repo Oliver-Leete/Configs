@@ -295,7 +295,6 @@ require("null-ls").setup({
     on_attach = custom_attach,
     diagnostics_format = "[#{c}] #{m} (#{s})",
     sources = {
-        -- null_ls.builtins.formatting.stylua,
         null_ls.builtins.code_actions.gitrebase, --no_mason_needed
         null_ls.builtins.code_actions.gitsigns, --no_mason_needed
         null_ls.builtins.code_actions.refactoring, --no_mason_needed
@@ -303,12 +302,14 @@ require("null-ls").setup({
         null_ls.builtins.diagnostics.fish, --no_mason_needed
         null_ls.builtins.diagnostics.gitlint, --Mason
         null_ls.builtins.diagnostics.markdownlint, --Mason
+        null_ls.builtins.formatting.cbfmt, --FIX:To_Mason
         null_ls.builtins.formatting.fish_indent, --no_mason_needed
         null_ls.builtins.formatting.isort, --Mason
         null_ls.builtins.formatting.latexindent, --FIX:To_Mason
         null_ls.builtins.formatting.markdownlint, --Mason
         null_ls.builtins.formatting.shellharden, --Mason
         null_ls.builtins.formatting.shfmt, --Mason
+        -- null_ls.builtins.formatting.stylua, --Mason
         null_ls.builtins.formatting.trim_newlines, --no_mason_needed
         null_ls.builtins.formatting.trim_whitespace, --no_mason_needed
         null_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),

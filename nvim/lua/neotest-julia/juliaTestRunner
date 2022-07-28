@@ -3,5 +3,6 @@ project="$(basename "$PWD")"
 cd test || exit
 julia --threads=auto --project -e '
 using ReTest;
-ReTest.load("'"$project"'Tests.jl");
-'"$project"'Tests.runtests('"$1"', verbose=true)'
+ReTest.load("PackageTests.jl");
+PackageTests.runtests('"$1"', spin=false, verbose=Inf)
+'

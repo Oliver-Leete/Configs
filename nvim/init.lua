@@ -34,6 +34,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'tommcdo/vim-ninja-feet'
     Plug 'wellle/targets.vim'
     Plug 'wellle/line-targets.vim'
+    Plug 'echasnovski/mini.nvim'
 
     Plug 'lervag/vimtex'
     Plug 'JuliaEditorSupport/julia-vim'
@@ -159,6 +160,7 @@ require("ui_config")
 require("git_config")
 require("terminal_config")
 require("projects_config")
+require("mini_config")
 
 local enterAndExitVim = vim.api.nvim_create_augroup("enterAndExitVim", { clear = true })
 vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-window-title ""', group = enterAndExitVim })

@@ -90,6 +90,7 @@ Map("n", "KK", "K")
 Map("n", "KG", require("gitsigns").preview_hunk)
 Map("n", "KA", function() require("gitsigns").blame_line({ full = true }) end)
 Map("n", "KE", function() vim.diagnostic.open_float(0, { border = "single", scope = "line", source = "always" }) end)
+Map("n", "KT", function() require("neotest").output.open() end)
 
 Map("x", "J", ":move '>+1<cr>gv=gv")
 Map("x", "K", ":move '<-2<cr>gv=gv")

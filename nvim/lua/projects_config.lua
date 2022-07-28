@@ -269,7 +269,13 @@ local projection = vim.api.nvim_create_augroup("projection", { clear = true })
 vim.api.nvim_create_autocmd("VimEnter", { callback = ActivateProject, group = projection })
 
 require("neotest").setup({
-    default_strategy = "overseer",
+    consumers = {
+        overseer = require("neotest.consumers.overseer"),
+    },
+    overseer = {
+        enabled = true,
+        force_default = true,
+    },
     adapters = {
         require("neotest-rust"),
         require("neotest-python"),
@@ -321,6 +327,14 @@ overseer.setup({
         ["]"] = "IncreaseWidth",
         ["{"] = "PrevTask",
         ["}"] = "NextTask",
+    },
+    component_aliases = {
+        default_neotest = {
+            "on_output_summarize",
+            "on_exit_set_status",
+            "on_complete_notify",
+            "on_complete_dispose",
+        },
     },
 })
 
