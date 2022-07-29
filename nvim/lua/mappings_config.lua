@@ -119,43 +119,43 @@ local get_input = function(prompt)
     return result
 end
 
-require("nvim-surround").setup({
-    keymaps = {
-        normal = "yp",
-        delete = "dp",
-        change = "cp",
-        visual = "P",
-    },
-    delimiters = {
-        pairs = {
-            ["("] = { "(", ")" },
-            [")"] = { "( ", " )" },
-            ["{"] = { "{", "}" },
-            ["}"] = { "{ ", " }" },
-            ["["] = { "[", "]" },
-            ["]"] = { "[ ", " ]" },
-            ["<"] = { "<", ">" },
-            [">"] = { "< ", " >" },
-            ["i"] = function()
-                return {
-                    get_input( "Enter the left delimiter: "),
-                    get_input( "Enter the right delimiter: ")
-                }
-            end,
-            ["f"] = function()
-                return {
-                    get_input( "Enter the function name: ") .. "(", ")"
-                }
-            end,
-        },
-        aliases = {
-            ["a"] = false,
-            ["b"] = { '[', "{", "(" },
-            ["q"] = { '"', "'", "`" },
-        },
-    }
-})
-
+-- require("nvim-surround").setup({
+--     keymaps = {
+--         normal = "yp",
+--         delete = "dp",
+--         change = "cp",
+--         visual = "P",
+--     },
+--     delimiters = {
+--         pairs = {
+--             ["("] = { "(", ")" },
+--             [")"] = { "( ", " )" },
+--             ["{"] = { "{", "}" },
+--             ["}"] = { "{ ", " }" },
+--             ["["] = { "[", "]" },
+--             ["]"] = { "[ ", " ]" },
+--             ["<"] = { "<", ">" },
+--             [">"] = { "< ", " >" },
+--             ["i"] = function()
+--                 return {
+--                     get_input( "Enter the left delimiter: "),
+--                     get_input( "Enter the right delimiter: ")
+--                 }
+--             end,
+--             ["f"] = function()
+--                 return {
+--                     get_input( "Enter the function name: ") .. "(", ")"
+--                 }
+--             end,
+--         },
+--         aliases = {
+--             ["a"] = false,
+--             ["b"] = { '[', "{", "(" },
+--             ["q"] = { '"', "'", "`" },
+--         },
+--     }
+-- })
+--
 vim.g.wordmotion_nomap = true
 Map({ "n", "x", "o" }, "<m-w>", "<plug>(WordMotion_w)", { remap = true })
 Map({ "n", "x", "o" }, "<m-b>", "<plug>(WordMotion_b)", { remap = true })
@@ -248,7 +248,7 @@ Map("x", ",re", function() require("refactoring").refactor("Extract Variable") e
 Map({ "n", "x" }, ",ri", function() require("refactoring").refactor("Inline Variable") end)
 
 Map("n", ",rd", "<cmd>Neogen<cr>")
-Map("n", ",ra", ",cA", { remap = true })
+-- Map("n", ",ra", ",cA", { remap = true })
 
 Map("n", ",dd", function() require("refactoring").debug.printf({}) end)
 Map({ "n", "x" }, ",dv", function() require("refactoring").debug.print_var({}) end, { remap = false })

@@ -4,10 +4,10 @@ vim.b[0].localCommands = function()
     }
 end
 
-require("nvim-surround").buffer_setup({
-    delimiters = {
-        pairs = {
-            ["a"] = { "function() ", " end" },
-        }
-    }
-})
+-- require("nvim-surround").buffer_setup({
+--     delimiters = {
+--         pairs = {
+--             ["a"] = { "function() ", " end" },
+--         }
+--     }
+-- })

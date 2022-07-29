@@ -210,11 +210,11 @@ vim.b[0].localCommands = {
     { source = "julia", name = "Load profile data", func = jul_perf_flat },
 }
 
-require("nvim-surround").buffer_setup({
-    delimiters = {
-        pairs = {
-            ["a"] = { "(x -> ", ")" },
-            ["b"] = { "begin ", " end" },
-        }
-    }
-})
+-- require("nvim-surround").buffer_setup({
+--     delimiters = {
+--         pairs = {
+--             ["a"] = { "(x -> ", ")" },
+--             ["b"] = { "begin ", " end" },
+--         }
+--     }
+-- })

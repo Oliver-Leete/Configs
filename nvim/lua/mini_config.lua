@@ -1,25 +1,68 @@
-local req
--- {
---   -- Table with textobject id as fields, textobject specification as values.
---   -- Also use this to disable builtin textobjects. See |MiniAi.config|.
---   custom_textobjects = nil,
+require("mini.ai").setup({
+    custom_textobjects = nil,
 
---   -- Module mappings. Use `''` (empty string) to disable one.
---   mappings = {
---     -- Main textobject prefixes
---     around = 'a',
---     inside = 'i',
+    mappings = {
+        around = 'a',
+        inside = 'i',
 
---     -- Move cursor to certain edge of `a` textobject
---     goto_left = 'g[',
---     goto_right = 'g]',
---   },
+        goto_left = '{',
+        goto_right = '}',
+    },
 
---   -- Number of lines within which textobject is searched
---   n_lines = 50,
+    n_lines = 200,
 
---   -- How to search for object (first inside current line, then inside
---   -- neighborhood). One of 'cover', 'cover_or_next', 'cover_or_prev',
---   -- 'cover_or_nearest'.
---   search_method = 'cover_or_next',
--- }
+    search_method = 'cover_or_nearest',
+})
+
+vim.g.miniindentscope_disable = true
+
+require("mini.indentscope").setup({
+    mappings = {
+        object_scope = 'ii',
+        object_scope_with_border = 'ai',
+        goto_top = '{i',
+        goto_bottom = '}i',
+    },
+    symbol = '╎',
+})
+
+require("mini.comment").setup({
+    mappings = {
+        comment = ',c',
+        comment_line = ',cc',
+        textobject = 'id',
+    },
+})
+
+require("mini.pairs").setup({
+    modes = { insert = true, command = true, terminal = true },
+    mappings = {
+        ['('] = { action = 'open', pair = '()', neigh_pattern = '[^\\].' },
+        ['['] = { action = 'open', pair = '[]', neigh_pattern = '[^\\].' },
+        ['{'] = { action = 'open', pair = '{}', neigh_pattern = '[^\\].' },
+
+        [')'] = { action = 'close', pair = '()', neigh_pattern = '[^\\].' },
+        [']'] = { action = 'close', pair = '[]', neigh_pattern = '[^\\].' },
+        ['}'] = { action = 'close', pair = '{}', neigh_pattern = '[^\\].' },
+
+        ['"'] = { action = 'closeopen', pair = '""', neigh_pattern = '[^\\].', register = { cr = false } },
+        ["'"] = { action = 'closeopen', pair = "''", neigh_pattern = '[^%a\\].', register = { cr = false } },
+        ['`'] = { action = 'closeopen', pair = '``', neigh_pattern = '[^\\].', register = { cr = false } },
+    },
+})
+
+require("mini.surround").setup({
+    mappings = {
+        add = 'yp',
+        delete = 'dp',
+        find = 'fp',
+        find_left = 'gP',
+        replace = 'cp',
+    },
+    n_lines = 200,
+    search_method = 'cover_or_nearest',
+})
+
+require("mini.misc").setup({
+    make_global = { 'put', 'put_text' },
+})

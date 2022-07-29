@@ -40,15 +40,15 @@ Map({ "x", "o" }, "an", "<plug>(vimtex-a$)", { buffer = 0, remap = true })
 Map({ "x", "o" }, "ins", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-iP)')<cr>", { buffer = 0 })
 Map({ "x", "o" }, "inm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ie)')<cr>", { buffer = 0 })
 Map({ "x", "o" }, "inn", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-i$)')<cr>", { buffer = 0 })
-Map({ "x", "o" }, "iNs", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[])', '(vimtex-iP)')<cr>", { buffer = 0 })
-Map({ "x", "o" }, "iNm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[M)', '(vimtex-ie)')<cr>", { buffer = 0 })
-Map({ "x", "o" }, "iNn", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[N)', '(vimtex-i$)')<cr>", { buffer = 0 })
+Map({ "x", "o" }, "ils", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[])', '(vimtex-iP)')<cr>", { buffer = 0 })
+Map({ "x", "o" }, "ilm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[M)', '(vimtex-ie)')<cr>", { buffer = 0 })
+Map({ "x", "o" }, "iln", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[l)', '(vimtex-i$)')<cr>", { buffer = 0 })
 Map({ "x", "o" }, "ans", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-aP)')<cr>", { buffer = 0 })
 Map({ "x", "o" }, "anm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ae)')<cr>", { buffer = 0 })
 Map({ "x", "o" }, "ann", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-a$)')<cr>", { buffer = 0 })
-Map({ "x", "o" }, "aNs", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[])', '(vimtex-aP)')<cr>", { buffer = 0 })
-Map({ "x", "o" }, "aNm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[M)', '(vimtex-ae)')<cr>", { buffer = 0 })
-Map({ "x", "o" }, "aNn", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[N)', '(vimtex-a$)')<cr>", { buffer = 0 })
+Map({ "x", "o" }, "als", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[])', '(vimtex-aP)')<cr>", { buffer = 0 })
+Map({ "x", "o" }, "alm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[M)', '(vimtex-ae)')<cr>", { buffer = 0 })
+Map({ "x", "o" }, "aln", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[l)', '(vimtex-a$)')<cr>", { buffer = 0 })
 
 Map("n", "dpc", "<plug>(vimtex-env-delete)", { buffer = 0, remap = true })
 Map("n", "dpe", "<plug>(vimtex-cmd-delete)", { buffer = 0, remap = true })
@@ -146,20 +146,20 @@ vim.g.projectionist_heuristics = {
     },
 }
 
-require("nvim-surround").buffer_setup({
-    delimiters = {
-        pairs = {
-            ["f"] = function()
-                return {
-                    "\\" .. require("nvim-surround.utils").get_input(
-                        "Enter the function name: "
-                    ) .. "{",
-                    "}"
-                }
-            end,
-        }
-    }
-})
+-- require("nvim-surround").buffer_setup({
+--     delimiters = {
+--         pairs = {
+--             ["f"] = function()
+--                 return {
+--                     "\\" .. require("nvim-surround.utils").get_input(
+--                         "Enter the function name: "
+--                     ) .. "{",
+--                     "}"
+--                 }
+--             end,
+--         }
+--     }
+-- })
 
 if vim.g.viewerOpen ~= 1 then
     vim.g.viewerOpen = 1

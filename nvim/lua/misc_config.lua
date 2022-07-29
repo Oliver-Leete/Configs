@@ -1,42 +1,5 @@
--- Targets Setup
-vim.cmd([[augroup mywellle
-    autocmd!
-    autocmd User targets#mappings#user call targets#mappings#extend({
-        \ 'z': { 'separator': [{'d':','}, {'d':'.'}, {'d':';'}, {'d':':'}, {'d':'+'}, {'d':'-'},
-        \                      {'d':'='}, {'d':'~'}, {'d':'_'}, {'d':'*'}, {'d':'#'}, {'d':'/'},
-        \                      {'d':'\'}, {'d':'|'}, {'d':'&'}, {'d':'$'}] },
-        \ ',': {},
-        \ ';': {},
-        \ ':': {},
-        \ '+': {},
-        \ '-': {},
-        \ '=': {},
-        \ '~': {},
-        \ '_': {},
-        \ '*': {},
-        \ '#': {},
-        \ '/': {},
-        \ '\': {},
-        \ '|': {},
-        \ '&': {},
-        \ '$': {},
-        \ 'a': {'argument': [{'o': '[{([]', 'c': '[])}]', 's': '[,;]'}]},
-        \ 'x': {'line': [{'c': 1}]},
-        \ 't': {'tag': [{}]},
-        \ '<': {'pair': [{'o': '<', 'c': '>'}]},
-        \ '>': {'pair': [{'o': '>', 'c': '<'}]},
-        \ 'b': {'pair': [{'o':'(', 'c':')'}, {'o':'[', 'c':']'}, {'o':'{', 'c':'}'}]},
-        \ 'q': {'quote': [{'d':"'"}, {'d':'"'}, {'d':'`'}]},
-        \ })
-augroup end]])
 vim.g.matchup_matchparen_offscreen = { method = false }
 vim.g.matchup_text_obj_enabled = false
-
-vim.g.targets_seekRanges = "cc cr cb cB lc ac Ac lr rr ll lb ar ab lB Ar aB Ab AB rb rB al Al"
-vim.g.targets_jumpRanges = "rr rb rB bb bB BB ll al Al aa Aa AA"
-vim.g.targets_gracious = true
-vim.g.targets_nl = "nN"
-
 vim.cmd([[fu! s:lastplace()
 	if index(split("quickfix,nofile,help", ","), &buftype) != -1  | return | endif
 	if index(split("gitcommit,gitrebase,svn,hgcommit", ","), &filetype) != -1 | return | endif
@@ -55,39 +18,7 @@ require("close_buffers").setup({
     preserve_window_layout = { "this" },
 })
 
-require("Comment").setup({
-    ignore = "^$",
-    toggler = {
-        line = ",cc",
-        block = ",bb",
-    },
-    opleader = {
-        line = ",c",
-        block = ",b",
-    },
-    extra = {
-        above = ",cO",
-        below = ",co",
-        eol = ",cA",
-    },
-    mappings = {
-        basic = true,
-        extra = true,
-        extended = false,
-    },
-})
-
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
--- require("colorizer").setup({ "*" }, {
---     RGB = true,
---     RRGGBB = true,
---     names = false,
---     RRGGBBAA = true,
---     rgb_fn = true,
---     hsl_fn = true,
---     css_fn = false,
---     mode = "background",
--- })
 
 local util = require("perfanno.util")
 

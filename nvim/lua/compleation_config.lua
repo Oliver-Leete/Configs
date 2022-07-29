@@ -156,35 +156,35 @@ require("cmp_dictionary").setup({
 
 vim.cmd([[autocmd FileType toml lua require('cmp').setup.buffer { sources = { { name = 'crates' } } }]])
 
-local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({ map_char = { all = "(", tex = "{", haskell = " " } }))
-
+-- local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+-- cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({ map_char = { all = "(", tex = "{", haskell = " " } }))
+--
 -- AutoPairs Setup
-require("nvim-autopairs").setup({
-    check_ts = true,
-    enable_check_bracket_line = true,
-    fast_wrap = {
-        map = "<C-p>",
-        chars = { "{", "[", "(", '"', "'", "`" },
-        pattern = string.gsub([[ [%'%"%)%>%]%)%}%,%s] ]], "%s+", ""),
-        end_key = "l",
-        keys = "tnseriaodhgjplfuwybkvmcxzq",
-    },
-})
-
-local Rule = require("nvim-autopairs.rule")
-local cond = require("nvim-autopairs.conds")
-require("nvim-autopairs").add_rules(
-    { Rule("$", "$", { "tex", "markdown" }):with_move(cond.none()) },
-    { Rule("$$", "$$", { "tex", "markdown" }):with_move(cond.none()) }
-)
-
-require("nvim-autopairs").add_rules({
-    Rule("\\(", "\\)", "tex"),
-    Rule("\\[", "\\]", "tex"),
-    Rule("#=", "=#", "julia"),
-    Rule("```", "```"),
-})
+-- require("nvim-autopairs").setup({
+--     check_ts = true,
+--     enable_check_bracket_line = true,
+--     fast_wrap = {
+--         map = "<C-p>",
+--         chars = { "{", "[", "(", '"', "'", "`" },
+--         pattern = string.gsub([[ [%'%"%)%>%]%)%}%,%s] ]], "%s+", ""),
+--         end_key = "l",
+--         keys = "tnseriaodhgjplfuwybkvmcxzq",
+--     },
+-- })
+--
+-- local Rule = require("nvim-autopairs.rule")
+-- local cond = require("nvim-autopairs.conds")
+-- require("nvim-autopairs").add_rules(
+--     { Rule("$", "$", { "tex", "markdown" }):with_move(cond.none()) },
+--     { Rule("$$", "$$", { "tex", "markdown" }):with_move(cond.none()) }
+-- )
+--
+-- require("nvim-autopairs").add_rules({
+--     Rule("\\(", "\\)", "tex"),
+--     Rule("\\[", "\\]", "tex"),
+--     Rule("#=", "=#", "julia"),
+--     Rule("```", "```"),
+-- })
 
 vim.g.diagnostic_auto_popup_while_jump = 0
 vim.g.diagnostic_enable_virtual_text = 0

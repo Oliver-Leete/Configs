@@ -20,7 +20,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'phaazon/hop.nvim'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
-    Plug 'numToStr/Comment.nvim'
+    " Plug 'numToStr/Comment.nvim'
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
     Plug 'ralismark/opsort.vim'
@@ -28,12 +28,12 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'svermeulen/vim-subversive'
     Plug 'inkarkat/vim-unconditionalpaste'
     Plug 'tpope/vim-abolish'
-    Plug 'kylechui/nvim-surround'
+    " Plug 'kylechui/nvim-surround'
     Plug 'andymass/vim-matchup'
 
-    Plug 'tommcdo/vim-ninja-feet'
-    Plug 'wellle/targets.vim'
-    Plug 'wellle/line-targets.vim'
+    " Plug 'tommcdo/vim-ninja-feet'
+    " Plug 'wellle/targets.vim'
+    " Plug 'wellle/line-targets.vim'
     Plug 'echasnovski/mini.nvim'
 
     Plug 'lervag/vimtex'
@@ -85,7 +85,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'L3MON4D3/LuaSnip'
     Plug 'danymat/neogen'
-    Plug 'windwp/nvim-autopairs'
+    " Plug 'windwp/nvim-autopairs'
 
     Plug 'nvim-telescope/telescope-file-browser.nvim'
     Plug 'nvim-telescope/telescope.nvim'

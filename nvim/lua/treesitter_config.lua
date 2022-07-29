@@ -14,7 +14,7 @@
 -- Treesitter
 
 require("nvim-treesitter.configs").setup({
-    autopairs = { enable = true },
+    -- autopairs = { enable = true },
     indent = { enable = false },
     matchup = { enable = true },
     highlight = {
