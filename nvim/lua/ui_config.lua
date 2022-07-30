@@ -11,29 +11,6 @@ require("stickybuf").setup({
     },
 })
 
-require("zen-mode").setup({
-    window = {
-        options = {
-            signcolumn = "no",
-            number = false,
-            relativenumber = false,
-        },
-    },
-    plugins = {
-        options = {
-            enabled = true,
-            ruler = false,
-            showcmd = false,
-        },
-    },
-    on_open = function()
-        vim.diagnostic.disable()
-    end,
-    on_close = function()
-        vim.cmd([[silent lua vim.diagnostic.enable()]])
-    end,
-})
-
 require("dressing").setup({
     select = {
         backend = { "telescope" },
@@ -85,7 +62,7 @@ vim.api.nvim_set_hl(0, "IndentBlanklineContextStart", { underline = true, sp = "
 
 require("indent_blankline").setup {
     char = "",
-    context_char = "🭰",
+    context_char = "▎",
     space_char_blankline = " ",
     show_current_context = true,
     show_current_context_start = true,

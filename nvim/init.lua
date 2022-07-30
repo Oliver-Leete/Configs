@@ -10,6 +10,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'stevearc/dressing.nvim'
     Plug 'rcarriga/nvim-notify'
 
+    Plug 'echasnovski/mini.nvim'
+
     Plug 'knubie/vim-kitty-navigator'
     Plug 'kazhala/close-buffers.nvim'
     Plug 'stevearc/stickybuf.nvim'
@@ -20,7 +22,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'phaazon/hop.nvim'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
-    " Plug 'numToStr/Comment.nvim'
     Plug 'arthurxavierx/vim-caser'
     Plug 'junegunn/vim-easy-align'
     Plug 'ralismark/opsort.vim'
@@ -28,20 +29,14 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'svermeulen/vim-subversive'
     Plug 'inkarkat/vim-unconditionalpaste'
     Plug 'tpope/vim-abolish'
-    " Plug 'kylechui/nvim-surround'
     Plug 'andymass/vim-matchup'
-
-    " Plug 'tommcdo/vim-ninja-feet'
-    " Plug 'wellle/targets.vim'
-    " Plug 'wellle/line-targets.vim'
-    Plug 'echasnovski/mini.nvim'
 
     Plug 'lervag/vimtex'
     Plug 'JuliaEditorSupport/julia-vim'
     Plug 'fladson/vim-kitty'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
     Plug 'wilriker/gcode.vim'
-    Plug 'LhKipp/nvim-nu', {'do': ':TSInstall nu'}
+    Plug 'LhKipp/nvim-nu'
 
     Plug 'Oliver-Leete/gitsigns.nvim'
     Plug 'sindrets/diffview.nvim'
@@ -49,7 +44,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'rebelot/kanagawa.nvim'
     Plug 'windwp/windline.nvim'
-    Plug 'folke/zen-mode.nvim'
     Plug 'lukas-reineke/indent-blankline.nvim'
 
     Plug 'mbbill/undotree'
@@ -58,14 +52,13 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'williamboman/mason.nvim'
     Plug 'williamboman/mason-lspconfig.nvim'
+    Plug 'jose-elias-alvarez/null-ls.nvim'
 
     Plug 'neovim/nvim-lspconfig'
-    " Plug 'brymer-meneses/grammar-guard.nvim'
     Plug 'barreiroleo/ltex_extra.nvim'
     Plug 'simrat39/rust-tools.nvim'
     Plug 'p00f/clangd_extensions.nvim'
     Plug 'b0o/schemastore.nvim'
-    Plug 'jose-elias-alvarez/null-ls.nvim'
 
     Plug 'Issafalcon/lsp-overloads.nvim'
     Plug 'SmiteshP/nvim-navic'
@@ -85,7 +78,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'L3MON4D3/LuaSnip'
     Plug 'danymat/neogen'
-    " Plug 'windwp/nvim-autopairs'
 
     Plug 'nvim-telescope/telescope-file-browser.nvim'
     Plug 'nvim-telescope/telescope.nvim'
@@ -100,20 +92,20 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'mizlan/iswap.nvim'
     Plug 'AckslD/nvim-trevJ.lua'
 
+    Plug 'stevearc/overseer.nvim'
+    Plug 't-troebst/perfanno.nvim'
+    Plug 'nvim-neotest/neotest'
+    Plug 'rouge8/neotest-rust'
+    Plug 'nvim-neotest/neotest-python'
+    Plug 'andythigpen/nvim-coverage'
+
     Plug 'mfussenegger/nvim-dap'
     Plug 'Pocco81/DAPInstall.nvim'
     Plug 'rcarriga/nvim-dap-ui'
     Plug 'theHamsta/nvim-dap-virtual-text'
     Plug 'nvim-telescope/telescope-dap.nvim'
 
-    Plug 't-troebst/perfanno.nvim'
-    Plug 'andythigpen/nvim-coverage'
-
     Plug 'akinsho/toggleterm.nvim'
-    Plug 'stevearc/overseer.nvim'
-    Plug 'nvim-neotest/neotest'
-    Plug 'rouge8/neotest-rust'
-    Plug 'nvim-neotest/neotest-python'
 
     Plug 'anuvyklack/hydra.nvim'
     Plug 'anuvyklack/keymap-layer.nvim'

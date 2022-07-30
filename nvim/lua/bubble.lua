@@ -79,7 +79,6 @@ basic.right = {
                 { sep.left_rounded, state.mode[2] .. "Ends" },
                 { lsp_names, state.mode[2] },
                 { sep.right_rounded, state.mode[2] .. "Ends" },
-                { " " },
             }
         end
         return ""

@@ -48,6 +48,7 @@ alias .. "cd .."
 alias ... "cd ../.."
 alias .... "cd ../../.."
 alias ..... "cd ../../../.."
+alias edrive "cd /run/media/oleete"
 
 abbr  htop 'htop -t'
 alias lzg lazygit

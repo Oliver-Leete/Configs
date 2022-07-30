@@ -4,7 +4,10 @@ vim.cmd([[set errorformat+=%-G%.%#@\ /.%#]])
 vim.cmd([[set errorformat+=%Z%.%#@\ %f:%l]])
 vim.cmd([[set errorformat+=%C%.%#]])
 vim.cmd([[set errorformat+=%-G%.%#]])
--- vim.api.nvim_buf_set_option(0, "commentstring", [[#%s]])
+
+vim.bo.commentstring = [[#%s]]
+
+
 
 vim.g.latex_to_unicode_tab = 0
 vim.g.latex_to_unicode_auto = 1
@@ -210,11 +213,15 @@ vim.b[0].localCommands = {
     { source = "julia", name = "Load profile data", func = jul_perf_flat },
 }
 
--- require("nvim-surround").buffer_setup({
---     delimiters = {
---         pairs = {
---             ["a"] = { "(x -> ", ")" },
---             ["b"] = { "begin ", " end" },
---         }
---     }
--- })
+vim.b.minisurround_config = {
+    custom_surroundings = {
+        ['a'] = {
+            input = { find = "%(.-->.-%)", extract = "^(.-->%s?).-(%))$" },
+            output = { left = '(x -> ', right = ')' },
+        },
+        ['b'] = {
+            input = { find = "begin.-end", extract = "^(begin%s?).-(%s?end)$" },
+            output = { left = 'begin ', right = 'end' },
+        },
+    }
+}
