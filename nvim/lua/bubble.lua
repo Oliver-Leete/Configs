@@ -136,14 +136,8 @@ windline.setup({
             active = {
                 basic.vi_mode,
                 basic.lsp_diagnos,
-                basic.dap,
                 basic.divider,
-                { function()
-                    local reg = vim.fn.reg_recording()
-                    if reg and reg ~= "" then
-                        return "Recording @" .. reg
-                    end
-                end, { "red", "NormalBg" } },
+                basic.dap,
                 basic.divider,
                 basic.git,
                 basic.right,

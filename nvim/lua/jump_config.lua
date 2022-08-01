@@ -46,8 +46,8 @@ Map({ "n", "x", "o" }, "]p", "<cmd>call v:lua.markGoCentre(v:count, 'norm! }', '
 Map({ "x", "o" }, "anp", ":<c-u>call v:lua.paragraph_targets(v:count, 1)<cr>")
 Map({ "x", "o" }, "inp", ":<c-u>call v:lua.paragraph_targets(v:count)<cr>")
 
-Map({ "n", "x", "o" }, "]d", [[<cmd>call v:lua.markGoCentre(v:count, 'lua vim.diagnostic.goto_next({float={border="single",scope="cursor",source="always"}})', 'd')<cr>]])
-Map({ "n", "x", "o" }, "[d", [[<cmd>call v:lua.markGoCentre(v:count, 'lua vim.diagnostic.goto_prev({float={border="single",scope="cursor",source="always"}})', 'd')<cr>]])
+Map({ "n", "x", "o" }, "[e", [[<cmd>call v:lua.markGoCentre(v:count, 'lua vim.diagnostic.goto_prev({float={border="single",scope="cursor",source="always"}})', 'd')<cr>]])
+Map({ "n", "x", "o" }, "]e", [[<cmd>call v:lua.markGoCentre(v:count, 'lua vim.diagnostic.goto_next({float={border="single",scope="cursor",source="always"}})', 'd')<cr>]])
 
 Map({ "n", "x", "o" }, "[l", "<cmd>call v:lua.markGoCentre(v:count, 'try|cprevious|catch/E553/|clast|endtry', 'l')<cr>")
 Map({ "n", "x", "o" }, "]l", "<cmd>call v:lua.markGoCentre(v:count, 'try|cnext|catch/E553/|cfirst|endtry', 'l')<cr>")
@@ -74,19 +74,28 @@ Map({ "x", "o" }, "inW", ":<c-u>call v:lua.mapped_targets(v:count, 'W', 'iW')<cr
 -- Map({ "x", "o" }, "an<m-w>", ":<c-u>call v:lua.mapped_targets(v:count, '<m-w>', 'a<m-w>')<cr>")
 -- Map({ "x", "o" }, "in<m-w>", ":<c-u>call v:lua.mapped_targets(v:count, '<m-w>', 'i<m-w>')<cr>")
 
-Map({ "x", "o" }, "ilc", ":<c-u>call v:lua.git_target(v:count, 'false')<cr>")
-Map({ "x", "o" }, "inc", ":<c-u>call v:lua.git_target(v:count, 'true')<cr>")
-Map({ "x", "o" }, "ic", ":<c-u>Gitsigns selct_hunk<cr>")
-Map({ "x", "o" }, "alc", ":<c-u>call v:lua.git_target(v:count, 'false')<cr>")
-Map({ "x", "o" }, "anc", ":<c-u>call v:lua.git_target(v:count, 'true')<cr>")
-Map({ "x", "o" }, "ac", ":<c-u>Gitsigns selct_hunk<cr>")
-if vim.api.nvim_win_get_option(0, "diff") then
-    Map({ "n", "x", "o" }, "]c", "<cmd>call v:lua.markGoCentre(v:count, 'norm! ]c', 'c')<cr>")
-    Map({ "n", "x", "o" }, "[c", "<cmd>call v:lua.markGoCentre(v:count, 'norm! [c', 'c')<cr>")
-else
-    Map({ "n", "x", "o" }, "]c", [[<cmd>call v:lua.markGoCentre(v:count, 'lua require"gitsigns".next_hunk()', 'c')<cr>]])
-    Map({ "n", "x", "o" }, "[c", [[<cmd>call v:lua.markGoCentre(v:count, 'lua require"gitsigns".prev_hunk()', 'c')<cr>]])
-end
+
+vim.api.nvim_create_autocmd("BufEnter",
+    {
+        group = vim.api.nvim_create_augroup("diff_mappings", { clear = true }),
+        callback = function()
+            local bmap = function(mode, key, action) Map(mode, key, action, { buffer = vim.api.nvim_get_current_buf() }) end
+            if vim.wo.diff then
+                bmap({ "n", "x", "o" }, "[h", "<cmd>call v:lua.markGoCentre(v:count, 'norm! [c', 'h')<cr>")
+                bmap({ "n", "x", "o" }, "]h", "<cmd>call v:lua.markGoCentre(v:count, 'norm! ]c', 'h')<cr>")
+            else
+                bmap({ "x", "o" }, "ah", ":<c-u>Gitsigns selct_hunk<cr>")
+                bmap({ "x", "o" }, "ih", ":<c-u>Gitsigns selct_hunk<cr>")
+                bmap({ "n", "x", "o" }, "[h", [[<cmd>call v:lua.markGoCentre(v:count, 'lua require"gitsigns".prev_hunk()', 'h')<cr>]])
+                bmap({ "x", "o" }, "alh", ":<c-u>call v:lua.git_target(v:count, 'false')<cr>")
+                bmap({ "x", "o" }, "ilh", ":<c-u>call v:lua.git_target(v:count, 'false')<cr>")
+                bmap({ "n", "x", "o" }, "]h", [[<cmd>call v:lua.markGoCentre(v:count, 'lua require"gitsigns".next_hunk()', 'h')<cr>]])
+                bmap({ "x", "o" }, "anh", ":<c-u>call v:lua.git_target(v:count, 'true')<cr>")
+                bmap({ "x", "o" }, "inh", ":<c-u>call v:lua.git_target(v:count, 'true')<cr>")
+            end
+        end
+    }
+)
 
 -- Text object targets
 function _G.ts_target(count, object, back)
