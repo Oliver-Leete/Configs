@@ -107,21 +107,22 @@ these combinations (where one tick is any support and two is preferable
 
 | Object                                | Select in/around | Select in/around next/last | Jump to next/last | Jump to left/right |
 |:-------------------------------------:|:----------------:|:--------------------------:|:-----------------:|:------------------:|
-| scope (method, function, class, etc.) | ✓                | ✓✓                         | ✓                 | ✗                  |
-| block (loops, conditionals, etc.)     | ✓                | ✓✓                         | ✓                 | ✗                  |
+| scope (method, function, class, etc.) | ✓                | ✓✓                         | ✓✓                | ✗                  |
+| block (loops, conditionals, etc.)     | ✓                | ✓✓                         | ✓✓                | ✗                  |
 | paragraph                             | ✓                | ✓✓                         | ✓✓                | ✗                  |
-| sentence                              | ✓✓               | ✗                          | ✗                 | ✗                  |
+| sentence                              | ✓✓               | ✗                          | ✓                 | ✗                  |
 | sub-word                              | ✓                | ✗                          | ✗                 | ✗                  |
 | word                                  | ✓                | ✓✓                         | ✓                 | ✗                  |
 | WORD                                  | ✓                | ✓✓                         | ✓                 | ✗                  |
 | quickfix list item                    | ✗                | ✗                          | ✓                 | ✗                  |
-| diagnostic message                    | ✗                | ✗                          | ✓                 | ✗                  |
+| diagnostic                            | ✗                | ✗                          | ✓                 | ✗                  |
 | git signs hunk                        | ✓                | ✓✓                         | ✓✓                | ✗                  |
 | diff hunk                             | ✗                | ✗                          | ✓                 | ✗                  |
 | quote                                 | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
 | bracket                               | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
 | argument                              | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
 | function call                         | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
+| indent                                | ✓✗               | ✗                          | ✗                 | ✓                  |
 | latex section                         | ✓                | ✓✓                         | ✓                 | ✗                  |
 | latex environment                     | ✓                | ✓✓                         | ✓                 | ✗                  |
 | latex maths                           | ✓                | ✓✓                         | ✓                 | ✗                  |
