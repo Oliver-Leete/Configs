@@ -392,14 +392,13 @@ myLayoutHook = smartBorders
     where
     notebookMulti   = Notebook True True True 1 2 reSize 2 (2/3)
     notebookThesis  = Notebook True True True 1 3 reSize 2 (2/3)
+    notebookTwoMain = Notebook False True True 2 3 reSize 2 (2/3)
     notebookColumns = Notebook False True True 4 4 reSize 2 (2/3)
 
-    notebookTwoMain = Notebook False True True 2 3 reSize 2 (2/3)
     notebookDifferent = onWorkspaces [wsTHESIS, ws3D] notebookThesis $ onWorkspaces [wsCOMMENTS] notebookTwoMain notebookMulti
 
     notbookLaptop = FourTall 1 reSize (2/3)
-    notebookLayout = onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns
-                   $ ifWider 1920 notebookDifferent notbookLaptop
+    notebookLayout = onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns $ ifWider 1920 notebookDifferent notbookLaptop
 
 ----------------------------------------------------------------------------------------------------
 -- Keybindings                                                                                    --

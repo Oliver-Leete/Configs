@@ -1,205 +1,134 @@
 <!-- markdownlint-disable MD013 -->
 # Oliver's Config
 
-I'll slowly go through and document some of this stuff I'm not going to go over
-every bit of my configs, but it might be worth some of the things I'm doing that
-I haven't seen elsewhere (or not as much as I think I should be). I'll try and
-give credit to others where it's due, but there's stuff that I can't remember
-where it came from.
+I'll slowly go through and document some of this stuff. I'm not going to go over
+every bit of my configs, but I will cover the interesting (in my opinion) bits.
+I'll try and give credit to others where it's due, but there's stuff that I
+can't remember where it came from, sorry about that.
 
 ## WARNING
 
-This readme is horrifically out of date with the code in this repo, do not trust
-it. It seems I change my configs way more often than I write about them.
+This readme could be horrifically out of date with the code in this repo, do not
+trust it. It seems I change my configs way more often than I write about them.
+
+Also, my config layout is super inconsistent, and has some utter crap in it, so
+be warned.
 
 # Neovim
 
 ## Multiple Leaders
 
 I am slowly moving things over to a system of having a few top level leaders,
-each with its own use. Space, the actual leader key set, is used for all
-'program level commands', things like fuzzy finding, running code, debugging,
-etc. Comma, the user command key, is used for additional editing commands, like
-aligning things, changing case, and special pasting. Backslash, the local leader
-key, is used for very language specific things. Such as viewing a Tex file's
-PDF, or using the VimTex word count function.
+each with its own use. The main thing here is separating the normal leader key
+in two, with 'program level commands' on a space leader and extra editing
+commands on a comma leader. Backslash is my local leader (although most of that
+stuff is moving to my command palette).
 
 Square brackets are used as directional leaders (covered more in the Repeat
-section), for all manner of jumping about. I am trying to limit g to just be
-goto commands (goto paste works kinda), I'll hopefully remove all the normal
-extra crap it's used for at some point. v is a view related key (thanks Kakoune
-for the inspiration). I have a bit of a hacky way to lock a mode in, by simply
-having the mapping end by calling the same leader key again, this has many
-flaws, but it is the best I can be bothered to do at the moment.
+section), for all manner of jumping about and nothing else (At some point I'll
+get rid of all the other things vim defaults to using it for). I am trying
+to limit g to just be goto commands, I'll hopefully remove all the normal extra
+crap it's used for at some point. v is a view related key (thanks Kakoune for
+the inspiration). Unlike Kakoune, I have v lock into a view mode if any of the
+bindings you might want to repeat are pressed. This is done with Hydra.
 
 ## Repeat Mappings
 
 OK, I love this one. I use a lot of jumping around mappings, bound to ] and [
 for forward and backward jumps respectively. Especially treesitter text objects
-movements. I have my shift keys bound to send the brackets on a press (but
-still send the shift key when held) in my keyboard firmware. Only problem is I
-hate having to keep pressing the letters after, makes jumping through a load
-of spelling mistakes to correct them all very tedious. So I came up with this
-little function. Then in all my mappings for the jumps themselves I add a bit
-to overwrite the dirJumps variable like in the example below (note that it's in
-which-key.nvim format). I also have all my jump mappings include zz at the end
-for that nice screen centering and m\` to add it to the jump list (I think it
-should be m', but that doesn't seem to work)
+movements. Only problem is I hate having to keep pressing the letters after,
+makes jumping through a load of spelling mistakes to correct them all very
+tedious. So I came up with this little function. Then in all my mappings for
+the jumps themselves I add a bit to overwrite the dirJumps variable like in the
+example below. I also have all my jump mappings include zz at the end for that
+nice screen centring and m\` to add it to the jump list.
+
+vim-slash is used to set dirJumps="search" after each search, so that n and N
+still work for searching for jumps.
 
 ```lua
 vim.api.nvim_set_var("dirJumps", "f")
 
 function _G.commandRepeat(leader, varName)
-    local jump = vim.api.nvim_get_var(varName)
-    return vim.api.nvim_replace_termcodes(leader .. jump, true, true, true)
-end
-
-    n = { "v:lua.commandRepeat(']', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
-    N = { "v:lua.commandRepeat('[', 'dirJumps')", "Repeat Last", expr = true, noremap = false },
-
-    ["]"] = {
-        f = { "<cmd>let g:dirJumps='f'<cr><cmd>TSTextobjectGotoNextStart @function.outer<cr>zz", "Function" },
-    }
-```
-
-Since writing this, I have moved the repeat key to n and N, with jumping between
-search results being the default for all file types. ]], ][, [[ and [] now jump
-to the start or end of the previous file type based defaults (mostly scopes, but
-sections in Tex or markdown files).
-
-Realizing that I could use the same function for all kinds of repeats. I've
-already added it to my panel opening mappings (all bound under \<leader\>v) so
-that \<leader\>vv will open the last panel, or close it if it's still open. This
-is just done by having another variable to store the window command in.
-
-All of these also have a default command that is used if nothing has been called
-yet (can't repeat what hasn't been done). The default panel is nvim tree, but
-the below snippet can be used to set it per file type, like setting it to open
-the table of contents in a Tex file.
-
-```lua
-if vim.api.nvim_get_var("panelRepeat") == "x" then
-    vim.api.nvim_set_var("panelRepeat", "c")
-end
-```
-
-## Target Mappings
-
-OK, so I'm a massive fan of the next/last operators provided by the targets
-extension. Only problem is that they don't work with every text object. I've
-started to make some bindings for that will fill in the gaps, so far I've got
-this to add target mappings for Treesitter text objects:
-
-```lua
-function _G.ts_target(count, object)
-    vim.cmd("TSTextobjectGotoNextStart " .. object)
-    count = count - 1
-    while count > 0 do
-        vim.cmd("TSTextobjectGotoNextStart " .. object)
-        count = count - 1
+    local key = vim.api.nvim_get_var(varName)
+    if key == "search" then
+        if leader == "]" then
+            return replace_keycodes("nvv")
+        elseif leader == "[" then
+            return replace_keycodes("Nvv")
+        end
     end
-    vim.cmd("TSTextobjectSelect " .. object)
+    return replace_keycodes(leader .. key)
 end
 
-function _G.ts_target_back(count, object)
-    vim.cmd("TSTextobjectGotoPreviousEnd " .. object)
-    count = count - 1
-    while count > 0 do
-        vim.cmd("TSTextobjectGotoPreviousEnd " .. object)
-        count = count - 1
-    end
-    vim.cmd("TSTextobjectGotoPreviousStart " .. object)
-    vim.cmd("TSTextobjectSelect " .. object)
-end
+
+Map({ "n", "x", "o" }, "n", "v:lua.commandRepeat(']', 'dirJumps')", { expr = true, remap = true })
+Map({ "n", "x", "o" }, "N", "v:lua.commandRepeat('[', 'dirJumps')", { expr = true, remap = true })
+
+Map({ "n", "x", "o" }, "[s", "<cmd>call v:lua.markGoCentre(v:count, 'TSTextobjectGotoPreviousStart @function.outer', 's')<cr>")
+Map({ "n", "x", "o" }, "]s", "<cmd>call v:lua.markGoCentre(v:count, 'TSTextobjectGotoNextStart @function.outer', 's')<cr>")
 ```
 
-These use the functions provided by the TS Text Object plugin to define two
-new commands. They move forward or backward a count number of the desired
-text object and then select said object. This can be used in addition to a
-c-u mapping to make an operator pending mapping (examples can be seen in my
-operator pending mappings). I have also made a similar function for git hunks,
-using the git signs plugin. This is slightly simpler, due to the way the git
-signs function works, only one function is needed, with one command swapped out
-depending on direction.
+## Text objects
 
-Just made some more functions and mappings for this. Mapped targets allows
-for the creation of target mappings using already existing mapped motions and
-selections. Plug targets instead uses the plug mapping provided by plugins.
-Examples of all of these functions can be seen in my o_bindings_config.Lua and
-Tex.Lua config files. Combined with the targets plugin this allows for almost
-any text object to be targeted from afar. The one remaining object has been
-conquered, paragraphs. This had to have two functions all to itself, but it now
-works how I want it to.
+At some point I need to actually finish making a consistent set of mapping for
+handling text objects. Thanks to the amazing mini.ai I'm closer, but I still
+need a bit more.
 
-## Targeted Paste
+There are four sets of mappings I'd like to have for each textobject (quickfix
+list is listed, but only the jump command makes any sense).
 
-This is something I've wanted for a while, a simple little pair of functions
-that lets you paste from afar. This is useful for putting the thing you just
-yanked at the end of the paragraph (or any other text object you could think
-of).
+1) Select inside/around the current instance of that text object (mapped to
+a/i). Obviously this is the basic functionality.
+2) Select inside/around the next or last instance of that text object (mapped to
+al/an/il/in).
+3) Jump to the start of the next or last instance of that text object (mapped to
+[/]). I'd like it so that it always goes to the previous object instead of first
+goint to the start of the current one.
+4) Jump to the left or right edge of the current instance of that text object
+(mapped to {/})
 
-The first is the setup function, followed by the function that can be set as the
-Opfunc (for whatever reason the Opfunc can't take arguments, hence the setup
-function).
+The jump to the left right edge used to be covered for all objects by vim ninja
+feet, but that didn't work with dot repeat, so now it's missing for all but the
+mini.ai text objects. I'm starting to think the easiest way to get everything I
+want is just to implement every text object in mini.ai.
 
-```lua
-function _G.pre_paste_away(register, paste)
-    local direction
-    if string.find(paste, "p") then
-        direction = "]"
-    else
-        direction = "["
-    end
-    Paste_away_direction = direction
-    Paste_away_register = register
-    Paste_away_paste = paste
-end
+Scope and block use treesitter-textobjects and some functions to add the extra
+mappings. I have a modified copy of the query files that groups together a lot
+of the queries to make them take up less shortcuts (I think they've now added
+this functionality into the plugin, but I'm not sure if it'll work with my
+wrapper functions). Neither name is great, and block doesn't even match with the
+mapping (I currently have it mapped to o). But 'scope' is joins class and
+function. And block joins block, conditional and loops.
 
-function _G.paste_away()
-    vim.cmd([[normal ']] .. Paste_away_direction .. '"' .. Paste_away_register .. Paste_away_paste)
-end
-```
+The current (assuming I remember to update this) state of my mappings cover
+these combinations (where one tick is any support and two is preferable
+(includes counts and any above conditions)):
 
-Turns out I don't ever actually use this, I'm not even sure if I even still have
-it bound to anything. Although I have considered making everything targeted by
-default, like insert mode, ext. Maybe that would make me use it.
-
-## Diff View Mappings
-
-I have a few commands to let me pick what to diff against in diff view, so I
-added a variation of the repeat mappings to give me a mapping of reopening diff
-view using the last command. The telescope commands come from someone from the
-Neovim subreddit, the only extra bit is the bit that stores the command (and in
-the actual config there are more of them, for picking things like branches).
-
-```lua
-vim.api.nvim_set_var("DiffviewLast", "DiffviewOpen")
-
-function _G.diff_repeat()
-    local cmd = vim.api.nvim_get_var("DiffviewLast")
-    vim.cmd(cmd)
-end
-local open_dif = function()
-    local selected_entry = action_state.get_selected_entry()
-    local value = selected_entry["value"]
-    -- close Telescope window properly prior to switching windows
-    vim.api.nvim_win_close(0, true)
-    local cmd = "DiffviewOpen " .. value
-    vim.api.nvim_set_var("DiffviewLast", cmd)
-    vim.cmd(cmd)
-end
-function _G.git_commits_againsthead()
-    require("telescope.builtin").git_commits({
-        attach_mappings = function(_, map)
-            map("n", "<cr>", open_dif)
-            map("i", "<cr>", open_dif)
-            return true
-        end,
-    })
-end
-```
+| Object                                | Select in/around | Select in/around next/last | Jump to next/last | Jump to left/right |
+|:-------------------------------------:|:----------------:|:--------------------------:|:-----------------:|:------------------:|
+| scope (method, function, class, etc.) | ✓                | ✓✓                         | ✓                 | ✗                  |
+| block (loops, conditionals, etc.)     | ✓                | ✓✓                         | ✓                 | ✗                  |
+| paragraph                             | ✓                | ✓✓                         | ✓✓                | ✗                  |
+| sentence                              | ✓✓               | ✗                          | ✗                 | ✗                  |
+| sub-word                              | ✓                | ✗                          | ✗                 | ✗                  |
+| word                                  | ✓                | ✓✓                         | ✓                 | ✗                  |
+| WORD                                  | ✓                | ✓✓                         | ✓                 | ✗                  |
+| quickfix list item                    | ✗                | ✗                          | ✓                 | ✗                  |
+| diagnostic message                    | ✗                | ✗                          | ✓                 | ✗                  |
+| git signs hunk                        | ✓                | ✓✓                         | ✓✓                | ✗                  |
+| diff hunk                             | ✗                | ✗                          | ✓                 | ✗                  |
+| quote                                 | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
+| bracket                               | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
+| argument                              | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
+| function call                         | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
+| latex section                         | ✓                | ✓✓                         | ✓                 | ✗                  |
+| latex environment                     | ✓                | ✓✓                         | ✓                 | ✗                  |
+| latex maths                           | ✓                | ✓✓                         | ✓                 | ✗                  |
 
 ## Some Other Mappings
+
+### Move up and down
 
 These two make j and k respect wrapped lines, unless a count is given, in which
 case j and k act on true lines. This means that normally they make the cursor
@@ -211,6 +140,11 @@ jump list if a count greater than 5 is given.
 Map({ "n", "x", "o" }, "j", [[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], { expr = true })
 Map({ "n", "x", "o" }, "k", [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], { expr = true })
 ```
+
+I don't used wrapped lines any more, and rarely ever jump by line, so this
+mapping isn't that useful to me any more.
+
+### Move to start/end of line
 
 It makes sense to me to have 'big' h and l do a bigger version of the h or
 l movement. So this mapping makes H and L go to the start and end of the
@@ -225,102 +159,6 @@ Map({ "n", "x", "o" }, "H", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], {
 Map({ "n", "x" }, "L", [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], { expr = true })
 Map("o", "L", "$")
 ```
-
-## The Slow Road To Kak
-
-I really like the ideas behind Kakoune, and will at some point have another try
-at moving to it (or Helix). But for the mean time I'm just taking a few ideas
-from it.
-
-### Kak Mappings
-
-I don't actually know how I would get to normal visual mode at the moment, I
-have unmapped all the v key functionality and instead split line and column
-based stuff to x and C, inspired by the Kak mappings. These mappings also allow
-for quickly expanding the selections (Why would you go into column mode if you
-aren't going to select another column?)
-
-```lua
-Map({ "n", "x", "o" }, "v", "<nop>")
-Map({ "n", "x", "o" }, "V", "<nop>")
-Map({ "n", "x", "o" }, "<c-v>", "<nop>")
-
-Map("n", "x", "V")
-Map("n", "X", "V")
-Map("n", "C", "<c-v>j")
-Map("n", "<m-C>", "<c-v>k")
-Map("n", "<m-C>", "<c-v>k")
-
-Map("x", "x", "j$")
-Map("x", "X", "<esc>`<kV`>")
-Map("x", "C", "j")
-Map("x", "<m-C>", "<esc>`<k<c-v>`>")
-Map("x", "<M-;>", "o")
-
-Map({ "n", "x" }, "<m-c>", [["_c]])
-Map({ "n", "x" }, "<m-d>", [["_d]])
-
-Map("n", "<m-o>", "m1o<esc>`1")
-Map("n", "<m-O>", "m1O<esc>`1")
-Map("x", "<m-o>", "<esc>`>o<esc>gv")
-Map("x", "<m-O>", "<esc>`<O<esc>gv")
-```
-
-### Remote Terminal Tasks
-
-I tried for ages to get a system for running terminal tasks set up in NVim that
-I was happy with, closest I got was using toggle term, but I still had some
-issues. When I looked back into Kakoune I thought about the idea of keeping the
-editor for editing only, and started looking into running terminal tasks in my
-actual terminal. Using Kitty's remote functionality I was able to set up some
-shortcuts for running REPLs, debug and build tools.
-
-There are a few scripts used for this. Oneshot is for things like build tasks,
-where the terminal is killed and recreated every time the task is called.
-Persistent is used for things like debug terminals or test runners, where you
-want the terminal to stick around whist more commands are sent to it. And REPL
-is used for its ability to send strings from the editor windows.
-
-Another script can grab the output from the latest command in a terminal and
-bring it in to the quickfix list. Or the other way around, some shortcuts in
-kitty can be used to jump to the location of an error message (this would work
-better with another editor, if they don't have a quickfix list alternative).
-
-## New Text Object Concept
-
-I haven't put much time into implementing this yet, but I have plans. The plan
-is to have all text objects accessable by alphabetic characters (so the capital
-letters can be used for some stuff) or characters that can be shifted. And then
-to use a few directional keys to select them in different ways. The first set
-would be used ([ and ] in my current plans) to jump to the next or previous
-object or in operator pending, to act until the next object. The next pair ({
-and } in my current plans) would select within the next text object, similar to
-gn and gN. And the last pair (( and ) in my current plans), would jump to the
-start or end of the current text object, like vim ninja feet.
-
-Having this would allow for things like yanking the next two functions, deleting
-to the next bracket and then changing to the end of the quote the cursor is
-currently in.
-
-I have started working on this now. I'm trying to think about how to make it
-customisable, both for easy changes for my own config, but also to be able
-to make it into an extension. At the moment it uses custom methods for some
-of the built in text objects, like words, paragraphs ect., targets is used
-for brackets, arguments and quotes, vim-word-motion is used for subwords and
-treesitter text objects is used for functions and that stuff. I have altered the
-queries in TSTextobjects to simplyfy them a bit, using just three instead of the
-many, parameters is the same as it is. Scope takes over for function and objects
-and block takes over for conditionals, loops and blocks.
-
-### Other editors
-
-For when I actually want the full powers of Kakoune I have a shortcut that uses
-kitty's remote control to open a new tab with Kak running. This tab is opened
-to the same cursor position in the same file as I ran the shortcut from. I also
-have shortcuts for opening in vis and helix, but I don't tend to use any of
-these.
-
-## Insert Mappings
 
 ### Copy from above
 
@@ -338,6 +176,77 @@ inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.'
 snoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 ```
+
+### Delete buffer
+
+I have a stupidly complicated mapping to decide what I do when I press my magic
+key (more on that later) for closing things. It already does a variety of things
+depending on what program I'm focused on, but it also does a variety of things
+within Neovim depending on what window is focused and what is left on the tab.
+
+## Command Palette
+
+I've tried a few extensions, but none of them did quite what I wanted, so I made
+my own. It uses vim.ui.select for the picker (with dressing.nvim to use
+telescope for that picker). The main thing was to have a way of adding to the
+picker for file types and project types, and having it be able to run vim
+commands, lua functions or key maps. I also wanted a way of specifying the
+source of a command so that I could group together similar commands.
+
+Honestly it's quite basic, but it works for what I need it for.
+
+### Tasks runner
+
+At some point I will move to using neotest for all my testing needs, and
+overseer for managing all tasks. But at the moment I'm still using a custom-made
+task runner built on top of the above command palette and running in toggleterm.
+I think the turning point will be when I finally make a Julia test runner
+server (running up a Julia instance each time you want to test takes too much
+precompilation time). I can't be bothered to document this properly because,
+as I say, I'll hopefully drop it for the above options soon (and honestly my
+solution is an absolute mess, using private functions in toggleterm) (Although
+my current method supports debugging, running and profiling of Julia benchmarks,
+which I'm not sure how I'd cover with the above).
+
+## Julia
+
+I am slowly trying collect all the tools I want for Julia development. I have
+the hacky task runner mentioned above for all my task running needs (I even have
+a function to run the matching test for the current function, assuming the test
+has the same name as the function). And I have started working on a neotest
+adaptor for Julia, although it's very early stages right now.
+
+nvim-coverage already has some nice Julia support, so all I need to do is write
+an overseer task to run the full test suite with coverage and then load it in to
+nvim-coverage when it's finished.
+
+I have a very hacky Julia profile trace reader for perfanno, it is very dumb at
+the moment and is waiting for me to make a Julia function to properly export the
+profile data instead of just flattening it. What I do have though is a hacky way
+of loading the profile data into perfanno when a profile run is finished by my
+task runner.
+
+As I can't get dap to work with Julia I have made some functions to toggle
+Debugger.jl and Infiltrator.jl breakpoints, including adding the using statement
+if the file doesn't have one and removing it when the last breakpoint is
+removed.
+
+So still on the list to do at some point is to (not that I'll ever get around to
+them):
+
+- Add Julia support for neogen (actually it looks like someone has already started
+  on that).
+- Add Julia support for refactoring.nvim
+- Figure out if a wrapper can be made to use DebugAdapter.jl in Neovim.
+- Make a Julia server to run tests and finish the neotest adaptor.
+- Make a similar thing for benchmarks, and probably a neotest consumer for
+  benchmark results.
+- Make a better profile data exporter.
+- Extend the profile runner and exporter to allocation profiles.
+- I would also like to have Julia support in something like splitjoin.vim, but I
+  really don't like vimscript, so I'll never do that myself. I have got basic
+  functionality from nvim-trevJ.lua and the julia#toggle_function_blockassign()
+  function from julia-vim
 
 # XMonad
 
@@ -385,20 +294,22 @@ monitor, but if I ever move to a laptop then it will be killer. I'll have to get
 my head around the logic of the persistent two pane layouts and try and nick
 that.
 
+OK, I gave up on the above paragraph for now. At the moment I just have it swap
+to a modified version of the tall layout for 1080p screens.
+
 I love this layout so much that not only is it basically all I use, but I also
-use it twice. In that I have two different layouts defined that use the notebook
-layout just with different default settings (even more than twice now that I'm
-using multiple screen resolutions).
+use it twice. In that I have many layouts defined that use the notebook layout
+just with different default settings for different workspaces.
 
 ### Layout Bar Avoidance
 
 Inspired by a Reddit post, I have made a little function that does some
 hardcoded checks for the location of window columns, and extends them if they
-don't interfere with the XMobar. I've added this to my Notebook and Four column
+don't interfere with the Xmobar. I've added this to my Notebook and Four column
 layout. Basically, I have the xmobar take up the centre third of the top of the
 screen, on those layouts there are checks to see if a column is in the centre
 third of the screen horizontally. If not, it will extend the column height by
-the height of my XMobar, it's only a little of screen space that I gain back,
+the height of my Xmobar, it's only a little of screen space that I gain back,
 honestly it is mostly for the looks.
 
 This is done with some strategic uses of the following function:
@@ -450,7 +361,7 @@ used it should just move between windows. The killer is having it move out of
 the editor or terminal if it is already at the edge. That is done by using a
 modified version of vim-kitty-navigator and a bash script (along with kitty
 remote) for the editor and terminal respectively. This allows all windows and
-splits to be treated as one continuos thing as far as 2d navigation is concerned.
+splits to be treated as one continuous thing as far as 2d navigation is concerned.
 
 Other 'Magic' keys include:
 
@@ -462,10 +373,24 @@ window is already in the terminal's master window then it will move to the
 window manager master (this is super hacky, relying on the terminal master and
 stack windows having different dimensions and also relying on a sleep in the
 script).
-- Super+n focuses the main editor for the workspace, or creates a new terminal
-split if the editor is focused.
+- Super+w sends the full-screen key (normally f11). Unless it's focused on a
+browser with the current tab being a YouTube tab, in which case it sends the
+f key, to full-screen the YouTube video. If a terminal is focused then it
+full-screens the current window within the terminal, but if Neovim is focused
+and there are no other terminal windows in the tab then it will focus the
+current Neovim window (using mini.misc zoom)
+- Super+left/right changes tabs in the browser, tabs in kitty or tabs in Neovim
+  (or terminals in toggleterm)
 
-## Workspace Harpoon
+## Workspaces
+
+There's a bit of inconsistency in my workspaces because I use workspaces in two
+different ways. For specific programs or specific projects. Workspaces like
+print are program specific, in that case it's my slicer. And workspaces like sim
+are project specific, in that case for the simulation I'm programming for my
+PhD.
+
+### Workspace Harpoon
 
 I really like the harpoon Neovim extension for quickly jumping between files in
 Neovim. Well my attitude to XMonad workspaces (or projects or whatever) is to
@@ -474,7 +399,19 @@ way I solved this was to make a little bash script that can jump between a small
 list of workspaces, and a way of editing that list. Neovim harpoon lets you have
 a list of files per directory, to get a similar thing for my workspace harpoon I
 have a concept of preset lists of workspaces, so I can quickly swap between the
-set I use for my work simulations, thesis writing or config editing.
+set I use for my work simulations, thesis writing or config editing, etc.
+
+### App Harpoon
+
+I also added a workspace dependent app harpoon for the home row on my right
+hand. Where each key runs or raises the set app (with the pinky finger always
+having the workspace specific browser).
+
+### Browser
+
+Each workspace (and I have a lot of them) has its own user-data-dir (using
+altercation's browser script) so that tabs can be picked up from where I left
+off last time I was in that workspace.
 
 ## Other
 
@@ -494,7 +431,7 @@ away quickly.
 
 I wanted to use nerdfont icons to represent things like battery level and
 network connection. I don't think there is a good way to do this in xmobar, so I
-made a litte bash script that would output these icons and then had xmobar run
+made a little bash script that would output these icons and then had xmobar run
 that script. It's nothing fancy, just checks the battery state and returns the
 relevant icon, and does the same with network state. It also adds some actions
 to the icons, so that clicking on them makes a notification with some more info
@@ -511,7 +448,9 @@ them. This also allowed me to add a menu for the display control stuff,
 bluetooth, network and sound control stuff (most of which was a mouse task
 before), making it all keyboard accessible now.
 
-# Hellslide (Keyboard)
+# Other Things
+
+## Hellslide (Keyboard)
 
 A simple wireless low profile keyboard that is based on the kyria's shape, but
 with the two outermost thumb keys moved to below the middle and ring finger
@@ -519,7 +458,27 @@ columns. It also gets rid of the outer column, almost all none key features and
 uses Kailh choc low profile switch spacing.
 
 One of my goals when it came to making the mapping for this board was to avoid
-layers. I've done this using combos for all of the numbers and symbols and
-having all the other keys (like space, tab, del etc.) on the thumb clusters,
-with combo thumb clusters for mod taps. I only have one layer for function keys,
-consol swapping (control + alt + function keys) and bluetooth and input control.
+layers. I've done this using combos for all the numbers and symbols and having
+all the other keys (like space, tab, del etc.) on the thumb clusters, with combo
+thumb clusters for mod taps. I only have one layer for function keys, consol
+swapping (control + alt + function keys) and bluetooth and input control.
+
+And of course because it's a wireless split keyboard, I had to make it so the two
+halves magnet together side by side to make a more stable keyboard for used on
+my lap. And magnet together back to back for easy transport.
+
+At the moment I am using a slightly crappy FDM PLA case for it, but I have got a
+laser sintered nylon case that I managed to sneak onto a build at work that I
+just need to get around to dying before I change to it.
+
+# Film picker
+
+Have you ever had 4 hours and 20 minutes to spare and wondered what combination
+of films you could watch to perfectly fill your time? Well now with the handy
+film picker script you can not only find out, but also queue them up.
+
+If you run this script in a folder filled with videos it will open up a Neovim
+instance with a list of all the films sorted by duration. The winbar defined in
+ui_config.lua will display the duration of all the films in the current
+paragraph. When the Neovim instance is quit whatever paragraph is at the top of
+the file will be queued up in MPV. (The lsv script is also required).

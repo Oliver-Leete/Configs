@@ -111,14 +111,6 @@ Map("x", ">", ">gv")
 Map("n", "<c-v>", "<cmd>silent vsplit %<cr>")
 Map("n", "<c-x>", "<cmd>silent split %<cr>")
 
-local get_input = function(prompt)
-    local ok, result = pcall(vim.fn.input, { prompt = prompt })
-    if not ok then
-        return nil
-    end
-    return result
-end
-
 vim.g.wordmotion_nomap = true
 Map({ "n", "x", "o" }, "<m-w>", "<plug>(WordMotion_w)", { remap = true })
 Map({ "n", "x", "o" }, "<m-b>", "<plug>(WordMotion_b)", { remap = true })

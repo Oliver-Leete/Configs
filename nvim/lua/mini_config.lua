@@ -1,7 +1,7 @@
 local gen_spec = require('mini.ai').gen_spec
 require("mini.ai").setup({
     custom_textobjects = {
-        a = gen_spec.argument({ brackets = { '%b()', '%b{}', '%b[]' }, separators = { ',', ';' } }),
+        a = gen_spec.argument({ separators = { ',', ';' } }),
     },
 
     mappings = {
@@ -31,14 +31,14 @@ function _G.markAndGoMini(count, ai, np, key)
     until count <= 0
 end
 
-Map({ "n", "x", "o" }, "]a", "<cmd>call v:lua.markAndGoMini(v:count, 'i', 'next', 'a')<cr>")
-Map({ "n", "x", "o" }, "[a", "<cmd>call v:lua.markAndGoMini(v:count, 'i', 'prev', 'a')<cr>")
+Map({ "n", "x", "o" }, "]a", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'next', 'a')<cr>")
+Map({ "n", "x", "o" }, "[a", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'prev', 'a')<cr>")
 
-Map({ "n", "x", "o" }, "]b", "<cmd>call v:lua.markAndGoMini(v:count, 'i', 'next', 'b')<cr>")
-Map({ "n", "x", "o" }, "[b", "<cmd>call v:lua.markAndGoMini(v:count, 'i', 'prev', 'b')<cr>")
+Map({ "n", "x", "o" }, "]b", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'next', 'b')<cr>")
+Map({ "n", "x", "o" }, "[b", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'prev', 'b')<cr>")
 
-Map({ "n", "x", "o" }, "]q", "<cmd>call v:lua.markAndGoMini(v:count, 'i', 'next', 'q')<cr>")
-Map({ "n", "x", "o" }, "[q", "<cmd>call v:lua.markAndGoMini(v:count, 'i', 'prev', 'q')<cr>")
+Map({ "n", "x", "o" }, "]q", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'next', 'q')<cr>")
+Map({ "n", "x", "o" }, "[q", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'prev', 'q')<cr>")
 
 Map({ "n", "x", "o" }, "]f", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'next', 'f')<cr>")
 Map({ "n", "x", "o" }, "[f", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'prev', 'f')<cr>")
@@ -58,7 +58,7 @@ require("mini.comment").setup({
     mappings = {
         comment = ",c",
         comment_line = ",cc",
-        textobject = "id",
+        textobject = "ic",
     },
 })
 

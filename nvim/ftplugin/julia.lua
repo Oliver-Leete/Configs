@@ -7,13 +7,8 @@ vim.cmd([[set errorformat+=%-G%.%#]])
 
 vim.bo.commentstring = [[#%s]]
 
-
-
 vim.g.latex_to_unicode_tab = 0
 vim.g.latex_to_unicode_auto = 1
-
-vim.b[0].replCommand = "juliaREPL"
-vim.b[0].replName = "JuliaPersistant"
 
 local function get_command_output(cmd, silent)
     if silent then
@@ -186,19 +181,6 @@ BP_Remove_All = function(imp_names, bp_names)
     vim.fn.cursor(cur_pos[2] - 2, cur_pos[3])
 end
 
-ReadLastOutput = function()
-    local handleRLO = io.popen(
-        [[kitty @ get-text --match title:JuliaPersistant --extent last_cmd_output | rg --multiline --pcre2 "julia>(?!(.|\\n)*(julia>))(.|\\n)*?\Z"]]
-    )
-    if not handleRLO then return end
-    local last_output = handleRLO:read("*a")
-    handleRLO:close()
-
-    vim.diagnostic.match(last_output)
-    local filename
-    vim.fn.bufnr(filename, true)
-end
-
 Map("n", ",rb", "<cmd>call julia#toggle_function_blockassign()<cr>")
 
 Map("n", "<leader>D", Run_closest, { expr = true, buffer = 0 })
@@ -208,8 +190,6 @@ Map("n", ",di", function() BP_Toggle("Infiltrator", "@infiltrate") end, { buffer
 Map("n", ",dq", function() BP_Remove_All({ "Debugger", "Infiltrator" }, { "@bp", "@infiltrate" }) end, { buffer = 0 })
 
 vim.b[0].localCommands = {
-    { source = "julia", name = "Fetch errors from persistant", command = "silent !kittyQuickfix juliaTest" },
-    { source = "julia", name = "Fetch errors from one shot", command = "silent !kittyQuickfix OneShot" },
     { source = "julia", name = "Load profile data", func = jul_perf_flat },
 }
 
