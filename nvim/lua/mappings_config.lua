@@ -119,43 +119,6 @@ local get_input = function(prompt)
     return result
 end
 
--- require("nvim-surround").setup({
---     keymaps = {
---         normal = "yp",
---         delete = "dp",
---         change = "cp",
---         visual = "P",
---     },
---     delimiters = {
---         pairs = {
---             ["("] = { "(", ")" },
---             [")"] = { "( ", " )" },
---             ["{"] = { "{", "}" },
---             ["}"] = { "{ ", " }" },
---             ["["] = { "[", "]" },
---             ["]"] = { "[ ", " ]" },
---             ["<"] = { "<", ">" },
---             [">"] = { "< ", " >" },
---             ["i"] = function()
---                 return {
---                     get_input( "Enter the left delimiter: "),
---                     get_input( "Enter the right delimiter: ")
---                 }
---             end,
---             ["f"] = function()
---                 return {
---                     get_input( "Enter the function name: ") .. "(", ")"
---                 }
---             end,
---         },
---         aliases = {
---             ["a"] = false,
---             ["b"] = { '[', "{", "(" },
---             ["q"] = { '"', "'", "`" },
---         },
---     }
--- })
---
 vim.g.wordmotion_nomap = true
 Map({ "n", "x", "o" }, "<m-w>", "<plug>(WordMotion_w)", { remap = true })
 Map({ "n", "x", "o" }, "<m-b>", "<plug>(WordMotion_b)", { remap = true })

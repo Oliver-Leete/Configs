@@ -1,5 +1,8 @@
+local gen_spec = require('mini.ai').gen_spec
 require("mini.ai").setup({
-    custom_textobjects = nil,
+    custom_textobjects = {
+        a = gen_spec.argument({ brackets = { '%b()', '%b{}', '%b[]' }, separators = { ',', ';' } }),
+    },
 
     mappings = {
         around = "a",
@@ -18,6 +21,27 @@ require("mini.ai").setup({
 
     search_method = "cover_or_nearest",
 })
+
+function _G.markAndGoMini(count, ai, np, key)
+    vim.g.dirJumps = key
+    vim.cmd("norm! m`")
+    repeat
+        MiniAi.move_cursor("left", ai, key, { search_method = np, n_times = vim.v.count })
+        count = count - 1
+    until count <= 0
+end
+
+Map({ "n", "x", "o" }, "]a", "<cmd>call v:lua.markAndGoMini(v:count, 'i', 'next', 'a')<cr>")
+Map({ "n", "x", "o" }, "[a", "<cmd>call v:lua.markAndGoMini(v:count, 'i', 'prev', 'a')<cr>")
+
+Map({ "n", "x", "o" }, "]b", "<cmd>call v:lua.markAndGoMini(v:count, 'i', 'next', 'b')<cr>")
+Map({ "n", "x", "o" }, "[b", "<cmd>call v:lua.markAndGoMini(v:count, 'i', 'prev', 'b')<cr>")
+
+Map({ "n", "x", "o" }, "]q", "<cmd>call v:lua.markAndGoMini(v:count, 'i', 'next', 'q')<cr>")
+Map({ "n", "x", "o" }, "[q", "<cmd>call v:lua.markAndGoMini(v:count, 'i', 'prev', 'q')<cr>")
+
+Map({ "n", "x", "o" }, "]f", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'next', 'f')<cr>")
+Map({ "n", "x", "o" }, "[f", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'prev', 'f')<cr>")
 
 vim.g.miniindentscope_disable = true
 
@@ -67,6 +91,7 @@ require("mini.surround").setup({
     n_lines = 200,
     search_method = "cover_or_nearest",
 })
+vim.keymap.del("x", "yp")
 
 require("mini.misc").setup({
     make_global = { "put_text", "zoom" },

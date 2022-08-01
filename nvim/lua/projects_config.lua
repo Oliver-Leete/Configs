@@ -76,7 +76,7 @@ local juliaProjectRunnables = function()
 
     -- Tests
     local handle1 = io.popen(
-        [[rg --no-filename --no-heading --no-line-number -e "^\s*@testitem\s*\"(.*)\"\s*begin.*\$" -r "\$1"]]
+        [[rg --no-filename --no-heading --no-line-number -e "^\s*@testcase\s*\"(.*)\"\s*begin.*\$" -r "\$1"]]
     )
     local tests
     if handle1 then
@@ -88,7 +88,7 @@ local juliaProjectRunnables = function()
                 source = "Test",
                 name = name,
                 func = function()
-                    JuliaTest:send_open(vim.g.project .. [[Tests.runtests("]] .. name .. [[",spin=false)]], true, 1)
+                    JuliaTest:send_open([[PackageTests.runtests("]] .. name .. [[",spin=false)]], true, 1)
                 end,
             })
         end
@@ -506,3 +506,4 @@ overseer.register_template({
         callback = is_julia_project
     },
 })
+
