@@ -16,10 +16,3 @@ vim.b.minisurround_config = {
         },
     }
 }
--- require("nvim-surround").buffer_setup({
---     delimiters = {
---         pairs = {
---             ["a"] = { "function() ", " end" },
---         }
---     }
--- })

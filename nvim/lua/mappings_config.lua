@@ -203,7 +203,6 @@ Map("x", ",re", function() require("refactoring").refactor("Extract Variable") e
 Map({ "n", "x" }, ",ri", function() require("refactoring").refactor("Inline Variable") end)
 
 Map("n", ",rd", "<cmd>Neogen<cr>")
--- Map("n", ",ra", ",cA", { remap = true })
 
 Map("n", ",dd", function() require("refactoring").debug.printf({}) end)
 Map({ "n", "x" }, ",dv", function() require("refactoring").debug.print_var({}) end, { remap = false })
@@ -211,7 +210,6 @@ Map("n", ",dq", function() require("refactoring").debug.cleanup({}) end)
 
 Map({ "n", "x" }, ",s", "<Plug>Opsort", { remap = true })
 Map("n", ",ss", "<Plug>OpsortLines", { remap = true })
--- Map("x", ",s", "<Plug>Opsort", { remap = true })
 
 Map({ "n", "x" }, ",t", "<Plug>(EasyAlign)")
 

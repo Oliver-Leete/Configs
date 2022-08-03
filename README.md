@@ -78,15 +78,10 @@ need a bit more.
 There are four sets of mappings I'd like to have for each textobject (quickfix
 list is listed, but only the jump command makes any sense).
 
-1) Select inside/around the current instance of that text object (mapped to
-a/i). Obviously this is the basic functionality.
-2) Select inside/around the next or last instance of that text object (mapped to
-al/an/il/in).
-3) Jump to the start of the next or last instance of that text object (mapped to
-[/]). I'd like it so that it always goes to the previous object instead of first
-goint to the start of the current one.
-4) Jump to the left or right edge of the current instance of that text object
-(mapped to {/})
+1) Select inside/around the current instance of that text object (mapped to a/i). Obviously this is the basic functionality.
+2) Select inside/around the next or last instance of that text object (mapped to al/an/il/in).
+3) Jump to the start of the next or last instance of that text object (mapped to [/]). I'd like it so that it always goes to the previous object instead of first going to the start of the current one.
+4) Jump to the left or right edge of the current instance of that text object (mapped to {/})
 
 The jump to the left right edge used to be covered for all objects by vim ninja
 feet, but that didn't work with dot repeat, so now it's missing for all but the

@@ -87,6 +87,7 @@ require("mini.surround").setup({
         find = "fp",
         find_left = "gP",
         replace = "cp",
+        update_n_lines = '',
     },
     n_lines = 200,
     search_method = "cover_or_nearest",
