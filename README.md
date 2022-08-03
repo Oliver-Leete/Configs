@@ -102,8 +102,8 @@ these combinations (where one tick is any support and two is preferable
 
 | Object                                | Select in/around | Select in/around next/last | Jump to next/last | Jump to left/right |
 |:-------------------------------------:|:----------------:|:--------------------------:|:-----------------:|:------------------:|
-| scope (method, function, class, etc.) | ✓                | ✓✓                         | ✓✓                | ✗                  |
-| block (loops, conditionals, etc.)     | ✓                | ✓✓                         | ✓✓                | ✗                  |
+| scope (method, function, class, etc.) | ✓                | ✓✓                         | ✓✓                | ✓✓                 |
+| block (loops, conditionals, etc.)     | ✓                | ✓✓                         | ✓✓                | ✓✓                 |
 | paragraph                             | ✓                | ✓✓                         | ✓✓                | ✗                  |
 | sentence                              | ✓✓               | ✗                          | ✓                 | ✗                  |
 | sub-word                              | ✓                | ✗                          | ✗                 | ✗                  |
@@ -117,7 +117,7 @@ these combinations (where one tick is any support and two is preferable
 | bracket                               | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
 | argument                              | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
 | function call                         | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
-| indent                                | ✓✗               | ✗                          | ✗                 | ✓                  |
+| indent                                | ✓                | ✗                          | ✗                 | ✓                  |
 | latex section                         | ✓                | ✓✓                         | ✓                 | ✗                  |
 | latex environment                     | ✓                | ✓✓                         | ✓                 | ✗                  |
 | latex maths                           | ✓                | ✓✓                         | ✓                 | ✗                  |

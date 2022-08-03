@@ -18,26 +18,8 @@ vim.g.dirJumps = "search"
 Map({ "n", "x", "o" }, "n", "v:lua.commandRepeat(']', 'dirJumps')", { expr = true, remap = true })
 Map({ "n", "x", "o" }, "N", "v:lua.commandRepeat('[', 'dirJumps')", { expr = true, remap = true })
 
-Map({ "x", "o" }, "as", ":<c-u>TSTextobjectSelect @function.outer<cr>")
-Map({ "x", "o" }, "is", ":<c-u>TSTextobjectSelect @function.inner<cr>")
-Map({ "n", "x", "o" }, "[s", "<cmd>call v:lua.markGoTree(v:count, '@function.outer', 's', 1)<cr>")
-Map({ "x", "o" }, "als", ":<c-u>call v:lua.ts_target(v:count, '@function.outer', 1)<cr>")
-Map({ "x", "o" }, "ils", ":<c-u>call v:lua.ts_target(v:count, '@function.inner', 1)<cr>")
-Map({ "n", "x", "o" }, "]s", "<cmd>call v:lua.markGoTree(v:count, '@function.outer', 's')<cr>")
-Map({ "x", "o" }, "ans", ":<c-u>call v:lua.ts_target(v:count, '@function.outer')<cr>")
-Map({ "x", "o" }, "ins", ":<c-u>call v:lua.ts_target(v:count, '@function.inner')<cr>")
-
 Map({ "n", "x", "o" }, "[[", "[s", { remap = true })
 Map({ "n", "x", "o" }, "]]", "]s", { remap = true })
-
-Map({ "x", "o" }, "ao", ":<c-u>TSTextobjectSelect @block.outer<cr>")
-Map({ "x", "o" }, "io", ":<c-u>TSTextobjectSelect @block.inner<cr>")
-Map({ "n", "x", "o" }, "[o", "<cmd>call v:lua.markGoTree(v:count, '@block.outer', 'o', 1)<cr>")
-Map({ "x", "o" }, "alo", ":<c-u>call v:lua.ts_target(v:count, '@block.outer', 1)<cr>")
-Map({ "x", "o" }, "ilo", ":<c-u>call v:lua.ts_target(v:count, '@block.inner', 1)<cr>")
-Map({ "n", "x", "o" }, "]o", "<cmd>call v:lua.markGoTree(v:count, '@block.outer', 'o')<cr>")
-Map({ "x", "o" }, "ano", ":<c-u>call v:lua.ts_target(v:count, '@block.outer')<cr>")
-Map({ "x", "o" }, "ino", ":<c-u>call v:lua.ts_target(v:count, '@block.inner')<cr>")
 
 Map({ "n", "x", "o" }, "[p", "<cmd>call v:lua.markGoCentre(v:count, 'norm! {', 'p')<cr>")
 Map({ "x", "o" }, "alp", ":<c-u>call v:lua.paragraph_targets(v:count, 1, 1)<cr>")
@@ -101,21 +83,6 @@ vim.api.nvim_create_autocmd("BufEnter",
 )
 
 -- Text object targets
-function _G.ts_target(count, object, back)
-    local move_cmd
-    if back then
-        move_cmd = "TSTextobjectGotoPreviousEnd" .. object
-    else
-        move_cmd = "TSTextobjectGotoNextStart" .. object
-    end
-
-    repeat
-        vim.cmd(move_cmd)
-        count = count - 1
-    until count <= 0
-    vim.cmd("TSTextobjectSelect " .. object)
-end
-
 function _G.git_target(count, go_forward)
     local move_cmd
     if go_forward == "true" then
@@ -213,24 +180,6 @@ function _G.markGoCentre(count, command, key)
     vim.cmd("norm! m`")
     repeat
         vim.cmd(command)
-        count = count - 1
-    until count <= 0
-    vim.cmd("norm! zz")
-end
-
-function _G.markGoTree(count, object, key, back)
-    vim.g.dirJumps = key
-    vim.cmd("norm! m`")
-    local move_cmd
-    if back then
-        vim.cmd("TSTextobjectGotoPreviousEnd" .. object)
-        move_cmd = "TSTextobjectGotoPreviousStart" .. object
-    else
-        move_cmd = "TSTextobjectGotoNextStart" .. object
-    end
-
-    repeat
-        vim.cmd(move_cmd)
         count = count - 1
     until count <= 0
     vim.cmd("norm! zz")

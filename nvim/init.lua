@@ -30,6 +30,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'inkarkat/vim-unconditionalpaste'
     Plug 'tpope/vim-abolish'
     Plug 'andymass/vim-matchup'
+    Plug 'tommcdo/vim-nowchangethat'
 
     Plug 'lervag/vimtex'
     Plug 'JuliaEditorSupport/julia-vim'

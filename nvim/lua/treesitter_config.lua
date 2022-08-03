@@ -9,28 +9,28 @@ require("nvim-treesitter.configs").setup({
             return lang == "tex" or lang == "latex"
         end,
     },
-    textobjects = {
-        select = {
-            enable = true,
-            lookahead = true,
-            keymaps = {},
-        },
-        move = {
-            enable = true,
-            set_jumps = true,
-        },
-        lsp_interop = {
-            enable = true,
-            border = "single",
-            peek_definition_code = {
-                ["<leader>kf"] = "@function.outer",
-                ["<leader>ko"] = "@class.outer",
-            },
-        },
-        swap = {
-            enable = true,
-        },
-    },
+    -- textobjects = {
+    --     select = {
+    --         enable = true,
+    --         lookahead = true,
+    --         keymaps = {},
+    --     },
+    --     move = {
+    --         enable = true,
+    --         set_jumps = true,
+    --     },
+    --     lsp_interop = {
+    --         enable = true,
+    --         border = "single",
+    --         peek_definition_code = {
+    --             ["<leader>kf"] = "@function.outer",
+    --             ["<leader>ko"] = "@class.outer",
+    --         },
+    --     },
+    --     swap = {
+    --         enable = true,
+    --     },
+    -- },
     playground = {
         enable = true,
         disable = {},
