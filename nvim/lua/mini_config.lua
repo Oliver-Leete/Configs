@@ -155,10 +155,18 @@ end
 local gen_spec = require('mini.ai').gen_spec
 require("mini.ai").setup({
     custom_textobjects = {
-        p = { '\n%s*\n()%s*().-()\n%s*\n[\n%s]*()' },
-        x = { '\n()%s*().-()\n()' },
-        W = { '%s+()()%f[%S].-()%s+()' },
-        w = { '()()%f[%w]%w+()[ \t]*()' },
+        a = gen_spec.argument({ separators = { ',', ';' } }),
+        d = { '%f[%d]%d+' },
+        g = {
+            '\n%s*\n()().-()()\n%s*\n',
+            {
+                '[.!?][%s\n]()().-()[.!?][%s\n]()',
+                '^\n,n()().-()[.!?][%s\n]()',
+                '^\n\n()()[^.?!]*()().*$',
+            }
+        },
+        o = miniAiTreeWrapper({ "@block", "@conditional", "@loop" }),
+        p = { '\n%s*\n()().-()\n%s*\n[\n%s]*()' },
         r = {
             {
                 '%u[%l%d]+%f[^%l%d]',
@@ -168,10 +176,10 @@ require("mini.ai").setup({
             },
             '^().*()$'
         },
-        d = { '%f[%d]%d+' },
-        a = gen_spec.argument({ separators = { ',', ';' } }),
-        o = miniAiTreeWrapper({ "@block", "@conditional", "@loop" }),
         s = miniAiTreeWrapper({ "@function", "@class" }),
+        x = { '\n()%s*().-()\n()' },
+        W = { '%s+()()%f[%S].-()%s+()' },
+        w = { '()()%f[%w]%w+()[ \t]*()' },
     },
 
     mappings = {
@@ -201,7 +209,7 @@ function _G.markAndGoMini(count, ai, np, key)
     until count <= 0
 end
 
-for _, o in pairs({ "s", "o", "a", "b", "q", "f", "w", "W", "r", "d", "x", "p" }) do
+for _, o in pairs({ "a", "b", "d", "f", "g", "o", "p", "q", "r", "s", "w", "W", "x", }) do
     Map({ "n", "x", "o" }, "[" .. o, "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'prev', '" .. o .. "')<cr>")
     Map({ "n", "x", "o" }, "]" .. o, "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'next', '" .. o .. "')<cr>")
 

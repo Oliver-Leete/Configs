@@ -61,7 +61,6 @@ function _G.commandRepeat(leader, varName)
     return replace_keycodes(leader .. key)
 end
 
-
 Map({ "n", "x", "o" }, "n", "v:lua.commandRepeat(']', 'dirJumps')", { expr = true, remap = true })
 Map({ "n", "x", "o" }, "N", "v:lua.commandRepeat('[', 'dirJumps')", { expr = true, remap = true })
 
@@ -374,9 +373,9 @@ browser with the current tab being a YouTube tab, in which case it sends the
 f key, to full-screen the YouTube video. If a terminal is focused then it
 full-screens the current window within the terminal, but if Neovim is focused
 and there are no other terminal windows in the tab then it will focus the
-current Neovim window (using mini.misc zoom)
+current Neovim window (using mini.misc zoom).
 - Super+left/right changes tabs in the browser, tabs in kitty or tabs in Neovim
-  (or terminals in toggleterm)
+  (or terminals in toggleterm).
 
 ## Workspaces
 
