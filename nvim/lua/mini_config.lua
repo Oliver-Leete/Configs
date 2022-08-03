@@ -145,7 +145,7 @@ end
 
 local miniAiTreeWrapper = function(query_list)
     if type(query_list) ~= "table" then
-        query_list = {query_list}
+        query_list = { query_list }
     end
     return function(ai_type, _, opts)
         return miniAiTreesitter(ai_type, _, opts, query_list)
@@ -155,9 +155,23 @@ end
 local gen_spec = require('mini.ai').gen_spec
 require("mini.ai").setup({
     custom_textobjects = {
+        p = { '\n%s*\n()%s*().-()\n%s*\n[\n%s]*()' },
+        x = { '\n()%s*().-()\n()' },
+        W = { '%s+()()%f[%S].-()%s+()' },
+        w = { '()()%f[%w]%w+()[ \t]*()' },
+        r = {
+            {
+                '%u[%l%d]+%f[^%l%d]',
+                '%f[%S][%l%d]+%f[^%l%d]',
+                '%f[%P][%l%d]+%f[^%l%d]',
+                '^[%l%d]+%f[^%l%d]',
+            },
+            '^().*()$'
+        },
+        d = { '%f[%d]%d+' },
         a = gen_spec.argument({ separators = { ',', ';' } }),
-        o = miniAiTreeWrapper({"@block", "@conditional", "@loop"}),
-        s = miniAiTreeWrapper({"@function", "@class"}),
+        o = miniAiTreeWrapper({ "@block", "@conditional", "@loop" }),
+        s = miniAiTreeWrapper({ "@function", "@class" }),
     },
 
     mappings = {
@@ -169,8 +183,8 @@ require("mini.ai").setup({
         around_last = 'al',
         inside_last = 'il',
 
-        goto_left = "{",
-        goto_right = "}",
+        goto_left = "",
+        goto_right = "",
     },
 
     n_lines = 200,
@@ -187,23 +201,20 @@ function _G.markAndGoMini(count, ai, np, key)
     until count <= 0
 end
 
-Map({ "n", "x", "o" }, "]s", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'next', 's')<cr>")
-Map({ "n", "x", "o" }, "[s", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'prev', 's')<cr>")
+for _, o in pairs({ "s", "o", "a", "b", "q", "f", "w", "W", "r", "d", "x", "p" }) do
+    Map({ "n", "x", "o" }, "[" .. o, "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'prev', '" .. o .. "')<cr>")
+    Map({ "n", "x", "o" }, "]" .. o, "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'next', '" .. o .. "')<cr>")
 
-Map({ "n", "x", "o" }, "]o", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'next', 'o')<cr>")
-Map({ "n", "x", "o" }, "[o", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'prev', 'o')<cr>")
-
-Map({ "n", "x", "o" }, "]a", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'next', 'a')<cr>")
-Map({ "n", "x", "o" }, "[a", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'prev', 'a')<cr>")
-
-Map({ "n", "x", "o" }, "]b", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'next', 'b')<cr>")
-Map({ "n", "x", "o" }, "[b", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'prev', 'b')<cr>")
-
-Map({ "n", "x", "o" }, "]q", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'next', 'q')<cr>")
-Map({ "n", "x", "o" }, "[q", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'prev', 'q')<cr>")
-
-Map({ "n", "x", "o" }, "]f", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'next', 'f')<cr>")
-Map({ "n", "x", "o" }, "[f", "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'prev', 'f')<cr>")
+    -- Does the same thing as goto_left and goto_right, but limited to the current object and for
+    -- both inside and around. Now I don't need ninja-feet
+    local m1 = "<cmd>lua MiniAi.move_cursor('"
+    local m2 = "', '"
+    local m3 = "', '" .. o .. "',  {n_times = vim.v.count, search_method='cover'} )<cr>"
+    Map({ "n", "x", "o" }, "{" .. o, m1 .. "left" .. m2 .. "a" .. m3)
+    Map({ "n", "x", "o" }, "}" .. o, m1 .. "right" .. m2 .. "a" .. m3)
+    Map({ "n", "x", "o" }, "(" .. o, m1 .. "left" .. m2 .. "i" .. m3)
+    Map({ "n", "x", "o" }, ")" .. o, m1 .. "right" .. m2 .. "i" .. m3)
+end
 
 vim.g.miniindentscope_disable = true
 
