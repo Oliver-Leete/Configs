@@ -158,15 +158,24 @@ require("mini.ai").setup({
         a = gen_spec.argument({ separators = { ',', ';' } }),
         d = { '%f[%d]%d+' },
         g = {
-            '\n%s*\n()().-()()\n%s*\n',
             {
-                '[.!?][%s\n]()().-()[.!?][%s\n]()',
-                '^\n,n()().-()[.!?][%s\n]()',
-                '^\n\n()()[^.?!]*()().*$',
+                '\n%s*\n()().-()\n%s*\n[%s]*()', -- normal paragraphs
+                '^()().-()\n%s*\n[%s]*()', -- paragraph at start of file
+                '\n%s*\n()().-()()$', -- paragraph at end of file
+            },
+            {
+                '[%.?!][%s]+()().-[^%s].-()[%.?!]()[%s]', -- normal sentence
+                '^[%s]*()().-[^%s].-()[%.?!]()[%s]', -- sentence at start of paragraph
+                '[%.?!][%s]+()().-[^%s].-()()[\n]*$', -- sentence at end of paragraph
+                '^[%s]*()().-[^%s].-()()[%s]+$', -- sentence at end of paragraph (no final punctuation)
             }
         },
         o = miniAiTreeWrapper({ "@block", "@conditional", "@loop" }),
-        p = { '\n%s*\n()().-()\n%s*\n[\n%s]*()' },
+        p = { {
+            '\n%s*\n()().-()\n%s*\n[%s]*()', -- normal paragraphs
+            '^()().-()\n%s*\n[%s]*()', -- paragraph at start of file
+            '\n%s*\n()().-()()$', -- paragraph at end of file
+        } },
         r = {
             {
                 '%u[%l%d]+%f[^%l%d]',
@@ -177,8 +186,13 @@ require("mini.ai").setup({
             '^().*()$'
         },
         s = miniAiTreeWrapper({ "@function", "@class" }),
-        x = { '\n()%s*().-()\n()' },
-        W = { '%s+()()%f[%S].-()%s+()' },
+        x = { {
+            '\n()%s*().-()\n()',
+            '^()%s*().-()\n()'
+        } },
+        W = { {
+            '()()%f[%w%p][%w%p]+()[ \t]*()',
+        } },
         w = { '()()%f[%w]%w+()[ \t]*()' },
     },
 
@@ -200,18 +214,18 @@ require("mini.ai").setup({
     search_method = "cover_or_nearest",
 })
 
-function _G.markAndGoMini(count, ai, np, key)
-    vim.g.dirJumps = key
+function _G.markAndGoMini(count, direction, id)
+    vim.g.dirJumps = id
     vim.cmd("norm! m`")
     repeat
-        MiniAi.move_cursor("left", ai, key, { search_method = np, n_times = vim.v.count })
+        MiniAi.move_cursor("left", "a", id, { search_method = direction, n_times = vim.v.count })
         count = count - 1
     until count <= 0
 end
 
 for _, o in pairs({ "a", "b", "d", "f", "g", "o", "p", "q", "r", "s", "w", "W", "x", }) do
-    Map({ "n", "x", "o" }, "[" .. o, "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'prev', '" .. o .. "')<cr>")
-    Map({ "n", "x", "o" }, "]" .. o, "<cmd>call v:lua.markAndGoMini(v:count, 'a', 'next', '" .. o .. "')<cr>")
+    Map({ "n", "x", "o" }, "[" .. o, "<cmd>call v:lua.markAndGoMini(v:count, 'prev', '" .. o .. "')<cr>")
+    Map({ "n", "x", "o" }, "]" .. o, "<cmd>call v:lua.markAndGoMini(v:count, 'next', '" .. o .. "')<cr>")
 
     -- Does the same thing as goto_left and goto_right, but limited to the current object and for
     -- both inside and around. Now I don't need ninja-feet

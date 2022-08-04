@@ -32,68 +32,21 @@ crap it's used for at some point. v is a view related key (thanks Kakoune for
 the inspiration). Unlike Kakoune, I have v lock into a view mode if any of the
 bindings you might want to repeat are pressed. This is done with Hydra.
 
-## Repeat Mappings
-
-OK, I love this one. I use a lot of jumping around mappings, bound to ] and [
-for forward and backward jumps respectively. Especially treesitter text objects
-movements. Only problem is I hate having to keep pressing the letters after,
-makes jumping through a load of spelling mistakes to correct them all very
-tedious. So I came up with this little function. Then in all my mappings for
-the jumps themselves I add a bit to overwrite the dirJumps variable like in the
-example below. I also have all my jump mappings include zz at the end for that
-nice screen centring and m\` to add it to the jump list.
-
-vim-slash is used to set dirJumps="search" after each search, so that n and N
-still work for searching for jumps.
-
-```lua
-vim.api.nvim_set_var("dirJumps", "f")
-
-function _G.commandRepeat(leader, varName)
-    local key = vim.api.nvim_get_var(varName)
-    if key == "search" then
-        if leader == "]" then
-            return replace_keycodes("nvv")
-        elseif leader == "[" then
-            return replace_keycodes("Nvv")
-        end
-    end
-    return replace_keycodes(leader .. key)
-end
-
-Map({ "n", "x", "o" }, "n", "v:lua.commandRepeat(']', 'dirJumps')", { expr = true, remap = true })
-Map({ "n", "x", "o" }, "N", "v:lua.commandRepeat('[', 'dirJumps')", { expr = true, remap = true })
-
-Map({ "n", "x", "o" }, "[s", "<cmd>call v:lua.markGoCentre(v:count, 'TSTextobjectGotoPreviousStart @function.outer', 's')<cr>")
-Map({ "n", "x", "o" }, "]s", "<cmd>call v:lua.markGoCentre(v:count, 'TSTextobjectGotoNextStart @function.outer', 's')<cr>")
-```
-
 ## Text objects
 
-At some point I need to actually finish making a consistent set of mapping for
-handling text objects. Thanks to the amazing mini.ai I'm closer, but I still
-need a bit more.
-
-There are four sets of mappings I'd like to have for each textobject (quickfix
-list is listed, but only the jump command makes any sense).
+There are four sets of mappings I'd like to have for each textobject (some
+things like quickfix list are listed for completeness, even if only some of the
+commands make sense).
 
 1) Select inside/around the current instance of that text object (mapped to a/i). Obviously this is the basic functionality.
 2) Select inside/around the next or last instance of that text object (mapped to al/an/il/in).
 3) Jump to the start of the next or last instance of that text object (mapped to [/]). I'd like it so that it always goes to the previous object instead of first going to the start of the current one.
-4) Jump to the left or right edge of the current instance of that text object (mapped to {/})
+4) Jump to the left or right inside and outside edge of the current instance of that text object (mapped to {/}/(/)).
 
-The jump to the left right edge used to be covered for all objects by vim ninja
-feet, but that didn't work with dot repeat, so now it's missing for all but the
-mini.ai text objects. I'm starting to think the easiest way to get everything I
-want is just to implement every text object in mini.ai.
-
-Scope and block use treesitter-textobjects and some functions to add the extra
-mappings. I have a modified copy of the query files that groups together a lot
-of the queries to make them take up less shortcuts (I think they've now added
-this functionality into the plugin, but I'm not sure if it'll work with my
-wrapper functions). Neither name is great, and block doesn't even match with the
-mapping (I currently have it mapped to o). But 'scope' is joins class and
-function. And block joins block, conditional and loops.
+Scope and block use treesitter-textobjects queries (and a stolen function) along
+with mini.ai. Neither name is great, and block doesn't even match with the
+mapping (I currently have it mapped to o). But 'scope' joins @class and @function
+and block joins @block, @conditional and @loops.
 
 The current (assuming I remember to update this) state of my mappings cover
 these combinations (where one tick is any support and two is preferable
@@ -103,11 +56,11 @@ these combinations (where one tick is any support and two is preferable
 |:-------------------------------------:|:----------------:|:--------------------------:|:-----------------:|:------------------:|
 | scope (method, function, class, etc.) | ✓                | ✓✓                         | ✓✓                | ✓✓                 |
 | block (loops, conditionals, etc.)     | ✓                | ✓✓                         | ✓✓                | ✓✓                 |
-| paragraph                             | ✓                | ✓✓                         | ✓✓                | ✗                  |
-| sentence                              | ✓✓               | ✗                          | ✓                 | ✗                  |
-| sub-word                              | ✓                | ✗                          | ✗                 | ✗                  |
-| word                                  | ✓                | ✓✓                         | ✓                 | ✗                  |
-| WORD                                  | ✓                | ✓✓                         | ✓                 | ✗                  |
+| paragraph                             | ✓                | ✓✓                         | ✓✓                | ✓✓                 |
+| sentence                              | ✓✓               | ✗                          | ✓                 | ✓✓                 |
+| sub-word                              | ✓                | ✗                          | ✗                 | ✓✓                 |
+| word                                  | ✓                | ✓✓                         | ✓                 | ✓✓                 |
+| WORD                                  | ✓                | ✓✓                         | ✓                 | ✓✓                 |
 | quickfix list item                    | ✗                | ✗                          | ✓                 | ✗                  |
 | diagnostic                            | ✗                | ✗                          | ✓                 | ✗                  |
 | git signs hunk                        | ✓                | ✓✓                         | ✓✓                | ✗                  |
@@ -121,23 +74,39 @@ these combinations (where one tick is any support and two is preferable
 | latex environment                     | ✓                | ✓✓                         | ✓                 | ✗                  |
 | latex maths                           | ✓                | ✓✓                         | ✓                 | ✗                  |
 
-## Some Other Mappings
+### Repeat Mappings
 
-### Move up and down
+OK, I love this one. I use the jumping around mappings covered above a lot (the
+ones bound to [/]), only problem is I hate having to keep pressing the
+letters after, makes jumping through a load of spelling mistakes to correct
+them all very tedious. So I came up with this little function. Then in all my
+mappings for the jumps themselves I add a bit to overwrite the dirJumps variable
+like in the example below. I also have all my jump mappings include zz at the
+end for that nice screen centring and m\` to add it to the jump list.
 
-These two make j and k respect wrapped lines, unless a count is given, in which
-case j and k act on true lines. This means that normally they make the cursor
-go where you'd expect (if you've ever used any other editor), but relative line
-numbers can still be used for fast jumping. In addition, they also add to the
-jump list if a count greater than 5 is given.
+vim-slash is used to set dirJumps="search" after each search (and I have it set
+to default to that), so that n and N still work for searching for jumps.
 
 ```lua
-Map({ "n", "x", "o" }, "j", [[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], { expr = true })
-Map({ "n", "x", "o" }, "k", [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], { expr = true })
+
+function _G.commandRepeat(leader, varName)
+    local key = vim.api.nvim_get_var(varName)
+    if key == "search" then
+        if leader == "]" then
+            return replace_keycodes("nvv")
+        elseif leader == "[" then
+            return replace_keycodes("Nvv")
+        end
+    end
+    return replace_keycodes(leader .. key)
+end
+
+vim.g.dirJumps = "search"
+Map({ "n", "x", "o" }, "n", "v:lua.commandRepeat(']', 'dirJumps')", { expr = true, remap = true })
+Map({ "n", "x", "o" }, "N", "v:lua.commandRepeat('[', 'dirJumps')", { expr = true, remap = true })
 ```
 
-I don't used wrapped lines any more, and rarely ever jump by line, so this
-mapping isn't that useful to me any more.
+## Some Other Mappings
 
 ### Move to start/end of line
 
