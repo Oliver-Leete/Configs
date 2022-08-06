@@ -155,8 +155,11 @@ end
 local gen_spec = require('mini.ai').gen_spec
 require("mini.ai").setup({
     custom_textobjects = {
+        -- argument
         a = gen_spec.argument({ separators = { ',', ';' } }),
+        -- digits
         d = { '%f[%d]%d+' },
+        -- grammer (sentence)
         g = {
             {
                 '\n%s*\n()().-()\n%s*\n[%s]*()', -- normal paragraphs
@@ -170,12 +173,15 @@ require("mini.ai").setup({
                 '^[%s]*()().-[^%s].-()()[%s]+$', -- sentence at end of paragraph (no final punctuation)
             }
         },
+        -- blOck
         o = miniAiTreeWrapper({ "@block", "@conditional", "@loop" }),
+        -- paragraph
         p = { {
             '\n%s*\n()().-()\n%s*\n[%s]*()', -- normal paragraphs
             '^()().-()\n%s*\n[%s]*()', -- paragraph at start of file
             '\n%s*\n()().-()()$', -- paragraph at end of file
         } },
+        -- sub-word (below w on my keyboard)
         r = {
             {
                 '%u[%l%d]+%f[^%l%d]',
@@ -185,15 +191,26 @@ require("mini.ai").setup({
             },
             '^().*()$'
         },
+        -- scope
         s = miniAiTreeWrapper({ "@function", "@class" }),
+        -- line (same key as visual line in my mappings)
         x = { {
             '\n()%s*().-()\n()',
             '^()%s*().-()\n()'
         } },
+        -- WORD
         W = { {
             '()()%f[%w%p][%w%p]+()[ \t]*()',
         } },
+        -- word
         w = { '()()%f[%w]%w+()[ \t]*()' },
+        -- key or value (needs a lot of work)
+        -- z = gen_spec.argument({ brackets = { '%b()'}, separators = {',', ';', '=>'}}),
+        -- chunk (as in from vim-textobj-chunk)
+        -- z = {
+        --     '\n.-%b{}',
+        --     '\n().-%{\n().*()\n.*%}()'
+        -- },
     },
 
     mappings = {
@@ -247,6 +264,7 @@ require("mini.indentscope").setup({
         goto_top = "{i",
         goto_bottom = "}i",
     },
+    symbol = '▎"',
 })
 
 require("mini.comment").setup({

@@ -44,7 +44,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'akinsho/git-conflict.nvim'
 
     Plug 'rebelot/kanagawa.nvim'
-    Plug 'windwp/windline.nvim'
     Plug 'lukas-reineke/indent-blankline.nvim'
 
     Plug 'mbbill/undotree'
@@ -63,6 +62,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'Issafalcon/lsp-overloads.nvim'
     Plug 'SmiteshP/nvim-navic'
+    Plug 'https://git.sr.ht/~whynothugo/lsp_lines.nvim'
 
     Plug 'hrsh7th/nvim-cmp'
     Plug 'hrsh7th/cmp-buffer'
@@ -148,8 +148,9 @@ require("panels_config")
 require("myfuncs_config")
 require("lsp_config")
 require("treesitter_config")
-require("bubble")
 require("ui_config")
+require("statusline_config")
+require("winbar_config")
 require("git_config")
 require("terminal_config")
 require("projects_config")

@@ -19,12 +19,17 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = "single",
 })
 
+-- require("lsp_lines").setup()
 vim.diagnostic.config({
     underline = {
         severity = {
             min = "Warn",
         },
     },
+    -- virtual_text = false,
+    -- virtual_lines = {
+    --     only_current_line = true,
+    -- },
     virtual_text = {
         severity = {
             min = "Warn",
