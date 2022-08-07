@@ -1,146 +1,23 @@
--- NOTE: If i move any of the treesitter stuff, remember to update the mini.nvim discussion comment
-local parsers = require "nvim-treesitter.parsers"
 local queries = require "nvim-treesitter.query"
-local ts_utils = require "nvim-treesitter.ts_utils"
-local textobject_at_point = function(query_list, pos, opts)
-    opts = opts or {}
-    local bufnr = vim.api.nvim_get_current_buf()
-    local lang = parsers.get_buf_lang(bufnr)
-    if not lang then
-        return
-    end
 
-    local row, col = unpack(pos or vim.api.nvim_win_get_cursor(0))
-    row = row - 1
+local miniAiTreesitter = function(ai_type, _, _, query_list)
+    ai_type = ai_type == "a" and ".outer" or ".inner"
+    query_list = vim.tbl_map(function(query) return query .. ai_type end, query_list)
 
-    Query_list = query_list
     local matches = {}
     for _, query in pairs(query_list) do
-        if not string.match(query, "^@.*") then
-            error 'Captures must start with "@"'
-        end
-        vim.list_extend(matches, queries.get_capture_matches_recursively(bufnr, query, "textobjects"))
-    end
-    Matches = matches
-
-    local match_length
-    local smallest_range
-    local earliest_start
-
-    local lookahead_match_length
-    local lookahead_largest_range
-    local lookahead_earliest_start
-    local lookbehind_match_length
-    local lookbehind_largest_range
-    local lookbehind_earliest_start
-
-    for _, m in pairs(matches) do
-        if opts.lookhere and m.node and ts_utils.is_in_node_range(m.node, row, col) then
-            local length = ts_utils.node_length(m.node)
-            if not match_length or length < match_length then
-                smallest_range = m
-                match_length = length
-            end
-            -- for nodes with same length take the one with earliest start
-            if match_length and length == smallest_range then
-                local start = m.start
-                if start then
-                    local _, _, start_byte = m.start.node:start()
-                    if not earliest_start or start_byte < earliest_start then
-                        smallest_range = m
-                        match_length = length
-                        earliest_start = start_byte
-                    end
-                end
-            end
-        elseif opts.lookahead then
-            local start_line, start_col, start_byte = m.node:start()
-            if start_line > row or start_line == row and start_col > col then
-                local length = ts_utils.node_length(m.node)
-                if not lookahead_earliest_start
-                    or lookahead_earliest_start > start_byte
-                    or (lookahead_earliest_start == start_byte and lookahead_match_length < length)
-                then
-                    lookahead_match_length = length
-                    lookahead_largest_range = m
-                    lookahead_earliest_start = start_byte
-                end
-            end
-        elseif opts.lookbehind then
-            local start_byte = m.node:start()
-            local end_line, end_col = m.node:end_()
-            if end_line < row or end_line == row and end_col < col then
-                local length = ts_utils.node_length(m.node)
-                if not lookbehind_earliest_start
-                    or lookbehind_earliest_start < start_byte
-                    or (lookbehind_earliest_start == start_byte and lookbehind_match_length > length)
-                then
-                    lookbehind_match_length = length
-                    lookbehind_largest_range = m
-                    lookbehind_earliest_start = start_byte
-                end
-            end
-        end
-    end
-    if smallest_range then
-        if smallest_range.start then
-            local start_range = { smallest_range.start.node:range() }
-            local node_range = { smallest_range.node:range() }
-            return bufnr, { start_range[1], start_range[2], node_range[3], node_range[4] }, smallest_range.node
-        else
-            return bufnr, { smallest_range.node:range() }, smallest_range.node
-        end
-    elseif lookahead_largest_range then
-        return bufnr, { lookahead_largest_range.node:range() }, lookahead_largest_range.node
-    elseif lookbehind_largest_range then
-        return bufnr, { lookbehind_largest_range.node:range() }, lookbehind_largest_range.node
-    end
-end
-
-local miniAiTreesitter = function(ai_type, _, opts, query_list)
-    -- NOTE: This function does not respect n_lines setting
-    local new_opts = {}
-    if opts.search_method:find("cover") then
-        new_opts.lookhere = true
-    end
-    -- NOTE: nearest actually only looks back if nothing is found ahead
-    if opts.search_method:find("nearest") then
-        new_opts.lookahead = true
-        new_opts.lookbehind = true
-    elseif opts.search_method:find("next") then
-        new_opts.lookahead = true
-    elseif opts.search_method:find("prev") then
-        new_opts.lookbehind = true
+        vim.list_extend(matches, queries.get_capture_matches_recursively(0, query, "textobjects"))
     end
 
-    local full_query_list = {}
-    for _, query in pairs(query_list) do
-        if ai_type == "a" then
-            table.insert(full_query_list, query .. ".outer")
-        elseif ai_type == "i" then
-            table.insert(full_query_list, query .. ".inner")
-        end
-    end
+    matches = vim.tbl_map(function(match)
+        local from_line, from_col, to_line, to_col = match.node:range()
+        return {
+            from = { line = from_line + 1, col = from_col + 1 },
+            to = { line = to_line + 1, col = to_col + 1 }
+        }
+    end, matches)
 
-    local pos = vim.api.nvim_win_get_cursor(0)
-    local count = opts.n_times
-    local match_pos
-    repeat
-        count = count - 1
-        local _, new_pos = textobject_at_point(full_query_list, pos, new_opts)
-        if new_pos == nil and opts.search_method:find("nearest") then
-            _, new_pos = textobject_at_point(full_query_list, pos, { lookbehind = true })
-        end
-        if new_pos == nil then
-            break
-        end
-        match_pos = new_pos
-        pos = { match_pos[3], match_pos[4] }
-    until count == 0
-
-    if not match_pos then return end
-    return { from = { line = match_pos[1] + 1, col = match_pos[2] + 1 }, to = { line = match_pos[3] + 1,
-        col = match_pos[4] } }
+    return matches
 end
 
 local miniAiTreeWrapper = function(query_list)
@@ -152,6 +29,22 @@ local miniAiTreeWrapper = function(query_list)
     end
 end
 
+local miniAiDiagnostics = function()
+    local diagnostics = vim.diagnostic.get(0)
+    diagnostics = vim.tbl_map(function(diagnostic)
+        local from_line = diagnostic.lnum + 1
+        local from_col = diagnostic.col + 1
+        local to_line = diagnostic.end_lnum + 1
+        local to_col = diagnostic.end_col + 1
+        return {
+            from = { line = from_line, col = from_col },
+            to = { line = to_line, col = to_col }
+        }
+    end, diagnostics)
+
+    return diagnostics
+end
+
 local gen_spec = require('mini.ai').gen_spec
 require("mini.ai").setup({
     custom_textobjects = {
@@ -159,6 +52,8 @@ require("mini.ai").setup({
         a = gen_spec.argument({ separators = { ',', ';' } }),
         -- digits
         d = { '%f[%d]%d+' },
+        -- diagnostics (errors)
+        e = miniAiDiagnostics,
         -- grammer (sentence)
         g = {
             {
@@ -226,7 +121,7 @@ require("mini.ai").setup({
         goto_right = "",
     },
 
-    n_lines = 200,
+    n_lines = 500,
 
     search_method = "cover_or_nearest",
 })
@@ -240,7 +135,7 @@ function _G.markAndGoMini(count, direction, id)
     until count <= 0
 end
 
-for _, o in pairs({ "a", "b", "d", "f", "g", "o", "p", "q", "r", "s", "w", "W", "x", }) do
+for _, o in pairs({ "a", "b", "d", "e", "f", "g", "o", "p", "q", "r", "s", "w", "W", "x", }) do
     Map({ "n", "x", "o" }, "[" .. o, "<cmd>call v:lua.markAndGoMini(v:count, 'prev', '" .. o .. "')<cr>")
     Map({ "n", "x", "o" }, "]" .. o, "<cmd>call v:lua.markAndGoMini(v:count, 'next', '" .. o .. "')<cr>")
 
