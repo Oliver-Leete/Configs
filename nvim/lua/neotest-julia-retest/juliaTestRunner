@@ -1,0 +1,8 @@
+#!/bin/bash
+project="$(basename "$PWD")"
+cd test || exit
+julia --threads=auto --project -e '
+using ReTest;
+ReTest.load("PackageTests.jl");
+PackageTests.runtests('"$1"', spin=false, verbose=Inf)
+'

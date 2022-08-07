@@ -279,7 +279,8 @@ require("neotest").setup({
     adapters = {
         require("neotest-rust"),
         require("neotest-python"),
-        require("neotest-julia")
+        require("neotest-julia-retest"),
+        require("neotest-julia-benchmarktools")
     },
     floating = {
         border = "rounded",

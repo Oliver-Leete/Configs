@@ -24,44 +24,8 @@ Map({ "n", "x", "o" }, "N", "v:lua.commandRepeat('[', 'dirJumps')", { expr = tru
 Map({ "n", "x", "o" }, "[[", "[s", { remap = true })
 Map({ "n", "x", "o" }, "]]", "]s", { remap = true })
 
--- Map({ "n", "x", "o" }, "[p", "<cmd>call v:lua.markGoCentre(v:count, 'norm! {', 'p')<cr>")
--- Map({ "x", "o" }, "alp", ":<c-u>call v:lua.paragraph_targets(v:count, 1, 1)<cr>")
--- Map({ "x", "o" }, "ilp", ":<c-u>call v:lua.paragraph_targets(v:count, 1, 1)<cr>")
--- Map({ "n", "x", "o" }, "]p", "<cmd>call v:lua.markGoCentre(v:count, 'norm! }', 'p')<cr>")
--- Map({ "x", "o" }, "anp", ":<c-u>call v:lua.paragraph_targets(v:count, 1)<cr>")
--- Map({ "x", "o" }, "inp", ":<c-u>call v:lua.paragraph_targets(v:count)<cr>")
-
 Map({ "n", "x", "o"}, "[.", "<cmd>call v:lua.markAndGo(v:count, 'norm! (', '.')<cr>")
 Map({ "n", "x", "o"}, "].", "<cmd>call v:lua.markAndGo(v:count, 'norm! )', '.')<cr>")
-
-Map({ "n", "x", "o" }, "[e", [[<cmd>call v:lua.markGoCentre(v:count, 'lua vim.diagnostic.goto_prev({float={border="single",scope="cursor",source="always"}})', 'e')<cr>]])
-Map({ "n", "x", "o" }, "]e", [[<cmd>call v:lua.markGoCentre(v:count, 'lua vim.diagnostic.goto_next({float={border="single",scope="cursor",source="always"}})', 'e')<cr>]])
-
-Map({ "n", "x", "o" }, "[l", "<cmd>call v:lua.markGoCentre(v:count, 'try|cprevious|catch/E553/|clast|endtry', 'l')<cr>")
-Map({ "n", "x", "o" }, "]l", "<cmd>call v:lua.markGoCentre(v:count, 'try|cnext|catch/E553/|cfirst|endtry', 'l')<cr>")
---
--- Map({ "n", "x", "o" }, "[w", "<cmd>call v:lua.markAndGo(v:count, 'norm! b', 'w')<cr>")
--- Map({ "x", "o" }, "alw", ":<c-u>call v:lua.mapped_targets(v:count, 'ge', 'aw')<cr>")
--- Map({ "x", "o" }, "ilw", ":<c-u>call v:lua.mapped_targets(v:count, 'ge', 'iw')<cr>")
--- Map({ "n", "x", "o" }, "]w", "<cmd>call v:lua.markAndGo(v:count, 'norm! w', 'w')<cr>")
--- Map({ "x", "o" }, "anw", ":<c-u>call v:lua.mapped_targets(v:count, 'w', 'aw')<cr>")
--- Map({ "x", "o" }, "inw", ":<c-u>call v:lua.mapped_targets(v:count, 'w', 'iw')<cr>")
---
--- Map({ "n", "x", "o" }, "[W", "<cmd>call v:lua.markAndGo(v:count, 'norm! B', 'W')<cr>")
--- Map({ "x", "o" }, "alW", ":<c-u>call v:lua.mapped_targets(v:count, 'gE', 'aW')<cr>")
--- Map({ "x", "o" }, "ilW", ":<c-u>call v:lua.mapped_targets(v:count, 'gE', 'iW')<cr>")
--- Map({ "n", "x", "o" }, "]W", "<cmd>call v:lua.markAndGo(v:count, 'norm! W', 'W')<cr>")
--- Map({ "x", "o" }, "anW", ":<c-u>call v:lua.mapped_targets(v:count, 'W', 'aW')<cr>")
--- Map({ "x", "o" }, "inW", ":<c-u>call v:lua.mapped_targets(v:count, 'W', 'iW')<cr>")
-
-
--- Map({"n", "x", "o"}, "[<m-w>", function() markAndGo("norm <m-b>)", "<m-w>")end)
--- Map({ "x", "o" }, "al<m-w>", ":<c-u>call v:lua.mapped_targets(v:count, '<m-ge>', 'a<m-w>')<cr>")
--- Map({ "x", "o" }, "il<m-w>", ":<c-u>call v:lua.mapped_targets(v:count, '<m-ge>', 'i<m-w>')<cr>")
--- Map({"n", "x", "o"}, "]<m-w>", function() markAndGo("norm <m-w>)", "<m-w>")end)
--- Map({ "x", "o" }, "an<m-w>", ":<c-u>call v:lua.mapped_targets(v:count, '<m-w>', 'a<m-w>')<cr>")
--- Map({ "x", "o" }, "in<m-w>", ":<c-u>call v:lua.mapped_targets(v:count, '<m-w>', 'i<m-w>')<cr>")
-
 
 vim.api.nvim_create_autocmd("BufEnter",
     {
@@ -71,15 +35,6 @@ vim.api.nvim_create_autocmd("BufEnter",
             if vim.wo.diff then
                 bmap({ "n", "x", "o" }, "[h", "<cmd>call v:lua.markGoCentre(v:count, 'norm! [c', 'h')<cr>")
                 bmap({ "n", "x", "o" }, "]h", "<cmd>call v:lua.markGoCentre(v:count, 'norm! ]c', 'h')<cr>")
-            else
-                bmap({ "x", "o" }, "ah", ":<c-u>Gitsigns select_hunk<cr>")
-                bmap({ "x", "o" }, "ih", ":<c-u>Gitsigns select_hunk<cr>")
-                bmap({ "n", "x", "o" }, "[h", [[<cmd>call v:lua.markGoCentre(v:count, 'lua require"gitsigns".prev_hunk()', 'h')<cr>]])
-                bmap({ "x", "o" }, "alh", ":<c-u>call v:lua.git_target(v:count, 'false')<cr>")
-                bmap({ "x", "o" }, "ilh", ":<c-u>call v:lua.git_target(v:count, 'false')<cr>")
-                bmap({ "n", "x", "o" }, "]h", [[<cmd>call v:lua.markGoCentre(v:count, 'lua require"gitsigns".next_hunk()', 'h')<cr>]])
-                bmap({ "x", "o" }, "anh", ":<c-u>call v:lua.git_target(v:count, 'true')<cr>")
-                bmap({ "x", "o" }, "inh", ":<c-u>call v:lua.git_target(v:count, 'true')<cr>")
             end
         end
     }

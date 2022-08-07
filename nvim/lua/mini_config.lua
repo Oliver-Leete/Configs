@@ -45,6 +45,23 @@ local miniAiDiagnostics = function()
     return diagnostics
 end
 
+local miniAiGitsigns = function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local hunks = require("gitsigns.cache").cache[bufnr].hunks
+    hunks = vim.tbl_map(function(hunk)
+        local from_line = hunk.added.start
+        local from_col = 1
+        local to_line = hunk.vend
+        local to_col = #vim.api.nvim_buf_get_lines(0, to_line-1, to_line, false)[1] + 1
+        return {
+            from = { line = from_line, col = from_col },
+            to = { line = to_line, col = to_col },
+        }
+    end, hunks)
+
+    return hunks
+end
+
 local gen_spec = require('mini.ai').gen_spec
 require("mini.ai").setup({
     custom_textobjects = {
@@ -68,6 +85,8 @@ require("mini.ai").setup({
                 '^[%s]*()().-[^%s].-()()[%s]+$', -- sentence at end of paragraph (no final punctuation)
             }
         },
+        -- git hunks
+        h = miniAiGitsigns,
         -- blOck
         o = miniAiTreeWrapper({ "@block", "@conditional", "@loop" }),
         -- paragraph
@@ -135,7 +154,7 @@ function _G.markAndGoMini(count, direction, id)
     until count <= 0
 end
 
-for _, o in pairs({ "a", "b", "d", "e", "f", "g", "o", "p", "q", "r", "s", "w", "W", "x", }) do
+for _, o in pairs({ "a", "b", "d", "e", "f", "g", "h", "o", "p", "q", "r", "s", "w", "W", "x", }) do
     Map({ "n", "x", "o" }, "[" .. o, "<cmd>call v:lua.markAndGoMini(v:count, 'prev', '" .. o .. "')<cr>")
     Map({ "n", "x", "o" }, "]" .. o, "<cmd>call v:lua.markAndGoMini(v:count, 'next', '" .. o .. "')<cr>")
 

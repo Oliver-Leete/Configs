@@ -38,7 +38,7 @@ end
 function adapter.build_spec(args)
     local error_file = vim.fn.tempname()
     local position = args.tree:data()
-    local command = "/home/oleete/.config/nvim/lua/neotest-julia/juliaTestRunner '" .. position.name .. "'"
+    local command = "/home/oleete/.config/nvim/lua/neotest-julia-retest/juliaTestRunner '" .. position.name .. "'"
     if position.type == "file" then
         return
     end
