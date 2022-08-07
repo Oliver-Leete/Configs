@@ -1,8 +1,9 @@
 #!/bin/bash
 project="$(basename "$PWD")"
-cd test || exit
+cd benchmark || exit
 julia --threads=auto --project -e '
-using ReTest;
-ReTest.load("PackageTests.jl");
-PackageTests.runtests('"$1"', spin=false, verbose=Inf)
+using BenchmarkTools;
+include("PackageBenchmarks.jl")
+results = run('"$1"', verbose=true)
+print(results)
 '

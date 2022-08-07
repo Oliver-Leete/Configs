@@ -7,7 +7,7 @@ local with = context_manager.with
 local xml = require("neotest.lib.xml")
 local xml_tree = require("neotest.lib.xml.tree")
 
-local adapter = { name = "neotest-julia" }
+local adapter = { name = "neotest-julia-retest" }
 
 adapter.root = lib.files.match_root_pattern("Project.toml")
 
@@ -38,8 +38,8 @@ end
 function adapter.build_spec(args)
     local error_file = vim.fn.tempname()
     local position = args.tree:data()
-    local command = "/home/oleete/.config/nvim/lua/neotest-julia-retest/juliaTestRunner '" .. position.name .. "'"
-    if position.type == "file" then
+    local command = "/home/oleete/.config/nvim/lua/neotest-julia-retest/juliaTestRunner '" .. position.name .. ",'"
+    if position.type ~= "test" then
         return
     end
     return {

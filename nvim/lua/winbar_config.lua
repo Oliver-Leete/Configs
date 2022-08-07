@@ -63,7 +63,7 @@ local function default_winbar(bufnr, hl, is_active)
     if is_active and require("nvim-navic").is_available() then
         local location = require("nvim-navic").get_location()
         if location ~= "" then
-            winbar = winbar .. " > " .. location
+            winbar = winbar .. "  " .. location
         end
     end
     return winbar

@@ -148,7 +148,7 @@ function Statusline()
             end
         end
         if next(clients) then
-            statusline = statusline .. "  " .. table.concat(clients, ' | ')
+            statusline = statusline .. "  " .. table.concat(clients, '   ')
         end
     end
 

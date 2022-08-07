@@ -7,26 +7,21 @@ local with = context_manager.with
 local xml = require("neotest.lib.xml")
 local xml_tree = require("neotest.lib.xml.tree")
 
-local adapter = { name = "neotest-julia" }
+local adapter = { name = "neotest-julia-benchmarktools" }
 
 adapter.root = lib.files.match_root_pattern("Project.toml")
 
 function adapter.is_test_file(file_path)
-    return vim.endswith(file_path, "ests.jl")
+    return vim.endswith(file_path, "enchmarks.jl")
 end
 
 function adapter.discover_positions(path)
     local query = [[
-        (macro_expression
-           (macro_identifier (identifier) @macro_name)
-           (#match? @macro_name "testcase")
-           (macro_argument_list (string_literal) @test.name)
-        ) @test.definition
-        (macro_expression
-           (macro_identifier (identifier) @macro_name)
-           (#match? @macro_name "testset")
-           (macro_argument_list (string_literal) @namespace.name)
-        ) @namespace.definition
+    (assignment_expression
+        (subscript_expression
+            (string_literal) @test.name)
+        (macro_expression)  @test.definition
+    )
     ]]
 
     return lib.treesitter.parse_positions(path, query, {
@@ -38,7 +33,8 @@ end
 function adapter.build_spec(args)
     local error_file = vim.fn.tempname()
     local position = args.tree:data()
-    local command = "/home/oleete/.config/nvim/lua/neotest-julia-benchmarktools/juliaBenchmarkRunner '" .. position.name .. "'"
+    local name = "suite[" .. position.name .. "]"
+    local command = "/home/oleete/.config/nvim/lua/neotest-julia-benchmarktools/juliaBenchmarkRunner '" .. name .. "'"
     if position.type == "file" then
         return
     end

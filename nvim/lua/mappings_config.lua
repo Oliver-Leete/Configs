@@ -412,7 +412,10 @@ GlobalCommands = {
     { source = "profiling", name = "Profile Pick Event", command = "PerfPickEvent" },
     { source = "profiling", name = "Profile Toggle Annotations", command = "PerfToggleAnnotations" },
 
-    { source = "tasks", name = "Tasks", func = Select_runnables },
+    { source = "tasks", name = "Run Tasks", command = "OverseerRun" },
+    { source = "tasks", name = "Task Window", command = "OverseerToggle" },
+    { source = "tasks", name = "Run Nearest Test", func = function() require("neotest").run.run() end},
+    { source = "tasks", name = "Test Window", func = function() require("neotest").summary.open() end},
 }
 
 Map("n", "<leader>p", function() CommandCentre({}, true) end)
@@ -516,4 +519,8 @@ function Select_runnables()
     end
 end
 
-Map("n", "<leader>d", Select_runnables)
+-- Map("n", "<leader>d", Select_runnables)
+Map("n", "<leader>d", "<cmd>OverseerRun<cr>")
+Map("n", "<leader>D", "<cmd>OverseerToggle<cr>")
+Map("n", "<leader>h", function() require("neotest").run.run() end)
+Map("n", "<leader>H", function() require("neotest").summary.toggle() end)

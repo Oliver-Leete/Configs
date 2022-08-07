@@ -175,7 +175,10 @@ vim.api.nvim_set_hl(0, "WinBarInactiveSpecialEnds", { fg = tc.waveBlue2, bg = tc
 vim.api.nvim_set_hl(0, "WinBarBlank", { fg = tc.sumiInk, bg = tc.sumiInk })
 vim.api.nvim_set_hl(0, "WinBarBlank", { fg = tc.sumiInk, bg = tc.sumiInk })
 
-require("nvim-navic").setup({ highlight = false })
+require("nvim-navic").setup({
+    highlight = false,
+    separator = "  "
+})
 
 
 local mode_map = {

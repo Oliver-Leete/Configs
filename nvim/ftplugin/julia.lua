@@ -183,7 +183,7 @@ end
 
 Map("n", ",rb", "<cmd>call julia#toggle_function_blockassign()<cr>")
 
-Map("n", "<leader>D", Run_closest, { expr = true, buffer = 0 })
+-- Map("n", "<leader>D", Run_closest, { expr = true, buffer = 0 })
 
 Map("n", ",dd", function() BP_Toggle("Debugger", "@bp") end, { buffer = 0 })
 Map("n", ",di", function() BP_Toggle("Infiltrator", "@infiltrate") end, { buffer = 0 })
@@ -205,3 +205,10 @@ vim.b.minisurround_config = {
         },
     }
 }
+
+JuliaREPL = Terminal:new({
+    jobname = "Julia REPL",
+    cmd = "julia",
+    id = 8,
+})
+JuliaREPL:set_harp(1)
