@@ -7,6 +7,7 @@ Term_on_open = function(term)
         Temp_Num = Temp_Num + 1
         term.jobname = "Terminal " .. Temp_Num
     end
+    term.name = term.jobname
     vim.b[0].my_term_title = term.jobname
 end
 
@@ -49,9 +50,9 @@ BackgroundTerm = Terminal:new({
     runnable = { source = "def", name = "Background Terminal", func = function() BackgroundTerm:set_toggle(4) end }
 })
 
-Harp_Term_1 = Terminal:new({ id = 1 })
-Harp_Term_2 = Terminal:new({ id = 2 })
-Harp_Term_3 = Terminal:new({ id = 3 })
+Harp_Term_1 = Terminal:new({ id = 1})
+Harp_Term_2 = Terminal:new({ id = 2})
+Harp_Term_3 = Terminal:new({ id = 3})
 Harp_Term_4 = BackgroundTerm
 
 function Terminal:set_harp(term_num)
@@ -110,7 +111,7 @@ function Terminal:send_open(cmd, _, term_num)
 end
 
 Background_Term_List = {
-    { source = "default", name = "default", func = function() BackgroundTerm:set_toggle(4) end },
+    { source = "default", func = function() BackgroundTerm:set_toggle(4) end },
 }
 
 function Terminal:open_add()

@@ -107,6 +107,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-telescope/telescope-dap.nvim'
 
     Plug 'akinsho/toggleterm.nvim'
+    Plug 'tknightz/telescope-termfinder.nvim'
 
     Plug 'anuvyklack/hydra.nvim'
     Plug 'anuvyklack/keymap-layer.nvim'
@@ -150,6 +151,7 @@ require("lsp_config")
 require("treesitter_config")
 require("ui_config")
 require("statusline_config")
+-- require("tabline_config")
 require("winbar_config")
 require("git_config")
 require("terminal_config")

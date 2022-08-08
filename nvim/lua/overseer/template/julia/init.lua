@@ -10,7 +10,7 @@ return {
         end
     },
 
-    generator = function(opts)
+    generator = function(_)
         local commands = {
             {
                 name = "Package Precompile",

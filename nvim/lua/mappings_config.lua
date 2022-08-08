@@ -108,8 +108,8 @@ Map({ "n", "x", "o" }, "`", "'")
 Map("x", "<", "<gv")
 Map("x", ">", ">gv")
 
-Map("n", "<c-v>", "<cmd>silent vsplit %<cr>")
-Map("n", "<c-x>", "<cmd>silent split %<cr>")
+Map("n", "<c-v>", "<cmd>silent vsplit<cr>")
+Map("n", "<c-x>", "<cmd>silent split<cr>")
 
 vim.g.wordmotion_nomap = true
 Map({ "n", "x", "o" }, "<m-w>", "<plug>(WordMotion_w)", { remap = true })

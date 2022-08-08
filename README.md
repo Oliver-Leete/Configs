@@ -282,7 +282,7 @@ This is done with some strategic uses of the following function:
 modY :: Rectangle -> Rectangle -> Rectangle
 modY (Rectangle sx sy sw sh) (Rectangle bx _ _ _)=
     Rectangle sx y sw h
-    where   ymoddifier= if toInteger (8 + sx) < toInteger bx + 1280
+    where   ymoddifier= if toInteger (8 + sx) < toInteger bx + 960
                         then 31
                         else 0
             y = sy + ymoddifier

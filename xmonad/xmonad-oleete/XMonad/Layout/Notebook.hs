@@ -96,11 +96,11 @@ data ToggleStackDir = ToggleStackDir deriving (Read, Show, Typeable)
 instance Message ToggleStackDir
 
 -- | Arguments are nmaster, delta, fraction, mirror fraction
-data Notebook a = Notebook{ notebookMiddle :: !Bool, notebookSide :: !Bool, stackDirection :: !Bool, notebookMaster :: !Int, notebookColumn :: !Int, notebookDelta :: !Rational, notebookFrac :: !Rational, notebookMirrorFrac :: !Rational}
+data Notebook a = Notebook{ notebookMiddle :: !Bool, notebookSide :: !Bool, stackDirection :: !Bool, notebookMaster :: !Int, notebookColumn :: !Int, notebookDelta :: !Rational, notebookMirrorDelta :: !Rational, notebookFrac :: !Rational, notebookMirrorFrac :: !Rational}
     deriving (Show,Read)
 
 instance LayoutClass Notebook a where
-    pureLayout (Notebook mid s dir n c _ f mf) r    = doL mid s dir n c f mf r
+    pureLayout (Notebook mid s dir n c _ _ f mf) r    = doL mid s dir n c f mf r
     handleMessage l m =
         return $ msum   [fmap resize         (fromMessage m)
                         ,fmap mresize        (fromMessage m)
@@ -109,10 +109,10 @@ instance LayoutClass Notebook a where
                         ,fmap togglemiddle   (fromMessage m)
                         ,fmap toggleside     (fromMessage m)
                         ,fmap togglestackdir (fromMessage m)]
-            where   resize Shrink = l { notebookFrac = min 3 $ f+d }
-                    resize Expand = l { notebookFrac = max 1 $ f-d }
-                    mresize MirrorShrink = l { notebookMirrorFrac = max (-0.5) $ mf-d }
-                    mresize MirrorExpand = l { notebookMirrorFrac = min 1 $ mf+d }
+            where   resize Shrink = l { notebookFrac = max 1 $ f-d }
+                    resize Expand = l { notebookFrac = min 10 $ f+d }
+                    mresize MirrorShrink = l { notebookMirrorFrac = max (1/10) $ mf-dm }
+                    mresize MirrorExpand = l { notebookMirrorFrac = min (9/10) $ mf+dm }
                     incmastern (IncColumnN x) = l { notebookMaster = max 0 $ min c (n+x) }
                     inccolumnn (IncMasterN x) = l { notebookColumn = max n (c+x) }
                     togglemiddle ToggleMiddle = l { notebookMiddle = not mid}
@@ -123,6 +123,7 @@ instance LayoutClass Notebook a where
                     n = notebookMaster l
                     c = notebookColumn l
                     d = notebookDelta l
+                    dm = notebookMirrorDelta l
                     f = notebookFrac l
                     mf = notebookMirrorFrac l
                     dir = stackDirection l
@@ -151,13 +152,13 @@ newWide m s d n c nwin f mf r
                 | n == 0 = floor (rect_width r % fromIntegral ncol)
                 | c <= 1 = rect_width r
                 | ncol == 0 = floor (rect_width r % fromIntegral nmain)
-                | otherwise = 2 * floor (toRational (rect_width r) / (toRational ncol + (f * toRational nmain)))
+                | otherwise = floor ((toRational (rect_width r) / t) * f)
+                where t = toRational ncol + (f * toRational nmain)
             colWidth
                 | n == 0 = fromIntegral width
                 | c <= 1 = 0
                 | ncol == 0 = floor (toRational width/2)
                 | otherwise = floor (toRational (toRational (rect_width r) - (toRational width*toRational nmain)) / toRational ncol)
-
             minWidth = colWidth * nstack
 
             nmain
@@ -261,7 +262,7 @@ splitColumns list minWidth stackRect mf d bigRect
 modY :: Rectangle -> Rectangle -> Rectangle
 modY (Rectangle sx sy sw sh) (Rectangle bx _ _ _)=
     Rectangle sx y sw h
-    where   ymoddifier= if toInteger (8 + sx) < toInteger bx + 1280
+    where   ymoddifier= if toInteger (8 + sx) < toInteger bx + 960
                         then 31
                         else 0
             y = sy + ymoddifier

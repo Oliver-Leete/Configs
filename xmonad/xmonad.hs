@@ -332,7 +332,8 @@ warning    = "#C34043"
 
 -- sizes
 gap    = 4
-reSize = 1/20
+reSize = 1/10
+moreReSize = 1/2
 myBorder = 3
 
 myWideFont :: [Char]
@@ -390,10 +391,10 @@ myLayoutHook = smartBorders
              $ mkToggle (single FULLCENTER)
                notebookLayout
     where
-    notebookMulti   = Notebook True True True 1 2 reSize 2 (2/3)
-    notebookThesis  = Notebook True True True 1 3 reSize 2 (2/3)
-    notebookTwoMain = Notebook False True True 2 3 reSize 2 (2/3)
-    notebookColumns = Notebook False True True 4 4 reSize 2 (2/3)
+    notebookMulti   = Notebook True True True 1 2 moreReSize reSize 3 (2/3)
+    notebookThesis  = Notebook True True True 1 3 moreReSize reSize 2 (2/3)
+    notebookTwoMain = Notebook False True True 2 3 moreReSize reSize 3 (2/3)
+    notebookColumns = Notebook False True True 4 4 moreReSize reSize 2 (2/3)
 
     notebookDifferent = onWorkspaces [wsTHESIS, ws3D] notebookThesis $ onWorkspaces [wsCOMMENTS] notebookTwoMain notebookMulti
 

@@ -60,7 +60,7 @@ centreRect f limit (Rectangle sx sy sw sh) =
 modY :: Rectangle -> Rectangle -> Rectangle
 modY (Rectangle sx sy sw sh) (Rectangle bx _ bw _)=
     Rectangle sx y sw h
-    where   ymoddifier= if toInteger (8 + sx) < toInteger bx + 1280
+    where   ymoddifier= if toInteger (8 + sx) < toInteger bx + 960
                         then 31
                         else 0
             y = sy + ymoddifier
