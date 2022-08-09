@@ -58,7 +58,8 @@ return {
             },
             {
                 name = "Run File (" .. vim.fn.expand("%:t:r") .. ")",
-                cmd = "julia " .. vim.fn.expand("%:p")
+                cmd = "julia " .. vim.fn.expand("%:p"),
+                condition = { filetype = "julia" },
             },
             {
                 name = "Profile Imports",
@@ -66,7 +67,8 @@ return {
             },
             {
                 name = "Profile File (" .. vim.fn.expand("%:t:r") .. ")",
-                cmd = "julia ~/.config/nvim/filetype/julia/prof.jl " .. vim.fn.expand("%:p")
+                cmd = "julia ~/.config/nvim/filetype/julia/prof.jl " .. vim.fn.expand("%:p"),
+                condition = { filetype = "julia" }
             },
         }
         local ret = {}
@@ -85,6 +87,7 @@ return {
                     tags = command.tags,
                     priority = priority,
                     params = {},
+                    condition = command.condition,
                 }
             )
             priority = priority + 1

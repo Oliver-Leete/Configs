@@ -130,7 +130,7 @@ overseer.setup({
             ["?"] = "ShowHelp",
             ["<CR>"] = "RunAction",
             ["<C-e>"] = "Edit",
-            ["o"] = "<cmd>OverseerQuickAction Open in toggleterm<cr>",
+            ["o"] = "<cmd>OverseerQuickAction open in toggleterm<cr>",
             ["<C-v>"] = "OpenVsplit",
             ["<C-f>"] = "OpenFloat",
             ["p"] = "TogglePreview",
@@ -151,9 +151,20 @@ overseer.setup({
             "on_complete_notify",
             "on_complete_dispose",
         },
+        default = {
+            "on_output_summarize",
+            "on_exit_set_status",
+            "on_complete_notify",
+            "on_complete_dispose",
+            "toggleterm.attach_toggleterm",
+        },
     },
     actions = {
-        ["Open in toggleterm"] = {
+        ["open"] = false,
+        ["open vsplit"] = false,
+        ["open hsplit"] = false,
+        ["set loclist diagnostics"] = false,
+        ["open in toggleterm"] = {
             desc = "Attach this task to a toggleterm terminal",
             run = function(task)
                 if task.toggleterm then
@@ -166,6 +177,7 @@ overseer.setup({
                 else
                     local bufnr = task.strategy.bufnr
                     task.toggleterm = Terminal:new({ bufnr = bufnr, jobname = task.name })
+                    task:add_components({ "toggleterm.on_dispose_clean_toggleterm" })
                     task.toggleterm:toggle()
                     task.toggleterm:__resurrect()
                 end
@@ -198,3 +210,22 @@ overseer.register_template({
     priority = 6000,
     params = {},
 })
+
+overseer.register_template({
+    name = "lazygit",
+    builder = function()
+        return {
+            name = "lazygit",
+            cmd = "lazygit",
+        }
+    end,
+    priority = 6000,
+    params = {},
+})
+
+Map("n", "<leader>:", function() overseer.run_template({ name = "lazygit" }, function(task)
+        if task then
+            overseer.run_action(task, 'open in toggleterm')
+        end
+    end)
+end)
