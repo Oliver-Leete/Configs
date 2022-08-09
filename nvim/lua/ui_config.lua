@@ -165,10 +165,11 @@ vim.lsp.handlers["window/showMessage"] = function(_, method, params, _)
 end
 
 local mode_colours = { Normal = tc.crystalBlue, Insert = tc.autumnGreen, Visual = tc.oniViolet, Replace = tc.autumnRed,
-    Command = tc.boatYellow2, Inactive = tc.fujiGray }
+    Command = tc.boatYellow2, Inactive = tc.fujiGray, Tab = tc.oldWhite }
 for mode, colour in pairs(mode_colours) do
     vim.api.nvim_set_hl(0, "WinBar" .. mode, { fg = tc.bg, bg = colour })
     vim.api.nvim_set_hl(0, "WinBar" .. mode .. "Ends", { fg = colour, bg = tc.bg })
+    vim.api.nvim_set_hl(0, "WinBar" .. mode .. "MidEnds", { fg = colour, bg = tc.fujiGray })
 end
 vim.api.nvim_set_hl(0, "WinBarInactiveSpecial", { fg = tc.bg, bg = tc.waveBlue2 })
 vim.api.nvim_set_hl(0, "WinBarInactiveSpecialEnds", { fg = tc.waveBlue2, bg = tc.bg })

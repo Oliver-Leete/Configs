@@ -338,18 +338,14 @@ end)
 
 -- Terminal mappings
 
-local term_keys = { "n", "e", "i", "o" }
+local term_keys = { "N", "E" }
 for i, key in pairs(term_keys) do
-    Map("n", "<cr>" .. key, function() _G.sendLines(vim.v.count, i) end)
-    Map("x", "<cr>" .. key, ":<c-u>call v:lua.sendRegion(visualmode(), " .. i .. ")<cr>", { remap = true })
+    Map("n", "<leader>" .. key, function() _G.sendLines(vim.v.count, i) end)
+    Map("x", "<leader>" .. key, ":<c-u>call v:lua.sendRegion(visualmode(), " .. i .. ")<cr>", { remap = true })
 end
 
 Map("n", "<leader>n", function() Harp_Term_1:toggle() end)
 Map("n", "<leader>e", function() Harp_Term_2:toggle() end)
-Map("n", "<leader>i", function() Harp_Term_3:toggle() end)
-Map("n", "<leader>o", function() Harp_Term_4:toggle() end)
-
-Map("n", "<leader>:", function() CommandCentre(Background_Term_List) end)
 
 Map("t", "<c-]>", "<c-\\><c-n>")
 
@@ -368,10 +364,6 @@ GlobalCommands = {
     { source = "default", name = "Undo tree", command = "UndotreeToggle" },
     { source = "default", name = "Reload snippets", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
     { source = "default", name = "Source init", command = "source /home/oleete/.config/nvim/init.lua" },
-
-    { source = "log", name = "Neovim Log", func = function() NvimLogTerm:open_add(4) end },
-    { source = "log", name = "LSP Log", func = function() LspLogTerm:open_add(4) end },
-    { source = "log", name = "X Session Log", func = function() XLogTerm:open_add(4) end },
 
     { source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
     { source = "finders", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
@@ -414,8 +406,9 @@ GlobalCommands = {
 
     { source = "tasks", name = "Run Tasks", command = "OverseerRun" },
     { source = "tasks", name = "Task Window", command = "OverseerToggle" },
-    { source = "tasks", name = "Run Nearest Test", func = function() require("neotest").run.run() end},
-    { source = "tasks", name = "Test Window", func = function() require("neotest").summary.open() end},
+    { source = "tasks", name = "Run Nearest Test", func = function() require("neotest").run.run() end },
+    { source = "tasks", name = "Test Window", func = function() require("neotest").summary.open() end },
+    { source = "tasks", name = "Terminals", command = "Telescope termfinder theme=get_ivy" },
 }
 
 Map("n", "<leader>p", function() CommandCentre({}, true) end)
@@ -521,6 +514,6 @@ end
 
 -- Map("n", "<leader>d", Select_runnables)
 Map("n", "<leader>d", "<cmd>OverseerRun<cr>")
-Map("n", "<leader>D", "<cmd>OverseerToggle<cr>")
 Map("n", "<leader>h", function() require("neotest").run.run() end)
-Map("n", "<leader>H", function() require("neotest").summary.toggle() end)
+Map("n", "<leader>i", "<cmd>OverseerToggle<cr>")
+Map("n", "<leader>o", function() require("neotest").summary.toggle() end)

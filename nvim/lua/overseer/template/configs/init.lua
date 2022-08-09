@@ -29,6 +29,17 @@ return {
                 end,
                 priority = 60,
                 params = {},
+            },
+            {
+                name = "View xsession Logs",
+                builder = function()
+                    return {
+                        name = "View xsession Logs",
+                        cmd = "tail --follow --retry ~/.xsession-errors | less -S",
+                    }
+                end,
+                priority = 60,
+                params = {},
             }
         }
     end

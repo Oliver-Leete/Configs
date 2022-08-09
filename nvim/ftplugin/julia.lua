@@ -54,37 +54,6 @@ function _G.jul_perf_flat()
     require("perfanno").load_traces(result)
 end
 
-vim.b[0].runnables = function()
-    -- Misc Runnables
-    local runnables_list = {
-        {
-            source = "Run",
-            name = "Run File",
-            func = function()
-                JuliaRunFile = Terminal:new({
-                    id = 16,
-                    jobname = "Run File",
-                    cmd = [[julia ']] .. vim.fn.expand("%:p") .. [[']],
-                })
-                JuliaRunFile:set_background()
-            end,
-        },
-        {
-            source = "Prof",
-            name = "Profile File",
-            func = function()
-                JuliaProfFile = Terminal:new({
-                    id = 17,
-                    jobname = "Profile File",
-                    cmd = [[julia ~/.config/nvim/filetype/julia/prof.jl ']] .. vim.fn.expand("%:p") .. "'",
-                })
-                JuliaProfFile:set_background()
-            end,
-        },
-    }
-    return runnables_list
-end
-
 Run_closest = function()
     local func_pat = "function [^%s]"
     local func_num = vim.fn.search(func_pat, "nbWc")
@@ -108,7 +77,8 @@ Run_closest = function()
     else
         name = line:match("struct ([%w^_-]+)")
     end
-    JuliaTest:send_open(vim.g.project .. [[Tests.runtests("]] .. name .. [[",spin=false)]], true, 1)
+    -- FIX: this currently does nothing, but there must be a neotest way of starting a test by name
+    -- JuliaTest:send_open(vim.g.project .. [[Tests.runtests("]] .. name .. [[",spin=false)]], true, 1)
 end
 
 local bp_remover = function(imp_line, bp_pattern, mod_pat)
@@ -183,7 +153,7 @@ end
 
 Map("n", ",rb", "<cmd>call julia#toggle_function_blockassign()<cr>")
 
--- Map("n", "<leader>D", Run_closest, { expr = true, buffer = 0 })
+Map("n", "<leader>H", Run_closest, { expr = true, buffer = 0 })
 
 Map("n", ",dd", function() BP_Toggle("Debugger", "@bp") end, { buffer = 0 })
 Map("n", ",di", function() BP_Toggle("Infiltrator", "@infiltrate") end, { buffer = 0 })
@@ -209,6 +179,6 @@ vim.b.minisurround_config = {
 JuliaREPL = Terminal:new({
     jobname = "Julia REPL",
     cmd = "julia",
-    id = 8,
+    id = 1008,
 })
 JuliaREPL:set_harp(1)

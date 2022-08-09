@@ -22,13 +22,13 @@ return {
                 cmd = "~/.config/nvim/filetype/julia/docBuild",
             },
             {
+                name = "Open preBuilt Documentation",
+                cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
+            },
+            {
                 name = "Start Documentation Server",
                 cmd = [[julia --project=docs -ie 'using ]] ..
                     vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']]
-            },
-            {
-                name = "Open preBuilt Documentation",
-                cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
             },
             {
                 name = "Open Live Documentation Server",
@@ -59,6 +59,10 @@ return {
             {
                 name = "Run File (" .. vim.fn.expand("%:t:r") .. ")",
                 cmd = "julia " .. vim.fn.expand("%:p")
+            },
+            {
+                name = "Profile Imports",
+                cmd = [[julia +beta -e '@time_imports using ]] .. vim.g.project .. "'"
             },
             {
                 name = "Profile File (" .. vim.fn.expand("%:t:r") .. ")",

@@ -35,33 +35,43 @@ vim.g.projectionist_heuristics = {
         ["src/*.jl"] = {
             type = "source",
             alternate = "test/{}_tests.jl",
-            related = { "test/{}_tests.jl", "docs/src/{}.md" },
+            related = { "test/{}_tests.jl", "benchmark/{}_benchmarks.jl", "docs/src/{}.md" },
         },
         ["test/*_tests.jl"] = {
             type = "test",
             alternate = "src/{}.jl",
-            related = { "src/{}.jl", "docs/src/{}.md" },
+            related = { "src/{}.jl", "benchmark/{}_benchmarks.jl", "docs/src/{}.md" },
+        },
+        ["benches/*_benchmarks.jl"] = {
+            type = "bench",
+            alternate = "src/{}.jl",
+            related = { "src/{}.jl", "tests/{}_tests.jl", "docs/src/{}.md" },
         },
         ["docs/src/*.md"] = {
             type = "doc",
             alternate = "src/{}.jl",
-            related = { "test/{}_tests.jl", "src/{}.jl" },
+            related = { "test/{}_tests.jl", "benchmark/{}_benchmarks.jl", "src/{}.jl" },
         },
 
         ["src/" .. vim.g.project .. ".jl"] = {
             type = "mainSource",
-            alternate = "test/" .. vim.g.project .. "Tests.jl",
-            related = { "test/" .. vim.g.project .. "Tests.jl", "docs/make.jl" },
+            alternate = "test/PackageTests.jl",
+            related = { "test/PackageTests.jl", "benchmark/PackageBenchmarks.jl", "docs/make.jl" },
         },
-        ["test/" .. vim.g.project .. "Tests.jl"] = {
+        ["test/PackageTests.jl"] = {
             type = "mainTest",
             alternate = "src/" .. vim.g.project .. ".jl",
-            related = { "src/" .. vim.g.project .. ".jl", "docs/make.jl" },
+            related = { "src/" .. vim.g.project .. ".jl", "benchmark/PackageBenchmarks.jl", "docs/make.jl" },
+        },
+        ["benchmark/PackageBenchmarks.jl"] = {
+            type = "mainBench",
+            alternate = "src/" .. vim.g.project .. ".jl",
+            related = { "src/" .. vim.g.project .. ".jl", "test/PackageTests.jl", "docs/make.jl" },
         },
         ["docs/make.jl"] = {
             type = "mainDoc",
-            alternate = "src/}.jl",
-            related = { "src/" .. vim.g.project .. ".jl", "test/" .. vim.g.project .. "Tests.jl" },
+            alternate = "src/" .. vim.g.project .. ".jl",
+            related = { "src/" .. vim.g.project .. ".jl", "test/PackageTests.jl", "benchmark/PackageBenchmarks.jl" },
         },
 
         ["README.md"] = { type = "readme" },
@@ -115,22 +125,24 @@ overseer.setup({
     task_editor = { win_opts = { winblend = 0, }, },
     task_win = { win_opts = { winblend = 0, }, },
     confirm = { win_opts = { winblend = 0, }, },
-    bindings = {
-        ["?"] = "ShowHelp",
-        ["<CR>"] = "RunAction",
-        ["<C-e>"] = "Edit",
-        ["o"] = "Open",
-        ["<C-v>"] = "OpenVsplit",
-        ["<C-f>"] = "OpenFloat",
-        ["p"] = "TogglePreview",
-        ["<C-l>"] = "IncreaseDetail",
-        ["<C-h>"] = "DecreaseDetail",
-        ["L"] = "IncreaseAllDetail",
-        ["H"] = "DecreaseAllDetail",
-        ["["] = "DecreaseWidth",
-        ["]"] = "IncreaseWidth",
-        ["{"] = "PrevTask",
-        ["}"] = "NextTask",
+    task_list = {
+        bindings = {
+            ["?"] = "ShowHelp",
+            ["<CR>"] = "RunAction",
+            ["<C-e>"] = "Edit",
+            ["o"] = "<cmd>OverseerQuickAction Open in toggleterm<cr>",
+            ["<C-v>"] = "OpenVsplit",
+            ["<C-f>"] = "OpenFloat",
+            ["p"] = "TogglePreview",
+            ["<C-l>"] = "IncreaseDetail",
+            ["<C-h>"] = "DecreaseDetail",
+            ["L"] = "IncreaseAllDetail",
+            ["H"] = "DecreaseAllDetail",
+            ["["] = "DecreaseWidth",
+            ["]"] = "IncreaseWidth",
+            ["{"] = "PrevTask",
+            ["}"] = "NextTask",
+        },
     },
     component_aliases = {
         default_neotest = {
@@ -140,6 +152,49 @@ overseer.setup({
             "on_complete_dispose",
         },
     },
+    actions = {
+        ["Open in toggleterm"] = {
+            desc = "Attach this task to a toggleterm terminal",
+            run = function(task)
+                if task.toggleterm then
+                    if task.toggleterm:is_open() then
+                        task.toggleterm:close()
+                        task.toggleterm:open()
+                    else
+                        task.toggleterm:open()
+                    end
+                else
+                    local bufnr = task.strategy.bufnr
+                    task.toggleterm = Terminal:new({ bufnr = bufnr, jobname = task.name })
+                    task.toggleterm:toggle()
+                    task.toggleterm:__resurrect()
+                end
+            end,
+        }
+
+    },
     templates = { "builtin", "julia", "configs" }
 })
 
+overseer.register_template({
+    name = "View LSP Logs",
+    builder = function()
+        return {
+            name = "View LSP Logs",
+            cmd = "tail --follow --retry ~/.local/state/nvim/lsp.log | less -S",
+        }
+    end,
+    priority = 6000,
+    params = {},
+})
+overseer.register_template({
+    name = "View Neovim Logs",
+    builder = function()
+        return {
+            name = "View Neovim Logs",
+            cmd = "tail --follow --retry ~/.local/state/nvim/log | less -S",
+        }
+    end,
+    priority = 6000,
+    params = {},
+})
