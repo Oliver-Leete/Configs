@@ -159,4 +159,5 @@ require("projects_config")
 require("mini_config")
 
 local enterAndExitVim = vim.api.nvim_create_augroup("enterAndExitVim", { clear = true })
+vim.api.nvim_create_autocmd("VimEnter", { command = 'silent! !/home/oleete/.config/bin/nvrRename', group = enterAndExitVim })
 vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-window-title ""', group = enterAndExitVim })

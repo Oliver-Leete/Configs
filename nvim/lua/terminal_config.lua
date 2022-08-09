@@ -29,14 +29,14 @@ require("toggleterm").setup({
     direction = "horizontal",
     close_on_exit = false,
     on_exit = function(t, _, exit_code, _)
-        if exit_code == 0 then
-            vim.notify(t.jobname .. " Succeded", "info", { title = "Terminal" })
-        else
-            vim.notify(t.jobname .. " has errored", "info", { title = "Terminal" })
-            if not t:is_open() then
-                t:open()
-            end
-        end
+        -- if exit_code == 0 then
+        --     vim.notify(t.jobname .. " Succeded", "info", { title = "Terminal" })
+        -- else
+        --     vim.notify(t.jobname .. " has errored", "info", { title = "Terminal" })
+        --     if not t:is_open() then
+        --         t:open()
+        --     end
+        -- end
     end,
     shell = "fish",
     float_opts = {
@@ -45,8 +45,8 @@ require("toggleterm").setup({
 })
 
 Terminal = require("toggleterm.terminal").Terminal
-Harp_Term_1 = Terminal:new({ id = 1001 })
-Harp_Term_2 = Terminal:new({ id = 1002 })
+Harp_Term_1 = Terminal:new({ id = 1001, jobname = "Terminal 1" })
+Harp_Term_2 = Terminal:new({ id = 1002, jobname = "Terminal 2" })
 
 function Terminal:set_harp(term_num)
     if term_num == 1 then

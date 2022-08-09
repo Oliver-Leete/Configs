@@ -41,7 +41,7 @@ local function special_winbar(bufnr, hl, is_active)
     else
         hl = "%#WinBarInactiveSpecial#"
     end
-    return hl .. specialname
+    return hl .. " " .. specialname .. " "
 end
 
 local function default_winbar(bufnr, hl, is_active)
@@ -57,22 +57,22 @@ local function default_winbar(bufnr, hl, is_active)
             icon = ""
         end
         winbar = winbar .. icon .. " "
-        winbar = winbar .. Get_unique_bufname(bufnr)
+        winbar = hl .. " " .. winbar .. Get_unique_bufname(bufnr) .. " "
     end
     -- Code location
     if is_active and require("nvim-navic").is_available() then
         local location = require("nvim-navic").get_location()
         if location ~= "" then
-            winbar = winbar .. "  " .. location
+            winbar = winbar .. "  " .. location
         end
     end
     return winbar
 end
 
 function _G.my_toggleterm_winbar_click(id)
-    local cur_win = math.floor(id / 1000)
+    local cur_win = math.floor(id / 1000000)
     print(cur_win)
-    local term_id = id - cur_win * 1000
+    local term_id = id - cur_win * 1000000
     print(term_id)
     local term = require("toggleterm.terminal").get_or_create_term(term_id)
     if not term then return end
@@ -110,21 +110,23 @@ function GPS_Bar()
                 hl = "%#WinBarInactive#"
                 hle = "%#WinBarInactiveEnds#"
             end
-            winbar = winbar ..
-                hle ..
-                string.format("%%%d@v:lua.my_toggleterm_winbar_click@", term.id + cur_win * 1000) ..
-                "" .. hl .. " " .. term.jobname .. hle .. " "
+            winbar = winbar .. string.format("%%%d@v:lua.my_toggleterm_winbar_click@", term.id + cur_win * 1000000)
+            winbar = winbar .. hl .. ""
+            winbar = winbar .. hl .. " " .. " " .. term.jobname .. " "
+            winbar = winbar .. hl .. ""
         end
-        return hlb .. winbar .. hlb .. "%="
+        return hlb .. winbar .. hle .. "%="
     elseif Is_special(bufnr) then
         winbar = special_winbar(bufnr, hl, is_active)
         hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveSpecialEnds#"
+        if winbar == "" then return "" end
+        return hlb .. "%=" .. hle .. "" .. winbar .. hle .. "" .. hlb .. "%=" .. hlb
     else -- Default winbar
         winbar = default_winbar(bufnr, hl, is_active)
     end
 
     if winbar == "" then return "" end
-    return hlb .. hle .. "" .. winbar .. hle .. "" .. hlb .. "%=" .. hlb
+    return hlb .. hle .. "" .. winbar .. hl .. " " .. hle .. "" .. hlb .. "%=" .. hlb
 end
 
 vim.go.winbar = "%{%v:lua.GPS_Bar()%}"

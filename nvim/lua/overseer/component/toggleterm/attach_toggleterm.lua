@@ -9,11 +9,19 @@ return {
             on_init = function()
             end,
             on_start = function(_, task)
+                Task = task
+                if task.toggleterm then
+                    task.toggleterm:shutdown()
+                end
                 local bufnr = task.strategy.bufnr
-                task.toggleterm = Terminal:new({ bufnr = bufnr, jobname = task.name })
+                local name = task.test_name or task.name
+                task.toggleterm = Terminal:new({ bufnr = bufnr, jobname = name })
                 task.toggleterm:toggle()
                 task.toggleterm:__resurrect()
                 task.toggleterm:toggle()
+            end,
+            on_restart = function(_, task)
+                task.toggleterm:shutdown()
             end,
             on_dispose = function(_, task)
                 task.toggleterm:shutdown()

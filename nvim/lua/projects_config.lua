@@ -131,17 +131,17 @@ overseer.setup({
             ["<CR>"] = "RunAction",
             ["<C-e>"] = "Edit",
             ["o"] = "<cmd>OverseerQuickAction open in toggleterm<cr>",
-            ["<C-v>"] = "OpenVsplit",
-            ["<C-f>"] = "OpenFloat",
             ["p"] = "TogglePreview",
             ["<C-l>"] = "IncreaseDetail",
             ["<C-h>"] = "DecreaseDetail",
             ["L"] = "IncreaseAllDetail",
             ["H"] = "DecreaseAllDetail",
-            ["["] = "DecreaseWidth",
-            ["]"] = "IncreaseWidth",
-            ["{"] = "PrevTask",
-            ["}"] = "NextTask",
+            ["["] = "PrevTask",
+            ["]"] = "NextTask",
+            ["{"] = nil,
+            ["}"] = nil,
+            ["<C-v>"] = nil,
+            ["<C-f>"] = nil,
         },
     },
     component_aliases = {
@@ -150,6 +150,7 @@ overseer.setup({
             "on_exit_set_status",
             "on_complete_notify",
             "on_complete_dispose",
+            "toggleterm.attach_toggleterm",
         },
         default = {
             "on_output_summarize",
@@ -210,22 +211,3 @@ overseer.register_template({
     priority = 6000,
     params = {},
 })
-
-overseer.register_template({
-    name = "lazygit",
-    builder = function()
-        return {
-            name = "lazygit",
-            cmd = "lazygit",
-        }
-    end,
-    priority = 6000,
-    params = {},
-})
-
-Map("n", "<leader>:", function() overseer.run_template({ name = "lazygit" }, function(task)
-        if task then
-            overseer.run_action(task, 'open in toggleterm')
-        end
-    end)
-end)

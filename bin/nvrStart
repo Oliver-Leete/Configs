@@ -2,15 +2,4 @@
 
 WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
 serverID="nvr-$WS"
-winTitle="MainEditor"
-
-TITLES=$(kitty @ ls | jq ".[].tabs[].windows[].title")
-
-if ! [[ "$TITLES" == *"$winTitle"* ]]; then
-	kitty @ set-window-title $winTitle
-else
-	ID=$(kitty @ ls | jq ".[].tabs[].windows[] | select(.title==\"MainEditor\") | .id")
-	kitty @ focus-window --match title:$winTitle
-fi
-
 nvr -s --servername "/tmp/$serverID" $@

@@ -165,20 +165,26 @@ vim.lsp.handlers["window/showMessage"] = function(_, method, params, _)
 end
 
 local mode_colours = { Normal = tc.crystalBlue, Insert = tc.autumnGreen, Visual = tc.oniViolet, Replace = tc.autumnRed,
-    Command = tc.boatYellow2, Inactive = tc.fujiGray, Tab = tc.oldWhite }
+    Command = tc.boatYellow2, Inactive = tc.fujiGray}
 for mode, colour in pairs(mode_colours) do
-    vim.api.nvim_set_hl(0, "WinBar" .. mode, { fg = tc.bg, bg = colour })
+    vim.api.nvim_set_hl(0, "WinBar" .. mode, { fg = tc.bg, bg = colour})
     vim.api.nvim_set_hl(0, "WinBar" .. mode .. "Ends", { fg = colour, bg = tc.bg })
     vim.api.nvim_set_hl(0, "WinBar" .. mode .. "MidEnds", { fg = colour, bg = tc.fujiGray })
+
 end
 vim.api.nvim_set_hl(0, "WinBarInactiveSpecial", { fg = tc.bg, bg = tc.waveBlue2 })
 vim.api.nvim_set_hl(0, "WinBarInactiveSpecialEnds", { fg = tc.waveBlue2, bg = tc.bg })
 vim.api.nvim_set_hl(0, "WinBarBlank", { fg = tc.sumiInk, bg = tc.sumiInk })
 vim.api.nvim_set_hl(0, "WinBarBlank", { fg = tc.sumiInk, bg = tc.sumiInk })
 
+vim.api.nvim_set_hl(0, "TabLine", { fg = tc.bg, bg = tc.fujiGray, sp=tc.sumiInk3, underline=true})
+vim.api.nvim_set_hl(0, "TabLineEnds", { fg = tc.fujiGray, bg = tc.bg, sp=tc.sumiInk3, underline=true })
+vim.api.nvim_set_hl(0, "TabLineActive", { fg = tc.bg, bg = tc.crystalBlue, sp=tc.sumiInk3, underline=true})
+vim.api.nvim_set_hl(0, "TabLineActiveEnds", { fg = tc.crystalBlue, bg = tc.bg, sp=tc.sumiInk3, underline=true })
+
 require("nvim-navic").setup({
     highlight = false,
-    separator = "  "
+    separator = "  "
 })
 
 

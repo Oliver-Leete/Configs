@@ -7,7 +7,7 @@ function Statusline()
     local hle = "%#WinBar" .. mode .. "Ends#"
 
     local prev = ""
-    local statusline = hle .. "" .. hl .. " " .. VimMode()[1] .. " " .. hle .. " "
+    local statusline = hl .. " " .. VimMode()[1] .. " " .. hle .. " "
 
     -- git
     local gitstats = vim.b.gitsigns_status_dict
@@ -32,7 +32,7 @@ function Statusline()
     end
     if git ~= "" then
         if prev ~= "" then
-            statusline = statusline .. hle .. " " .. git
+            statusline = statusline .. hle .. " " .. git
         else
             statusline = statusline .. git
         end
@@ -67,7 +67,7 @@ function Statusline()
     end
     if diag ~= "" then
         if prev ~= "" then
-            statusline = statusline .. hle .. " " .. diag
+            statusline = statusline .. hle .. " " .. diag
         else
             statusline = statusline .. diag
         end
@@ -103,7 +103,7 @@ function Statusline()
     end
     if tasks ~= "" then
         if prev ~= "" then
-            statusline = statusline .. hle .. " " .. tasks
+            statusline = statusline .. hle .. " " .. tasks
         else
             statusline = statusline .. tasks
         end
@@ -115,7 +115,7 @@ function Statusline()
     if #termstats > 0 then
         terms = "%#WinBarVisualEnds#" .. terms .. " " .. tostring(#termstats) .. " "
         if prev ~= "" then
-            statusline = statusline .. hle .. " " .. terms
+            statusline = statusline .. hle .. " " .. terms
         else
             statusline = statusline .. terms
         end
@@ -126,7 +126,7 @@ function Statusline()
     if dapstats ~= "" then
         local dap = "%#DiagnosticError#" .. dapstats .. " "
         if prev ~= "" then
-            statusline = statusline .. hle .. " " .. dap
+            statusline = statusline .. hle .. " " .. dap
         else
             statusline = statusline .. dap
         end
@@ -136,9 +136,9 @@ function Statusline()
     -- midway
     statusline = statusline .. "%="
 
-    statusline = statusline .. hle .. "" .. hl .. " "
+    statusline = statusline .. hle .. "" .. hl .. " "
     -- location stuff
-    statusline = statusline .. "%l:%c  %p%% "
+    statusline = statusline .. "%l:%c  %p%% "
 
     if vim.lsp.get_active_clients({ bufnr = bufnr }) then
         local clients = {}
@@ -148,11 +148,11 @@ function Statusline()
             end
         end
         if next(clients) then
-            statusline = statusline .. "  " .. table.concat(clients, '   ')
+            statusline = statusline .. "  " .. table.concat(clients, '   ')
         end
     end
 
-    statusline = statusline .. " " .. hle .. ""
+    statusline = statusline .. " "
 
 
     return statusline

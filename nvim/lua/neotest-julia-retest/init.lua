@@ -46,7 +46,8 @@ function adapter.build_spec(args)
         command = command,
         error_file = error_file,
         context = {
-            pos_id = position.id
+            pos_id = position.id,
+            name = position.name,
         },
     }
 end

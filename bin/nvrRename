@@ -1,0 +1,11 @@
+#!/bin/bash
+# Honestly don't know why this works, but renaming in nvrstart doesn't
+# It is the calls to kitty that seem to stop it
+
+winTitle="MainEditor"
+
+TITLES=$(kitty @ ls | jq ".[].tabs[].windows[].title")
+
+if ! [[ "$TITLES" == *"$winTitle"* ]]; then
+	kitty @ set-window-title $winTitle
+fi

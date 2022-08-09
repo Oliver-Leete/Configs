@@ -7,35 +7,15 @@ function Tabline()
         local bufname = Get_unique_bufname(bufnr)
 
         local is_active = index == vim.fn.tabpagenr()
-        local before_active = index < vim.fn.tabpagenr()
-        local div = before_active and "" or ""
 
-        mode = "Tab"
-        local hl = is_active and "%#WinBar" .. mode .. "#" or "%#WinBarInactive#"
-        local hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveEnds#"
-        local hlme = is_active and "%#WinBar" .. mode .. "MidEnds#" or "%#WinBarInactiveMidEnds#"
+        local hl = is_active and "%#TabLineActive#" or "%#TabLine#"
+        local hle = is_active and "%#TabLineActiveEnds#" or "%#TabLineEnds#"
 
         tabline = tabline .. "%" .. index .. "T"
-
-        if index == 1 then
-            tabline = tabline .. hle .. ""
-        elseif not is_active and before_active then
-            tabline = tabline .. hl .. div
-        else
-            tabline = tabline .. hlme .. ""
-        end
-
+        tabline = tabline .. hl .. ""
         tabline = tabline .. hl .. " " .. bufname .. " "
-
-        if index == vim.fn.tabpagenr('$') then
-            tabline = tabline .. hle .. ""
-        elseif not is_active and not before_active then
-            tabline = tabline .. hl .. div
-        else
-            tabline = tabline .. hlme .. ""
-        end
-
-        tabline = tabline .. "%" .. index .. "x"
+        tabline = tabline .. hl .. ""
+        tabline = tabline .. "%" .. index .. "x" .. hle
     end
     return tabline
 end

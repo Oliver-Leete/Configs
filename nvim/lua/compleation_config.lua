@@ -81,7 +81,7 @@ require("cmp").setup({
         { name = "fish" },
         { name = "path" },
         { name = "nvim_lua" },
-        { name = "buffer", keyword_lenght = 3 },
+        { name = "buffer", keyword_length = 3 },
     },
     formatting = {
         format = function(entry, vim_item)
@@ -125,8 +125,8 @@ require("cmp").setup.filetype("tex", {
         { name = "omni" },
         { name = "nvim_lsp" },
         { name = "path" },
-        { name = "buffer", keyword_lenght = 3 },
-        { name = "dictionary", keyword_lenght = 2 },
+        { name = "buffer", keyword_length = 3 },
+        { name = "dictionary", keyword_length = 3 },
     },
 })
 
