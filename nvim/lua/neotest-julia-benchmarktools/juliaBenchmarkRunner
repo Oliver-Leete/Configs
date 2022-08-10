@@ -1,9 +1,3 @@
 #!/bin/bash
-project="$(basename "$PWD")"
 cd benchmark || exit
-julia --threads=auto --project -e '
-using BenchmarkTools;
-include("PackageBenchmarks.jl")
-results = run('"$1"', verbose=true)
-print(results)
-'
+julia --threads=auto --project -e 'using DaemonMode; runargs()' "/home/oleete/.config/nvim/lua/neotest-julia-benchmarktools/juliaBenchmarkClient.jl" "$PWD" "$1"

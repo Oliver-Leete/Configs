@@ -9,6 +9,7 @@ Term_on_open = function(term)
     end
     term.name = term.jobname
     vim.b[0].my_term_title = term.jobname
+    vim.b[0].my_term_id = term.id
 end
 
 require("toggleterm").setup({
@@ -47,6 +48,16 @@ require("toggleterm").setup({
 Terminal = require("toggleterm.terminal").Terminal
 Harp_Term_1 = Terminal:new({ id = 1001, jobname = "Terminal 1" })
 Harp_Term_2 = Terminal:new({ id = 1002, jobname = "Terminal 2" })
+
+function Terminal:open_no_foc()
+    if not self:is_open() then
+        self:toggle()
+    end
+    local ui = require("toggleterm.ui")
+    ui.scroll_to_bottom()
+    ui.goto_previous()
+    ui.stopinsert()
+end
 
 function Terminal:set_harp(term_num)
     if term_num == 1 then

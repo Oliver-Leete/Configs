@@ -1,8 +1,3 @@
 #!/bin/bash
-project="$(basename "$PWD")"
 cd test || exit
-julia --threads=auto --project -e '
-using ReTest;
-ReTest.load("PackageTests.jl");
-PackageTests.runtests('"$1"' spin=false, verbose=Inf)
-'
+julia --threads=auto --project -e 'using DaemonMode; runargs()' "/home/oleete/.config/nvim/lua/neotest-julia-retest/juliaTestClient.jl" "$PWD" "$1"

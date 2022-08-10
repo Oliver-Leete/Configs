@@ -33,8 +33,7 @@ end
 function adapter.build_spec(args)
     local error_file = vim.fn.tempname()
     local position = args.tree:data()
-    local name = "suite[" .. position.name .. "]"
-    local command = "/home/oleete/.config/nvim/lua/neotest-julia-benchmarktools/juliaBenchmarkRunner '" .. name .. "'"
+    local command = "/home/oleete/.config/nvim/lua/neotest-julia-benchmarktools/juliaBenchmarkRunner '" .. position.name:sub(2,-2) .. "'"
     if position.type == "file" then
         return
     end
@@ -42,7 +41,8 @@ function adapter.build_spec(args)
         command = command,
         error_file = error_file,
         context = {
-            pos_id = position.id
+            pos_id = position.id,
+            name = position.name
         },
     }
 end

@@ -13,6 +13,10 @@ return {
     generator = function(_)
         local commands = {
             {
+                name = "Julia Test Server",
+                cmd = "julia -t auto -e 'using Revise, DaemonMode; serve(print_stack=true, async=false)'",
+            },
+            {
                 name = "Package Precompile",
                 cmd = "~/.config/nvim/filetype/julia/precompile",
                 tags = { TAG.BUILD }
@@ -26,7 +30,7 @@ return {
                 cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
             },
             {
-                name = "Start Documentation Server",
+                name = "Documentation Server",
                 cmd = [[julia --project=docs -ie 'using ]] ..
                     vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']]
             },
@@ -40,11 +44,11 @@ return {
                 tags = { TAG.TEST }
             },
             {
-                name = "Run all Tests",
+                name = "Package Tests",
                 cmd = "~/.config/nvim/lua/neotest-julia-retest/juliaTestRunner",
             },
             {
-                name = "Run all Benchmarks",
+                name = "Package Benchmarks",
                 cmd = "~/.config/nvim/lua/neotest-julia-benchmarktools/juliaBenchmarkRunner suite",
             },
             {

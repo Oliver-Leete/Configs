@@ -29,7 +29,6 @@ SpecialName = function(bufnr)
             return filetype
         end
     end
-    return false
 end
 
 local function special_winbar(bufnr, hl, is_active)
@@ -95,11 +94,11 @@ function GPS_Bar()
     if vim.api.nvim_buf_get_name(bufnr) == "/tmp/film_list.films" then
         winbar = filmpicker_winbar(hl)
     elseif vim.bo[bufnr].filetype == "toggleterm" then
-        local term_name = vim.b[0].my_term_title
+        local term_id = vim.b[0].my_term_id
         local term_list = require("toggleterm.terminal").get_all(true)
         local cur_win = vim.api.nvim_get_current_win()
         for _, term in pairs(term_list) do
-            local is_cur_term = term_name == term.jobname
+            local is_cur_term = tonumber(term_id) == term.id
             if is_active and is_cur_term then
                 hl = "%#WinBar" .. mode .. "#"
                 hle = "%#WinBar" .. mode .. "Ends#"

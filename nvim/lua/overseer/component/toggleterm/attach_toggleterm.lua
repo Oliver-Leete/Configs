@@ -18,7 +18,7 @@ return {
                 task.toggleterm = Terminal:new({ bufnr = bufnr, jobname = name })
                 task.toggleterm:toggle()
                 task.toggleterm:__resurrect()
-                task.toggleterm:toggle()
+                require("toggleterm.ui").goto_previous()
             end,
             on_restart = function(_, task)
                 task.toggleterm:shutdown()

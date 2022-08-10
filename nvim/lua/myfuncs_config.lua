@@ -152,11 +152,11 @@ vim.api.nvim_create_user_command("ZenOrFull", ZenOrFull, { nargs = 0 })
 
 TabNext = function()
     if vim.bo[0].filetype == "toggleterm" then
-        local term_name = vim.b[0].my_term_title
+        local term_id = vim.b[0].my_term_id
         local term_list = require("toggleterm.terminal").get_all(true)
         local cur_index
         for i, term in pairs(term_list) do
-            if term_name == term.jobname then
+            if tonumber(term_id) == term.id then
                 cur_index = i
             end
         end
@@ -171,11 +171,11 @@ vim.api.nvim_create_user_command("TabNext", TabNext, { nargs = 0 })
 
 TabPrev = function()
     if vim.bo[0].filetype == "toggleterm" then
-        local term_name = vim.b[0].my_term_title
+        local term_id = vim.b[0].my_term_id
         local term_list = require("toggleterm.terminal").get_all(true)
         local cur_index
         for i, term in pairs(term_list) do
-            if term_name == term.jobname then
+            if tonumber(term_id) == term.id then
                 cur_index = i
             end
         end
