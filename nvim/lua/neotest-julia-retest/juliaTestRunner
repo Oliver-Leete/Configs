@@ -1,3 +1,0 @@
-#!/bin/bash
-cd test || exit
-julia --threads=auto --project -e 'using DaemonMode; runargs()' "/home/oleete/.config/nvim/lua/neotest-julia-retest/juliaTestClient.jl" "$PWD" "$1"

@@ -41,18 +41,25 @@ function adapter.build_spec(args)
 
     -- Make sure server is running
     local task_list = require("overseer.task_list").list_tasks()
-    local server_running = false
-    for _, task in pairs(task_list) do
-        if task.name == "Julia Test Server" and task.status == "RUNNING" then
-            server_running = true
+    local server_running = function()
+        for _, task in pairs(task_list) do
+            if task.name == "Julia Test Server" and task.status == "RUNNING" then
+                return true
+            end
         end
     end
-    if not server_running then
-        require("overseer").run_template({name = "Julia Test Server"})
+    if not server_running() then
+        require("overseer").run_template({ name = "Julia Test Server" })
     end
 
-    local command = "/home/oleete/.config/nvim/lua/neotest-julia-retest/juliaTestRunner '" .. position.name:sub(2,-2) .. "'"
-    if position.type ~= "test" then
+
+    local command = "cd test && julia --project -e'using DaemonMode; runargs()' "
+        .. "/home/oleete/.config/nvim/lua/neotest-julia-retest/juliaTestClient.jl "
+        .. vim.fn.getcwd() .. "/test/PackageTests.jl' "
+        .. position.name:sub(2, -2)
+        .. "'"
+
+    if position.type == "file" then
         return
     end
     return {
@@ -61,17 +68,44 @@ function adapter.build_spec(args)
         context = {
             pos_id = position.id,
             name = position.name,
+            type = position.type,
         },
     }
 end
 
 function adapter.results(spec, result)
-    local pos_id = spec.context.pos_id
-    local status = result.code == 0 and "passed" or "failed"
+    Spec = spec
+    local success, data = pcall(lib.files.read, result.output)
+    if not success then
+        return {}
+    end
 
-    return { [pos_id] = {
-        status = status,
-    } }
+    data = data:match("Main.PackageTests\r\n(.*)$")
+    local lines = vim.split(data, '\r\n')
+    Lines = lines
+    local ret_tab = {}
+    for _, line in pairs(lines) do
+        local pos_id, stat_icon = line:match("%d*|%s*(.*) (...)")
+        if pos_id and stat_icon then
+            local status
+            if stat_icon == "✔" then
+                status = 'passed'
+            elseif stat_icon == "✘" then
+                status = 'failed'
+            end
+
+            if spec.context.type == "test" then
+                pos_id = spec.context.pos_id
+            else
+                pos_id = spec.context.pos_id .. "::\"" .. pos_id .. "\""
+            end
+
+            ret_tab[pos_id] = { status = status }
+        end
+    end
+    RetTab = ret_tab
+
+    return ret_tab
 end
 
 return adapter

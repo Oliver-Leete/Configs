@@ -1,3 +1,0 @@
-#!/bin/bash
-cd benchmark || exit
-julia --threads=auto --project -e 'using DaemonMode; runargs()' "/home/oleete/.config/nvim/lua/neotest-julia-benchmarktools/juliaBenchmarkClient.jl" "$PWD" "$1"

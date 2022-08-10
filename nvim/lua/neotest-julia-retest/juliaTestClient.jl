@@ -1,3 +1,8 @@
 using ReTest;
+
 ReTest.load(ARGS[1]);
-retest(ARGS[2], spin=false, verbose=Inf)
+try
+    retest(join(ARGS[2:end], " "), spin=false, verbose=Inf)
+catch
+end
+retest(join(ARGS[2:end], " "), dry=true, marks=true, verbose=Inf)

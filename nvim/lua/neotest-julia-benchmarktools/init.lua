@@ -33,7 +33,26 @@ end
 function adapter.build_spec(args)
     local error_file = vim.fn.tempname()
     local position = args.tree:data()
-    local command = "/home/oleete/.config/nvim/lua/neotest-julia-benchmarktools/juliaBenchmarkRunner '" .. position.name:sub(2,-2) .. "'"
+
+    -- Make sure server is running
+    local task_list = require("overseer.task_list").list_tasks()
+    local server_running = function()
+        for _, task in pairs(task_list) do
+            if task.name == "Julia Test Server" and task.status == "RUNNING" then
+                return true
+            end
+        end
+    end
+    if not server_running() then
+        require("overseer").run_template({ name = "Julia Test Server" })
+    end
+
+    local command = "cd benchmark && julia --project -e'using DaemonMode; runargs()' "
+        .. "/home/oleete/.config/nvim/lua/neotest-julia-benchmarktools/juliaBenchmarkClient.jl "
+        .. vim.fn.getcwd() .. "/benchmark/PackageBenchmarks.jl' "
+        .. position.name:sub(2, -2)
+        .. "'"
+
     if position.type == "file" then
         return
     end
