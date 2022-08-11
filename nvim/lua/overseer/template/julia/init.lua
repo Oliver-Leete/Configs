@@ -101,8 +101,7 @@ return {
             [[rg --no-filename --no-heading --no-line-number -e ".*\[\"(.*?)\"\].*@benchmarkable(.*)\$" -r "\$1	\$2"]]
         )
         if profileHandler then
-            local Profilable
-            Profilable = profileHandler:read("*a")
+            local Profilable = profileHandler:read("*a")
             profileHandler:close()
 
             for s in Profilable:gmatch("([^\r\n]+)") do

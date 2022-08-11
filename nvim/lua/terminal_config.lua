@@ -71,9 +71,6 @@ function Terminal:set_harp(term_num)
         end
     elseif term_num == 2 then
         if Harp_Term_2 ~= self then
-            if Harp_Term_2:is_open() then
-                Harp_Term_2:close()
-            end
             Harp_Term_2 = self
         end
     end

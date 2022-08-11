@@ -92,7 +92,7 @@ require("mini.ai").setup({
             '()()%f[%w%p][%w%p]+()[ \t]*()',
         } },
         -- word
-        w = { '()()%f[%w]%w+()[ \t]*()' },
+        w = { '()()%f[%w_][%w_]+()[ \t]*()' },
         -- key or value (needs a lot of work)
         -- z = gen_spec.argument({ brackets = { '%b()'}, separators = {',', ';', '=>'}}),
         -- chunk (as in from vim-textobj-chunk)

@@ -182,6 +182,7 @@ overseer.setup({
                     task.toggleterm:toggle()
                     task.toggleterm:__resurrect()
                 end
+                task.toggleterm:set_harp(2)
             end,
         }
 
@@ -210,4 +211,33 @@ overseer.register_template({
     end,
     priority = 6000,
     params = {},
+})
+overseer.register_template({
+    generator = function()
+        local logHandler = io.popen(
+            [[fd -e log]]
+        )
+        local ret = {}
+        if logHandler then
+            local logs = logHandler:read("*a")
+            logHandler:close()
+            for log in logs:gmatch("([^\r\n]+)") do
+                table.insert(
+                    ret,
+                    {
+                        name = "Show " .. log,
+                        builder = function()
+                            return {
+                                name = "Show " .. log,
+                                cmd = "tail --follow --retry " .. log,
+                            }
+                        end,
+                        priority = 1000,
+                        params = {},
+                    }
+                )
+            end
+        end
+        return ret
+    end
 })
