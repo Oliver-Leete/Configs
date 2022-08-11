@@ -54,7 +54,7 @@ function adapter.build_spec(args)
 
 
     local command = "cd test && julia --project -e'using DaemonMode; runargs()' "
-        .. "/home/oleete/.config/nvim/lua/neotest-julia-retest/juliaTestClient.jl "
+        .. "/home/oleete/.config/nvim/lua/neotest/adapters/neotest-julia-retest/juliaTestClient.jl "
         .. vim.fn.getcwd() .. "/test/PackageTests.jl' "
         .. position.name:sub(2, -2)
         .. "'"
@@ -74,15 +74,11 @@ function adapter.build_spec(args)
 end
 
 function adapter.results(spec, result)
-    Spec = spec
     local success, data = pcall(lib.files.read, result.output)
-    if not success then
-        return {}
-    end
+    if not success then return {} end
 
     data = data:match("Main.PackageTests\r\n(.*)$")
     local lines = vim.split(data, '\r\n')
-    Lines = lines
     local ret_tab = {}
     for _, line in pairs(lines) do
         local pos_id, stat_icon = line:match("%d*|%s*(.*) (...)")
@@ -103,7 +99,6 @@ function adapter.results(spec, result)
             ret_tab[pos_id] = { status = status }
         end
     end
-    RetTab = ret_tab
 
     return ret_tab
 end

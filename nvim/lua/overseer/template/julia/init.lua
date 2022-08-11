@@ -13,46 +13,46 @@ return {
     generator = function(_)
         local commands = {
             {
-                name = "Julia Test Server",
+                name = "Julia test server",
                 cmd = "julia -t auto -e 'using Revise, DaemonMode; serve(print_stack=true, async=false)'",
             },
             {
-                name = "Package Precompile",
+                name = "Julia package precompile",
                 cmd = "~/.config/nvim/filetype/julia/precompile",
                 tags = { TAG.BUILD }
             },
             {
-                name = "Build Documentation",
+                name = "Julia build documentation",
                 cmd = "~/.config/nvim/filetype/julia/docBuild",
             },
             {
-                name = "Open preBuilt Documentation",
+                name = "Julia open prebuilt documentation",
                 cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
             },
             {
-                name = "Documentation Server",
+                name = "Julia documentation server",
                 cmd = [[julia --project=docs -ie 'using ]] ..
                     vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']]
             },
             {
-                name = "Open Live Documentation Server",
+                name = "Open live documentation server",
                 cmd = "browser http://localhost:8000 & sleep 5",
             },
             {
-                name = "Documentation Tests",
+                name = "Julia documentation tests",
                 cmd = "~/.config/nvim/filetype/julia/docTest",
                 tags = { TAG.TEST }
             },
             {
-                name = "Package Tests",
+                name = "Julia package tests",
                 cmd = "~/.config/nvim/lua/neotest-julia-retest/juliaTestRunner",
             },
             {
-                name = "Package Benchmarks",
+                name = "Julia package benchmarks",
                 cmd = "~/.config/nvim/lua/neotest-julia-benchmarktools/juliaBenchmarkRunner suite",
             },
             {
-                name = "Retune Benchmarks",
+                name = "Julia retune benchmarks",
                 cmd = [[julia -e '
                 using BenchmarkTools
                 include("benchmark/PackageBenchmarks.jl")
@@ -61,16 +61,16 @@ return {
                 ']],
             },
             {
-                name = "Run File (" .. vim.fn.expand("%:t:r") .. ")",
+                name = "Julia run file (" .. vim.fn.expand("%:t:r") .. ")",
                 cmd = "julia " .. vim.fn.expand("%:p"),
                 condition = { filetype = "julia" },
             },
             {
-                name = "Profile Imports",
+                name = "Julia profile imports",
                 cmd = [[julia +beta -e '@time_imports using ]] .. vim.g.project .. "'"
             },
             {
-                name = "Profile File (" .. vim.fn.expand("%:t:r") .. ")",
+                name = "Julia profile file (" .. vim.fn.expand("%:t:r") .. ")",
                 cmd = "julia ~/.config/nvim/filetype/julia/prof.jl " .. vim.fn.expand("%:p"),
                 condition = { filetype = "julia" }
             },
@@ -97,15 +97,15 @@ return {
             priority = priority + 1
         end
 
-        local handle2 = io.popen(
+        local profileHandler = io.popen(
             [[rg --no-filename --no-heading --no-line-number -e ".*\[\"(.*?)\"\].*@benchmarkable(.*)\$" -r "\$1	\$2"]]
         )
-        local benches
-        if handle2 then
-            benches = handle2:read("*a")
-            handle2:close()
+        if profileHandler then
+            local Profilable
+            Profilable = profileHandler:read("*a")
+            profileHandler:close()
 
-            for s in benches:gmatch("([^\r\n]+)") do
+            for s in Profilable:gmatch("([^\r\n]+)") do
                 local name, command = s:match("([^\t]+)\t([^\t]+)")
                 table.insert(
                     ret,
@@ -113,7 +113,7 @@ return {
                         name = "Profile " .. name,
                         builder = function()
                             return {
-                                name = "Profile " .. name,
+                                name = "Julia profile " .. name,
                                 cmd = "~/.config/nvim/filetype/julia/profBench '" .. command .. "'",
                             }
                         end,

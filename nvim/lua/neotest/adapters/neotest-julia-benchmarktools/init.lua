@@ -48,7 +48,7 @@ function adapter.build_spec(args)
     end
 
     local command = "cd benchmark && julia --project -e'using DaemonMode; runargs()' "
-        .. "/home/oleete/.config/nvim/lua/neotest-julia-benchmarktools/juliaBenchmarkClient.jl "
+        .. "/home/oleete/.config/nvim/lua/neotest/adapters/neotest-julia-benchmarktools/juliaBenchmarkClient.jl "
         .. vim.fn.getcwd() .. "/benchmark/PackageBenchmarks.jl' "
         .. position.name:sub(2, -2)
         .. "'"
@@ -67,11 +67,16 @@ function adapter.build_spec(args)
 end
 
 function adapter.results(spec, result)
+    local success, data = pcall(lib.files.read, result.output)
+    if not success then return {} end
+
+    local time = data:match("%((.*)%)")
     local pos_id = spec.context.pos_id
     local status = result.code == 0 and "passed" or "failed"
 
     return { [pos_id] = {
         status = status,
+        time = time,
     } }
 end
 

@@ -29,21 +29,23 @@ require("toggleterm").setup({
     persist_size = true,
     direction = "horizontal",
     close_on_exit = false,
-    on_exit = function(t, _, exit_code, _)
-        -- if exit_code == 0 then
-        --     vim.notify(t.jobname .. " Succeded", "info", { title = "Terminal" })
-        -- else
-        --     vim.notify(t.jobname .. " has errored", "info", { title = "Terminal" })
-        --     if not t:is_open() then
-        --         t:open()
-        --     end
-        -- end
-    end,
     shell = "fish",
     float_opts = {
         border = "curved",
     }
 })
+
+function AnyTermOpen()
+    local term_list = require("toggleterm.terminal").get_all()
+    local open
+    for _, term in pairs(term_list) do
+        if term:is_open() then
+            open = true
+            break
+        end
+    end
+    return open
+end
 
 Terminal = require("toggleterm.terminal").Terminal
 Harp_Term_1 = Terminal:new({ id = 1001, jobname = "Terminal 1" })
