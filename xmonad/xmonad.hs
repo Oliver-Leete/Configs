@@ -32,7 +32,6 @@ import XMonad.Hooks.ServerMode
 import XMonad.Hooks.ShowWName
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
-import XMonad.Hooks.StatusBar.WorkspaceScreen
 
 import XMonad.Layout.FourColumns
 import XMonad.Layout.MultiToggle
@@ -55,8 +54,8 @@ import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 import XMonad.Actions.WithAll (killAll)
 import XMonad.Prompt
 import XMonad.Hooks.RefocusLast
-import XMonad.Prelude
 import XMonad.Hooks.WorkspaceHistory (workspaceHistoryHookExclude)
+import XMonad.Util.ClickableWorkspaces
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
 ----------------------------------------------------------------------------------------------------
@@ -485,7 +484,7 @@ myKeys =
 
     -- , ("M-m"             , myFocusMaster)
     , ("M-m"             , bF $ kt " mainMove" $ l (upPointer $ swapPromote' False))
-    , ("M-S-m"           , bF $ kt " mainMove" $ l (upPointer $ swapPromote' False))
+    , ("M-S-m"           , upPointer $ swapPromote' False)
 
     , ("M-y"             , upPointer $ withFocused toggleFloat)
     , ("M-S-y"           , upFocus sinkAll)
@@ -549,20 +548,11 @@ myStartupHook = do
 -- Log                                                                                            --
 ----------------------------------------------------------------------------------------------------
 
-monitorIds :: IO [(ScreenId, String)]
-monitorIds = return [(S 0, "¹"), (S 1, "²"), (S 2, "³"), (S 3, "⁴")]
-
-myScreenCombiner :: X WorkspaceScreenCombiner
-myScreenCombiner = do
-  screenNames <- io monitorIds
-  return
-    $ \w sc -> w <> fromJust (W.screen sc `lookup` screenNames)
-
 barSpawner :: ScreenId -> IO StatusBarConfig
 barSpawner (S sid) = pure $
   statusBarPropTo ("_XMONAD_LOG_" ++ show sid) ( "/home/oleete/.config/xmobar/xmobarLaunch " ++ show sid) myPP
 
-myPP = combineWithScreen myScreenCombiner $ filterOutWsPP ["NSP"] $ def
+myPP = clickablePP $ filterOutWsPP ["NSP"] $ def
     { ppCurrent = xmobarColor active "" . wrap ("<box type=Bottom width=2 mt=2 color=" ++ active ++ ">") "</box>"
     , ppVisible = xmobarColor active ""
     , ppHidden  = xmobarColor dull  ""
