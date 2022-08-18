@@ -514,6 +514,7 @@ end
 
 -- Map("n", "<leader>d", Select_runnables)
 Map("n", "<leader>d", "<cmd>OverseerRun<cr>")
+Map("n", "<leader>D", "<cmd>OverseerTaskAction<cr>")
 Map("n", "<leader>h", function() require("neotest").run.run() end)
 Map("n", "<leader>i", "<cmd>OverseerToggle<cr>")
 Map("n", "<leader>o", function() require("neotest").summary.toggle() end)

@@ -73,7 +73,7 @@ vim.opt.signcolumn = "yes:2"
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
-vim.cmd([[call matchadd('TabLine', '\%101v', 203)]])
+vim.cmd([[call matchadd('TabLineSel', '\%101v', 203)]])
 
 local numbertoggle = vim.api.nvim_create_augroup("numbertoggle", { clear = true })
 vim.api.nvim_create_autocmd(

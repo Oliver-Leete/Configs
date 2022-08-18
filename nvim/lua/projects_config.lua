@@ -120,6 +120,7 @@ require("neotest").setup({
 })
 
 local overseer = require("overseer")
+local STATUS = require("overseer.constants").STATUS
 overseer.setup({
     form = { win_opts = { winblend = 0, }, },
     task_editor = { win_opts = { winblend = 0, }, },
@@ -184,8 +185,16 @@ overseer.setup({
                 end
                 task.toggleterm:set_harp(2)
             end,
+        },
+        ["keep runnning"] = {
+            desc = "restart the task even if it succeeds",
+            run = function(task)
+                task:add_components({ { "on_complete_restart", statuses = { STATUS.FAILURE, STATUS.SUCCESS } } })
+                if task.status == STATUS.FAILURE or task.status == STATUS.SUCCESS then
+                    task:restart()
+                end
+            end
         }
-
     },
     templates = { "builtin", "julia", "configs" }
 })

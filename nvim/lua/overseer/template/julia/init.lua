@@ -1,6 +1,7 @@
 local overseer = require("overseer")
 local constants = require("overseer.constants")
 local files = require("overseer.files")
+local STATUS = require("overseer.constants").STATUS
 local TAG = constants.TAG
 
 return {
@@ -31,8 +32,9 @@ return {
             },
             {
                 name = "Julia documentation server",
-                cmd = [[julia --project=docs -ie 'using ]] ..
-                    vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']]
+                cmd = [[julia --project=docs -e 'using Revise, ]] ..
+                    vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']],
+                components = { "default", { "on_complete_restart", statuses = { STATUS.FAILURE, STATUS.SUCCESS } } }
             },
             {
                 name = "Open live documentation server",
@@ -86,6 +88,7 @@ return {
                         return {
                             name = command.name,
                             cmd = command.cmd,
+                            components = command.components or { "default" }
                         }
                     end,
                     tags = command.tags,
