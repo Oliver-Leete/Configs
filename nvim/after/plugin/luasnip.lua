@@ -26,7 +26,7 @@ local m = lse.match
 -- local n = lse.nonempty
 -- local dl = lse.dynamic_lambda
 
--- NOTE : LUA
+-- NOTE: LUA
 Ls.add_snippets("lua", {
     lua = {
         s({ trig = "sn", name = "snippet", dscr = "The snippet to make snippets" }, {
@@ -37,7 +37,16 @@ Ls.add_snippets("lua", {
     },
 })
 
--- NOTE : JULIA
+-- NOTE: MARKDOWN
+Ls.add_snippets("markdown", {
+    lua = {
+        s({ trig = "ref", name = "julia docstring reference", dscr = "Link to docstrings" }, {
+            t({ "[`" }), i(1), t({ "`](@ref)" }), i(0)
+        })
+    },
+})
+
+-- NOTE: JULIA
 
 local rec_elseif
 rec_elseif = function()
@@ -239,7 +248,8 @@ rec_draw = function()
         c(1, {
             t(""),
             sn(nil, {
-                t({ "", "\t\t\\draw [arrow] (" }), i(1, "from node"), t(") "), i(3, "branch type"), t(" ("), i(2, "to node"), t(");"), d(4, rec_draw, {}),
+                t({ "", "\t\t\\draw [arrow] (" }), i(1, "from node"), t(") "), i(3, "branch type"), t(" ("),
+                i(2, "to node"), t(");"), d(4, rec_draw, {}),
             }),
         })
     )
@@ -251,13 +261,16 @@ rec_node = function()
         c(1, {
             t(""),
             sn(nil, {
-                t({ "", "\t\t\\node (" }), i(2, "node name"), t(") ["), i(3, "options"), t("] {"), i(1, "node text"), t("};"), d(4, rec_node, {})
+                t({ "", "\t\t\\node (" }), i(2, "node name"), t(") ["), i(3, "options"), t("] {"), i(1, "node text"),
+                t("};"), d(4, rec_node, {})
             }),
             sn(nil, {
-                t({ "", "\t\t\\draw [arrow] (" }), i(1, "from node"), t(") "), i(3, "branch type"), t(" ("), i(2, "to node"), t(");"), d(4, rec_node, {}),
+                t({ "", "\t\t\\draw [arrow] (" }), i(1, "from node"), t(") "), i(3, "branch type"), t(" ("),
+                i(2, "to node"), t(");"), d(4, rec_node, {}),
             }),
             sn(nil, {
-                t({ "", "", "\t\t\\draw [arrow] (" }), i(1, "from node"), t(") "), i(3, "branch type"), t(" ("), i(2, "to node"), t(");"), d(4, rec_draw, {}),
+                t({ "", "", "\t\t\\draw [arrow] (" }), i(1, "from node"), t(") "), i(3, "branch type"), t(" ("),
+                i(2, "to node"), t(");"), d(4, rec_draw, {}),
             }),
         })
     )
@@ -430,6 +443,7 @@ Ls.add_snippets("tex", {
 
     -- NOTE : FLOWCHARTS
     s({ trig = "node", name = "tikz Node", dscr = "Flowchart Node" }, {
-        t("\\node ("), i(1, "nodeID"), t(") ["), i(2, "style"), t(", "), i(3, "position"), t("] {"), i(4, "text"), t("};")
+        t("\\node ("), i(1, "nodeID"), t(") ["), i(2, "style"), t(", "), i(3, "position"), t("] {"), i(4, "text"),
+        t("};")
     }),
 })

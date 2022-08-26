@@ -92,13 +92,6 @@ function Terminal:send_open(cmd, _, term_num)
     self:send(cmd, false)
 end
 
-LZGTerm = Terminal:new({
-    cmd = "lazygit",
-    jobname = "Lazygit",
-    id = 6,
-})
-
-
 local function harpsend(num)
     local to_send = vim.fn.getreg('"'):gsub("[\r\n]$", "")
     if num == 1 then

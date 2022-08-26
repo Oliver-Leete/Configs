@@ -8,7 +8,7 @@ vim.cmd([[set errorformat+=%-G%.%#]])
 vim.bo.commentstring = [[#%s]]
 
 vim.g.latex_to_unicode_tab = 0
-vim.g.latex_to_unicode_auto = 1
+vim.g.latex_to_unicode_auto = 0
 
 local function get_command_output(cmd, silent)
     if silent then
@@ -175,10 +175,3 @@ vim.b.minisurround_config = {
         },
     }
 }
-
-JuliaREPL = Terminal:new({
-    jobname = "Julia REPL",
-    cmd = "julia",
-    id = 1008,
-})
-JuliaREPL:set_harp(1)

@@ -388,7 +388,6 @@ GlobalCommands = {
     { source = "git", name = "Diff of unstaged", command = "DiffviewOpen" },
     { source = "git", name = "File diff history", command = "DiffviewFileHistory %" },
     { source = "git", name = "Folder diff history", command = "DiffviewFileHistory" },
-    { source = "git", name = "Lazygit", func = function() LZGTerm:toggle() end, },
     { source = "git", name = "Reset File", command = "Gitsigns reset_buffer" },
     { source = "git", name = "Stage File", command = "Gitsigns stage_buffer" },
 
@@ -405,6 +404,7 @@ GlobalCommands = {
     { source = "profiling", name = "Profile Toggle Annotations", command = "PerfToggleAnnotations" },
 
     { source = "tasks", name = "Run Tasks", command = "OverseerRun" },
+    { source = "tasks", name = "Modify Tasks", command = "OverseerTaskAction" },
     { source = "tasks", name = "Task Window", command = "OverseerToggle" },
     { source = "tasks", name = "Run Nearest Test", func = function() require("neotest").run.run() end },
     { source = "tasks", name = "Test Window", func = function() require("neotest").summary.open() end },

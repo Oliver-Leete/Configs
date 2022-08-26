@@ -151,7 +151,7 @@ overseer.setup({
             "on_exit_set_status",
             "on_complete_notify",
             "on_complete_dispose",
-            "toggleterm.attach_toggleterm",
+            { "toggleterm.attach_toggleterm", goto_bottom = true },
         },
         default = {
             "on_output_summarize",
@@ -193,6 +193,12 @@ overseer.setup({
                 if task.status == STATUS.FAILURE or task.status == STATUS.SUCCESS then
                     task:restart()
                 end
+            end
+        },
+        ["don't dispose"] = {
+            desc = "keep the task until manually disposed",
+            run = function(task)
+                task:remove_components({ "on_complete_dispose" })
             end
         }
     },
@@ -249,4 +255,85 @@ overseer.register_template({
         end
         return ret
     end
+})
+overseer.register_template({
+    name = "Plot from logfile",
+    params = {
+        key = {
+            type = "string",
+            name = "Key",
+            desc = "A search term to find the desired parameter to plot",
+            optional = false,
+        }
+    },
+    builder = function(params)
+        return {
+            name = "Plot ".. params.key,
+            cmd = [[
+                echo temp > /tmp/T.csv; rg ']] .. params.key .. [[' /home/oleete/Projects/PowderModel/test/test_outputs/full_out.log | rg -o '[0-9.]*$' >> /tmp/T.csv;
+                julia -e '
+                    using Plots, CSV;
+                    ENV["GKSwstype"]="nul"
+                    gr()
+                    a = CSV.File("/tmp/T.csv")
+                    savefig(plot([a[i][1] for i in 1:length(a)]), "/tmp/T.png")
+                '
+                feh /tmp/T.png
+            ]],
+        }
+    end,
+    priority = 500,
+    condition = {
+        dir = "/home/oleete/Projects/PowderModel"
+    }
+})
+overseer.register_template({
+    name = "View Animation",
+    builder = function()
+        return {
+            name = "Animation",
+            cmd = "mpv --loop-file=inf /tmp/fig.gif",
+        }
+    end,
+    priority = 501,
+    condition = {
+        dir = "/home/oleete/Projects/PowderModel"
+    }
+})
+
+overseer.register_template({
+    name = "System Info (btop)",
+    builder = function()
+        return {
+            name = "btop",
+            cmd = "btop",
+        }
+    end,
+    priority = 4000,
+    params = {},
+})
+overseer.register_template({
+    name = "Lazygit",
+    builder = function()
+        return {
+            name = "lazygit",
+            cmd = "lazygit",
+        }
+    end,
+    priority = 4000,
+    params = {},
+})
+
+overseer.register_template({
+    name = "Build Document",
+    builder = function()
+        return {
+            name = "Build Document",
+            cmd = "latexmk -pdf -file-line-error -synctex=1 OML-Thesis.tex",
+        }
+    end,
+    priority = 5,
+    condition = {
+        dir = "/home/oleete/UniversityDrive/Thesis/thesis"
+    }
 })

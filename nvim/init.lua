@@ -33,13 +33,12 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'tommcdo/vim-nowchangethat'
 
     Plug 'lervag/vimtex'
-    Plug 'JuliaEditorSupport/julia-vim'
     Plug 'fladson/vim-kitty'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
     Plug 'wilriker/gcode.vim'
     Plug 'LhKipp/nvim-nu'
 
-    Plug 'Oliver-Leete/gitsigns.nvim'
+    Plug 'lewis6991/gitsigns.nvim'
     Plug 'sindrets/diffview.nvim'
     Plug 'akinsho/git-conflict.nvim'
 

@@ -69,9 +69,9 @@ local function default_winbar(bufnr, hl, is_active)
 end
 
 function _G.my_toggleterm_winbar_click(id)
-    local cur_win = math.floor(id / 1000000)
+    local cur_win = math.floor(id / 10000000)
     print(cur_win)
-    local term_id = id - cur_win * 1000000
+    local term_id = id - cur_win * 10000000
     print(term_id)
     local term = require("toggleterm.terminal").get_or_create_term(term_id)
     if not term then return end
@@ -109,7 +109,7 @@ function GPS_Bar()
                 hl = "%#WinBarInactive#"
                 hle = "%#WinBarInactiveEnds#"
             end
-            winbar = winbar .. string.format("%%%d@v:lua.my_toggleterm_winbar_click@", term.id + cur_win * 1000000)
+            winbar = winbar .. string.format("%%%d@v:lua.my_toggleterm_winbar_click@", term.id + cur_win * 10000000)
             winbar = winbar .. hl .. ""
             winbar = winbar .. hl .. " " .. " " .. term.jobname .. " "
             winbar = winbar .. hl .. ""

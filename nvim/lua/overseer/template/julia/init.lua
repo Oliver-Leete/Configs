@@ -4,10 +4,12 @@ local files = require("overseer.files")
 local STATUS = require("overseer.constants").STATUS
 local TAG = constants.TAG
 
+local condFunc = function(opts) return files.exists(files.join(opts.dir, "Project.toml")) end
+
 return {
     condition = {
         callback = function(opts)
-            return files.exists(files.join(opts.dir, "Project.toml"))
+            return files.exists(files.join(opts.dir, "Project.toml")) or vim.bo.filetype == "julia"
         end
     },
 
@@ -15,64 +17,98 @@ return {
         local commands = {
             {
                 name = "Julia test server",
+                tskName = vim.g.project .. " Test Server",
                 cmd = "julia -t auto -e 'using Revise, DaemonMode; serve(print_stack=true, async=false)'",
+                condition = { callback = condFunc },
+            },
+            {
+                name = "Julia Open Repl",
+                tskName = "Julia Repl",
+                cmd = "julia",
+            },
+            {
+                name = "Julia Open Repl in Project",
+                tskName = vim.g.project .. " Repl",
+                cmd = "julia",
+                condition = { callback = condFunc },
             },
             {
                 name = "Julia package precompile",
                 cmd = "~/.config/nvim/filetype/julia/precompile",
-                tags = { TAG.BUILD }
+                tskName = vim.g.project .. " Precompile",
+                tags = { TAG.BUILD },
+                condition = { callback = condFunc },
             },
             {
                 name = "Julia build documentation",
+                tskName = vim.g.project .. " Doc Build",
                 cmd = "~/.config/nvim/filetype/julia/docBuild",
+                condition = { callback = condFunc },
             },
             {
                 name = "Julia open prebuilt documentation",
                 cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
+                condition = { callback = condFunc },
             },
             {
                 name = "Julia documentation server",
+                tskName = vim.g.project .. " Doc Server",
                 cmd = [[julia --project=docs -e 'using Revise, ]] ..
                     vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']],
-                components = { "default", { "on_complete_restart", statuses = { STATUS.FAILURE, STATUS.SUCCESS } } }
+                components = { "default", { "on_complete_restart", statuses = { STATUS.FAILURE, STATUS.SUCCESS } } },
+                condition = { callback = condFunc },
             },
             {
                 name = "Open live documentation server",
                 cmd = "browser http://localhost:8000 & sleep 5",
+                condition = { callback = condFunc },
             },
             {
                 name = "Julia documentation tests",
+                tskName = vim.g.project .. " Doc Test",
                 cmd = "~/.config/nvim/filetype/julia/docTest",
-                tags = { TAG.TEST }
+                tags = { TAG.TEST },
+                condition = { callback = condFunc },
             },
             {
                 name = "Julia package tests",
+                tskName = vim.g.project .. " Test Suite",
                 cmd = "~/.config/nvim/lua/neotest-julia-retest/juliaTestRunner",
+                tags = { TAG.TEST },
+                condition = { callback = condFunc },
             },
             {
                 name = "Julia package benchmarks",
+                tskName = vim.g.project .. " Bench Suite",
                 cmd = "~/.config/nvim/lua/neotest-julia-benchmarktools/juliaBenchmarkRunner suite",
+                condition = { callback = condFunc },
             },
             {
                 name = "Julia retune benchmarks",
+                tskName = vim.g.project .. " Retune Bench",
                 cmd = [[julia -e '
                 using BenchmarkTools
                 include("benchmark/PackageBenchmarks.jl")
                 tune!(suite)
                 BenchmarkTools.save(joinpath(dirname(@__FILE__), "params.json"), params(suite))
                 ']],
+                condition = { callback = condFunc },
             },
             {
                 name = "Julia run file (" .. vim.fn.expand("%:t:r") .. ")",
+                tskName = "Running " .. vim.fn.expand("%:t:r"),
                 cmd = "julia " .. vim.fn.expand("%:p"),
                 condition = { filetype = "julia" },
             },
             {
                 name = "Julia profile imports",
-                cmd = [[julia +beta -e '@time_imports using ]] .. vim.g.project .. "'"
+                tskName = vim.g.project .. " Profile Imports",
+                cmd = [[julia +beta -e '@time_imports using ]] .. vim.g.project .. "'",
+                condition = { callback = condFunc },
             },
             {
                 name = "Julia profile file (" .. vim.fn.expand("%:t:r") .. ")",
+                tskName = "Profiling " .. vim.fn.expand("%:t:r"),
                 cmd = "julia ~/.config/nvim/filetype/julia/prof.jl " .. vim.fn.expand("%:p"),
                 condition = { filetype = "julia" }
             },
@@ -86,7 +122,7 @@ return {
                     name = command.name,
                     builder = function()
                         return {
-                            name = command.name,
+                            name = command.tskName or command.name,
                             cmd = command.cmd,
                             components = command.components or { "default" }
                         }

@@ -15,7 +15,15 @@ return {
     desc = "Clean up toggleterm terminal after the task is disposed",
     editable = false,
     serializable = true,
-    constructor = function()
+    params = {
+        goto_bottom = {
+            desc = "If the terminal should jump to the bottom",
+            type = "boolean",
+            defualt = true,
+            optional = true,
+        },
+    },
+    constructor = function(opts)
         return {
             on_init = function()
             end,
@@ -31,7 +39,13 @@ return {
                 task.toggleterm = Terminal:new({ bufnr = bufnr, jobname = name })
                 task.toggleterm:toggle()
                 task.toggleterm:__resurrect()
+
+                if opts.goto_bottom then
+                    require("toggleterm.ui").scroll_to_bottom()
+                end
+
                 require("toggleterm.ui").goto_previous()
+
                 task.toggleterm:set_harp(2)
                 if not open then
                     task.toggleterm:close()
@@ -44,7 +58,7 @@ return {
                 task.toggleterm:shutdown()
 
                 local task_list = require("overseer.task_list").list_tasks()
-                local prev_task = task_list[#task_list-1]
+                local prev_task = task_list[#task_list - 1]
                 prev_task.toggleterm:set_harp(2)
             end
         }

@@ -106,6 +106,7 @@ lspconfig.julials.setup(default)
 lspconfig.bashls.setup(default)
 lspconfig.fortls.setup(default)
 lspconfig.jedi_language_server.setup(default)
+lspconfig.marksman.setup(default)
 
 lspconfig.sourcery.setup({
     on_attach = custom_attach,
@@ -307,7 +308,7 @@ require("null-ls").setup({
         null_ls.builtins.diagnostics.fish, --no_mason_needed
         null_ls.builtins.diagnostics.gitlint, --Mason
         null_ls.builtins.diagnostics.markdownlint, --Mason
-        null_ls.builtins.formatting.cbfmt, --FIX:To_Mason
+        null_ls.builtins.formatting.cbfmt, --Mason
         null_ls.builtins.formatting.fish_indent, --no_mason_needed
         null_ls.builtins.formatting.isort, --Mason
         null_ls.builtins.formatting.latexindent, --FIX:To_Mason
