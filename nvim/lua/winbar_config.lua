@@ -110,9 +110,9 @@ function GPS_Bar()
                 hle = "%#WinBarInactiveEnds#"
             end
             winbar = winbar .. string.format("%%%d@v:lua.my_toggleterm_winbar_click@", term.id + cur_win * 10000000)
-            winbar = winbar .. hl .. ""
+            winbar = winbar .. hle .. ""
             winbar = winbar .. hl .. " " .. " " .. term.jobname .. " "
-            winbar = winbar .. hl .. ""
+            winbar = winbar .. hle .. ""
         end
         return hlb .. winbar .. hle .. "%="
     elseif Is_special(bufnr) then

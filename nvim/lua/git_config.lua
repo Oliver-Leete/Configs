@@ -23,6 +23,11 @@ require("diffview").setup({
     key_bindings = {
         view = {
             ["<esc>"] = actions.focus_files,
+            [",xo"] = actions.conflict_choose("ours"),
+            [",xt"] = actions.conflict_choose("theirs"),
+            [",xb"] = actions.conflict_choose("base"),
+            [",xa"] = actions.conflict_choose("all"),
+            [",xn"] = actions.conflict_choose("none"),
         },
         file_panel = {
             ["<esc>"] = function() vim.cmd("DiffviewClose") end,
@@ -31,41 +36,4 @@ require("diffview").setup({
             ["<esc>"] = function() vim.cmd("DiffviewClose") end,
         },
     },
-})
-
--- conflict.nvim
-require("git-conflict").setup({
-    default_mappings = false,
-    disable_diagnostics = false,
-    highlights = {
-        incoming = "DiffText",
-        current = "DiffAdd",
-    },
-})
-
-vim.api.nvim_create_autocmd("User", {
-    pattern = "GitConflictDetected",
-    callback = function()
-        if vim.b[0].localCommands then
-            table.insert(vim.b[0].localCommands, {
-                source = "conflict",
-                name = "List conflicts",
-                command = "GitConflictListQf | Telescope quickfix theme=get_ivy",
-            })
-        else
-            vim.b[0].localCommands = {
-                {
-                    source = "conflict",
-                    name = "List conflicts",
-                    command = "GitConflictListQf | Telescope quickfix theme=get_ivy",
-                },
-            }
-        end
-        Map("n", "co", "<Plug>(git-conflict-ours)")
-        Map("n", "cb", "<Plug>(git-conflict-both)")
-        Map("n", "c0", "<Plug>(git-conflict-none)")
-        Map("n", "ct", "<Plug>(git-conflict-theirs)")
-        Map("n", "[x", function() markGoCentre("GitConflictPrevConflict", "x") end)
-        Map("n", "]x", function() markGoCentre("GitConflictNextConflict", "x") end)
-    end,
 })

@@ -132,17 +132,6 @@ vim.g.projectionist_heuristics = {
     },
 }
 
-vim.b.minisurround_config = {
-    custom_surroundings = {
-        ['f'] = { output = { left = '(x -> ', right = ')' } },
-    }
-}
-
---                     "\\" .. require("nvim-surround.utils").get_input(
---                         "Enter the function name: "
---                     ) .. "{",
---                     "}"
-
 if vim.g.viewerOpen ~= 1 then
     vim.g.viewerOpen = 1
     vim.cmd("VimtexView")

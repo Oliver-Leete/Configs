@@ -151,7 +151,8 @@ overseer.setup({
             "on_exit_set_status",
             "on_complete_notify",
             "on_complete_dispose",
-            { "toggleterm.attach_toggleterm", goto_bottom = true },
+            { "toggleterm.attach_toggleterm", goto_prev = true },
+            "unique",
         },
         default = {
             "on_output_summarize",
@@ -200,6 +201,28 @@ overseer.setup({
             run = function(task)
                 task:remove_components({ "on_complete_dispose" })
             end
+        },
+        ["hard restart"] = {
+            desc = "restart the server with the task",
+            run = function(task)
+                local task_list = require("overseer.task_list").list_tasks()
+                for _, ntask in pairs(task_list) do
+                    if ntask.metadata.is_test_server then
+                        ntask:restart(true)
+                    end
+                end
+                task:restart(true)
+            end,
+            condition = function(task)
+                local not_pend = task.status ~= STATUS.PENDING
+                return task.metadata.uses_server and not_pend
+            end,
+        },
+        ["dump task"] = {
+            desc = "save task table to DumpTask (for debugging)",
+            run = function(task)
+                DumpTask = task
+            end,
         }
     },
     templates = { "builtin", "julia", "configs" }
@@ -268,9 +291,11 @@ overseer.register_template({
     },
     builder = function(params)
         return {
-            name = "Plot ".. params.key,
+            name = "Plot " .. params.key,
             cmd = [[
-                echo temp > /tmp/T.csv; rg ']] .. params.key .. [[' /home/oleete/Projects/PowderModel/test/test_outputs/full_out.log | rg -o '[0-9.]*$' >> /tmp/T.csv;
+                echo temp > /tmp/T.csv; rg ']] ..
+                params.key ..
+                [[' /home/oleete/Projects/PowderModel/test/test_outputs/full_out.log | rg -o '[0-9.]*$' >> /tmp/T.csv;
                 julia -e '
                     using Plots, CSV;
                     ENV["GKSwstype"]="nul"
@@ -336,4 +361,25 @@ overseer.register_template({
     condition = {
         dir = "/home/oleete/UniversityDrive/Thesis/thesis"
     }
+})
+
+OvTermNum = 0
+overseer.register_template({
+    name = "Fish",
+    builder = function()
+        OvTermNum = OvTermNum + 1
+        return {
+            name = "Fish " .. OvTermNum,
+            cmd = "fish",
+            components = {
+                "on_output_summarize",
+                "on_exit_set_status",
+                "on_complete_notify",
+                "on_complete_dispose",
+                { "toggleterm.attach_toggleterm", num = 1 },
+            }
+        }
+    end,
+    priority = 1,
+    params = {},
 })

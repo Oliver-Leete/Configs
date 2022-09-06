@@ -4,7 +4,7 @@ projectDir=$PWD
 docsBuild="$projectDir/docs/make.jl"
 docsFile="$projectDir/docs/build/index.html"
 
-julia --project -e '
+julia --threads=auto --project -e '
 using Pkg
 
 mktempdir() do p

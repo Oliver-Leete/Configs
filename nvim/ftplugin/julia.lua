@@ -166,12 +166,8 @@ vim.b[0].localCommands = {
 vim.b.minisurround_config = {
     custom_surroundings = {
         ['a'] = {
-            input = { find = "%(.-->.-%)", extract = "^(.-->%s?).-(%))$" },
+            input = { "%(.-->.-%)", "^.-->%s?().-()[),\n]$" },
             output = { left = '(x -> ', right = ')' },
-        },
-        ['b'] = {
-            input = { find = "begin.-end", extract = "^(begin%s?).-(%s?end)$" },
-            output = { left = 'begin ', right = 'end' },
         },
     }
 }

@@ -78,6 +78,7 @@ require("cmp").setup({
         { name = "luasnip" },
         { name = "cmp_git" },
         { name = "nvim_lsp" },
+        { name = "latex_symbols" },
         { name = "fish" },
         { name = "path" },
         { name = "nvim_lua" },
@@ -86,9 +87,10 @@ require("cmp").setup({
     formatting = {
         format = function(entry, vim_item)
             vim_item.menu = ({
-                luasnip = "(LSnip)",
+                luasnip = "(SNIP)",
                 git = "(GIT)",
                 nvim_lsp = "(LSP)",
+                latex_symbols = "(SYM)",
                 fish = "(FISH)",
                 path = "(PATH)",
                 nvim_lua = "(NVIM)",
@@ -97,6 +99,7 @@ require("cmp").setup({
                 cmdline_history = "(CMDH)",
                 dictionary = "(DICT)",
                 omni = "(TEX?)",
+                nvim_lsp_document_symbol = "(LSP)",
             })[entry.source.name]
             vim_item.kind = M.icons[vim_item.kind]
             return vim_item
@@ -106,8 +109,10 @@ require("cmp").setup({
 
 cmp.setup.cmdline("/", {
     sources = {
+        { name = 'nvim_lsp_document_symbol' },
         { name = "buffer" },
         { name = "cmdline_history" },
+        { name = "latex_symbols" },
     },
 })
 
@@ -117,6 +122,7 @@ cmp.setup.cmdline(":", {
         { name = "buffer" },
         { name = "cmdline_history" },
         { name = "cmdline" },
+        { name = "latex_symbols" },
     }),
 })
 require("cmp").setup.filetype("tex", {

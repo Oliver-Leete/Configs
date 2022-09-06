@@ -35,16 +35,16 @@ function adapter.build_spec(args)
     local position = args.tree:data()
 
     -- Make sure server is running
-    local task_list = require("overseer.task_list").list_tasks()
     local server_running = function()
+        local task_list = require("overseer.task_list").list_tasks()
         for _, task in pairs(task_list) do
-            if task.name == "Julia Test Server" and task.status == "RUNNING" then
+            if task.metadata.is_test_server and task.status == "RUNNING" then
                 return true
             end
         end
     end
     if not server_running() then
-        require("overseer").run_template({ name = "Julia Test Server" })
+        require("overseer").run_template({ name = "Julia test server" })
     end
 
     local command = "cd benchmark && julia --project -e'using DaemonMode; runargs()' "
@@ -61,7 +61,8 @@ function adapter.build_spec(args)
         error_file = error_file,
         context = {
             pos_id = position.id,
-            name = position.name
+            name = position.name,
+            uses_server = true,
         },
     }
 end

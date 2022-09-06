@@ -13,5 +13,6 @@ Profile.print(
 run(`/home/oleete/.config/bin/nvrWS "lua _G.jul_perf_flat()"`)
 profileData = Profile.retrieve()
 save("/tmp/last_jul.jlprof", profileData[1], profileData[2])
+loadProfData() = run(`/home/oleete/.config/bin/nvrWS "lua _G.jul_perf_flat()"`);
 display(a)
 '

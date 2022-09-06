@@ -11,8 +11,8 @@ import Graphics.X11.Types
 import XMonad hiding ( (|||) )
 import qualified XMonad.StackSet as W
 
-import XMonad.Actions.CycleWSLocal
 import XMonad.Actions.CycleWS (nextScreen, shiftNextScreen)
+import XMonad.Actions.CycleWSLocal
 import XMonad.Actions.DynamicProjectsLocal
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.Navigation2D
@@ -23,15 +23,18 @@ import XMonad.Actions.SwapPromote
 import XMonad.Actions.UpdateFocus
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.WindowGoLocal
+import XMonad.Actions.WithAll (killAll)
 
 import XMonad.Hooks.EwmhDesktops ( ewmh )
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.RefocusLast
 import XMonad.Hooks.ServerMode
 import XMonad.Hooks.ShowWName
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
+import XMonad.Hooks.WorkspaceHistory (workspaceHistoryHookExclude)
 
 import XMonad.Layout.FourColumns
 import XMonad.Layout.MultiToggle
@@ -43,6 +46,7 @@ import XMonad.Layout.PerWorkspace
 import XMonad.Layout.SimpleFocus
 import XMonad.Layout.Spacing
 
+import XMonad.Util.ClickableWorkspaces
 import XMonad.Util.Cursor
 import XMonad.Util.EZConfig
 import XMonad.Util.Hacks
@@ -50,12 +54,8 @@ import XMonad.Util.NamedScratchpadLocal
 import XMonad.Util.Paste as P
 import XMonad.Util.SpawnOnce
 
-import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
-import XMonad.Actions.WithAll (killAll)
 import XMonad.Prompt
-import XMonad.Hooks.RefocusLast
-import XMonad.Hooks.WorkspaceHistory (workspaceHistoryHookExclude)
-import XMonad.Util.ClickableWorkspaces
+import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
 ----------------------------------------------------------------------------------------------------
@@ -72,7 +72,7 @@ myConfig = def
         { borderWidth        = myBorder
         , clickJustFocuses   = True
         , focusFollowsMouse  = True
-        , normalBorderColor  = borderCol
+        , normalBorderColor  = background
         , focusedBorderColor = active
         , manageHook         = myManageHook
         , handleEventHook    = myHandleEventHook
@@ -321,7 +321,6 @@ scratchpads =
 ----------------------------------------------------------------------------------------------------
 -- Theme                                                                                          --
 ----------------------------------------------------------------------------------------------------
-borderCol  = "#1a1b26"
 background = "#1F1F28"
 foreground = "#C8C093"
 dull       = "#54546D"
@@ -333,12 +332,11 @@ warning    = "#C34043"
 gap    = 4
 reSize = 1/10
 moreReSize = 1/2
-myBorder = 3
+myBorder = 4
 
 myWideFont :: [Char]
 myWideFont  = "xft:Eurostar Black Extended:"
             ++ "style=Regular:pixelsize=180:hinting=true"
-
 
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def

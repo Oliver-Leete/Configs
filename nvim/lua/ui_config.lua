@@ -7,7 +7,7 @@ require("stickybuf").setup({
         toggleterm = "filetype",
     },
     buftype = {
-        help     = "buftype",
+        help = "buftype",
     },
 })
 
@@ -90,64 +90,8 @@ require("indent_blankline").setup {
     },
 }
 
-local stages_util = require("notify.stages.util")
 require("notify").setup({
-    stages = {
-        function(state)
-            local next_height = state.message.height + 2
-            local next_row = stages_util.available_slot(
-                state.open_windows,
-                next_height,
-                stages_util.DIRECTION.BOTTOM_UP
-            )
-            if not next_row then
-                return nil
-            end
-            return {
-                relative = "editor",
-                anchor = "NE",
-                width = state.message.width,
-                height = state.message.height,
-                col = vim.opt.columns:get(),
-                row = next_row,
-                border = "rounded",
-                style = "minimal",
-                opacity = 0,
-            }
-        end,
-        function()
-            return {
-                opacity = { 100 },
-                col = { vim.opt.columns:get() },
-            }
-        end,
-        function()
-            return {
-                col = { vim.opt.columns:get() },
-                time = true,
-            }
-        end,
-        function()
-            return {
-                width = {
-                    1,
-                    frequency = 2.5,
-                    damping = 0.9,
-                    complete = function(cur_width)
-                        return cur_width < 3
-                    end,
-                },
-                opacity = {
-                    0,
-                    frequency = 2,
-                    complete = function(cur_opacity)
-                        return cur_opacity <= 4
-                    end,
-                },
-                col = { vim.opt.columns:get() },
-            }
-        end,
-    },
+    top_down = false,
 })
 
 vim.notify = require("notify")
@@ -165,9 +109,9 @@ vim.lsp.handlers["window/showMessage"] = function(_, method, params, _)
 end
 
 local mode_colours = { Normal = tc.crystalBlue, Insert = tc.autumnGreen, Visual = tc.oniViolet, Replace = tc.autumnRed,
-    Command = tc.boatYellow2, Inactive = tc.fujiGray}
+    Command = tc.boatYellow2, Inactive = tc.fujiGray }
 for mode, colour in pairs(mode_colours) do
-    vim.api.nvim_set_hl(0, "WinBar" .. mode, { fg = tc.bg, bg = colour})
+    vim.api.nvim_set_hl(0, "WinBar" .. mode, { fg = tc.bg, bg = colour })
     vim.api.nvim_set_hl(0, "WinBar" .. mode .. "Ends", { fg = colour, bg = tc.bg })
     vim.api.nvim_set_hl(0, "WinBar" .. mode .. "MidEnds", { fg = colour, bg = tc.fujiGray })
 
@@ -177,10 +121,10 @@ vim.api.nvim_set_hl(0, "WinBarInactiveSpecialEnds", { fg = tc.waveBlue2, bg = tc
 vim.api.nvim_set_hl(0, "WinBarBlank", { fg = tc.sumiInk, bg = tc.sumiInk })
 vim.api.nvim_set_hl(0, "WinBarBlank", { fg = tc.sumiInk, bg = tc.sumiInk })
 
-vim.api.nvim_set_hl(0, "TabLine", { fg = tc.bg, bg = tc.fujiGray, sp=tc.sumiInk3, underline=true})
-vim.api.nvim_set_hl(0, "TabLineEnds", { fg = tc.fujiGray, bg = tc.bg, sp=tc.sumiInk3, underline=true })
-vim.api.nvim_set_hl(0, "TabLineActive", { fg = tc.bg, bg = tc.crystalBlue, sp=tc.sumiInk3, underline=true})
-vim.api.nvim_set_hl(0, "TabLineActiveEnds", { fg = tc.crystalBlue, bg = tc.bg, sp=tc.sumiInk3, underline=true })
+vim.api.nvim_set_hl(0, "TabLine", { fg = tc.bg, bg = tc.fujiGray, sp = tc.sumiInk3 })
+vim.api.nvim_set_hl(0, "TabLineEnds", { fg = tc.fujiGray, bg = tc.bg, sp = tc.sumiInk3 })
+vim.api.nvim_set_hl(0, "TabLineActive", { fg = tc.bg, bg = tc.crystalBlue, sp = tc.sumiInk3 })
+vim.api.nvim_set_hl(0, "TabLineActiveEnds", { fg = tc.crystalBlue, bg = tc.bg, sp = tc.sumiInk3 })
 
 require("nvim-navic").setup({
     highlight = false,

@@ -40,7 +40,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'sindrets/diffview.nvim'
-    Plug 'akinsho/git-conflict.nvim'
 
     Plug 'rebelot/kanagawa.nvim'
     Plug 'lukas-reineke/indent-blankline.nvim'
@@ -75,6 +74,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'uga-rosa/cmp-dictionary'
     Plug 'mtoohey31/cmp-fish'
     Plug 'saadparwaiz1/cmp_luasnip'
+    Plug 'kdheepak/cmp-latex-symbols'
+    Plug 'kdheepak/cmp-latex-symbols'
 
     Plug 'L3MON4D3/LuaSnip'
     Plug 'danymat/neogen'
@@ -98,6 +99,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'rouge8/neotest-rust'
     Plug 'nvim-neotest/neotest-python'
     Plug 'andythigpen/nvim-coverage'
+    Plug 'krady21/compiler-explorer.nvim'
 
     Plug 'mfussenegger/nvim-dap'
     Plug 'Pocco81/DAPInstall.nvim'

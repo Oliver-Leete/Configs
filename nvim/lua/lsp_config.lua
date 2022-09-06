@@ -107,6 +107,7 @@ lspconfig.bashls.setup(default)
 lspconfig.fortls.setup(default)
 lspconfig.jedi_language_server.setup(default)
 lspconfig.marksman.setup(default)
+lspconfig.taplo.setup(default)
 
 lspconfig.sourcery.setup({
     on_attach = custom_attach,
@@ -233,8 +234,8 @@ require("rust-tools").setup({
     },
     dap = {
         adapter = require("rust-tools.dap").get_codelldb_adapter(
-            "/home/oleete/.local/share/nvim/dapinstall/codelldb/extension/adapter/codelldb",
-            "/home/oleete/.local/share/nvim/dapinstall/codelldb/extension/lldb/lib/liblldb.so"
+            "/home/oleete/.local/share/nvim/mason/bin/codelldb",
+            "/home/oleete/.local/share/nvim/mason/packages/codelldb/extension/lldb/lib/liblldb.so"
         ),
     },
 })
@@ -307,7 +308,7 @@ require("null-ls").setup({
         null_ls.builtins.diagnostics.chktex, --FIX:To_Mason
         null_ls.builtins.diagnostics.fish, --no_mason_needed
         null_ls.builtins.diagnostics.gitlint, --Mason
-        null_ls.builtins.diagnostics.markdownlint, --Mason
+        null_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013" } }), --Mason
         null_ls.builtins.formatting.cbfmt, --Mason
         null_ls.builtins.formatting.fish_indent, --no_mason_needed
         null_ls.builtins.formatting.isort, --Mason

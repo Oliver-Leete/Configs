@@ -1,4 +1,3 @@
-<!-- markdownlint-disable MD013 -->
 # Oliver's Config
 
 I'll slowly go through and document some of this stuff. I'm not going to go over
@@ -14,9 +13,9 @@ trust it. It seems I change my configs way more often than I write about them.
 Also, my config layout is super inconsistent, and has some utter crap in it, so
 be warned.
 
-# Neovim
+## Neovim
 
-## Multiple Leaders
+### Multiple Leaders
 
 I am slowly moving things over to a system of having a few top level leaders,
 each with its own use. The main thing here is separating the normal leader key
@@ -32,7 +31,7 @@ crap it's used for at some point. v is a view related key (thanks Kakoune for
 the inspiration). Unlike Kakoune, I have v lock into a view mode if any of the
 bindings you might want to repeat are pressed. This is done with Hydra.
 
-## Text objects
+### Text objects
 
 There are four sets of mappings I'd like to have for each textobject (some
 things like quickfix list are listed for completeness, even if only some of the
@@ -74,7 +73,7 @@ these combinations (where one tick is any support and two is preferable
 | latex environment                     | ✓                | ✓✓                         | ✓                 | ✗                  |
 | latex maths                           | ✓                | ✓✓                         | ✓                 | ✗                  |
 
-### Repeat Mappings
+#### Repeat Mappings
 
 OK, I love this one. I use the jumping around mappings covered above a lot (the
 ones bound to [/]), only problem is I hate having to keep pressing the
@@ -106,9 +105,9 @@ Map({ "n", "x", "o" }, "n", "v:lua.commandRepeat(']', 'dirJumps')", { expr = tru
 Map({ "n", "x", "o" }, "N", "v:lua.commandRepeat('[', 'dirJumps')", { expr = true, remap = true })
 ```
 
-## Some Other Mappings
+### Some Other Mappings
 
-### Move to start/end of line
+#### Move to start/end of line
 
 It makes sense to me to have 'big' h and l do a bigger version of the h or
 l movement. So this mapping makes H and L go to the start and end of the
@@ -124,7 +123,7 @@ Map({ "n", "x" }, "L", [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], { expr
 Map("o", "L", "$")
 ```
 
-### Copy from above
+#### Copy from above
 
 This mapping extends the normal c-y mapping to take the whole word from above
 the cursor and adds a mapping for below (c-l) the cursor. Credit goes to someone
@@ -141,14 +140,14 @@ snoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1), '\%' . virtcol('.'
 snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1), '\%' . virtcol('.') . 'v\%(\k\+\\|.\)')
 ```
 
-### Delete buffer
+#### Delete buffer
 
 I have a stupidly complicated mapping to decide what I do when I press my magic
 key (more on that later) for closing things. It already does a variety of things
 depending on what program I'm focused on, but it also does a variety of things
 within Neovim depending on what window is focused and what is left on the tab.
 
-## Command Palette
+### Command Palette
 
 I've tried a few extensions, but none of them did quite what I wanted, so I made
 my own. It uses vim.ui.select for the picker (with dressing.nvim to use
@@ -159,7 +158,7 @@ source of a command so that I could group together similar commands.
 
 Honestly it's quite basic, but it works for what I need it for.
 
-### Tasks runner
+#### Tasks runner
 
 At some point I will move to using neotest for all my testing needs, and
 overseer for managing all tasks. But at the moment I'm still using a custom-made
@@ -172,7 +171,7 @@ solution is an absolute mess, using private functions in toggleterm) (Although
 my current method supports debugging, running and profiling of Julia benchmarks,
 which I'm not sure how I'd cover with the above).
 
-## Julia
+### Julia
 
 I am slowly trying collect all the tools I want for Julia development. I have
 the hacky task runner mentioned above for all my task running needs (I even have
@@ -212,11 +211,11 @@ them):
   functionality from nvim-trevJ.lua and the julia#toggle_function_blockassign()
   function from julia-vim
 
-# XMonad
+## XMonad
 
-## Layouts
+### Layouts
 
-### Notebook Layout
+#### Notebook Layout
 
 OK, so this has a bit of a weird name, it came from the original use case and
 I just can't be bothered to think of a better one. So the original use case, I
@@ -265,7 +264,7 @@ I love this layout so much that not only is it basically all I use, but I also
 use it twice. In that I have many layouts defined that use the notebook layout
 just with different default settings for different workspaces.
 
-### Layout Bar Avoidance
+#### Layout Bar Avoidance
 
 Inspired by a Reddit post, I have made a little function that does some
 hardcoded checks for the location of window columns, and extends them if they
@@ -289,7 +288,7 @@ modY (Rectangle sx sy sw sh) (Rectangle bx _ _ _)=
             h = sh - fromIntegral ymoddifier
 ```
 
-### Toggleable layouts
+#### Toggleable layouts
 
 The only non notebook layouts I actually use are the three toggleable layouts I have set up. The
 first one is toggleable full-screen. A fairly standard one that lets me have the best of both worlds
@@ -303,7 +302,7 @@ looking at right in front of you instead of way off to one side. I have this set
 so normally it defaults to half the screen width, but on my thesis workspace it instead uses roughly
 the width of 100 character columns in my terminal. For that extra focused writing experience.
 
-## 'Magic' keys
+### 'Magic' keys
 
 Everything in this section will be using at least one 'server mode' of a
 program, mostly neovim-remote (nvr), kitty remote and XMonad server mode.
@@ -346,7 +345,7 @@ current Neovim window (using mini.misc zoom).
 - Super+left/right changes tabs in the browser, tabs in kitty or tabs in Neovim
   (or terminals in toggleterm).
 
-## Workspaces
+### Workspaces
 
 There's a bit of inconsistency in my workspaces because I use workspaces in two
 different ways. For specific programs or specific projects. Workspaces like
@@ -354,7 +353,7 @@ print are program specific, in that case it's my slicer. And workspaces like sim
 are project specific, in that case for the simulation I'm programming for my
 PhD.
 
-### Workspace Harpoon
+#### Workspace Harpoon
 
 I really like the harpoon Neovim extension for quickly jumping between files in
 Neovim. Well my attitude to XMonad workspaces (or projects or whatever) is to
@@ -365,21 +364,21 @@ a list of files per directory, to get a similar thing for my workspace harpoon I
 have a concept of preset lists of workspaces, so I can quickly swap between the
 set I use for my work simulations, thesis writing or config editing, etc.
 
-### App Harpoon
+#### App Harpoon
 
 I also added a workspace dependent app harpoon for the home row on my right
 hand. Where each key runs or raises the set app (with the pinky finger always
 having the workspace specific browser).
 
-### Browser
+#### Browser
 
 Each workspace (and I have a lot of them) has its own user-data-dir (using
 altercation's browser script) so that tabs can be picked up from where I left
 off last time I was in that workspace.
 
-## Other
+### Other
 
-### Local Modules
+#### Local Modules
 
 ConditionalKeys is from Ethan (where my XMonad config originated from).
 CycleWSLocal strips out everything I don't use and adds a function to send the
@@ -391,7 +390,7 @@ has been modified to add a function that sends any scratchpad back to the NSP
 workspace, so I can use a rofi script to summon scratchpads, but still send them
 away quickly.
 
-### Xmobar Icons
+#### Xmobar Icons
 
 I wanted to use nerdfont icons to represent things like battery level and
 network connection. I don't think there is a good way to do this in xmobar, so I
@@ -404,7 +403,7 @@ like that's possible with xmobar, maybe it's time to move to another bar. It
 also adds a bluetooth icon, at the moment it doesn't track bluetooth state, just
 provides a shortcut to bluetooth settings.
 
-### Rofi script
+#### Rofi script
 
 I used to have a load of keyboard shortcuts for things like layout settings, or
 media controls. So instead of just committing, I made a rofi script for calling
@@ -412,9 +411,9 @@ them. This also allowed me to add a menu for the display control stuff,
 bluetooth, network and sound control stuff (most of which was a mouse task
 before), making it all keyboard accessible now.
 
-# Other Things
+## Other Things
 
-## Hellslide (Keyboard)
+### Hellslide (Keyboard)
 
 A simple wireless low profile keyboard that is based on the kyria's shape, but
 with the two outermost thumb keys moved to below the middle and ring finger
@@ -435,7 +434,7 @@ At the moment I am using a slightly crappy FDM PLA case for it, but I have got a
 laser sintered nylon case that I managed to sneak onto a build at work that I
 just need to get around to dying before I change to it.
 
-# Film picker
+## Film picker
 
 Have you ever had 4 hours and 20 minutes to spare and wondered what combination
 of films you could watch to perfectly fill your time? Well now with the handy

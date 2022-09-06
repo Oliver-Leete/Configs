@@ -20,9 +20,9 @@ function Tabline()
         if not bufname then bufname = "" end
 
         tabline = tabline .. "%" .. index .. "T"
-        tabline = tabline .. hl .. ""
+        tabline = tabline .. hle .. ""
         tabline = tabline .. hl .. " " .. bufname .. " "
-        tabline = tabline .. hl .. ""
+        tabline = tabline .. hle .. ""
         tabline = tabline .. "%" .. index .. "x" .. hle
     end
     return tabline
