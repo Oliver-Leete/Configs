@@ -556,7 +556,7 @@ myPP = clickablePP $ filterOutWsPP ["NSP"] $ def
     , ppHidden  = xmobarColor dull  ""
     , ppTitle   = xmobarColor foreground "" . wrap ("<box type=Bottom width=2 mt=2 color=" ++ yellow ++ "><fc=" ++ yellow ++ ">") "</fc></box>" . shorten 30
     , ppLayout  = const ""
-    , ppSep = xmobarColor foreground "" " | "
+    , ppSep = xmobarColor foreground "" ("  <box type=Left width=2 mt=2 color=" ++ dull ++ "><fc=" ++ dull ++ "> </fc></box>  ")
     , ppOrder = reverse
     }
 

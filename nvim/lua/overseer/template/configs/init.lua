@@ -13,6 +13,7 @@ return {
                         name = "Reload XMonad",
                         cwd = "/home/oleete/.config/xmonad",
                         cmd = "/home/oleete/.config/bin/xmonadRebuild",
+                        components = {"default", "unique"}
                     }
                 end,
                 priority = 60,
@@ -25,6 +26,7 @@ return {
                     return {
                         name = "Reload Kitty",
                         cmd = "pkill -10 kitty",
+                        components = {"default", "unique"}
                     }
                 end,
                 priority = 60,
@@ -36,6 +38,7 @@ return {
                     return {
                         name = "View xsession Logs",
                         cmd = "tail --follow --retry ~/.xsession-errors | less -S",
+                        components = {"default", "unique"}
                     }
                 end,
                 priority = 60,

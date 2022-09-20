@@ -5,6 +5,8 @@ local STATUS = require("overseer.constants").STATUS
 local TAG = constants.TAG
 
 local isInProject = function(opts) return files.exists(files.join(opts.dir, "Project.toml")) end
+local isFile = { filetype = "julia" }
+local isProject = { callback = isInProject }
 
 return {
     condition = {
@@ -19,7 +21,7 @@ return {
                 name = "Julia test server",
                 tskName = vim.g.project .. " Test Server",
                 cmd = "julia -t auto -e 'using Revise, DaemonMode; serve(print_stack=true, async=false)'",
-                condition = { callback = isInProject },
+                condition = isProject,
                 is_test_server = true,
                 hide = true,
                 unique = true,
@@ -33,14 +35,14 @@ return {
                 name = "Julia Open Repl in Project",
                 tskName = vim.g.project .. " Repl",
                 cmd = "julia --threads=auto --project",
-                condition = { callback = isInProject },
+                condition = isProject,
             },
             {
                 name = "Julia package precompile",
                 cmd = "~/.config/nvim/filetype/julia/precompile",
                 tskName = vim.g.project .. " Precompile",
                 tags = { TAG.BUILD },
-                condition = { callback = isInProject },
+                condition = isProject,
                 unique = true,
             },
             {
@@ -53,7 +55,7 @@ return {
             {
                 name = "Julia open prebuilt documentation",
                 cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
-                condition = { callback = isInProject },
+                condition = isProject,
                 hide = true,
                 unique = true,
             },
@@ -65,12 +67,12 @@ return {
                 hide = true,
                 unique = true,
                 alwaysRestart = true,
-                condition = { callback = isInProject },
+                condition = isProject,
             },
             {
                 name = "Open live documentation server",
                 cmd = "browser http://localhost:8000 & sleep 5",
-                condition = { callback = isInProject },
+                condition = isProject,
                 hide = true,
                 unique = true,
             },
@@ -79,14 +81,14 @@ return {
                 tskName = vim.g.project .. " Doc Test",
                 cmd = "~/.config/nvim/filetype/julia/docTest",
                 tags = { TAG.TEST },
-                condition = { callback = isInProject },
+                condition = isProject,
                 unique = true,
             },
             {
                 name = "Julia update documentation tests output",
                 tskName = vim.g.project .. " Doc Test Update",
                 cmd = "~/.config/nvim/filetype/julia/docTestUpdate",
-                condition = { callback = isInProject },
+                condition = isProject,
                 unique = true,
             },
             {
@@ -94,7 +96,7 @@ return {
                 tskName = vim.g.project .. " Test Suite",
                 cmd = "cd test; julia --threads=auto --project runtests.jl",
                 tags = { TAG.TEST },
-                condition = { callback = isInProject },
+                condition = isProject,
                 unique = true,
             },
             {
@@ -102,14 +104,14 @@ return {
                 tskName = vim.g.project .. " Test Coverage",
                 cmd = "cd test; julia --threads=auto --code-coverage=user --project runtests.jl",
                 tags = { TAG.TEST },
-                condition = { callback = isInProject },
+                condition = isProject,
                 unique = true,
             },
             {
                 name = "Julia package benchmarks",
                 tskName = vim.g.project .. " Bench Suite",
                 cmd = "~/.config/nvim/lua/neotest-julia-benchmarktools/juliaBenchmarkRunner suite",
-                condition = { callback = isInProject },
+                condition = isProject,
                 unique = true,
             },
             {
@@ -121,28 +123,28 @@ return {
                 tune!(suite)
                 BenchmarkTools.save(joinpath(dirname(@__FILE__), "params.json"), params(suite))
                 ']],
-                condition = { callback = isInProject },
+                condition = isProject,
                 unique = true,
             },
             {
                 name = "Julia run file (" .. vim.fn.expand("%:t:r") .. ")",
                 tskName = "Running " .. vim.fn.expand("%:t:r"),
                 cmd = "julia " .. vim.fn.expand("%:p"),
-                condition = { filetype = "julia" },
+                condition = isFile,
                 unique = true,
             },
             {
                 name = "Julia profile imports",
                 tskName = vim.g.project .. " Profile Imports",
                 cmd = [[julia +beta -e '@time_imports using ]] .. vim.g.project .. "'",
-                condition = { callback = isInProject },
+                condition = isProject,
                 unique = true,
             },
             {
                 name = "Julia profile file (" .. vim.fn.expand("%:t:r") .. ")",
                 tskName = "Profiling " .. vim.fn.expand("%:t:r"),
                 cmd = "julia ~/.config/nvim/filetype/julia/prof.jl " .. vim.fn.expand("%:p"),
-                condition = { filetype = "julia" },
+                condition = isFile,
                 unique = true,
             },
         }

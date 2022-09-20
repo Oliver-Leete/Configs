@@ -225,7 +225,7 @@ overseer.setup({
             end,
         }
     },
-    templates = { "builtin", "julia", "configs" }
+    templates = { "builtin", "julia", "configs", "runners" }
 })
 
 overseer.register_template({
@@ -234,6 +234,7 @@ overseer.register_template({
         return {
             name = "View LSP Logs",
             cmd = "tail --follow --retry ~/.local/state/nvim/lsp.log | less -S",
+            components = { "default", "unique" },
         }
     end,
     priority = 6000,
@@ -245,6 +246,7 @@ overseer.register_template({
         return {
             name = "View Neovim Logs",
             cmd = "tail --follow --retry ~/.local/state/nvim/log | less -S",
+            components = { "default", "unique" }
         }
     end,
     priority = 6000,
@@ -268,6 +270,7 @@ overseer.register_template({
                             return {
                                 name = "Show " .. log,
                                 cmd = "tail --follow --retry " .. log,
+                                components = { "default", "unique" }
                             }
                         end,
                         priority = 1000,
@@ -305,6 +308,7 @@ overseer.register_template({
                 '
                 feh /tmp/T.png
             ]],
+            components = { "default", "unique" }
         }
     end,
     priority = 500,
@@ -318,6 +322,7 @@ overseer.register_template({
         return {
             name = "Animation",
             cmd = "mpv --loop-file=inf /tmp/fig.gif",
+            components = { "default", "unique" }
         }
     end,
     priority = 501,
@@ -332,6 +337,7 @@ overseer.register_template({
         return {
             name = "btop",
             cmd = "btop",
+            components = { "default", "unique" }
         }
     end,
     priority = 4000,
@@ -343,6 +349,7 @@ overseer.register_template({
         return {
             name = "lazygit",
             cmd = "lazygit",
+            components = { "default", "unique" }
         }
     end,
     priority = 4000,
@@ -355,6 +362,7 @@ overseer.register_template({
         return {
             name = "Build Document",
             cmd = "latexmk -pdf -file-line-error -synctex=1 OML-Thesis.tex",
+            components = { "default", "unique" }
         }
     end,
     priority = 5,
@@ -383,3 +391,4 @@ overseer.register_template({
     priority = 1,
     params = {},
 })
+

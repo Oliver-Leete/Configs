@@ -29,6 +29,7 @@ alias exa "exa --colour=always --group-directories-first --icons"
 abbr vidir "echo 'use edir'"
 abbr rm "echo use trm"
 abbr trm "trash-put -i"
+abbr redir "fd -HLI | edir"
 
 
 abbr mv "mv -iv"

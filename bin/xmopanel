@@ -102,7 +102,7 @@ else
     dnd_icon=""
 fi
 
-men_icon="$good$end"
+men_icon="$good   $end"
 
 if [ -f /tmp/screencast.pid ]; then
     cap_icon=" $ugly REC$end"
