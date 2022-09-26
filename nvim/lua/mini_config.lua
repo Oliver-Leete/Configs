@@ -186,7 +186,7 @@ require("mini.surround").setup({
         add = "yp",
         visual_add = "P",
         delete = "dp",
-        find = "fp",
+        find = "gp",
         find_left = "gP",
         replace = "cp",
         update_n_lines = '',
@@ -203,4 +203,11 @@ Map("n", "dpO", "mioy<c-o>Rao", { remap = true })
 
 require("mini.misc").setup({
     make_global = { "put_text", "zoom" },
+})
+
+require("mini.align").setup({
+    mappings = {
+        start = "",
+        start_with_preview = ",t",
+    }
 })

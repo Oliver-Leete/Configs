@@ -7,9 +7,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'kyazdani42/nvim-web-devicons'
     Plug '907th/vim-auto-save'
 
-    Plug 'stevearc/dressing.nvim'
-    Plug 'rcarriga/nvim-notify'
-
     Plug 'echasnovski/mini.nvim'
 
     Plug 'knubie/vim-kitty-navigator'
@@ -43,6 +40,9 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'rebelot/kanagawa.nvim'
     Plug 'lukas-reineke/indent-blankline.nvim'
+    Plug 'stevearc/dressing.nvim'
+    Plug 'rcarriga/nvim-notify'
+    Plug 'simrat39/desktop-notify.nvim'
 
     Plug 'mbbill/undotree'
     Plug 'kyazdani42/nvim-tree.lua'
@@ -158,8 +158,6 @@ require("git_config")
 require("terminal_config")
 require("projects_config")
 require("mini_config")
-
-print(TEST)
 
 local enterAndExitVim = vim.api.nvim_create_augroup("enterAndExitVim", { clear = true })
 vim.api.nvim_create_autocmd("VimEnter", { command = 'silent! !/home/oleete/.config/bin/nvrRename', group = enterAndExitVim })

@@ -3,7 +3,7 @@ return {
         local filerunners = {
             julia = function() return {"julia", vim.fn.expand("%:p")} end,
             go = function() return {"go", "run", vim.fn.expand("%:p")} end,
-            bash = function() return {"bash", vim.fn.expand("%:p")} end,
+            sh = function() return {"sh", vim.fn.expand("%:p")} end,
             fish = function() return {"fish", vim.fn.expand("%:p")} end,
             python = function() return {"python", vim.fn.expand("%:p")} end,
             nu = function() return {"nu", vim.fn.expand("%:p")} end,

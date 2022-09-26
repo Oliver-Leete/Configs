@@ -1,5 +1,6 @@
 -- Theme
 vim.opt.termguicolors = true
+vim.opt.guifont = "JuliaMono:h10"
 
 require("stickybuf").setup({
     filetype = {
@@ -90,11 +91,13 @@ require("indent_blankline").setup {
     },
 }
 
-require("notify").setup({
-    top_down = false,
-})
+require("desktop-notify").override_vim_notify()
 
-vim.notify = require("notify")
+-- require("notify").setup({
+--     top_down = false,
+-- })
+--
+-- vim.notify = require("notify")
 
 -- LSP integration
 local severity = {

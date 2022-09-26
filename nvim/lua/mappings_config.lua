@@ -211,7 +211,7 @@ Map("n", ",dq", function() require("refactoring").debug.cleanup({}) end)
 Map({ "n", "x" }, ",s", "<Plug>Opsort", { remap = true })
 Map("n", ",ss", "<Plug>OpsortLines", { remap = true })
 
-Map({ "n", "x" }, ",t", "<Plug>(EasyAlign)")
+-- Map({ "n", "x" }, ",t", "<Plug>(EasyAlign)")
 
 vim.g.UnconditionalPaste_no_mappings = true
 Map("n", ",Pb", "<Plug>UnconditionalPasteBlockBefore", { remap = true })
@@ -343,9 +343,6 @@ for i, key in pairs(term_keys) do
     Map("n", "<leader>" .. key, function() _G.sendLines(vim.v.count, i) end)
     Map("x", "<leader>" .. key, ":<c-u>call v:lua.sendRegion(visualmode(), " .. i .. ")<cr>", { remap = true })
 end
-
-Map("n", "<leader>n", function() Harp_Term_1:toggle() end)
-Map("n", "<leader>e", function() Harp_Term_2:toggle() end)
 
 Map("t", "<c-]>", "<c-\\><c-n>")
 
@@ -512,9 +509,27 @@ function Select_runnables()
     end
 end
 
--- Map("n", "<leader>d", Select_runnables)
-Map("n", "<leader>d", "<cmd>OverseerRun<cr>")
-Map("n", "<leader>D", "<cmd>OverseerTaskAction<cr>")
-Map("n", "<leader>h", function() require("neotest").run.run() end)
-Map("n", "<leader>i", "<cmd>OverseerToggle<cr>")
+Map("n", "<leader>h", "<cmd>OverseerTaskAction<cr>")
+Map("n", "<leader>n", "<cmd>OverseerRun<cr>")
+Map("n", "<leader>N", function()
+    local overseer = require("overseer")
+    local tasks = overseer.list_tasks({ recent_first = true })
+    if vim.tbl_isempty(tasks) then
+        vim.notify("No tasks found", vim.log.levels.WARN)
+    else
+        overseer.run_action(tasks[1], "restart")
+    end
+end)
+
+Map("n", "<leader>i", "<cmd>ToggleTermToggleAll<cr>")
+Map("n", "<leader>e", "<cmd>OverseerToggle<cr>")
 Map("n", "<leader>o", function() require("neotest").summary.toggle() end)
+
+Map("n", "<leader>l", function() require("neotest").run.run() end)
+
+local filmPicker = vim.api.nvim_create_augroup("filmPicker", { clear = true })
+vim.api.nvim_create_autocmd("BufRead", { pattern = "*.films", callback = function()
+    Map("n", "<leader>a", "<cmd>%!sort -k1<cr>")
+    Map("n", "<leader>r", "<cmd>%!sort -k3<cr>")
+    Map("n", "<leader>s", "<cmd>%!sort -k5<cr>")
+end, group = filmPicker })

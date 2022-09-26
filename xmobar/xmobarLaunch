@@ -1,11 +1,20 @@
 #!/bin/bash
-
+GAP=6
+GAP2=12
 RESOLUTIONS=$(xrandr | rg ' connected' | rg -o -e '\d*x\d*\+\d*\+\d*' | head -n"$(expr "$1" + 1)" | tail -n1 | rg -o -e '\d+')
-X=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f3)" + 8)
-Y=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f4)" - 10)
+X=$(expr "$(echo $RESOLUTIONS | cut -d' ' -f3)" + "$GAP")
+Y="$(echo $RESOLUTIONS | cut -d' ' -f4)"
+
+W="$(echo $RESOLUTIONS | cut -d' ' -f1)"
+minW="1920"
+if [ "$W" -le "$minW" ]; then
+	W=$(expr 1280 - "$GAP2")
+else
+	W=$(expr 960 - "$GAP")
+fi
 
 COMMANDS='[Run UnsafeXPropertyLog "_XMONAD_LOG_'$1'"]'
-TEMPLATE="%panel%%playing%}{ %_XMONAD_LOG_$1% <box type=Bottom width=2 mt=2 color=#DCA561><fc=#DCA561> %date%   </fc></box>"
-POSITION="Static { xpos = $X , ypos = $Y, width = 949, height = 40 }"
+TEMPLATE="%panel%%playing%}{ %_XMONAD_LOG_$1% | <box type=Bottom width=2 mt=2 color=#DCA561><fc=#DCA561> %date%   </fc></box>"
+POSITION="Static { xpos = $X , ypos = $Y, width = $W, height = 30 }"
 
 xmobar -p "$POSITION" --screen "$1" -C "$COMMANDS" -t "$TEMPLATE" ~/.config/xmobar/xmobar.conf

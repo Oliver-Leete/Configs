@@ -329,10 +329,10 @@ yellow     = "#DCA561"
 warning    = "#C34043"
 
 -- sizes
-gap    = 4
+gap    = 3
 reSize = 1/10
 moreReSize = 1/2
-myBorder = 4
+myBorder = 3
 
 myWideFont :: [Char]
 myWideFont  = "xft:Eurostar Black Extended:"
@@ -556,7 +556,7 @@ myPP = clickablePP $ filterOutWsPP ["NSP"] $ def
     , ppHidden  = xmobarColor dull  ""
     , ppTitle   = xmobarColor foreground "" . wrap ("<box type=Bottom width=2 mt=2 color=" ++ yellow ++ "><fc=" ++ yellow ++ ">") "</fc></box>" . shorten 30
     , ppLayout  = const ""
-    , ppSep = xmobarColor foreground "" ("  <box type=Left width=2 mt=2 color=" ++ dull ++ "><fc=" ++ dull ++ "> </fc></box>  ")
+    , ppSep = xmobarColor foreground "" " | "
     , ppOrder = reverse
     }
 

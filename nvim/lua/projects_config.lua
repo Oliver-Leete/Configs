@@ -362,7 +362,14 @@ overseer.register_template({
         return {
             name = "Build Document",
             cmd = "latexmk -pdf -file-line-error -synctex=1 OML-Thesis.tex",
-            components = { "default", "unique" }
+            components = {
+                "on_output_summarize",
+                "on_exit_set_status",
+                "on_complete_notify",
+                "on_complete_dispose",
+                "unique",
+                { "toggleterm.attach_toggleterm", hide = true },
+            }
         }
     end,
     priority = 5,
@@ -391,4 +398,3 @@ overseer.register_template({
     priority = 1,
     params = {},
 })
-

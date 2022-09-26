@@ -25,7 +25,7 @@ return {
         num = {
             desc = "What harpoon number to use",
             type = "integer",
-            defualt = 2,
+            defualt = 1,
             optional = true,
         },
         goto_prev = {

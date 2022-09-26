@@ -24,8 +24,7 @@ zsh/
 !/xmonad/xmonad.hs
 !/xmonad/xmonad-oleete/XMonad/**/*.hs
 !/xmobar/*
-!/deadd/deadd.conf
-!/deadd/deadd.css
+!/dunst/*
 !/vis/visrc.lua
 !/kak/kakrc
 !/zathura/zathurarc
