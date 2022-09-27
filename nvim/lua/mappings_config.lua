@@ -338,12 +338,6 @@ end)
 
 -- Terminal mappings
 
-local term_keys = { "N", "E" }
-for i, key in pairs(term_keys) do
-    Map("n", "<leader>" .. key, function() _G.sendLines(vim.v.count, i) end)
-    Map("x", "<leader>" .. key, ":<c-u>call v:lua.sendRegion(visualmode(), " .. i .. ")<cr>", { remap = true })
-end
-
 Map("t", "<c-]>", "<c-\\><c-n>")
 
 -- Command Panel Bindings
@@ -510,8 +504,8 @@ function Select_runnables()
 end
 
 Map("n", "<leader>h", "<cmd>OverseerTaskAction<cr>")
-Map("n", "<leader>n", "<cmd>OverseerRun<cr>")
-Map("n", "<leader>N", function()
+Map("n", "<leader>e", "<cmd>OverseerRun<cr>")
+Map("n", "<leader>E", function()
     local overseer = require("overseer")
     local tasks = overseer.list_tasks({ recent_first = true })
     if vim.tbl_isempty(tasks) then
@@ -521,8 +515,8 @@ Map("n", "<leader>N", function()
     end
 end)
 
+Map("n", "<leader>n", "<cmd>OverseerToggle<cr>")
 Map("n", "<leader>i", "<cmd>ToggleTermToggleAll<cr>")
-Map("n", "<leader>e", "<cmd>OverseerToggle<cr>")
 Map("n", "<leader>o", function() require("neotest").summary.toggle() end)
 
 Map("n", "<leader>l", function() require("neotest").run.run() end)

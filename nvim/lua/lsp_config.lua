@@ -55,7 +55,8 @@ local custom_attach = function(client, bufnr)
             })
         end
     end
-    if client.server_capabilities.documentSymbolProvider then
+    local sc = client.server_capabilities
+    if sc.documentSymbolProvider then
         require("nvim-navic").attach(client, bufnr)
     end
 
@@ -73,7 +74,7 @@ local custom_attach = function(client, bufnr)
 
         bmap("n", "KK", vim.lsp.buf.hover)
     end
-    if client.server_capabilities.codeLensProvider ~= nil then
+    if sc.codeLensProvider ~= nil then
         bmap("n", "<C-,>", vim.lsp.codelens.run)
         bmap("n", "<leader>,", vim.lsp.codelens.run)
         vim.api.nvim_create_autocmd(
@@ -81,14 +82,14 @@ local custom_attach = function(client, bufnr)
             { callback = vim.lsp.codelens.refresh, buffer = bufnr, group = lsp_auto }
         )
     end
-    if client.server_capabilities.codeActionProvider then
+    if sc.codeActionProvider then
         bmap("n", "<C-.>", vim.lsp.buf.code_action)
         bmap("n", "<leader>.", vim.lsp.buf.code_action)
         bmap("x", "<C-.>", vim.lsp.buf.range_code_action)
         bmap("x", "<leader>.", vim.lsp.buf.range_code_action)
     end
 
-    if client.server_capabilities.signatureHelpProvider then
+    if sc.signatureHelpProvider then
         require('lsp-overloads').setup(client, {})
     end
 end
@@ -106,6 +107,7 @@ lspconfig.julials.setup(default)
 lspconfig.bashls.setup(default)
 lspconfig.fortls.setup(default)
 lspconfig.jedi_language_server.setup(default)
+lspconfig.pyright.setup(default)
 lspconfig.marksman.setup(default)
 lspconfig.taplo.setup(default)
 
@@ -307,8 +309,11 @@ require("null-ls").setup({
         null_ls.builtins.code_actions.refactoring, --no_mason_needed
         null_ls.builtins.diagnostics.chktex, --FIX:To_Mason
         null_ls.builtins.diagnostics.fish, --no_mason_needed
+        null_ls.builtins.diagnostics.flake8, --Mason
         null_ls.builtins.diagnostics.gitlint, --Mason
         null_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013" } }), --Mason
+        null_ls.builtins.diagnostics.pydocstyle, --Mason
+        null_ls.builtins.formatting.black, --Mason
         null_ls.builtins.formatting.cbfmt, --Mason
         null_ls.builtins.formatting.fish_indent, --no_mason_needed
         null_ls.builtins.formatting.isort, --Mason

@@ -57,6 +57,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'simrat39/rust-tools.nvim'
     Plug 'p00f/clangd_extensions.nvim'
     Plug 'b0o/schemastore.nvim'
+    Plug 'AckslD/swenv.nvim'
 
     Plug 'Issafalcon/lsp-overloads.nvim'
     Plug 'SmiteshP/nvim-navic'
@@ -149,6 +150,7 @@ require("compleation_config")
 require("panels_config")
 require("myfuncs_config")
 require("lsp_config")
+require("dap_config")
 require("treesitter_config")
 require("ui_config")
 require("statusline_config")

@@ -106,14 +106,16 @@ wsEXP    = "Exp"
 wsANSYS  = "ANSYS"
 wsCOMMENTS = "Comments"
 wsWRKN   = "WrkNotes"
-wsSCN    = "Scintilla"
+wsSCN    = "Scin-Main"
+wsSCNP   = "Scin-Print"
+wsSCNF   = "Scin-Firm"
 wsSCNN   = "Scin-Docs"
 wsCODE   = "CodeTuts"
 wsGAME   = "Games"
 wsFILM   = "Films"
 
 myWorkspaces :: [[Char]]
-myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1, wsQMK, wsANSYS, wsCOMMENTS, wsWRKN, wsZMK, wsSCN, wsCODE, wsGAME, wsSCNN, wsFILM]
+myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1, wsQMK, wsANSYS, wsCOMMENTS, wsWRKN, wsZMK, wsSCN, wsCODE, wsGAME, wsSCNN, wsFILM, wsSCNP, wsSCNF]
 
 projects :: [Project]
 projects =
@@ -255,11 +257,27 @@ projects =
                 }
 
     , Project   { projectName       = wsSCN
-                , projectDirectory  = "~/Projects/Scintilla/Scintilla"
+                , projectDirectory  = "~/Projects/Scintilla/Main"
                 , projectApp1       = nvim
                 , projectApp1Force  = nvimForce
                 , projectStartHook  = Just $ do spawnOn wsSCN $ sl myTerminal
                                                 spawnOn wsSCN ("sleep .2; " ++ myBrowser)
+                }
+
+    , Project   { projectName       = wsSCNP
+                , projectDirectory  = "~/Projects/Scintilla/PrintSys"
+                , projectApp1       = nvim
+                , projectApp1Force  = nvimForce
+                , projectStartHook  = Just $ do spawnOn wsSCNP $ sl myTerminal
+                                                spawnOn wsSCNP ("sleep .2; " ++ myBrowser)
+                }
+
+    , Project   { projectName       = wsSCNF
+                , projectDirectory  = "~/Projects/Scintilla/Firmware"
+                , projectApp1       = nvim
+                , projectApp1Force  = nvimForce
+                , projectStartHook  = Just $ do spawnOn wsSCNF $ sl myTerminal
+                                                spawnOn wsSCNF ("sleep .2; " ++ myBrowser)
                 }
 
     , Project   { projectName       = wsSCNN
@@ -301,6 +319,7 @@ projects =
 ----------------------------------------------------------------------------------------------------
 -- Applications                                                                                   --
 ----------------------------------------------------------------------------------------------------
+myTerminal, myTerminalRemote, myBrowser, myBrowserClass :: [Char]
 myTerminal     = "/home/oleete/.config/bin/kittyMaker"
 myTerminalRemote = "/home/oleete/.config/bin/kittyRemote"
 myBrowser      = "/home/oleete/.config/bin/browser"
@@ -321,6 +340,7 @@ scratchpads =
 ----------------------------------------------------------------------------------------------------
 -- Theme                                                                                          --
 ----------------------------------------------------------------------------------------------------
+background, foreground, dull, active, yellow, warning :: [Char]
 background = "#1F1F28"
 foreground = "#C8C093"
 dull       = "#54546D"

@@ -6,6 +6,8 @@ set -Ux BROWSER "/home/oleete/.config/bin/browser"
 set -gx BROWSER "/home/oleete/.config/bin/browser"
 set -Ux EDITOR "/home/oleete/.config/bin/nvrTab --remote-wait"
 set -Ux VISUAL "/home/oleete/.config/bin/nvrTab --remote-wait"
+set -Ux PYENV_ROOT "/home/oleete/.pyenv"
+fish_add_path --path $PYENV_ROOT/bin
 fish_add_path --path /home/oleete/.cargo/bin
 fish_add_path --path /home/oleete/.yarn/bin
 fish_add_path --path /home/oleete/go/bin
@@ -14,6 +16,8 @@ fish_add_path --path /home/oleete/.local/bin
 fish_add_path --path /home/oleete/.config/bin
 fish_add_path --path /home/oleete/.cabal/bin
 fish_add_path --path /home/oleete/.ghcup/bin
+
+pyenv init - | source
 
 set WORKSPACE (wmctrl -d | grep '*' | awk "{print $NF}")
 export PAGER="/home/oleete/.config/bin/nvrTab --remote-wait"
