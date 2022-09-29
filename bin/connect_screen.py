@@ -2,22 +2,32 @@
 import subprocess
 import time
 
-#--- set commands below
+# --- set commands below
 screen_command = "/home/oleete/.config/bin/displayctl auto"
 net_command = "/home/oleete/.config/bin/statusNotify net"
-#---
+# ---
 
 time.sleep(1)
 
+
 # read the input from some commands
-def get(cmd): return subprocess.check_output(cmd).decode("utf-8")
+def get(cmd):
+    return subprocess.check_output(cmd).decode("utf-8")
+
 
 # - to count the occurrenc of " connected "
-def count_screens(xr): return xr.count(" connected ")
-def count_nets(xr): return xr.count(":connected:")
+def count_screens(xr):
+    return xr.count(" connected ")
+
+
+def count_nets(xr):
+    return xr.count(":connected:")
+
 
 # - to run the command(s)
-def run_command(cmd): subprocess.Popen(["/bin/bash", "-c", cmd])
+def run_command(cmd):
+    subprocess.Popen(["/bin/bash", "-c", cmd])
+
 
 # first count
 xr1 = count_screens(get(["xrandr"]))

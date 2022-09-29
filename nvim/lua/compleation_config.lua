@@ -105,6 +105,10 @@ require("cmp").setup({
             return vim_item
         end,
     },
+    enabled = function()
+        return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
+            or require("cmp_dap").is_dap_buffer()
+    end
 })
 
 cmp.setup.cmdline("/", {
@@ -142,6 +146,12 @@ require("cmp_dictionary").setup({
     dic = {
         ["tex"] = "/home/oleete/.config/nvim/pluged/cmp-dictionary/british_english.dic",
         ["markdown"] = "/home/oleete/.config/nvim/pluged/cmp-dictionary/british_english.dic",
+    },
+})
+
+require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+    sources = {
+        { name = "dap" },
     },
 })
 

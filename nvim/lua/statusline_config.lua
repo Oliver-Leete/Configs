@@ -122,7 +122,7 @@ function Statusline()
         prev = terms
     end
 
-    local dapstats = require("dap").status(bufnr)
+    local dapstats = require("dap").status()
     if dapstats ~= "" then
         local dap = "%#DiagnosticError#" .. dapstats .. " "
         if prev ~= "" then

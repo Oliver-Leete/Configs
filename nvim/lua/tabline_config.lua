@@ -25,6 +25,10 @@ function Tabline()
         tabline = tabline .. hle .. ""
         tabline = tabline .. "%" .. index .. "x" .. hle
     end
+    local dapstats = require("dap").status()
+    if dapstats ~= "" then
+        tabline = tabline .. "%=" .. require("dapui").controls()
+    end
     return tabline
 end
 

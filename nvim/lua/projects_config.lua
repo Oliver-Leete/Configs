@@ -225,7 +225,7 @@ overseer.setup({
             end,
         }
     },
-    templates = { "builtin", "julia", "configs", "runners" }
+    templates = { "builtin", "julia", "configs", "runners", "shell" }
 })
 
 overseer.register_template({
@@ -237,7 +237,7 @@ overseer.register_template({
             components = { "default", "unique" },
         }
     end,
-    priority = 6000,
+    priority = 150,
     params = {},
 })
 overseer.register_template({
@@ -249,7 +249,7 @@ overseer.register_template({
             components = { "default", "unique" }
         }
     end,
-    priority = 6000,
+    priority = 150,
     params = {},
 })
 overseer.register_template({
@@ -273,7 +273,7 @@ overseer.register_template({
                                 components = { "default", "unique" }
                             }
                         end,
-                        priority = 1000,
+                        priority = 150,
                         params = {},
                     }
                 )
@@ -311,7 +311,7 @@ overseer.register_template({
             components = { "default", "unique" }
         }
     end,
-    priority = 500,
+    priority = 150,
     condition = {
         dir = "/home/oleete/Projects/PowderModel"
     }
@@ -325,7 +325,7 @@ overseer.register_template({
             components = { "default", "unique" }
         }
     end,
-    priority = 501,
+    priority = 151,
     condition = {
         dir = "/home/oleete/Projects/PowderModel"
     }
@@ -340,7 +340,7 @@ overseer.register_template({
             components = { "default", "unique" }
         }
     end,
-    priority = 4000,
+    priority = 155,
     params = {},
 })
 overseer.register_template({
@@ -352,7 +352,7 @@ overseer.register_template({
             components = { "default", "unique" }
         }
     end,
-    priority = 4000,
+    priority = 2,
     params = {},
 })
 

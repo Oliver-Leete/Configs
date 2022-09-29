@@ -50,6 +50,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'williamboman/mason.nvim'
     Plug 'williamboman/mason-lspconfig.nvim'
+    Plug 'jayp0521/mason-nvim-dap.nvim'
     Plug 'jose-elias-alvarez/null-ls.nvim'
 
     Plug 'neovim/nvim-lspconfig'
@@ -77,6 +78,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'saadparwaiz1/cmp_luasnip'
     Plug 'kdheepak/cmp-latex-symbols'
     Plug 'kdheepak/cmp-latex-symbols'
+    Plug 'rcarriga/cmp-dap'
 
     Plug 'L3MON4D3/LuaSnip'
     Plug 'danymat/neogen'
@@ -103,10 +105,11 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'krady21/compiler-explorer.nvim'
 
     Plug 'mfussenegger/nvim-dap'
-    Plug 'Pocco81/DAPInstall.nvim'
     Plug 'rcarriga/nvim-dap-ui'
     Plug 'theHamsta/nvim-dap-virtual-text'
     Plug 'nvim-telescope/telescope-dap.nvim'
+    Plug 'mfussenegger/nvim-dap-python'
+    Plug 'leoluz/nvim-dap-go'
 
     Plug 'akinsho/toggleterm.nvim'
     Plug 'tknightz/telescope-termfinder.nvim'
