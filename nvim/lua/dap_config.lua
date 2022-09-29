@@ -68,6 +68,8 @@ local function open_in_tab()
     debug_tab = vim.api.nvim_win_get_tabpage(debug_win)
     debug_tabnr = vim.api.nvim_tabpage_get_number(debug_tab)
 
+    vim.t[vim.api.nvim_get_current_tabpage()].tabname = "Debugging"
+
     dapui.open()
 end
 

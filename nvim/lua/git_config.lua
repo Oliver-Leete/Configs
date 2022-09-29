@@ -18,6 +18,13 @@ require("diffview").setup({
     hooks = {
         diff_buf_read = function(bufnr)
             vim.b[bufnr].is_diffview_file = true
+        end,
+        view_opened = function(view)
+            if view.panel.bufname == "DiffviewFileHistoryPanel" then
+                vim.t[vim.api.nvim_get_current_tabpage()].tabname = "Git History"
+            elseif view.panel.bufname == "DiffviewFilePanel" then
+                vim.t[vim.api.nvim_get_current_tabpage()].tabname = "Git Changes"
+            end
         end
     },
     key_bindings = {
