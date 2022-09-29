@@ -521,10 +521,3 @@ Map("n", "<leader>i", "<cmd>ToggleTermToggleAll<cr>")
 Map("n", "<leader>o", function() require("neotest").summary.toggle() end)
 
 Map("n", "<leader>l", function() require("neotest").run.run() end)
-
-local filmPicker = vim.api.nvim_create_augroup("filmPicker", { clear = true })
-vim.api.nvim_create_autocmd("BufRead", { pattern = "*.films", callback = function()
-    Map("n", "<leader>a", "<cmd>%!sort -k1<cr>")
-    Map("n", "<leader>r", "<cmd>%!sort -k3<cr>")
-    Map("n", "<leader>s", "<cmd>%!sort -k5<cr>")
-end, group = filmPicker })

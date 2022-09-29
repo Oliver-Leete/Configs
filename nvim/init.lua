@@ -163,6 +163,7 @@ require("git_config")
 require("terminal_config")
 require("projects_config")
 require("mini_config")
+require("filmpicker_config")
 
 local enterAndExitVim = vim.api.nvim_create_augroup("enterAndExitVim", { clear = true })
 vim.api.nvim_create_autocmd("VimEnter", { command = 'silent! !/home/oleete/.config/bin/nvrRename', group = enterAndExitVim })

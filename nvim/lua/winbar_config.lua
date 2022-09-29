@@ -1,23 +1,3 @@
-local function filmpicker_winbar(hl)
-    local line1 = vim.fn.search([[\(\%^\|^$\)]], "nbWc") - 1
-    local line2 = vim.fn.search([[\(\%$\|^$\)]], "nW")
-
-    local lines = vim.api.nvim_buf_get_lines(0, line1, line2, false)
-    local pattern = "(%d+):(%d+):(%d+)"
-    local runtime = 0
-    for _, line in pairs(lines) do
-        local time_string = line:sub(1, 8)
-        local hour, minute, second = time_string:match(pattern)
-        if hour and minute and second then
-            runtime = runtime + hour * 3600 + minute * 60 + second
-        end
-    end
-    local hours = math.floor(runtime / 3600)
-    local minutes = math.floor(math.fmod(runtime, 3600) / 60)
-    local seconds = math.floor(math.fmod(runtime, 60))
-    return hl .. string.format("%02d:%02d:%02d", hours, minutes, seconds)
-end
-
 SpecialName = function(bufnr)
     if vim.bo[bufnr].filetype == "help" then
         local help_title = vim.fn.expand("%:t:r")
@@ -90,10 +70,7 @@ function GPS_Bar()
     local hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveEnds#"
 
     local winbar = ""
-    -- Special winbar for filmpicker script
-    if vim.api.nvim_buf_get_name(bufnr) == "/tmp/film_list.films" then
-        winbar = filmpicker_winbar(hl)
-    elseif vim.bo[bufnr].filetype == "toggleterm" then
+    if vim.bo[bufnr].filetype == "toggleterm" then
         local term_id = vim.b[0].my_term_id
         local term_list = require("toggleterm.terminal").get_all(true)
         local cur_win = vim.api.nvim_get_current_win()
