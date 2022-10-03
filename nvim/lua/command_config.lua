@@ -30,6 +30,15 @@ GlobalCommands = {
     { source = "finders", name = "Workspace diagnostics", command = "Telescope diagnostics theme=get_ivy" },
     { source = "finders", name = "Workspace symbols", command = "Telescope lsp_workspace_symbols theme=get_ivy" },
 
+    { source = "settings", name = "Options", command = "Telescope vim_options theme=get_ivy" },
+    { source = "settings", name = "Keymaps", command = "Telescope keymaps theme=get_ivy" },
+    { source = "settings", name = "Highlights", command = "Telescope highlights theme=get_ivy" },
+    { source = "settings", name = "Autocommands", command = "Telescope autocommands theme=get_ivy" },
+    { source = "settings", name = "Help", command = "Telescope help_tags theme=get_ivy" },
+    { source = "settings", name = "Man pages", command = "Telescope man_pages theme=get_ivy" },
+    { source = "settings", name = "Reload Module", command = "Telescope reloader theme=get_ivy" },
+    { source = "settings", name = "File types", command = "Telescope filetypes theme=get_ivy" },
+
     { source = "git", name = "Diff against a commit", func = function() git_commits_againsthead() end, },
     { source = "git", name = "Diff of a branch from current", func = function() git_branch_dif() end, },
     { source = "git", name = "Diff of a branch from master", func = function() git_branch_mergebase() end, },

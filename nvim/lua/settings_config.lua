@@ -36,12 +36,19 @@ vim.opt.fillchars:append({
 })
 Border = {
       {"🭽", "FloatBorder"},
+
       {"▔", "FloatBorder"},
+
       {"🭾", "FloatBorder"},
+
       {"▕", "FloatBorder"},
+
       {"🭿", "FloatBorder"},
+
       {"▁", "FloatBorder"},
+
       {"🭼", "FloatBorder"},
+
       {"▏", "FloatBorder"},
 }
 

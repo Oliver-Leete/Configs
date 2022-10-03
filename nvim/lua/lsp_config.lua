@@ -74,8 +74,7 @@ local custom_attach = function(client, bufnr)
         )
     end
     if sc.codeActionProvider then
-        bmap("n", "<C-.>", vim.lsp.buf.code_action)
-        bmap("x", "<C-.>", vim.lsp.buf.range_code_action)
+        bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action)
     end
 
     if sc.signatureHelpProvider then

@@ -1,5 +1,38 @@
 # Oliver's Config
 
+<!--toc:start-->
+- [Oliver's Config](#olivers-config)
+  - [WARNING](#warning)
+  - [Neovim](#neovim)
+    - [Multiple Leaders](#multiple-leaders)
+    - [Text objects](#text-objects)
+      - [Repeat Mappings](#repeat-mappings)
+    - [Some Other Mappings](#some-other-mappings)
+      - [Move to start/end of line](#move-to-startend-of-line)
+      - [Copy from above](#copy-from-above)
+      - [Delete buffer](#delete-buffer)
+    - [Command Palette](#command-palette)
+      - [Tasks runner](#tasks-runner)
+    - [Julia](#julia)
+  - [XMonad](#xmonad)
+    - [Layouts](#layouts)
+      - [Notebook Layout](#notebook-layout)
+      - [Layout Bar Avoidance](#layout-bar-avoidance)
+      - [Toggleable layouts](#toggleable-layouts)
+    - ['Magic' keys](#magic-keys)
+    - [Workspaces](#workspaces)
+      - [Workspace Harpoon](#workspace-harpoon)
+      - [App Harpoon](#app-harpoon)
+      - [Browser](#browser)
+    - [Other](#other)
+      - [Local Modules](#local-modules)
+      - [Xmobar Icons](#xmobar-icons)
+      - [Rofi script](#rofi-script)
+  - [Other Things](#other-things)
+    - [Hellslide (Keyboard)](#hellslide-keyboard)
+  - [Film picker](#film-picker)
+<!--toc:end-->
+
 I'll slowly go through and document some of this stuff. I'm not going to go over
 every bit of my configs, but I will cover the interesting (in my opinion) bits.
 I'll try and give credit to others where it's due, but there's stuff that I
@@ -197,19 +230,20 @@ removed.
 So still on the list to do at some point is to (not that I'll ever get around to
 them):
 
-- Add Julia support for neogen (actually it looks like someone has already started
+- [ ] Add Julia support for neogen (actually it looks like someone has already started
   on that).
-- Add Julia support for refactoring.nvim
-- Figure out if a wrapper can be made to use DebugAdapter.jl in Neovim.
-- Make a Julia server to run tests and finish the neotest adaptor.
-- Make a similar thing for benchmarks, and probably a neotest consumer for
+- [ ] Add Julia support for refactoring.nvim
+- [ ] Figure out if a wrapper can be made to use DebugAdapter.jl in Neovim.
+- [x] Make a Julia server to run tests and finish the neotest adaptor.
+- [x] Make a similar thing for benchmarks, and probably a neotest consumer for
   benchmark results.
-- Make a better profile data exporter.
-- Extend the profile runner and exporter to allocation profiles.
-- I would also like to have Julia support in something like splitjoin.vim, but I
+- [ ] Make a better profile data exporter.
+- [ ] Extend the profile runner and exporter to allocation profiles.
+- [X] I would also like to have Julia support in something like splitjoin.vim, but I
   really don't like vimscript, so I'll never do that myself. I have got basic
   functionality from nvim-trevJ.lua and the julia#toggle_function_blockassign()
-  function from julia-vim
+  function from julia-vim. (OK, I gave up on this one because the mix of the two
+  above and juliaformatter cover 99% of my uses)
 
 ## XMonad
 

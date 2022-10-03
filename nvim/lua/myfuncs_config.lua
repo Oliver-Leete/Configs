@@ -15,6 +15,12 @@ Special_types = {
     OverseerList = { name = " Task List", exit_func = function() vim.cmd("OverseerClose") end },
     OverseerForm = { name = " Overseer Form", exit_func = function() vim.cmd("wincmd c") end },
     ["dap-float"] = { exit_func = function() vim.cmd("wincmd c") end },
+    ["dapui_scopes"] = { name = "Scopes", exit_func = function() vim.cmd("wincmd c") end },
+    ["dapui_breakpoints"] = { name = "Breakpoints", exit_func = function() vim.cmd("wincmd c") end },
+    ["dapui_stacks"] = { name = "Stacks", exit_func = function() vim.cmd("wincmd c") end },
+    ["dapui_watches"] = { name = "Watches", exit_func = function() vim.cmd("wincmd c") end },
+    ["dap-repl"] = { name = "Debug REPL", exit_func = function() vim.cmd("wincmd c") end },
+    ["dapui_console"] = { name = "Debug Console", exit_func = function() vim.cmd("wincmd c") end },
     ["neotest-summary"] = { name = " Test List", exit_func = function() vim.cmd("wincmd c") end },
     ["vim"] = { exit_func = function() vim.cmd("wincmd c") end },
     [""] = { exit_func = function() vim.cmd("wincmd c") end },
@@ -161,7 +167,7 @@ TabNext = function()
                 cur_index = i
             end
         end
-        local next_index = cur_index == #term_list and 1 or cur_index+1
+        local next_index = cur_index == #term_list and 1 or cur_index + 1
         local cur_win = vim.api.nvim_get_current_win()
         vim.api.nvim_win_set_buf(cur_win, term_list[next_index].bufnr)
     else
@@ -180,7 +186,7 @@ TabPrev = function()
                 cur_index = i
             end
         end
-        local next_index = cur_index == 1 and #term_list or cur_index-1
+        local next_index = cur_index == 1 and #term_list or cur_index - 1
         local cur_win = vim.api.nvim_get_current_win()
         vim.api.nvim_win_set_buf(cur_win, term_list[next_index].bufnr)
     else
