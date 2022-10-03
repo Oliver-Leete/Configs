@@ -1,5 +1,5 @@
 return {
-    generator = function(_)
+    generator = function(_,cb)
         local filerunners = {
             julia = function() return { "julia", vim.fn.expand("%:p") } end,
             go = function() return { "go", "run", vim.fn.expand("%:p") } end,
@@ -23,10 +23,11 @@ return {
             java = function() return { "java", vim.fn.expand("%:p") } end,
         }
 
-        return { {
-            name = "Run file (" .. vim.fn.expand("%:t") .. ")",
+        local ft = vim.bo.filetype
+        cb({ {
+            name = "Run " .. ft .. " file (" .. vim.fn.expand("%:t") .. ")",
             builder = function()
-                local cmd = filerunners[vim.bo.filetype]()
+                local cmd = filerunners[ft]()
                 return {
                     cmd = cmd,
                     name = "Running " .. vim.fn.expand("%:t:r"),
@@ -37,6 +38,6 @@ return {
             condition = {
                 filetype = vim.tbl_keys(filerunners)
             },
-        } }
+        } })
     end,
 }

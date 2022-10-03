@@ -34,6 +34,16 @@ vim.opt.fillchars:append({
     verthoriz = "🭿",
     diff = "╱",
 })
+Border = {
+      {"🭽", "FloatBorder"},
+      {"▔", "FloatBorder"},
+      {"🭾", "FloatBorder"},
+      {"▕", "FloatBorder"},
+      {"🭿", "FloatBorder"},
+      {"▁", "FloatBorder"},
+      {"🭼", "FloatBorder"},
+      {"▏", "FloatBorder"},
+}
 
 -- Saving
 vim.opt.confirm = true

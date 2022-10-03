@@ -15,7 +15,7 @@ return {
         end
     },
 
-    generator = function(_)
+    generator = function(_, cb)
         local commands = {
             {
                 name = "Julia test server",
@@ -218,6 +218,6 @@ return {
                 )
             end
         end
-        return ret
+        cb(ret)
     end,
 }

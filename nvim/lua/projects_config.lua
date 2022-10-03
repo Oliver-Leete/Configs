@@ -96,7 +96,7 @@ require("neotest").setup({
         require("neotest.adapters.neotest-julia-benchmarktools")
     },
     floating = {
-        border = "rounded",
+        border = Border,
         max_height = 0.9,
         max_width = 0.9,
         options = {},
@@ -122,10 +122,10 @@ require("neotest").setup({
 local overseer = require("overseer")
 local STATUS = require("overseer.constants").STATUS
 overseer.setup({
-    form = { win_opts = { winblend = 0, }, },
-    task_editor = { win_opts = { winblend = 0, }, },
-    task_win = { win_opts = { winblend = 0, }, },
-    confirm = { win_opts = { winblend = 0, }, },
+    form = { border = Border, win_opts = { winblend = 0, }, },
+    task_editor = { border = Border, win_opts = { winblend = 0, }, },
+    task_win = { border = Border, win_opts = { winblend = 0, }, },
+    confirm = { border = Border, win_opts = { winblend = 0, }, },
     task_list = {
         bindings = {
             ["?"] = "ShowHelp",
@@ -225,7 +225,7 @@ overseer.setup({
             end,
         }
     },
-    templates = { "builtin", "julia", "configs", "runners", "shell" }
+    templates = { "builtin", "julia", "configs", "runners", "run_bins", "logs" }
 })
 
 overseer.register_template({
@@ -251,36 +251,6 @@ overseer.register_template({
     end,
     priority = 150,
     params = {},
-})
-overseer.register_template({
-    generator = function()
-        local logHandler = io.popen(
-            [[fd -e log]]
-        )
-        local ret = {}
-        if logHandler then
-            local logs = logHandler:read("*a")
-            logHandler:close()
-            for log in logs:gmatch("([^\r\n]+)") do
-                table.insert(
-                    ret,
-                    {
-                        name = "Show " .. log,
-                        builder = function()
-                            return {
-                                name = "Show " .. log,
-                                cmd = "tail --follow --retry " .. log,
-                                components = { "default", "unique" }
-                            }
-                        end,
-                        priority = 150,
-                        params = {},
-                    }
-                )
-            end
-        end
-        return ret
-    end
 })
 overseer.register_template({
     name = "Plot from logfile",

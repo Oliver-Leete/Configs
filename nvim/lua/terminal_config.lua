@@ -31,7 +31,7 @@ require("toggleterm").setup({
     close_on_exit = false,
     shell = "fish",
     float_opts = {
-        border = "curved",
+        border = Border,
     }
 })
 

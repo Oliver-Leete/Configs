@@ -4,8 +4,8 @@ return {
     condition = {
         dir = "/home/oleete/.config",
     },
-    generator = function(_)
-        return {
+    generator = function(_, cb)
+        cb({
             {
                 name = "Reload XMonad",
                 builder = function()
@@ -44,6 +44,6 @@ return {
                 priority = 60,
                 params = {},
             }
-        }
+        })
     end
 }

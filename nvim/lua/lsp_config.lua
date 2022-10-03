@@ -8,28 +8,20 @@ vim.api.nvim_set_hl(0, "CursorLineError", { fg = "#E82424", bg = "#363646" })
 vim.api.nvim_set_hl(0, "CursorLineWarn", { fg = "#FF9E3B", bg = "#363646" })
 vim.api.nvim_set_hl(0, "CursorLineInfo", { fg = "#658494", bg = "#363646" })
 vim.api.nvim_set_hl(0, "CursorLineHint", { fg = "#6A9589", bg = "#363646" })
-vim.cmd([[
-    sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl= culhl=CursorLineError
-    sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl= culhl=CursorLineWarn
-    sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl= culhl=CursorLineInfo
-    sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl= culhl=CursorLineHint
-]])
-
+vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn", culhl = "CursorLineWarn" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo", culhl = "CursorLineInfo" })
+vim.fn.sign_define("DiagnosticSignHint", { text = " ", texthl = "DiagnosticSignHint", culhl = "CursorLineHint" })
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-    border = "single",
+    border = Border,
 })
 
--- require("lsp_lines").setup()
 vim.diagnostic.config({
     underline = {
         severity = {
             min = "Warn",
         },
     },
-    -- virtual_text = false,
-    -- virtual_lines = {
-    --     only_current_line = true,
-    -- },
     virtual_text = {
         severity = {
             min = "Warn",
@@ -69,14 +61,13 @@ local custom_attach = function(client, bufnr)
         bmap("n", "gr", "<cmd>Telescope lsp_references theme=get_ivy<cr>")
         bmap("n", "gI", "<cmd>Telescope lsp_implementations theme=get_ivy<cr>")
         bmap("n", "gD", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>")
-        bmap("n", "go", vim.lsp.buf.outgoing_calls)
-        bmap("n", "gi", vim.lsp.buf.incoming_calls)
+        bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls theme=get_ivy<cr>")
+        bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>")
 
         bmap("n", "KK", vim.lsp.buf.hover)
     end
     if sc.codeLensProvider ~= nil then
         bmap("n", "<C-,>", vim.lsp.codelens.run)
-        bmap("n", "<leader>,", vim.lsp.codelens.run)
         vim.api.nvim_create_autocmd(
             "CursorHold",
             { callback = vim.lsp.codelens.refresh, buffer = bufnr, group = lsp_auto }
@@ -84,13 +75,15 @@ local custom_attach = function(client, bufnr)
     end
     if sc.codeActionProvider then
         bmap("n", "<C-.>", vim.lsp.buf.code_action)
-        bmap("n", "<leader>.", vim.lsp.buf.code_action)
         bmap("x", "<C-.>", vim.lsp.buf.range_code_action)
-        bmap("x", "<leader>.", vim.lsp.buf.range_code_action)
     end
 
     if sc.signatureHelpProvider then
-        require('lsp-overloads').setup(client, {})
+        require('lsp-overloads').setup(client, {
+            ui = {
+                border = Border
+            }
+        })
     end
 end
 

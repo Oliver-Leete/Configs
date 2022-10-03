@@ -1,7 +1,7 @@
 function Tabline()
     local tabline = ""
     for index = 1, vim.fn.tabpagenr('$') do
-        local tabname = vim.t[index].tabname or ("Tab" .. index)
+        local tabname = vim.t[index].tabname or ("Tab " .. index)
 
         local is_active = index == vim.fn.tabpagenr()
 

@@ -1,16 +1,16 @@
 local dap = require("dap")
 
-vim.api.nvim_set_hl(0, "CursorLineError", { fg = "#E82424", bg = "#363646" })
-vim.cmd([[
-    sign define DapBreakpoint text= texthl=DiagnosticSignError linehl= numhl= culhl=CursorLineError
-    sign define DapBreakpointCondition text= texthl=DiagnosticSignError linehl= numhl= culhl=CursorLineError
-    sign define DapLogPoint text= texthl=DiagnosticSignWarn linehl= numhl= culhl=CursorLineWarn
-    sign define DapStopped text= texthl=DiagnosticSignError linehl= numhl= culhl=CursorLineError
-    sign define DapBreakpointRejected text= texthl=DiagnosticSignInfo linehl= numhl= culhl=CursorLineInfo
-]])
+vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
+vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
+vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DiagnosticSignWarn", culhl = "CursorLineWarn" })
+vim.fn.sign_define("DapStopped", { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
+vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DiagnosticSignInfo", culhl = "CursorLineInfo" })
 
 require("nvim-dap-virtual-text").setup()
 require("dapui").setup({
+    floating = {
+        border = Border,
+    },
     controls = {
         enabled = false,
         icons = {
@@ -95,3 +95,48 @@ end
 dap.listeners.before.event_exited["dapui_config"] = function()
     close_tab()
 end
+
+-- Mappings
+--
+-- Make it so that this changes all the , leader keys to debug keys when active but is exitable (maybe with ,<esc>)
+--
+-- Hydra({
+--     name = "Debug",
+--     mode = { "n" },
+--     body = "<leader>d",
+--     config = {
+--         hint = {
+--             position = "middle-right",
+--             border = "single"
+--         }
+--     },
+--     --     hint = [[
+--     --  _h_/_j_/_k_/_l_: ←/↓/↑/→
+--     --  _H_/_J_/_K_/_L_: ⇚/⟱/⤊/⇛
+--     --        _t_: top
+--     --        _v_: middle
+--     --        _b_: bottom
+--     --        _s_: start
+--     --        _m_: middle
+--     --        _e_: end
+--     -- ]]   ,
+--     heads = {
+--
+--         { ",d", dap.continue },
+--         { ",n", dap.continue },
+--         { ",D", dap.run_last, { exit = true } },
+--         { ",h", dap.step_back },
+--         { ",j", dap.step_into },
+--         { ",k", dap.step_out },
+--         { ",l", dap.step_over },
+--         { ",p", dap.pause },
+--         { ",<Up>", dap.up },
+--         { ",<Down>", dap.down },
+--         { ",e", dap.run_to_cursor },
+--         { ",b", dap.toggle_breakpoint },
+--         { ",", function() dap.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end },
+--         { ",", function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end },
+--     }
+-- })
+-- Map("n", "<leader>dd", dap.continue)
+-- Map("n", "<leader>dD", dap.run_last)

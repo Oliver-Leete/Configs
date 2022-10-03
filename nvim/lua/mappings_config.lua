@@ -89,7 +89,7 @@ Map("n", "K", "<nop>")
 Map("n", "KK", "K")
 Map("n", "KG", require("gitsigns").preview_hunk)
 Map("n", "KA", function() require("gitsigns").blame_line({ full = true }) end)
-Map("n", "KE", function() vim.diagnostic.open_float(0, { border = "single", scope = "line", source = "always" }) end)
+Map("n", "KE", function() vim.diagnostic.open_float(0, { border = Border, scope = "line", source = "always" }) end)
 Map("n", "KT", function() require("neotest").output.open() end)
 Map("n", "KD", function() require("dap.ui.widgets").hover() end, { silent = true })
 
@@ -145,7 +145,7 @@ Hydra({
     config = {
         hint = {
             position = "middle-right",
-            border = "single"
+            border = Border
         }
     },
     hint = [[
@@ -266,6 +266,25 @@ for i, key in pairs(harpoon_keys) do
     Map("n", "<leader>" .. key, function() require("harpoon.ui").nav_file(i) end)
 end
 
+Map("n", "<leader>h", "<cmd>OverseerTaskAction<cr>")
+Map("n", "<leader>e", "<cmd>OverseerRun<cr>")
+Map("n", "<leader>E", function()
+    local overseer = require("overseer")
+    local tasks = overseer.list_tasks({ recent_first = true })
+    if vim.tbl_isempty(tasks) then
+        vim.notify("No tasks found", vim.log.levels.WARN)
+    else
+        overseer.run_action(tasks[1], "restart")
+    end
+end)
+
+Map("n", "<leader>n", "<cmd>OverseerToggle<cr>")
+Map("n", "<leader>i", "<cmd>ToggleTermToggleAll<cr>")
+Map("n", "<leader>o", function() require("neotest").summary.toggle() end)
+
+Map("n", "<leader>l", function() require("neotest").run.run() end)
+
+
 Map("n", "<leader>//", "<cmd>silent A<cr>")
 Map("n", "<leader>/r", "<cmd>silent Ereadme<cr>")
 Map("n", "<leader>/d", "<cmd>silent Edoc<cr>")
@@ -283,13 +302,6 @@ Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
 
 Map("n", ",gr", "<cmd>Gitsigns reset_hunk<CR>")
 Map("n", ",gs", "<cmd>Gitsigns stage_hunk<CR>")
-
--- Git Diff Bindings
-if vim.api.nvim_win_get_option(0, "diff") then
-    Map("n", "<leader>[", "<cmd>diffget LOCAL<cr>", "Take From Local Change")
-    Map("n", "<leader>]", "<cmd>diffget REMOTE<cr>", "Take From Remote Change")
-    Map("n", "<leader><leader>", "<cmd>diffget BASE<cr>", "Take From Base")
-end
 
 -- Insert Bindings
 
@@ -341,183 +353,3 @@ end)
 
 Map("t", "<c-]>", "<c-\\><c-n>")
 
--- Command Panel Bindings
-
-GlobalCommands = {
-    { source = "coverage", name = "Coverage summary", command = "CoverageSummary" },
-    { source = "coverage", name = "Load coverage", command = "Coverage" },
-    { source = "coverage", name = "Toggle coverage", command = "CoverageToggle" },
-
-    { source = "default", name = "Close buffer", func = function() _G.delete_buffer() end },
-    { source = "default", name = "Clear search", command = "let @/=''" },
-    { source = "default", name = "Close tab", command = "tabclose" },
-    { source = "default", name = "Toggle text wraping", "set wrap!" },
-    { source = "default", name = "File tree", command = "NvimTreeToggle" },
-    { source = "default", name = "Undo tree", command = "UndotreeToggle" },
-    { source = "default", name = "Reload snippets", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
-    { source = "default", name = "Source init", command = "source /home/oleete/.config/nvim/init.lua" },
-
-    { source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
-    { source = "finders", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
-    { source = "finders", name = "File browser (relative)",
-        command = "Telescope file_browser respect_gitignore=false theme=get_ivy cwd=%:p:h" },
-    { source = "finders", name = "Files", command = "Telescope git_files theme=get_ivy" },
-    { source = "finders", name = "File browser", command = "Telescope file_browser respect_gitignore=false theme=get_ivy" },
-    { source = "finders", name = "Grep", command = "Telescope live_grep theme=get_ivy theme=get_ivy" },
-    { source = "finders", name = "Notifications",
-        func = function() require("telescope").extensions.notify.notify(require("telescope.themes").get_ivy()) end },
-    { source = "finders", name = "Old files finder", command = "Telescope oldfiles theme=get_ivy" },
-    { source = "finders", name = "Quickfix", command = "Telescope quickfix theme=get_ivy" },
-    { source = "finders", name = "Symbols", command = "Telescope lsp_document_symbols theme=get_ivy" },
-    { source = "finders", name = "Todo list", command = "TodoTelescope theme=get_ivy" },
-    { source = "finders", name = "Workspace diagnostics", command = "Telescope diagnostics theme=get_ivy" },
-    { source = "finders", name = "Workspace symbols", command = "Telescope lsp_workspace_symbols theme=get_ivy" },
-
-    { source = "git", name = "Diff against a commit", func = function() git_commits_againsthead() end, },
-    { source = "git", name = "Diff of a branch from current", func = function() git_branch_dif() end, },
-    { source = "git", name = "Diff of a branch from master", func = function() git_branch_mergebase() end, },
-    { source = "git", name = "Diff of a commit", func = function() git_commits_onechange() end, },
-    { source = "git", name = "Diff of unstaged", command = "DiffviewOpen" },
-    { source = "git", name = "File diff history", command = "DiffviewFileHistory %" },
-    { source = "git", name = "Folder diff history", command = "DiffviewFileHistory" },
-    { source = "git", name = "Reset File", command = "Gitsigns reset_buffer" },
-    { source = "git", name = "Stage File", command = "Gitsigns stage_buffer" },
-
-    { source = "profiling", name = "Profile Annotate Function", command = "PerfAnnotateFunction" },
-    { source = "profiling", name = "Profile Cycle Format", command = "PerfCycleFormat" },
-    { source = "profiling", name = "Profile Hottest Callers Function", command = "PerfHottestCallersFunction" },
-    { source = "profiling", name = "Profile Hottest Callers Selection", command = "PerfHottestCallersSelection" },
-    { source = "profiling", name = "Profile Hottest Lines", command = "PerfHottestLines" },
-    { source = "profiling", name = "Profile Hottest Symbols", command = "PerfHottestSymbols" },
-    { source = "profiling", name = "Profile Load Call Graph", command = "PerfLoadCallGraph" },
-    { source = "profiling", name = "Profile Load Flame Graph", command = "PerfLoadFlameGraph" },
-    { source = "profiling", name = "Profile Load Flat", command = "PerfLoadFlat" },
-    { source = "profiling", name = "Profile Pick Event", command = "PerfPickEvent" },
-    { source = "profiling", name = "Profile Toggle Annotations", command = "PerfToggleAnnotations" },
-
-    { source = "tasks", name = "Run Tasks", command = "OverseerRun" },
-    { source = "tasks", name = "Modify Tasks", command = "OverseerTaskAction" },
-    { source = "tasks", name = "Task Window", command = "OverseerToggle" },
-    { source = "tasks", name = "Run Nearest Test", func = function() require("neotest").run.run() end },
-    { source = "tasks", name = "Test Window", func = function() require("neotest").summary.open() end },
-    { source = "tasks", name = "Terminals", command = "Telescope termfinder theme=get_ivy" },
-}
-
-Map("n", "<leader>p", function() CommandCentre({}, true) end)
-
-
-local function append_command(runnables, to_add)
-    local function always_extend(dst, src)
-        if not vim.tbl_islist(src) then
-            src = vim.tbl_values(src)
-        end
-        vim.list_extend(dst, src)
-    end
-
-    if to_add then
-        if type(to_add) == "table" then
-            always_extend(runnables, to_add)
-        elseif type(to_add) == "function" then
-            always_extend(runnables, to_add())
-        end
-    end
-end
-
-function CommandCentre(argCommands, extend)
-    if not extend then extend = false end
-    if not argCommands then argCommands = {} end
-
-    local commands = {}
-    local command_sources = { argCommands }
-
-    if extend then
-        local default_sources = { GlobalCommands, vim.b[0].localCommands }
-        for _, source in pairs(default_sources) do
-            table.insert(command_sources, source)
-        end
-    end
-
-    for _, source in pairs(command_sources) do
-        append_command(commands, source)
-    end
-
-    table.sort(commands, function(a, b) return a.name < b.name end)
-    table.sort(commands, function(a, b) return a.source < b.source end)
-
-    vim.ui.select(commands, {
-        prompt = "Command Centre",
-        format_item = function(item)
-            return "[" .. item.source:sub(1, 3) .. "] " .. item.name
-        end,
-        telescope = require("telescope.themes").get_ivy(),
-    }, function(choice)
-        if not choice then
-            vim.notify("No command entered", "warn", { title = "Command Centre" })
-            return
-        end
-
-        if choice.func ~= nil then
-            choice.func()
-        elseif choice.command ~= nil then
-            vim.cmd(choice.command)
-        elseif choice.keymap ~= nil then
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(choice.keymap, true, true, true), "n", false)
-        else
-            vim.notify("Command does not have an action", "warn", { title = "Command Centre" })
-            return
-        end
-    end)
-end
-
-Global_Runnables = {}
-
-
-function Select_runnables()
-    local runnables = {}
-
-    -- Config sources
-    local runnable_sources = { Global_Runnables, vim.g.runnables, vim.b[0].runnables }
-
-    -- runnables from tasks.lua files in directory
-    local handle1 = io.popen([[fd -I tasks.lua]])
-    local task_files
-    if handle1 then
-        task_files = handle1:read("*a")
-        handle1:close()
-    end
-
-    if task_files then
-        for name in task_files:gmatch("([^\r\n]+)") do
-            name = name:gsub("%./", ""):gsub("%.lua", "")
-            table.insert(runnable_sources, require(name))
-        end
-    end
-
-    for _, source in pairs(runnable_sources) do
-        append_command(runnables, source)
-    end
-
-    if #runnables ~= 0 then
-        CommandCentre(runnables)
-    else
-        vim.notify("Nothing to Run", "warn", { title = "Command Centre" })
-    end
-end
-
-Map("n", "<leader>h", "<cmd>OverseerTaskAction<cr>")
-Map("n", "<leader>e", "<cmd>OverseerRun<cr>")
-Map("n", "<leader>E", function()
-    local overseer = require("overseer")
-    local tasks = overseer.list_tasks({ recent_first = true })
-    if vim.tbl_isempty(tasks) then
-        vim.notify("No tasks found", vim.log.levels.WARN)
-    else
-        overseer.run_action(tasks[1], "restart")
-    end
-end)
-
-Map("n", "<leader>n", "<cmd>OverseerToggle<cr>")
-Map("n", "<leader>i", "<cmd>ToggleTermToggleAll<cr>")
-Map("n", "<leader>o", function() require("neotest").summary.toggle() end)
-
-Map("n", "<leader>l", function() require("neotest").run.run() end)

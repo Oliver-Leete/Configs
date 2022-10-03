@@ -62,7 +62,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'Issafalcon/lsp-overloads.nvim'
     Plug 'SmiteshP/nvim-navic'
-    Plug 'https://git.sr.ht/~whynothugo/lsp_lines.nvim'
 
     Plug 'hrsh7th/nvim-cmp'
     Plug 'hrsh7th/cmp-buffer'
@@ -87,7 +86,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-telescope/telescope.nvim'
     Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make'}
     Plug 'crispgm/telescope-heading.nvim'
-    Plug 'gbrlsnchs/telescope-lsp-handlers.nvim'
 
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-treesitter/playground'
@@ -147,6 +145,7 @@ end
 require("settings_config")
 require("misc_config")
 require("mappings_config")
+require("command_config")
 require("jump_config")
 require("telescope_config")
 require("compleation_config")

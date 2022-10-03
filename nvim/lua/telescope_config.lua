@@ -2,7 +2,6 @@ local action_state = require("telescope.actions.state")
 local actions = require("telescope.actions")
 
 require("telescope").load_extension("dap")
-require("telescope").load_extension("lsp_handlers")
 require("telescope").load_extension("heading")
 require("telescope").load_extension("refactoring")
 require('telescope').load_extension("termfinder")

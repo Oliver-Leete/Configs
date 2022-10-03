@@ -12,7 +12,7 @@ local function anyTermOpen()
 end
 
 return {
-    desc = "Clean up toggleterm terminal after the task is disposed",
+    desc = "Attach a toggleterm to the task",
     editable = false,
     serializable = true,
     params = {

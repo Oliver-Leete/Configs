@@ -105,3 +105,10 @@ require("nvim-tree").setup({
         },
     },
 })
+
+require("compiler-explorer").setup({
+    autocmd = {
+        enable =true,
+        hl = "Search",
+    }
+})
