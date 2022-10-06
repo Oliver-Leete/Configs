@@ -7,23 +7,21 @@ vim.cmd([[set errorformat+=%-G%.%#]])
 
 vim.bo.commentstring = [[#%s]]
 
-vim.g.latex_to_unicode_tab = 0
-vim.g.latex_to_unicode_auto = 0
-
-local function get_command_output(cmd, silent)
-    if silent then
-        cmd = cmd .. " 2>/dev/null"
-    end
-
-    local data_file = assert(io.popen(cmd, "r"))
-    data_file:flush()
-    local output = data_file:read("*all")
-    data_file:close()
-
-    return output
-end
 
 function _G.jul_perf_flat()
+    local function get_command_output(cmd, silent)
+        if silent then
+            cmd = cmd .. " 2>/dev/null"
+        end
+
+        local data_file = assert(io.popen(cmd, "r"))
+        data_file:flush()
+        local output = data_file:read("*all")
+        data_file:close()
+
+        return output
+    end
+
     local perf_data = "/tmp/julprof.data"
     local raw_data = get_command_output("cat " .. perf_data, true)
 
@@ -153,7 +151,7 @@ end
 
 Map("n", ",rb", "<cmd>call julia#toggle_function_blockassign()<cr>")
 
-Map("n", "<leader>H", Run_closest, { expr = true, buffer = 0 })
+-- Map("n", "<leader>H", Run_closest, { expr = true, buffer = 0 })
 
 Map("n", ",dd", function() BP_Toggle("Debugger", "@bp") end, { buffer = 0 })
 Map("n", ",di", function() BP_Toggle("Infiltrator", "@infiltrate") end, { buffer = 0 })

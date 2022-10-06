@@ -3,7 +3,7 @@ local dap = require("dap")
 vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
 vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
 vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DiagnosticSignWarn", culhl = "CursorLineWarn" })
--- vim.fn.sign_define("DapStopped", { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
+vim.fn.sign_define("DapStopped", { text = "→", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
 vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DiagnosticSignInfo", culhl = "CursorLineInfo" })
 
 require("nvim-dap-virtual-text").setup()
@@ -27,9 +27,9 @@ require("dapui").setup({
     layouts = {
         {
             elements = {
-                { id = "scopes", size = 0.25 },
                 "breakpoints",
                 "stacks",
+                "scopes",
                 "watches",
             },
             size = 0.2,
@@ -56,6 +56,37 @@ dap.adapters.codelldb = {
         command = "/home/oleete/.local/share/nvim/mason/bin/codelldb",
         args = { "--port", "${port}" },
     }
+}
+
+dap.adapters.juliadb = {
+    type = "executable",
+    command = "/usr/bin/julia",
+    args = {
+        "--color=yes",
+        "--startup-file=no",
+        "--history-file=no",
+        "--project",
+        "/home/oleete/Projects/julia-vscode/scripts/debugger/run_debugger.jl",
+    },
+}
+    
+dap.configurations.julia = {
+    {
+        name = "Run active Julia file (stop on enter)",
+        type = "juliadb",
+        request = "attach",
+        program = "${file}",
+        cwd = "${workspaceFolder}",
+        stopOnEntry = true,
+    },
+    {
+        name = "Run active Julia file",
+        type = "juliadb",
+        request = "attach",
+        program = "${file}",
+        cwd = "${workspaceFolder}",
+        stopOnEntry = false,
+    },
 }
 
 dap.configurations.cpp = {

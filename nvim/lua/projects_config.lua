@@ -92,7 +92,7 @@ require("neotest").setup({
     adapters = {
         require("neotest-rust"),
         require("neotest-python"),
-        require("neotest.adapters.neotest-julia-retest"),
+        require("neotest.adapters.neotest-julia-testitem"),
         require("neotest.adapters.neotest-julia-benchmarktools")
     },
     floating = {
@@ -367,4 +367,22 @@ overseer.register_template({
     end,
     priority = 1,
     params = {},
+})
+
+overseer.register_template({
+    name = "Make",
+    builder = function ()
+        return {
+        name = "Make",
+        cmd = vim.split(vim.o.makeprg, "%s+"),
+    }
+    end,
+    priority = 1000,
+    condition = {
+    -- Only show if there is a more interesting make program, for make itself use the overseer built
+    -- in command.
+        callback = function()
+            return vim.go.makeprg ~= "make"
+        end
+    }
 })

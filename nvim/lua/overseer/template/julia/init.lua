@@ -20,7 +20,7 @@ return {
             {
                 name = "Julia test server",
                 tskName = vim.g.project .. " Test Server",
-                cmd = "julia -t auto -e 'using Revise, DaemonMode; serve(print_stack=true, async=false)'",
+                cmd = "julia --color=yes -t auto -e 'using Revise, DaemonMode; serve(print_stack=true, async=false)'",
                 condition = isProject,
                 is_test_server = true,
                 hide = true,
@@ -32,6 +32,8 @@ return {
                 cmd = "julia --threads=auto",
             },
             {
+                -- TODO : Add a version that uses the upermost project for the current file (use
+                -- TODO : test project if in test file, ect.)
                 name = "Julia Open Repl in Project",
                 tskName = vim.g.project .. " Repl",
                 cmd = "julia --threads=auto --project",
@@ -46,6 +48,7 @@ return {
                 unique = true,
             },
             {
+                -- TODO : Add a conditional for only if there's a docs folder
                 name = "Julia build documentation",
                 tskName = vim.g.project .. " Doc Build",
                 cmd = "~/.config/nvim/filetype/julia/docBuild",
@@ -53,6 +56,7 @@ return {
                 unique = true,
             },
             {
+                -- TODO : Add a conditional for only if there's build documentation
                 name = "Julia open prebuilt documentation",
                 cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
                 condition = isProject,
@@ -60,6 +64,7 @@ return {
                 unique = true,
             },
             {
+                -- TODO : Add a conditional for only if there's a docs folder
                 name = "Julia documentation server",
                 tskName = vim.g.project .. " Doc Server",
                 cmd = [[julia --project=docs -e 'using Revise, ]] ..
@@ -70,6 +75,7 @@ return {
                 condition = isProject,
             },
             {
+                -- TODO : Add a conditional for only if there's a docs folder
                 name = "Open live documentation server",
                 cmd = "browser http://localhost:8000 & sleep 5",
                 condition = isProject,
@@ -77,6 +83,7 @@ return {
                 unique = true,
             },
             {
+                -- TODO : Add a conditional for only if there's a docs folder
                 name = "Julia documentation tests",
                 tskName = vim.g.project .. " Doc Test",
                 cmd = "~/.config/nvim/filetype/julia/docTest",
@@ -85,6 +92,7 @@ return {
                 unique = true,
             },
             {
+                -- TODO : Add a conditional for only if there's a docs folder
                 name = "Julia update documentation tests output",
                 tskName = vim.g.project .. " Doc Test Update",
                 cmd = "~/.config/nvim/filetype/julia/docTestUpdate",
@@ -92,6 +100,7 @@ return {
                 unique = true,
             },
             {
+                -- TODO : Add a conditional for only if there's a test file
                 name = "Julia test package",
                 tskName = vim.g.project .. " Test Suite",
                 cmd = "cd test; julia --threads=auto --project runtests.jl",
@@ -100,14 +109,26 @@ return {
                 unique = true,
             },
             {
+                -- TODO : Add a conditional for only if there's a test file
                 name = "Julia test coverage",
                 tskName = vim.g.project .. " Test Coverage",
+                -- TODO : Move to using script from vscode extension
                 cmd = "cd test; julia --threads=auto --code-coverage=user --project runtests.jl",
                 tags = { TAG.TEST },
                 condition = isProject,
                 unique = true,
             },
             {
+                -- TODO : Add a conditional for only if there's a build folder
+                name = "Julia Run Build",
+                tskName = vim.g.project .. " Build",
+                cmd = "julia --threads=auto --project runtests.jl",
+                tags = { TAG.TEST },
+                condition = isProject,
+                unique = true,
+            },
+            {
+                -- TODO : Add a conditional for only if there's benchmarks
                 name = "Julia package benchmarks",
                 tskName = vim.g.project .. " Bench Suite",
                 cmd = "~/.config/nvim/lua/neotest-julia-benchmarktools/juliaBenchmarkRunner suite",
@@ -115,6 +136,7 @@ return {
                 unique = true,
             },
             {
+                -- TODO : Add a conditional for only if there's benchmarks
                 name = "Julia retune benchmarks",
                 tskName = vim.g.project .. " Retune Bench",
                 cmd = [[julia -e '

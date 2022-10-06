@@ -1,10 +1,11 @@
 local filerunners = {
-    julia = {
-        name = "Julia",
-        repl = "julia",
-        projectRepl = { "julia", " --project" },
-        filerunner = function() return { "julia", vim.fn.expand("%:p") } end,
-    },
+    -- These are handled better by julia specific provider
+    -- julia = {
+    --     name = "Julia",
+    --     repl = "julia",
+    --     projectRepl = { "julia", "--threads=auto", "--project" },
+    --     filerunner = function() return { "julia", vim.fn.expand("%:p") } end,
+    -- },
     go = {
         name = "Go",
         filerunner = function() return { "go", "run", vim.fn.expand("%:p") } end,

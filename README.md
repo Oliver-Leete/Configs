@@ -120,17 +120,16 @@ vim-slash is used to set dirJumps="search" after each search (and I have it set
 to default to that), so that n and N still work for searching for jumps.
 
 ```lua
-
 function _G.commandRepeat(leader, varName)
-    local key = vim.api.nvim_get_var(varName)
-    if key == "search" then
-        if leader == "]" then
-            return replace_keycodes("nvv")
-        elseif leader == "[" then
-            return replace_keycodes("Nvv")
-        end
-    end
-    return replace_keycodes(leader .. key)
+ local key = vim.api.nvim_get_var(varName)
+ if key == "search" then
+  if leader == "]" then
+   return replace_keycodes("nvv")
+  elseif leader == "[" then
+   return replace_keycodes("Nvv")
+  end
+ end
+ return replace_keycodes(leader .. key)
 end
 
 vim.g.dirJumps = "search"
@@ -193,16 +192,15 @@ Honestly it's quite basic, but it works for what I need it for.
 
 #### Tasks runner
 
-At some point I will move to using neotest for all my testing needs, and
-overseer for managing all tasks. But at the moment I'm still using a custom-made
-task runner built on top of the above command palette and running in toggleterm.
-I think the turning point will be when I finally make a Julia test runner
-server (running up a Julia instance each time you want to test takes too much
-precompilation time). I can't be bothered to document this properly because,
-as I say, I'll hopefully drop it for the above options soon (and honestly my
-solution is an absolute mess, using private functions in toggleterm) (Although
-my current method supports debugging, running and profiling of Julia benchmarks,
-which I'm not sure how I'd cover with the above).
+OK, moved to overseer and neotest for task and test running. I've got a super
+hacky way of attaching a toggleterm terminal to all the overseer tasks (and
+therefore neotest tests). Things I still want to do:
+
+- [ ] Overseer tasks that just run lua code.
+- [ ] Use the above to add dap debugging to overseer (using the above for the
+  starting of tasks, and using dap events to update the task somehow).
+- [ ] Get a list of neotest tests in Overseer list, with variations for starting
+  them in dap.
 
 ### Julia
 

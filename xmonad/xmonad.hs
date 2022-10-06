@@ -17,13 +17,12 @@ import XMonad.Actions.DynamicProjectsLocal
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.Navigation2D
 import XMonad.Actions.PerWindowKeys
-import XMonad.Actions.SinkAll
 import XMonad.Actions.SpawnOn
 import XMonad.Actions.SwapPromote
 import XMonad.Actions.UpdateFocus
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.WindowGoLocal
-import XMonad.Actions.WithAll (killAll)
+import XMonad.Actions.WithAll (sinkAll, killAll)
 
 import XMonad.Hooks.EwmhDesktops ( ewmh )
 import XMonad.Hooks.InsertPosition
@@ -415,8 +414,8 @@ myLayoutHook = smartBorders
 
     notebookDifferent = onWorkspaces [wsTHESIS, ws3D] notebookThesis $ onWorkspaces [wsCOMMENTS] notebookTwoMain notebookMulti
 
-    notbookLaptop = FourTall 1 reSize (2/3)
-    notebookLayout = onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns $ ifWider 1920 notebookDifferent notbookLaptop
+    notebookLaptop = FourTall 1 reSize (2/3)
+    notebookLayout = ifWider 1920 (onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns notebookDifferent) notebookLaptop
 
 ----------------------------------------------------------------------------------------------------
 -- Keybindings                                                                                    --
