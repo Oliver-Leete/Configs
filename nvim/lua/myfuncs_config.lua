@@ -81,11 +81,7 @@ function WinIsDuplicate(winnr)
 end
 
 function _G.delete_buffer()
-    local tabnr = vim.api.nvim_get_current_tabpage()
-    local winnr = vim.api.nvim_get_current_win()
     local bufnr = vim.api.nvim_get_current_buf()
-
-    local num_tabs = #vim.api.nvim_list_tabpages()
 
     -- Handle special buffers
     if Is_special(bufnr) then
@@ -103,34 +99,12 @@ function _G.delete_buffer()
         return
     end
 
-    local is_dup = WinIsDuplicate(winnr)
     local num_bufs = LoadedBufCount()
-    local num_tab_wins = TabWinCount(tabnr)
 
-    -- print("num_bufs = " .. num_bufs .. ", num_tab_wins = " .. num_tab_wins .. ", is_dup = " .. tostring(is_dup))
-    if num_tab_wins > 1 then
-        if is_dup then
-            vim.cmd([[wincmd c]])
-        else
-            require("close_buffers").delete({ type = "this" })
-            vim.cmd([[wincmd c]])
-        end
+    if num_bufs > 1 then
+        vim.cmd([[wincmd c]])
     else
-        if num_tabs > 1 then
-            if is_dup then
-                vim.cmd([[tabclose]])
-            else
-                require("close_buffers").delete({ type = "this" })
-                vim.cmd([[tabclose]])
-            end
-        else
-            if num_bufs > 1 then
-                require("close_buffers").delete({ type = "this" })
-            else
-                vim.cmd([[quitall]])
-            end
-        end
-
+        vim.cmd([[quitall]])
     end
 end
 

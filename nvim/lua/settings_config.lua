@@ -35,21 +35,14 @@ vim.opt.fillchars:append({
     diff = "╱",
 })
 Border = {
-      {"🭽", "FloatBorder"},
-
-      {"▔", "FloatBorder"},
-
-      {"🭾", "FloatBorder"},
-
-      {"▕", "FloatBorder"},
-
-      {"🭿", "FloatBorder"},
-
-      {"▁", "FloatBorder"},
-
-      {"🭼", "FloatBorder"},
-
-      {"▏", "FloatBorder"},
+    { "🭽", "FloatBorder" },
+    { "▔", "FloatBorder" },
+    { "🭾", "FloatBorder" },
+    { "▕", "FloatBorder" },
+    { "🭿", "FloatBorder" },
+    { "▁", "FloatBorder" },
+    { "🭼", "FloatBorder" },
+    { "▏", "FloatBorder" },
 }
 
 -- Saving
@@ -113,6 +106,7 @@ vim.api.nvim_create_autocmd(
 -- Splitting
 vim.opt.splitbelow = true
 vim.opt.splitright = true
+vim.opt.splitkeep = "topline"
 
 local windowPositioning = vim.api.nvim_create_augroup("windowPositioning", { clear = true })
 vim.api.nvim_create_autocmd(

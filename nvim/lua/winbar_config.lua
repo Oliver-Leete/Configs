@@ -36,7 +36,7 @@ local function default_winbar(bufnr, hl, is_active)
             icon = ""
         end
         winbar = winbar .. icon .. " "
-        winbar = hl .. " " .. winbar .. Get_unique_bufname(bufnr) .. " "
+        winbar = hl .. " " .. winbar .. vim.api.nvim_buf_get_name(bufnr) .. " "
     end
     -- Code location
     if is_active and require("nvim-navic").is_available() then

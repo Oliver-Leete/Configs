@@ -233,7 +233,7 @@ Map("n", ",ff", vim.lsp.buf.format)
 Map("n", ",f<space>", [[<cmd>%s/\v[^^ ]\zs  / /g<cr>]])
 Map("n", ",fw", "m1!ippar w100<cr>`1", { silent = true })
 Map("n", ",fW", [["<cmd>%!par w" . &textwidth . "<cr>"]], { expr = true })
-Map("x", ",ff", vim.lsp.buf.range_formatting)
+Map("x", ",ff", function() vim.lsp.buf.range_formatting() end)
 Map("x", ",fw", [["!par w" . &textwidth . "<cr>"]], { expr = true })
 vim.g.caser_no_mappings = true
 Map("n", ",fp", "<Plug>CaserMixedCase", { remap = true })
@@ -352,4 +352,3 @@ end)
 -- Terminal mappings
 
 Map("t", "<c-]>", "<c-\\><c-n>")
-

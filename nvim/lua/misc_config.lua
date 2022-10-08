@@ -13,11 +13,6 @@ augroup lastplace_notplugin
 	autocmd BufWinEnter * call s:lastplace()
 augroup END]])
 
--- Close Buffers Setup
-require("close_buffers").setup({
-    preserve_window_layout = { "this" },
-})
-
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
 
 local util = require("perfanno.util")

@@ -69,6 +69,7 @@ return {
                 tskName = vim.g.project .. " Doc Server",
                 cmd = [[julia --project=docs -e 'using Revise, ]] ..
                     vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']],
+                -- vim.g.project .. [[, LiveServer; servedocs(launch_browser=true; include_dirs = ["src"])']],
                 hide = true,
                 unique = true,
                 alwaysRestart = true,
@@ -122,7 +123,7 @@ return {
                 -- TODO : Add a conditional for only if there's a build folder
                 name = "Julia Run Build",
                 tskName = vim.g.project .. " Build",
-                cmd = "julia --threads=auto --project runtests.jl",
+                cmd = "julia --threads=auto --project -e 'using Pkg; Pkg.build(" .. vim.g.project .. ")'",
                 tags = { TAG.TEST },
                 condition = isProject,
                 unique = true,
@@ -177,7 +178,7 @@ return {
             local comps = {
                 "on_output_summarize",
                 "on_exit_set_status",
-                "on_complete_notify",
+                { "on_complete_notify", { system = "unfocused" } },
                 "on_complete_dispose",
             }
             if command.hide then

@@ -149,7 +149,7 @@ overseer.setup({
         default_neotest = {
             "on_output_summarize",
             "on_exit_set_status",
-            "on_complete_notify",
+            { "on_complete_notify", { system = "unfocused" } },
             "on_complete_dispose",
             { "toggleterm.attach_toggleterm", goto_prev = true },
             "unique",
@@ -157,7 +157,7 @@ overseer.setup({
         default = {
             "on_output_summarize",
             "on_exit_set_status",
-            "on_complete_notify",
+            { "on_complete_notify", { system = "always" } },
             "on_complete_dispose",
             "toggleterm.attach_toggleterm",
         },
@@ -335,7 +335,7 @@ overseer.register_template({
             components = {
                 "on_output_summarize",
                 "on_exit_set_status",
-                "on_complete_notify",
+                { "on_complete_notify", { system = "unfocused" } },
                 "on_complete_dispose",
                 "unique",
                 { "toggleterm.attach_toggleterm", hide = true },
@@ -359,7 +359,7 @@ overseer.register_template({
             components = {
                 "on_output_summarize",
                 "on_exit_set_status",
-                "on_complete_notify",
+                { "on_complete_notify", { system = "unfocused" } },
                 "on_complete_dispose",
                 { "toggleterm.attach_toggleterm", num = 1 },
             }
@@ -371,16 +371,16 @@ overseer.register_template({
 
 overseer.register_template({
     name = "Make",
-    builder = function ()
+    builder = function()
         return {
-        name = "Make",
-        cmd = vim.split(vim.o.makeprg, "%s+"),
-    }
+            name = "Make",
+            cmd = vim.split(vim.o.makeprg, "%s+"),
+        }
     end,
     priority = 1000,
     condition = {
-    -- Only show if there is a more interesting make program, for make itself use the overseer built
-    -- in command.
+        -- Only show if there is a more interesting make program, for make itself use the overseer built
+        -- in command.
         callback = function()
             return vim.go.makeprg ~= "make"
         end

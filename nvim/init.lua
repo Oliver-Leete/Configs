@@ -7,20 +7,17 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'kyazdani42/nvim-web-devicons'
     Plug '907th/vim-auto-save'
 
-    Plug 'echasnovski/mini.nvim'
-
     Plug 'knubie/vim-kitty-navigator'
-    Plug 'kazhala/close-buffers.nvim'
     Plug 'stevearc/stickybuf.nvim'
     Plug 'tpope/vim-projectionist'
     Plug 'ThePrimeagen/harpoon'
 
+    Plug 'echasnovski/mini.nvim'
     Plug 'ap/vim-you-keep-using-that-word'
     Plug 'phaazon/hop.nvim'
     Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
     Plug 'arthurxavierx/vim-caser'
-    Plug 'junegunn/vim-easy-align'
     Plug 'ralismark/opsort.vim'
     Plug 'Konfekt/vim-CtrlXA'
     Plug 'svermeulen/vim-subversive'
@@ -42,7 +39,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'lukas-reineke/indent-blankline.nvim'
     Plug 'stevearc/dressing.nvim'
     Plug 'rcarriga/nvim-notify'
-    Plug 'simrat39/desktop-notify.nvim'
 
     Plug 'mbbill/undotree'
     Plug 'kyazdani42/nvim-tree.lua'
