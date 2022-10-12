@@ -26,7 +26,7 @@ Map({ "n", "x", "o" }, "C", "<nop>")
 Map({ "n", "x", "o" }, "D", "<nop>")
 Map({ "n", "x", "o" }, "S", "<nop>")
 
--- NOTE: _, =, |, ;, ^, BS are free to map
+-- NOTE: _, =, |, ;, ^, <BS>, <CR> are free to map
 
 -- Mappings
 Map({ "n", "x", "o" }, "<m-f>", ";")
@@ -53,10 +53,6 @@ Map("x", "x", "j$")
 Map("x", "X", "<esc>`<kV`>")
 Map("x", "C", "j")
 Map("x", "<m-C>", "<esc>`<k<c-v>`>")
-Map("x", "<M-;>", "o")
-
-Map({ "n", "x" }, "<m-c>", [["_c]])
-Map({ "n", "x" }, "<m-d>", [["_d]])
 
 Map("n", "<m-o>", "m1o<esc>`1")
 Map("n", "<m-O>", "m1O<esc>`1")
@@ -79,8 +75,7 @@ Map({ "n", "x", "o" }, "j", [[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], { 
 Map({ "n", "x", "o" }, "k", [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], { expr = true })
 
 Map({ "n", "x", "o" }, "H", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true })
-Map({ "n", "x" }, "L", [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], { expr = true })
-Map("o", "L", "$")
+Map({ "n", "x", "o" }, "L", "$")
 
 Map("n", "J", "gi")
 Map({ "n", "x" }, "U", "<c-r>")
@@ -92,9 +87,6 @@ Map("n", "KA", function() require("gitsigns").blame_line({ full = true }) end)
 Map("n", "KE", function() vim.diagnostic.open_float(0, { border = Border, scope = "line", source = "always" }) end)
 Map("n", "KT", function() require("neotest").output.open() end)
 Map("n", "KD", function() require("dap.ui.widgets").hover() end, { silent = true })
-
-Map("x", "J", ":move '>+1<cr>gv=gv")
-Map("x", "K", ":move '<-2<cr>gv=gv")
 
 Map("n", "Q", "@q")
 Map("x", "Q", ":norm! @q<cr>")
@@ -112,28 +104,16 @@ Map("x", ">", ">gv")
 Map("n", "<c-v>", "<cmd>silent vsplit<cr>")
 Map("n", "<c-x>", "<cmd>silent split<cr>")
 
-vim.g.wordmotion_nomap = true
-Map({ "n", "x", "o" }, "<m-w>", "<plug>(WordMotion_w)", { remap = true })
-Map({ "n", "x", "o" }, "<m-b>", "<plug>(WordMotion_b)", { remap = true })
-Map({ "n", "x", "o" }, "<m-e>", "<plug>(WordMotion_e)", { remap = true })
-Map({ "n", "x", "o" }, "<m-g>e", "<plug>(WordMotion_ge)", { remap = true })
-Map({ "n", "x", "o" }, "<m-g><m-e>", "<plug>(WordMotion_ge)", { remap = true })
-Map({ "x", "o" }, "i<m-w>", "<plug>(WordMotion_iw)", { remap = true })
-Map({ "x", "o" }, "a<m-w>", "<plug>(WordMotion_aw)", { remap = true })
-
 -- GOTO
-Map({ "n", "x", "o" }, "gg", "gg")
 Map({ "n", "x", "o" }, "gj", "G")
 Map({ "n", "x", "o" }, "gk", "gg")
 Map({ "n", "x", "o" }, "gh", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true })
-Map({ "n", "x" }, "gl", [[getline('.')[col('.'):-1]=~#'^\s\+$'?'$':'g_']], { expr = true })
-Map("o", "gl", "$")
+Map({ "n", "x", "o" }, "gl", "$")
 
 Map({ "n", "x", "o" }, "gt", "H")
 Map({ "n", "x", "o" }, "gm", "M")
 Map({ "n", "x", "o" }, "gb", "L")
 
-Map("n", "gf", "gf")
 Map("n", "gF", ":edit <cfile><cr>")
 Map("n", "gx", ":!xdg-open <cfile> &<cr><cr>")
 
@@ -174,7 +154,7 @@ Hydra({
         { "b", "zb", { exit = true } },
 
         { "s", "zs", { exit = true } },
-        { "m", "<cm>set sidescrolloff=999<cr><cmd>set sidescrolloff=0<cr>", { exit = true } },
+        { "m", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>", { exit = true } },
         { "e", "ze", { exit = true } },
     }
 })
@@ -182,7 +162,7 @@ Map({ "n", "x" }, "vt", "zt")
 Map({ "n", "x" }, "vv", "zz")
 Map({ "n", "x" }, "vb", "zb")
 Map({ "n", "x" }, "vs", "zs")
-Map({ "n", "x" }, "vm", "<cm>set sidescrolloff=999<cr><cmd>set sidescrolloff=0<cr>")
+Map({ "n", "x" }, "vm", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>")
 Map({ "n", "x" }, "ve", "ze")
 
 Map({ "n", "x" }, "m", "v")
@@ -199,7 +179,7 @@ Map("n", ",rf", function() require("refactoring").refactor("Extract Block") end)
 Map("x", ",rf", function() require("refactoring").refactor("Extract Function") end)
 Map("n", ",rF", function() require("refactoring").refactor("Extract Block to File") end)
 Map("x", ",rF", function() require("refactoring").refactor("Extract Function to File") end)
-Map("n", ",re", "mi,:lua require('refactoring').refactor('Extract Variable')<cr>", { remap = true })
+Map("n", ",re", "mia:lua require('refactoring').refactor('Extract Variable')<cr>", { remap = true })
 Map("x", ",re", function() require("refactoring").refactor("Extract Variable") end)
 Map({ "n", "x" }, ",ri", function() require("refactoring").refactor("Inline Variable") end)
 
@@ -229,11 +209,11 @@ Map("n", ",pl", "<plug>UnconditionalPasteLineAfter", { remap = true })
 Map("n", ",pS", "<Plug>UnconditionalPasteParagraphedAfter", { remap = true })
 Map("n", ",ps", "<Plug>UnconditionalPasteSpacedAfter", { remap = true })
 
-Map("n", ",ff", vim.lsp.buf.format)
-Map("n", ",f<space>", [[<cmd>%s/\v[^^ ]\zs  / /g<cr>]])
-Map("n", ",fw", "m1!ippar w100<cr>`1", { silent = true })
+Map({ "n", "x" }, ",ff", vim.lsp.buf.format)
+Map("n", ",fw", function()
+    return "m1!ippar w" .. (vim.b.textwidth or vim.g.textwidth) .. "<cr>`1"
+end, { expr = true, silent = true })
 Map("n", ",fW", [["<cmd>%!par w" . &textwidth . "<cr>"]], { expr = true })
-Map("x", ",ff", function() vim.lsp.buf.range_formatting() end)
 Map("x", ",fw", [["!par w" . &textwidth . "<cr>"]], { expr = true })
 vim.g.caser_no_mappings = true
 Map("n", ",fp", "<Plug>CaserMixedCase", { remap = true })
@@ -297,7 +277,7 @@ Map("n", "<leader>/p", "<cmd>silent Edeps<cr>")
 Map("n", "<leader>/b", "<cmd>silent Ebench<cr>")
 Map("n", "<leader>/B", "<cmd>silent EmainBench<cr>")
 
-Map("n", "<leader>f", "<cmd>call v:lua.project_files()<cr>")
+Map("n", "<leader>f", function() ProjectFiles() end)
 Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
 
 Map("n", ",gr", "<cmd>Gitsigns reset_hunk<CR>")
@@ -309,13 +289,6 @@ vim.cmd([[inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1),'\%'.virt
 vim.cmd([[inoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
 vim.cmd([[snoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
 vim.cmd([[snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
-
-Map("i", "<c-g>", "<c-o>%")
-
-Map("i", ",", ",<c-g>u")
-Map("i", ".", ".<c-g>u")
-Map("i", "!", "!<c-g>u")
-Map("i", "?", "?<c-g>u")
 
 Map({ "i", "s", "c" }, "<c-a>", "<HOME>")
 Map({ "i", "s", "c" }, "<c-e>", "<END>")
@@ -349,6 +322,6 @@ Map("i", "<c-n>", function()
     end
 end)
 
--- Terminal mappings
+-- Terminal Bindings
 
 Map("t", "<c-]>", "<c-\\><c-n>")

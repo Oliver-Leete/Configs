@@ -98,10 +98,20 @@ local default = {
 lspconfig.julials.setup(default)
 lspconfig.bashls.setup(default)
 lspconfig.fortls.setup(default)
-lspconfig.jedi_language_server.setup(default)
 lspconfig.pyright.setup(default)
 lspconfig.marksman.setup(default)
 lspconfig.taplo.setup(default)
+
+lspconfig.jedi_language_server.setup({
+    on_attach = custom_attach,
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 500 },
+    init_options = {
+        diagnostics = {
+            enable = false,
+        },
+    }
+})
 
 lspconfig.sourcery.setup({
     on_attach = custom_attach,

@@ -2,7 +2,6 @@ local action_state = require("telescope.actions.state")
 local actions = require("telescope.actions")
 
 require("telescope").load_extension("dap")
-require("telescope").load_extension("heading")
 require("telescope").load_extension("refactoring")
 require('telescope').load_extension("termfinder")
 
@@ -146,7 +145,7 @@ function _G.git_branch_mergebase()
     })
 end
 
-function _G.project_files()
+function ProjectFiles()
     local results = require("telescope.utils").get_os_command_output({ "git", "rev-parse", "--git-dir" })
 
     if results == nil then

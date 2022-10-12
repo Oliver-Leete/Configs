@@ -4,10 +4,10 @@ vim.opt.guifont = "JuliaMono:h10"
 
 require("stickybuf").setup({
     filetype = {
-        OverseerList = "filetype",
-        toggleterm = "filetype",
+        OverseerList = "bufnr",
     },
     buftype = {
+        terminal = "buftype",
         help = "buftype",
     },
 })
@@ -91,8 +91,6 @@ require("indent_blankline").setup {
     },
 }
 
--- require("desktop-notify").override_vim_notify()
-
 require("notify").setup({
     top_down = false,
 })
@@ -133,47 +131,3 @@ require("nvim-navic").setup({
     highlight = false,
     separator = "  "
 })
-
-
-local mode_map = {
-    ['n'] = { 'NORMAL', 'Normal' },
-    ['no'] = { 'O-PENDING', 'Visual' },
-    ['nov'] = { 'O-PENDING', 'Visual' },
-    ['noV'] = { 'O-PENDING', 'Visual' },
-    ['no'] = { 'O-PENDING', 'Visual' },
-    ['nt'] = { 'T-NORMAL', 'Normal' },
-    ['niI'] = { 'NORMAL', 'Normal' },
-    ['niR'] = { 'NORMAL', 'Normal' },
-    ['niV'] = { 'NORMAL', 'Normal' },
-    ['v'] = { 'VISUAL', 'Visual' },
-    ['V'] = { 'V-LINE', 'Visual' },
-    [''] = { 'V-BLOCK', 'Visual' },
-    ['s'] = { 'SELECT', 'Visual' },
-    ['S'] = { 'S-LINE', 'Visual' },
-    [''] = { 'S-BLOCK', 'Visual' },
-    ['i'] = { 'INSERT', 'Insert' },
-    ['ic'] = { 'INSERT', 'Insert' },
-    ['ix'] = { 'INSERT', 'Insert' },
-    ['R'] = { 'REPLACE', 'Replace' },
-    ['Rc'] = { 'REPLACE', 'Replace' },
-    ['Rv'] = { 'V-REPLACE', 'Normal' },
-    ['Rx'] = { 'REPLACE', 'Normal' },
-    ['Rvc'] = { 'V-REPLACE', 'Replace' },
-    ['Rvx'] = { 'V-REPLACE', 'Replace' },
-    ['c'] = { 'COMMAND', 'Command' },
-    ['cv'] = { 'EX', 'Command' },
-    ['ce'] = { 'EX', 'Command' },
-    ['r'] = { 'REPLACE', 'Replace' },
-    ['rm'] = { 'MORE', 'Normal' },
-    ['r?'] = { 'CONFIRM', 'Normal' },
-    ['!'] = { 'SHELL', 'Normal' },
-    ['t'] = { 'TERMINAL', 'Command' },
-}
-
-VimMode = function()
-    local mode_code = vim.api.nvim_get_mode().mode
-    if mode_map[mode_code] == nil then
-        return { mode_code, 'Normal' }
-    end
-    return mode_map[mode_code]
-end

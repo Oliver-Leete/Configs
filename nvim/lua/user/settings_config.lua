@@ -77,6 +77,7 @@ vim.opt.breakindent = true
 vim.opt.breakindentopt = "shift:2"
 -- vim.opt.foldmethod = "expr"
 vim.opt.foldlevel = 20
+vim.g.textwidth = 100
 
 -- Numbering
 vim.opt.signcolumn = "yes:2"

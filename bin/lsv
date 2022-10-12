@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# NOTE: Assumes you have avprobe installed and the full path
-# to it is /usr/bin/avprobe - if not, edit.
-
 # Get a list of files
 LIST=$(find "$1" -type f)
 

@@ -2,92 +2,53 @@
 import subprocess
 import time
 
-# --- set commands below
-screen_command = "/home/oleete/.config/bin/displayctl auto"
-net_command = "/home/oleete/.config/bin/statusNotify net"
-# ---
 
-time.sleep(1)
-
-
-# read the input from some commands
 def get(cmd):
+    """Read the input from some command."""
     return subprocess.check_output(cmd).decode("utf-8")
 
 
-# - to count the occurrenc of " connected "
 def count_screens(xr):
+    """Count the number of connected screens."""
     return xr.count(" connected ")
 
 
 def count_nets(xr):
+    """Count the number of connected networks."""
     return xr.count(":connected:")
 
 
 # - to run the command(s)
 def run_command(cmd):
+    """Run some command."""
     subprocess.Popen(["/bin/bash", "-c", cmd])
 
 
-# first count
-xr1 = count_screens(get(["xrandr"]))
-net1 = count_nets(get(["nmcli", "-t", "device"]))
-lid1 = get(["cat", "/proc/acpi/button/lid/LID/state"])
+screen_command = "/home/oleete/.config/bin/displayctl auto"
+net_command = "/home/oleete/.config/bin/statusNotify net"
 
+# first values
+screenCount1 = count_screens(get(["xrandr"]))
+networkCount1 = count_nets(get(["nmcli", "-t", "device"]))
+lidOpen1 = get(["cat", "/proc/acpi/button/lid/LID/state"])
+
+time.sleep(0.5)
 run_command(screen_command)
-
 while True:
     time.sleep(1)
-    # second count
-    xr2 = count_screens(get(["xrandr"]))
-    net2 = count_nets(get(["nmcli", "-t", "device"]))
-    lid2 = get(["cat", "/proc/acpi/button/lid/LID/state"])
+
+    # second values
+    screenCount2 = count_screens(get(["xrandr"]))
+    networkCount2 = count_nets(get(["nmcli", "-t", "device"]))
+    lidOpen2 = get(["cat", "/proc/acpi/button/lid/LID/state"])
+
     # check if there is a change in the screen state
-    if (xr2 != xr1) or (lid2 != lid1):
+    if (screenCount2 != screenCount1) or (lidOpen2 != lidOpen1):
         run_command(screen_command)
-    if net2 != net1:
+    if networkCount2 != networkCount1:
         run_command(net_command)
-    # set the second count as initial state for the next loop
-    xr1 = xr2
-    net1 = net2
-    lid1 = lid2
 
-# #!/usr/bin/env python3
-# import subprocess
-# import time
-
-# #--- set commands below
-# screen_command = "/home/oleete/.config/bin/displayctl auto"
-# net_command = "/home/oleete/.config/bin/statusNotify net"
-# #---
-
-# def get(cmd): return subprocess.check_output(cmd).decode("utf-8")
-
-# # - to count the occurrenc of " connected "
-# def count_nets(xr): return xr.count(":connected:")
-
-# # - to run the connect / disconnect command(s)
-# def run_command(cmd): subprocess.Popen(["/bin/bash", "-c", cmd])
-
-# # first count
-# xr1 = get(["displayctl", "fingOnly"])
-# net1 = count_nets(get(["nmcli", "-t", "device"]))
-
-# run_command(screen_command)
-
-# while True:
-#     time.sleep(1)
-#     # second count
-#     xr2 = get(["displayctl", "fingOnly"])
-#     net2 = count_nets(get(["nmcli", "-t", "device"]))
-
-#     # check if there is a change in the state
-#     if xr2 != xr1:
-#         print("Displays Change")
-#         run_command(screen_command)
-#     if net2 != net1:
-#         print("Net Change")
-#         run_command(net_command)
-#     # set the second count as initial state for the next loop
-#     xr1 = xr2
-#     net1 = net2
+    # set the second values as initial state for the next loop
+    screenCount1 = screenCount2
+    networkCount1 = networkCount2
+    lidOpen1 = lidOpen2

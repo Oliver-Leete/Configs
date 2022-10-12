@@ -46,7 +46,6 @@ require("dapui").setup({
     },
 })
 require("dap-python").setup("/home/oleete/.local/share/nvim/mason/packages/debugpy/venv/bin/python")
-require('dap-go').setup()
 require("mason-nvim-dap").setup()
 
 dap.adapters.codelldb = {

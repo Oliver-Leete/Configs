@@ -130,8 +130,8 @@ function _G.markAndGoMini(count, direction, id)
 end
 
 for _, o in pairs({ "a", "b", "d", "e", "f", "g", "h", "o", "p", "q", "r", "s", "w", "W", "x", }) do
-    Map({ "n", "x", "o" }, "[" .. o, "<cmd>call v:lua.markAndGoMini(v:count, 'prev', '" .. o .. "')<cr>")
-    Map({ "n", "x", "o" }, "]" .. o, "<cmd>call v:lua.markAndGoMini(v:count, 'next', '" .. o .. "')<cr>")
+    Map({ "n", "x", "o" }, "[" .. o, function() _G.markAndGoMini(vim.v.count, 'prev', o) end )
+    Map({ "n", "x", "o" }, "]" .. o, function() _G.markAndGoMini(vim.v.count, 'next', o) end )
 
     -- Does the same thing as goto_left and goto_right, but limited to the current object and for
     -- both inside and around. Now I don't need ninja-feet

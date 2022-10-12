@@ -42,8 +42,8 @@ local filerunners = {
     },
     python = {
         name = "Python",
-        repl = "python",
-        projectRepl = { "source", "venv/bin/activate", "&&", "python" },
+        repl = "ipython",
+        projectRepl = { "fish", "-c", "source venv/bin/activate.fish && ipython" },
         filerunner = function() return { "python", vim.fn.expand("%:p") } end,
     },
     r = {

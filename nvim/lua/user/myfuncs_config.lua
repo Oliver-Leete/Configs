@@ -1,29 +1,32 @@
+local winclose = function() vim.cmd.wincmd({ args = { "c" } }) end
+
 Special_types = {
-    qf = { name = " Quick Fix", exit_func = function() vim.cmd("wincmd c") end },
-    help = { name = " help", exit_func = function() vim.cmd("wincmd c") end },
-    ["vim-plug"] = { name = " Vim Plug", exit_func = function() vim.cmd("wincmd c") end },
-    juliadoc = { name = " Julia Documentation", exit_func = function() vim.cmd("wincmd c") end },
-    lspinfo = { exit_func = function() vim.cmd("wincmd c") end },
-    tsplayground = { name = " Tree Sitter Playground", exit_func = function() vim.cmd("wincmd c") end },
-    ["harpoon-menu"] = { exit_func = function() vim.cmd("wincmd c") end },
-    toggleterm = { exit_func = function() vim.cmd("wincmd c") end },
-    notify = { exit_func = function() vim.cmd("wincmd c") end },
+    qf = { name = " Quick Fix", exit_func = winclose },
+    help = { name = " help", exit_func = winclose },
+    ["vim-plug"] = { name = " Vim Plug", exit_func = winclose },
+    juliadoc = { name = " Julia Documentation", exit_func = winclose },
+    lspinfo = { exit_func = winclose },
+    tsplayground = { name = " Tree Sitter Playground", exit_func = winclose },
+    ["harpoon-menu"] = { exit_func = winclose },
+    toggleterm = { exit_func = winclose },
+    notify = { exit_func = winclose },
     undotree = { name = "碑Undo Tree", exit_func = function() vim.cmd("UndotreeHide") end },
-    NvimTree = { name = " File Tree", exit_func = function() vim.cmd("wincmd c") end },
+    NvimTree = { name = " File Tree", exit_func = winclose },
     DiffviewFileHistory = { name = " Diff History", exit_func = function() vim.cmd("DiffviewClose") end },
     DiffviewFiles = { name = " Diff Tree", exit_func = function() vim.cmd("DiffviewClose") end },
     OverseerList = { name = " Task List", exit_func = function() vim.cmd("OverseerClose") end },
-    OverseerForm = { name = " Overseer Form", exit_func = function() vim.cmd("wincmd c") end },
-    ["dap-float"] = { exit_func = function() vim.cmd("wincmd c") end },
-    ["dapui_scopes"] = { name = "Scopes", exit_func = function() vim.cmd("wincmd c") end },
-    ["dapui_breakpoints"] = { name = "Breakpoints", exit_func = function() vim.cmd("wincmd c") end },
-    ["dapui_stacks"] = { name = "Stacks", exit_func = function() vim.cmd("wincmd c") end },
-    ["dapui_watches"] = { name = "Watches", exit_func = function() vim.cmd("wincmd c") end },
-    ["dap-repl"] = { name = "Debug REPL", exit_func = function() vim.cmd("wincmd c") end },
-    ["dapui_console"] = { name = "Debug Console", exit_func = function() vim.cmd("wincmd c") end },
-    ["neotest-summary"] = { name = " Test List", exit_func = function() vim.cmd("wincmd c") end },
-    ["vim"] = { exit_func = function() vim.cmd("wincmd c") end },
-    [""] = { exit_func = function() vim.cmd("wincmd c") end },
+    OverseerForm = { name = " Overseer Form", exit_func = winclose },
+    ["dap-float"] = { exit_func = winclose },
+    ["dapui_scopes"] = { name = "Scopes", exit_func = winclose },
+    ["dapui_breakpoints"] = { name = "Breakpoints", exit_func = winclose },
+    ["dapui_stacks"] = { name = "Stacks", exit_func = winclose },
+    ["dapui_watches"] = { name = "Watches", exit_func = winclose },
+    ["dap-repl"] = { name = "Debug REPL", exit_func = winclose },
+    ["dapui_console"] = { name = "Debug Console", exit_func = winclose },
+    ["neotest-summary"] = { name = " Test List", exit_func = winclose },
+    ["vim"] = { exit_func = winclose },
+    ["gitcommit"] = { name = "Git Commit Message", exit_func = winclose },
+    [""] = { exit_func = winclose },
 }
 
 -- Check if a given buffer is "special"
@@ -66,33 +69,16 @@ function LoadedBufCount()
     return num_bufs
 end
 
--- Find if the current buffer is in another window
-function WinIsDuplicate(winnr)
-    local is_dup
+function DeleteBuffer()
+    local tabnr = vim.api.nvim_get_current_tabpage()
     local bufnr = vim.api.nvim_get_current_buf()
-    local wins = vim.api.nvim_list_wins()
-    for _, win in pairs(wins) do
-        if win ~= winnr and bufnr == vim.api.nvim_win_get_buf(win) then
-            is_dup = true
-            break
-        end
-    end
-    return is_dup
-end
 
-function _G.delete_buffer()
-    local bufnr = vim.api.nvim_get_current_buf()
+    local num_tabs = #vim.api.nvim_list_tabpages()
 
     -- Handle special buffers
     if Is_special(bufnr) then
         local filetype = vim.bo[bufnr].filetype
-
-        if filetype == "" or filetype == "vim" then
-            vim.cmd("stopinsert | wincmd c")
-        else
-            Special_types[filetype].exit_func()
-        end
-
+        Special_types[filetype].exit_func()
         return
     elseif vim.b[bufnr].is_diffview_file then
         vim.cmd("DiffviewFocusFiles")
@@ -100,15 +86,20 @@ function _G.delete_buffer()
     end
 
     local num_bufs = LoadedBufCount()
+    local num_tab_wins = TabWinCount(tabnr)
 
-    if num_bufs > 1 then
-        vim.cmd([[wincmd c]])
+    if num_tab_wins > 1 then
+        winclose()
+    elseif num_tabs > 1 then
+        vim.cmd.tabclose()
+    elseif num_bufs <= 1 then
+        vim.cmd.quitall()
     else
-        vim.cmd([[quitall]])
+        vim.cmd.bdelete()
     end
 end
 
-vim.cmd([[command! DeleteBuffer call v:lua.delete_buffer()]])
+vim.api.nvim_create_user_command("DeleteBuffer", DeleteBuffer, { nargs = 0 })
 
 ZenOrFull = function()
     local handle = io.popen([[kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length"]])
@@ -119,14 +110,7 @@ ZenOrFull = function()
     if num_windows > 1 then
         vim.cmd([[silent !xdotool key --clearmodifiers "ctrl+alt+f"]])
     else
-        zoom()
-        -- local num_tabs = #vim.api.nvim_list_tabpages()
-        -- local num_tab_wins = TabWinCount(vim.api.nvim_get_current_tabpage())
-        -- if num_tab_wins <= 1 and num_tabs > 1 then
-        --     vim.cmd("tabclose")
-        -- else
-        --     vim.cmd("tab split")
-        -- end
+        require("mini.misc").zoom()
     end
 end
 vim.api.nvim_create_user_command("ZenOrFull", ZenOrFull, { nargs = 0 })
@@ -168,3 +152,46 @@ TabPrev = function()
     end
 end
 vim.api.nvim_create_user_command("TabPrev", TabPrev, { nargs = 0 })
+
+local mode_map = {
+    ['n'] = { 'NORMAL', 'Normal' },
+    ['no'] = { 'O-PENDING', 'Visual' },
+    ['nov'] = { 'O-PENDING', 'Visual' },
+    ['noV'] = { 'O-PENDING', 'Visual' },
+    ['no'] = { 'O-PENDING', 'Visual' },
+    ['nt'] = { 'T-NORMAL', 'Normal' },
+    ['niI'] = { 'NORMAL', 'Normal' },
+    ['niR'] = { 'NORMAL', 'Normal' },
+    ['niV'] = { 'NORMAL', 'Normal' },
+    ['v'] = { 'VISUAL', 'Visual' },
+    ['V'] = { 'V-LINE', 'Visual' },
+    [''] = { 'V-BLOCK', 'Visual' },
+    ['s'] = { 'SELECT', 'Visual' },
+    ['S'] = { 'S-LINE', 'Visual' },
+    [''] = { 'S-BLOCK', 'Visual' },
+    ['i'] = { 'INSERT', 'Insert' },
+    ['ic'] = { 'INSERT', 'Insert' },
+    ['ix'] = { 'INSERT', 'Insert' },
+    ['R'] = { 'REPLACE', 'Replace' },
+    ['Rc'] = { 'REPLACE', 'Replace' },
+    ['Rv'] = { 'V-REPLACE', 'Normal' },
+    ['Rx'] = { 'REPLACE', 'Normal' },
+    ['Rvc'] = { 'V-REPLACE', 'Replace' },
+    ['Rvx'] = { 'V-REPLACE', 'Replace' },
+    ['c'] = { 'COMMAND', 'Command' },
+    ['cv'] = { 'EX', 'Command' },
+    ['ce'] = { 'EX', 'Command' },
+    ['r'] = { 'REPLACE', 'Replace' },
+    ['rm'] = { 'MORE', 'Normal' },
+    ['r?'] = { 'CONFIRM', 'Normal' },
+    ['!'] = { 'SHELL', 'Normal' },
+    ['t'] = { 'TERMINAL', 'Command' },
+}
+
+VimMode = function()
+    local mode_code = vim.api.nvim_get_mode().mode
+    if mode_map[mode_code] == nil then
+        return { mode_code, 'Normal' }
+    end
+    return mode_map[mode_code]
+end

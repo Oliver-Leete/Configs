@@ -51,15 +51,15 @@ be warned.
 ### Multiple Leaders
 
 I am slowly moving things over to a system of having a few top level leaders,
-each with its own use. The main thing here is separating the normal leader key
-in two, with 'program level commands' on a space leader and extra editing
+each with its own use. The main thing here is separating the normal leader
+key in two, with 'program level commands' on a space leader and extra editing
 commands on a comma leader. Backslash is my local leader (although most of that
 stuff is moving to my command palette).
 
 Square brackets are used as directional leaders (covered more in the Repeat
 section), for all manner of jumping about and nothing else (At some point I'll
-get rid of all the other things vim defaults to using it for). I am trying
-to limit g to just be goto commands, I'll hopefully remove all the normal extra
+get rid of all the other things vim defaults to using it for). I am trying to
+limit g to just be goto commands, I'll hopefully remove all the normal extra
 crap it's used for at some point. v is a view related key (thanks Kakoune for
 the inspiration). Unlike Kakoune, I have v lock into a view mode if any of the
 bindings you might want to repeat are pressed. This is done with Hydra.
@@ -75,10 +75,10 @@ commands make sense).
 3) Jump to the start of the next or last instance of that text object (mapped to [/]). I'd like it so that it always goes to the previous object instead of first going to the start of the current one.
 4) Jump to the left or right inside and outside edge of the current instance of that text object (mapped to {/}/(/)).
 
-Scope and block use treesitter-textobjects queries (and a stolen function) along
-with mini.ai. Neither name is great, and block doesn't even match with the
-mapping (I currently have it mapped to o). But 'scope' joins @class and @function
-and block joins @block, @conditional and @loops.
+Scope and block use treesitter-textobjects queries (and a stolen function)
+along with mini.ai. Neither name is great, and block doesn't even match with
+the mapping (I currently have it mapped to o). But 'scope' joins @class and
+@function and block joins @block, @conditional and @loops.
 
 The current (assuming I remember to update this) state of my mappings cover
 these combinations (where one tick is any support and two is preferable
@@ -86,16 +86,16 @@ these combinations (where one tick is any support and two is preferable
 
 | Object                                | Select in/around | Select in/around next/last | Jump to next/last | Jump to left/right |
 |:-------------------------------------:|:----------------:|:--------------------------:|:-----------------:|:------------------:|
-| scope (method, function, class, etc.) | ✓                | ✓✓                         | ✓✓                | ✓✓                 |
-| block (loops, conditionals, etc.)     | ✓                | ✓✓                         | ✓✓                | ✓✓                 |
-| paragraph                             | ✓                | ✓✓                         | ✓✓                | ✓✓                 |
-| sentence                              | ✓✓               | ✗                          | ✓                 | ✓✓                 |
-| sub-word                              | ✓                | ✗                          | ✗                 | ✓✓                 |
-| word                                  | ✓                | ✓✓                         | ✓                 | ✓✓                 |
-| WORD                                  | ✓                | ✓✓                         | ✓                 | ✓✓                 |
+| scope (method, function, class, etc.) | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
+| block (loops, conditionals, etc.)     | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
+| paragraph                             | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
+| sentence                              | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
+| sub-word                              | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
+| word                                  | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
+| WORD                                  | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
 | quickfix list item                    | ✗                | ✗                          | ✓                 | ✗                  |
 | diagnostic                            | ✗                | ✗                          | ✓                 | ✗                  |
-| git signs hunk                        | ✓                | ✓✓                         | ✓✓                | ✗                  |
+| git signs hunk                        | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
 | diff hunk                             | ✗                | ✗                          | ✓                 | ✗                  |
 | quote                                 | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |
 | bracket                               | ✓✓               | ✓✓                         | ✓✓                | ✓✓                 |

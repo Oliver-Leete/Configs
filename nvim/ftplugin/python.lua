@@ -1,8 +1,3 @@
-require('swenv').setup({
-    venvs_path = vim.fn.expand('~/.local/python_venvs/')
-})
-vim.b[0].localCommands = function()
-    return {
-        { source = "python", name = "change venv", func = function() require('swenv.api').pick_venv() end },
-    }
-end
+vim.bo.textwidth = 79
+vim.b.textwidth = 79
+vim.cmd([[call matchadd('TabLineSel', '\%101v', 80)]])

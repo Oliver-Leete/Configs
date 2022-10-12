@@ -6,6 +6,9 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'tpope/vim-repeat'
     Plug 'kyazdani42/nvim-web-devicons'
     Plug '907th/vim-auto-save'
+    Plug 'anuvyklack/hydra.nvim'
+    Plug 'anuvyklack/keymap-layer.nvim'
+    Plug 'lewis6991/impatient.nvim'
 
     Plug 'knubie/vim-kitty-navigator'
     Plug 'stevearc/stickybuf.nvim'
@@ -15,22 +18,19 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'echasnovski/mini.nvim'
     Plug 'ap/vim-you-keep-using-that-word'
     Plug 'phaazon/hop.nvim'
-    Plug 'chaoren/vim-wordmotion'
     Plug 'junegunn/vim-slash'
     Plug 'arthurxavierx/vim-caser'
     Plug 'ralismark/opsort.vim'
     Plug 'Konfekt/vim-CtrlXA'
     Plug 'svermeulen/vim-subversive'
     Plug 'inkarkat/vim-unconditionalpaste'
-    Plug 'tpope/vim-abolish'
     Plug 'andymass/vim-matchup'
-    Plug 'tommcdo/vim-nowchangethat'
 
     Plug 'lervag/vimtex'
     Plug 'fladson/vim-kitty'
-    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
     Plug 'wilriker/gcode.vim'
     Plug 'LhKipp/nvim-nu'
+    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'sindrets/diffview.nvim'
@@ -47,14 +47,12 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'williamboman/mason.nvim'
     Plug 'williamboman/mason-lspconfig.nvim'
     Plug 'jayp0521/mason-nvim-dap.nvim'
-    Plug 'jose-elias-alvarez/null-ls.nvim'
 
+    Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'neovim/nvim-lspconfig'
     Plug 'barreiroleo/ltex_extra.nvim'
-    Plug 'simrat39/rust-tools.nvim'
     Plug 'p00f/clangd_extensions.nvim'
     Plug 'b0o/schemastore.nvim'
-    Plug 'AckslD/swenv.nvim'
 
     Plug 'Issafalcon/lsp-overloads.nvim'
     Plug 'SmiteshP/nvim-navic'
@@ -78,10 +76,9 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'L3MON4D3/LuaSnip'
     Plug 'danymat/neogen'
 
-    Plug 'nvim-telescope/telescope-file-browser.nvim'
     Plug 'nvim-telescope/telescope.nvim'
+    Plug 'nvim-telescope/telescope-file-browser.nvim'
     Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make'}
-    Plug 'crispgm/telescope-heading.nvim'
 
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'nvim-treesitter/playground'
@@ -91,75 +88,47 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'AckslD/nvim-trevJ.lua'
 
     Plug 'stevearc/overseer.nvim'
-    Plug 't-troebst/perfanno.nvim'
     Plug 'nvim-neotest/neotest'
-    Plug 'rouge8/neotest-rust'
-    Plug 'nvim-neotest/neotest-python'
     Plug 'andythigpen/nvim-coverage'
+    Plug 't-troebst/perfanno.nvim'
     Plug 'krady21/compiler-explorer.nvim'
+    Plug 'akinsho/toggleterm.nvim'
+    Plug 'tknightz/telescope-termfinder.nvim'
 
     Plug 'mfussenegger/nvim-dap'
     Plug 'rcarriga/nvim-dap-ui'
     Plug 'theHamsta/nvim-dap-virtual-text'
     Plug 'nvim-telescope/telescope-dap.nvim'
+
+    " Rust
+    Plug 'simrat39/rust-tools.nvim'
+    Plug 'rouge8/neotest-rust'
+
+    " Python
+    Plug 'nvim-neotest/neotest-python'
     Plug 'mfussenegger/nvim-dap-python'
-    Plug 'leoluz/nvim-dap-go'
-
-    Plug 'akinsho/toggleterm.nvim'
-    Plug 'tknightz/telescope-termfinder.nvim'
-
-    Plug 'anuvyklack/hydra.nvim'
-    Plug 'anuvyklack/keymap-layer.nvim'
 call plug#end()]])
 
--- Disable builtins
-local disabled_built_ins = {
-    "netrw",
-    "netrwPlugin",
-    "netrwSettings",
-    "netrwFileHandlers",
-    "gzip",
-    "zip",
-    "zipPlugin",
-    "tar",
-    "tarPlugin",
-    "getscript",
-    "getscriptPlugin",
-    "vimball",
-    "vimballPlugin",
-    "2html_plugin",
-    "logipat",
-    "rrhelper",
-    "spellfile_plugin",
-    "matchit",
-}
+pcall(require('impatient'))
 
-for _, plugin in pairs(disabled_built_ins) do
-    vim.g["loaded_" .. plugin] = 1
-end
-
-require("settings_config")
-require("misc_config")
-require("mappings_config")
-require("command_config")
-require("jump_config")
-require("telescope_config")
-require("compleation_config")
-require("panels_config")
-require("myfuncs_config")
-require("lsp_config")
-require("dap_config")
-require("treesitter_config")
-require("ui_config")
-require("statusline_config")
-require("tabline_config")
-require("winbar_config")
-require("git_config")
-require("terminal_config")
-require("projects_config")
-require("mini_config")
-require("filmpicker_config")
-
-local enterAndExitVim = vim.api.nvim_create_augroup("enterAndExitVim", { clear = true })
-vim.api.nvim_create_autocmd("VimEnter", { command = 'silent! !/home/oleete/.config/bin/nvrRename', group = enterAndExitVim })
-vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-window-title ""', group = enterAndExitVim })
+pcall(require("user.settings_config"))
+pcall(require("user.misc_config"))
+pcall(require("user.mappings_config"))
+pcall(require("user.command_config"))
+pcall(require("user.jump_config"))
+pcall(require("user.telescope_config"))
+pcall(require("user.compleation_config"))
+pcall(require("user.panels_config"))
+pcall(require("user.myfuncs_config"))
+pcall(require("user.lsp_config"))
+pcall(require("user.dap_config"))
+pcall(require("user.treesitter_config"))
+pcall(require("user.ui_config"))
+pcall(require("user.statusline_config"))
+pcall(require("user.tabline_config"))
+pcall(require("user.winbar_config"))
+pcall(require("user.git_config"))
+pcall(require("user.terminal_config"))
+pcall(require("user.projects_config"))
+pcall(require("user.mini_config"))
+pcall(require("user.filmpicker_config"))

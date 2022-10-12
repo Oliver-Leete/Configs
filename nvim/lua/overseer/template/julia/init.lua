@@ -68,8 +68,7 @@ return {
                 name = "Julia documentation server",
                 tskName = vim.g.project .. " Doc Server",
                 cmd = [[julia --project=docs -e 'using Revise, ]] ..
-                    vim.g.project .. [[, LiveServer; servedocs(launch_browser=true)']],
-                -- vim.g.project .. [[, LiveServer; servedocs(launch_browser=true; include_dirs = ["src"])']],
+                    vim.g.project .. [[, LiveServer; servedocs(launch_browser=true; include_dirs = ["src"])']],
                 hide = true,
                 unique = true,
                 alwaysRestart = true,
