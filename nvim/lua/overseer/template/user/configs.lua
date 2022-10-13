@@ -10,7 +10,7 @@ return {
                 name = "Source File",
                 builder = function()
                     vim.cmd.source(vim.fn.expand("%"))
-                    return { cmd = "", name = "", components = { "toggleterm.dispose_now" }, }
+                    return { cmd = "", name = "", components = { "user.dispose_now" }, }
                 end,
                 priority = 59,
                 params = {},
@@ -20,7 +20,7 @@ return {
                 name = "Source NVim Init",
                 builder = function()
                     vim.cmd.source("/home/oleete/.config/nvim/init.lua")
-                    return { cmd = "", name = "", components = { "toggleterm.dispose_now" }, }
+                    return { cmd = "", name = "", components = { "user.dispose_now" }, }
                 end,
                 priority = 59,
                 params = {},
@@ -29,7 +29,7 @@ return {
                 name = "Source NVim Module",
                 builder = function()
                     require("telescope.builtin").reloader(require("telescope.themes").get_ivy())
-                    return { cmd = "", name = "", components = { "toggleterm.dispose_now" }, }
+                    return { cmd = "", name = "", components = { "user.dispose_now" }, }
                 end,
                 priority = 59,
                 params = {},

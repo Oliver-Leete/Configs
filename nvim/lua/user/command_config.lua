@@ -5,7 +5,7 @@ GlobalCommands = {
     { source = "coverage", name = "Load coverage", command = "Coverage" },
     { source = "coverage", name = "Toggle coverage", command = "CoverageToggle" },
 
-    { source = "default", name = "Close buffer", func = function() _G.delete_buffer() end },
+    { source = "default", name = "Delete buffer", command = "bdelete" },
     { source = "default", name = "Clear search", command = "let @/=''" },
     { source = "default", name = "Close tab", command = "tabclose" },
     { source = "default", name = "Toggle text wraping", "set wrap!" },
@@ -64,7 +64,6 @@ GlobalCommands = {
     { source = "tasks", name = "Run Tasks", command = "OverseerRun" },
     { source = "tasks", name = "Modify Tasks", command = "OverseerTaskAction" },
     { source = "tasks", name = "Task Window", command = "OverseerToggle" },
-    { source = "tasks", name = "Run Nearest Test", func = function() require("neotest").run.run() end },
     { source = "tasks", name = "Test Window", func = function() require("neotest").summary.open() end },
     { source = "tasks", name = "Terminals", command = "Telescope termfinder theme=get_ivy" },
 }

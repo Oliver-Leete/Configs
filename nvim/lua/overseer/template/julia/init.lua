@@ -39,7 +39,7 @@ return {
 
         local commands = {
             {
-                name = "Julia test server",
+                name = "Start Test Server",
                 tskName = vim.g.project .. " Test Server",
                 cmd = [[julia --color=yes --project -t auto -e 'using Revise, DaemonMode; print("Starting test server"); serve(print_stack=true, async=false)']],
                 condition = isProject,
@@ -49,18 +49,18 @@ return {
                 alwaysRestart = true,
             },
             {
-                name = "Julia Open Repl",
+                name = "Open Julia Repl",
                 tskName = "Julia Repl",
                 cmd = "julia --threads=auto",
             },
             {
-                name = "Julia Open Repl in Project",
+                name = "Open Julia Repl in Project",
                 tskName = vim.g.project .. " Project Repl",
                 cmd = "julia --threads=auto --project",
                 condition = isProject,
             },
             {
-                name = "Julia Open Repl in " .. otherProjectName .. " Project",
+                name = "Open Julia Repl in " .. otherProjectName .. " Project",
                 tskName = otherProjectName .. " Project Repl",
                 cmd = "julia --threads=auto --project=" .. otherProject,
                 condition = {
@@ -68,29 +68,21 @@ return {
                 },
             },
             {
-                name = "Julia package precompile",
-                cmd = "~/.config/nvim/filetype/julia/precompile",
-                tskName = vim.g.project .. " Precompile",
-                tags = { TAG.BUILD },
-                condition = isProject,
-                unique = true,
-            },
-            {
-                name = "Julia build documentation",
+                name = "Build Documentation",
                 tskName = vim.g.project .. " Doc Build",
                 cmd = "~/.config/nvim/filetype/julia/docBuild",
                 condition = { callback = isInProject },
                 unique = true,
             },
             {
-                name = "Julia open prebuilt documentation",
+                name = "Open Built Documentation",
                 cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
                 condition = { callback = function(opts) files.exists(files.join(opts.dir, "docs", "build", "index.html")) end },
                 hide = true,
                 unique = true,
             },
             {
-                name = "Julia documentation server",
+                name = "Start documentation Server",
                 tskName = vim.g.project .. " Doc Server",
                 cmd = [[julia --project=docs -e 'using Revise, ]] ..
                     vim.g.project .. [[, LiveServer; servedocs(launch_browser=true; include_dirs = ["src"])']],
@@ -100,14 +92,14 @@ return {
                 condition = hasDocs,
             },
             {
-                name = "Open live documentation server",
+                name = "Open Documentation Server",
                 cmd = "browser http://localhost:8000 & sleep 5",
                 condition = hasDocs,
                 hide = true,
                 unique = true,
             },
             {
-                name = "Julia documentation tests",
+                name = "Run Documentation Tests",
                 tskName = vim.g.project .. " Doc Test",
                 cmd = "~/.config/nvim/filetype/julia/docTest",
                 tags = { TAG.TEST },
@@ -115,14 +107,14 @@ return {
                 unique = true,
             },
             {
-                name = "Julia update documentation tests output",
+                name = "Update Documentation Tests Output",
                 tskName = vim.g.project .. " Doc Test Update",
                 cmd = "~/.config/nvim/filetype/julia/docTestUpdate",
                 condition = hasDocs,
                 unique = true,
             },
             {
-                name = "Julia test package",
+                name = "Test Package",
                 tskName = vim.g.project .. " Test Suite",
                 cmd = "cd test; julia --threads=auto --project runtests.jl",
                 tags = { TAG.TEST },
@@ -130,7 +122,7 @@ return {
                 unique = true,
             },
             {
-                name = "Julia test coverage",
+                name = "Test Coverage",
                 tskName = vim.g.project .. " Test Coverage",
                 cmd = "julia --threads=auto --project ~/.config/nvim/filetype/julia/task_test.jl " ..
                     vim.fs.basename(vim.fn.getcwd()),
@@ -139,7 +131,42 @@ return {
                 unique = true,
             },
             {
-                name = "Julia Run Build",
+                name = "Package Benchmarks",
+                tskName = vim.g.project .. " Bench Suite",
+                cmd = [[julia -e 'using PkgBenchmark; benchmarkpkg("]] .. vim.g.project .. [[")']],
+                condition = hasBenchmark,
+                unique = true,
+            },
+            {
+                name = "Retune Benchmarks",
+                tskName = vim.g.project .. " Retune Bench",
+                cmd = [[julia -e 'using PkgBenchmark; benchmarkpkg("]] .. vim.g.project .. [[, retune=true")']],
+                condition = hasBenchmark,
+                unique = true,
+            },
+            {
+                name = "Run Julia File (" .. vim.fn.expand("%:t:r") .. ")",
+                tskName = "Running " .. vim.fn.expand("%:t:r"),
+                cmd = "julia " .. vim.fn.expand("%:p"),
+                condition = isFile,
+                unique = true,
+            },
+            {
+                name = "Profile Package Imports",
+                tskName = vim.g.project .. " Profile Imports",
+                cmd = [[julia -e 'using InteractiveUtils; @time_imports using ]] .. vim.g.project .. "'",
+                condition = isProject,
+                unique = true,
+            },
+            {
+                name = "Profile File (" .. vim.fn.expand("%:t:r") .. ")",
+                tskName = "Profiling " .. vim.fn.expand("%:t:r"),
+                cmd = "julia ~/.config/nvim/filetype/julia/prof.jl " .. vim.fn.expand("%:p"),
+                condition = isFile,
+                unique = true,
+            },
+            {
+                name = "Run Build",
                 tskName = vim.g.project .. " Build",
                 cmd = "julia --threads=auto --project -e 'using Pkg; Pkg.build(" .. vim.g.project .. ")'",
                 tags = { TAG.BUILD },
@@ -147,46 +174,19 @@ return {
                 unique = true,
             },
             {
-                name = "Julia Compile",
-                tskName = vim.g.project .. " Compile",
-                cmd = "julia --threads=auto ~/.config/nvim/filetype/julia/task_compileenv.jl " .. vim.fn.getcwd(),
+                name = "Precompile Package",
+                cmd = "~/.config/nvim/filetype/julia/precompile",
+                tskName = vim.g.project .. " Precompile",
                 tags = { TAG.BUILD },
                 condition = isProject,
                 unique = true,
             },
             {
-                name = "Julia package benchmarks",
-                tskName = vim.g.project .. " Bench Suite",
-                cmd = [[julia -e 'using PkgBenchmark; benchmarkpkg("]] .. vim.g.project .. [[")']],
-                condition = hasBenchmark,
-                unique = true,
-            },
-            {
-                name = "Julia retune benchmarks",
-                tskName = vim.g.project .. " Retune Bench",
-                cmd = [[julia -e 'using PkgBenchmark; benchmarkpkg("]] .. vim.g.project .. [[, retune=true")']],
-                condition = hasBenchmark,
-                unique = true,
-            },
-            {
-                name = "Julia run file (" .. vim.fn.expand("%:t:r") .. ")",
-                tskName = "Running " .. vim.fn.expand("%:t:r"),
-                cmd = "julia " .. vim.fn.expand("%:p"),
-                condition = isFile,
-                unique = true,
-            },
-            {
-                name = "Julia profile imports",
-                tskName = vim.g.project .. " Profile Imports",
-                cmd = [[julia -e 'using InteractiveUtils; @time_imports using ]] .. vim.g.project .. "'",
+                name = "Package Compile",
+                tskName = vim.g.project .. " Compile",
+                cmd = "julia --threads=auto ~/.config/nvim/filetype/julia/task_compileenv.jl " .. vim.fn.getcwd(),
+                tags = { TAG.BUILD },
                 condition = isProject,
-                unique = true,
-            },
-            {
-                name = "Julia profile file (" .. vim.fn.expand("%:t:r") .. ")",
-                tskName = "Profiling " .. vim.fn.expand("%:t:r"),
-                cmd = "julia ~/.config/nvim/filetype/julia/prof.jl " .. vim.fn.expand("%:p"),
-                condition = isFile,
                 unique = true,
             },
         }
@@ -201,9 +201,9 @@ return {
                 "on_complete_dispose",
             }
             if command.hide then
-                table.insert(comps, { "toggleterm.attach_toggleterm", hide = true })
+                table.insert(comps, { "user.attach_toggleterm", hide = true })
             else
-                table.insert(comps, "toggleterm.attach_toggleterm")
+                table.insert(comps, "user.attach_toggleterm")
             end
             if command.unique then
                 table.insert(comps, "unique")
@@ -250,7 +250,7 @@ return {
                         name = "Run " .. san_name .. " Test",
                         builder = function()
                             require("neotest").run.run(location)
-                            return { cmd = "", name = "", components = { "toggleterm.dispose_now" }, }
+                            return { cmd = "", name = "", components = { "user.dispose_now" }, }
                         end,
                         priority = priority,
                         params = {},
@@ -275,7 +275,7 @@ return {
                         name = "Run " .. san_name .. " benchmark",
                         builder = function()
                             require("neotest").run.run(location)
-                            return { cmd = "", name = "", components = { "toggleterm.dispose_now" }, }
+                            return { cmd = "", name = "", components = { "user.dispose_now" }, }
                         end,
                         priority = priority,
                         params = {},
@@ -318,7 +318,7 @@ return {
 
                     git_commits_againsthead()
 
-                    return { cmd = "", name = "", components = { "toggleterm.dispose_now" }, }
+                    return { cmd = "", name = "", components = { "user.dispose_now" }, }
                 end,
                 priority = priority,
                 condition = hasBenchmark,
@@ -353,7 +353,7 @@ return {
                 name = "Load profile data",
                 builder = function()
                     Jul_perf_flat()
-                    return { cmd = "", name = "", components = { "toggleterm.dispose_now" }, }
+                    return { cmd = "", name = "", components = { "user.dispose_now" }, }
                 end,
                 priority = priority,
                 condition = {
