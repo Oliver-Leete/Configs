@@ -41,7 +41,7 @@ return {
             {
                 name = "Julia test server",
                 tskName = vim.g.project .. " Test Server",
-                cmd = [[julia --color=yes -t auto -e 'using Revise, DaemonMode; print("Starting test server"); serve(print_stack=true, async=false)']],
+                cmd = [[julia --color=yes --project -t auto -e 'using Revise, DaemonMode; print("Starting test server"); serve(print_stack=true, async=false)']],
                 condition = isProject,
                 is_test_server = true,
                 hide = true,
@@ -356,6 +356,11 @@ return {
                     return { cmd = "", name = "", components = { "toggleterm.dispose_now" }, }
                 end,
                 priority = priority,
+                condition = {
+                    callback = function()
+                        return files.exists("/tmp/julprof.data")
+                    end
+                },
                 params = {},
             }
         )

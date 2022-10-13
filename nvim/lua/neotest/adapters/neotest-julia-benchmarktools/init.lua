@@ -63,6 +63,7 @@ function adapter.build_spec(args)
             pos_id = position.id,
             name = position.name,
             uses_server = true,
+            tsk_name = position.name:sub(2,-2) .. " benchmark",
         },
     }
 end

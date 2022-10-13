@@ -13,8 +13,9 @@ function adapter.discover_positions(path)
         (macro_expression
            (macro_identifier (identifier) @macro_name)
            (#match? @macro_name "testitem")
-           (macro_argument_list (string_literal) @test.name)
-        ) @test.definition
+           (macro_argument_list (string_literal) @test.name
+           (compound_expression (_)) @test.definition)
+        )
     ]]
 
     return lib.treesitter.parse_positions(path, query, {
@@ -41,17 +42,19 @@ function adapter.build_spec(args)
     end
 
 
-    local command = "cd test && julia --color=yes --project -e '" ..
+    local command = "julia --color=yes --project -e '" ..
         [[using DaemonMode
         try
             runexpr("Revise.revise(throw=true)")
         catch
             sendExitCode()
         end
-        runargs()' ]]
-        .. "/home/oleete/.config/nvim/lua/neotest/adapters/neotest-julia-testitem/juliaTestClient.jl '"
-        .. position.name:sub(2, -2)
-        .. "'"
+        runexpr("""
+            using TestItemRunner
+
+            @run_package_tests filter=ti->(ti.name == ]] .. position.name .. [[)
+        """)
+        ]] .. "'"
 
     if position.type == "file" then
         return
@@ -63,6 +66,7 @@ function adapter.build_spec(args)
             pos_id = position.id,
             name = position.name,
             uses_server = true,
+            tsk_name = position.name:sub(2,-2) .. " test",
         },
     }
 end

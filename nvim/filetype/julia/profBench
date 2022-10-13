@@ -2,6 +2,13 @@
 project="$(basename "$PWD")"
 cd benchmark || exit
 julia --threads=auto --project -e '
+using DaemonMode
+try
+    runexpr("Revise.revise(throw=true)")
+catch
+    sendExitCode()
+end
+runexpr("""
 using BenchmarkTools, Profile, FileIO
 include("benchmarks.jl")
 
@@ -13,4 +20,5 @@ Profile.print(
 profileData = Profile.retrieve()
 save("/tmp/last_jul.jlprof", profileData[1], profileData[2])
 display(a)
+""")
 '

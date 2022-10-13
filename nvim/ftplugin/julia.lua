@@ -53,44 +53,49 @@ function Jul_perf_flat()
 end
 
 Run_closest = function()
-    -- TODO: make use treesitter
-    -- TODO: run nearest test if nearer than function
-    -- TODO: make the logic of test location better
-    local func_pat = "function [^%s]"
-    local func_num = vim.fn.search(func_pat, "nbWc")
+    local line = vim.api.nvim_win_get_cursor(0)[1]
 
-    local ass_pat = "[^%s](.*) = "
-    local ass_num = vim.fn.search(ass_pat, "nbWc")
-
-    local struct_pat = "struct [^%s]"
-    local struct_num = vim.fn.search(struct_pat, "nbWc")
-
-    local line_num = math.max(func_num, ass_num, struct_num)
-
-    if line_num == 0 then
-        return
+    local query = require 'nvim-treesitter.query'
+    local nodes = {}
+    local qs = { "@function.name", "@class.name", "@testitem.name" }
+    for _, q in pairs(qs) do
+        vim.list_extend(nodes,
+            query.get_capture_matches_recursively(0, q, "textobjects")
+        )
     end
 
-    local line = vim.fn.getline(line_num)
-    local name
-    if struct_num < math.max(func_num, ass_num) then
-        name = line:match("([^%s]+)%(")
-    else
-        name = line:match("struct ([%w^_-]+)")
+    local results = {}
+    for _, node in pairs(nodes) do
+        local res = node.node:start()
+        local name = require("vim.treesitter.query").get_node_text(node.node, 0)
+        table.insert(results,
+            { res + 1, name }
+        )
     end
-    local server_running = function()
-        local task_list = require("overseer.task_list").list_tasks()
-        for _, task in pairs(task_list) do
-            if task.metadata.is_test_server and task.status == "RUNNING" then
-                return true
-            end
+
+    Res = results
+    local name = ""
+    local min_distance = 10000
+    for _, result in pairs(results) do
+        local dist = math.abs(line - result[1])
+        if min_distance > dist then
+            min_distance = dist
+            name = result[2]
         end
     end
-    if not server_running() then
-        require("overseer").run_template({ name = "Julia test server" })
+
+    if not name:match('^".*"$') then
+        name = '"' .. name .. '"'
     end
-    local location = vim.fn.expand("%:p:r") .. "_tests.jl::\"" .. name .. '"'
-    location = location:gsub("/src/", "/test/")
+
+    local file = vim.fn.expand("%:p")
+    local testfile = vim.fn.expand("%:p:r"):gsub("/src/", "/test/") .. "_tests.jl"
+    local location
+    if require("overseer.files").exists(testfile) then
+        location = testfile .. "::" .. name
+    else
+        location = file .. "::" .. name
+    end
     require("neotest").run.run(location)
 end
 
@@ -166,7 +171,7 @@ end
 
 Map("n", ",rb", "<cmd>call julia#toggle_function_blockassign()<cr>")
 
-Map("n", "<leader>l", Run_closest, {  buffer = 0 })
+Map("n", "<leader>l", Run_closest, { buffer = 0 })
 
 Map("n", ",dd", function() BP_Toggle("Debugger", "@bp") end, { buffer = 0 })
 Map("n", ",di", function() BP_Toggle("Infiltrator", "@infiltrate") end, { buffer = 0 })

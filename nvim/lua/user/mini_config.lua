@@ -79,8 +79,12 @@ require("mini.ai").setup({
         },
         -- scope
         s = gen_spec.treesitter({
-            a = {"@function.outer", "@class.outer"},
-            i = {"@function.inner", "@class.inner"},
+            a = {"@function.outer", "@class.outer", "@testitem.outer"},
+            i = {"@function.inner", "@class.inner", "@testitem.inner"},
+        }),
+        S = gen_spec.treesitter({
+            a = {"@function.name", "@class.name", "@testitem.name"},
+            i = {"@function.name", "@class.name", "@testitem.name"},
         }),
         -- line (same key as visual line in my mappings)
         x = { {
