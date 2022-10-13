@@ -107,6 +107,9 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     " Python
     Plug 'nvim-neotest/neotest-python'
     Plug 'mfussenegger/nvim-dap-python'
+
+    " Haskell
+    Plug 'mrcjkb/neotest-haskell'
 call plug#end()]])
 
 pcall(require('impatient'))

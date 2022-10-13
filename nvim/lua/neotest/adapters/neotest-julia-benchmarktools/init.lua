@@ -1,11 +1,4 @@
-local async = require("neotest.async")
-local context_manager = require("plenary.context_manager")
 local lib = require("neotest.lib")
-local open = context_manager.open
-local Path = require("plenary.path")
-local with = context_manager.with
-local xml = require("neotest.lib.xml")
-local xml_tree = require("neotest.lib.xml.tree")
 
 local adapter = { name = "neotest-julia-benchmarktools" }
 
@@ -47,9 +40,16 @@ function adapter.build_spec(args)
         require("overseer").run_template({ name = "Julia test server" })
     end
 
-    local command = "cd benchmark && julia --project -e'using DaemonMode; runargs()' "
+    local command = "cd benchmark && julia --project -e '" ..
+        [[using DaemonMode
+        try
+            runexpr("Revise.revise(throw=true)")
+        catch
+            sendExitCode()
+        end
+        runargs()' ]]
         .. "/home/oleete/.config/nvim/lua/neotest/adapters/neotest-julia-benchmarktools/juliaBenchmarkClient.jl "
-        .. vim.fn.getcwd() .. "/benchmark/PackageBenchmarks.jl' "
+        .. vim.fn.getcwd() .. "/benchmark/benchmarks.jl' "
         .. position.name:sub(2, -2)
         .. "'"
 

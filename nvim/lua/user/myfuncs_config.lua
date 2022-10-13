@@ -102,10 +102,7 @@ end
 vim.api.nvim_create_user_command("DeleteBuffer", DeleteBuffer, { nargs = 0 })
 
 ZenOrFull = function()
-    local handle = io.popen([[kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length"]])
-    if not handle then return end
-    local num_windows = tonumber(handle:read("*a"))
-    handle:close()
+    local num_windows = tonumber(vim.fn.systemlist([[kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length"]])[1])
 
     if num_windows > 1 then
         vim.cmd([[silent !xdotool key --clearmodifiers "ctrl+alt+f"]])

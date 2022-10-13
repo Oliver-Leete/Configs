@@ -1,12 +1,4 @@
-local handle = io.popen([[echo "$(basename "$PWD")"]])
-local project
-if handle then
-    project = handle:read("*a")
-    handle:close()
-    vim.g.project = string.gsub(project, "\n", "")
-else
-    vim.notify("Couldn't find project name", "Warn", { title = "Projects" })
-end
+vim.g.project = vim.fs.basename(vim.fn.getcwd())
 
 vim.g.projectionist_heuristics = {
     ["src/*.rs"] = {
@@ -56,14 +48,14 @@ vim.g.projectionist_heuristics = {
         ["src/" .. vim.g.project .. ".jl"] = {
             type = "mainSource",
             alternate = "test/PackageTests.jl",
-            related = { "test/PackageTests.jl", "benchmark/PackageBenchmarks.jl", "docs/make.jl" },
+            related = { "test/PackageTests.jl", "benchmark/benchmarks.jl", "docs/make.jl" },
         },
         ["test/PackageTests.jl"] = {
             type = "mainTest",
             alternate = "src/" .. vim.g.project .. ".jl",
-            related = { "src/" .. vim.g.project .. ".jl", "benchmark/PackageBenchmarks.jl", "docs/make.jl" },
+            related = { "src/" .. vim.g.project .. ".jl", "benchmark/benchmarks.jl", "docs/make.jl" },
         },
-        ["benchmark/PackageBenchmarks.jl"] = {
+        ["benchmark/benchmarks.jl"] = {
             type = "mainBench",
             alternate = "src/" .. vim.g.project .. ".jl",
             related = { "src/" .. vim.g.project .. ".jl", "test/PackageTests.jl", "docs/make.jl" },
@@ -71,7 +63,7 @@ vim.g.projectionist_heuristics = {
         ["docs/make.jl"] = {
             type = "mainDoc",
             alternate = "src/" .. vim.g.project .. ".jl",
-            related = { "src/" .. vim.g.project .. ".jl", "test/PackageTests.jl", "benchmark/PackageBenchmarks.jl" },
+            related = { "src/" .. vim.g.project .. ".jl", "test/PackageTests.jl", "benchmark/benchmarks.jl" },
         },
 
         ["README.md"] = { type = "readme" },
@@ -92,6 +84,7 @@ require("neotest").setup({
     adapters = {
         require("neotest-rust"),
         require("neotest-python"),
+        require("neotest-haskell"),
         require("neotest.adapters.neotest-julia-testitem"),
         require("neotest.adapters.neotest-julia-benchmarktools")
     },
@@ -149,7 +142,7 @@ overseer.setup({
         default_neotest = {
             "on_output_summarize",
             "on_exit_set_status",
-            { "on_complete_notify", { system = "unfocused" } },
+            { "on_complete_notify", system = "unfocused" },
             "on_complete_dispose",
             { "toggleterm.attach_toggleterm", goto_prev = true },
             "unique",
@@ -157,9 +150,16 @@ overseer.setup({
         default = {
             "on_output_summarize",
             "on_exit_set_status",
-            { "on_complete_notify", { system = "always" } },
+            { "on_complete_notify", system = "always" },
             "on_complete_dispose",
             "toggleterm.attach_toggleterm",
+        },
+        default_hide = {
+            "on_output_summarize",
+            "on_exit_set_status",
+            { "on_complete_notify", system = "always" },
+            "on_complete_dispose",
+            { "toggleterm.attach_toggleterm", hide = true },
         },
     },
     actions = {
@@ -332,14 +332,6 @@ overseer.register_template({
         return {
             name = "Build Document",
             cmd = "latexmk -pdf -file-line-error -synctex=1 OML-Thesis.tex",
-            components = {
-                "on_output_summarize",
-                "on_exit_set_status",
-                { "on_complete_notify", { system = "unfocused" } },
-                "on_complete_dispose",
-                "unique",
-                { "toggleterm.attach_toggleterm", hide = true },
-            }
         }
     end,
     priority = 5,
@@ -359,7 +351,7 @@ overseer.register_template({
             components = {
                 "on_output_summarize",
                 "on_exit_set_status",
-                { "on_complete_notify", { system = "unfocused" } },
+                { "on_complete_notify", system = "unfocused" },
                 "on_complete_dispose",
                 { "toggleterm.attach_toggleterm", num = 1 },
             }

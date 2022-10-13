@@ -24,6 +24,7 @@ import XMonad.Actions.UpdatePointer
 import XMonad.Actions.WindowGoLocal
 import XMonad.Actions.WithAll (sinkAll, killAll)
 
+import XMonad.Hooks.DebugStack
 import XMonad.Hooks.EwmhDesktops ( ewmh )
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
@@ -712,4 +713,7 @@ myCommands =
 
     , ("sendF"               , P.sendKey noModMask xK_f)
     , ("sendF11"             , P.sendKey noModMask xK_F11)
+
+    , ("dump-stack"          , debugStack)
+    , ("dump-full-stack"     , debugStackFull)
     ]

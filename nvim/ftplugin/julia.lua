@@ -8,7 +8,7 @@ vim.cmd([[set errorformat+=%-G%.%#]])
 vim.bo.commentstring = [[#%s]]
 
 
-function _G.jul_perf_flat()
+function Jul_perf_flat()
     local function get_command_output(cmd, silent)
         if silent then
             cmd = cmd .. " 2>/dev/null"
@@ -53,6 +53,9 @@ function _G.jul_perf_flat()
 end
 
 Run_closest = function()
+    -- TODO: make use treesitter
+    -- TODO: run nearest test if nearer than function
+    -- TODO: make the logic of test location better
     local func_pat = "function [^%s]"
     local func_num = vim.fn.search(func_pat, "nbWc")
 
@@ -75,8 +78,20 @@ Run_closest = function()
     else
         name = line:match("struct ([%w^_-]+)")
     end
-    -- FIX: this currently does nothing, but there must be a neotest way of starting a test by name
-    -- JuliaTest:send_open(vim.g.project .. [[Tests.runtests("]] .. name .. [[",spin=false)]], true, 1)
+    local server_running = function()
+        local task_list = require("overseer.task_list").list_tasks()
+        for _, task in pairs(task_list) do
+            if task.metadata.is_test_server and task.status == "RUNNING" then
+                return true
+            end
+        end
+    end
+    if not server_running() then
+        require("overseer").run_template({ name = "Julia test server" })
+    end
+    local location = vim.fn.expand("%:p:r") .. "_tests.jl::\"" .. name .. '"'
+    location = location:gsub("/src/", "/test/")
+    require("neotest").run.run(location)
 end
 
 local bp_remover = function(imp_line, bp_pattern, mod_pat)
@@ -151,15 +166,11 @@ end
 
 Map("n", ",rb", "<cmd>call julia#toggle_function_blockassign()<cr>")
 
--- Map("n", "<leader>H", Run_closest, { expr = true, buffer = 0 })
+Map("n", "<leader>l", Run_closest, {  buffer = 0 })
 
 Map("n", ",dd", function() BP_Toggle("Debugger", "@bp") end, { buffer = 0 })
 Map("n", ",di", function() BP_Toggle("Infiltrator", "@infiltrate") end, { buffer = 0 })
 Map("n", ",dq", function() BP_Remove_All({ "Debugger", "Infiltrator" }, { "@bp", "@infiltrate" }) end, { buffer = 0 })
-
-vim.b[0].localCommands = {
-    { source = "julia", name = "Load profile data", func = jul_perf_flat },
-}
 
 vim.b.minisurround_config = {
     custom_surroundings = {

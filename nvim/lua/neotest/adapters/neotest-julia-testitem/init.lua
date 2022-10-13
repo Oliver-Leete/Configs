@@ -41,7 +41,14 @@ function adapter.build_spec(args)
     end
 
 
-    local command = "cd test && julia --color=yes --project -e'using DaemonMode; runargs()' "
+    local command = "cd test && julia --color=yes --project -e '" ..
+        [[using DaemonMode
+        try
+            runexpr("Revise.revise(throw=true)")
+        catch
+            sendExitCode()
+        end
+        runargs()' ]]
         .. "/home/oleete/.config/nvim/lua/neotest/adapters/neotest-julia-testitem/juliaTestClient.jl '"
         .. position.name:sub(2, -2)
         .. "'"

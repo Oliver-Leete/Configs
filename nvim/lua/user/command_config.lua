@@ -11,8 +11,8 @@ GlobalCommands = {
     { source = "default", name = "Toggle text wraping", "set wrap!" },
     { source = "default", name = "File tree", command = "NvimTreeToggle" },
     { source = "default", name = "Undo tree", command = "UndotreeToggle" },
-    { source = "default", name = "Reload snippets", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
-    { source = "default", name = "Source init", command = "source /home/oleete/.config/nvim/init.lua" },
+    { source = "default", name = "Reload snippets", func = function() require("mini.map").toggle() end},
+    { source = "default", name = "Toggle Minimap", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
 
     { source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
     { source = "finders", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
@@ -145,15 +145,9 @@ function Select_runnables()
     local runnable_sources = { Global_Runnables, vim.g.runnables, vim.b[0].runnables }
 
     -- runnables from tasks.lua files in directory
-    local handle1 = io.popen([[fd -I tasks.lua]])
-    local task_files
-    if handle1 then
-        task_files = handle1:read("*a")
-        handle1:close()
-    end
-
+    local task_files = vim.fn.systemlist([[fd -I tasks.lua]])
     if task_files then
-        for name in task_files:gmatch("([^\r\n]+)") do
+        for name in pairs(task_files) do
             name = name:gsub("%./", ""):gsub("%.lua", "")
             table.insert(runnable_sources, require(name))
         end

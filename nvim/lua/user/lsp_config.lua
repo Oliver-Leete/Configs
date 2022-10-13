@@ -327,6 +327,7 @@ require("null-ls").setup({
         null_ls.builtins.formatting.trim_newlines, --no_mason_needed
         null_ls.builtins.formatting.trim_whitespace, --no_mason_needed
         null_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
+        null_ls.builtins.hover.printenv,
     },
 })
 

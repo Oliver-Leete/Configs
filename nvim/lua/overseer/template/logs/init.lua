@@ -1,13 +1,8 @@
 return {
     generator = function(_, cb)
-        local logHandler = io.popen(
-            [[fd -e log]]
-        )
         local ret = {}
-        if logHandler then
-            local logs = logHandler:read("*a")
-            logHandler:close()
-            for log in logs:gmatch("([^\r\n]+)") do
+            local logs = vim.fn.systemlist([[fd -e log]])
+            for _, log in pairs(logs) do
                 table.insert(
                     ret,
                     {
@@ -24,7 +19,6 @@ return {
                     }
                 )
             end
-        end
         cb(ret)
     end
 }

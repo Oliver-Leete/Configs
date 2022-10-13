@@ -211,3 +211,16 @@ require("mini.align").setup({
         start_with_preview = ",t",
     }
 })
+
+local minimap = require("mini.map")
+minimap.setup({
+    integrations = {
+      minimap.gen_integration.builtin_search(),
+      minimap.gen_integration.gitsigns(),
+      minimap.gen_integration.diagnostic(),
+    }
+})
+minimap.open()
+
+Map("n", "<leader>:", minimap.toggle_focus)
+Map("n", "<leader>;", minimap.toggle)

@@ -10,6 +10,39 @@ Term_on_open = function(term)
     term.name = term.jobname
     vim.b[0].my_term_title = term.jobname
     vim.b[0].my_term_id = term.id
+    vim.wo.winbar = "%{%v:lua.Term_Winbar()%}"
+end
+
+function Term_Winbar()
+    local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
+    local mode = VimMode()[2]
+    if not mode then return "" end
+    local hlb = "%#WinBarBlank#"
+    local hl = is_active and "%#WinBar" .. mode .. "#" or "%#WinBarInactive#"
+    local hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveEnds#"
+
+    local term_id = vim.b[0].my_term_id
+    local term_list = require("toggleterm.terminal").get_all(true)
+    local cur_win = vim.api.nvim_get_current_win()
+    local winbar = ""
+    for _, term in pairs(term_list) do
+        local is_cur_term = tonumber(term_id) == term.id
+        if is_active and is_cur_term then
+            hl = "%#WinBar" .. mode .. "#"
+            hle = "%#WinBar" .. mode .. "Ends#"
+        elseif is_cur_term then
+            hl = "%#WinBarInactiveSpecial#"
+            hle = "%#WinBarInactiveSpecialEnds#"
+        else
+            hl = "%#WinBarInactive#"
+            hle = "%#WinBarInactiveEnds#"
+        end
+        winbar = winbar .. string.format("%%%d@v:lua.my_toggleterm_winbar_click@", term.id + cur_win * 10000000)
+        winbar = winbar .. hle .. ""
+        winbar = winbar .. hl .. " " .. " " .. term.jobname .. " "
+        winbar = winbar .. hle .. ""
+    end
+    return hlb .. winbar .. hle .. "%="
 end
 
 require("toggleterm").setup({

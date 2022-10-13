@@ -58,7 +58,7 @@ function _G.my_toggleterm_winbar_click(id)
     vim.api.nvim_win_set_buf(cur_win, term.bufnr)
 end
 
-function GPS_Bar()
+function Normal_Winbar()
     local bufnr = vim.api.nvim_get_current_buf()
     local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
 
@@ -70,29 +70,7 @@ function GPS_Bar()
     local hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveEnds#"
 
     local winbar = ""
-    if vim.bo[bufnr].filetype == "toggleterm" then
-        local term_id = vim.b[0].my_term_id
-        local term_list = require("toggleterm.terminal").get_all(true)
-        local cur_win = vim.api.nvim_get_current_win()
-        for _, term in pairs(term_list) do
-            local is_cur_term = tonumber(term_id) == term.id
-            if is_active and is_cur_term then
-                hl = "%#WinBar" .. mode .. "#"
-                hle = "%#WinBar" .. mode .. "Ends#"
-            elseif is_cur_term then
-                hl = "%#WinBarInactiveSpecial#"
-                hle = "%#WinBarInactiveSpecialEnds#"
-            else
-                hl = "%#WinBarInactive#"
-                hle = "%#WinBarInactiveEnds#"
-            end
-            winbar = winbar .. string.format("%%%d@v:lua.my_toggleterm_winbar_click@", term.id + cur_win * 10000000)
-            winbar = winbar .. hle .. ""
-            winbar = winbar .. hl .. " " .. " " .. term.jobname .. " "
-            winbar = winbar .. hle .. ""
-        end
-        return hlb .. winbar .. hle .. "%="
-    elseif Is_special(bufnr) then
+    if Is_special(bufnr) then
         winbar = special_winbar(bufnr, hl, is_active)
         hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveSpecialEnds#"
         if winbar == "" then return "" end
@@ -105,4 +83,4 @@ function GPS_Bar()
     return hlb .. hle .. "" .. winbar .. hl .. " " .. hle .. "" .. hlb .. "%=" .. hlb
 end
 
-vim.go.winbar = "%{%v:lua.GPS_Bar()%}"
+vim.go.winbar = "%{%v:lua.Normal_Winbar()%}"
