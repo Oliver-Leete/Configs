@@ -38,7 +38,7 @@ function adapter.build_spec(args)
         end
     end
     if not server_running() then
-        require("overseer").run_template({ name = "Julia test server" })
+        require("overseer").run_template({ name = "Start Test Server" })
     end
 
 

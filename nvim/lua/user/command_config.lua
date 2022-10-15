@@ -66,6 +66,7 @@ GlobalCommands = {
     { source = "tasks", name = "Task Window", command = "OverseerToggle" },
     { source = "tasks", name = "Test Window", func = function() require("neotest").summary.open() end },
     { source = "tasks", name = "Terminals", command = "Telescope termfinder theme=get_ivy" },
+    { source = "tasks", name = "Clear Task Cache", command = "OverseerClearCache" },
 }
 
 Map("n", "<leader>p", function() CommandCentre({}, true) end)

@@ -19,6 +19,21 @@ require("neotest").setup({
         max_width = 0.9,
         options = {},
     },
+    icons = {
+        running_animated = {"⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"},
+        passed = " ",
+        running = " ",
+        failed = " ",
+        skipped = "ﰸ ",
+        unknown = "?",
+        non_collapsible = "─",
+        collapsed = "─",
+        expanded = "╮",
+        child_prefix = "├",
+        final_child_prefix = "╰",
+        child_indent = "│",
+        final_child_indent = " ",
+    },
     mappings = {
         expand = { "<CR>", "<2-LeftMouse>" },
         expand_all = "e",
@@ -36,4 +51,3 @@ require("neotest").setup({
     },
 
 })
-

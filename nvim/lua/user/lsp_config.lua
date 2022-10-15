@@ -234,7 +234,7 @@ require("rust-tools").setup({
         standalone = true,
     },
     tools = {
-        executor = require("rust-tools/executors").toggleterm,
+        executor = require("rust-tools/executors").overseer,
     },
     dap = {
         adapter = require("rust-tools.dap").get_codelldb_adapter(

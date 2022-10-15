@@ -139,4 +139,4 @@ if vim.g.viewerOpen ~= 1 then
     vim.cmd("silent !xdotool key super+n")
 end
 
-vim.wo.winbar = "%{%v:lua.GPS_Bar()%}"
+vim.go.winbar = "%{%v:lua.Normal_Winbar()%}"

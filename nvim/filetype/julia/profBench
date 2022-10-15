@@ -10,6 +10,7 @@ catch
 end
 runexpr("""
 using BenchmarkTools, Profile, FileIO
+using FlameGraphs, AbstractTrees, JSON
 include("benchmarks.jl")
 
 a = @bprofile '"$1"'
@@ -19,6 +20,32 @@ Profile.print(
 )
 profileData = Profile.retrieve()
 save("/tmp/last_jul.jlprof", profileData[1], profileData[2])
+
+function make_json(flamegraph)
+    function allparent(node)
+        ret = []
+        while node.parent != node
+            node = node.parent
+            push!(ret, node)
+        end
+        return ret
+    end
+    event = []
+    for leaf in PreOrderDFS(flamegraph)
+        push!(event, Dict(
+            "count" => length(leaf.data.span),
+            "frames" => [Dict(
+                "symbol" => leaf.data.sf.func,
+                "file" => leaf.data.sf.file,
+                "linenr" => leaf.data.sf.line,
+            ) for i in allparent(leaf)]
+        ))
+    end
+    return event
+end
+
+write("/tmp/jlprof.json", JSON.json(make_json(flamegraph(profileData[1], lidict=profileData[2]))))
+
 display(a)
 """)
 '

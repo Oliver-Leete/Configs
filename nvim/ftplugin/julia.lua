@@ -96,6 +96,7 @@ Run_closest = function()
     else
         location = file .. "::" .. name
     end
+    print(location)
     require("neotest").run.run(location)
 end
 

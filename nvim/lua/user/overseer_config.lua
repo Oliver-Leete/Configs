@@ -32,27 +32,35 @@ overseer.setup({
             "on_complete_dispose",
             { "user.attach_toggleterm", goto_prev = true },
             "unique",
+            "display_duration",
         },
         default = {
             "on_output_summarize",
             "on_exit_set_status",
-            { "on_complete_notify", system = "always" },
+            { "on_complete_notify", system = "unfocused" },
             "on_complete_dispose",
             "user.attach_toggleterm",
+            "display_duration",
         },
         default_hide = {
             "on_output_summarize",
             "on_exit_set_status",
-            { "on_complete_notify", system = "always" },
+            { "on_complete_notify", system = "unfocused" },
             "on_complete_dispose",
             { "user.attach_toggleterm", hide = true },
+            "display_duration",
         },
     },
     actions = {
-        ["open"] = false,
         ["open vsplit"] = false,
         ["open hsplit"] = false,
         ["set loclist diagnostics"] = false,
+        ["toggle open"] = {
+            desc = "open in toggleterm",
+            run = function(task)
+                task.toggleterm:toggle()
+            end,
+        },
         ["keep runnning"] = {
             desc = "restart the task even if it succeeds",
             run = function(task)
@@ -68,7 +76,7 @@ overseer.setup({
                 task:remove_components({ "on_complete_dispose" })
             end
         },
-        ["hard restart"] = {
+        ["restart with server"] = {
             desc = "restart the server with the task",
             run = function(task)
                 local task_list = require("overseer.task_list").list_tasks()

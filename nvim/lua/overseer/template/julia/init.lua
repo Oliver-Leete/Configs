@@ -41,7 +41,7 @@ return {
             {
                 name = "Start Test Server",
                 tskName = vim.g.project .. " Test Server",
-                cmd = [[julia --color=yes --project -t auto -e 'using Revise, DaemonMode; print("Starting test server"); serve(print_stack=true, async=false)']],
+                cmd = [[julia --color=yes --project -t auto -e 'using Revise, DaemonMode; print("Running test server"); serve(print_stack=true, async=false)']],
                 condition = isProject,
                 is_test_server = true,
                 hide = true,
@@ -116,7 +116,7 @@ return {
             {
                 name = "Test Package",
                 tskName = vim.g.project .. " Test Suite",
-                cmd = "cd test; julia --threads=auto --project runtests.jl",
+                cmd = "julia --threads=auto --project -e 'using Pkg; Pkg.test()'",
                 tags = { TAG.TEST },
                 condition = hasTest,
                 unique = true,
@@ -247,7 +247,7 @@ return {
                 table.insert(
                     ret,
                     {
-                        name = "Run " .. san_name .. " Test",
+                        name = "Test " .. san_name,
                         builder = function()
                             require("neotest").run.run(location)
                             return { cmd = "", name = "", components = { "user.dispose_now" }, }
@@ -272,7 +272,7 @@ return {
                 table.insert(
                     ret,
                     {
-                        name = "Run " .. san_name .. " benchmark",
+                        name = "Benchmark " .. san_name,
                         builder = function()
                             require("neotest").run.run(location)
                             return { cmd = "", name = "", components = { "user.dispose_now" }, }
@@ -285,6 +285,45 @@ return {
             end
         end
 
+        local profilable = vim.fn.systemlist([[rg --no-filename --no-heading --no-line-number -e ".*\[\"(.*?)\"\].*@benchmarkable(.*)\$" -r "\$1	\$2"]])
+        for _, s in pairs(profilable) do
+            local name, command = s:match("([^\t]+)\t([^\t]+)")
+            table.insert(
+                ret,
+                {
+                    name = "Profile " .. name,
+                    builder = function()
+                        return {
+                            name = name .. " profiling",
+                            cmd = "~/.config/nvim/filetype/julia/profBench '" .. command .. "'",
+                            components = { "default", "unique" },
+                        }
+                    end,
+                    priority = priority,
+                    params = {},
+                }
+            )
+            priority = priority + 1
+        end
+
+        table.insert(
+            ret,
+            {
+                name = "Load profile data",
+                builder = function()
+                    Jul_perf_flat()
+                    return { cmd = "", name = "", components = { "user.dispose_now" }, }
+                end,
+                priority = priority,
+                condition = {
+                    callback = function()
+                        return files.exists("/tmp/julprof.data")
+                    end
+                },
+                params = {},
+            }
+        )
+        priority = priority + 1
 
         table.insert(
             ret,
@@ -325,45 +364,6 @@ return {
             }
         )
         priority = priority + 1
-
-        local profilable = vim.fn.systemlist([[rg --no-filename --no-heading --no-line-number -e ".*\[\"(.*?)\"\].*@benchmarkable(.*)\$" -r "\$1	\$2"]])
-        for _, s in pairs(profilable) do
-            local name, command = s:match("([^\t]+)\t([^\t]+)")
-            table.insert(
-                ret,
-                {
-                    name = "Profile " .. name .. " Benchmark",
-                    builder = function()
-                        return {
-                            name = name .. " profiling",
-                            cmd = "~/.config/nvim/filetype/julia/profBench '" .. command .. "'",
-                            components = { "default", "unique" },
-                        }
-                    end,
-                    priority = priority,
-                    params = {},
-                }
-            )
-            priority = priority + 1
-        end
-
-        table.insert(
-            ret,
-            {
-                name = "Load profile data",
-                builder = function()
-                    Jul_perf_flat()
-                    return { cmd = "", name = "", components = { "user.dispose_now" }, }
-                end,
-                priority = priority,
-                condition = {
-                    callback = function()
-                        return files.exists("/tmp/julprof.data")
-                    end
-                },
-                params = {},
-            }
-        )
 
         cb(ret)
     end,

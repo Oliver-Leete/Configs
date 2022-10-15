@@ -110,18 +110,6 @@ function Statusline()
         prev = tasks
     end
 
-    local terms = ""
-    local termstats = require("toggleterm.terminal").get_all(true)
-    if #termstats > 0 then
-        terms = "%#WinBarVisualEnds#" .. terms .. " " .. tostring(#termstats) .. " "
-        if prev ~= "" then
-            statusline = statusline .. hle .. " " .. terms
-        else
-            statusline = statusline .. terms
-        end
-        prev = terms
-    end
-
     local dapstats = require("dap").status()
     if dapstats ~= "" then
         local dap = "%#DiagnosticError#" .. dapstats .. " "

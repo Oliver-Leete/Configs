@@ -46,6 +46,7 @@ return {
                     return {
                         name = "Build Document",
                         cmd = "latexmk -pdf -file-line-error -synctex=1 OML-Thesis.tex",
+                        components = { "default_hide", 'unique' }
                     }
                 end,
                 priority = 5,

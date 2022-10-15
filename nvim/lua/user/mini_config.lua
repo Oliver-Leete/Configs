@@ -21,7 +21,7 @@ local miniAiGitsigns = function()
         local from_line = hunk.added.start
         local from_col = 1
         local to_line = hunk.vend
-        local to_col = #vim.api.nvim_buf_get_lines(0, to_line-1, to_line, false)[1] + 1
+        local to_col = #vim.api.nvim_buf_get_lines(0, to_line - 1, to_line, false)[1] + 1
         return {
             from = { line = from_line, col = from_col },
             to = { line = to_line, col = to_col },
@@ -58,8 +58,8 @@ require("mini.ai").setup({
         h = miniAiGitsigns,
         -- blOck
         o = gen_spec.treesitter({
-            a = {"@block.outer", "@conditional.outer", "@loop.outer"},
-            i = {"@block.inner", "@conditional.inner", "@loop.inner"},
+            a = { "@block.outer", "@conditional.outer", "@loop.outer" },
+            i = { "@block.inner", "@conditional.inner", "@loop.inner" },
         }),
         -- paragraph
         p = { {
@@ -79,12 +79,12 @@ require("mini.ai").setup({
         },
         -- scope
         s = gen_spec.treesitter({
-            a = {"@function.outer", "@class.outer", "@testitem.outer"},
-            i = {"@function.inner", "@class.inner", "@testitem.inner"},
+            a = { "@function.outer", "@class.outer", "@testitem.outer" },
+            i = { "@function.inner", "@class.inner", "@testitem.inner" },
         }),
         S = gen_spec.treesitter({
-            a = {"@function.name", "@class.name", "@testitem.name"},
-            i = {"@function.name", "@class.name", "@testitem.name"},
+            a = { "@function.name", "@class.name", "@testitem.name" },
+            i = { "@function.name", "@class.name", "@testitem.name" },
         }),
         -- line (same key as visual line in my mappings)
         x = { {
@@ -133,9 +133,9 @@ function _G.markAndGoMini(count, direction, id)
     until count <= 0
 end
 
-for _, o in pairs({ "a", "b", "d", "e", "f", "g", "h", "o", "p", "q", "r", "s", "w", "W", "x", }) do
-    Map({ "n", "x", "o" }, "[" .. o, function() _G.markAndGoMini(vim.v.count, 'prev', o) end )
-    Map({ "n", "x", "o" }, "]" .. o, function() _G.markAndGoMini(vim.v.count, 'next', o) end )
+for _, o in pairs({ "a", "b", "d", "e", "f", "g", "h", "o", "p", "q", "r", "S", "s", "w", "W", "x", }) do
+    Map({ "n", "x", "o" }, "[" .. o, function() _G.markAndGoMini(vim.v.count, 'prev', o) end)
+    Map({ "n", "x", "o" }, "]" .. o, function() _G.markAndGoMini(vim.v.count, 'next', o) end)
 
     -- Does the same thing as goto_left and goto_right, but limited to the current object and for
     -- both inside and around. Now I don't need ninja-feet
@@ -219,10 +219,17 @@ require("mini.align").setup({
 local minimap = require("mini.map")
 minimap.setup({
     integrations = {
-      minimap.gen_integration.builtin_search(),
-      minimap.gen_integration.gitsigns(),
-      minimap.gen_integration.diagnostic(),
-    }
+        minimap.gen_integration.builtin_search(),
+        minimap.gen_integration.gitsigns(),
+        minimap.gen_integration.diagnostic(),
+    },
+    window = {
+        show_integration_count = false,
+    },
+    symbols = {
+        scroll_line = '▶',
+        scroll_view = '┃',
+    },
 })
 minimap.open()
 
