@@ -42,7 +42,7 @@ function adapter.build_spec(args)
     end
 
 
-    local command = "julia --color=yes --project -e '" ..
+    local command = "julia --color=yes --project -E '" ..
         [[using DaemonMode
         try
             runexpr("Revise.revise(throw=true)")

@@ -11,7 +11,7 @@ profileData = Profile.retrieve()
 save("/tmp/last_jul.jlprof", profileData[1], profileData[2])
 ProfileCanvas.view()
 
-using AbstractTrees
+using AbstractTrees, FlameGraphs, JSON
 function make_json(flamegraph)
     function allparent(node)
         ret = []
@@ -22,15 +22,28 @@ function make_json(flamegraph)
         return ret
     end
     event = []
-    for leaf in Leaves(flamegraph)
-        push!(event, Dict(
-            "count" => length(leaf.data.span),
-            "frames" => [Dict(
-                "symbols" => leaf.data.sf.func,
-                "file" => leaf.data.sf.file,
-                "linenr" => leaf.data.sf.line,
-            ) for i in allparent(leaf)]
-        ))
+    for leaf in PreOrderDFS(flamegraph)
+        if leaf.data.sf.line != 0
+            push!(event, Dict(
+                "count" => length(leaf.data.span),
+                "frames" => [Dict(
+                    "symbol" => leaf.data.sf.func,
+                    "file" => leaf.data.sf.file,
+                    "linenr" => leaf.data.sf.line,
+                ) for i in allparent(leaf)]
+            ))
+        else
+            push!(event, Dict(
+                "count" => length(leaf.data.span),
+                "frames" => [Dict(
+                    "symbol" => leaf.data.sf.func,
+                    "file" => leaf.data.sf.file,
+                ) for i in allparent(leaf)]
+            ))
+        end
     end
-    return event
+    ret = Dict( "event 1" => event )
+    return ret
 end
+
+write("/tmp/jlprof.json", JSON.json(make_json(flamegraph(profileData[1], lidict=profileData[2]))))

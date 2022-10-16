@@ -1,6 +1,5 @@
 #!/bin/bash
 project="$(basename "$PWD")"
-cd benchmark || exit
 julia --threads=auto --project -e '
 using DaemonMode
 try
@@ -11,7 +10,7 @@ end
 runexpr("""
 using BenchmarkTools, Profile, FileIO
 using FlameGraphs, AbstractTrees, JSON
-include("benchmarks.jl")
+include("benchmark/benchmarks.jl")
 
 a = @bprofile '"$1"'
 Profile.print(
@@ -32,16 +31,27 @@ function make_json(flamegraph)
     end
     event = []
     for leaf in PreOrderDFS(flamegraph)
-        push!(event, Dict(
-            "count" => length(leaf.data.span),
-            "frames" => [Dict(
-                "symbol" => leaf.data.sf.func,
-                "file" => leaf.data.sf.file,
-                "linenr" => leaf.data.sf.line,
-            ) for i in allparent(leaf)]
-        ))
+        if leaf.data.sf.line != 0
+            push!(event, Dict(
+                "count" => length(leaf.data.span),
+                "frames" => [Dict(
+                    "symbol" => leaf.data.sf.func,
+                    "file" => leaf.data.sf.file,
+                    "linenr" => leaf.data.sf.line,
+                ) for i in allparent(leaf)]
+            ))
+        else
+            push!(event, Dict(
+                "count" => length(leaf.data.span),
+                "frames" => [Dict(
+                    "symbol" => leaf.data.sf.func,
+                    "file" => leaf.data.sf.file,
+                ) for i in allparent(leaf)]
+            ))
+        end
     end
-    return event
+    ret = Dict( "event 1" => event )
+    return ret
 end
 
 write("/tmp/jlprof.json", JSON.json(make_json(flamegraph(profileData[1], lidict=profileData[2]))))

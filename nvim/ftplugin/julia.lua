@@ -7,50 +7,7 @@ vim.cmd([[set errorformat+=%-G%.%#]])
 
 vim.bo.commentstring = [[#%s]]
 
-
-function Jul_perf_flat()
-    local function get_command_output(cmd, silent)
-        if silent then
-            cmd = cmd .. " 2>/dev/null"
-        end
-
-        local data_file = assert(io.popen(cmd, "r"))
-        data_file:flush()
-        local output = data_file:read("*all")
-        data_file:close()
-
-        return output
-    end
-
-    local perf_data = "/tmp/julprof.data"
-    local raw_data = get_command_output("cat " .. perf_data, true)
-
-    local result = {}
-    local current_event = 1
-    result[1] = {}
-
-    for line in raw_data:gmatch("[^\r\n]+") do
-        local count, file, linenr, symbol = line:match("^%s*(%d+)%s+%d+%s+(.-)%s+(%d+)%s+(.*)")
-        local success = count and file and linenr and symbol
-
-        local cur_file_name = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
-
-        if success and tonumber(count) > 0 then
-            if file:find("@" .. vim.g.project) then
-                file = "/home/oleete/Projects/" .. file.match(file, "@(" .. vim.g.project .. ".*)")
-                local trace = { symbol = symbol, file = file, linenr = tonumber(linenr) }
-
-                table.insert(result[current_event], { count = tonumber(count), frames = { trace } })
-            elseif file:find(cur_file_name) then
-                file = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
-                local trace = { symbol = symbol, file = file, linenr = tonumber(linenr) }
-
-                table.insert(result[current_event], { count = tonumber(count), frames = { trace } })
-            end
-        end
-    end
-    require("perfanno").load_traces(result)
-end
+Jul_perf_flat = require("perfanno").load_traces({ vim.json.decode(io.open("/tmp/jlprof.json", "rb"):read("*all")) })
 
 Run_closest = function()
     local line = vim.api.nvim_win_get_cursor(0)[1]
@@ -96,7 +53,6 @@ Run_closest = function()
     else
         location = file .. "::" .. name
     end
-    print(location)
     require("neotest").run.run(location)
 end
 
@@ -177,12 +133,3 @@ Map("n", "<leader>l", Run_closest, { buffer = 0 })
 Map("n", ",dd", function() BP_Toggle("Debugger", "@bp") end, { buffer = 0 })
 Map("n", ",di", function() BP_Toggle("Infiltrator", "@infiltrate") end, { buffer = 0 })
 Map("n", ",dq", function() BP_Remove_All({ "Debugger", "Infiltrator" }, { "@bp", "@infiltrate" }) end, { buffer = 0 })
-
-vim.b.minisurround_config = {
-    custom_surroundings = {
-        ['a'] = {
-            input = { "%(.-->.-%)", "^.-->%s?().-()[),\n]$" },
-            output = { left = '(x -> ', right = ')' },
-        },
-    }
-}

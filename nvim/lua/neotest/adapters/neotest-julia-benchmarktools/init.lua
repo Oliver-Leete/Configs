@@ -13,7 +13,7 @@ function adapter.discover_positions(path)
     (assignment_expression
         (subscript_expression
             (string_literal) @test.name)
-        (macro_expression)  @test.definition
+        (_)  @test.definition
     )
     ]]
 
@@ -40,8 +40,8 @@ function adapter.build_spec(args)
         require("overseer").run_template({ name = "Start Test Server" })
     end
 
-    local command = "cd benchmark && julia --project -e '" ..
-        [[using DaemonMode
+    local command = "julia --project -e '" ..
+        [[using DaemonMode, Revise
         try
             runexpr("Revise.revise(throw=true)")
         catch
@@ -49,9 +49,8 @@ function adapter.build_spec(args)
         end
         runargs()' ]]
         .. "/home/oleete/.config/nvim/lua/neotest/adapters/neotest-julia-benchmarktools/juliaBenchmarkClient.jl "
-        .. vim.fn.getcwd() .. "/benchmark/benchmarks.jl' "
-        .. position.name:sub(2, -2)
-        .. "'"
+        .. vim.fn.getcwd() .. "/benchmark/benchmarks.jl "
+        .. position.name
 
     if position.type == "file" then
         return

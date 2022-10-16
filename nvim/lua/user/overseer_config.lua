@@ -58,7 +58,15 @@ overseer.setup({
         ["toggle open"] = {
             desc = "open in toggleterm",
             run = function(task)
-                task.toggleterm:toggle()
+                if task.toggleterm then
+                    task.toggleterm:toggle()
+                else
+                    local bufnr = task.strategy.bufnr
+                    task.toggleterm = require("toggleterm.terminal").Terminal:new({ bufnr = bufnr, jobname = task.name })
+                    task:add_components({ "user.attach_toggleterm" })
+                    task.toggleterm:toggle()
+                    task.toggleterm:__resurrect()
+                end
             end,
         },
         ["keep runnning"] = {

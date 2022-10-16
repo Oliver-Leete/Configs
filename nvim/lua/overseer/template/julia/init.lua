@@ -1,4 +1,3 @@
-local overseer = require("overseer")
 local constants = require("overseer.constants")
 local files = require("overseer.files")
 local STATUS = require("overseer.constants").STATUS
@@ -33,9 +32,8 @@ return {
     },
 
     generator = function(_, cb)
-
-        local otherProject = otherProjectFinder()
-        local otherProjectName = vim.fs.basename(otherProject)
+        local otherProject = otherProjectFinder() or ""
+        local otherProjectName = vim.fs.basename(otherProject) or ""
 
         local commands = {
             {
@@ -64,7 +62,9 @@ return {
                 tskName = otherProjectName .. " Project Repl",
                 cmd = "julia --threads=auto --project=" .. otherProject,
                 condition = {
-                    callback = function() return otherProjectName ~= vim.g.project and otherProjectName ~= "." end,
+                    callback = function() return otherProjectName ~= vim.g.project and
+                            otherProjectName ~= "."
+                    end,
                 },
             },
             {
@@ -84,7 +84,7 @@ return {
             {
                 name = "Start documentation Server",
                 tskName = vim.g.project .. " Doc Server",
-                cmd = [[julia --project=docs -e 'using Revise, ]] ..
+                cmd = [[julia --project=docs -E 'using Revise, ]] ..
                     vim.g.project .. [[, LiveServer; servedocs(launch_browser=true; include_dirs = ["src"])']],
                 hide = true,
                 unique = true,
@@ -116,7 +116,7 @@ return {
             {
                 name = "Test Package",
                 tskName = vim.g.project .. " Test Suite",
-                cmd = "julia --threads=auto --project -e 'using Pkg; Pkg.test()'",
+                cmd = "julia --threads=auto --project -E 'using Pkg; Pkg.test()'",
                 tags = { TAG.TEST },
                 condition = hasTest,
                 unique = true,
@@ -133,14 +133,14 @@ return {
             {
                 name = "Package Benchmarks",
                 tskName = vim.g.project .. " Bench Suite",
-                cmd = [[julia -e 'using PkgBenchmark; benchmarkpkg("]] .. vim.g.project .. [[")']],
+                cmd = [[julia -E 'using PkgBenchmark; benchmarkpkg("]] .. vim.g.project .. [[")']],
                 condition = hasBenchmark,
                 unique = true,
             },
             {
                 name = "Retune Benchmarks",
                 tskName = vim.g.project .. " Retune Bench",
-                cmd = [[julia -e 'using PkgBenchmark; benchmarkpkg("]] .. vim.g.project .. [[, retune=true")']],
+                cmd = [[julia -E 'using PkgBenchmark; benchmarkpkg("]] .. vim.g.project .. [[, retune=true")']],
                 condition = hasBenchmark,
                 unique = true,
             },
@@ -154,7 +154,7 @@ return {
             {
                 name = "Profile Package Imports",
                 tskName = vim.g.project .. " Profile Imports",
-                cmd = [[julia -e 'using InteractiveUtils; @time_imports using ]] .. vim.g.project .. "'",
+                cmd = [[julia -E 'using InteractiveUtils; @time_imports using ]] .. vim.g.project .. "'",
                 condition = isProject,
                 unique = true,
             },
@@ -168,7 +168,7 @@ return {
             {
                 name = "Run Build",
                 tskName = vim.g.project .. " Build",
-                cmd = "julia --threads=auto --project -e 'using Pkg; Pkg.build(" .. vim.g.project .. ")'",
+                cmd = "julia --threads=auto --project -E 'using Pkg; Pkg.build(" .. vim.g.project .. ")'",
                 tags = { TAG.BUILD },
                 condition = hasBuild,
                 unique = true,
@@ -260,6 +260,34 @@ return {
             end
         end
 
+        -- FIX: This doesn't actually work
+        for _, result in pairs(test_results) do
+            result = vim.fn.json_decode(result)
+            if result.type == "match" then
+                local name = result.data.submatches[1].match.text
+                local san_name = name:sub(2, -2)
+                table.insert(
+                    ret,
+                    {
+                        name = "Infiltrate " .. san_name,
+                        builder = function()
+                            return {
+                                name = san_name .. " Infiltration",
+                                cmd = [[julia --threads=auto --project -i -E '
+                                using TestItemRunner, Infiltrator
+                                @run_package_tests filter=ti->(ti.name == ]] .. name .. [[)
+                                ']],
+                                components = { "default", "unique" },
+                            }
+                        end,
+                        priority = priority,
+                        params = {},
+                    }
+                )
+                priority = priority + 1
+            end
+        end
+
         -- Add neotest benchmarks
         local benchmark_results = vim.fn.systemlist([[rg -o --json --pcre2 '".*"(?=] = @benchmarkable)' $(pwd)]])
         for _, result in pairs(benchmark_results) do
@@ -328,7 +356,7 @@ return {
         table.insert(
             ret,
             {
-                name = "Julia benchmark against commit",
+                name = "Benchmark against commit",
                 builder = function()
                     local open_dif = function()
                         local action_state = require("telescope.actions.state")
@@ -338,8 +366,10 @@ return {
                         vim.api.nvim_win_close(0, true)
                         local task = require("overseer").new_task({
                             name = "Benchmark against " .. value,
-                            cmd = [[julia -e 'using PkgBenchmark; judge("]] ..
-                                vim.g.project .. '", "' .. value .. [[")']],
+                            cmd = [[julia -E 'using PkgBenchmark; res = judge("]] ..
+                                vim.g.project .. '", "' .. value .. [[")
+                                export_markdown("judgement.md", res)
+                                ']],
                             components = { "default", "unique" }
                         })
                         task:start()
