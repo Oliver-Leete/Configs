@@ -13,6 +13,16 @@ Term_on_open = function(term)
     vim.wo.winbar = "%{%v:lua.Term_Winbar()%}"
 end
 
+function _G.my_toggleterm_winbar_click(id)
+    local cur_win = math.floor(id / 100000)
+    print(cur_win)
+    local term_id = id - (cur_win * 100000)
+    print(term_id)
+    local term = require("toggleterm.terminal").get_or_create_term(term_id)
+    if not term then return end
+    vim.api.nvim_win_set_buf(cur_win, term.bufnr)
+end
+
 function Term_Winbar()
     local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
     local mode = VimMode()[2]
@@ -37,7 +47,7 @@ function Term_Winbar()
             hl = "%#WinBarInactive#"
             hle = "%#WinBarInactiveEnds#"
         end
-        winbar = winbar .. string.format("%%%d@v:lua.my_toggleterm_winbar_click@", term.id + cur_win * 10000000)
+        winbar = winbar .. string.format("%%%d@v:lua.my_toggleterm_winbar_click@", term.id + cur_win * 100000)
         winbar = winbar .. hle .. ""
         winbar = winbar .. hl .. " " .. " " .. term.jobname .. " "
         winbar = winbar .. hle .. ""

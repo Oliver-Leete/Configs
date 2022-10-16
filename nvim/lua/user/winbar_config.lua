@@ -48,16 +48,6 @@ local function default_winbar(bufnr, hl, is_active)
     return winbar
 end
 
-function _G.my_toggleterm_winbar_click(id)
-    local cur_win = math.floor(id / 10000000)
-    print(cur_win)
-    local term_id = id - cur_win * 10000000
-    print(term_id)
-    local term = require("toggleterm.terminal").get_or_create_term(term_id)
-    if not term then return end
-    vim.api.nvim_win_set_buf(cur_win, term.bufnr)
-end
-
 function Normal_Winbar()
     local bufnr = vim.api.nvim_get_current_buf()
     local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)

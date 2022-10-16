@@ -261,7 +261,11 @@ Map("n", "<leader>e", "<cmd>OverseerRun<cr>")
 -- Map("n", "<leader>i", "<cmd>OverseerQuickAction toggle<cr>")
 Map("n", "<leader>i", function()
     if OTerm ~= "" then
-        OTerm:toggle()
+        if OTerm:is_open() then
+            vim.cmd("ToggleTermToggleAll")
+        else
+            OTerm:open()
+        end
     else
         vim.notify("No terminal found", "info", { title = "My Terminals", })
     end

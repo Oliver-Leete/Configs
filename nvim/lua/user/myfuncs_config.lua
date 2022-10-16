@@ -125,6 +125,7 @@ TabNext = function()
         local next_index = cur_index == #term_list and 1 or cur_index + 1
         local cur_win = vim.api.nvim_get_current_win()
         vim.api.nvim_win_set_buf(cur_win, term_list[next_index].bufnr)
+        OTerm = term_list[next_index]
     else
         vim.cmd("tabnext")
     end
@@ -144,6 +145,7 @@ TabPrev = function()
         local next_index = cur_index == 1 and #term_list or cur_index - 1
         local cur_win = vim.api.nvim_get_current_win()
         vim.api.nvim_win_set_buf(cur_win, term_list[next_index].bufnr)
+        OTerm = term_list[next_index]
     else
         vim.cmd("tabprevious")
     end
