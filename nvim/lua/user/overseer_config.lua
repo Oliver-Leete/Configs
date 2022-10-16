@@ -72,6 +72,7 @@ overseer.setup({
                     task.toggleterm:toggle()
                     task.toggleterm:__resurrect()
                 end
+                OTerm = task.toggleterm
             end,
         },
         ["toggle"] = {
@@ -86,6 +87,7 @@ overseer.setup({
                     task.toggleterm:toggle()
                     task.toggleterm:__resurrect()
                 end
+                OTerm = task.toggleterm
             end,
         },
         ["keep runnning"] = {

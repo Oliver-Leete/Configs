@@ -258,7 +258,14 @@ Map("n", "<leader>e", "<cmd>OverseerRun<cr>")
 --         overseer.run_action(tasks[1], "restart")
 --     end
 -- end)
-Map("n", "<leader>i", "<cmd>OverseerQuickAction toggle<cr>")
+-- Map("n", "<leader>i", "<cmd>OverseerQuickAction toggle<cr>")
+Map("n", "<leader>i", function()
+    if OTerm ~= "" then
+        OTerm:toggle()
+    else
+        vim.notify("No terminal found", "info", { title = "My Terminals", })
+    end
+end)
 Map("n", "<leader>o", function() require("neotest").summary.toggle() end)
 
 Map("n", "<leader>l", function() require("neotest").run.run() end)

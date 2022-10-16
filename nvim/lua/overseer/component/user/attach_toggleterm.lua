@@ -49,6 +49,7 @@ return {
                 elseif params.goto_prev then
                     require("toggleterm.ui").goto_previous()
                 end
+                OTerm = task.toggleterm
             end,
             on_restart = function(_, task)
                 task.toggleterm:shutdown()

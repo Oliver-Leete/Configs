@@ -113,6 +113,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 call plug#end()]])
 
 pcall(require('impatient'))
+OTerm = ""
 
 pcall(require("user.settings_config"))
 pcall(require("user.misc_config"))
