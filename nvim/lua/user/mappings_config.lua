@@ -247,19 +247,18 @@ for i, key in pairs(harpoon_keys) do
 end
 
 Map("n", "<leader>h", "<cmd>OverseerTaskAction<cr>")
-Map("n", "<leader>e", "<cmd>OverseerRun<cr>")
-Map("n", "<leader>E", function()
-    local overseer = require("overseer")
-    local tasks = overseer.list_tasks({ recent_first = true })
-    if vim.tbl_isempty(tasks) then
-        vim.notify("No tasks found", vim.log.levels.WARN)
-    else
-        overseer.run_action(tasks[1], "restart")
-    end
-end)
-
 Map("n", "<leader>n", "<cmd>OverseerToggle<cr>")
-Map("n", "<leader>i", "<cmd>ToggleTermToggleAll<cr>")
+Map("n", "<leader>e", "<cmd>OverseerRun<cr>")
+-- Map("n", "<leader>E", function()
+--     local overseer = require("overseer")
+--     local tasks = overseer.list_tasks({ recent_first = true })
+--     if vim.tbl_isempty(tasks) then
+--         vim.notify("No tasks found", vim.log.levels.WARN)
+--     else
+--         overseer.run_action(tasks[1], "restart")
+--     end
+-- end)
+Map("n", "<leader>i", "<cmd>OverseerQuickAction toggle<cr>")
 Map("n", "<leader>o", function() require("neotest").summary.toggle() end)
 
 Map("n", "<leader>l", function() require("neotest").run.run() end)

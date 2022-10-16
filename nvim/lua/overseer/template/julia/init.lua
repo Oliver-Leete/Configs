@@ -42,9 +42,7 @@ return {
                 cmd = [[julia --color=yes --project -t auto -e 'using Revise, DaemonMode; print("Running test server"); serve(print_stack=true, async=false)']],
                 condition = isProject,
                 is_test_server = true,
-                hide = true,
-                unique = true,
-                alwaysRestart = true,
+                components = { "default_hide", "unique", "always_restart" },
             },
             {
                 name = "Open Julia Repl",
@@ -72,31 +70,27 @@ return {
                 tskName = vim.g.project .. " Doc Build",
                 cmd = "~/.config/nvim/filetype/julia/docBuild",
                 condition = { callback = isInProject },
-                unique = true,
+                components = { "default", "unique" },
             },
             {
                 name = "Open Built Documentation",
                 cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
                 condition = { callback = function(opts) files.exists(files.join(opts.dir, "docs", "build", "index.html")) end },
-                hide = true,
-                unique = true,
+                components = { "default_hide", "unique" },
             },
             {
                 name = "Start documentation Server",
                 tskName = vim.g.project .. " Doc Server",
                 cmd = [[julia --project=docs -E 'using Revise, ]] ..
                     vim.g.project .. [[, LiveServer; servedocs(launch_browser=true; include_dirs = ["src"])']],
-                hide = true,
-                unique = true,
-                alwaysRestart = true,
+                components = { "default_hide", "unique", "always_restart" },
                 condition = hasDocs,
             },
             {
                 name = "Open Documentation Server",
                 cmd = "browser http://localhost:8000 & sleep 5",
                 condition = hasDocs,
-                hide = true,
-                unique = true,
+                components = { "default_hide", "unique" },
             },
             {
                 name = "Run Documentation Tests",
@@ -104,14 +98,14 @@ return {
                 cmd = "~/.config/nvim/filetype/julia/docTest",
                 tags = { TAG.TEST },
                 condition = hasDocs,
-                unique = true,
+                components = { "default", "unique" },
             },
             {
                 name = "Update Documentation Tests Output",
                 tskName = vim.g.project .. " Doc Test Update",
                 cmd = "~/.config/nvim/filetype/julia/docTestUpdate",
                 condition = hasDocs,
-                unique = true,
+                components = { "default", "unique" },
             },
             {
                 name = "Test Package",
@@ -119,7 +113,7 @@ return {
                 cmd = "julia --threads=auto --project -E 'using Pkg; Pkg.test()'",
                 tags = { TAG.TEST },
                 condition = hasTest,
-                unique = true,
+                components = { "default", "unique" },
             },
             {
                 name = "Test Coverage",
@@ -128,42 +122,42 @@ return {
                     vim.fs.basename(vim.fn.getcwd()),
                 tags = { TAG.TEST },
                 condition = hasTest,
-                unique = true,
+                components = { "default", "unique" },
             },
             {
                 name = "Package Benchmarks",
                 tskName = vim.g.project .. " Bench Suite",
                 cmd = [[julia -E 'using PkgBenchmark; benchmarkpkg("]] .. vim.g.project .. [[")']],
                 condition = hasBenchmark,
-                unique = true,
+                components = { "default", "unique" },
             },
             {
                 name = "Retune Benchmarks",
                 tskName = vim.g.project .. " Retune Bench",
                 cmd = [[julia -E 'using PkgBenchmark; benchmarkpkg("]] .. vim.g.project .. [[, retune=true")']],
                 condition = hasBenchmark,
-                unique = true,
+                components = { "default", "unique" },
             },
             {
                 name = "Run Julia File (" .. vim.fn.expand("%:t:r") .. ")",
                 tskName = "Running " .. vim.fn.expand("%:t:r"),
                 cmd = "julia " .. vim.fn.expand("%:p"),
                 condition = isFile,
-                unique = true,
+                components = { "default", "unique" },
             },
             {
                 name = "Profile Package Imports",
                 tskName = vim.g.project .. " Profile Imports",
                 cmd = [[julia -E 'using InteractiveUtils; @time_imports using ]] .. vim.g.project .. "'",
                 condition = isProject,
-                unique = true,
+                components = { "default", "unique" },
             },
             {
                 name = "Profile File (" .. vim.fn.expand("%:t:r") .. ")",
                 tskName = "Profiling " .. vim.fn.expand("%:t:r"),
                 cmd = "julia ~/.config/nvim/filetype/julia/prof.jl " .. vim.fn.expand("%:p"),
                 condition = isFile,
-                unique = true,
+                components = { "default", "unique" },
             },
             {
                 name = "Run Build",
@@ -171,7 +165,7 @@ return {
                 cmd = "julia --threads=auto --project -E 'using Pkg; Pkg.build(" .. vim.g.project .. ")'",
                 tags = { TAG.BUILD },
                 condition = hasBuild,
-                unique = true,
+                components = { "default", "unique" },
             },
             {
                 name = "Precompile Package",
@@ -179,7 +173,7 @@ return {
                 tskName = vim.g.project .. " Precompile",
                 tags = { TAG.BUILD },
                 condition = isProject,
-                unique = true,
+                components = { "default", "unique" },
             },
             {
                 name = "Package Compile",
@@ -187,31 +181,12 @@ return {
                 cmd = "julia --threads=auto ~/.config/nvim/filetype/julia/task_compileenv.jl " .. vim.fn.getcwd(),
                 tags = { TAG.BUILD },
                 condition = isProject,
-                unique = true,
+                components = { "default", "unique" },
             },
         }
         local ret = {}
         local priority = 60
         for _, command in pairs(commands) do
-
-            local comps = {
-                "on_output_summarize",
-                "on_exit_set_status",
-                { "on_complete_notify", system = "unfocused" },
-                "on_complete_dispose",
-            }
-            if command.hide then
-                table.insert(comps, { "user.attach_toggleterm", hide = true })
-            else
-                table.insert(comps, "user.attach_toggleterm")
-            end
-            if command.unique then
-                table.insert(comps, "unique")
-            end
-            if command.alwaysRestart then
-                table.insert(comps, { "on_complete_restart", statuses = { STATUS.FAILURE, STATUS.SUCCESS } })
-            end
-
             table.insert(
                 ret,
                 {
@@ -220,7 +195,7 @@ return {
                         return {
                             name = command.tskName or command.name,
                             cmd = command.cmd,
-                            components = comps,
+                            components = command.components,
                             metadata = {
                                 is_test_server = command.is_test_server,
                             },

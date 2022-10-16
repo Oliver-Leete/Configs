@@ -10,7 +10,7 @@ overseer.setup({
             ["?"] = "ShowHelp",
             ["<CR>"] = "RunAction",
             ["<C-e>"] = "Edit",
-            ["o"] = "<cmd>OverseerQuickAction open in toggleterm<cr>",
+            ["o"] = "Open",
             ["p"] = "TogglePreview",
             ["<C-l>"] = "IncreaseDetail",
             ["<C-h>"] = "DecreaseDetail",
@@ -47,16 +47,35 @@ overseer.setup({
             "on_exit_set_status",
             { "on_complete_notify", system = "unfocused" },
             "on_complete_dispose",
-            { "user.attach_toggleterm", hide = true },
             "display_duration",
         },
+        always_restart = { "on_complete_restart", statuses = { STATUS.FAILURE, STATUS.SUCCESS } },
     },
     actions = {
         ["open vsplit"] = false,
         ["open hsplit"] = false,
         ["set loclist diagnostics"] = false,
-        ["toggle open"] = {
+        ["open"] = {
             desc = "open in toggleterm",
+            run = function(task)
+                if task.toggleterm then
+                    if task.toggleterm:is_open() then
+                        task.toggleterm:close()
+                        task.toggleterm:open()
+                    else
+                        task.toggleterm:open()
+                    end
+                else
+                    local bufnr = task.strategy.bufnr
+                    task.toggleterm = require("toggleterm.terminal").Terminal:new({ bufnr = bufnr, jobname = task.name })
+                    task:add_components({ "user.attach_toggleterm" })
+                    task.toggleterm:toggle()
+                    task.toggleterm:__resurrect()
+                end
+            end,
+        },
+        ["toggle"] = {
+            desc = "toggle toggleterm",
             run = function(task)
                 if task.toggleterm then
                     task.toggleterm:toggle()
