@@ -267,7 +267,7 @@ Map("n", "<leader>i", function()
             OTerm:open()
         end
     else
-        vim.notify("No terminal found", "info", { title = "My Terminals", })
+        vim.notify("No terminal found", "info", { title = "OTerm", })
     end
 end)
 Map("n", "<leader>o", function() require("neotest").summary.toggle() end)

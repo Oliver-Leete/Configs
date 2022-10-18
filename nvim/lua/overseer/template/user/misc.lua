@@ -8,7 +8,7 @@ return {
                     return {
                         name = "Animation",
                         cmd = "mpv --loop-file=inf /tmp/fig.gif",
-                        components = { "default", "unique" }
+                        components = { "default", "unique", "on_complete_dispose" }
                     }
                 end,
                 priority = 151,
@@ -22,7 +22,7 @@ return {
                     return {
                         name = "btop",
                         cmd = "btop",
-                        components = { "default", "unique" }
+                        components = { "user.attach_toggleterm", "unique", { "on_complete_dispose", timeout = 1 } }
                     }
                 end,
                 priority = 155,
@@ -34,7 +34,7 @@ return {
                     return {
                         name = "lazygit",
                         cmd = "lazygit",
-                        components = { "default", "unique" }
+                        components = { "user.attach_toggleterm", "unique", { "on_complete_dispose", timeout = 1 } }
                     }
                 end,
                 priority = 2,

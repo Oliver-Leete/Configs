@@ -93,7 +93,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 't-troebst/perfanno.nvim'
     Plug 'krady21/compiler-explorer.nvim'
     Plug 'akinsho/toggleterm.nvim'
-    Plug 'tknightz/telescope-termfinder.nvim'
 
     Plug 'mfussenegger/nvim-dap'
     Plug 'rcarriga/nvim-dap-ui'
@@ -114,6 +113,7 @@ call plug#end()]])
 
 pcall(require('impatient'))
 OTerm = ""
+STerm = ""
 
 pcall(require("user.settings_config"))
 pcall(require("user.misc_config"))

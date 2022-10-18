@@ -313,12 +313,14 @@ require("null-ls").setup({
         null_ls.builtins.diagnostics.fish, --no_mason_needed
         null_ls.builtins.diagnostics.flake8, --Mason
         null_ls.builtins.diagnostics.gitlint, --Mason
+        null_ls.builtins.diagnostics.jsonlint, --FIX:To_Mason
         null_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013" } }), --Mason
         null_ls.builtins.diagnostics.pydocstyle, --Mason
         null_ls.builtins.formatting.black, --Mason
         null_ls.builtins.formatting.cbfmt, --Mason
         null_ls.builtins.formatting.fish_indent, --no_mason_needed
         null_ls.builtins.formatting.isort, --Mason
+        null_ls.builtins.formatting.jq.with({ extra_args = { "--indent", "4" }}), --FIX:To_Mason
         null_ls.builtins.formatting.latexindent, --FIX:To_Mason
         null_ls.builtins.formatting.markdownlint, --Mason
         null_ls.builtins.formatting.shellharden, --Mason

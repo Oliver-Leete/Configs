@@ -2,15 +2,7 @@ using Profile, FileIO
 using ProfileCanvas
 
 include(ARGS[1])
-@profile include(ARGS[1])
-Profile.print(
-    IOContext(open("/tmp/julprof.data", "w"), :displaysize => (100000, 1000)),
-    format=:flat
-)
-profileData = Profile.retrieve()
-save("/tmp/last_jul.jlprof", profileData[1], profileData[2])
-ProfileCanvas.view()
-
+a = @profile include(ARGS[1])
 using AbstractTrees, FlameGraphs, JSON
 function make_json(flamegraph)
     function allparent(node)
@@ -46,4 +38,8 @@ function make_json(flamegraph)
     return ret
 end
 
+ProfileCanvas.view()
+profileData = Profile.retrieve()
 write("/tmp/jlprof.json", JSON.json(make_json(flamegraph(profileData[1], lidict=profileData[2]))))
+
+display(a)

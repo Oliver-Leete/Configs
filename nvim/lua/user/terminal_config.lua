@@ -78,95 +78,50 @@ require("toggleterm").setup({
     }
 })
 
--- function AnyTermOpen()
---     local term_list = require("toggleterm.terminal").get_all()
---     local open
---     for _, term in pairs(term_list) do
---         if term:is_open() then
---             open = true
---             break
---         end
---     end
---     return open
--- end
---
--- Terminal = require("toggleterm.terminal").Terminal
--- Harp_Term_1 = Terminal:new({ id = 1001, jobname = "Terminal 1" })
--- Harp_Term_2 = Terminal:new({ id = 1002, jobname = "Terminal 2" })
+Terminal = require("toggleterm.terminal").Terminal
+Map("n", "<leader>I", function() _G.sendLines(vim.v.count) end)
+Map("x", "<leader>I", ":<c-u>call v:lua.sendRegion(visualmode())<cr>")
 
--- function Terminal:open_no_foc()
---     if not self:is_open() then
---         self:toggle()
---     end
---     local ui = require("toggleterm.ui")
---     ui.scroll_to_bottom()
---     ui.goto_previous()
---     ui.stopinsert()
--- end
---
--- function Terminal:set_harp(term_num)
---     if term_num == 1 then
---         if Harp_Term_1 ~= self then
---             if Harp_Term_1:is_open() then
---                 Harp_Term_1:close()
---             end
---             Harp_Term_1 = self
---         end
---     elseif term_num == 2 then
---         if Harp_Term_2 ~= self then
---             Harp_Term_2 = self
---         end
---     end
--- end
---
--- function Terminal:set_toggle(term_num)
---     self:set_harp(term_num)
---     self:toggle()
--- end
---
--- function Terminal:send_open(cmd, _, term_num)
---     if term_num then
---         self:set_harp(term_num)
---     end
---
---     if not self:is_open() then
---         self:toggle()
---     end
---     self:send(cmd, false)
--- end
+function Terminal:fsend()
+    local to_send = vim.fn.getreg('"'):gsub("[\r\n]$", "")
+    self:send(to_send, true)
+end
 
--- local function harpsend(num)
---     local to_send = vim.fn.getreg('"'):gsub("[\r\n]$", "")
---     if num == 1 then
---         Harp_Term_1:send_open(to_send, true, num)
---     elseif num == 2 then
---         Harp_Term_2:send_open(to_send, true, num)
---     end
--- end
---
--- function _G.sendRange(startline, endline, num)
---     local regStore = vim.fn.getreg('"')
---     local regType = vim.fn.getregtype('"')
---     vim.cmd(startline .. "," .. endline .. " yank")
---     harpsend(num)
---     vim.fn.setreg('"', regStore, regType)
--- end
---
--- function _G.sendLines(count, num)
---     count = count + 1
---     local regStore = vim.fn.getreg('"')
---     local regType = vim.fn.getregtype('"')
---     vim.cmd("normal! " .. count .. "yy")
---     harpsend(num)
---     vim.fn.setreg('"', regStore, regType)
--- end
---
--- function _G.sendRegion(type, num)
---     vim.cmd("normal <esc>")
---     local regStore = vim.fn.getreg('"')
---     local regType = vim.fn.getregtype('"')
---     vim.cmd([[silent normal! `<]] .. type .. [[`>y]])
---     harpsend(num)
---     vim.fn.setreg('"', regStore, regType)
---     vim.cmd("normal! `>")
--- end
+function _G.sendRange(startline, endline)
+    local regStore = vim.fn.getreg('"')
+    local regType = vim.fn.getregtype('"')
+    vim.cmd(startline .. "," .. endline .. " yank")
+    if STerm == "" then
+        vim.notify("No terminal found", "info", { title = "STerm", })
+    else
+        STerm:fsend()
+    end
+    vim.fn.setreg('"', regStore, regType)
+end
+
+function _G.sendLines(count)
+    count = count + 1
+    local regStore = vim.fn.getreg('"')
+    local regType = vim.fn.getregtype('"')
+    vim.cmd("normal! " .. count .. "yy")
+    if STerm == "" then
+        vim.notify("No terminal found", "info", { title = "STerm", })
+    else
+        STerm:fsend()
+    end
+    vim.fn.setreg('"', regStore, regType)
+end
+
+function _G.sendRegion(type)
+    vim.cmd("normal <esc>")
+    local regStore = vim.fn.getreg('"')
+    local regType = vim.fn.getregtype('"')
+    vim.cmd([[silent normal! `<]] .. type .. [[`>y]])
+    if STerm == "" then
+        vim.notify("No terminal found", "info", { title = "STerm", })
+    else
+        STerm:fsend()
+    end
+    vim.fn.setreg('"', regStore, regType)
+    vim.cmd("normal! `>")
+end

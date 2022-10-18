@@ -7,7 +7,7 @@ vim.cmd([[set errorformat+=%-G%.%#]])
 
 vim.bo.commentstring = [[#%s]]
 
-Jul_perf_flat = require("perfanno").load_traces({ vim.json.decode(io.open("/tmp/jlprof.json", "rb"):read("*all")) })
+Jul_perf_flat = function() require("perfanno").load_traces(vim.json.decode(io.open("/tmp/jlprof.json", "rb"):read("*all"))) end
 
 Run_closest = function()
     local line = vim.api.nvim_win_get_cursor(0)[1]

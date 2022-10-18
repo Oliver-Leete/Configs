@@ -10,6 +10,7 @@ end
 runexpr("""
 using BenchmarkTools, Profile, FileIO
 using FlameGraphs, AbstractTrees, JSON
+using ProfileCanvas
 include("benchmark/benchmarks.jl")
 
 a = @bprofile '"$1"'
@@ -17,8 +18,6 @@ Profile.print(
     IOContext(open("/tmp/julprof.data", "w"), :displaysize=>(100000,1000)),
     format=:flat
 )
-profileData = Profile.retrieve()
-save("/tmp/last_jul.jlprof", profileData[1], profileData[2])
 
 function make_json(flamegraph)
     function allparent(node)
@@ -54,6 +53,8 @@ function make_json(flamegraph)
     return ret
 end
 
+ProfileCanvas.view()
+profileData = Profile.retrieve()
 write("/tmp/jlprof.json", JSON.json(make_json(flamegraph(profileData[1], lidict=profileData[2]))))
 
 display(a)

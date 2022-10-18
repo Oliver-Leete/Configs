@@ -1,5 +1,15 @@
 local overseer = require("overseer")
 local STATUS = require("overseer.constants").STATUS
+
+local toggleterm_if_not = function(task)
+    local bufnr = task.strategy.bufnr
+    task.toggleterm = require("toggleterm.terminal").Terminal:new({ bufnr = bufnr, jobname = task.name })
+    task:add_components({ "user.attach_toggleterm" })
+    task.toggleterm.job_id = task.strategy.chan_id
+    task.toggleterm:toggle()
+    task.toggleterm:__resurrect()
+end
+
 overseer.setup({
     form = { border = Border, win_opts = { winblend = 0, }, },
     task_editor = { border = Border, win_opts = { winblend = 0, }, },
@@ -59,35 +69,21 @@ overseer.setup({
             desc = "open in toggleterm",
             run = function(task)
                 if task.toggleterm then
-                    if task.toggleterm:is_open() then
-                        task.toggleterm:close()
-                        task.toggleterm:open()
-                    else
-                        task.toggleterm:open()
-                    end
-                else
-                    local bufnr = task.strategy.bufnr
-                    task.toggleterm = require("toggleterm.terminal").Terminal:new({ bufnr = bufnr, jobname = task.name })
-                    task:add_components({ "user.attach_toggleterm" })
                     task.toggleterm:toggle()
-                    task.toggleterm:__resurrect()
+                else
+                    toggleterm_if_not(task)
                 end
                 OTerm = task.toggleterm
             end,
         },
-        ["toggle"] = {
-            desc = "toggle toggleterm",
+        ["set as recive terminal"] = {
+            desc = "set this task as the terminal to recive sent text and commands",
             run = function(task)
-                if task.toggleterm then
-                    task.toggleterm:toggle()
-                else
-                    local bufnr = task.strategy.bufnr
-                    task.toggleterm = require("toggleterm.terminal").Terminal:new({ bufnr = bufnr, jobname = task.name })
-                    task:add_components({ "user.attach_toggleterm" })
-                    task.toggleterm:toggle()
-                    task.toggleterm:__resurrect()
+                if not task.toggleterm then
+                    toggleterm_if_not(task)
                 end
                 OTerm = task.toggleterm
+                STerm = task.toggleterm
             end,
         },
         ["keep runnning"] = {
@@ -97,6 +93,12 @@ overseer.setup({
                 if task.status == STATUS.FAILURE or task.status == STATUS.SUCCESS then
                     task:restart()
                 end
+            end
+        },
+        ["stop repeat running"] = {
+            desc = "stop from running on finish",
+            run = function(task)
+                task:remove_components({ "on_complete_restart" })
             end
         },
         ["don't dispose"] = {

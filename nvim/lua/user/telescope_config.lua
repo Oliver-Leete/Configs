@@ -3,7 +3,6 @@ local actions = require("telescope.actions")
 
 require("telescope").load_extension("dap")
 require("telescope").load_extension("refactoring")
-require('telescope').load_extension("termfinder")
 
 require("telescope").setup({
     defaults = {
@@ -65,15 +64,6 @@ require("telescope").setup({
         lsp_handlers = {
             require("telescope.themes").get_dropdown(),
         },
-        termfinder = {
-            mappings = {
-                rename_term = '<C-r>',
-                delete_term = '<C-x>',
-                vertical_term = '<C-v>',
-                horizontal_term = '<C-h>',
-                float_term = '<C-f>'
-            }
-        }
     },
 })
 

@@ -37,6 +37,7 @@ return {
                 local name = task.test_name or task.name
 
                 task.toggleterm = Terminal:new({ bufnr = bufnr, jobname = name })
+                task.toggleterm.job_id = task.strategy.chan_id
 
                 task.toggleterm:toggle()
                 task.toggleterm:__resurrect()
@@ -55,6 +56,11 @@ return {
                 task.toggleterm:shutdown()
             end,
             on_dispose = function(_, task)
+                if OTerm == task.toggleterm then
+                    OTerm = ""
+                elseif STerm == task.toggleterm then
+                    STerm = ""
+                end
                 if task.toggleterm then
                     task.toggleterm:shutdown()
                 end
