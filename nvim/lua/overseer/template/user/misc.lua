@@ -8,7 +8,7 @@ return {
                     return {
                         name = "Animation",
                         cmd = "mpv --loop-file=inf /tmp/fig.gif",
-                        components = { "default", "unique", "on_complete_dispose" }
+                        components = { "unique", { "on_complete_dispose", timeout = 1 } }
                     }
                 end,
                 priority = 151,
@@ -22,7 +22,7 @@ return {
                     return {
                         name = "btop",
                         cmd = "btop",
-                        components = { "user.attach_toggleterm", "unique", { "on_complete_dispose", timeout = 1 } }
+                        components = { "def_dispose", "unique" }
                     }
                 end,
                 priority = 155,
@@ -34,7 +34,7 @@ return {
                     return {
                         name = "lazygit",
                         cmd = "lazygit",
-                        components = { "user.attach_toggleterm", "unique", { "on_complete_dispose", timeout = 1 } }
+                        components = { "def_dispose", "unique" }
                     }
                 end,
                 priority = 2,
@@ -61,13 +61,7 @@ return {
                     return {
                         name = "Fish " .. OvTermNum,
                         cmd = "fish",
-                        components = {
-                            "on_output_summarize",
-                            "on_exit_set_status",
-                            { "on_complete_notify", system = "unfocused" },
-                            "on_complete_dispose",
-                            { "user.attach_toggleterm", num = 1 },
-                        }
+                        components = { "def_dispose" }
                     }
                 end,
                 priority = 1,

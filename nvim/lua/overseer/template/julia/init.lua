@@ -24,6 +24,8 @@ local otherProjectFinder = function()
     end
 end
 
+local julReplNum = 0
+
 return {
     condition = {
         callback = function(opts)
@@ -34,6 +36,58 @@ return {
     generator = function(_, cb)
         local otherProject = otherProjectFinder() or ""
         local otherProjectName = vim.fs.basename(otherProject) or ""
+        local ret = {}
+        local priority = 60
+        local pr = function() priority = priority + 1; return priority end
+
+        table.insert(
+            ret,
+            {
+                name = "Open Julia Repl",
+                builder = function()
+                    julReplNum = julReplNum + 1
+                    return {
+                        name = "Julia Repl " .. julReplNum,
+                        cmd = "julia --threads=auto",
+                    }
+                end,
+                priority = pr(),
+            }
+        )
+        table.insert(
+            ret,
+            {
+                name = "Open Julia Repl in Project",
+                builder = function()
+                    julReplNum = julReplNum + 1
+                    return {
+                        name = vim.g.project .. " Project Repl " .. julReplNum,
+                        cmd = "julia --threads=auto --project",
+                    }
+                end,
+                condition = isProject,
+                priority = pr(),
+            }
+        )
+        table.insert(
+            ret,
+            {
+                name = "Open Julia Repl in " .. otherProjectName .. " Project",
+                builder = function()
+                    julReplNum = julReplNum + 1
+                    return {
+                        name = otherProjectName .. " Project Repl " .. julReplNum,
+                        cmd = "julia --threads=auto --project=" .. otherProject,
+                    }
+                end,
+                condition = {
+                    callback = function() return otherProjectName ~= vim.g.project and
+                            otherProjectName ~= "."
+                    end,
+                },
+                priority = pr(),
+            }
+        )
 
         local commands = {
             {
@@ -43,27 +97,6 @@ return {
                 condition = isProject,
                 is_test_server = true,
                 components = { "default_hide", "unique", "always_restart" },
-            },
-            {
-                name = "Open Julia Repl",
-                tskName = "Julia Repl",
-                cmd = "julia --threads=auto",
-            },
-            {
-                name = "Open Julia Repl in Project",
-                tskName = vim.g.project .. " Project Repl",
-                cmd = "julia --threads=auto --project",
-                condition = isProject,
-            },
-            {
-                name = "Open Julia Repl in " .. otherProjectName .. " Project",
-                tskName = otherProjectName .. " Project Repl",
-                cmd = "julia --threads=auto --project=" .. otherProject,
-                condition = {
-                    callback = function() return otherProjectName ~= vim.g.project and
-                            otherProjectName ~= "."
-                    end,
-                },
             },
             {
                 name = "Build Documentation",
@@ -184,8 +217,6 @@ return {
                 components = { "default", "unique" },
             },
         }
-        local ret = {}
-        local priority = 60
         for _, command in pairs(commands) do
             table.insert(
                 ret,
@@ -202,12 +233,11 @@ return {
                         }
                     end,
                     tags = command.tags,
-                    priority = priority,
+                    priority = pr(),
                     params = {},
                     condition = command.condition,
                 }
             )
-            priority = priority + 1
         end
 
         -- Add neotest tests
@@ -227,11 +257,10 @@ return {
                             require("neotest").run.run(location)
                             return { cmd = "", name = "", components = { "user.dispose_now" }, }
                         end,
-                        priority = priority,
+                        priority = pr(),
                         params = {},
                     }
                 )
-                priority = priority + 1
             end
         end
 
@@ -255,11 +284,10 @@ return {
                                 components = { "default", "unique" },
                             }
                         end,
-                        priority = priority,
+                        priority = pr(),
                         params = {},
                     }
                 )
-                priority = priority + 1
             end
         end
 
@@ -280,11 +308,10 @@ return {
                             require("neotest").run.run(location)
                             return { cmd = "", name = "", components = { "user.dispose_now" }, }
                         end,
-                        priority = priority,
+                        priority = pr(),
                         params = {},
                     }
                 )
-                priority = priority + 1
             end
         end
 
@@ -302,11 +329,10 @@ return {
                             components = { "default", "unique" },
                         }
                     end,
-                    priority = priority,
+                    priority = pr(),
                     params = {},
                 }
             )
-            priority = priority + 1
         end
 
         table.insert(
@@ -317,7 +343,7 @@ return {
                     Jul_perf_flat()
                     return { cmd = "", name = "", components = { "user.dispose_now" }, }
                 end,
-                priority = priority,
+                priority = pr(),
                 condition = {
                     callback = function()
                         return files.exists("/tmp/julprof.data")
@@ -326,7 +352,6 @@ return {
                 params = {},
             }
         )
-        priority = priority + 1
 
         table.insert(
             ret,
@@ -364,11 +389,10 @@ return {
 
                     return { cmd = "", name = "", components = { "user.dispose_now" }, }
                 end,
-                priority = priority,
+                priority = pr(),
                 condition = hasBenchmark,
             }
         )
-        priority = priority + 1
 
         cb(ret)
     end,

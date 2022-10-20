@@ -59,6 +59,12 @@ overseer.setup({
             "on_complete_dispose",
             "display_duration",
         },
+        def_dispose = {
+            "on_complete_dispose",
+            "display_duration",
+            "user.attach_toggleterm", 
+            { "on_complete_dispose", timeout = 1 }
+        },
         always_restart = { "on_complete_restart", statuses = { STATUS.FAILURE, STATUS.SUCCESS } },
     },
     actions = {

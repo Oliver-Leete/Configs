@@ -142,10 +142,15 @@ return {
                 {
                     name = "Open " .. ft.name .. " REPL",
                     builder = function()
+                        if ft.num then
+                            ft.num = ft.num + 1
+                        else
+                            ft.num = 1
+                        end
                         return {
                             cmd = ft.repl,
-                            name = ft.name .. " REPL",
-                            components = { "default", "unique" }
+                            name = ft.name .. " REPL " .. ft.num,
+                            components = { "def_dispose" }
                         }
                     end,
                     priority = 5,
@@ -156,10 +161,15 @@ return {
                 {
                     name = "Open " .. ft.name .. " REPL in project",
                     builder = function()
+                        if ft.num then
+                            ft.num = ft.num + 1
+                        else
+                            ft.num = 1
+                        end
                         return {
                             cmd = ft.projectRepl,
-                            name = ft.name .. " Project REPL",
-                            components = { "default", "unique" }
+                            name = ft.name .. " REPL " .. ft.num,
+                            components = { "def_dispose" }
                         }
                     end,
                     priority = 6,
