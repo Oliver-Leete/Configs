@@ -1,10 +1,12 @@
-using Profile, FileIO
-using ProfileCanvas
+using BenchmarkTools, Profile, FileIO
+using ProfileView
 
-include(ARGS[1])
-a = @profile include(ARGS[1])
+a = @bprofile include(ARGS[1])
+
 using AbstractTrees, FlameGraphs, JSON
-function make_json(flamegraph)
+
+function make_json(profileData)
+    flame = flamegraph(profileData[1], lidict=profileData[2])
     function allparent(node)
         ret = []
         while node.parent != node
@@ -14,32 +16,25 @@ function make_json(flamegraph)
         return ret
     end
     event = []
-    for leaf in PreOrderDFS(flamegraph)
-        if leaf.data.sf.line != 0
+    for node in PreOrderDFS(flame)
+        # calclate span of node minus span of all children
+        count = length(node.data.span)
+        for child in children(node)
+            count -= length(child.data.span)
+        end
+        if count > 0
             push!(event, Dict(
-                "count" => length(leaf.data.span),
-                "frames" => [Dict(
-                    "symbol" => leaf.data.sf.func,
-                    "file" => leaf.data.sf.file,
-                    "linenr" => leaf.data.sf.line,
-                ) for i in allparent(leaf)]
-            ))
-        else
-            push!(event, Dict(
-                "count" => length(leaf.data.span),
-                "frames" => [Dict(
-                    "symbol" => leaf.data.sf.func,
-                    "file" => leaf.data.sf.file,
-                ) for i in allparent(leaf)]
-            ))
+                "count" => count,
+                "frames" => [i.data.sf.line > 0 ?
+                             Dict("symbol" => i.data.sf.func, "file" => i.data.sf.file, "linenr" => i.data.sf.line,) :
+                             Dict("symbol" => i.data.sf.func, "file" => i.data.sf.file,)
+                             for i in allparent(node)]))
         end
     end
-    ret = Dict( "event 1" => event )
+    ret = JSON.json(Dict("event 1" => event))
     return ret
 end
 
-ProfileCanvas.view()
-profileData = Profile.retrieve()
-write("/tmp/jlprof.json", JSON.json(make_json(flamegraph(profileData[1], lidict=profileData[2]))))
-
+write("/tmp/jlprof.json", make_json(Profile.retrieve()))
+ProfileView.view()
 display(a)

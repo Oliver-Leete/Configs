@@ -1,6 +1,5 @@
 local constants = require("overseer.constants")
 local files = require("overseer.files")
-local STATUS = require("overseer.constants").STATUS
 local TAG = constants.TAG
 
 local isInProject = function(opts) return files.exists(files.join(opts.dir, "Project.toml")) end
@@ -188,7 +187,7 @@ return {
             {
                 name = "Profile File (" .. vim.fn.expand("%:t:r") .. ")",
                 tskName = "Profiling " .. vim.fn.expand("%:t:r"),
-                cmd = "julia ~/.config/nvim/filetype/julia/prof.jl " .. vim.fn.expand("%:p"),
+                cmd = "julia -i ~/.config/nvim/filetype/julia/prof.jl " .. vim.fn.expand("%:p"),
                 condition = isFile,
                 components = { "default", "unique" },
             },
