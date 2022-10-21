@@ -22,19 +22,9 @@ require("dressing").setup({
 })
 
 require("kanagawa").setup({
-    undercurl = true,
-    commentStyle = { italic = true },
-    functionStyle = {},
     keywordStyle = {},
     statementStyle = {},
-    typeStyle = {},
     variablebuiltinStyle = {},
-    specialReturn = true,
-    specialException = true,
-    transparent = false,
-    colors = {},
-    overrides = {},
-    dimInactive = false,
     globalStatus = true,
 })
 

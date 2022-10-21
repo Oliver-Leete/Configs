@@ -39,6 +39,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'lukas-reineke/indent-blankline.nvim'
     Plug 'stevearc/dressing.nvim'
     Plug 'rcarriga/nvim-notify'
+    Plug 'nvim-lualine/lualine.nvim'
 
     Plug 'mbbill/undotree'
     Plug 'kyazdani42/nvim-tree.lua'
