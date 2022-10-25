@@ -1,12 +1,10 @@
 -- Command Panel Bindings
-
+local telescopeFileBrowser = "Telescope file_browser respect_gitignore=false theme=get_ivy"
 GlobalCommands = {
     { source = "coverage", name = "Coverage summary", command = "CoverageSummary" },
     { source = "coverage", name = "Load coverage", command = "Coverage" },
     { source = "coverage", name = "Toggle coverage", command = "CoverageToggle" },
 
-    { source = "default", name = "Notifications",
-        func = function() require("telescope").extensions.notify.notify(require("telescope.themes").get_ivy()) end },
     { source = "default", name = "Message", command = "message" },
     { source = "default", name = "History", command = "Noice" },
     { source = "default", name = "Delete buffer", command = "bdelete" },
@@ -15,16 +13,15 @@ GlobalCommands = {
     { source = "default", name = "Toggle text wraping", "set wrap!" },
     { source = "default", name = "File tree", command = "NvimTreeToggle" },
     { source = "default", name = "Undo tree", command = "UndotreeToggle" },
-    { source = "default", name = "Reload snippets", func = function() require("mini.map").toggle() end},
-    { source = "default", name = "Toggle Minimap", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
+    { source = "default", name = "Reload snippets", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
+    { source = "default", name = "Toggle Minimap", func = function() require("mini.map").toggle() end },
 
     { source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
     { source = "finders", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
-    { source = "finders", name = "File browser (relative)",
-        command = "Telescope file_browser respect_gitignore=false theme=get_ivy cwd=%:p:h" },
+    { source = "finders", name = "File browser", command = telescopeFileBrowser },
+    { source = "finders", name = "File browser (relative)", command = telescopeFileBrowser .. " cwd=%:p:h" },
     { source = "finders", name = "Files", command = "Telescope git_files theme=get_ivy" },
-    { source = "finders", name = "File browser", command = "Telescope file_browser respect_gitignore=false theme=get_ivy" },
-    { source = "finders", name = "Grep", command = "Telescope live_grep theme=get_ivy theme=get_ivy" },
+    { source = "finders", name = "Grep", command = "Telescope live_grep theme=get_ivy" },
     { source = "finders", name = "Old files finder", command = "Telescope oldfiles theme=get_ivy" },
     { source = "finders", name = "Quickfix", command = "Telescope quickfix theme=get_ivy" },
     { source = "finders", name = "Symbols", command = "Telescope lsp_document_symbols theme=get_ivy" },

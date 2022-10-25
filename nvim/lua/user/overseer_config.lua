@@ -142,5 +142,5 @@ overseer.setup({
             end,
         }
     },
-    templates = { "builtin", "user", "julia" }
+    templates = { "builtin", "user" }
 })

@@ -40,6 +40,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'stevearc/dressing.nvim'
     Plug 'rcarriga/nvim-notify'
     Plug 'nvim-lualine/lualine.nvim'
+    Plug 'MunifTanjim/nui.nvim'
+    Plug 'folke/noice.nvim'
 
     Plug 'mbbill/undotree'
     Plug 'kyazdani42/nvim-tree.lua'
@@ -113,8 +115,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 call plug#end()]])
 
 pcall(require('impatient'))
-OTerm = ""
-STerm = ""
+OTerm = nil
+STerm = nil
 
 pcall(require("user.settings_config"))
 pcall(require("user.misc_config"))
