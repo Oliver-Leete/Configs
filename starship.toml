@@ -4,6 +4,11 @@ continuation_prompt = "▶▶"
 unknown_indicator = "mystery shell"
 style = "cyan bold"
 disabled = false
+fish_indicator = "fish"
+bash_indicator = "bash"
+zsh_indicator = "zsh"
+xonsh_indicator = "xonsh"
+nu_indicator = "nu-shell"
 
 [aws]
 symbol = "  "

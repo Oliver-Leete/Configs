@@ -50,9 +50,8 @@ abbr -a bk backup
 abbr -a re restore
 
 alias .. "cd .."
-alias ... "cd ../.."
-alias .... "cd ../../.."
-alias ..... "cd ../../../.."
+alias .... "cd ../.."
+alias ...... "cd ../../.."
 alias edrive "cd /run/media/oleete"
 
 abbr  htop 'htop -t'

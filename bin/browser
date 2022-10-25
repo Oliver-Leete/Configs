@@ -27,10 +27,8 @@ CACHEDIR=${XDG_CACHE_HOME:-${HOME}/.cache/browser}
 	chattr +C "$CACHEDIR"
 }
 
-# [ -z "$WSPORT" ]  && REMOTE="" || REMOTE="--remote-debugging-port=$WSPORT"
 [ "$WSTAG" = "" ] && SUFFIX="" || SUFFIX="-$WSTAG"
 [ "$WSTAG" = "incognito" ] && INCOGNITO=" --incognito " || INCOGNITO=""
 
-# eval $BROWSER $INCOGNITO --user-data-dir=${CONFIGDIR}/${BROWSER}${SUFFIX} ${REMOTE:-} $* \&
 echo "$BROWSER" "$INCOGNITO" --enable-features=VaapiVideoDecoder,VaapiVideoEncoder --user-data-dir="$CONFIGDIR/$BROWSER$SUFFIX" "$*" \&
 "$BROWSER" "$INCOGNITO" --enable-features=VaapiVideoDecoder,VaapiVideoEncoder --user-data-dir="$CONFIGDIR/$BROWSER$SUFFIX" "$*" &
