@@ -57,9 +57,9 @@ return {
             end,
             on_dispose = function(_, task)
                 if OTerm == task.toggleterm then
-                    OTerm = ""
+                    OTerm = nil
                 elseif STerm == task.toggleterm then
-                    STerm = ""
+                    STerm = nil
                 end
                 if task.toggleterm then
                     task.toggleterm:shutdown()
