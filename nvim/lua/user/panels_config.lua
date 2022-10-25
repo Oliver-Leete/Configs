@@ -32,7 +32,7 @@ local lib = require("nvim-tree.lib")
 local git_add = function()
     local node = lib.get_node_at_cursor()
     if not node then
-        vim.notify("git add failed", "error", { title = "my nvim tree" })
+        vim.cmd.echomsg({ args = { "'git add failed'" } })
         return
     end
     local gs = node.git_status

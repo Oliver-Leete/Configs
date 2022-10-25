@@ -260,14 +260,14 @@ Map("n", "<leader>e", "<cmd>OverseerRun<cr>")
 -- end)
 -- Map("n", "<leader>i", "<cmd>OverseerQuickAction toggle<cr>")
 Map("n", "<leader>i", function()
-    if OTerm ~= "" then
+    if OTerm then
         if OTerm:is_open() then
             vim.cmd("ToggleTermToggleAll")
         else
             OTerm:open()
         end
     else
-        vim.notify("No terminal found", "info", { title = "OTerm", })
+        vim.cmd.echomsg({ args = { "'No O-Terminal found'" } })
     end
 end)
 Map("n", "<leader>o", function() require("neotest").summary.toggle() end)

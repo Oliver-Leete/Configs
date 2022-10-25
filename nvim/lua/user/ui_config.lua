@@ -50,6 +50,7 @@ vim.g.matchup_matchparen_hi_surround_always = true
 vim.api.nvim_set_hl(0, "IndentBlanklineContextChar", { link = "MatchParen" })
 vim.api.nvim_set_hl(0, "IndentBlanklineContextStart", { underline = true, sp = "#ff9e3b" })
 
+vim.api.nvim_set_hl(0, "MiniMapNormal", { fg = tc.fujiWhite })
 
 require("indent_blankline").setup {
     char = "",
@@ -87,18 +88,6 @@ require("notify").setup({
 
 vim.notify = require("notify")
 
--- LSP integration
-local severity = {
-    "error",
-    "warn",
-    "info",
-    "info", -- map both hint and info to info?
-}
-vim.lsp.handlers["window/showMessage"] = function(_, method, params, _)
-    ---@diagnostic disable-next-line: redundant-parameter
-    vim.notify(method.message, severity[params.type])
-end
-
 local mode_colours = { Normal = tc.crystalBlue, Insert = tc.autumnGreen, Visual = tc.oniViolet, Replace = tc.autumnRed,
     Command = tc.boatYellow2, Inactive = tc.fujiGray }
 for mode, colour in pairs(mode_colours) do
@@ -120,4 +109,36 @@ vim.api.nvim_set_hl(0, "TabLineActiveEnds", { fg = tc.crystalBlue, bg = tc.bg, s
 require("nvim-navic").setup({
     highlight = false,
     separator = "  "
+})
+
+require("noice").setup({
+    popupmenu = {
+        backend = "cmp",
+    },
+    history = {
+        view = "split",
+    },
+    messages = {
+        view_history = "split",
+        view = false,
+        view_error = "mini",
+        view_warn = "mini",
+    },
+    routes = {
+        {
+            view = "split",
+            filter = { event = "msg_show", min_width = 100, min_height = 20 },
+        },
+    },
+    views = {
+        split = {
+            enter = true,
+            position = "top",
+            win_options = {
+                winhighlight = {
+                    Normal = "Normal",
+                },
+            }
+        }
+    },
 })

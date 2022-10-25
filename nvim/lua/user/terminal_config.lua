@@ -91,10 +91,10 @@ function _G.sendRange(startline, endline)
     local regStore = vim.fn.getreg('"')
     local regType = vim.fn.getregtype('"')
     vim.cmd(startline .. "," .. endline .. " yank")
-    if STerm == "" then
-        vim.notify("No terminal found", "info", { title = "STerm", })
-    else
+    if STerm then
         STerm:fsend()
+    else
+        vim.cmd.echomsg({ args = { "'No S-Terminal found'" } })
     end
     vim.fn.setreg('"', regStore, regType)
 end
@@ -104,10 +104,10 @@ function _G.sendLines(count)
     local regStore = vim.fn.getreg('"')
     local regType = vim.fn.getregtype('"')
     vim.cmd("normal! " .. count .. "yy")
-    if STerm == "" then
-        vim.notify("No terminal found", "info", { title = "STerm", })
-    else
+    if STerm then
         STerm:fsend()
+    else
+        vim.cmd.echomsg({ args = { "'No S-Terminal found'" } })
     end
     vim.fn.setreg('"', regStore, regType)
 end
@@ -117,10 +117,10 @@ function _G.sendRegion(type)
     local regStore = vim.fn.getreg('"')
     local regType = vim.fn.getregtype('"')
     vim.cmd([[silent normal! `<]] .. type .. [[`>y]])
-    if STerm == "" then
-        vim.notify("No terminal found", "info", { title = "STerm", })
-    else
+    if STerm then
         STerm:fsend()
+    else
+        vim.cmd.echomsg({ args = { "'No S-Terminal found'" } })
     end
     vim.fn.setreg('"', regStore, regType)
     vim.cmd("normal! `>")

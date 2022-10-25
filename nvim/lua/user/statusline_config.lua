@@ -35,6 +35,11 @@ local ov_list = {
     [st.PENDING] = " ",
 }
 
+local function noice_wrapper()
+    local message = require("noice").api.status.message.get()
+    return message:sub(1,100)
+end
+
 require('lualine').setup({
     options = {
         component_separators = { left = '', right = '' },
@@ -49,14 +54,23 @@ require('lualine').setup({
         lualine_b = {
             { 'b:gitsigns_head', icon = '' },
             { 'diff', source = diff_source, symbols = { added = ' ', modified = ' ', removed = ' ' } },
-            { 'diagnostics', symbols = { error = " ", warn = " ", info = " ", hint = " ", } },
+            { 'diagnostics', symbols = { error = " ", warn = " ", info = " ", hint = " " } },
             { "overseer", symbols = ov_list },
         },
         lualine_c = {
+            {
+                require("noice").api.status.mode.get,
+                cond = require("noice").api.status.mode.has,
+                color = { fg = "#ff9e64" },
+            },
+            {
+                noice_wrapper,
+                cond = require("noice").api.status.message.has,
+            },
             { require("dap").status }
         },
         lualine_x = {},
-        lualine_y = { 'encoding', 'filetype', 'fileformat', lsp_status },
-        lualine_z = { 'location' }
+        lualine_y = { 'encoding', 'filetype', 'fileformat' },
+        lualine_z = { lsp_status, 'location' }
     },
 })

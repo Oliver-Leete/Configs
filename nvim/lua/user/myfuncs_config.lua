@@ -26,6 +26,7 @@ Special_types = {
     ["neotest-summary"] = { name = " Test List", exit_func = winclose },
     ["vim"] = { exit_func = winclose },
     ["gitcommit"] = { name = "Git Commit Message", exit_func = winclose },
+    ["noice"] = { name = "Noice", exit_func = function() vim.cmd.quit() end },
     [""] = { exit_func = winclose },
 }
 

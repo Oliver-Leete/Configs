@@ -5,6 +5,10 @@ GlobalCommands = {
     { source = "coverage", name = "Load coverage", command = "Coverage" },
     { source = "coverage", name = "Toggle coverage", command = "CoverageToggle" },
 
+    { source = "default", name = "Notifications",
+        func = function() require("telescope").extensions.notify.notify(require("telescope.themes").get_ivy()) end },
+    { source = "default", name = "Message", command = "message" },
+    { source = "default", name = "History", command = "Noice" },
     { source = "default", name = "Delete buffer", command = "bdelete" },
     { source = "default", name = "Clear search", command = "let @/=''" },
     { source = "default", name = "Close tab", command = "tabclose" },
@@ -21,8 +25,6 @@ GlobalCommands = {
     { source = "finders", name = "Files", command = "Telescope git_files theme=get_ivy" },
     { source = "finders", name = "File browser", command = "Telescope file_browser respect_gitignore=false theme=get_ivy" },
     { source = "finders", name = "Grep", command = "Telescope live_grep theme=get_ivy theme=get_ivy" },
-    { source = "finders", name = "Notifications",
-        func = function() require("telescope").extensions.notify.notify(require("telescope.themes").get_ivy()) end },
     { source = "finders", name = "Old files finder", command = "Telescope oldfiles theme=get_ivy" },
     { source = "finders", name = "Quickfix", command = "Telescope quickfix theme=get_ivy" },
     { source = "finders", name = "Symbols", command = "Telescope lsp_document_symbols theme=get_ivy" },
@@ -118,7 +120,7 @@ function CommandCentre(argCommands, extend)
         telescope = require("telescope.themes").get_ivy(),
     }, function(choice)
         if not choice then
-            vim.notify("No command entered", "warn", { title = "Command Centre" })
+            vim.cmd.echomsg({ args = { "'No command entered'" } })
             return
         end
 
@@ -129,7 +131,7 @@ function CommandCentre(argCommands, extend)
         elseif choice.keymap ~= nil then
             vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(choice.keymap, true, true, true), "n", false)
         else
-            vim.notify("Command does not have an action", "warn", { title = "Command Centre" })
+            vim.cmd.echomsg({ args = { "'Command does not have an action'" } })
             return
         end
     end)
@@ -160,6 +162,6 @@ function Select_runnables()
     if #runnables ~= 0 then
         CommandCentre(runnables)
     else
-        vim.notify("Nothing to Run", "warn", { title = "Command Centre" })
+        vim.cmd.echomsg({ args = { "'Nothing to Run'" } })
     end
 end

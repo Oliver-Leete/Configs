@@ -12,7 +12,6 @@ vim.opt.pumheight = 20
 vim.opt.spelllang = "en_gb"
 vim.opt.termguicolors = true
 vim.opt.hidden = true
-vim.opt.lazyredraw = true
 vim.opt.shortmess = "TWAcIFSs"
 vim.opt.showmode = false
 vim.opt.laststatus = 3

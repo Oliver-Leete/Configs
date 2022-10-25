@@ -37,16 +37,6 @@ Notification_Dict = {}
 
 local lsp_auto = vim.api.nvim_create_augroup("lsp_autocmd", { clear = true })
 local custom_attach = function(client, bufnr)
-    if client.name ~= "null-ls" then
-        if not Notification_Dict[client.name] then
-            Notification_Dict[client.name] = true
-            ---@diagnostic disable-next-line: redundant-parameter
-            vim.notify(client.name .. " started", "info", {
-                title = "LSP",
-                on_close = function() Notification_Dict[client.name] = false end,
-            })
-        end
-    end
     local sc = client.server_capabilities
     if sc.documentSymbolProvider then
         require("nvim-navic").attach(client, bufnr)
