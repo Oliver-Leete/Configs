@@ -100,9 +100,17 @@ overseer.setup({
             end
         },
         ["stop repeat running"] = {
-            desc = "stop from running on finish",
+            desc = "stop from running on finish or file watch",
             run = function(task)
-                task:remove_components({ "on_complete_restart" })
+                if task:has_component("on_complete_restart") then
+                    task:remove_components({ "on_complete_restart" })
+                end
+                if task:has_component("restart_on_save") then
+                    task:remove_components({ "restart_on_save" })
+                end
+            end,
+            condition = function(task)
+                return task:has_component("on_complete_restart") or task:has_component("restart_on_save")
             end
         },
         ["don't dispose"] = {

@@ -1,8 +1,6 @@
 #!/bin/bash
-project="$(basename "$PWD")"
-julia --threads=auto --project -i -e '
+julia --threads=auto -e '
 using BenchmarkTools, Profile, FileIO
-using ProfileView
 
 include("benchmark/benchmarks.jl")
 
@@ -41,6 +39,5 @@ function make_json(profileData)
 end
 
 write("/tmp/jlprof.json", make_json(Profile.retrieve()))
-ProfileView.view()
 display(a)
 '

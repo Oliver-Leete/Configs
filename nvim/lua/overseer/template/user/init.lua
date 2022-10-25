@@ -5,4 +5,6 @@ return {
     "user.runners",
     "user.misc",
     "user.rustables",
+    "user.platformio",
+    "user.julia",
 }

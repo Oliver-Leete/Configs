@@ -1,31 +1,18 @@
 OvTermNum = 0
 return {
     generator = function(_, cb)
-        ret = {
+        local ret = {
             {
-                name = "View Animation",
+                name = "Fish",
                 builder = function()
+                    OvTermNum = OvTermNum + 1
                     return {
-                        name = "Animation",
-                        cmd = "mpv --loop-file=inf /tmp/fig.gif",
-                        components = { "unique", { "on_complete_dispose", timeout = 1 } }
+                        name = "Fish " .. OvTermNum,
+                        cmd = "fish",
+                        components = { "def_dispose" }
                     }
                 end,
-                priority = 151,
-                condition = {
-                    dir = "/home/oleete/Projects/PowderModel"
-                },
-            },
-            {
-                name = "System Info (btop)",
-                builder = function()
-                    return {
-                        name = "btop",
-                        cmd = "btop",
-                        components = { "def_dispose", "unique" }
-                    }
-                end,
-                priority = 155,
+                priority = 1,
                 params = {},
             },
             {
@@ -38,6 +25,30 @@ return {
                     }
                 end,
                 priority = 2,
+                params = {},
+            },
+            {
+                name = "Lazydocker",
+                builder = function()
+                    return {
+                        name = "lazydocker",
+                        cmd = "lazydocker",
+                        components = { "def_dispose", "unique" }
+                    }
+                end,
+                priority = 3,
+                params = {},
+            },
+            {
+                name = "System Info (btop)",
+                builder = function()
+                    return {
+                        name = "btop",
+                        cmd = "btop",
+                        components = { "def_dispose", "unique" }
+                    }
+                end,
+                priority = 3,
                 params = {},
             },
             {
@@ -55,19 +66,6 @@ return {
                 }
             },
             {
-                name = "Fish",
-                builder = function()
-                    OvTermNum = OvTermNum + 1
-                    return {
-                        name = "Fish " .. OvTermNum,
-                        cmd = "fish",
-                        components = { "def_dispose" }
-                    }
-                end,
-                priority = 1,
-                params = {},
-            },
-            {
                 name = "Make",
                 builder = function()
                     return {
@@ -83,6 +81,20 @@ return {
                         return vim.go.makeprg ~= "make"
                     end
                 }
+            },
+            {
+                name = "View Animation",
+                builder = function()
+                    return {
+                        name = "Animation",
+                        cmd = "mpv --loop-file=inf /tmp/fig.gif",
+                        components = { "unique", { "on_complete_dispose", timeout = 1 } }
+                    }
+                end,
+                priority = 151,
+                condition = {
+                    dir = "/home/oleete/Projects/PowderModel"
+                },
             },
         }
         cb(ret)

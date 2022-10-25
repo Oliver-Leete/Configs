@@ -189,7 +189,7 @@ return {
                 tskName = "Profiling " .. vim.fn.expand("%:t:r"),
                 cmd = "julia -i ~/.config/nvim/filetype/julia/prof.jl " .. vim.fn.expand("%:p"),
                 condition = isFile,
-                components = { "default", "unique" },
+                components = { "default", "unique", { "on_complete_callback", on_complete = function() Jul_perf_flat() end } },
             },
             {
                 name = "Run Build",
@@ -325,7 +325,7 @@ return {
                         return {
                             name = name .. " profiling",
                             cmd = "~/.config/nvim/filetype/julia/profBench '" .. command .. "'",
-                            components = { "default", "unique" },
+                            components = { "default", "unique", { "on_complete_callback", on_complete = function() Jul_perf_flat() end } },
                         }
                     end,
                     priority = pr(),
@@ -345,7 +345,7 @@ return {
                 priority = pr(),
                 condition = {
                     callback = function()
-                        return files.exists("/tmp/julprof.data")
+                        return files.exists("/tmp/jlprof.json")
                     end
                 },
                 params = {},
