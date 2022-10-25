@@ -42,19 +42,12 @@ function adapter.build_spec(args)
     end
 
 
-    local command = "julia --color=yes --project -E '" ..
-        [[using DaemonMode
-        try
-            runexpr("Revise.revise(throw=true)")
-        catch
-            sendExitCode()
-        end
-        runexpr("""
-            using TestItemRunner
-
-            @run_package_tests filter=ti->(ti.name == ]] .. position.name .. [[)
-        """)
-        ]] .. "'"
+    local command = "julia --color=yes --project -e '" ..
+        [[using DaemonMode;
+        try; runexpr("Revise.revise(throw=true)"); catch; sendExitCode(); end;
+        runargs()]]
+        .. "' /home/oleete/.config/nvim/lua/neotest/adapters/neotest-julia-testitem/juliaTestClient.jl "
+        .. position.name
 
     if position.type == "file" then
         return
@@ -66,7 +59,7 @@ function adapter.build_spec(args)
             pos_id = position.id,
             name = position.name,
             uses_server = true,
-            tsk_name = position.name:sub(2,-2) .. " test",
+            tsk_name = position.name:sub(2, -2) .. " test",
         },
     }
 end
