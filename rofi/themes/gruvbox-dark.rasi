@@ -21,12 +21,12 @@
     gruvbox-dark-bg0:          #1F1F28;
     gruvbox-dark-bg2:          #2A2A37;
     gruvbox-dark-fg0:          #DCD7BA;
-    gruvbox-dark-fg1:          #C8C093;
+    gruvbox-dark-fg1:          #DCD7BA;
     gruvbox-dark-red-dark:     #C34043;
     gruvbox-dark-red-light:    #E82424;
     gruvbox-dark-yellow-dark:  #DCA561;
     gruvbox-dark-yellow-light: #FF9E3B;
-    gruvbox-dark-gray:         #C8C093;
+    gruvbox-dark-gray:         #7E9CD8;
 
     /* Theme colors */
     background:                  @gruvbox-dark-bg0-hard;

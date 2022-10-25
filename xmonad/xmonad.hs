@@ -344,7 +344,7 @@ background, foreground, dull, active, yellow, warning :: [Char]
 background = "#1F1F28"
 foreground = "#C8C093"
 dull       = "#54546D"
-active     = "#76946A"
+active     = "#7E9CD8"
 yellow     = "#DCA561"
 warning    = "#C34043"
 
