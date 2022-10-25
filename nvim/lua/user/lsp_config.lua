@@ -1,8 +1,8 @@
 local lspconfig = require("lspconfig")
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+local clangd_cap = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+clangd_cap.offsetEncoding = "utf-8"
 
 vim.api.nvim_set_hl(0, "CursorLineError", { fg = "#E82424", bg = "#363646" })
 vim.api.nvim_set_hl(0, "CursorLineWarn", { fg = "#FF9E3B", bg = "#363646" })
@@ -157,7 +157,6 @@ lspconfig.sumneko_lua.setup({
                 path = vim.split(package.path, ";"),
             },
             diagnostics = {
-                -- enable = false,
                 globals = { "vim" },
             },
             workspace = {
@@ -177,7 +176,6 @@ lspconfig.sumneko_lua.setup({
 
 lspconfig.texlab.setup({
     on_attach = custom_attach,
-    -- capabilities = capabilities,
     flags = { debounce_text_changes = 500 },
     root_dir = lspconfig.util.root_pattern(".git"),
     settings = {
@@ -211,7 +209,7 @@ lspconfig.hls.setup({
 require("clangd_extensions").setup({
     server = {
         on_attach = custom_attach,
-        capabilities = capabilities,
+        capabilities = clangd_cap,
         flags = { debounce_text_changes = 500 },
     },
 })
@@ -233,13 +231,6 @@ require("rust-tools").setup({
         ),
     },
 })
-
--- require("grammar-guard").init()
--- lspconfig.grammar_guard.setup({
---     cmd = { "/home/oleete/.local/share/nvim/lsp_servers/ltex/ltex-ls/bin/ltex-ls" },
---     on_attach = custom_attach,
---     flags = { debounce_text_changes = 500 },
--- })
 
 require("lspconfig").ltex.setup({
     capabilities = capabilities,
@@ -315,7 +306,6 @@ require("null-ls").setup({
         null_ls.builtins.formatting.markdownlint, --Mason
         null_ls.builtins.formatting.shellharden, --Mason
         null_ls.builtins.formatting.shfmt, --Mason
-        -- null_ls.builtins.formatting.stylua, --Mason
         null_ls.builtins.formatting.trim_newlines, --no_mason_needed
         null_ls.builtins.formatting.trim_whitespace, --no_mason_needed
         null_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
