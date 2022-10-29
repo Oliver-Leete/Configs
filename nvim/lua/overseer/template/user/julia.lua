@@ -33,11 +33,16 @@ return {
     },
 
     generator = function(_, cb)
+        local juliaCommand = "julia --threads=auto "
         local otherProject = otherProjectFinder() or ""
         local otherProjectName = vim.fs.basename(otherProject) or ""
         local ret = {}
         local priority = 60
         local pr = function() priority = priority + 1; return priority end
+
+        if files.exists(files.join(vim.fn.getcwd(), "JuliaSysimage.so")) then
+            juliaCommand = juliaCommand .. "--sysimage JuliaSysimage.so "
+        end
 
         table.insert(
             ret,
@@ -47,7 +52,7 @@ return {
                     julReplNum = julReplNum + 1
                     return {
                         name = "Julia Repl " .. julReplNum,
-                        cmd = "julia --threads=auto",
+                        cmd = juliaCommand,
                     }
                 end,
                 priority = pr(),
@@ -61,7 +66,7 @@ return {
                     julReplNum = julReplNum + 1
                     return {
                         name = vim.g.project .. " Project Repl " .. julReplNum,
-                        cmd = "julia --threads=auto --project",
+                        cmd = juliaCommand .. "--project",
                     }
                 end,
                 condition = isProject,
@@ -92,7 +97,8 @@ return {
             {
                 name = "Start Test Server",
                 tskName = vim.g.project .. " Test Server",
-                cmd = [[julia --color=yes --project -t auto -e 'using Revise, DaemonMode; print("Running test server"); serve(print_stack=true, async=false)']],
+                cmd = juliaCommand ..
+                    [[--project -e 'using Revise, DaemonMode; print("Running test server"); serve(print_stack=true, async=false)']],
                 condition = isProject,
                 is_test_server = true,
                 components = { "default_hide", "unique", "always_restart" },
@@ -113,7 +119,7 @@ return {
             {
                 name = "Start documentation Server",
                 tskName = vim.g.project .. " Doc Server",
-                cmd = [[julia --project=docs -E 'using Revise, ]] ..
+                cmd = juliaCommand .. [[--project=docs -E 'using Revise, ]] ..
                     vim.g.project .. [[, LiveServer; servedocs(launch_browser=true; include_dirs = ["src"])']],
                 components = { "default_hide", "unique", "always_restart" },
                 condition = hasDocs,
@@ -140,9 +146,15 @@ return {
                 components = { "default", "unique" },
             },
             {
+                name = "Format All Julia Files In Directory",
+                tskName = vim.g.project .. " Fromatting",
+                cmd = juliaCommand .. [[ -e 'using JuliaFormatter; format(".")']],
+                components = { "default_hide", "unique" },
+            },
+            {
                 name = "Test Package",
                 tskName = vim.g.project .. " Test Suite",
-                cmd = "julia --threads=auto --project -E 'using Pkg; Pkg.test()'",
+                cmd = juliaCommand .. "--project test/runtests.jl",
                 tags = { TAG.TEST },
                 condition = hasTest,
                 components = { "default", "unique" },
@@ -150,8 +162,7 @@ return {
             {
                 name = "Test Coverage",
                 tskName = vim.g.project .. " Test Coverage",
-                cmd = "julia --threads=auto --project ~/.config/nvim/filetype/julia/task_test.jl " ..
-                    vim.fs.basename(vim.fn.getcwd()),
+                cmd = juliaCommand .. "--project --code-coverage=user test/runtests.jl",
                 tags = { TAG.TEST },
                 condition = hasTest,
                 components = { "default", "unique" },
@@ -159,49 +170,50 @@ return {
             {
                 name = "Package Benchmarks",
                 tskName = vim.g.project .. " Bench Suite",
-                cmd = [[julia -E 'using PkgBenchmark; benchmarkpkg("]] .. vim.g.project .. [[")']],
+                cmd = juliaCommand .. [[-e 'using PkgBenchmark; benchmarkpkg("]] .. vim.g.project .. [[")']],
                 condition = hasBenchmark,
                 components = { "default", "unique" },
             },
             {
                 name = "Retune Benchmarks",
                 tskName = vim.g.project .. " Retune Bench",
-                cmd = [[julia -E 'using PkgBenchmark; benchmarkpkg("]] .. vim.g.project .. [[, retune=true")']],
+                cmd = juliaCommand .. [[-e 'using PkgBenchmark; benchmarkpkg("]] .. vim.g.project .. [[, retune=true")']],
                 condition = hasBenchmark,
                 components = { "default", "unique" },
             },
             {
                 name = "Run Julia File (" .. vim.fn.expand("%:t:r") .. ")",
                 tskName = "Running " .. vim.fn.expand("%:t:r"),
-                cmd = "julia " .. vim.fn.expand("%:p"),
+                cmd = juliaCommand .. vim.fn.expand("%:p"),
                 condition = isFile,
                 components = { "default", "unique" },
             },
             {
                 name = "Profile Package Imports",
                 tskName = vim.g.project .. " Profile Imports",
-                cmd = [[julia -E 'using InteractiveUtils; @time_imports using ]] .. vim.g.project .. "'",
+                cmd = [[julia -e 'using InteractiveUtils; @time_imports using ]] .. vim.g.project .. "'",
                 condition = isProject,
                 components = { "default", "unique" },
             },
             {
                 name = "Profile File (" .. vim.fn.expand("%:t:r") .. ")",
                 tskName = "Profiling " .. vim.fn.expand("%:t:r"),
-                cmd = "julia -i ~/.config/nvim/filetype/julia/prof.jl " .. vim.fn.expand("%:p"),
+                cmd = juliaCommand .. "-e ~/.config/nvim/filetype/julia/prof.jl " .. vim.fn.expand("%:p"),
                 condition = isFile,
-                components = { "default", "unique", { "on_complete_callback", on_complete = function() Jul_perf_flat() end } },
+                components = { "default", "unique",
+                    { "on_complete_callback", on_complete = function() Jul_perf_flat() end } },
             },
             {
                 name = "Run Build",
                 tskName = vim.g.project .. " Build",
-                cmd = "julia --threads=auto --project -E 'using Pkg; Pkg.build(" .. vim.g.project .. ")'",
+                cmd = juliaCommand .. "--project -e 'using Pkg; Pkg.build(" .. vim.g.project .. ")'",
                 tags = { TAG.BUILD },
                 condition = hasBuild,
                 components = { "default", "unique" },
             },
             {
                 name = "Precompile Package",
-                cmd = "~/.config/nvim/filetype/julia/precompile",
+                cmd = juliaCommand .. "--project -e 'using Pkg; Pkg.precompile()'",
                 tskName = vim.g.project .. " Precompile",
                 tags = { TAG.BUILD },
                 condition = isProject,
@@ -314,9 +326,10 @@ return {
             end
         end
 
-        local profilable = vim.fn.systemlist([[rg --no-filename --no-heading --no-line-number -e ".*\[\"(.*?)\"\].*@benchmarkable(.*)\$" -r "\$1	\$2"]])
+        local profilable = vim.fn.systemlist([[rg --no-filename --no-heading --no-line-number -e ".*\[\"(.*?)\"\].*@benchmarkable(.*?)(setup\s*=\s*\((.*)\))?\$" -r "\$1║\$2║\$4"]])
         for _, s in pairs(profilable) do
-            local name, command = s:match("([^\t]+)\t([^\t]+)")
+            local name, command, setup = s:match("(.+)║(.+)║(.*)")
+            TEST = { name, command, setup }
             table.insert(
                 ret,
                 {
@@ -324,8 +337,10 @@ return {
                     builder = function()
                         return {
                             name = name .. " profiling",
-                            cmd = "~/.config/nvim/filetype/julia/profBench '" .. command .. "'",
-                            components = { "default", "unique", { "on_complete_callback", on_complete = function() Jul_perf_flat() end } },
+                            cmd = juliaCommand .. "/home/oleete/.config/nvim/filetype/julia/profBench.jl '" ..
+                                vim.fn.getcwd() .. "' '" .. command .. "' '" .. setup .. "'",
+                            components = { "default", "unique",
+                                { "on_complete_callback", on_complete = function() Jul_perf_flat() end } },
                         }
                     end,
                     priority = pr(),

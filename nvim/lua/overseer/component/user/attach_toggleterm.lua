@@ -62,7 +62,7 @@ return {
                     STerm = nil
                 end
                 if task.toggleterm then
-                    task.toggleterm:shutdown()
+                    task.toggleterm:detach()
                 end
             end
         }

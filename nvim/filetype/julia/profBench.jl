@@ -1,9 +1,10 @@
 using BenchmarkTools, Profile, FileIO
 
-include("benchmark/benchmarks.jl")
+cd(ARGS[1])
+
+include(joinpath(ARGS[1], "benchmark/benchmarks.jl"))
 
 eval(Meta.parse(ARGS[3]))
-
 func = Meta.parse(ARGS[2])
 
 eval(func)
