@@ -119,193 +119,32 @@ myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, 
 
 projects :: [Project]
 projects =
+    [ Project { pName = wsTMP,      pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = Just $ return () }
+    , Project { pName = wsTMP2,     pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = Just $ return () }
 
-    [ Project   { projectName       = wsTMP
-                , projectDirectory  = "/tmp"
-                , projectApp1       = kitty
-                , projectApp1Force  = kittyForce
-                , projectStartHook  = Just $ return ()
-                }
+    , Project { pName = wsPER,      pDir = "~/PersonalDrive",               pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn wsPER }
+    , Project { pName = wsCODE,     pDir = "~/Projects/rustBook",           pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsCODE }
+    , Project { pName = ws3D,       pDir = "~/Projects/Printing",           pApp1 = prusa,    pApp1F = prusaForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = oneSpawn ws3D "flatpak run com.prusa3d.PrusaSlicer" }
+    , Project { pName = wsGAME,     pDir = "~/Documents",                   pApp1 = steam,    pApp1F = steamForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = oneSpawn wsGAME "steam" }
+    , Project { pName = wsFILM,     pDir = "~/Videos/films",                pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = mpv,       pApp2F = mpvForce,      pApp3 = deluge,    pApp3F = delugeForce, pStart = filmSpawn }
+    , Project { pName = wsDND,      pDir = "~/Projects/Rpgs",               pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn wsDND }
 
-    , Project   { projectName       = wsTMP2
-                , projectDirectory  = "/tmp"
-                , projectApp1       = kitty
-                , projectApp1Force  = kittyForce
-                , projectStartHook  = Just $ return ()
-                }
+    , Project { pName = wsCON,      pDir = "~/.config",                     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsCON }
+    , Project { pName = wsQMK,      pDir = "~/Projects/qmk_firmware",       pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsQMK }
+    , Project { pName = wsZMK,      pDir = "~/Projects/zmk-config",         pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsZMK }
 
-    , Project   { projectName       = ws3D
-                , projectDirectory  = "~/Projects/Printing"
-                , projectApp1       = upPointer $ runOrRaise "flatpak run com.prusa3d.PrusaSlicer" (className =? "PrusaSlicer")
-                , projectApp1Force  = upPointer $ spawn "flatpak run com.prusa3d.PrusaSlicer"
-                , projectStartHook  = Just $ do spawnOn ws3D $ sl "flatpak run com.prusa3d.PrusaSlicer"
-                }
+    , Project { pName = wsWRK,      pDir = "~/UniDrive",                    pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn wsWRK }
+    , Project { pName = wsWRKN,     pDir = "~/Projects/Thesis/Notes",       pApp1 = obsidian, pApp1F = obsidianForce, pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = oneSpawn wsWRKN "flatpak run md.obsidian.Obsidian" }
+    , Project { pName = wsTHESIS,   pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsTHESIS }
+    , Project { pName = wsSIM,      pDir = "~/Projects/PowderModel",        pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsSIM }
+    , Project { pName = wsEXP,      pDir = "~/Projects/JuliaPlotting",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsEXP }
+    , Project { pName = wsCOMMENTS, pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = foxit,     pApp3F = foxitForce,  pStart = commentSpawn }
+    , Project { pName = wsANSYS,    pDir = "~/Projects/ANSYSpowderModel",   pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = paraview,  pApp2F = paraviewForce, pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsANSYS }
 
-    , Project   { projectName       = wsDND
-                , projectDirectory  = "~/Projects/Rpgs"
-                , projectApp1       = kitty
-                , projectApp1Force  = kittyForce
-                , projectApp2       = zathura
-                , projectApp2Force  = zathuraForce
-                , projectStartHook  = Just $ spawnOn wsDND myBrowser
-                }
-
-    , Project   { projectName       = wsCON
-                , projectDirectory  = "~/.config"
-                , projectApp1       = nvim
-                , projectApp1Force  = nvimForce
-                , projectStartHook  = Just $ do spawnOn wsCON $ sl myTerminal
-                                                spawnOn wsCON ("sleep .5; " ++ myBrowser)
-                }
-
-    , Project   { projectName       = wsQMK
-                , projectDirectory  = "~/Projects/qmk_firmware"
-                , projectApp1       = nvim
-                , projectApp1Force  = nvimForce
-                , projectStartHook  = Just $ do spawnOn wsQMK $ sl myTerminal
-                                                spawnOn wsQMK ("sleep .5; " ++ myBrowser)
-                }
-
-    , Project   { projectName       = wsZMK
-                , projectDirectory  = "~/Projects/zmk-config"
-                , projectApp1       = nvim
-                , projectApp1Force  = nvimForce
-                , projectStartHook  = Just $ do spawnOn wsZMK $ sl myTerminal
-                                                spawnOn wsZMK ("sleep .5; " ++ myBrowser)
-                }
-
-    , Project   { projectName       = wsPER
-                , projectDirectory  = "~/PersonalDrive"
-                , projectApp1       = kitty
-                , projectApp1Force  = kittyForce
-                , projectApp2       = zathura
-                , projectApp2Force  = zathuraForce
-                , projectStartHook  = Just $ do spawnOn wsPER $ sl myBrowser
-                }
-
-    , Project   { projectName       = wsWRK
-                , projectDirectory  = "~/UniDrive"
-                , projectApp1       = kitty
-                , projectApp1Force  = kittyForce
-                , projectApp2       = zathura
-                , projectApp2Force  = zathuraForce
-                , projectStartHook  = Just $ do spawnOn wsWRK $ sl myBrowser
-                }
-
-    , Project   { projectName       = wsSIM
-                , projectDirectory  = "~/Projects/PowderModel"
-                , projectApp1       = nvim
-                , projectApp1Force  = nvimForce
-                , projectStartHook  = Just $ do spawnOn wsSIM $ sl myTerminal
-                                                spawnOn wsSIM ("sleep .2; " ++ myBrowser)
-                }
-    , Project   { projectName       = wsEXP
-                , projectDirectory  = "~/Projects/JuliaPlotting"
-                , projectApp1       = nvim
-                , projectApp1Force  = nvimForce
-                , projectStartHook  = Just $ do spawnOn wsEXP $ sl myTerminal
-                                                spawnOn wsEXP ("sleep .2; " ++ myBrowser)
-                }
-    , Project   { projectName       = wsTHESIS
-                , projectDirectory  = "~/Projects/Thesis/thesis"
-                , projectApp1       = nvim
-                , projectApp1Force  = nvimForce
-                , projectApp2       = zathura
-                , projectApp2Force  = zathuraForce
-                , projectStartHook  = Just $ do spawnOn wsTHESIS $ sl myTerminal
-                                                spawnOn wsTHESIS ("sleep .2; " ++ myBrowser)
-                }
-
-    , Project   { projectName       = wsCOMMENTS
-                , projectDirectory  = "~/Projects/Thesis/thesis"
-                , projectApp1       = nvim
-                , projectApp1Force  = nvimForce
-                , projectApp2       = zathura
-                , projectApp2Force  = zathuraForce
-                , projectApp3       = upPointer $ runOrRaise "foxitreader" (className =? "Foxit Reader")
-                , projectApp3Force  = upPointer $ spawn "foxitreader"
-                , projectStartHook  = Just $ do spawnOn wsCOMMENTS $ sl myTerminal
-                                                spawnOn wsCOMMENTS ("sleep .2; " ++ myBrowser)
-                                                spawnOn wsCOMMENTS $ sl "sleep .4; foxitreader"
-                }
-
-    , Project   { projectName       = wsWRKN
-                , projectDirectory  = "~/Projects/Thesis/Notes"
-                , projectApp1       = upPointer $ runOrRaise "flatpak run md.obsidian.Obsidian" (className =? "obsidian")
-                , projectApp1Force  = upPointer $ spawn "flatpak run md.obsidian.Obsidian"
-                , projectApp2       = zathura
-                , projectApp2Force  = zathuraForce
-                , projectStartHook  = Just $ do spawnOn wsCOMMENTS $ sl "flatpak run md.obsidian.Obsidian"
-                }
-
-    , Project   { projectName       = wsANSYS
-                , projectDirectory  = "~/Projects/ANSYSpowderModel"
-                , projectApp1       = nvim
-                , projectApp1Force  = nvimForce
-                , projectApp2       = upPointer $ runOrRaise "flatpak run org.paraview.Paraview" (className =? "ParaView")
-                , projectApp2Force  = upPointer $ spawn "flatpak run org.paraview.Paraview"
-                , projectStartHook  = Just $ do spawnOn wsANSYS $ sl myTerminal
-                                                spawnOn wsANSYS ("sleep .2; " ++ myBrowser)
-                }
-
-    , Project   { projectName       = wsCODE
-                , projectDirectory  = "~/Projects/rustBook"
-                , projectApp1       = nvim
-                , projectApp1Force  = nvimForce
-                , projectStartHook  = Just $ do spawnOn wsCODE $ sl myTerminal
-                                                spawnOn wsCODE ("sleep .2; " ++ myBrowser)
-                }
-
-    , Project   { projectName       = wsSCN
-                , projectDirectory  = "~/Projects/Scintilla/Main"
-                , projectApp1       = nvim
-                , projectApp1Force  = nvimForce
-                , projectStartHook  = Just $ do spawnOn wsSCN $ sl myTerminal
-                                                spawnOn wsSCN ("sleep .2; " ++ myBrowser)
-                }
-
-    , Project   { projectName       = wsSCNP
-                , projectDirectory  = "~/Projects/Scintilla/PrintSys"
-                , projectApp1       = nvim
-                , projectApp1Force  = nvimForce
-                , projectStartHook  = Just $ do spawnOn wsSCNP $ sl myTerminal
-                                                spawnOn wsSCNP ("sleep .2; " ++ myBrowser)
-                }
-
-    , Project   { projectName       = wsSCNF
-                , projectDirectory  = "~/Projects/Scintilla/Firmware"
-                , projectApp1       = nvim
-                , projectApp1Force  = nvimForce
-                , projectStartHook  = Just $ do spawnOn wsSCNF $ sl myTerminal
-                                                spawnOn wsSCNF ("sleep .2; " ++ myBrowser)
-                }
-
-    , Project   { projectName       = wsSCNN
-                , projectDirectory  = "~/Projects/Scintilla/docs"
-                , projectApp1       = nvim
-                , projectApp1Force  = nvimForce
-                , projectStartHook  = Just $ do spawnOn wsSCNN $ sl myTerminal
-                                                spawnOn wsSCNN ("sleep .2; " ++ myBrowser)
-                }
-
-    , Project   { projectName       = wsGAME
-                , projectDirectory  = "~/Documents"
-                , projectApp1       = upPointer $ runOrRaise "steam" (className =? "Steam")
-                , projectApp1Force  = upPointer $ spawn "steam"
-                , projectStartHook  = Just $ do spawnOn wsGAME $ sl "steam"
-                }
-    , Project   { projectName       = wsFILM
-                , projectDirectory  = "~/Videos/films"
-                , projectApp1       = upPointer $ runOrRaise myTerminal (className =? "kitty")
-                , projectApp1Force  = upPointer $ spawn myTerminal
-                , projectApp2       = upPointer $ runOrRaise "mpv /home/oleete/Videos/films/*" (className =? "mpv")
-                , projectApp2Force  = upPointer $ spawn "mpv /home/oleete/Videos/films/*"
-                , projectApp3       = upPointer $ runOrRaise "deluge" (className =? "Deluge-gtk")
-                , projectApp3Force  = upPointer $ spawn "deluge"
-                , projectStartHook  = Just $ do spawnOn wsFILM $ sl myBrowser
-                                                spawnOn wsFILM ("sleep .2; " ++ myTerminal)
-                                                spawnOn wsFILM $ sl "deluge"
-                }
+    , Project { pName = wsSCN,      pDir = "~/Projects/Scintilla/Main",     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsSCN }
+    , Project { pName = wsSCNP,     pDir = "~/Projects/Scintilla/PrintSys", pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsSCNP }
+    , Project { pName = wsSCNF,     pDir = "~/Projects/Scintilla/Firmware", pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsSCNF }
+    , Project { pName = wsSCNN,     pDir = "~/Projects/Scintilla/docs",     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsSCNN }
     ]
     where
         nvim = bF $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")])
@@ -314,7 +153,28 @@ projects =
         zathuraForce = upPointer $ spawn "zathura"
         kitty = upPointer $ runOrRaise "kittyMaker" (className =? "kitty")
         kittyForce = upPointer $ spawn "kitty"
+
+        foxit = upPointer $ runOrRaise "foxitreader" (className =? "Foxit Reader")
+        foxitForce = upPointer $ spawn "foxitreader"
+        obsidian = upPointer $ runOrRaise "flatpak run org.paraview.Paraview" (className =? "ParaView")
+        obsidianForce = upPointer $ spawn "flatpak run org.paraview.Paraview"
+        prusa = upPointer $ runOrRaise "flatpak run com.prusa3d.PrusaSlicer" (className =? "PrusaSlicer")
+        prusaForce = upPointer $ spawn "flatpak run com.prusa3d.PrusaSlicer"
+        paraview = upPointer $ runOrRaise "flatpak run org.paraview.Paraview" (className =? "ParaView")
+        paraviewForce = upPointer $ spawn "flatpak run org.paraview.Paraview"
+        mpv = upPointer $ runOrRaise "mpv /home/oleete/Videos/films/*" (className =? "mpv")
+        mpvForce = upPointer $ spawn "mpv /home/oleete/Videos/films/*"
+        deluge = upPointer $ runOrRaise "deluge" (className =? "Deluge-gtk")
+        delugeForce = upPointer $ spawn "deluge"
+        steam = upPointer $ runOrRaise "steam" (className =? "Steam")
+        steamForce = upPointer $ spawn "steam"
+
         sl i = "sleep .1; " ++ i
+        termBrowSpawn ws = Just $ do spawnOn ws $ sl myTerminal; spawnOn ws ("sleep .5; " ++ myBrowser)
+        browSpawn ws = Just $ do spawnOn ws ("sleep .5; " ++ myBrowser)
+        oneSpawn ws app = Just $ do spawnOn ws $ sl app
+        commentSpawn = Just $ do spawnOn wsCOMMENTS $ sl myTerminal; spawnOn wsCOMMENTS ("sleep .2; " ++ myBrowser); spawnOn wsCOMMENTS $ sl "sleep .4; foxitreader"
+        filmSpawn = Just $ do spawnOn wsFILM $ sl myBrowser; spawnOn wsFILM ("sleep .2; " ++ myTerminal); spawnOn wsFILM $ sl "deluge"
 
 ----------------------------------------------------------------------------------------------------
 -- Applications                                                                                   --

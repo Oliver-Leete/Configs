@@ -128,15 +128,15 @@ type ProjectTable = Map ProjectName Project
 --------------------------------------------------------------------------------
 -- | Details about a workspace that represents a project.
 data Project = Project
-  { projectName      :: !ProjectName    -- ^ Workspace name.
-  , projectDirectory :: !FilePath       -- ^ Working directory.
-  , projectStartHook :: !(Maybe (X ())) -- ^ Optional start-up hook.
-  , projectApp1      :: X () -- ^ Optional app
-  , projectApp1Force :: X () -- ^ Optional app forced version
-  , projectApp2      :: X () -- ^ Optional app
-  , projectApp2Force :: X () -- ^ Optional app forced version
-  , projectApp3      :: X () -- ^ Optional app
-  , projectApp3Force :: X () -- ^ Optional app forced version
+  { pName      :: !ProjectName    -- ^ Workspace name.
+  , pDir :: !FilePath       -- ^ Working directory.
+  , pStart :: !(Maybe (X ())) -- ^ Optional start-up hook.
+  , pApp1      :: X () -- ^ Optional app
+  , pApp1F :: X () -- ^ Optional app forced version
+  , pApp2      :: X () -- ^ Optional app
+  , pApp2F :: X () -- ^ Optional app forced version
+  , pApp3      :: X () -- ^ Optional app
+  , pApp3F :: X () -- ^ Optional app forced version
   }
 
 --------------------------------------------------------------------------------
@@ -186,12 +186,12 @@ instance XPrompt ProjectPrompt where
   modeAction (ProjectPrompt _ RenameMode _) name _ =
     when (not (null name) && not (all isSpace name)) $ do
       renameWorkspaceByName name
-      modifyProject (\p -> p { projectName = name })
+      modifyProject (\p -> p { pName = name })
 
   modeAction (ProjectPrompt _ DirMode _) buf auto = do
     let dir' = if null auto then buf else auto
     dir <- io $ makeAbsolute dir'
-    modifyProject (\p -> p { projectDirectory = dir })
+    modifyProject (\p -> p { pDir = dir })
 
 --------------------------------------------------------------------------------
 -- | Add dynamic projects support to the given config.
@@ -225,13 +225,13 @@ dynamicProjectsStartupHook ps = XS.modify go
     update = Map.union (Map.fromList $ map entry ps)
 
     entry :: Project -> (ProjectName, Project)
-    entry p = (projectName p, addDefaultHook p)
+    entry p = (pName p, addDefaultHook p)
 
     -- Force the hook to be a @Just@ so that it doesn't automatically
     -- get deleted when switching away from a workspace with no
     -- windows.
     addDefaultHook :: Project -> Project
-    addDefaultHook p = p { projectStartHook = projectStartHook p <|>
+    addDefaultHook p = p { pStart = pStart p <|>
                                               Just (return ())
                          }
 
@@ -259,7 +259,7 @@ modifyProject f = do
   -- If a project is renamed to match another project, the old project
   -- will be removed and replaced with this one.
   let new = f p
-      ps' = Map.insert (projectName new) new $ Map.delete (projectName p) ps
+      ps' = Map.insert (pName new) new $ Map.delete (pName p) ps
 
   XS.modify $ \s -> s {projects = ps'}
   activateProject new
@@ -276,11 +276,11 @@ switchProject p = do
 
   -- If the project we are switching away from has no windows, and
   -- it's a dynamic project, remove it from the configuration.
-  when (null ws && isNothing (projectStartHook oldp)) $ do
+  when (null ws && isNothing (pStart oldp)) $ do
     removeWorkspaceByTag name -- also remove the old workspace
     XS.modify (\s -> s {projects = Map.delete name $ projects s})
 
-  appendWorkspace (projectName p)
+  appendWorkspace (pName p)
 
 --------------------------------------------------------------------------------
 -- | Prompt for a project name and then switch to it.  Automatically
@@ -296,8 +296,8 @@ switchProjectPrompt = projectPrompt [ SwitchMode
 -- | Shift the currently focused window to the given project.
 shiftToProject :: Project -> X ()
 shiftToProject p = do
-  addHiddenWorkspace (projectName p)
-  windows (W.shift $ projectName p)
+  addHiddenWorkspace (pName p)
+  windows (W.shift $ pName p)
 
 --------------------------------------------------------------------------------
 -- | Prompts for a project name and then shifts the currently focused
@@ -352,10 +352,10 @@ activateProject p = do
     home <- io getHomeDirectory
 
     -- Change to the project's directory.
-    catchIO (setCurrentDirectory $ expandHome home $ projectDirectory p)
+    catchIO (setCurrentDirectory $ expandHome home $ pDir p)
 
     -- Possibly run the project's startup hook.
-    when (null ws) $ fromMaybe (return ()) (projectStartHook p)
+    when (null ws) $ fromMaybe (return ()) (pStart p)
 
   where
 
@@ -370,27 +370,27 @@ activateProject p = do
 runProjectApp1 :: X ()
 runProjectApp1 = do
   p  <- currentProject
-  projectApp1 p
+  pApp1 p
 runProjectApp2 :: X ()
 runProjectApp2 = do
   p  <- currentProject
-  projectApp2 p
+  pApp2 p
 runProjectApp3 :: X ()
 runProjectApp3 = do
   p  <- currentProject
-  projectApp3 p
+  pApp3 p
 runProjectApp1Force :: X ()
 runProjectApp1Force = do
   p  <- currentProject
-  projectApp1Force p
+  pApp1F p
 runProjectApp2Force :: X ()
 runProjectApp2Force = do
   p  <- currentProject
-  projectApp2Force p
+  pApp2F p
 runProjectApp3Force :: X ()
 runProjectApp3Force = do
   p  <- currentProject
-  projectApp3Force p
+  pApp3F p
 
 --------------------------------------------------------------------------------
 -- | Default project.
