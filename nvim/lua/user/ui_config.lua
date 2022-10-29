@@ -113,22 +113,55 @@ require("nvim-navic").setup({
 
 require("noice").setup({
     popupmenu = {
+        enabled = true,
         backend = "cmp",
     },
-    history = {
-        view = "split",
+    command = {
+        history = {
+            view = "split",
+        },
     },
     messages = {
         view_history = "split",
         view = false,
         view_error = "mini",
-        view_warn = "mini",
+        view_warn = false,
     },
     routes = {
         {
             view = "split",
             filter = { event = "msg_show", min_width = 100, min_height = 20 },
         },
+    },
+    lsp = {
+        progress = {
+            enabled = true,
+            view = "mini",
+        },
+        message = {
+            enabled = true,
+            view = "mini",
+        },
+        documentation = {
+            view = "hover",
+            opts = {
+                lang = "markdown",
+                replace = true,
+                render = "plain",
+                format = { "{message}" },
+                position = { row = 2 },
+                border = { style = Border },
+                win_options = { winblend=0, concealcursor = "n", conceallevel = 3 },
+            },
+        },
+        override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true,
+        },
+    },
+    presets = {
+        command_palette = false,
     },
     views = {
         split = {

@@ -24,8 +24,8 @@ Map({ "n", "x", "o" }, "N", "v:lua.commandRepeat('[', 'dirJumps')", { expr = tru
 Map({ "n", "x", "o" }, "[[", "[s", { remap = true })
 Map({ "n", "x", "o" }, "]]", "]s", { remap = true })
 
-Map({ "n", "x", "o"}, "[.", "<cmd>call v:lua.markAndGo(v:count, 'norm! (', '.')<cr>")
-Map({ "n", "x", "o"}, "].", "<cmd>call v:lua.markAndGo(v:count, 'norm! )', '.')<cr>")
+Map({ "n", "x", "o"}, "[l", "<cmd>call v:lua.markAndGo(v:count, 'cprev', 'l')<cr>")
+Map({ "n", "x", "o"}, "]l", "<cmd>call v:lua.markAndGo(v:count, 'cnext', 'l')<cr>")
 
 vim.api.nvim_create_autocmd("BufEnter",
     {

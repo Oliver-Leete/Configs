@@ -60,6 +60,7 @@ overseer.setup({
             "display_duration",
         },
         def_dispose = {
+            "on_exit_set_status",
             { "on_complete_dispose", timeout = 1 },
             "user.attach_toggleterm",
         },
@@ -80,6 +81,24 @@ overseer.setup({
                 OTerm = task.toggleterm
             end,
         },
+        ["close terminal"] = {
+            desc = "close and detach the toggleterm",
+            run = function(task)
+                if OTerm == task.toggleterm then
+                    OTerm = nil
+                elseif STerm == task.toggleterm then
+                    STerm = nil
+                end
+                if task.toggleterm then
+                    task:remove_components({ "user.attach_toggleterm" })
+                    task.toggleterm:detach()
+                    task.toggleterm = nil
+                end
+            end,
+            condition = function(task)
+                return task:has_component("user.attach_toggleterm")
+            end
+        },
         ["set as recive terminal"] = {
             desc = "set this task as the terminal to recive sent text and commands",
             run = function(task)
@@ -99,7 +118,7 @@ overseer.setup({
                 end
             end
         },
-        ["stop repeat running"] = {
+        ["unwatch"] = {
             desc = "stop from running on finish or file watch",
             run = function(task)
                 if task:has_component("on_complete_restart") then

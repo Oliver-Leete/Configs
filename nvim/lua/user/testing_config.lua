@@ -24,7 +24,7 @@ require("neotest").setup({
         passed = " ",
         running = " ",
         failed = " ",
-        skipped = "ﰸ ",
+        skipped = " ",
         unknown = "?",
         non_collapsible = "─",
         collapsed = "─",

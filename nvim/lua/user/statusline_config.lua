@@ -4,7 +4,9 @@ local function lsp_status()
     if vim.lsp.get_active_clients({ bufnr = bufnr }) then
         local clients = {}
         for _, client in pairs(vim.lsp.get_active_clients({ bufnr = bufnr or vim.api.nvim_get_current_buf() })) do
-            if client.name ~= "null-ls" then
+            if client.name == "jedi_language_server" then
+                clients[#clients + 1] = "jls"
+            elseif client.name ~= "null-ls" then
                 clients[#clients + 1] = client.name
             end
         end

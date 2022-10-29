@@ -14,14 +14,14 @@ require("dapui").setup({
     controls = {
         enabled = false,
         icons = {
-            pause = "",
-            play = "",
-            step_into = "",
-            step_over = "",
-            step_out = "",
-            step_back = "",
-            run_last = "↻",
-            terminate = "栗",
+            pause = " ",
+            play = " ",
+            step_into = " ",
+            step_over = " ",
+            step_out = " ",
+            step_back = " ",
+            run_last = " ",
+            terminate = " ",
         },
     },
     layouts = {

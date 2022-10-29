@@ -22,9 +22,9 @@ require("diffview").setup({
             vim.b[bufnr].is_diffview_file = true
         end,
         view_opened = function(view)
-            if view.panel.bufname == "DiffviewFileHistoryPanel" then
+            if view.panel and view.panel.bufname == "DiffviewFileHistoryPanel" then
                 vim.t[vim.api.nvim_get_current_tabpage()].tabname = "Git History"
-            elseif view.panel.bufname == "DiffviewFilePanel" then
+            elseif view.panel and view.panel.bufname == "DiffviewFilePanel" then
                 vim.t[vim.api.nvim_get_current_tabpage()].tabname = "Git Changes"
             end
         end

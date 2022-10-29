@@ -27,7 +27,7 @@ vim.diagnostic.config({
             min = "Warn",
         },
         source = "if_many",
-        prefix = "",
+        prefix = " ",
     },
     signs = true,
     update_in_insert = false,
@@ -157,6 +157,7 @@ lspconfig.sumneko_lua.setup({
                 path = vim.split(package.path, ";"),
             },
             diagnostics = {
+                enable = false,
                 globals = { "vim" },
             },
             workspace = {
