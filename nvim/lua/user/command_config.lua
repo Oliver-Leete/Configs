@@ -22,6 +22,7 @@ GlobalCommands = {
     { source = "finders", name = "File browser (relative)", command = telescopeFileBrowser .. " cwd=%:p:h" },
     { source = "finders", name = "Files", command = "Telescope git_files theme=get_ivy" },
     { source = "finders", name = "Grep", command = "Telescope live_grep theme=get_ivy" },
+    { source = "finders", name = "History (telescope)", command = "Telescope noice theme=get_ivy" },
     { source = "finders", name = "Old files finder", command = "Telescope oldfiles theme=get_ivy" },
     { source = "finders", name = "Quickfix", command = "Telescope quickfix theme=get_ivy" },
     { source = "finders", name = "Symbols", command = "Telescope lsp_document_symbols theme=get_ivy" },
