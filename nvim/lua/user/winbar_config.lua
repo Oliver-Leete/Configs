@@ -1,3 +1,8 @@
+require("nvim-navic").setup({
+    highlight = false,
+    separator = "  "
+})
+
 SpecialName = function(bufnr)
     if vim.bo[bufnr].filetype == "help" then
         local help_title = vim.fn.expand("%:t:r")

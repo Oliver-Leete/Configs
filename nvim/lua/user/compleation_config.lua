@@ -160,10 +160,6 @@ vim.g.diagnostic_enable_virtual_text = 0
 vim.g.diagnostic_enable_underline = 0
 vim.g.completion_timer_cycle = 200
 
-local function replace_keycodes(str)
-    return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
 _G.cmp_toggle = function()
     if require("cmp").visible() then
         require("cmp").close()

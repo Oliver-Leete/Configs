@@ -26,16 +26,7 @@ vim.opt.fillchars:append({
     verthoriz = "🭿",
     diff = "╱",
 })
-Border = {
-    { "🭽", "FloatBorder" },
-    { "▔", "FloatBorder" },
-    { "🭾", "FloatBorder" },
-    { "▕", "FloatBorder" },
-    { "🭿", "FloatBorder" },
-    { "▁", "FloatBorder" },
-    { "🭼", "FloatBorder" },
-    { "▏", "FloatBorder" },
-}
+Border = "rounded"
 
 -- Saving
 vim.opt.confirm = true
