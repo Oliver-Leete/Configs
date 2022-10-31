@@ -263,8 +263,10 @@ Map("n", "<leader>i", function()
     if OTerm then
         if OTerm:is_open() then
             vim.cmd("ToggleTermToggleAll")
-        else
+        elseif vim.api.nvim_buf_is_valid(OTerm.bufnr) then
             OTerm:open()
+        else
+            vim.cmd.echomsg({ args = { "'No O-Terminal found'" } })
         end
     else
         vim.cmd.echomsg({ args = { "'No O-Terminal found'" } })

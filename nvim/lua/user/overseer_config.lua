@@ -80,6 +80,10 @@ overseer.setup({
                 end
                 OTerm = task.toggleterm
             end,
+            condition = function(task)
+                local bufnr = task:get_bufnr()
+                return bufnr and vim.api.nvim_buf_is_valid(bufnr)
+            end,
         },
         ["close terminal"] = {
             desc = "close and detach the toggleterm",
@@ -96,7 +100,8 @@ overseer.setup({
                 end
             end,
             condition = function(task)
-                return task:has_component("user.attach_toggleterm")
+                local bufnr = task:get_bufnr()
+                return bufnr and vim.api.nvim_buf_is_valid(bufnr) and task:has_component("user.attach_toggleterm")
             end
         },
         ["set as recive terminal"] = {
