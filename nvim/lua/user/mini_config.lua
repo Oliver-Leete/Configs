@@ -82,10 +82,6 @@ require("mini.ai").setup({
             a = { "@function.outer", "@class.outer", "@testitem.outer" },
             i = { "@function.inner", "@class.inner", "@testitem.inner" },
         }),
-        S = gen_spec.treesitter({
-            a = { "@function.name", "@class.name", "@testitem.name" },
-            i = { "@function.name", "@class.name", "@testitem.name" },
-        }),
         -- line (same key as visual line in my mappings)
         x = { {
             '\n()%s*().-()\n()',
@@ -133,7 +129,7 @@ function _G.markAndGoMini(count, direction, id)
     until count <= 0
 end
 
-for _, o in pairs({ "a", "b", "d", "e", "f", "g", "h", "o", "p", "q", "r", "S", "s", "w", "W", "x", }) do
+for _, o in pairs({ "a", "b", "d", "e", "f", "g", "h", "o", "p", "q", "r", "s", "w", "W", "x", }) do
     Map({ "n", "x", "o" }, "[" .. o, function() _G.markAndGoMini(vim.v.count, 'prev', o) end)
     Map({ "n", "x", "o" }, "]" .. o, function() _G.markAndGoMini(vim.v.count, 'next', o) end)
 
