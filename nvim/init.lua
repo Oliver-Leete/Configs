@@ -57,7 +57,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'p00f/clangd_extensions.nvim'
     Plug 'b0o/schemastore.nvim'
 
-    Plug 'Issafalcon/lsp-overloads.nvim'
     Plug 'SmiteshP/nvim-navic'
 
     Plug 'hrsh7th/nvim-cmp'
