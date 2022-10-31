@@ -3,38 +3,36 @@ using ProfileView
 
 a = @bprofile include(ARGS[1])
 
-using AbstractTrees, FlameGraphs, JSON
+using JSON
 
 function make_json(profileData)
-    flame = flamegraph(profileData[1], lidict=profileData[2])
-    function allparent(node)
-        ret = []
-        while node.parent != node
-            node = node.parent
-            push!(ret, node)
-        end
-        return ret
-    end
+    data = profileData[1]
+    lidict = profileData[2]
+
     event = []
-    for node in PreOrderDFS(flame)
-        # calclate span of node minus span of all children
-        count = length(node.data.span)
-        for child in children(node)
-            count -= length(child.data.span)
+    for (key, stackframes) in lidict
+        c = count(==(key), data)
+        frames = []
+        for stackframe in stackframes
+            if stackframe.line > 0
+                push!(frames, Dict(
+                    "symbol" => stackframe.func,
+                    "file" => stackframe.file,
+                    "linenr" => stackframe.line,
+                ))
+            else
+                push!(frames, Dict(
+                    "symbol" => stackframe.func,
+                    "file" => stackframe.file,
+                ))
+            end
         end
-        if count > 0
-            push!(event, Dict(
-                "count" => count,
-                "frames" => [i.data.sf.line > 0 ?
-                             Dict("symbol" => i.data.sf.func, "file" => i.data.sf.file, "linenr" => i.data.sf.line,) :
-                             Dict("symbol" => i.data.sf.func, "file" => i.data.sf.file,)
-                             for i in allparent(node)]))
-        end
+        push!(event, Dict("count" => c, "frames" => frames))
     end
     ret = JSON.json(Dict("event 1" => event))
     return ret
 end
 
-write("/tmp/jlprof.json", make_json(Profile.retrieve()))
+write("/tmp/jlprof.json", make_json(Profile.fetch()))
 ProfileView.view()
 display(a)

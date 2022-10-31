@@ -222,7 +222,7 @@ return {
             {
                 name = "Package Compile",
                 tskName = vim.g.project .. " Compile",
-                cmd = "julia --threads=auto ~/.config/nvim/filetype/julia/task_compileenv.jl " .. vim.fn.getcwd(),
+                cmd = "julia --threads=auto --project ~/.config/nvim/filetype/julia/task_compileenv.jl " .. vim.fn.getcwd(),
                 tags = { TAG.BUILD },
                 condition = isProject,
                 components = { "default", "unique" },
@@ -340,7 +340,24 @@ return {
                             cmd = juliaCommand .. "/home/oleete/.config/nvim/filetype/julia/profBench.jl '" ..
                                 vim.fn.getcwd() .. "' '" .. command .. "' '" .. setup .. "'",
                             components = { "default", "unique",
-                                { "on_complete_callback", on_complete = function() Jul_perf_flat() end } },
+                                { "on_complete_callback", on_complete = function(_, _, status) return status == "SUCCESS" and Jul_perf_flat() end } },
+                        }
+                    end,
+                    priority = pr(),
+                    params = {},
+                }
+            )
+            table.insert(
+                ret,
+                {
+                    name = "Alloc Profile " .. name,
+                    builder = function()
+                        return {
+                            name = name .. " profiling allocs",
+                            cmd = juliaCommand .. "/home/oleete/.config/nvim/filetype/julia/profAllocBench.jl '" ..
+                                vim.fn.getcwd() .. "' '" .. command .. "' '" .. setup .. "'",
+                            components = { "default", "unique",
+                                { "on_complete_callback", on_complete = function(_, _, status) return status == "SUCCESS" and Jul_perf_flat() end } },
                         }
                     end,
                     priority = pr(),

@@ -13,13 +13,14 @@ eval(func)
 using JSON
 
 function make_json(profileData)
-    data = profileData[1]
-    lidict = profileData[2]
-
-    event = []
-    for (key, stackframes) in lidict
+    allocs = profileData.allocs
+    counts = []
+    size = []
+    for data in profileData.allocs
+        s = data.size
+        c = count(x -> x.stacktrace==data.stacktrace, allocs)
         frames = []
-        for stackframe in stackframes
+        for stackframe in data.stacktrace
             if stackframe.line > 0
                 push!(frames, Dict(
                     "symbol" => stackframe.func,
@@ -33,11 +34,11 @@ function make_json(profileData)
                 ))
             end
         end
-        c = count(==(key), data)
-        push!(event, Dict("count" => c, "frames" => frames))
+        push!(counts, Dict("count" => c, "frames" => frames))
+        push!(size, Dict("count" => s, "frames" => frames))
     end
-    ret = JSON.json(Dict("event 1" => event))
+    ret = JSON.json(Dict("size" => size, "count" => counts))
     return ret
 end
 
-write("/tmp/jlprof.json", make_json(Profile.retrieve()))
+write("/tmp/jlprof.json", make_json(Profile.Allocs.fetch()))
