@@ -30,5 +30,5 @@ CACHEDIR=${XDG_CACHE_HOME:-${HOME}/.cache/browser}
 [ "$WSTAG" = "" ] && SUFFIX="" || SUFFIX="-$WSTAG"
 [ "$WSTAG" = "incognito" ] && INCOGNITO=" --incognito " || INCOGNITO=""
 
-echo "$BROWSER" "$INCOGNITO" --enable-features=VaapiVideoDecoder,VaapiVideoEncoder --user-data-dir="$CONFIGDIR/$BROWSER$SUFFIX" "$*" \&
-"$BROWSER" "$INCOGNITO" --enable-features=VaapiVideoDecoder,VaapiVideoEncoder --user-data-dir="$CONFIGDIR/$BROWSER$SUFFIX" "$*" &
+echo "$BROWSER" "$INCOGNITO" --force-dark-mode --enable-features=WebUIDarkMode --enable-features=VaapiVideoDecoder,VaapiVideoEncoder --user-data-dir="$CONFIGDIR/$BROWSER$SUFFIX" "$*" \&
+"$BROWSER" "$INCOGNITO" --force-dark-mode --enable-features=WebUIDarkMode --enable-features=VaapiVideoDecoder,VaapiVideoEncoder --user-data-dir="$CONFIGDIR/$BROWSER$SUFFIX" "$*" &
