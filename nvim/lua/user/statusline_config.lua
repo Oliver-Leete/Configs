@@ -39,7 +39,7 @@ local ov_list = {
 
 local function noice_wrapper()
     local message = require("noice").api.status.message.get()
-    return message:sub(1,80)
+    return message:sub(1, 80)
 end
 
 require('lualine').setup({

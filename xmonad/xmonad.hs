@@ -5,7 +5,6 @@
 {-# OPTIONS_GHC -Wno-missing-fields #-}
 import qualified Data.Map as M
 import Data.Monoid
-import System.Exit
 import Graphics.X11.Types
 
 import XMonad hiding ( (|||) )
@@ -22,7 +21,7 @@ import XMonad.Actions.SwapPromote
 import XMonad.Actions.UpdateFocus
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.WindowGoLocal
-import XMonad.Actions.WithAll (sinkAll, killAll)
+import XMonad.Actions.WithAll (sinkAll)
 
 import XMonad.Hooks.DebugStack
 import XMonad.Hooks.EwmhDesktops ( ewmh )
@@ -54,8 +53,6 @@ import XMonad.Util.NamedScratchpadLocal
 import XMonad.Util.Paste as P
 import XMonad.Util.SpawnOnce
 
-import XMonad.Prompt
-import XMonad.Prompt.ConfirmPrompt (confirmPrompt)
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
 ----------------------------------------------------------------------------------------------------
@@ -200,13 +197,12 @@ scratchpads =
 ----------------------------------------------------------------------------------------------------
 -- Theme                                                                                          --
 ----------------------------------------------------------------------------------------------------
-background, foreground, dull, active, yellow, warning :: [Char]
-background = "#1F1F28"
+background, foreground, dull, active, yellow :: [Char]
+background = "#0f0f15"
 foreground = "#C8C093"
 dull       = "#54546D"
 active     = "#7E9CD8"
 yellow     = "#DCA561"
-warning    = "#C34043"
 
 -- sizes
 gap    = 3
@@ -226,24 +222,6 @@ myShowWNameTheme = def
     , swn_color             = background
     }
 
-myPromptTheme :: XPConfig
-myPromptTheme = def
-    { bgColor               = active
-    , fgColor               = background
-    , fgHLight              = dull
-    , bgHLight              = active
-    , borderColor           = active
-    , promptBorderWidth     = 0
-    , height                = 30
-    , position              = CenteredAt (1 / 4) (1 / 4)
-    , autoComplete          = Nothing
-    }
-
-hotPromptTheme :: XPConfig
-hotPromptTheme = myPromptTheme
-    { bgColor               = warning
-    , fgColor               = background
-    }
 ----------------------------------------------------------------------------------------------------
 -- Layouts                                                                                        --
 ----------------------------------------------------------------------------------------------------
@@ -315,7 +293,6 @@ myKeys =
 
     , ("M-q"             , spawn "xmonad --restart")
     , ("M-S-q"           , spawn "cd /home/oleete/.config/xmonad; stack install; xmonad --recompile; xmonad --restart; cd -")
-    , ("M-C-q"           , confirmPrompt myPromptTheme "Quit XMonad" $ io exitSuccess)
 
     , ("M-p"             , spawn "/home/oleete/.config/bin/rofiScript")
     , ("M-f"             , spawn "/home/oleete/.config/bin/wsHarpoon mainMenu")
@@ -337,7 +314,6 @@ myKeys =
 
     , ("M-<Backspace>"   , bF $ nv "DeleteBuffer" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_BackSpace) $ crm (P.sendKey controlMask xK_w) $ l kill)
     , ("M-S-<Backspace>" , kill)
-    , ("M-C-<Backspace>" , confirmPrompt hotPromptTheme "kill all" killAll)
 
     , ("M-<Left>"        , bF $ nv "TabPrev" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_Left)  $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
     , ("M-<Right>"       , bF $ nv "TabNext" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_Right) $ l (P.sendKey controlMask xK_Tab))
