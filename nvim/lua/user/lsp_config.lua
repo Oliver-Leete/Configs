@@ -157,7 +157,7 @@ lspconfig.sumneko_lua.setup({
                 path = vim.split(package.path, ";"),
             },
             diagnostics = {
-                enable = false,
+                enable = true,
                 globals = { "vim" },
             },
             workspace = {

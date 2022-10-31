@@ -143,5 +143,6 @@ pcall(require("user.testing_config"))
 
 pcall(require("user.git_config"))
 pcall(require("user.mini_config"))
+pcall(require("user.noice_config"))
 
 pcall(require("user.filmpicker_config"))
