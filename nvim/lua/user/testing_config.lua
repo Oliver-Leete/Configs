@@ -10,6 +10,7 @@ require("neotest").setup({
         require("neotest-rust"),
         require("neotest-python"),
         require("neotest-haskell"),
+        require("neotest-plenary"),
         require("neotest.adapters.neotest-julia-testitem"),
         require("neotest.adapters.neotest-julia-benchmarktools")
     },

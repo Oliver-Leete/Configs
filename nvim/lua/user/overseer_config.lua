@@ -16,6 +16,7 @@ overseer.setup({
     task_win = { border = Border, win_opts = { winblend = 0, }, },
     confirm = { border = Border, win_opts = { winblend = 0, }, },
     task_list = {
+        separator = "────────────────────────────────────────────────────────────────────────────────",
         bindings = {
             ["?"] = "ShowHelp",
             ["<CR>"] = "RunAction",
@@ -26,12 +27,14 @@ overseer.setup({
             ["<C-h>"] = "DecreaseDetail",
             ["L"] = "IncreaseAllDetail",
             ["H"] = "DecreaseAllDetail",
-            ["["] = "PrevTask",
-            ["]"] = "NextTask",
-            ["{"] = nil,
-            ["}"] = nil,
-            ["<C-v>"] = nil,
-            ["<C-f>"] = nil,
+            ["("] = "PrevTask",
+            [")"] = "NextTask",
+            ["["] = "",
+            ["]"] = "",
+            ["{"] = "",
+            ["}"] = "",
+            ["<C-v>"] = "",
+            ["<C-f>"] = "",
         },
     },
     component_aliases = {
@@ -66,6 +69,8 @@ overseer.setup({
         },
         always_restart = { "on_complete_restart", statuses = { STATUS.FAILURE, STATUS.SUCCESS } },
     },
+    template_timeout = 5000,
+    template_cache_threshold = 0,
     actions = {
         ["open vsplit"] = false,
         ["open hsplit"] = false,
@@ -168,3 +173,5 @@ overseer.setup({
     },
     templates = { "builtin", "user" }
 })
+
+vim.api.nvim_set_hl(0, "OverseerTaskBorder", { link = "Normal" })

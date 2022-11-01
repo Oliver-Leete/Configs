@@ -26,6 +26,8 @@ Map({ "n", "x", "o" }, "C", "<nop>")
 Map({ "n", "x", "o" }, "D", "<nop>")
 Map({ "n", "x", "o" }, "S", "<nop>")
 
+Map({ "n", "x", "o" }, "(", "<nop>")
+Map({ "n", "x", "o" }, ")", "<nop>")
 -- NOTE: _, =, |, ;, ^, <BS>, <CR> are free to map
 
 -- Mappings
@@ -266,6 +268,7 @@ Map("n", "<leader>i", function()
         elseif vim.api.nvim_buf_is_valid(OTerm.bufnr) then
             OTerm:open()
         else
+            OTerm:detach()
             vim.cmd.echomsg({ args = { "'No O-Terminal found'" } })
         end
     else

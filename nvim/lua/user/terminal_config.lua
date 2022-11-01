@@ -15,9 +15,7 @@ end
 
 function _G.my_toggleterm_winbar_click(id)
     local cur_win = math.floor(id / 100000)
-    print(cur_win)
     local term_id = id - (cur_win * 100000)
-    print(term_id)
     local term = require("toggleterm.terminal").get_or_create_term(term_id)
     if not term then return end
     vim.api.nvim_win_set_buf(cur_win, term.bufnr)
@@ -84,7 +82,12 @@ Map("x", "<leader>I", ":<c-u>call v:lua.sendRegion(visualmode())<cr>")
 
 function Terminal:fsend()
     local to_send = vim.fn.getreg('"'):gsub("[\r\n]$", "")
-    self:send(to_send, true)
+    if vim.api.nvim_buf_is_valid(self.bufnr) then
+        self:send(to_send, true)
+    else
+        self:detach()
+        vim.cmd.echomsg({ args = { "'No S-Terminal found'" } })
+    end
 end
 
 function _G.sendRange(startline, endline)

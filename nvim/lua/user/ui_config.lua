@@ -29,7 +29,7 @@ require("kanagawa").setup({
 })
 
 vim.cmd("colorscheme kanagawa")
-local tc = require("kanagawa.colors").setup()
+Tc = require("kanagawa.colors").setup()
 
 local background = vim.api.nvim_get_hl_by_name("CursorLine", true).background
 
@@ -40,7 +40,7 @@ for sign, colour in pairs(sign_colours) do
     vim.api.nvim_set_hl(0, "GitSigns" .. sign .. "Cul", highlight)
 end
 
-vim.api.nvim_set_hl(0, "CursorLineNr", { fg = tc.roninYellow, bg = tc.sumiInk3, bold = true })
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = Tc.roninYellow, bg = Tc.sumiInk3, bold = true })
 vim.api.nvim_set_hl(0, "CursorLineSign", { link = "CursorLine" })
 vim.api.nvim_set_hl(0, "CursorLineFold", { link = "CursorLine" })
 
@@ -50,7 +50,7 @@ vim.g.matchup_matchparen_hi_surround_always = true
 vim.api.nvim_set_hl(0, "IndentBlanklineContextChar", { link = "MatchParen" })
 vim.api.nvim_set_hl(0, "IndentBlanklineContextStart", { underline = true, sp = "#ff9e3b" })
 
-vim.api.nvim_set_hl(0, "MiniMapNormal", { fg = tc.fujiWhite })
+vim.api.nvim_set_hl(0, "MiniMapNormal", { fg = Tc.fujiWhite })
 
 require("indent_blankline").setup {
     char = "",
@@ -88,20 +88,20 @@ require("notify").setup({
 
 vim.notify = require("notify")
 
-local mode_colours = { Normal = tc.crystalBlue, Insert = tc.autumnGreen, Visual = tc.oniViolet, Replace = tc.autumnRed,
-    Command = tc.boatYellow2, Inactive = tc.fujiGray }
+local mode_colours = { Normal = Tc.crystalBlue, Insert = Tc.autumnGreen, Visual = Tc.oniViolet, Replace = Tc.autumnRed,
+    Command = Tc.boatYellow2, Inactive = Tc.fujiGray }
 for mode, colour in pairs(mode_colours) do
-    vim.api.nvim_set_hl(0, "WinBar" .. mode, { fg = tc.bg, bg = colour })
-    vim.api.nvim_set_hl(0, "WinBar" .. mode .. "Ends", { fg = colour, bg = tc.bg })
-    vim.api.nvim_set_hl(0, "WinBar" .. mode .. "MidEnds", { fg = colour, bg = tc.fujiGray })
+    vim.api.nvim_set_hl(0, "WinBar" .. mode, { fg = Tc.bg, bg = colour })
+    vim.api.nvim_set_hl(0, "WinBar" .. mode .. "Ends", { fg = colour, bg = Tc.bg })
+    vim.api.nvim_set_hl(0, "WinBar" .. mode .. "MidEnds", { fg = colour, bg = Tc.fujiGray })
 
 end
-vim.api.nvim_set_hl(0, "WinBarInactiveSpecial", { fg = tc.bg, bg = tc.waveBlue2 })
-vim.api.nvim_set_hl(0, "WinBarInactiveSpecialEnds", { fg = tc.waveBlue2, bg = tc.bg })
-vim.api.nvim_set_hl(0, "WinBarBlank", { fg = tc.sumiInk, bg = tc.sumiInk })
-vim.api.nvim_set_hl(0, "WinBarBlank", { fg = tc.sumiInk, bg = tc.sumiInk })
+vim.api.nvim_set_hl(0, "WinBarInactiveSpecial", { fg = Tc.bg, bg = Tc.waveBlue2 })
+vim.api.nvim_set_hl(0, "WinBarInactiveSpecialEnds", { fg = Tc.waveBlue2, bg = Tc.bg })
+vim.api.nvim_set_hl(0, "WinBarBlank", { fg = Tc.sumiInk, bg = Tc.sumiInk })
+vim.api.nvim_set_hl(0, "WinBarBlank", { fg = Tc.sumiInk, bg = Tc.sumiInk })
 
-vim.api.nvim_set_hl(0, "TabLine", { fg = tc.bg, bg = tc.fujiGray, sp = tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "TabLineEnds", { fg = tc.fujiGray, bg = tc.bg, sp = tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "TabLineActive", { fg = tc.bg, bg = tc.crystalBlue, sp = tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "TabLineActiveEnds", { fg = tc.crystalBlue, bg = tc.bg, sp = tc.sumiInk3 })
+vim.api.nvim_set_hl(0, "TabLine", { fg = Tc.bg, bg = Tc.fujiGray, sp = Tc.sumiInk3 })
+vim.api.nvim_set_hl(0, "TabLineEnds", { fg = Tc.fujiGray, bg = Tc.bg, sp = Tc.sumiInk3 })
+vim.api.nvim_set_hl(0, "TabLineActive", { fg = Tc.bg, bg = Tc.crystalBlue, sp = Tc.sumiInk3 })
+vim.api.nvim_set_hl(0, "TabLineActiveEnds", { fg = Tc.crystalBlue, bg = Tc.bg, sp = Tc.sumiInk3 })

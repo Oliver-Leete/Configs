@@ -16,6 +16,11 @@ GlobalCommands = {
     { source = "default", name = "Reload snippets", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
     { source = "default", name = "Toggle Minimap", func = function() require("mini.map").toggle() end },
 
+    { source = "info", name = "Lsp info", command = "LspInfo" },
+    { source = "info", name = "Null-ls info", command = "NullLsInfo" },
+    { source = "info", name = "Mason info", command = "Mason" },
+    { source = "info", name = "Overseer info", command = "OverseerInfo" },
+
     { source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
     { source = "finders", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
     { source = "finders", name = "File browser", command = telescopeFileBrowser },

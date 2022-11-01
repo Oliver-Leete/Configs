@@ -1,3 +1,4 @@
+require("neodev").setup({})
 local lspconfig = require("lspconfig")
 
 vim.api.nvim_set_hl(0, "CursorLineError", { fg = "#E82424", bg = "#363646" })
@@ -18,48 +19,45 @@ vim.diagnostic.config({
 })
 
 local lsp_auto = vim.api.nvim_create_augroup("lsp_autocmd", { clear = true })
-vim.api.nvim_create_autocmd('LspAttach', {
-    group = lsp_auto,
-    callback = function(args)
-        local bufnr = args.buf
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        local sc = client.server_capabilities
-        if sc.documentSymbolProvider then
-            require("nvim-navic").attach(client, bufnr)
-        end
 
-        local bmap = function(mode, key, action) Map(mode, key, action, { buffer = bufnr }) end
-        -- LSP Binding Override
-        if client.name ~= "null-ls" then
-            bmap("n", "gd", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
-            bmap("n", "gs", "<cmd>Telescope lsp_workspace_symbols theme=get_ivy<cr>")
-            bmap("n", "gS", "<cmd>Telescope lsp_document_symbols theme=get_ivy<cr>")
-            bmap("n", "gr", "<cmd>Telescope lsp_references theme=get_ivy<cr>")
-            bmap("n", "gI", "<cmd>Telescope lsp_implementations theme=get_ivy<cr>")
-            bmap("n", "gD", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>")
-            bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls theme=get_ivy<cr>")
-            bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>")
-
-            bmap("n", "KK", vim.lsp.buf.hover)
-        end
-        if sc.codeLensProvider ~= nil then
-            bmap("n", "<C-,>", vim.lsp.codelens.run)
-            vim.api.nvim_create_autocmd(
-                "CursorHold",
-                { callback = vim.lsp.codelens.refresh, buffer = bufnr, group = lsp_auto }
-            )
-        end
-        if sc.codeActionProvider then
-            bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action)
-        end
+local custom_attach = function(client, bufnr)
+    local sc = client.server_capabilities
+    if sc.documentSymbolProvider then
+        require("nvim-navic").attach(client, bufnr)
     end
-})
+
+    local bmap = function(mode, key, action) Map(mode, key, action, { buffer = bufnr }) end
+    -- LSP Binding Override
+    if client.name ~= "null-ls" then
+        bmap("n", "gd", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
+        bmap("n", "gs", "<cmd>Telescope lsp_workspace_symbols theme=get_ivy<cr>")
+        bmap("n", "gS", "<cmd>Telescope lsp_document_symbols theme=get_ivy<cr>")
+        bmap("n", "gr", "<cmd>Telescope lsp_references theme=get_ivy<cr>")
+        bmap("n", "gI", "<cmd>Telescope lsp_implementations theme=get_ivy<cr>")
+        bmap("n", "gD", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>")
+        bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls theme=get_ivy<cr>")
+        bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>")
+
+        bmap("n", "KK", vim.lsp.buf.hover)
+    end
+    if sc.codeLensProvider ~= nil then
+        bmap("n", "<C-,>", vim.lsp.codelens.run)
+        vim.api.nvim_create_autocmd(
+            "CursorHold",
+            { callback = vim.lsp.codelens.refresh, buffer = bufnr, group = lsp_auto }
+        )
+    end
+    if sc.codeActionProvider then
+        bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action)
+    end
+end
 
 require("mason").setup({})
 require("mason-lspconfig").setup({})
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 local default = {
+    on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
 }
@@ -72,12 +70,14 @@ lspconfig.marksman.setup(default)
 lspconfig.taplo.setup(default)
 
 lspconfig.jedi_language_server.setup({
+    on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
     init_options = { diagnostics = { enable = false, }, }
 })
 
 lspconfig.sourcery.setup({
+    on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
     init_options = {
@@ -88,6 +88,7 @@ lspconfig.sourcery.setup({
 })
 
 lspconfig.jsonls.setup({
+    on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
     settings = { json = { schemas = require("schemastore").json.schemas(), }, },
@@ -101,30 +102,20 @@ vim.tbl_map(function(schema)
 end, json_schemas)
 
 lspconfig.yamlls.setup({
+    on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
     settings = { yaml = { schemaStore = { enable = yaml_schemas, } } }
 })
 
 lspconfig.sumneko_lua.setup({
+    on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
-    root_dir = lspconfig.util.root_pattern("init.lua"),
-    settings = {
-        Lua = {
-            runtime = { version = "LuaJIT", },
-            diagnostics = { globals = { "vim" }, },
-            workspace = {
-                library = vim.api.nvim_get_runtime_file("", true),
-                maxPreload = 3000,
-                preloadFileSize = 500,
-            },
-            telemetry = { enable = false, },
-        },
-    },
 })
 
 lspconfig.texlab.setup({
+    on_attach = custom_attach,
     flags = { debounce_text_changes = 1000 },
     root_dir = lspconfig.util.root_pattern(".git"),
     settings = {
@@ -148,15 +139,20 @@ lspconfig.texlab.setup({
     },
 })
 
-lspconfig.hls.setup({
-    flags = { debounce_text_changes = 1000 },
-    root_dir = lspconfig.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"),
+local ht = require('haskell-tools')
+ht.setup({
+    hls = {
+        on_attach = custom_attach,
+        flags = { debounce_text_changes = 1000 },
+        root_dir = lspconfig.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"),
+    }
 })
 
 local clangd_cap = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 clangd_cap.offsetEncoding = "utf-8"
 require("clangd_extensions").setup({
     server = {
+        on_attach = custom_attach,
         capabilities = clangd_cap,
         flags = { debounce_text_changes = 1000 },
     },
@@ -164,6 +160,7 @@ require("clangd_extensions").setup({
 
 require("rust-tools").setup({
     server = {
+        on_attach = custom_attach,
         capabilities = capabilities,
         flags = { debounce_text_changes = 1000 },
         standalone = true,
@@ -182,13 +179,14 @@ require("rust-tools").setup({
 require("lspconfig").ltex.setup({
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
-    on_attach = function()
+    on_attach = function(client, bufnr)
         require("ltex_extra").setup({
             load_langs = { "en-GB" },
             init_check = true,
             path = nil,
             log_level = "none",
         })
+        custom_attach(client, bufnr)
     end,
     settings = {
         ltex = {

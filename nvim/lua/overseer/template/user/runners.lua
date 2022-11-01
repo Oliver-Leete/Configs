@@ -43,7 +43,6 @@ local filerunners = {
     python = {
         name = "Python",
         repl = "ipython",
-        projectRepl = { "fish", "-c", "source venv/bin/activate.fish && ipython" },
         filerunner = function() return { "python", vim.fn.expand("%:p") } end,
     },
     r = {
@@ -58,6 +57,7 @@ local filerunners = {
     },
     rust = {
         name = "Rust",
+        repl = "papyrus",
         filerunner = function() return { "rustc", vim.fn.expand("%:p") } end,
     },
     lua = {
@@ -67,6 +67,7 @@ local filerunners = {
     },
     perl = {
         name = "Perl",
+        repl = "re.pl",
         filerunner = function() return { "perl", vim.fn.expand("%:p") } end,
     },
     ruby = {
@@ -154,25 +155,6 @@ return {
                         }
                     end,
                     priority = 5,
-                })
-        end
-        if ft.projectRepl then
-            table.insert(ret,
-                {
-                    name = "Open " .. ft.name .. " REPL in project",
-                    builder = function()
-                        if ft.num then
-                            ft.num = ft.num + 1
-                        else
-                            ft.num = 1
-                        end
-                        return {
-                            cmd = ft.projectRepl,
-                            name = ft.name .. " REPL " .. ft.num,
-                            components = { "def_dispose" }
-                        }
-                    end,
-                    priority = 6,
                 })
         end
         cb(ret)

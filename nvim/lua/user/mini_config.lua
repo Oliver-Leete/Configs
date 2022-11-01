@@ -111,8 +111,8 @@ require("mini.ai").setup({
         around_last = 'al',
         inside_last = 'il',
 
-        goto_left = "",
-        goto_right = "",
+        goto_left = "{",
+        goto_right = "}",
     },
 
     n_lines = 500,
@@ -132,16 +132,6 @@ end
 for _, o in pairs({ "a", "b", "d", "e", "f", "g", "h", "o", "p", "q", "r", "s", "w", "W", "x", }) do
     Map({ "n", "x", "o" }, "[" .. o, function() _G.markAndGoMini(vim.v.count, 'prev', o) end)
     Map({ "n", "x", "o" }, "]" .. o, function() _G.markAndGoMini(vim.v.count, 'next', o) end)
-
-    -- Does the same thing as goto_left and goto_right, but limited to the current object and for
-    -- both inside and around. Now I don't need ninja-feet
-    local m1 = "<cmd>lua MiniAi.move_cursor('"
-    local m2 = "', '"
-    local m3 = "', '" .. o .. "',  {n_times = vim.v.count, search_method='cover'} )<cr>"
-    Map({ "n", "x", "o" }, "{" .. o, m1 .. "left" .. m2 .. "a" .. m3)
-    Map({ "n", "x", "o" }, "}" .. o, m1 .. "right" .. m2 .. "a" .. m3)
-    Map({ "n", "x", "o" }, "(" .. o, m1 .. "left" .. m2 .. "i" .. m3)
-    Map({ "n", "x", "o" }, ")" .. o, m1 .. "right" .. m2 .. "i" .. m3)
 end
 
 vim.g.miniindentscope_disable = true

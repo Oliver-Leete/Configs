@@ -26,6 +26,13 @@ require("noice").setup({
             filter = { event = "msg_show", min_width = 100, min_height = 20 },
         },
         {
+            view = false,
+            filter = { any = {
+                { event = "msg_show", find = "; before #" },
+                { event = "msg_show", find = "; after #" },
+            } },
+        },
+        {
             filter = {
                 event = "msg_show",
                 kind = "",

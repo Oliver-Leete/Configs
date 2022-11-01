@@ -198,7 +198,7 @@ scratchpads =
 -- Theme                                                                                          --
 ----------------------------------------------------------------------------------------------------
 background, foreground, dull, active, yellow :: [Char]
-background = "#0f0f15"
+background = "#1F1F28"
 foreground = "#C8C093"
 dull       = "#54546D"
 active     = "#7E9CD8"
