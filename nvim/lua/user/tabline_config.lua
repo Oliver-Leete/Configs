@@ -1,18 +1,18 @@
 function Tabline()
     local tabline = ""
-    for index = 1, vim.fn.tabpagenr('$') do
-        local tabname = vim.t[index].tabname or ("Tab " .. index)
+    for i, num in pairs(vim.api.nvim_list_tabpages()) do
+        local tabname = vim.t[num].tabname or ("Tab " .. num)
 
-        local is_active = index == vim.fn.tabpagenr()
+        local is_active = i == vim.fn.tabpagenr()
 
         local hl = is_active and "%#TabLineActive#" or "%#TabLine#"
         local hle = is_active and "%#TabLineActiveEnds#" or "%#TabLineEnds#"
 
-        tabline = tabline .. "%" .. index .. "T"
+        tabline = tabline .. "%" .. i .. "T"
         tabline = tabline .. hle .. ""
         tabline = tabline .. hl .. " " .. tabname .. " "
         tabline = tabline .. hle .. ""
-        tabline = tabline .. "%" .. index .. "x" .. hle
+        tabline = tabline .. "%" .. i .. "x" .. hle
     end
     local dapstats = require("dap").status()
     if dapstats ~= "" then

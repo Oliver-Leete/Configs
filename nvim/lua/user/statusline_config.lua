@@ -11,7 +11,7 @@ local function lsp_status()
             end
         end
         if next(clients) then
-            ret = ret .. " " .. table.concat(clients, '   ')
+            ret = ret .. " " .. table.concat(clients, "   ")
         end
     end
     return ret
@@ -42,21 +42,36 @@ local function noice_wrapper()
     return message:sub(1, 80)
 end
 
-require('lualine').setup({
+local harp = require("harpoon.mark")
+local function harpoon()
+    return "[H]"
+end
+
+local function harpoon_cond()
+    local bufname = vim.api.nvim_buf_get_name(0)
+    return harp.valid_index(harp.get_index_of(bufname))
+end
+
+require("lualine").setup({
     options = {
-        component_separators = { left = '', right = '' },
-        section_separators = { left = '', right = '' },
+        component_separators = { left = "", right = "" },
+        section_separators = { left = "", right = "" },
         globalstatus = true,
         refresh = {
             statusline = 1000,
         }
     },
     sections = {
-        lualine_a = { 'mode' },
+        lualine_a = { "mode",
+            {
+                harpoon,
+                cond = harpoon_cond,
+            },
+        },
         lualine_b = {
-            { 'b:gitsigns_head', icon = '' },
-            { 'diff', source = diff_source, symbols = { added = ' ', modified = ' ', removed = ' ' } },
-            { 'diagnostics', symbols = { error = " ", warn = " ", info = " ", hint = " " } },
+            { "b:gitsigns_head", icon = "" },
+            { "diff", source = diff_source, symbols = { added = " ", modified = " ", removed = " " } },
+            { "diagnostics", symbols = { error = " ", warn = " ", info = " ", hint = " " } },
             { "overseer", symbols = ov_list },
         },
         lualine_c = {
@@ -72,7 +87,7 @@ require('lualine').setup({
             { require("dap").status }
         },
         lualine_x = {},
-        lualine_y = { 'encoding', 'filetype', 'fileformat' },
-        lualine_z = { lsp_status, 'location' }
+        lualine_y = { "encoding", "filetype", "fileformat" },
+        lualine_z = { lsp_status, "location" }
     },
 })

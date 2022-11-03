@@ -11,7 +11,7 @@ vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSi
 vim.fn.sign_define("DiagnosticSignHint", { text = " ", texthl = "DiagnosticSignHint", culhl = "CursorLineHint" })
 
 vim.diagnostic.config({
-    underline = { severity = { min = "Hint", }, },
+    underline = { severity = { min = "Warn", }, },
     virtual_text = { severity = { min = "Warn", }, source = "if_many", prefix = " ", },
     signs = true,
     update_in_insert = false,
@@ -238,7 +238,7 @@ require("null-ls").setup({
         null_ls.builtins.diagnostics.flake8,
         null_ls.builtins.diagnostics.gitlint,
         null_ls.builtins.diagnostics.jsonlint,
-        null_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013" } }),
+        null_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013", "MD046", "MD009" } }),
         null_ls.builtins.diagnostics.pydocstyle,
         null_ls.builtins.formatting.black,
         null_ls.builtins.formatting.cbfmt,

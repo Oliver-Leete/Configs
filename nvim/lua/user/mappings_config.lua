@@ -241,8 +241,12 @@ Map("x", ",f.", "<Plug>CaserVDotCase", { remap = true })
 
 Map("n", "<leader><leader>", "<cmd>silent e #<cr>")
 
-Map("n", "<leader>c", require("harpoon.mark").add_file)
+Map("n", "<leader>c", function()
+    local bufname = vim.api.nvim_buf_get_name(0)
+    require("harpoon.mark").toggle_file(bufname)
+end)
 Map("n", "<leader>v", require("harpoon.ui").toggle_quick_menu)
+Map("n", "<leader>V", require("harpoon.mark").clear_all)
 local harpoon_keys = { "a", "r", "s", "t" }
 for i, key in pairs(harpoon_keys) do
     Map("n", "<leader>" .. key, function() require("harpoon.ui").nav_file(i) end)
@@ -275,6 +279,9 @@ Map("n", "<leader>i", function()
         vim.cmd.echomsg({ args = { "'No O-Terminal found'" } })
     end
 end)
+Map("n", "<leader>I", function() vim.cmd.ToggleTermSendCurrentLine({args={OTerm.id}})end)
+Map("x", "<leader>I", function() vim.cmd.ToggleTermSendVisualLines({args={OTerm.id}})end)
+
 Map("n", "<leader>o", function() require("neotest").summary.toggle() end)
 
 Map("n", "<leader>l", function() require("neotest").run.run() end)

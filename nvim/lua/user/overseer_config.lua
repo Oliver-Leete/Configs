@@ -3,9 +3,10 @@ local STATUS = require("overseer.constants").STATUS
 
 local toggleterm_if_not = function(task)
     local bufnr = task.strategy.bufnr
-    task.toggleterm = require("toggleterm.terminal").Terminal:new({ bufnr = bufnr, jobname = task.name })
+    task.toggleterm = require("toggleterm.terminal").Terminal:new({ bufnr = bufnr })
     task:add_components({ "user.attach_toggleterm" })
-    task.toggleterm.job_id = task.strategy.chan_id
+    task.toggleterm.name = task.name
+    task.toggleterm.job_id = task.strategy.chan_id -- to make send work
     task.toggleterm:toggle()
     task.toggleterm:__resurrect()
 end

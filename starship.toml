@@ -81,3 +81,15 @@ symbol = "🅢 "
 
 [rust]
 symbol = " "
+
+[meson]
+symbol = "喝 "
+
+[rlang]
+symbol = "ﳒ "
+
+[ruby]
+symbol = " "
+
+[scala]
+symbol = " "

@@ -1,14 +1,6 @@
 Temp_Num = 50
 Term_on_open = function(term)
     vim.wo[term.window].signcolumn = "no"
-    if not term.jobname and term.id then
-        term.jobname = "Terminal " .. term.id
-    elseif not term.jobname and not term.id then
-        Temp_Num = Temp_Num + 1
-        term.jobname = "Terminal " .. Temp_Num
-    end
-    term.name = term.jobname
-    vim.b[0].my_term_title = term.jobname
     vim.b[0].my_term_id = term.id
     vim.wo.winbar = "%{%v:lua.Term_Winbar()%}"
 end
@@ -47,7 +39,7 @@ function Term_Winbar()
         end
         winbar = winbar .. string.format("%%%d@v:lua.my_toggleterm_winbar_click@", term.id + cur_win * 100000)
         winbar = winbar .. hle .. ""
-        winbar = winbar .. hl .. " " .. " " .. term.jobname .. " "
+        winbar = winbar .. hl .. " " .. " " .. term.name .. " "
         winbar = winbar .. hle .. ""
     end
     return hlb .. winbar .. hle .. "%="
@@ -75,56 +67,3 @@ require("toggleterm").setup({
         border = Border,
     }
 })
-
-Terminal = require("toggleterm.terminal").Terminal
-Map("n", "<leader>I", function() _G.sendLines(vim.v.count) end)
-Map("x", "<leader>I", ":<c-u>call v:lua.sendRegion(visualmode())<cr>")
-
-function Terminal:fsend()
-    local to_send = vim.fn.getreg('"'):gsub("[\r\n]$", "")
-    if vim.api.nvim_buf_is_valid(self.bufnr) then
-        self:send(to_send, true)
-    else
-        self:detach()
-        vim.cmd.echomsg({ args = { "'No S-Terminal found'" } })
-    end
-end
-
-function _G.sendRange(startline, endline)
-    local regStore = vim.fn.getreg('"')
-    local regType = vim.fn.getregtype('"')
-    vim.cmd(startline .. "," .. endline .. " yank")
-    if STerm then
-        STerm:fsend()
-    else
-        vim.cmd.echomsg({ args = { "'No S-Terminal found'" } })
-    end
-    vim.fn.setreg('"', regStore, regType)
-end
-
-function _G.sendLines(count)
-    count = count + 1
-    local regStore = vim.fn.getreg('"')
-    local regType = vim.fn.getregtype('"')
-    vim.cmd("normal! " .. count .. "yy")
-    if STerm then
-        STerm:fsend()
-    else
-        vim.cmd.echomsg({ args = { "'No S-Terminal found'" } })
-    end
-    vim.fn.setreg('"', regStore, regType)
-end
-
-function _G.sendRegion(type)
-    vim.cmd("normal <esc>")
-    local regStore = vim.fn.getreg('"')
-    local regType = vim.fn.getregtype('"')
-    vim.cmd([[silent normal! `<]] .. type .. [[`>y]])
-    if STerm then
-        STerm:fsend()
-    else
-        vim.cmd.echomsg({ args = { "'No S-Terminal found'" } })
-    end
-    vim.fn.setreg('"', regStore, regType)
-    vim.cmd("normal! `>")
-end

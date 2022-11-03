@@ -36,8 +36,9 @@ return {
                 local bufnr = task.strategy.bufnr
                 local name = task.test_name or task.name
 
-                task.toggleterm = Terminal:new({ bufnr = bufnr, jobname = name })
-                task.toggleterm.job_id = task.strategy.chan_id
+                task.toggleterm = Terminal:new({ bufnr = bufnr })
+                task.toggleterm.name = name
+                task.toggleterm.job_id = task.strategy.chan_id -- to make send work
 
                 task.toggleterm:toggle()
                 task.toggleterm:__resurrect()

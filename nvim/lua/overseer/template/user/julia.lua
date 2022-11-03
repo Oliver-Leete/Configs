@@ -146,9 +146,9 @@ return {
                 components = { "default", "unique" },
             },
             {
-                name = "Format All Julia Files In Directory",
+                name = "Format " .. vim.g.project,
                 tskName = vim.g.project .. " Fromatting",
-                cmd = juliaCommand .. [[ -e 'using JuliaFormatter; format(".")']],
+                cmd = juliaCommand .. [[ -e 'using JuliaFormatter, PowderModel; format(]] .. vim.g.project .. [[, format_markdown=true, verbose=true)']],
                 components = { "default_hide", "unique" },
             },
             {

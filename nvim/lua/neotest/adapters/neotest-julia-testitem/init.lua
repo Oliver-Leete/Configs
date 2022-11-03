@@ -14,8 +14,8 @@ function adapter.discover_positions(path)
            (macro_identifier (identifier) @macro_name)
            (#match? @macro_name "testitem")
            (macro_argument_list (string_literal) @test.name
-           (compound_expression (_)) @test.definition)
-        )
+           (compound_expression (_)))
+        ) @test.definition
     ]]
 
     return lib.treesitter.parse_positions(path, query, {
