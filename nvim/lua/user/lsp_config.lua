@@ -22,7 +22,7 @@ local lsp_auto = vim.api.nvim_create_augroup("lsp_autocmd", { clear = true })
 
 local custom_attach = function(client, bufnr)
     local sc = client.server_capabilities
-    if sc.documentSymbolProvider then
+    if sc.documentSymbolProvider and not client.name == "jedi_language_server" then
         require("nvim-navic").attach(client, bufnr)
     end
 

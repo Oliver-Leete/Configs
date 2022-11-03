@@ -86,62 +86,35 @@ myConfig = def
 ----------------------------------------------------------------------------------------------------
 -- Workspaces                                                                                     --
 ----------------------------------------------------------------------------------------------------
-wsTMP    = "Tmp"
-wsTMP2   = "Tmp2"
-wsPER    = "Home"
-wsPER1   = "Home1"
-ws3D     = "Print"
-wsDND    = "Dnd"
-wsCON    = "Configs"
-wsQMK    = "QMK"
-wsZMK    = "ZMK"
-wsWRK    = "Wrk"
-wsWRK1   = "Wrk1"
-wsSIM    = "Sim"
-wsTHESIS = "Thesis"
-wsEXP    = "Exp"
-wsANSYS  = "ANSYS"
-wsCOMMENTS = "Comments"
-wsWRKN   = "WrkNotes"
-wsSCN    = "Scin-Main"
-wsSCNP   = "Scin-Print"
-wsSCNF   = "Scin-Firm"
-wsSCNN   = "Scin-Docs"
-wsCODE   = "CodeTuts"
-wsGAME   = "Games"
-wsFILM   = "Films"
-
-myWorkspaces :: [[Char]]
-myWorkspaces = [wsTMP, wsTMP2, wsPER1, ws3D, wsDND, wsCON, wsPER, wsWRK, wsEXP, wsSIM, wsTHESIS, wsWRK1, wsQMK, wsANSYS, wsCOMMENTS, wsWRKN, wsZMK, wsSCN, wsCODE, wsGAME, wsSCNN, wsFILM, wsSCNP, wsSCNF]
 
 projects :: [Project]
 projects =
-    [ Project { pName = wsTMP,      pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = Just $ return () }
-    , Project { pName = wsTMP2,     pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = Just $ return () }
+    [ Project { pName = "Tmp",        pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = Just $ return () }
+    , Project { pName = "Tmp2",       pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = Just $ return () }
 
-    , Project { pName = wsPER,      pDir = "~/PersonalDrive",               pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn wsPER }
-    , Project { pName = wsCODE,     pDir = "~/Projects/rustBook",           pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsCODE }
-    , Project { pName = ws3D,       pDir = "~/Projects/Printing",           pApp1 = prusa,    pApp1F = prusaForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = oneSpawn ws3D "flatpak run com.prusa3d.PrusaSlicer" }
-    , Project { pName = wsGAME,     pDir = "~/Documents",                   pApp1 = steam,    pApp1F = steamForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = oneSpawn wsGAME "steam" }
-    , Project { pName = wsFILM,     pDir = "~/Videos/films",                pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = mpv,       pApp2F = mpvForce,      pApp3 = deluge,    pApp3F = delugeForce, pStart = filmSpawn }
-    , Project { pName = wsDND,      pDir = "~/Projects/Rpgs",               pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn wsDND }
+    , Project { pName = "Home",       pDir = "~/PersonalDrive",               pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn "Home" }
+    , Project { pName = "CodeTuts",   pDir = "~/Projects/rustBook",           pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "CodeTuts" }
+    , Project { pName = "Print",      pDir = "~/Projects/Printing",           pApp1 = prusa,    pApp1F = prusaForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = oneSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer" }
+    , Project { pName = "Game",       pDir = "~/Documents",                   pApp1 = steam,    pApp1F = steamForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = oneSpawn "Game" "steam" }
+    , Project { pName = "Film",       pDir = "~/Videos/films",                pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = mpv,       pApp2F = mpvForce,      pApp3 = deluge,    pApp3F = delugeForce, pStart = filmSpawn "Film" }
+    , Project { pName = "DND",        pDir = "~/Projects/Rpgs",               pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn "DND" }
 
-    , Project { pName = wsCON,      pDir = "~/.config",                     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsCON }
-    , Project { pName = wsQMK,      pDir = "~/Projects/qmk_firmware",       pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsQMK }
-    , Project { pName = wsZMK,      pDir = "~/Projects/zmk-config",         pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsZMK }
+    , Project { pName = "Configs",    pDir = "~/.config",                     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Configs" }
+    , Project { pName = "QMK",        pDir = "~/Projects/qmk_firmware",       pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "QMK" }
+    , Project { pName = "ZMK",        pDir = "~/Projects/zmk-config",         pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "ZMK" }
 
-    , Project { pName = wsWRK,      pDir = "~/UniDrive",                    pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn wsWRK }
-    , Project { pName = wsWRKN,     pDir = "~/Projects/Thesis/Notes",       pApp1 = obsidian, pApp1F = obsidianForce, pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = oneSpawn wsWRKN "flatpak run md.obsidian.Obsidian" }
-    , Project { pName = wsTHESIS,   pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsTHESIS }
-    , Project { pName = wsSIM,      pDir = "~/Projects/PowderModel",        pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsSIM }
-    , Project { pName = wsEXP,      pDir = "~/Projects/JuliaPlotting",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsEXP }
-    , Project { pName = wsCOMMENTS, pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = foxit,     pApp3F = foxitForce,  pStart = commentSpawn }
-    , Project { pName = wsANSYS,    pDir = "~/Projects/ANSYSpowderModel",   pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = paraview,  pApp2F = paraviewForce, pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsANSYS }
+    , Project { pName = "Work",       pDir = "~/UniDrive",                    pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn "Work" }
+    , Project { pName = "WorkNotes",  pDir = "~/Projects/Thesis/Notes",       pApp1 = obsidian, pApp1F = obsidianForce, pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = oneSpawn "WorkNotes" "flatpak run md.obsidian.Obsidian" }
+    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Thesis" }
+    , Project { pName = "Sim",        pDir = "~/Projects/PowderModel",        pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Sim" }
+    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Exp" }
+    , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = foxit,     pApp3F = foxitForce,  pStart = commentSpawn "Comments" }
+    , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",   pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = paraview,  pApp2F = paraviewForce, pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "ANSYS" }
 
-    , Project { pName = wsSCN,      pDir = "~/Projects/Scintilla/Main",     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsSCN }
-    , Project { pName = wsSCNP,     pDir = "~/Projects/Scintilla/PrintSys", pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsSCNP }
-    , Project { pName = wsSCNF,     pDir = "~/Projects/Scintilla/Firmware", pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsSCNF }
-    , Project { pName = wsSCNN,     pDir = "~/Projects/Scintilla/docs",     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn wsSCNN }
+    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Main" }
+    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys", pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Print" }
+    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware", pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Firm" }
+    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Docs" }
     ]
     where
         nvim = bF $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")])
@@ -170,8 +143,11 @@ projects =
         termBrowSpawn ws = Just $ do spawnOn ws $ sl myTerminal; spawnOn ws ("sleep .5; " ++ myBrowser)
         browSpawn ws = Just $ do spawnOn ws ("sleep .5; " ++ myBrowser)
         oneSpawn ws app = Just $ do spawnOn ws $ sl app
-        commentSpawn = Just $ do spawnOn wsCOMMENTS $ sl myTerminal; spawnOn wsCOMMENTS ("sleep .2; " ++ myBrowser); spawnOn wsCOMMENTS $ sl "sleep .4; foxitreader"
-        filmSpawn = Just $ do spawnOn wsFILM $ sl myBrowser; spawnOn wsFILM ("sleep .2; " ++ myTerminal); spawnOn wsFILM $ sl "deluge"
+        commentSpawn ws = Just $ do spawnOn ws $ sl myTerminal; spawnOn ws ("sleep .2; " ++ myBrowser); spawnOn ws $ sl "sleep .4; foxitreader"
+        filmSpawn ws = Just $ do spawnOn ws $ sl myBrowser; spawnOn ws ("sleep .2; " ++ myTerminal); spawnOn ws $ sl "deluge"
+
+myWorkspaces :: [[Char]]
+myWorkspaces = map pName projects
 
 ----------------------------------------------------------------------------------------------------
 -- Applications                                                                                   --
@@ -251,10 +227,10 @@ myLayoutHook = smartBorders
     notebookTwoMain = Notebook False True True 2 3 moreReSize reSize 3 (2/3)
     notebookColumns = Notebook False True True 4 4 moreReSize reSize 2 (2/3)
 
-    notebookDifferent = onWorkspaces [wsTHESIS, ws3D] notebookThesis $ onWorkspaces [wsCOMMENTS] notebookTwoMain notebookMulti
+    notebookDifferent = onWorkspaces ["Thesis", "Print"] notebookThesis $ onWorkspaces ["Comments"] notebookTwoMain notebookMulti
 
     notebookLaptop = FourTall 1 reSize (2/3)
-    notebookLayout = ifWider 1920 (onWorkspaces [wsTMP, wsTMP2, wsPER, wsWRK] notebookColumns notebookDifferent) notebookLaptop
+    notebookLayout = ifWider 1920 (onWorkspaces ["Tmp", "Tmp2", "Home", "Work"] notebookColumns notebookDifferent) notebookLaptop
 
 ----------------------------------------------------------------------------------------------------
 -- Keybindings                                                                                    --
@@ -361,8 +337,8 @@ myKeys =
     , ("M-S-s"           , spawn "/home/oleete/.config/bin/wsHarpoon move 3")
     , ("M-S-t"           , spawn "/home/oleete/.config/bin/wsHarpoon move 4")
 
-    , ("M-d"             , spawn ("/home/oleete/.config/bin/wsHarpoon jumpName " ++ wsCON))
-    , ("M-S-d"           , spawn ("/home/oleete/.config/bin/wsHarpoon moveName " ++ wsCON))
+    , ("M-d"             , spawn ("/home/oleete/.config/bin/wsHarpoon jumpName Configs"))
+    , ("M-S-d"           , spawn ("/home/oleete/.config/bin/wsHarpoon moveName Configs"))
 
     , ("M-<Tab>"         , upPointer nextScreen)
     , ("M-S-<Tab>"       , upPointer shiftNextScreen)

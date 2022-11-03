@@ -7,4 +7,5 @@ return {
     "user.rustables",
     "user.platformio",
     "user.julia",
+    "user.python",
 }
