@@ -10,16 +10,32 @@ return {
                 builder = function()
                     return {
                         name = "Running main.py",
-                        cmd =  "python main.py",
+                        cmd = "python main.py",
+                        components = { "default", "unique" }
                     }
                 end,
                 condition = {
-                    callback = function ()
+                    callback = function()
                         return files.exists("main.py")
                     end
 
                 },
                 priority = 4,
+            }
+        )
+        table.insert(
+            ret,
+            {
+                name = "Run Scintilla",
+                builder = function()
+                    return {
+                        name = "Scintilla",
+                        cmd = "python main.py",
+                        components = { "default_hide", "unique" }
+                    }
+                end,
+                priority = 1,
+                condition = { dir = "/home/oleete/Projects/Scintilla/Main" },
             }
         )
         cb(ret)

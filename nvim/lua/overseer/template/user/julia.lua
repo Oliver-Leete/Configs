@@ -147,7 +147,7 @@ return {
             },
             {
                 name = "Format " .. vim.g.project,
-                tskName = vim.g.project .. " Fromatting",
+                tskName = vim.g.project .. " Formatting",
                 cmd = juliaCommand .. [[ -e 'using JuliaFormatter, PowderModel; format(]] .. vim.g.project .. [[, format_markdown=true, verbose=true)']],
                 components = { "default_hide", "unique" },
             },

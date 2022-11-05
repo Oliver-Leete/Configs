@@ -129,9 +129,31 @@ function _G.markAndGoMini(count, direction, id)
     until count <= 0
 end
 
+local hop = require("hop")
+local jump_target = require("hop.jump_target")
+local hint_char1_and_then = function(and_then_func)
+    return function()
+        local opts = hop.opts
+        local c = hop.get_input_pattern("Hop 1 char: ", 1)
+        local generator = jump_target.jump_targets_by_scanning_lines
+        hop.hint_with_callback(generator(jump_target.regex_by_case_searching(c, true, opts)), opts, function(jt)
+            hop.move_cursor_to(jt.window, jt.line + 1, jt.column - 1, opts.hint_offset)
+            and_then_func()
+        end)
+    end
+end
+
 for _, o in pairs({ "a", "b", "d", "e", "f", "g", "h", "o", "p", "q", "r", "s", "w", "W", "x", }) do
     Map({ "n", "x", "o" }, "[" .. o, function() _G.markAndGoMini(vim.v.count, 'prev', o) end)
     Map({ "n", "x", "o" }, "]" .. o, function() _G.markAndGoMini(vim.v.count, 'next', o) end)
+    for _, c in ipairs({ "d", "c", "y" }) do
+        Map("n", c .. "I" .. o, hint_char1_and_then(function()
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(c .. "i" .. o, true, false, true), "", true)
+        end), { noremap = true })
+        Map("n", c .. "A" .. o, hint_char1_and_then(function()
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(c .. "a" .. o, true, false, true), "", true)
+        end), { noremap = true })
+    end
 end
 
 vim.g.miniindentscope_disable = true

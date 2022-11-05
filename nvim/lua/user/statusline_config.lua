@@ -52,6 +52,10 @@ local function harpoon_cond()
     return harp.valid_index(harp.get_index_of(bufname))
 end
 
+local function is_wide()
+    return vim.go.columns >= 200
+end
+
 require("lualine").setup({
     options = {
         component_separators = { left = "", right = "" },
@@ -76,18 +80,19 @@ require("lualine").setup({
         },
         lualine_c = {
             {
-                require("noice").api.status.mode.get,
-                cond = require("noice").api.status.mode.has,
-                color = { fg = "#ff9e64" },
-            },
-            {
                 noice_wrapper,
                 cond = require("noice").api.status.message.has,
             },
             { require("dap").status }
         },
-        lualine_x = {},
-        lualine_y = { "encoding", "filetype", "fileformat" },
+        lualine_x = {
+            {
+                require("noice").api.status.mode.get,
+                cond = require("noice").api.status.mode.has,
+                color = { fg = "#ff9e64" },
+            },
+        },
+        lualine_y = { { "encoding", cond = is_wide }, { "filetype", cond = is_wide }, { "fileformat", cond = is_wide } },
         lualine_z = { lsp_status, "location" }
     },
 })
