@@ -9,6 +9,8 @@ require("gitsigns").setup({
     },
     preview_config = {
         border = Border,
+        title = " Git ",
+        title_pos = "center",
     },
 })
 

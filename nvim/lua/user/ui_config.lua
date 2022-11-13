@@ -105,3 +105,25 @@ vim.api.nvim_set_hl(0, "TabLine", { fg = Tc.bg, bg = Tc.fujiGray, sp = Tc.sumiIn
 vim.api.nvim_set_hl(0, "TabLineEnds", { fg = Tc.fujiGray, bg = Tc.bg, sp = Tc.sumiInk3 })
 vim.api.nvim_set_hl(0, "TabLineActive", { fg = Tc.bg, bg = Tc.crystalBlue, sp = Tc.sumiInk3 })
 vim.api.nvim_set_hl(0, "TabLineActiveEnds", { fg = Tc.crystalBlue, bg = Tc.bg, sp = Tc.sumiInk3 })
+
+local colorful_winsep = require("colorful-winsep")
+colorful_winsep.setup({
+    -- Window divider color definition
+    highlight = {
+        guibg = "#1F1F28",
+        guifg = "#7E9CD8"
+    },
+    -- timer refresh rate
+    interval = 30,
+    -- filetype in the list, will not be executed
+    no_exec_files = { "packer", "TelescopePrompt", "mason", "CompetiTest", "NvimTree" },
+    -- Split line symbol definition
+    symbols = {
+        "━",
+        "┃",
+        "┏",
+        "┓",
+        "┗",
+        "┛",
+    },
+})

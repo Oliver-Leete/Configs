@@ -17,13 +17,14 @@ vim.opt.showmode = false
 vim.opt.laststatus = 3
 vim.opt.cmdheight = 0
 vim.opt.fillchars:append({
-    horiz = "▁",
-    horizup = "🭿",
-    horizdown = "▁",
-    vert = "▕",
-    vertleft = "🭿",
-    vertright = "▕",
-    verthoriz = "🭿",
+    horiz = '━',
+    horizup = '┻',
+    horizdown = '┳',
+    vert = '┃',
+    vertleft = '┫',
+    vertright = '┣',
+    verthoriz = '╋',
+
     diff = "╱",
 })
 Border = "rounded"
@@ -64,27 +65,27 @@ vim.g.textwidth = 100
 -- Numbering
 vim.opt.signcolumn = "yes:2"
 vim.opt.number = true
-vim.opt.relativenumber = true
+-- vim.opt.relativenumber = true
 vim.opt.cursorline = true
 vim.cmd([[call matchadd('TabLineSel', '\%101v', 203)]])
 
-local numbertoggle = vim.api.nvim_create_augroup("numbertoggle", { clear = true })
-vim.api.nvim_create_autocmd(
-    { "BufEnter", "FocusGained", "InsertLeave", "WinEnter" },
-    { group = numbertoggle, command = "if &nu && mode() != 'i' | set rnu   | endif" }
-)
-vim.api.nvim_create_autocmd(
-    { "BufLeave", "FocusLost", "InsertEnter", "WinLeave" },
-    { group = numbertoggle, command = "if &nu                  | set nornu | endif" }
-)
-vim.api.nvim_create_autocmd(
-    { "BufEnter", "FocusGained", "InsertLeave", "WinEnter" },
-    { group = numbertoggle, command = "setlocal cursorline" }
-)
-vim.api.nvim_create_autocmd(
-    { "BufLeave", "FocusLost", "InsertEnter", "WinLeave" },
-    { group = numbertoggle, command = "setlocal nocursorline" }
-)
+-- local numbertoggle = vim.api.nvim_create_augroup("numbertoggle", { clear = true })
+-- vim.api.nvim_create_autocmd(
+--     { "BufEnter", "FocusGained", "InsertLeave", "WinEnter" },
+--     { group = numbertoggle, command = "if &nu && mode() != 'i' | set rnu   | endif" }
+-- )
+-- vim.api.nvim_create_autocmd(
+--     { "BufLeave", "FocusLost", "InsertEnter", "WinLeave" },
+--     { group = numbertoggle, command = "if &nu                  | set nornu | endif" }
+-- )
+-- vim.api.nvim_create_autocmd(
+--     { "BufEnter", "FocusGained", "InsertLeave", "WinEnter" },
+--     { group = numbertoggle, command = "setlocal cursorline" }
+-- )
+-- vim.api.nvim_create_autocmd(
+--     { "BufLeave", "FocusLost", "InsertEnter", "WinLeave" },
+--     { group = numbertoggle, command = "setlocal nocursorline" }
+-- )
 
 -- Splitting
 vim.opt.splitbelow = true

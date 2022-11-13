@@ -176,6 +176,7 @@ Map("x", ",j", "J")
 Map({ "n", "x" }, "R", "<plug>(SubversiveSubstitute)")
 
 Map("n", ",rr", vim.lsp.buf.rename)
+Map({"n", "x"}, ",rs", require("ssr").open)
 
 Map("n", ",rf", function() require("refactoring").refactor("Extract Block") end)
 Map("x", ",rf", function() require("refactoring").refactor("Extract Function") end)
@@ -185,7 +186,10 @@ Map("n", ",re", "mia:lua require('refactoring').refactor('Extract Variable')<cr>
 Map("x", ",re", function() require("refactoring").refactor("Extract Variable") end)
 Map({ "n", "x" }, ",ri", function() require("refactoring").refactor("Inline Variable") end)
 
-Map("n", ",rd", "<cmd>Neogen<cr>")
+Map("n", ",aa", function() require("neogen").generate({type = "func"}) end)
+Map("n", ",as", function() require("neogen").generate({type = "class"}) end)
+Map("n", ",at", function() require("neogen").generate({type = "type"}) end)
+Map("n", ",af", function() require("neogen").generate({type = "file"}) end)
 
 Map("n", ",dd", function() require("refactoring").debug.printf({}) end)
 Map({ "n", "x" }, ",dv", function() require("refactoring").debug.print_var({}) end, { remap = false })
