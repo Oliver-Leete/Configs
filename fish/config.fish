@@ -20,7 +20,6 @@ fish_add_path --path /home/oleete/.ghcup/bin
 pyenv init - | source
 
 set WORKSPACE (wmctrl -d | grep '*' | awk "{print $NF}")
-export PAGER="/home/oleete/.config/bin/nvrTab --remote-wait"
 
 # aliases
 alias neovim nvim
@@ -44,7 +43,8 @@ abbr  fd "fd -HLI"
 abbr  ls "exa -1 --icons --group-directories-first"
 abbr  ll "exa -a -l --icons --group-directories-first"
 abbr  lt "exa -a -l -T --level=2 --icons --group-directories-first"
-abbr  lg "exa -a -l -T --level=2 --git --git-ignore --icons --group-directories-first"
+abbr  lg "exa -l -T --git --git-ignore --icons --group-directories-first"
+abbr  lga "exa -a -l -T --level=2 --git --git-ignore --icons --group-directories-first"
 
 abbr -a bk backup
 abbr -a re restore
