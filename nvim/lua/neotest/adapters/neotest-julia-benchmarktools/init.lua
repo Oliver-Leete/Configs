@@ -12,9 +12,9 @@ function adapter.discover_positions(path)
     local query = [[
     (assignment_expression
         (subscript_expression
-            (string_literal) @test.name)
-        (_)  @test.definition
-    )
+           (string_literal) @test.name)
+        (_)
+    )@test.definition
     ]]
 
     return lib.treesitter.parse_positions(path, query, {
@@ -24,7 +24,6 @@ function adapter.discover_positions(path)
 end
 
 function adapter.build_spec(args)
-    local error_file = vim.fn.tempname()
     local position = args.tree:data()
 
     -- Make sure server is running

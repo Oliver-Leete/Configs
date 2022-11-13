@@ -14,8 +14,16 @@ function adapter.discover_positions(path)
            (macro_identifier (identifier) @macro_name)
            (#match? @macro_name "testitem")
            (macro_argument_list (string_literal) @test.name
-           (compound_expression (_)))
+           (compound_statement (_)))
         ) @test.definition
+        (assignment_expression
+          (macro_expression
+            (macro_identifier (identifier) @macro_name )
+            (#match? @macro_name "testitem")
+            (macro_argument_list
+                (string_literal) @test.name
+                (_)
+        ))) @test.definition
     ]]
 
     return lib.treesitter.parse_positions(path, query, {
@@ -25,7 +33,6 @@ function adapter.discover_positions(path)
 end
 
 function adapter.build_spec(args)
-    local error_file = vim.fn.tempname()
     local position = args.tree:data()
 
     -- Make sure server is running
@@ -54,7 +61,6 @@ function adapter.build_spec(args)
     end
     return {
         command = command,
-        error_file = error_file,
         context = {
             pos_id = position.id,
             name = position.name,

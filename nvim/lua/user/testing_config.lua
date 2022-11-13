@@ -8,7 +8,13 @@ require("neotest").setup({
     },
     adapters = {
         require("neotest-rust"),
-        require("neotest-python"),
+        require("neotest-python")({
+            python = "venv/bin/python",
+            is_test_file = function(file_path)
+                local ending = ".py"
+                return file_path:sub(-#ending) == ending
+            end
+        }),
         require("neotest-haskell"),
         require("neotest-plenary"),
         require("neotest.adapters.neotest-julia-testitem"),
@@ -18,7 +24,6 @@ require("neotest").setup({
         border = Border,
         max_height = 0.9,
         max_width = 0.9,
-        options = {},
     },
     icons = {
         running_animated = {"⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"},
