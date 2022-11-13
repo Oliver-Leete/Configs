@@ -8,4 +8,5 @@ return {
     "user.platformio",
     "user.julia",
     "user.python",
+    "user.haskell",
 }
