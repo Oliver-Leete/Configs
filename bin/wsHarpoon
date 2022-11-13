@@ -31,6 +31,12 @@ moveToWS () {
     "$XMONADCTL" move-to-"$WS"
 }
 
+copyToWS () {
+    WS="$(cat "$HARPFILE" | head -"$1" | tail -1 | awk '{print $1}')"
+    WS="$(wmctrl -d | rg -w "$WS" | awk '{print $1}')"
+    "$XMONADCTL" copy-to-"$WS"
+}
+
 jumpToWSName () {
     WS="$(wmctrl -d | rg -w "$1" | awk '{print $1}')"
     "$XMONADCTL" jump-to-"$WS"
@@ -86,7 +92,7 @@ mainMenu () {
     elif [[ $result == "modify-preset" ]]; then
         modifyPreset
     elif [[ ! -z "$result" && "$items" == *"$result"* ]]; then
-        actions="goto move-to go-and-move add-to-preset close"
+        actions="goto move-to copy-to go-and-move add-to-preset close"
         mode=$((for action in $actions; do echo $action; done) | rofi -matching fuzzy -window-title "$result" -dmenu "$result" -i)
         if [[ $mode == "goto" ]]; then
             WS="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
@@ -94,6 +100,9 @@ mainMenu () {
         elif [[ $mode == "move-to" ]]; then
             WS="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
             "$XMONADCTL" move-to-"$WS"
+        elif [[ $mode == "copy-to" ]]; then
+            WS="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
+            "$XMONADCTL" copy-to-"$WS"
         elif [[ $mode == "go-and-move" ]]; then
             WS="$(wmctrl -d | rg -w "$result" | awk '{print $1}')"
             "$XMONADCTL" move-to-"$WS"

@@ -10,6 +10,7 @@ import Graphics.X11.Types
 import XMonad hiding ( (|||) )
 import qualified XMonad.StackSet as W
 
+import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS (nextScreen, shiftNextScreen)
 import XMonad.Actions.CycleWSLocal
 import XMonad.Actions.DynamicProjectsLocal
@@ -89,32 +90,33 @@ myConfig = def
 
 projects :: [Project]
 projects =
-    [ Project { pName = "Tmp",       pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = Just $ return () }
-    , Project { pName = "Tmp2",      pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = Just $ return () }
+    [ Project { pName = "Tmp",        pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = Just $ return () }
+    , Project { pName = "Tmp2",       pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = Just $ return () }
 
-    , Project { pName = "Home",      pDir = "~/PersonalDrive",               pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn "Home" }
-    , Project { pName = "CodeTuts",  pDir = "~/Projects/rustBook",           pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "CodeTuts" }
-    , Project { pName = "Print",     pDir = "~/Projects/Printing",           pApp1 = prusa,    pApp1F = prusaForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = oneSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer" }
-    , Project { pName = "Game",      pDir = "~/Documents",                   pApp1 = steam,    pApp1F = steamForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = oneSpawn "Game" "steam" }
-    , Project { pName = "Film",      pDir = "~/Videos/films",                pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = mpv,       pApp2F = mpvForce,      pApp3 = deluge,    pApp3F = delugeForce, pStart = filmSpawn "Film" }
-    , Project { pName = "DND",       pDir = "~/Projects/Rpgs",               pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn "DND" }
+    , Project { pName = "Home",       pDir = "~/PersonalDrive",               pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn "Home" }
+    , Project { pName = "CodeTuts",   pDir = "~/Projects/rustBook",           pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "CodeTuts" }
+    , Project { pName = "Print",      pDir = "~/Projects/Printing",           pApp1 = prusa,    pApp1F = prusaForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = oneSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer" }
+    , Project { pName = "Games",      pDir = "~/Documents",                   pApp1 = steam,    pApp1F = steamForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = oneSpawn "Games" "steam" }
+    , Project { pName = "Films",      pDir = "~/Videos/films",                pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = mpv,       pApp2F = mpvForce,      pApp3 = deluge,    pApp3F = delugeForce, pStart = filmSpawn "Films" }
+    , Project { pName = "Dnd",        pDir = "~/Projects/Rpgs",               pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn "Dnd" }
 
-    , Project { pName = "Configs",   pDir = "~/.config",                     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Configs" }
-    , Project { pName = "QMK",       pDir = "~/Projects/qmk_firmware",       pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "QMK" }
-    , Project { pName = "ZMK",       pDir = "~/Projects/zmk-config",         pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "ZMK" }
+    , Project { pName = "Configs",    pDir = "~/.config",                     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Configs" }
+    , Project { pName = "QMK",        pDir = "~/Projects/qmk_firmware",       pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "QMK" }
+    , Project { pName = "ZMK",        pDir = "~/Projects/zmk-config",         pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "ZMK" }
 
-    , Project { pName = "Work",      pDir = "~/UniDrive",                    pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn "Work" }
-    , Project { pName = "WorkNotes", pDir = "~/Projects/Thesis/Notes",       pApp1 = obsidian, pApp1F = obsidianForce, pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = oneSpawn "WorkNotes" "flatpak run md.obsidian.Obsidian" }
-    , Project { pName = "Thesis",    pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Thesis" }
-    , Project { pName = "Sim",       pDir = "~/Projects/PowderModel",        pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Sim" }
-    , Project { pName = "Exp",       pDir = "~/Projects/JuliaPlotting",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Exp" }
-    , Project { pName = "Comments",  pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = foxit,     pApp3F = foxitForce,  pStart = commentSpawn "Comments" }
-    , Project { pName = "ANSYS",     pDir = "~/Projects/ANSYSpowderModel",   pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = paraview,  pApp2F = paraviewForce, pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "ANSYS" }
+    , Project { pName = "Wrk",        pDir = "~/UniDrive",                    pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn "Wrk" }
+    , Project { pName = "WrkNotes",   pDir = "~/Projects/Thesis/Notes",       pApp1 = obsidian, pApp1F = obsidianForce, pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = oneSpawn "WrkNotes" "flatpak run md.obsidian.Obsidian" }
+    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Thesis" }
+    , Project { pName = "Sim",        pDir = "~/Projects/PowderModel",        pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Sim" }
+    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Exp" }
+    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scripts" }
+    , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = foxit,     pApp3F = foxitForce,  pStart = commentSpawn "Comments" }
+    , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",   pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = paraview,  pApp2F = paraviewForce, pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "ANSYS" }
 
-    , Project { pName = "Scin-Main",   pDir = "~/Projects/Scintilla/Main",     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Main" }
-    , Project { pName = "Scin-Print",   pDir = "~/Projects/Scintilla/PrintSys", pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Print" }
-    , Project { pName = "Scin-Firm",   pDir = "~/Projects/Scintilla/Firmware", pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Firm" }
-    , Project { pName = "Scin-Docs",   pDir = "~/Projects/Scintilla/docs",     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Docs" }
+    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Main" }
+    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys", pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Print" }
+    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware", pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Firm" }
+    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Docs" }
     ]
     where
         nvim = bF $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")])
@@ -174,7 +176,7 @@ scratchpads =
 -- Theme                                                                                          --
 ----------------------------------------------------------------------------------------------------
 background, foreground, dull, active, yellow :: [Char]
-background = "#1F1F28"
+background = "#0F0F15"
 foreground = "#C8C093"
 dull       = "#54546D"
 active     = "#7E9CD8"
@@ -187,8 +189,7 @@ moreReSize = 1/2
 myBorder = 3
 
 myWideFont :: [Char]
-myWideFont  = "xft:Eurostar Black Extended:"
-            ++ "style=Regular:pixelsize=180:hinting=true"
+myWideFont  = "xft:Eurostar Black Extended:" ++ "style=Regular:pixelsize=180:hinting=true"
 
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def
@@ -230,7 +231,7 @@ myLayoutHook = smartBorders
     notebookDifferent = onWorkspaces ["Thesis", "Print"] notebookThesis $ onWorkspaces ["Comments"] notebookTwoMain notebookMulti
 
     notebookLaptop = FourTall 1 reSize (2/3)
-    notebookLayout = ifWider 1920 (onWorkspaces ["Tmp", "Tmp2", "Home", "Work"] notebookColumns notebookDifferent) notebookLaptop
+    notebookLayout = ifWider 1920 (onWorkspaces ["Tmp", "Tmp2", "Home", "Wrk"] notebookColumns notebookDifferent) notebookLaptop
 
 ----------------------------------------------------------------------------------------------------
 -- Keybindings                                                                                    --
@@ -247,11 +248,15 @@ myNav2DConf = def
 myModMask :: KeyMask
 myModMask = mod4Mask
 
--- ---------------------------------------------------------------------------------------------------------------------
--- |restart|fullWin| finder|project|   -   |-----------------------------------|winDown|winRght|   -   | float |   -   |
--- |  ws1  |  ws2  |  ws3  |  ws4  | wsCONF|-----------------------------------|winLeft|  app1 |  app2 |  app3 |  app4 |
--- |fullScr|fullBar|fullCen|   -   |   -   |nspAway|nextScr|---|   -   |  kill | winUp | Master| decCol| incCol|   -   |
--- |-------|   -   |   -   |-------|tabPrev| wsLast|winPrev|---|winNext|  term |tabNext|-------|   -   |   -   |-------|
+-- ┏━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┓                                   ┏━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┓
+-- ┃   -   ┃fullWin┃proFind┃cmdPale┃   -   ┃                                   ┃winDown┃winRght┃clseCpy┃ float ┃   -   ┃
+-- ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫                                   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
+-- ┃  ws1  ┃  ws2  ┃  ws3  ┃  ws4  ┃ wsCONF┃                                   ┃winLeft┃  app1 ┃  app2 ┃  app3 ┃  app4 ┃
+-- ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┳━━━━━━━┓   ┏━━━━━━━┳━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
+-- ┃fullScr┃fullBar┃fullCen┃   -   ┃   -   ┃nspAway┃nextScr┃   ┃   -   ┃  kill ┃ winUp ┃ Master┃ decCol┃ incCol┃   -   ┃
+-- ┗━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┛
+--         ┃   -   ┃   -   ┃       ┃tabPrev┃ wsLast┃winPrev┃   ┃winNext┃  term ┃tabNext┃       ┃   -   ┃   -   ┃
+--         ┗━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━━━━━━━━━┛   ┗━━━━━━━┻━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━┛
 myKeys :: [(String, X ())]
 myKeys =
     [ ("<XF86MonBrightnessDown>" , spawn "/home/oleete/.config/bin/brightness -dec 5")
@@ -267,9 +272,6 @@ myKeys =
     , ("<XF86AudioNext>"         , spawn "playerctl next")
     , ("<Print>"                 , spawn "/home/oleete/.config/bin/screencapt area")
 
-    , ("M-q"             , spawn "xmonad --restart")
-    , ("M-S-q"           , spawn "cd /home/oleete/.config/xmonad; stack install; xmonad --recompile; xmonad --restart; cd -")
-
     , ("M-p"             , spawn "/home/oleete/.config/bin/rofiScript")
     , ("M-f"             , spawn "/home/oleete/.config/bin/wsHarpoon mainMenu")
 
@@ -279,6 +281,9 @@ myKeys =
     , ("M-<Return>"      , bF $ kt " kittyWin" $ l(upPointer $ spawn myTerminal))
     , ("M-S-<Return>"    , upPointer $ spawn myTerminal)
 
+    , ("M-<Backspace>"   , bF $ nv "DeleteBuffer" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_BackSpace) $ crm (P.sendKey controlMask xK_w) $ l kill)
+    , ("M-S-<Backspace>" , kill)
+
     , ("M-n"             , runProjectApp1)
     , ("M-e"             , runProjectApp2)
     , ("M-i"             , runProjectApp3)
@@ -287,9 +292,6 @@ myKeys =
     , ("M-S-e"           , runProjectApp2Force)
     , ("M-S-i"           , runProjectApp3Force)
     , ("M-S-o"           , upPointer $ spawn myBrowser)
-
-    , ("M-<Backspace>"   , bF $ nv "DeleteBuffer" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_BackSpace) $ crm (P.sendKey controlMask xK_w) $ l kill)
-    , ("M-S-<Backspace>" , kill)
 
     , ("M-<Left>"        , bF $ nv "TabPrev" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_Left)  $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
     , ("M-<Right>"       , bF $ nv "TabNext" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_Right) $ l (P.sendKey controlMask xK_Tab))
@@ -306,16 +308,16 @@ myKeys =
     , ("M-j"             , bF $ nv "KittyNavigatebottom" $ kt " moveWindow bottom" $ l (upPointer $ windowGo D True))
     , ("M-k"             , bF $ nv "KittyNavigatetop"    $ kt " moveWindow top"    $ l (upPointer $ windowGo U True))
     , ("M-l"             , bF $ nv "KittyNavigateright"  $ kt " moveWindow right"  $ l (upPointer $ windowGo R True))
-
     , ("M-S-h"           , upPointer $ windowSwap L True)
     , ("M-S-j"           , upPointer $ windowSwap D True)
     , ("M-S-k"           , upPointer $ windowSwap U True)
     , ("M-S-l"           , upPointer $ windowSwap R True)
 
-    -- , ("M-m"             , myFocusMaster)
     , ("M-m"             , bF $ kt " mainMove" $ l (upPointer $ swapPromote' False))
     , ("M-S-m"           , upPointer $ swapPromote' False)
 
+    , ("M-u"             , killAllOtherCopies)
+    , ("M-S-u"           , kill1)
     , ("M-y"             , upPointer $ withFocused toggleFloat)
     , ("M-S-y"           , upFocus sinkAll)
 
@@ -421,7 +423,6 @@ myManageHook =
             , className =? "Nm-applet"            -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
             , className =? "Tlp-UI"               -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
             , className =? "Blueberry.py"         -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
-            , className =? "Insync"               -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
 
             , resource  =? "gnome-calculator"     -?> doCenterFloat
             , className =? "GCal"                 -?> doRectFloat bigFloat
@@ -492,9 +493,10 @@ myServerModeEventHook :: Event -> X All
 myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
 
 myCommands' :: [(String, X ())]
-myCommands' = myCommands ++ sendTo ++ swapTo
+myCommands' = myCommands ++ sendTo ++ swapTo ++ copyTo
     where sendTo = zipM "move-to-" nums (withNthWorkspace W.shift)
           swapTo = zipM "jump-to-" nums (withNthWorkspace W.greedyView)
+          copyTo = zipM "copy-to-" nums (withNthWorkspace copy)
           nums = [0..(length myWorkspaces)]
           zipM  m ks f = zipWith (\k d -> (m ++ show k, upFocus $ f d)) ks ks
 
