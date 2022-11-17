@@ -56,6 +56,10 @@ require("mason").setup({})
 require("mason-lspconfig").setup({})
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+capabilities.textDocument.foldingRange = {
+    dynamicRegistration = false,
+    lineFoldingOnly = true
+}
 local default = {
     on_attach = custom_attach,
     capabilities = capabilities,
@@ -145,6 +149,12 @@ ht.setup({
         on_attach = custom_attach,
         flags = { debounce_text_changes = 1000 },
         root_dir = lspconfig.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"),
+        settings = {
+            haskell = {
+                formattingProvider = "stylish-haskell",
+                checkProject = true,
+            }
+        }
     }
 })
 
@@ -231,8 +241,8 @@ require("null-ls").setup({
     diagnostics_format = "[#{c}] #{m} (#{s})",
     sources = {
         null_ls.builtins.code_actions.gitrebase,
-        null_ls.builtins.code_actions.gitsigns,
-        null_ls.builtins.code_actions.refactoring,
+        -- null_ls.builtins.code_actions.gitsigns,
+        -- null_ls.builtins.code_actions.refactoring,
         null_ls.builtins.diagnostics.chktex,
         null_ls.builtins.diagnostics.fish,
         null_ls.builtins.diagnostics.flake8,
@@ -255,6 +265,8 @@ require("null-ls").setup({
         null_ls.builtins.hover.printenv,
     },
 })
+
+require('ufo').setup()
 
 -- Non lsp diagnostics
 QfDiag = vim.api.nvim_create_namespace("qfDiag")

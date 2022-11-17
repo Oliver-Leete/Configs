@@ -1,58 +1,61 @@
-{-# LANGUAGE AllowAmbiguousTypes, DeriveDataTypeable, TypeSynonymInstances, MultiParamTypeClasses #-}
+{-# LANGUAGE AllowAmbiguousTypes   u-}
+{-# LANGUAGE DeriveDataTypeable    #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeSynonymInstances  #-}
 
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts      #-}
 {-# OPTIONS_GHC -Wno-missing-fields #-}
-import qualified Data.Map as M
-import Data.Monoid
-import Graphics.X11.Types
+import qualified Data.Map                            as M
+import           Data.Monoid
+import           Graphics.X11.Types
+import           XMonad                              hiding ((|||))
+import qualified XMonad.StackSet                     as W
 
-import XMonad hiding ( (|||) )
-import qualified XMonad.StackSet as W
+import           XMonad.Actions.CopyWindow
+import           XMonad.Actions.CycleWS              (nextScreen,
+                                                      shiftNextScreen)
+import           XMonad.Actions.CycleWSLocal
+import           XMonad.Actions.DynamicProjectsLocal
+import           XMonad.Actions.DynamicWorkspaces
+import           XMonad.Actions.Navigation2D
+import           XMonad.Actions.PerWindowKeys
+import           XMonad.Actions.SpawnOn
+import           XMonad.Actions.SwapPromote
+import           XMonad.Actions.UpdateFocus
+import           XMonad.Actions.UpdatePointer
+import           XMonad.Actions.WindowGoLocal
+import           XMonad.Actions.WithAll              (sinkAll)
 
-import XMonad.Actions.CopyWindow
-import XMonad.Actions.CycleWS (nextScreen, shiftNextScreen)
-import XMonad.Actions.CycleWSLocal
-import XMonad.Actions.DynamicProjectsLocal
-import XMonad.Actions.DynamicWorkspaces
-import XMonad.Actions.Navigation2D
-import XMonad.Actions.PerWindowKeys
-import XMonad.Actions.SpawnOn
-import XMonad.Actions.SwapPromote
-import XMonad.Actions.UpdateFocus
-import XMonad.Actions.UpdatePointer
-import XMonad.Actions.WindowGoLocal
-import XMonad.Actions.WithAll (sinkAll)
+import           XMonad.Hooks.DebugStack
+import           XMonad.Hooks.EwmhDesktops           (ewmh)
+import           XMonad.Hooks.InsertPosition
+import           XMonad.Hooks.ManageDocks
+import           XMonad.Hooks.ManageHelpers
+import           XMonad.Hooks.RefocusLast
+import           XMonad.Hooks.ServerMode
+import           XMonad.Hooks.ShowWName
+import           XMonad.Hooks.StatusBar
+import           XMonad.Hooks.StatusBar.PP
+import           XMonad.Hooks.WorkspaceHistory       (workspaceHistoryHookExclude)
 
-import XMonad.Hooks.DebugStack
-import XMonad.Hooks.EwmhDesktops ( ewmh )
-import XMonad.Hooks.InsertPosition
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.ManageHelpers
-import XMonad.Hooks.RefocusLast
-import XMonad.Hooks.ServerMode
-import XMonad.Hooks.ShowWName
-import XMonad.Hooks.StatusBar
-import XMonad.Hooks.StatusBar.PP
-import XMonad.Hooks.WorkspaceHistory (workspaceHistoryHookExclude)
+import           XMonad.Layout.FourColumns
+import           XMonad.Layout.MultiToggle
+import           XMonad.Layout.MultiToggle.Instances
+import           XMonad.Layout.NoBorders
+import           XMonad.Layout.Notebook
+import           XMonad.Layout.PerScreen
+import           XMonad.Layout.PerWorkspace
+import           XMonad.Layout.SimpleFocus
+import           XMonad.Layout.Spacing
 
-import XMonad.Layout.FourColumns
-import XMonad.Layout.MultiToggle
-import XMonad.Layout.MultiToggle.Instances
-import XMonad.Layout.NoBorders
-import XMonad.Layout.Notebook
-import XMonad.Layout.PerScreen
-import XMonad.Layout.PerWorkspace
-import XMonad.Layout.SimpleFocus
-import XMonad.Layout.Spacing
-
-import XMonad.Util.ClickableWorkspaces
-import XMonad.Util.Cursor
-import XMonad.Util.EZConfig
-import XMonad.Util.Hacks
-import XMonad.Util.NamedScratchpadLocal
-import XMonad.Util.Paste as P
-import XMonad.Util.SpawnOnce
+import           XMonad.Util.ClickableWorkspaces
+import           XMonad.Util.Cursor
+import           XMonad.Util.EZConfig
+import           XMonad.Util.Hacks
+import           XMonad.Util.NamedScratchpadLocal
+import           XMonad.Util.Paste                   as P
+import           XMonad.Util.SpawnOnce
 
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
@@ -90,56 +93,49 @@ myConfig = def
 
 projects :: [Project]
 projects =
-    [ Project { pName = "Tmp",        pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = Just $ return () }
-    , Project { pName = "Tmp2",       pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = Just $ return () }
+    [ Project { pName = "Tmp",        pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
+    , Project { pName = "Tmp2",       pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
 
-    , Project { pName = "Home",       pDir = "~/PersonalDrive",               pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn "Home" }
-    , Project { pName = "CodeTuts",   pDir = "~/Projects/rustBook",           pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "CodeTuts" }
-    , Project { pName = "Print",      pDir = "~/Projects/Printing",           pApp1 = prusa,    pApp1F = prusaForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = oneSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer" }
-    , Project { pName = "Games",      pDir = "~/Documents",                   pApp1 = steam,    pApp1F = steamForce,    pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = oneSpawn "Games" "steam" }
-    , Project { pName = "Films",      pDir = "~/Videos/films",                pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = mpv,       pApp2F = mpvForce,      pApp3 = deluge,    pApp3F = delugeForce, pStart = filmSpawn "Films" }
-    , Project { pName = "Dnd",        pDir = "~/Projects/Rpgs",               pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn "Dnd" }
+    , Project { pName = "Home",       pDir = "~/PersonalDrive",               pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Home" }
+    , Project { pName = "CodeTuts",   pDir = "~/Projects/rustBook",           pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "CodeTuts" }
+    , Project { pName = "Print",      pDir = "~/Projects/Printing",           pApp1 = prusa,    pApp1F = prusaF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = oneSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer" }
+    , Project { pName = "Games",      pDir = "~/Documents",                   pApp1 = steam,    pApp1F = steamF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = oneSpawn "Games" "steam" }
+    , Project { pName = "Films",      pDir = "~/Videos/films",                pApp1 = kitty,    pApp1F = kittyF,    pApp2 = mpv,       pApp2F = mpvF,      pApp3 = deluge,    pApp3F = delugeF,   pStart = filmSpawn "Films" }
+    , Project { pName = "Dnd",        pDir = "~/Projects/Rpgs",               pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Dnd" }
 
-    , Project { pName = "Configs",    pDir = "~/.config",                     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Configs" }
-    , Project { pName = "QMK",        pDir = "~/Projects/qmk_firmware",       pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "QMK" }
-    , Project { pName = "ZMK",        pDir = "~/Projects/zmk-config",         pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "ZMK" }
+    , Project { pName = "Configs",    pDir = "~/.config",                     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Configs" }
+    , Project { pName = "QMK",        pDir = "~/Projects/qmk_firmware",       pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "QMK" }
+    , Project { pName = "ZMK",        pDir = "~/Projects/zmk-config",         pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ZMK" }
 
-    , Project { pName = "Wrk",        pDir = "~/UniDrive",                    pApp1 = kitty,    pApp1F = kittyForce,    pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = browSpawn "Wrk" }
-    , Project { pName = "WrkNotes",   pDir = "~/Projects/Thesis/Notes",       pApp1 = obsidian, pApp1F = obsidianForce, pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = oneSpawn "WrkNotes" "flatpak run md.obsidian.Obsidian" }
-    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Thesis" }
-    , Project { pName = "Sim",        pDir = "~/Projects/PowderModel",        pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Sim" }
-    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Exp" }
-    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scripts" }
-    , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = zathura,   pApp2F = zathuraForce,  pApp3 = foxit,     pApp3F = foxitForce,  pStart = commentSpawn "Comments" }
-    , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",   pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = paraview,  pApp2F = paraviewForce, pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "ANSYS" }
+    , Project { pName = "Wrk",        pDir = "~/UniDrive",                    pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Wrk" }
+    , Project { pName = "WrkNotes",   pDir = "~/Projects/Thesis/Notes",       pApp1 = obsidian, pApp1F = obsidianF, pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = oneSpawn "WrkNotes" "flatpak run md.obsidian.Obsidian" }
+    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Thesis" }
+    , Project { pName = "Sim",        pDir = "~/Projects/PowderModel",        pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Sim" }
+    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",      pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Exp" }
+    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scripts" }
+    , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = commentSpawn "Comments" }
+    , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",   pApp1 = nvim,     pApp1F = nvimF,     pApp2 = paraview,  pApp2F = paraviewF, pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ANSYS" }
 
-    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Main" }
-    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys", pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Print" }
-    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware", pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Firm" }
-    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",     pApp1 = nvim,     pApp1F = nvimForce,     pApp2 = return (), pApp2F = return (),     pApp3 = return (), pApp3F = return (),   pStart = termBrowSpawn "Scin-Docs" }
+    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Main" }
+    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys", pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Print" }
+    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware", pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Firm" }
+    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Docs" }
     ]
     where
-        nvim = bF $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")])
-        nvimForce = upPointer $ spawn (myTerminal ++ " fish -C nvrStart")
-        zathura = upPointer $ runOrRaise "zathura" (className =? "Zathura")
-        zathuraForce = upPointer $ spawn "zathura"
-        kitty = upPointer $ runOrRaise "kittyMaker" (className =? "kitty")
-        kittyForce = upPointer $ spawn "kitty"
+        nvim   = bF $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")])
+        nvimF  = upPointer $ spawn (myTerminal ++ " fish -C nvrStart")
+        kitty  = upPointer $ runOrRaise "kittyMaker" (className =? "kitty")
+        kittyF = upPointer $ spawn "kitty"
 
-        foxit = upPointer $ runOrRaise "foxitreader" (className =? "Foxit Reader")
-        foxitForce = upPointer $ spawn "foxitreader"
-        obsidian = upPointer $ runOrRaise "flatpak run org.paraview.Paraview" (className =? "ParaView")
-        obsidianForce = upPointer $ spawn "flatpak run org.paraview.Paraview"
-        prusa = upPointer $ runOrRaise "flatpak run com.prusa3d.PrusaSlicer" (className =? "PrusaSlicer")
-        prusaForce = upPointer $ spawn "flatpak run com.prusa3d.PrusaSlicer"
-        paraview = upPointer $ runOrRaise "flatpak run org.paraview.Paraview" (className =? "ParaView")
-        paraviewForce = upPointer $ spawn "flatpak run org.paraview.Paraview"
-        mpv = upPointer $ runOrRaise "mpv /home/oleete/Videos/films/*" (className =? "mpv")
-        mpvForce = upPointer $ spawn "mpv /home/oleete/Videos/films/*"
-        deluge = upPointer $ runOrRaise "deluge" (className =? "Deluge-gtk")
-        delugeForce = upPointer $ spawn "deluge"
-        steam = upPointer $ runOrRaise "steam" (className =? "Steam")
-        steamForce = upPointer $ spawn "steam"
+        sameForce r c = (upPointer $ runOrRaise r (className =? c), upPointer $ spawn r)
+        (zathura, zathuraF)   = sameForce "zathura" "Zathura"
+        (foxit, foxitF)       = sameForce "foxitreader" "Foxit Reader"
+        (obsidian, obsidianF) = sameForce "flatpak run org.paraview.Paraview" "ParaView"
+        (prusa, prusaF)       = sameForce "flatpak run com.prusa3d.PrusaSlicer" "PrusaSlicer"
+        (paraview, paraviewF) = sameForce "flatpak run org.paraview.Paraview" "ParaView"
+        (mpv, mpvF)           = sameForce "mpv /home/oleete/Videos/films/*" "mpv"
+        (deluge, delugeF)     = sameForce "deluge" "Deluge-gtk"
+        (steam, steamF)       = sameForce "steam" "Steam"
 
         sl i = "sleep .1; " ++ i
         termBrowSpawn ws = Just $ do spawnOn ws $ sl myTerminal; spawnOn ws ("sleep .5; " ++ myBrowser)
@@ -530,4 +526,5 @@ myCommands =
 
     , ("dump-stack"          , debugStack)
     , ("dump-full-stack"     , debugStackFull)
+    , ("shift-next-screen"   , upPointer shiftNextScreen)
     ]

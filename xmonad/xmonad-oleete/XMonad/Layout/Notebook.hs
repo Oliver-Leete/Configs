@@ -1,4 +1,5 @@
-{-# LANGUAGE FlexibleInstances, MultiParamTypeClasses #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 
 -----------------------------------------------------------------------------
 -- |
@@ -29,24 +30,22 @@ module XMonad.Layout.Notebook (
                               ToggleStackDir(..)
                              ) where
 
-import XMonad
-    ( fromMessage,
-      splitHorizontally,
-      splitVerticallyBy,
-      LayoutClass(pureLayout, description, handleMessage),
-      IncMasterN(IncMasterN),
-      Resize(Expand, Shrink), Typeable)
-import qualified XMonad.StackSet as W
-import XMonad.Layout.ResizableTile(MirrorResize(..))
+import           XMonad                      (IncMasterN (IncMasterN),
+                                              LayoutClass (description, handleMessage, pureLayout),
+                                              Resize (Expand, Shrink), Typeable,
+                                              fromMessage, splitHorizontally,
+                                              splitVerticallyBy)
+import           XMonad.Layout.ResizableTile (MirrorResize (..))
+import qualified XMonad.StackSet             as W
 
-import Data.Ratio ( (%) )
+import           Data.Ratio                  ((%))
 
-import Control.Monad ( msum )
-import Graphics.X11.Xlib ( Rectangle(..) )
-import Data.List (sortOn)
+import           Control.Monad               (msum)
+import           Data.List                   (sortOn)
+import           Graphics.X11.Xlib           (Rectangle (..))
 -- import qualified Basement.Compat.Base as GHC.Int
-import XMonad.Core (Message)
 import qualified Data.Ord
+import           XMonad.Core                 (Message)
 -- $usage
 -- You can use this module with the following in your @~\/.xmonad\/xmonad.hs@:
 --

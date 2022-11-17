@@ -9,6 +9,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'anuvyklack/hydra.nvim'
     Plug 'anuvyklack/keymap-layer.nvim'
     Plug 'lewis6991/impatient.nvim'
+    Plug 'kevinhwang91/promise-async'
 
     Plug 'knubie/vim-kitty-navigator'
     Plug 'stevearc/stickybuf.nvim'
@@ -45,6 +46,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'MunifTanjim/nui.nvim'
     Plug 'folke/noice.nvim'
     Plug 'nvim-zh/colorful-winsep.nvim'
+    Plug 'kevinhwang91/nvim-ufo'
 
     Plug 'mbbill/undotree'
     Plug 'kyazdani42/nvim-tree.lua'

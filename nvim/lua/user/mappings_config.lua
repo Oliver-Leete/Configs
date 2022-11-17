@@ -19,7 +19,6 @@ Map({ "n", "x", "o" }, "<c-v>", "<nop>")
 Map({ "n", "x", "o" }, "dd", "<nop>")
 Map({ "n", "x", "o" }, "cc", "<nop>")
 Map({ "n", "x", "o" }, "yy", "<nop>")
-Map({ "n", "x", "o" }, "z", "<nop>")
 
 Map({ "n", "x", "o" }, "Y", "<nop>")
 Map({ "n", "x", "o" }, "C", "<nop>")
@@ -168,6 +167,11 @@ Map({ "n", "x" }, "vm", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=
 Map({ "n", "x" }, "ve", "ze")
 
 Map({ "n", "x" }, "m", "v")
+
+-- Z mappings
+
+Map('n', 'zR', require('ufo').openAllFolds)
+Map('n', 'zM', require('ufo').closeAllFolds)
 
 Map("n", ",j", "m1J`1")
 Map("n", ",k", require("trevj").format_at_cursor)

@@ -59,8 +59,13 @@ vim.opt.wrap = false
 vim.opt.linebreak = true
 vim.opt.breakindent = true
 vim.opt.breakindentopt = "shift:2"
-vim.opt.foldlevel = 20
 vim.g.textwidth = 100
+
+-- Folds
+vim.o.foldcolumn = '0'
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
 
 -- Numbering
 vim.opt.signcolumn = "yes:2"
