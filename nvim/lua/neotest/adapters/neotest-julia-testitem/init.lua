@@ -10,14 +10,14 @@ end
 
 function adapter.discover_positions(path)
     local query = [[
-        (macro_expression
+        (macrocall_expression
            (macro_identifier (identifier) @macro_name)
            (#match? @macro_name "testitem")
            (macro_argument_list (string_literal) @test.name
            (compound_statement (_)))
         ) @test.definition
         (assignment_expression
-          (macro_expression
+          (macrocall_expression
             (macro_identifier (identifier) @macro_name )
             (#match? @macro_name "testitem")
             (macro_argument_list

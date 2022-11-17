@@ -34,12 +34,14 @@ zsh/
 !/broot/conf.hjson
 !/vifm/vifmrc
 !/nvim/after/plugin/*
+!/nvim/after/ftplugin/*
 !topgrade.toml
 !/**/tasks.lua
 !tasks.lua
 !git/*
 !nu/*
 !fish/conf.d/*
+!displayctl
 
 /rofi-themes
 /bin/startupScript

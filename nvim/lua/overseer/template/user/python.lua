@@ -1,6 +1,9 @@
 local files = require("overseer.files")
 
 return {
+    condition = {
+        dir = "/home/oleete/Projects/Scintilla/Main"
+    },
     generator = function(_, cb)
         local ret = {}
         local priority = 60
