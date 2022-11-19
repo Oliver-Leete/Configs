@@ -36,7 +36,7 @@ overseer.setup({
             ["{"] = "",
             ["}"] = "",
             ["<C-v>"] = "",
-            ["<C-f>"] = "",
+            ["<C-f>"] = "OpenFloat",
         },
     },
     component_aliases = {

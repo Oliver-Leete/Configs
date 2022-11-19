@@ -84,7 +84,7 @@ Map({ "n", "x" }, "U", "<c-r>")
 Map("n", "K", "<nop>")
 Map("n", "KK", "K")
 Map("n", "KG", require("gitsigns").preview_hunk)
-Map("n", "KA", function() require("gitsigns").blame_line({ full = true }) end)
+Map("n", "KB", function() require("gitsigns").blame_line({ full = true }) end)
 Map("n", "KE", function() vim.diagnostic.open_float(0, { border = Border, scope = "line", source = "always" }) end)
 Map("n", "KT", function() require("neotest").output.open() end)
 Map("n", "KD", function() require("dap.ui.widgets").hover() end, { silent = true })
@@ -160,12 +160,12 @@ Hydra({
         { "e", "ze", { exit = true } },
     }
 })
-Map({ "n", "x" }, "vt", "zt")
-Map({ "n", "x" }, "vv", "zz")
-Map({ "n", "x" }, "vb", "zb")
-Map({ "n", "x" }, "vs", "zs")
-Map({ "n", "x" }, "vm", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>")
-Map({ "n", "x" }, "ve", "ze")
+-- Map({ "n", "x" }, "vt", "zt")
+-- Map({ "n", "x" }, "vv", "zz")
+-- Map({ "n", "x" }, "vb", "zb")
+-- Map({ "n", "x" }, "vs", "zs")
+-- Map({ "n", "x" }, "vm", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>")
+-- Map({ "n", "x" }, "ve", "ze")
 
 Map({ "n", "x" }, "m", "v")
 
