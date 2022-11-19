@@ -12,6 +12,7 @@ local toggleterm_if_not = function(task)
 end
 
 overseer.setup({
+    strategy = "terminal",
     form = { border = Border, win_opts = { winblend = 0, }, },
     task_editor = { border = Border, win_opts = { winblend = 0, }, },
     task_win = { border = Border, win_opts = { winblend = 0, }, },
@@ -148,22 +149,6 @@ overseer.setup({
             run = function(task)
                 task:remove_components({ "on_complete_dispose" })
             end
-        },
-        ["restart with server"] = {
-            desc = "restart the server with the task",
-            run = function(task)
-                local task_list = require("overseer.task_list").list_tasks()
-                for _, ntask in pairs(task_list) do
-                    if ntask.metadata.is_test_server then
-                        ntask:restart(true)
-                    end
-                end
-                task:restart(true)
-            end,
-            condition = function(task)
-                local not_pend = task.status ~= STATUS.PENDING
-                return task.metadata.uses_server and not_pend
-            end,
         },
         ["dump task"] = {
             desc = "save task table to DumpTask (for debugging)",

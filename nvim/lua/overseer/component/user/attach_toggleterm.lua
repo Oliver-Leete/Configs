@@ -5,12 +5,6 @@ return {
     editable = false,
     serializable = true,
     params = {
-        goto_bottom = {
-            desc = "If the terminal should jump to the bottom",
-            type = "boolean",
-            defualt = true,
-            optional = true,
-        },
         goto_prev = {
             desc = "Should you return to where you were?",
             type = "boolean",
@@ -23,6 +17,12 @@ return {
             defualt = false,
             optional = true,
         },
+        send_on_start = {
+            type = "string",
+            desc = "What text to send to task once it has started",
+            default = nil,
+            optional = true,
+        }
     },
     constructor = function(params)
         return {
@@ -52,6 +52,10 @@ return {
                     require("toggleterm.ui").goto_previous()
                 end
                 OTerm = task.toggleterm
+
+                if params.send_on_start then
+                    task.toggleterm:send(params.send_on_start)
+                end
             end,
             on_restart = function(_, task)
                 task.toggleterm:shutdown()

@@ -98,9 +98,8 @@ return {
                 name = "Start Test Server",
                 tskName = vim.g.project .. " Test Server",
                 cmd = juliaCommand ..
-                    [[--project -e 'using Revise, DaemonMode; print("Running test server"); serve(print_stack=true, async=false)']],
+                    [[--project -e 'using Revise, DaemonMode; print("Running test server"); serve(print_stack=true)']],
                 condition = isProject,
-                is_test_server = true,
                 components = { "default_hide", "unique", "always_restart" },
             },
             {
@@ -148,7 +147,9 @@ return {
             {
                 name = "Format " .. vim.g.project,
                 tskName = vim.g.project .. " Formatting",
-                cmd = juliaCommand .. [[ -e 'using JuliaFormatter, PowderModel; format(]] .. vim.g.project .. [[, format_markdown=true, verbose=true)']],
+                cmd = juliaCommand ..
+                    [[ -e 'using JuliaFormatter, PowderModel; format(]] ..
+                    vim.g.project .. [[, format_markdown=true, verbose=true)']],
                 components = { "default_hide", "unique" },
             },
             {
@@ -222,7 +223,8 @@ return {
             {
                 name = "Package Compile",
                 tskName = vim.g.project .. " Compile",
-                cmd = "julia --threads=auto --project ~/.config/nvim/filetype/julia/task_compileenv.jl " .. vim.fn.getcwd(),
+                cmd = "julia --threads=auto --project ~/.config/nvim/filetype/julia/task_compileenv.jl " ..
+                    vim.fn.getcwd(),
                 tags = { TAG.BUILD },
                 condition = isProject,
                 components = { "default", "unique" },
@@ -238,9 +240,6 @@ return {
                             name = command.tskName or command.name,
                             cmd = command.cmd,
                             components = command.components,
-                            metadata = {
-                                is_test_server = command.is_test_server,
-                            },
                         }
                     end,
                     tags = command.tags,
@@ -255,7 +254,7 @@ return {
         local test_results = vim.fn.systemlist([[rg --json -o --pcre2 '(?<=@testitem )".*"' $(pwd)]])
         for _, result in pairs(test_results) do
             result = vim.fn.json_decode(result)
-            if result.type == "match" then
+            if result and result.type == "match" then
                 local name = result.data.submatches[1].match.text
                 local path = result.data.path.text
                 local location = path .. "::" .. name
@@ -278,7 +277,7 @@ return {
         -- FIX: This doesn't actually work
         for _, result in pairs(test_results) do
             result = vim.fn.json_decode(result)
-            if result.type == "match" then
+            if result and result.type == "match" then
                 local name = result.data.submatches[1].match.text
                 local san_name = name:sub(2, -2)
                 table.insert(
@@ -286,13 +285,20 @@ return {
                     {
                         name = "Infiltrate " .. san_name,
                         builder = function()
+                            local cond = vim.fn.input({ prompt = "Break condition: " })
                             return {
                                 name = san_name .. " Infiltration",
-                                cmd = [[julia --threads=auto --project -i -E '
-                                using TestItemRunner, Infiltrator
-                                @run_package_tests filter=ti->(ti.name == ]] .. name .. [[)
-                                ']],
-                                components = { "default", "unique" },
+                                cmd = [[julia --threads=auto --project -i -e "
+                                using Revise, TestItemRunner, Infiltrator, ]] .. vim.g.project .. [[;
+                                run(\`/home/oleete/.config/bin/nvrWS 'lua No_Using_Toggle(\"Main.@infiltrate cond = ]] ..
+                                    cond .. [[\")'\`)
+                                "]],
+                                components = { "default_hide", "unique",
+                                    { "user.attach_toggleterm",
+                                        send_on_start = [[@run_package_tests filter=ti->(ti.name == ]] .. name .. [[)]],
+                                        goto_prev = true,
+                                    }
+                                },
                             }
                         end,
                         priority = pr(),
@@ -306,7 +312,7 @@ return {
         local benchmark_results = vim.fn.systemlist([[rg -o --json --pcre2 '".*"(?=] = @benchmarkable)' $(pwd)]])
         for _, result in pairs(benchmark_results) do
             result = vim.fn.json_decode(result)
-            if result.type == "match" then
+            if result and result.type == "match" then
                 local name = result.data.submatches[1].match.text
                 local path = result.data.path.text
                 local location = path .. "::" .. name
@@ -340,7 +346,8 @@ return {
                             cmd = juliaCommand .. "/home/oleete/.config/nvim/filetype/julia/profBench.jl '" ..
                                 vim.fn.getcwd() .. "' '" .. command .. "' '" .. setup .. "'",
                             components = { "default", "unique",
-                                { "on_complete_callback", on_complete = function(_, _, status) return status == "SUCCESS" and Jul_perf_flat() end } },
+                                { "on_complete_callback",
+                                    on_complete = function(_, _, status) return status == "SUCCESS" and Jul_perf_flat() end } },
                         }
                     end,
                     priority = pr(),
@@ -357,7 +364,8 @@ return {
                             cmd = juliaCommand .. "/home/oleete/.config/nvim/filetype/julia/profAllocBench.jl '" ..
                                 vim.fn.getcwd() .. "' '" .. command .. "' '" .. setup .. "'",
                             components = { "default", "unique",
-                                { "on_complete_callback", on_complete = function(_, _, status) return status == "SUCCESS" and Jul_perf_flat() end } },
+                                { "on_complete_callback",
+                                    on_complete = function(_, _, status) return status == "SUCCESS" and Jul_perf_flat() end } },
                         }
                     end,
                     priority = pr(),

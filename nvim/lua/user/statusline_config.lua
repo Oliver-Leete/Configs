@@ -68,6 +68,10 @@ require("lualine").setup({
     sections = {
         lualine_a = { "mode",
             {
+                require("hydra.statusline").get_name,
+                cond = require("hydra.statusline").is_active
+            },
+            {
                 harpoon,
                 cond = harpoon_cond,
             },
@@ -92,7 +96,20 @@ require("lualine").setup({
                 color = { fg = "#ff9e64" },
             },
         },
-        lualine_y = { { "encoding", cond = is_wide }, { "filetype", cond = is_wide }, { "fileformat", cond = is_wide } },
+        lualine_y = {
+            {
+                "encoding",
+                cond = function() return vim.bo.fenc ~= "utf-8" and vim.go.enc ~= "utf-8" end,
+            },
+            {
+                "filetype",
+                cond = is_wide,
+            },
+            {
+                "fileformat",
+                cond = function() return vim.bo.fileformat ~= "unix" end,
+            }
+        },
         lualine_z = { lsp_status, "location" }
     },
 })

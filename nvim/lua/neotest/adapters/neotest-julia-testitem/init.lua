@@ -35,20 +35,6 @@ end
 function adapter.build_spec(args)
     local position = args.tree:data()
 
-    -- Make sure server is running
-    local server_running = function()
-        local task_list = require("overseer.task_list").list_tasks()
-        for _, task in pairs(task_list) do
-            if task.metadata.is_test_server and task.status == "RUNNING" then
-                return true
-            end
-        end
-    end
-    if not server_running() then
-        require("overseer").run_template({ name = "Start Test Server" })
-    end
-
-
     local command = "julia --color=yes --project -e '" ..
         [[using DaemonMode;
         try; runexpr("Revise.revise(throw=true)"); catch; sendExitCode(); end;

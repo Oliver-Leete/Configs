@@ -29,6 +29,8 @@ M.icons = {
     Variable = "",
 }
 
+Map("c", "<C-CR>", "<nop>")
+
 local cmp = require("cmp")
 require("cmp").setup({
     snippet = {
@@ -70,6 +72,7 @@ require("cmp").setup({
             end,
         }),
         ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "i" }),
+        ["<C-CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), {  "c" }),
     },
 
     sources = {

@@ -124,6 +124,7 @@ Hydra({
     mode = { "n", "x" },
     body = "v",
     config = {
+        invoke_on_body = true,
         hint = {
             position = "middle-right",
             border = Border
@@ -179,8 +180,11 @@ Map("x", ",j", "J")
 
 Map({ "n", "x" }, "R", "<plug>(SubversiveSubstitute)")
 
-Map("n", ",rr", vim.lsp.buf.rename)
-Map({"n", "x"}, ",rs", require("ssr").open)
+Map("n", ",rr", function()
+    return ":IncRename " .. vim.fn.expand("<cword>")
+end, { expr = true })
+
+Map({ "n", "x" }, ",rs", require("ssr").open)
 
 Map("n", ",rf", function() require("refactoring").refactor("Extract Block") end)
 Map("x", ",rf", function() require("refactoring").refactor("Extract Function") end)
@@ -190,10 +194,10 @@ Map("n", ",re", "mia:lua require('refactoring').refactor('Extract Variable')<cr>
 Map("x", ",re", function() require("refactoring").refactor("Extract Variable") end)
 Map({ "n", "x" }, ",ri", function() require("refactoring").refactor("Inline Variable") end)
 
-Map("n", ",aa", function() require("neogen").generate({type = "func"}) end)
-Map("n", ",as", function() require("neogen").generate({type = "class"}) end)
-Map("n", ",at", function() require("neogen").generate({type = "type"}) end)
-Map("n", ",af", function() require("neogen").generate({type = "file"}) end)
+Map("n", ",aa", function() require("neogen").generate({ type = "func" }) end)
+Map("n", ",as", function() require("neogen").generate({ type = "class" }) end)
+Map("n", ",at", function() require("neogen").generate({ type = "type" }) end)
+Map("n", ",af", function() require("neogen").generate({ type = "file" }) end)
 
 Map("n", ",dd", function() require("refactoring").debug.printf({}) end)
 Map({ "n", "x" }, ",dv", function() require("refactoring").debug.print_var({}) end, { remap = false })
@@ -263,16 +267,6 @@ end
 Map("n", "<leader>h", "<cmd>OverseerTaskAction<cr>")
 Map("n", "<leader>n", "<cmd>OverseerToggle<cr>")
 Map("n", "<leader>e", "<cmd>OverseerRun<cr>")
--- Map("n", "<leader>E", function()
---     local overseer = require("overseer")
---     local tasks = overseer.list_tasks({ recent_first = true })
---     if vim.tbl_isempty(tasks) then
---         vim.notify("No tasks found", vim.log.levels.WARN)
---     else
---         overseer.run_action(tasks[1], "restart")
---     end
--- end)
--- Map("n", "<leader>i", "<cmd>OverseerQuickAction toggle<cr>")
 Map("n", "<leader>i", function()
     if OTerm then
         if OTerm:is_open() then
@@ -287,9 +281,20 @@ Map("n", "<leader>i", function()
         vim.cmd.echomsg({ args = { "'No O-Terminal found'" } })
     end
 end)
-Map("n", "<leader>I", function() vim.cmd.ToggleTermSendCurrentLine({args={OTerm.id}})end)
-Map("x", "<leader>I", function() vim.cmd.ToggleTermSendVisualLines({args={OTerm.id}})end)
-
+Map("n", "<leader>I", function()
+    if STerm and vim.api.nvim_buf_is_valid(STerm.bufnr) then
+        vim.cmd.ToggleTermSendCurrentLine({ args = { STerm.id } })
+    else
+        vim.cmd.echomsg({ args = { "'No S-Terminal found'" } })
+    end
+end)
+Map("x", "<leader>I", function()
+    if STerm and vim.api.nvim_buf_is_valid(STerm.bufnr) then
+        vim.cmd.ToggleTermSendVisualLines({ args = { STerm.id } })
+    else
+        vim.cmd.echomsg({ args = { "'No S-Terminal found'" } })
+    end
+end)
 Map("n", "<leader>o", function() require("neotest").summary.toggle() end)
 
 Map("n", "<leader>l", function() require("neotest").run.run() end)
@@ -309,9 +314,6 @@ Map("n", "<leader>/B", "<cmd>silent EmainBench<cr>")
 
 Map("n", "<leader>f", function() ProjectFiles() end)
 Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
-
-Map("n", ",gr", "<cmd>Gitsigns reset_hunk<CR>")
-Map("n", ",gs", "<cmd>Gitsigns stage_hunk<CR>")
 
 -- Insert Bindings
 

@@ -28,6 +28,18 @@ return {
                 params = {},
             },
             {
+                name = "Git Commit",
+                builder = function()
+                    return {
+                        name = "Git Commit",
+                        cmd = "git commit",
+                        components = { "default_hide", "unique" }
+                    }
+                end,
+                priority = 2,
+                params = {},
+            },
+            {
                 name = "Lazydocker",
                 builder = function()
                     return {

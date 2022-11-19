@@ -1,5 +1,7 @@
 require("neodev").setup({})
 local lspconfig = require("lspconfig")
+local lsp_selection_range = require('lsp-selection-range')
+require("inc_rename").setup()
 
 vim.api.nvim_set_hl(0, "CursorLineError", { fg = "#E82424", bg = "#363646" })
 vim.api.nvim_set_hl(0, "CursorLineWarn", { fg = "#FF9E3B", bg = "#363646" })
@@ -25,6 +27,7 @@ local custom_attach = function(client, bufnr)
     if sc.documentSymbolProvider and not client.name == "jedi_language_server" then
         require("nvim-navic").attach(client, bufnr)
     end
+    lsp_selection_range.setup({})
 
     local bmap = function(mode, key, action) Map(mode, key, action, { buffer = bufnr }) end
     -- LSP Binding Override
@@ -39,6 +42,9 @@ local custom_attach = function(client, bufnr)
         bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>")
 
         bmap("n", "KK", vim.lsp.buf.hover)
+
+        bmap("n", "mm", require("lsp-selection-range").trigger)
+        bmap("x", "mm", require("lsp-selection-range").expand)
     end
     if sc.codeLensProvider ~= nil then
         bmap("n", "<C-,>", vim.lsp.codelens.run)
@@ -55,11 +61,14 @@ end
 require("mason").setup({})
 require("mason-lspconfig").setup({})
 
+
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities.textDocument.foldingRange = {
     dynamicRegistration = false,
     lineFoldingOnly = true
 }
+capabilities = lsp_selection_range.update_capabilities(capabilities)
+
 local default = {
     on_attach = custom_attach,
     capabilities = capabilities,

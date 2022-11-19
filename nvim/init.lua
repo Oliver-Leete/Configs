@@ -63,6 +63,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'b0o/schemastore.nvim'
 
     Plug 'SmiteshP/nvim-navic'
+    Plug 'camilledejoye/nvim-lsp-selection-range'
+    Plug 'smjonas/inc-rename.nvim'
 
     Plug 'hrsh7th/nvim-cmp'
     Plug 'hrsh7th/cmp-buffer'

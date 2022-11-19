@@ -68,7 +68,7 @@ dap.adapters.juliadb = {
         "/home/oleete/Projects/julia-vscode/scripts/debugger/run_debugger.jl",
     },
 }
-    
+
 dap.configurations.julia = {
     {
         name = "Run active Julia file (stop on enter)",
@@ -102,6 +102,91 @@ dap.configurations.cpp = {
 }
 dap.configurations.c = dap.configurations.cpp
 
+dap.adapters.bashdb = {
+    type = 'executable';
+    command = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/bash-debug-adapter';
+    name = 'bashdb';
+}
+
+dap.configurations.sh = {
+    {
+        type = 'bashdb';
+        request = 'launch';
+        name = "Launch file";
+        showDebugOutput = true;
+        pathBashdb = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb';
+        pathBashdbLib = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir';
+        trace = true;
+        file = "${file}";
+        program = "${file}";
+        cwd = '${workspaceFolder}';
+        pathCat = "cat";
+        pathBash = "/bin/bash";
+        pathMkfifo = "mkfifo";
+        pathPkill = "pkill";
+        args = {};
+        env = {};
+        terminalKind = "integrated";
+    }
+}
+
+local hint = [[
+  ^^^^        Step
+^^^^━━━━━━━━━━━━━━━━━━━━━━━
+ ^^^^        back
+ ^^          _K_
+     out _H_ ^^  _L_ into
+ ^^          _J_
+ ^^         over
+   ns-out _<_  _>_ ns-in
+
+ ^^        Action
+^^^^━━━━━━━━━━━━━━━━━━━━━━━
+ ^^_t_: toggle breakpoint
+ ^^_T_: special breakpoint
+ ^^_r_: continue
+ ^^_R_: continue to cursor
+ ^^_p_: pause
+ ^^_X_: terminate
+
+ _<esc>_: exit
+]]
+DapHydra = require('hydra')({
+    name = 'Debug',
+    hint = hint,
+    config = {
+        color = 'pink',
+        invoke_on_body = true,
+        hint = {
+            border = Border,
+            position = "middle-right"
+        },
+    },
+    mode = { 'n' },
+    body = '<leader>d',
+    heads = {
+        { 'H', dap.step_out, { desc = 'step out' } },
+        { 'J', dap.step_over, { desc = 'step over' } },
+        { 'K', dap.step_back, { desc = 'step back' } },
+        { 'L', dap.step_into, { desc = 'step into' } },
+        { 't', dap.toggle_breakpoint, { desc = 'toggle breakpoint' } },
+        { "T", function()
+            local cond = vim.fn.input('Breakpoint condition: ')
+            local hit = vim.fn.input('Hit condition: ')
+            local log = vim.fn.input('Log message: ')
+            dap.set_breakpoint(cond, hit, log)
+        end },
+        { "<", dap.up },
+        { ">", dap.down },
+        { 'r', dap.continue, { desc = 'continue' } },
+        { "R", dap.run_to_cursor },
+        { 'X', dap.terminate, { desc = 'terminate' } },
+        { "p", dap.pause },
+        { '<esc>', nil, { exit = true, nowait = true, desc = 'exit' } },
+        { '<leader>d', nil, { exit = true, nowait = true, desc = false } },
+    }
+})
+
 local dapui = require("dapui")
 local debug_win = nil
 local debug_tab = nil
@@ -129,6 +214,7 @@ local function close_tab()
     if debug_tab and vim.api.nvim_tabpage_is_valid(debug_tab) then
         vim.api.nvim_exec("tabclose " .. debug_tabnr, false)
     end
+    DapHydra:exit()
 
     debug_win = nil
     debug_tab = nil
@@ -146,75 +232,3 @@ dap.listeners.before.event_exited["dapui_config"] = function()
     close_tab()
 end
 
-dap.adapters.bashdb = {
-  type = 'executable';
-  command = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/bash-debug-adapter';
-  name = 'bashdb';
-}
-
-dap.configurations.sh = {
-  {
-    type = 'bashdb';
-    request = 'launch';
-    name = "Launch file";
-    showDebugOutput = true;
-    pathBashdb = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb';
-    pathBashdbLib = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir';
-    trace = true;
-    file = "${file}";
-    program = "${file}";
-    cwd = '${workspaceFolder}';
-    pathCat = "cat";
-    pathBash = "/bin/bash";
-    pathMkfifo = "mkfifo";
-    pathPkill = "pkill";
-    args = {};
-    env = {};
-    terminalKind = "integrated";
-  }
-}
-
--- Mappings
---
--- Make it so that this changes all the , leader keys to debug keys when active but is exitable (maybe with ,<esc>)
---
--- Hydra({
---     name = "Debug",
---     mode = { "n" },
---     body = "<leader>d",
---     config = {
---         hint = {
---             position = "middle-right",
---             border = "single"
---         }
---     },
---     --     hint = [[
---     --  _h_/_j_/_k_/_l_: ←/↓/↑/→
---     --  _H_/_J_/_K_/_L_: ⇚/⟱/⤊/⇛
---     --        _t_: top
---     --        _v_: middle
---     --        _b_: bottom
---     --        _s_: start
---     --        _m_: middle
---     --        _e_: end
---     -- ]]   ,
---     heads = {
---
---         { ",d", dap.continue },
---         { ",n", dap.continue },
---         { ",D", dap.run_last, { exit = true } },
---         { ",h", dap.step_back },
---         { ",j", dap.step_into },
---         { ",k", dap.step_out },
---         { ",l", dap.step_over },
---         { ",p", dap.pause },
---         { ",<Up>", dap.up },
---         { ",<Down>", dap.down },
---         { ",e", dap.run_to_cursor },
---         { ",b", dap.toggle_breakpoint },
---         { ",", function() dap.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end },
---         { ",", function() dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end },
---     }
--- })
--- Map("n", "<leader>dd", dap.continue)
--- Map("n", "<leader>dD", dap.run_last)

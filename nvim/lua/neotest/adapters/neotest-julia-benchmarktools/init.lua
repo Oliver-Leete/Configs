@@ -11,7 +11,7 @@ end
 function adapter.discover_positions(path)
     local query = [[
     (assignment_expression
-        (subscript_expression
+        (index_expression
            (string_literal) @test.name)
         (_)
     )@test.definition
@@ -26,19 +26,6 @@ end
 function adapter.build_spec(args)
     local position = args.tree:data()
 
-    -- Make sure server is running
-    local server_running = function()
-        local task_list = require("overseer.task_list").list_tasks()
-        for _, task in pairs(task_list) do
-            if task.metadata.is_test_server and task.status == "RUNNING" then
-                return true
-            end
-        end
-    end
-    if not server_running() then
-        require("overseer").run_template({ name = "Start Test Server" })
-    end
-
     local command = "julia --project -e '" ..
         [[using DaemonMode, Revise
         try
@@ -48,7 +35,6 @@ function adapter.build_spec(args)
         end
         runargs()' ]]
         .. "/home/oleete/.config/nvim/lua/neotest/adapters/neotest-julia-benchmarktools/juliaBenchmarkClient.jl "
-        .. vim.fn.getcwd() .. "/benchmark/benchmarks.jl "
         .. position.name
 
     if position.type == "file" then
@@ -56,7 +42,6 @@ function adapter.build_spec(args)
     end
     return {
         command = command,
-        error_file = error_file,
         context = {
             pos_id = position.id,
             name = position.name,

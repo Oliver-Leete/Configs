@@ -55,7 +55,7 @@ vim.api.nvim_set_hl(0, "MiniMapNormal", { fg = Tc.fujiWhite })
 require("indent_blankline").setup {
     char = "",
     context_char = "▎",
-    space_char_blankline = " ",
+    space_char_blankline = "",
     show_current_context = true,
     show_current_context_start = true,
     show_current_context_start_on_current_line = true,

@@ -14,7 +14,7 @@ Run_closest = function()
 
     local query = require 'nvim-treesitter.query'
     local nodes = {}
-    local qs = { "@function.name", "@class.name", "@testitem.name" }
+    local qs = { "@function.name", "@class.name", "@test.name" }
     for _, q in pairs(qs) do
         vim.list_extend(nodes,
             query.get_capture_matches_recursively(0, q, "textobjects")
@@ -102,6 +102,16 @@ BP_Toggle = function(imp_name, bp)
     end
 end
 
+No_Using_Toggle = function(bp)
+    local bp_pattern = "^[%s]*" .. bp .. ".*"
+
+    if string.match(vim.fn.getline("."), bp_pattern) then
+        vim.cmd("delete")
+    else
+        vim.cmd("normal! o" .. bp)
+    end
+end
+
 BP_Remove_All = function(imp_names, bp_names)
     local cur_pos = vim.fn.getcurpos()
     for _, imp_name in pairs(imp_names) do
@@ -131,5 +141,5 @@ Map("n", ",rb", "<cmd>call julia#toggle_function_blockassign()<cr>")
 Map("n", "<leader>l", Run_closest, { buffer = 0 })
 
 Map("n", ",dd", function() BP_Toggle("Debugger", "@bp") end, { buffer = 0 })
-Map("n", ",di", function() BP_Toggle("Infiltrator", "@infiltrate") end, { buffer = 0 })
-Map("n", ",dq", function() BP_Remove_All({ "Debugger", "Infiltrator" }, { "@bp", "@infiltrate" }) end, { buffer = 0 })
+Map("n", ",di", function() No_Using_Toggle("Main.@infiltrate") end, { buffer = 0 })
+Map("n", ",dq", function() BP_Remove_All({ "Debugger", "Infiltrator" }, { "@bp", "@infiltrate", "Main.@infiltrate" }) end, { buffer = 0 })
