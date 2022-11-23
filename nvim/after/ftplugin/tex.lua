@@ -12,5 +12,6 @@ end
 
 if vim.g.countSaved ~= 1 then
     save_wordcount()
+    vim.fn.jobstart([[julia -e 'using CSV, DataFrames, Plots; a = CSV.File("/home/oleete/Documents/University/wordcount.csv") |> DataFrame; p = plot(a[!,1], a[!,2], legend=false); savefig(p, "/home/oleete/Documents/University/wordcount.png")']])
     vim.g.countSaved = 1
 end
