@@ -183,6 +183,13 @@ require("rust-tools").setup({
         capabilities = capabilities,
         flags = { debounce_text_changes = 1000 },
         standalone = true,
+        settings = {
+            ["rust-analyzer"] = {
+                checkOnSave = {
+                    command = { "cargo", "clippy" },
+                },
+            },
+        }
     },
     tools = {
         executor = require("rust-tools/executors").overseer,

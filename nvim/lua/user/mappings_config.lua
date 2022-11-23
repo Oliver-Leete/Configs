@@ -78,7 +78,6 @@ Map({ "n", "x", "o" }, "k", [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], { 
 Map({ "n", "x", "o" }, "H", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true })
 Map({ "n", "x", "o" }, "L", "$")
 
-Map("n", "J", "gi")
 Map({ "n", "x" }, "U", "<c-r>")
 
 Map("n", "K", "<nop>")
@@ -160,12 +159,6 @@ Hydra({
         { "e", "ze", { exit = true } },
     }
 })
--- Map({ "n", "x" }, "vt", "zt")
--- Map({ "n", "x" }, "vv", "zz")
--- Map({ "n", "x" }, "vb", "zb")
--- Map({ "n", "x" }, "vs", "zs")
--- Map({ "n", "x" }, "vm", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>")
--- Map({ "n", "x" }, "ve", "ze")
 
 Map({ "n", "x" }, "m", "v")
 
@@ -174,9 +167,14 @@ Map({ "n", "x" }, "m", "v")
 Map('n', 'zR', require('ufo').openAllFolds)
 Map('n', 'zM', require('ufo').closeAllFolds)
 
-Map("n", ",j", "m1J`1")
-Map("n", ",k", require("trevj").format_at_cursor)
-Map("x", ",j", "J")
+-- Text leader mappings: ,
+
+Map({"n", "x"}, ",j", require("treesj").join)
+Map({"n", "x"}, ",k", require("treesj").split)
+
+-- Map("n", ",j", "m1J`1")
+-- Map("n", ",k", require("trevj").format_at_cursor)
+-- Map("x", ",j", "J")
 
 Map({ "n", "x" }, "R", "<plug>(SubversiveSubstitute)")
 

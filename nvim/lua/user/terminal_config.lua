@@ -1,6 +1,5 @@
 Temp_Num = 50
 Term_on_open = function(term)
-    vim.wo[term.window].signcolumn = "no"
     vim.b[0].my_term_id = term.id
     vim.wo.winbar = "%{%v:lua.Term_Winbar()%}"
 end

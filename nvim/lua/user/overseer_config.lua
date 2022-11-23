@@ -24,6 +24,7 @@ overseer.setup({
             ["<CR>"] = "RunAction",
             ["<C-e>"] = "Edit",
             ["o"] = "Open",
+            ["O"] = "<cmd>OverseerQuickAction open as buffer<cr>",
             ["p"] = "TogglePreview",
             ["<C-l>"] = "IncreaseDetail",
             ["<C-h>"] = "DecreaseDetail",
@@ -90,6 +91,17 @@ overseer.setup({
             condition = function(task)
                 local bufnr = task:get_bufnr()
                 return bufnr and vim.api.nvim_buf_is_valid(bufnr)
+            end,
+        },
+        ["open as buffer"] = {
+            desc = "open terminal in the current window",
+            condition = function(task)
+                local bufnr = task:get_bufnr()
+                return bufnr and vim.api.nvim_buf_is_valid(bufnr)
+            end,
+            run = function(task)
+                vim.cmd([[normal! m']])
+                vim.api.nvim_win_set_buf(0, task:get_bufnr())
             end,
         },
         ["close terminal"] = {

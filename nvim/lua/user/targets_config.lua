@@ -1,3 +1,5 @@
+local gen_spec = require('mini.ai').gen_spec
+
 local miniAiDiagnostics = function()
     local diagnostics = vim.diagnostic.get(0)
     diagnostics = vim.tbl_map(function(diagnostic)
@@ -31,7 +33,6 @@ local miniAiGitsigns = function()
     return hunks
 end
 
-local gen_spec = require('mini.ai').gen_spec
 local custom_objects = {
     -- argument
     a = gen_spec.argument({ separators = { ',', ';' } }),
@@ -42,7 +43,7 @@ local custom_objects = {
     -- diagnostics
     e = miniAiDiagnostics,
     -- Function call
-    f = MiniAi.gen_spec.function_call(),
+    f = gen_spec.function_call(),
     -- grammer (sentence)
     g = {
         {
@@ -59,8 +60,11 @@ local custom_objects = {
     },
     -- git hunks
     h = miniAiGitsigns,
-    -- key or value (needs a lot of work)
-    -- k = gen_spec.argument({ brackets = { '%b()'}, separators = {',', ';', '=>'}}),
+    -- key (from key value pair)
+    k = gen_spec.treesitter({
+        i = { "@key.inner" },
+        a = { "@key.inner" },
+    }),
     -- blOck
     o = gen_spec.treesitter({
         a = { "@block.outer", "@conditional.outer", "@loop.outer" },
@@ -91,17 +95,22 @@ local custom_objects = {
     }),
     -- Tag
     t = { '<(%w-)%f[^<%w][^<>]->.-</%1>', '^<.->().*()</[^/]->$' },
-    -- line (same key as visual line in my mappings)
-    x = { {
-        '\n()%s*().-()\n()',
-        '^()%s*().-()\n()'
-    } },
+    -- value (from key value pair)
+    v = gen_spec.treesitter({
+        i = { "@value.inner" },
+        a = { "@value.inner" },
+    }),
     -- WORD
     W = { {
         '()()%f[%w%p][%w%p]+()[ \t]*()',
     } },
     -- word
     w = { '()()%f[%w_][%w_]+()[ \t]*()' },
+    -- line (same key as visual line in my mappings)
+    x = { {
+        '\n()%s*().-()\n()',
+        '^()%s*().-()\n()'
+    } },
     -- chunk (as in from vim-textobj-chunk)
     z = {
         '\n.-%b{}',

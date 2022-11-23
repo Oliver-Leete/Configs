@@ -35,13 +35,19 @@ require("nvim-treesitter.configs").setup({
 })
 
 require("iswap").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
-require("trevj").setup({
-    containers = {
+
+local tsj_utils = require('treesj.langs.utils')
+require('treesj').setup({
+    use_default_keymaps = false,
+    max_join_length = 1000,
+
+    langs = {
         julia = {
-            matrix_expression = { final_separator = ";", final_end_line = true, skip = { matrix_row = false } },
-            tuple_expression = { final_separator = ",", final_end_line = true },
-            argument_list = { final_separator = false, final_end_line = true },
-            parameter_list = { final_separator = false, final_end_line = true },
+            matrix_expression = { both = { separator = ';' }, join = {}, split = { last_separator = true } },
+            argument_list = tsj_utils.set_preset_for_list({ join = { space_in_brackets = false } }),
+            parameter_list = { join = { space_in_brackets = false }, both = { last_separator = false, omit = { "keyword_parameters" } } },
+            tuple_expression = tsj_utils.set_preset_for_list({ join = { space_in_brackets = false } }),
+            parenthesized_expression = tsj_utils.set_preset_for_list({ join = { space_in_brackets = false } }),
         },
     },
 })

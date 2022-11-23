@@ -95,6 +95,8 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'ThePrimeagen/refactoring.nvim'
     Plug 'mizlan/iswap.nvim'
     Plug 'AckslD/nvim-trevJ.lua'
+    Plug 'Wansmer/treesj'
+    " Plug 'Dkendal/nvim-treeclimber'
 
     Plug 'stevearc/overseer.nvim'
     Plug 'nvim-neotest/neotest'
