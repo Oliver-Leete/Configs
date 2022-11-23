@@ -1,4 +1,4 @@
-{-# LANGUAGE AllowAmbiguousTypes   u-}
+{-# LANGUAGE AllowAmbiguousTypes   #-}
 {-# LANGUAGE DeriveDataTypeable    #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeSynonymInstances  #-}
