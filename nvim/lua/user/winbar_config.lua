@@ -20,11 +20,6 @@ local function special_winbar(bufnr, hl, is_active)
     local mode = VimMode()[2]
     local specialname = SpecialName(bufnr)
     if not specialname then return "" end
-    if is_active then
-        hl = "%#WinBar" .. mode .. "#"
-    else
-        hl = "%#WinBarInactiveSpecial#"
-    end
     return hl .. " " .. specialname .. " "
 end
 
@@ -67,7 +62,6 @@ function Normal_Winbar()
     local winbar = ""
     if Is_special(bufnr) then
         winbar = special_winbar(bufnr, hl, is_active)
-        hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveSpecialEnds#"
         if winbar == "" then return "" end
         return hlb .. "%=" .. hle .. "" .. winbar .. hle .. "" .. hlb .. "%=" .. hlb
     else -- Default winbar
