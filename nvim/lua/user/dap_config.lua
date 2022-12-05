@@ -1,4 +1,5 @@
 local dap = require("dap")
+require("dap.ext.vscode").load_launchjs()
 
 vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
 vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
