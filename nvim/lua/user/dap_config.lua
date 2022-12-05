@@ -131,25 +131,25 @@ dap.configurations.sh = {
 }
 
 local hint = [[
-  ^^^^        Step
-^^^^━━━━━━━━━━━━━━━━━━━━━━━
- ^^^^        back
- ^^          _K_
-     out _H_ ^^  _L_ into
- ^^          _J_
- ^^         over
-   ns-out _<_  _>_ ns-in
+^^^^         Step
+^^^^━━━━━━━━━━━━━━━━━━━━━━━━
+^^^          back
+^^           _,k_
+     out _,h_ ^^ _,l_ into
+^^           _,j_
+^^^          over
+^  ns-out _,<_  _,>_ ns-in
 
- ^^        Action
-^^^^━━━━━━━━━━━━━━━━━━━━━━━
- ^^_t_: toggle breakpoint
- ^^_T_: special breakpoint
- ^^_r_: continue
- ^^_R_: continue to cursor
- ^^_p_: pause
- ^^_X_: terminate
+^^          Action
+^^^^^━━━━━━━━━━━━━━━━━━━━━━━━
+ ^^_,t_: toggle breakpoint
+ ^^_,T_: special breakpoint
+ ^^_,r_: continue
+ ^^_,R_: continue to cursor
+ ^^_,p_: pause
+ ^^_,X_: terminate
 
- _<esc>_: exit
+ _,<esc>_: exit
 ]]
 DapHydra = require('hydra')({
     name = 'Debug',
@@ -165,24 +165,24 @@ DapHydra = require('hydra')({
     mode = { 'n' },
     body = '<leader>d',
     heads = {
-        { 'H', dap.step_out, { desc = 'step out' } },
-        { 'J', dap.step_over, { desc = 'step over' } },
-        { 'K', dap.step_back, { desc = 'step back' } },
-        { 'L', dap.step_into, { desc = 'step into' } },
-        { 't', dap.toggle_breakpoint, { desc = 'toggle breakpoint' } },
-        { "T", function()
+        { ',h', dap.step_out, { desc = 'step out' } },
+        { ',j', dap.step_over, { desc = 'step over' } },
+        { ',k', dap.step_back, { desc = 'step back' } },
+        { ',l', dap.step_into, { desc = 'step into' } },
+        { ',t', dap.toggle_breakpoint, { desc = 'toggle breakpoint' } },
+        { ",T", function()
             local cond = vim.fn.input('Breakpoint condition: ')
             local hit = vim.fn.input('Hit condition: ')
             local log = vim.fn.input('Log message: ')
             dap.set_breakpoint(cond, hit, log)
         end },
-        { "<", dap.up },
-        { ">", dap.down },
-        { 'r', dap.continue, { desc = 'continue' } },
-        { "R", dap.run_to_cursor },
-        { 'X', dap.terminate, { desc = 'terminate' } },
-        { "p", dap.pause },
-        { '<esc>', nil, { exit = true, nowait = true, desc = 'exit' } },
+        { ",<", dap.up },
+        { ",>", dap.down },
+        { ',r', dap.continue, { desc = 'continue' } },
+        { ",R", dap.run_to_cursor },
+        { ',X', dap.terminate, { desc = 'terminate' } },
+        { ",p", dap.pause },
+        { ',<esc>', nil, { exit = true, nowait = true, desc = 'exit' } },
         { '<leader>d', nil, { exit = true, nowait = true, desc = false } },
     }
 })
@@ -231,4 +231,3 @@ end
 dap.listeners.before.event_exited["dapui_config"] = function()
     close_tab()
 end
-

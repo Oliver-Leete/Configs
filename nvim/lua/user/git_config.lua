@@ -41,7 +41,10 @@ require("diffview").setup({
             [",xn"] = actions.conflict_choose("none"),
         },
         file_panel = {
-            ["<esc>"] = function() vim.cmd("DiffviewClose") end,
+            ["<esc>"] = function()
+                vim.b.is_diffview_file = false
+                vim.cmd("DiffviewClose")
+            end,
         },
         file_history_panel = {
             ["<esc>"] = function() vim.cmd("DiffviewClose") end,
@@ -57,21 +60,20 @@ local hint = [[
  n: next hunk
  N: prev hunk
 
- _s_: stage hunk
- _R_: reset hunk
- _u_: undo last stage
+ _,s_: stage hunk
+ _,r_: reset hunk
+ _,u_: undo last stage
 
- _S_: stage buffer
-^^━━━━━━━━━━━━━━━━━━━━
- _b_: blame line
- _B_: blame show full
- _p_: preview hunk
+ _,S_: stage buffer
+^^^━━━━━━━━━━━━━━━━━━━━
+ _,K_: blame line
+ _,p_: preview hunk
 
- _d_: show deleted
- _w_: show word diff
+ _,d_: show deleted
+ _,w_: show word diff
 ^^━━━━━━━━━━━━━━━━━━━━
- _f_: file finder
- _<esc>_: exit
+ _,f_: file finder
+ _,<esc>_: exit
 ]]
 Hydra({
     name = 'Git',
@@ -98,17 +100,16 @@ Hydra({
     mode = { 'n', 'x' },
     body = '<leader>g',
     heads = {
-        { 's', gitsigns.stage_hunk, { silent = true, desc = 'stage hunk' } },
-        { 'R', gitsigns.reset_hunk, { silent = true, desc = 'stage hunk' } },
-        { 'u', gitsigns.undo_stage_hunk, { desc = 'undo last stage' } },
-        { 'S', gitsigns.stage_buffer, { desc = 'stage buffer' } },
-        { 'p', gitsigns.preview_hunk, { desc = 'preview hunk' } },
-        { 'd', gitsigns.toggle_deleted, { nowait = true, desc = 'toggle deleted' } },
-        { 'b', gitsigns.blame_line, { desc = 'blame' } },
-        { 'B', function() gitsigns.blame_line({ full = true }) end, { desc = 'blame show full' } },
-        { '<esc>', nil, { exit = true, nowait = true, desc = 'exit' } },
-        { "w", gitsigns.toggle_word_diff },
-        { "f", "<cmd>Telescope git_status theme=get_ivy<cr>" },
+        { ',s', gitsigns.stage_hunk, { silent = true, desc = 'stage hunk' } },
+        { ',r', gitsigns.reset_hunk, { silent = true, desc = 'stage hunk' } },
+        { ',u', gitsigns.undo_stage_hunk, { desc = 'undo last stage' } },
+        { ',S', gitsigns.stage_buffer, { desc = 'stage buffer' } },
+        { ',p', gitsigns.preview_hunk, { desc = 'preview hunk' } },
+        { ',d', gitsigns.toggle_deleted, { nowait = true, desc = 'toggle deleted' } },
+        { ',K', gitsigns.blame_line, { desc = 'blame' } },
+        { ",w", gitsigns.toggle_word_diff },
+        { ",f", "<cmd>Telescope git_status theme=get_ivy<cr>" },
+        { ',<esc>', nil, { exit = true, nowait = true, desc = 'exit' } },
         { '<leader>g', nil, { exit = true, nowait = true, desc = false } },
     }
 })
