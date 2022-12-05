@@ -21,9 +21,9 @@ require("mini.comment").setup({
 require("mini.pairs").setup({
     modes = { insert = true, command = true, terminal = true },
     mappings = {
-        ["("] = { action = "open", pair = "()", neigh_pattern = "[^\\][^%w]" },
-        ["["] = { action = "open", pair = "[]", neigh_pattern = "[^\\][^%w]" },
-        ["{"] = { action = "open", pair = "{}", neigh_pattern = "[^\\][^%w]" },
+        ["("] = { action = "open", pair = "()", neigh_pattern = "[^\\]%s" },
+        ["["] = { action = "open", pair = "[]", neigh_pattern = "[^\\]%s" },
+        ["{"] = { action = "open", pair = "{}", neigh_pattern = "[^\\]%s" },
 
         [")"] = { action = "close", pair = "()", neigh_pattern = "[^\\]." },
         ["]"] = { action = "close", pair = "[]", neigh_pattern = "[^\\]." },

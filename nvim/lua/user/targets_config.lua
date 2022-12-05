@@ -116,6 +116,7 @@ local custom_objects = {
         '\n.-%b{}',
         '\n().-%{\n().*()\n.*%}()'
     },
+    ["$"] = gen_spec.pair("$", "$", { type = "balanced" }),
 }
 
 require("mini.ai").setup({
@@ -184,8 +185,8 @@ vim.api.nvim_create_autocmd("BufEnter",
         callback = function()
             local bmap = function(mode, key, action) Map(mode, key, action, { buffer = vim.api.nvim_get_current_buf() }) end
             if vim.wo.diff then
-                bmap({ "n", "x", "o" }, "[h", "<cmd>call v:lua.markandGo(v:count, 'norm! [c', 'h')<cr>")
-                bmap({ "n", "x", "o" }, "]h", "<cmd>call v:lua.markandGo(v:count, 'norm! ]c', 'h')<cr>")
+                bmap({ "n", "x", "o" }, "[h", "<cmd>call v:lua.markAndGo(v:count, 'norm! [c', 'h')<cr>")
+                bmap({ "n", "x", "o" }, "]h", "<cmd>call v:lua.markAndGo(v:count, 'norm! ]c', 'h')<cr>")
             end
         end
     }
