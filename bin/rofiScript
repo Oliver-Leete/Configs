@@ -50,6 +50,7 @@ menu () {
     sys-mon
 
     admin
+    toggl-time
 
     terminal
     calculator
@@ -110,6 +111,7 @@ menu () {
         sys-mon)            /home/oleete/.cabal/bin/xmonadctl-exe nsp-sysm ;;
 
         admin)              workLauncher gcal ;;
+        toggl-time)         /home/oleete/.cabal/bin/xmonadctl-exe nsp-time ;;
 
         terminal)           /home/oleete/.cabal/bin/xmonadctl-exe nsp-cons ;;
         calculator)         /home/oleete/.cabal/bin/xmonadctl-exe nsp-calc ;;

@@ -112,7 +112,7 @@ projects =
     , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Thesis" }
     , Project { pName = "Sim",        pDir = "~/Projects/PowderModel",        pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Sim" }
     , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",      pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Exp" }
-    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scripts" }
+    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = hdfview,   pApp3F = hdfviewF,  pStart = termBrowSpawn "Scripts" }
     , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = commentSpawn "Comments" }
     , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",   pApp1 = nvim,     pApp1F = nvimF,     pApp2 = paraview,  pApp2F = paraviewF, pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ANSYS" }
 
@@ -136,6 +136,7 @@ projects =
         (mpv, mpvF)           = sameForce "mpv /home/oleete/Videos/films/*" "mpv"
         (deluge, delugeF)     = sameForce "deluge" "Deluge-gtk"
         (steam, steamF)       = sameForce "steam" "Steam"
+        (hdfview, hdfviewF)   = sameForce "hdfview" "SWT"
 
         sl i = "sleep .1; " ++ i
         termBrowSpawn ws = Just $ do spawnOn ws $ sl myTerminal; spawnOn ws ("sleep .5; " ++ myBrowser)
@@ -162,6 +163,7 @@ scratchpads =
     ,   NS "gcalWork" (myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcalWrk  --class=WrkGCal") (className =? "WrkGCal") nonFloating
     ,   NS "discord"  (myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/discord  --class=discord  --app=https://discord.com/channels/@me") (className =? "discord") defaultFloating
 
+    ,   NS "toggl" "flatpak run com.toggl.TogglDesktop" (className =? "Toggl Desktop") nonFloating
     ,   NS "youtubeMusic"  "youtube-music" (className =? "YouTube Music") nonFloating
     ,   NS "calc"  "gnome-calculator" (className =? "gnome-calculator") nonFloating
     ,   NS "console"  "alacritty --class console" (resource =? "console") nonFloating
@@ -423,6 +425,7 @@ myManageHook =
             , resource  =? "gnome-calculator"     -?> doCenterFloat
             , className =? "GCal"                 -?> doRectFloat bigFloat
             , className =? "WrkGCal"              -?> doRectFloat bigFloat
+            , className =? "Toggl Desktop"        -?> doRectFloat (W.RationalRect (3 / 8) (1 / 8) (1 / 4) (3 / 4))
             , resource  =? "sysMon"               -?> doRectFloat (W.RationalRect (1 / 8) (1 / 8) (3 / 4) (3 / 4))
             , resource  =? "wsHarpoon"            -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4))
             , resource  =? "console"              -?> doRectFloat (W.RationalRect (4 / 7) (4 / 7) (2 / 5) (2 / 5))
@@ -510,6 +513,7 @@ myCommands =
     , ("nsp-disc"            , upPointer $ namedScratchpadAction scratchpads "discord")
     , ("nsp-musc"            , upPointer $ namedScratchpadAction scratchpads "youtubeMusic")
     , ("nsp-sysm"            , upPointer $ namedScratchpadAction scratchpads "sysMon")
+    , ("nsp-time"            , upPointer $ namedScratchpadAction scratchpads "toggl")
 
     , ("nsp-gcal"            , upPointer $ namedScratchpadAction scratchpads "gcal")
     , ("nsp-gcal-wrk"        , upPointer $ namedScratchpadAction scratchpads "gcalWork")
