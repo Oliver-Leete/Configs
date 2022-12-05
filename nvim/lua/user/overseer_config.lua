@@ -12,7 +12,7 @@ local toggleterm_if_not = function(task)
 end
 
 overseer.setup({
-    strategy = "terminal",
+    strategy = "toggleterm",
     form = { border = Border, win_opts = { winblend = 0, }, },
     task_editor = { border = Border, win_opts = { winblend = 0, }, },
     task_win = { border = Border, win_opts = { winblend = 0, }, },
@@ -46,7 +46,7 @@ overseer.setup({
             "on_exit_set_status",
             { "on_complete_notify", system = "unfocused" },
             "on_complete_dispose",
-            { "user.attach_toggleterm", goto_prev = true },
+            -- { "user.attach_toggleterm", goto_prev = true },
             "unique",
             "display_duration",
         },
@@ -55,7 +55,7 @@ overseer.setup({
             "on_exit_set_status",
             { "on_complete_notify", system = "unfocused" },
             "on_complete_dispose",
-            "user.attach_toggleterm",
+            -- "user.attach_toggleterm",
             "display_duration",
         },
         default_hide = {
@@ -66,10 +66,18 @@ overseer.setup({
             "display_duration",
         },
         def_dispose = {
+            "on_output_summarize",
             "on_exit_set_status",
-            { "on_complete_dispose", timeout = 1 },
-            "user.attach_toggleterm",
+            { "on_complete_notify", system = "unfocused" },
+            "on_complete_dispose",
+            -- "user.attach_toggleterm",
+            "display_duration",
         },
+        -- def_dispose = {
+        --     "on_exit_set_status",
+        --     { "on_complete_dispose", timeout = 1 },
+        --     "user.attach_toggleterm",
+        -- },
         always_restart = { "on_complete_restart", statuses = { STATUS.FAILURE, STATUS.SUCCESS } },
     },
     template_timeout = 5000,

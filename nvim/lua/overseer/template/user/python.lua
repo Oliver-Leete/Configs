@@ -17,6 +17,7 @@ return {
                     return {
                         name = "Running main.py",
                         cmd = "python main.py",
+                        strategy = {"toggleterm", open_on_start = false},
                         components = { "default_hide", "unique" }
                     }
                 end,
@@ -36,6 +37,7 @@ return {
                 builder = function()
                     return {
                         name = "Building Docs",
+                        strategy = {"toggleterm", open_on_start = false},
                         cmd = "sphinx-build -b html docs/source docs/build/html",
                         components = { "default_hide", "unique" }
                     }

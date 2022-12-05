@@ -33,7 +33,8 @@ return {
                     return {
                         name = "Git Commit",
                         cmd = "git commit",
-                        components = { "default_hide", "unique" }
+                        components = { "default_hide", "unique" },
+                        strategy = {"toggleterm", open_on_start = false, hidden = true},
                     }
                 end,
                 priority = 2,
@@ -69,6 +70,7 @@ return {
                     return {
                         name = "Build Document",
                         cmd = "latexmk -pdf -file-line-error -synctex=1 OML-Thesis.tex",
+                        strategy = {"toggleterm", open_on_start = false},
                         components = { "default_hide", 'unique' }
                     }
                 end,

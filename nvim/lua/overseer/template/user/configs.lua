@@ -66,7 +66,8 @@ return {
                     return {
                         name = "Log XMonad Stack",
                         cmd = { "/home/oleete/.cabal/bin/xmonadctl-exe", "dump-stack" },
-                        components = { "default_hide", "unique" }
+                        components = { "default_hide", "unique" },
+                        strategy = {"toggleterm", open_on_start = false, hidden = true},
                     }
                 end,
                 priority = 61,
@@ -78,6 +79,7 @@ return {
                     return {
                         name = "Log XMonad Full Stack",
                         cmd = { "/home/oleete/.cabal/bin/xmonadctl-exe", "dump-full-stack" },
+                        strategy = {"toggleterm", open_on_start = false, hidden = true},
                         components = { "default_hide", "unique" }
                     }
                 end,
