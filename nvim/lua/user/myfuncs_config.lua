@@ -27,6 +27,9 @@ Special_types = {
     ["vim"] = { exit_func = winclose },
     ["gitcommit"] = { name = "Git Commit Message", exit_func = winclose },
     ["noice"] = { name = "Noice", exit_func = function() vim.cmd.quit() end },
+    ["mason"] = {  exit_func = winclose },
+    ["null-ls-info"] = {  exit_func = winclose },
+    ["Glance"] = {  exit_func = require('glance').actions.close },
     [""] = { exit_func = winclose },
 }
 
@@ -82,6 +85,7 @@ function DeleteBuffer()
         Special_types[filetype].exit_func()
         return
     elseif vim.b[bufnr].is_diffview_file then
+        vim.b.is_diffview_file = false
         vim.cmd("DiffviewFocusFiles")
         return
     end

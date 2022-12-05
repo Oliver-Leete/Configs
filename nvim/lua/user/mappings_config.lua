@@ -80,11 +80,12 @@ Map({ "n", "x", "o" }, "L", "$")
 
 Map({ "n", "x" }, "U", "<c-r>")
 
+Map("n", "G", "<nop>")
 Map("n", "K", "<nop>")
 Map("n", "KK", "K")
 Map("n", "KG", require("gitsigns").preview_hunk)
 Map("n", "KB", function() require("gitsigns").blame_line({ full = true }) end)
-Map("n", "KE", function() vim.diagnostic.open_float(0, { border = Border, scope = "line", source = "always" }) end)
+Map("n", "KE", function() vim.diagnostic.open_float({ border = Border, scope = "line", source = "always" }) end)
 Map("n", "KT", function() require("neotest").output.open() end)
 Map("n", "KD", function() require("dap.ui.widgets").hover() end, { silent = true })
 
@@ -222,6 +223,7 @@ Map("n", ",pS", "<Plug>UnconditionalPasteParagraphedAfter", { remap = true })
 Map("n", ",ps", "<Plug>UnconditionalPasteSpacedAfter", { remap = true })
 
 Map({ "n", "x" }, ",ff", vim.lsp.buf.format)
+Map({ "n", "x" }, ",fe", require("null-ls-embedded").format_current)
 Map("n", ",fw", function()
     return "m1!ippar w" .. (vim.b.textwidth or vim.g.textwidth) .. "<cr>`1"
 end, { expr = true, silent = true })

@@ -110,8 +110,8 @@ local colorful_winsep = require("colorful-winsep")
 colorful_winsep.setup({
     -- Window divider color definition
     highlight = {
-        guibg = "#1F1F28",
-        guifg = "#7E9CD8"
+        guibg = Tc.bg,
+        guifg = Tc.crystalBlue
     },
     -- timer refresh rate
     interval = 30,
@@ -125,5 +125,44 @@ colorful_winsep.setup({
         "┓",
         "┗",
         "┛",
+    },
+})
+
+local glance = require('glance')
+local actions = glance.actions
+
+vim.api.nvim_set_hl(0, "GlanceBorderTop", { fg = Tc.crystalBlue, bg = "#2f2f39" })
+vim.api.nvim_set_hl(0, "GlanceListBorderBottom", { fg = Tc.crystalBlue, bg = "#2f2f39" })
+vim.api.nvim_set_hl(0, "GlancePreviewBorderBottom", { fg = Tc.crystalBlue, bg = "#2a2933" })
+
+glance.setup({
+    height = 20,
+    border = {
+        enable = true,
+        top_char = '━',
+        bottom_char = '━',
+    },
+    mappings = {
+        list = {
+            ['j'] = actions.next,
+            ['k'] = actions.previous,
+            ['<Down>'] = actions.next,
+            ['<Up>'] = actions.previous,
+            ['n'] = actions.next_location,
+            ['N'] = actions.previous_location,
+            ['<C-u>'] = actions.preview_scroll_win(5),
+            ['<C-d>'] = actions.preview_scroll_win(-5),
+            ['<c-v>'] = actions.jump_vsplit,
+            ['<c-s>'] = actions.jump_split,
+            ['<CR>'] = actions.jump,
+            ['o'] = actions.enter_win('preview'),
+            ['<Esc>'] = actions.close,
+        },
+        preview = {
+            ['n'] = actions.next_location,
+            ['N'] = actions.previous_location,
+            ['<esc>'] = actions.enter_win('list'),
+            ['<leader><cr>'] = actions.enter_win('list'),
+        },
     },
 })

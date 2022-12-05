@@ -32,14 +32,19 @@ local custom_attach = function(client, bufnr)
     local bmap = function(mode, key, action) Map(mode, key, action, { buffer = bufnr }) end
     -- LSP Binding Override
     if client.name ~= "null-ls" then
-        bmap("n", "gd", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
+        bmap("n", "gd", "<cmd>Glance definitions<cr>")
+        bmap("n", "gr", "<cmd>Glance references<cr>")
+        bmap("n", "gD", "<cmd>Glance type_definitions<cr>")
+        bmap("n", "gI", "<cmd>Glance implementations<cr>")
         bmap("n", "gs", "<cmd>Telescope lsp_workspace_symbols theme=get_ivy<cr>")
         bmap("n", "gS", "<cmd>Telescope lsp_document_symbols theme=get_ivy<cr>")
-        bmap("n", "gr", "<cmd>Telescope lsp_references theme=get_ivy<cr>")
-        bmap("n", "gI", "<cmd>Telescope lsp_implementations theme=get_ivy<cr>")
-        bmap("n", "gD", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>")
         bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls theme=get_ivy<cr>")
         bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>")
+
+        bmap("n", "Gd", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
+        bmap("n", "Gr", "<cmd>Telescope lsp_references theme=get_ivy<cr>")
+        bmap("n", "GI", "<cmd>Telescope lsp_implementations theme=get_ivy<cr>")
+        bmap("n", "GD", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>")
 
         bmap("n", "KK", vim.lsp.buf.hover)
 
@@ -242,6 +247,7 @@ require("lspconfig").ltex.setup({
                     ["\\pac{}"] = "dummy",
                     ["\\Pac{}"] = "dummy",
                     ["\\subref{}"] = "dummy",
+                    ["\\SI{}{}"] = "dummy",
                 },
             },
             dictionary = {},
@@ -261,7 +267,7 @@ require("null-ls").setup({
         -- null_ls.builtins.code_actions.refactoring,
         null_ls.builtins.diagnostics.chktex,
         null_ls.builtins.diagnostics.fish,
-        null_ls.builtins.diagnostics.flake8,
+        -- null_ls.builtins.diagnostics.flake8,
         null_ls.builtins.diagnostics.gitlint,
         null_ls.builtins.diagnostics.jsonlint,
         null_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013", "MD046", "MD009" } }),

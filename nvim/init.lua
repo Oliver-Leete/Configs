@@ -61,10 +61,13 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'barreiroleo/ltex_extra.nvim'
     Plug 'p00f/clangd_extensions.nvim'
     Plug 'b0o/schemastore.nvim'
+    Plug 'LostNeophyte/null-ls-embedded'
 
     Plug 'SmiteshP/nvim-navic'
     Plug 'camilledejoye/nvim-lsp-selection-range'
     Plug 'smjonas/inc-rename.nvim'
+    Plug 'DNLHC/glance.nvim'
+    Plug 'yioneko/nvim-type-fmt'
 
     Plug 'hrsh7th/nvim-cmp'
     Plug 'hrsh7th/cmp-buffer'
