@@ -109,7 +109,7 @@ projects =
 
     , Project { pName = "Wrk",        pDir = "~/UniDrive",                    pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Wrk" }
     , Project { pName = "WrkNotes",   pDir = "~/Projects/Thesis/Notes",       pApp1 = obsidian, pApp1F = obsidianF, pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = oneSpawn "WrkNotes" "flatpak run md.obsidian.Obsidian" }
-    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Thesis" }
+    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = termBrowSpawn "Thesis" }
     , Project { pName = "Sim",        pDir = "~/Projects/PowderModel",        pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Sim" }
     , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",      pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Exp" }
     , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = hdfview,   pApp3F = hdfviewF,  pStart = termBrowSpawn "Scripts" }
@@ -236,12 +236,12 @@ myLayoutHook = smartBorders
 ----------------------------------------------------------------------------------------------------
 myNav2DConf :: Navigation2DConfig
 myNav2DConf = def
-    { defaultTiledNavigation    = centerNavigation
-    , floatNavigation           = centerNavigation
-    , screenNavigation          = lineNavigation
-    , layoutNavigation          = [("Full", centerNavigation)]
-    , unmappedWindowRect        = [("Full", singleWindowRect)]
-    }
+    -- { defaultTiledNavigation    = centerNavigation
+    -- , floatNavigation           = centerNavigation
+    -- , screenNavigation          = lineNavigation
+    -- -- , layoutNavigation          = [("Full", centerNavigation)]
+    -- , unmappedWindowRect        = [("Full", fullScreenRect)]
+    -- }
 
 myModMask :: KeyMask
 myModMask = mod4Mask
