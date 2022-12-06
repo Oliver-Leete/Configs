@@ -9,7 +9,6 @@ return {
                     return {
                         name = "Fish " .. OvTermNum,
                         cmd = "fish",
-                        components = { "def_dispose" }
                     }
                 end,
                 priority = 1,
@@ -21,7 +20,7 @@ return {
                     return {
                         name = "lazygit",
                         cmd = "lazygit",
-                        components = { "def_dispose", "unique" }
+                        components = { "default", "unique" }
                     }
                 end,
                 priority = 2,
@@ -33,7 +32,7 @@ return {
                     return {
                         name = "Git Commit",
                         cmd = "git commit",
-                        components = { "default_hide", "unique" },
+                        components = { "default", "unique" },
                         strategy = {"toggleterm", open_on_start = false, hidden = true},
                     }
                 end,
@@ -46,7 +45,7 @@ return {
                     return {
                         name = "lazydocker",
                         cmd = "lazydocker",
-                        components = { "def_dispose", "unique" }
+                        components = { "default", "unique" }
                     }
                 end,
                 priority = 3,
@@ -58,7 +57,7 @@ return {
                     return {
                         name = "btop",
                         cmd = "btop",
-                        components = { "def_dispose", "unique" }
+                        components = { "default", "unique" }
                     }
                 end,
                 priority = 3,
@@ -71,7 +70,7 @@ return {
                         name = "Build Document",
                         cmd = "latexmk -pdf -file-line-error -synctex=1 OML-Thesis.tex",
                         strategy = {"toggleterm", open_on_start = false},
-                        components = { "default_hide", 'unique' }
+                        components = { "default", 'unique' }
                     }
                 end,
                 priority = 5,

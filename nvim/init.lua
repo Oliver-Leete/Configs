@@ -65,7 +65,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'SmiteshP/nvim-navic'
     Plug 'camilledejoye/nvim-lsp-selection-range'
-    Plug 'smjonas/inc-rename.nvim'
+    " Plug 'smjonas/inc-rename.nvim'
     Plug 'DNLHC/glance.nvim'
     Plug 'yioneko/nvim-type-fmt'
 
@@ -81,6 +81,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'uga-rosa/cmp-dictionary'
     Plug 'mtoohey31/cmp-fish'
     Plug 'saadparwaiz1/cmp_luasnip'
+    Plug 'doxnit/cmp-luasnip-choice'
     Plug 'kdheepak/cmp-latex-symbols'
     Plug 'kdheepak/cmp-latex-symbols'
     Plug 'rcarriga/cmp-dap'

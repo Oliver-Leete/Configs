@@ -1,4 +1,4 @@
 #!/bin/bash
 projectName=$(basename $(pwd))
 
-julia --threads=auto -e "using Test, Documenter, $projectName; DocMeta.setdocmeta!($projectName, :DocTestSetup, :(using $projectName)); doctest($projectName, fix=true)"
+julia --threads=auto -e "using Test, Documenter, $projectName; DocMeta.setdocmeta!($projectName, :DocTestSetup, :(using $projectName); recursive=true); doctest($projectName, fix=true); "

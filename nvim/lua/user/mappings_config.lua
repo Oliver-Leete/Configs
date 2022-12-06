@@ -179,9 +179,10 @@ Map({"n", "x"}, ",k", require("treesj").split)
 
 Map({ "n", "x" }, "R", "<plug>(SubversiveSubstitute)")
 
-Map("n", ",rr", function()
-    return ":IncRename " .. vim.fn.expand("<cword>")
-end, { expr = true })
+Map("n", ",rr", vim.lsp.buf.rename)
+-- Map("n", ",rr", function()
+    -- return ":IncRename " .. vim.fn.expand("<cword>")
+-- end, { expr = true })
 
 Map({ "n", "x" }, ",rs", require("ssr").open)
 

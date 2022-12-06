@@ -10,7 +10,11 @@ return {
                 name = "Source File",
                 builder = function()
                     vim.cmd.source(vim.fn.expand("%"))
-                    return { cmd = "", name = "", components = { "user.dispose_now" }, }
+                    return {
+                        cmd = "",
+                        name = "",
+                        components = { "user.dispose_now" },
+                    }
                 end,
                 priority = 59,
                 params = {},
@@ -20,7 +24,11 @@ return {
                 name = "Source NVim Init",
                 builder = function()
                     vim.cmd.source("/home/oleete/.config/nvim/init.lua")
-                    return { cmd = "", name = "", components = { "user.dispose_now" }, }
+                    return {
+                        cmd = "",
+                        name = "",
+                        components = { "user.dispose_now" },
+                    }
                 end,
                 priority = 59,
                 params = {},
@@ -29,7 +37,11 @@ return {
                 name = "Source NVim Module",
                 builder = function()
                     require("telescope.builtin").reloader(require("telescope.themes").get_ivy())
-                    return { cmd = "", name = "", components = { "user.dispose_now" }, }
+                    return {
+                        cmd = "",
+                        name = "",
+                        components = { "user.dispose_now" },
+                    }
                 end,
                 priority = 59,
                 params = {},
@@ -66,8 +78,8 @@ return {
                     return {
                         name = "Log XMonad Stack",
                         cmd = { "/home/oleete/.cabal/bin/xmonadctl-exe", "dump-stack" },
-                        components = { "default_hide", "unique" },
-                        strategy = {"toggleterm", open_on_start = false, hidden = true},
+                        components = { "default", "unique" },
+                        strategy = { "toggleterm", open_on_start = false, hidden = true },
                     }
                 end,
                 priority = 61,
@@ -79,8 +91,8 @@ return {
                     return {
                         name = "Log XMonad Full Stack",
                         cmd = { "/home/oleete/.cabal/bin/xmonadctl-exe", "dump-full-stack" },
-                        strategy = {"toggleterm", open_on_start = false, hidden = true},
-                        components = { "default_hide", "unique" }
+                        strategy = { "toggleterm", open_on_start = false, hidden = true },
+                        components = { "default", "unique" }
                     }
                 end,
                 priority = 61,

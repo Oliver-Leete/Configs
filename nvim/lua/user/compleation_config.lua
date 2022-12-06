@@ -72,10 +72,11 @@ require("cmp").setup({
             end,
         }),
         ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "i" }),
-        ["<C-CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), {  "c" }),
+        ["<C-CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "c" }),
     },
 
     sources = {
+        { name = "luasnip_choice" },
         { name = "luasnip" },
         { name = "cmp_git" },
         { name = "nvim_lsp" },
@@ -88,6 +89,7 @@ require("cmp").setup({
     formatting = {
         format = function(entry, vim_item)
             vim_item.menu = ({
+                luasnip_choice = "(CHOICE)",
                 luasnip = "(SNIP)",
                 git = "(GIT)",
                 nvim_lsp = "(LSP)",
@@ -110,6 +112,10 @@ require("cmp").setup({
         return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
             or require("cmp_dap").is_dap_buffer()
     end
+})
+
+require('cmp_luasnip_choice').setup({
+    auto_open = true,
 })
 
 cmp.setup.cmdline("/", {

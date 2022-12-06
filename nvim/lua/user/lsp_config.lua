@@ -1,7 +1,7 @@
 require("neodev").setup({})
 local lspconfig = require("lspconfig")
 local lsp_selection_range = require('lsp-selection-range')
-require("inc_rename").setup()
+-- require("inc_rename").setup()
 
 vim.api.nvim_set_hl(0, "CursorLineError", { fg = "#E82424", bg = "#363646" })
 vim.api.nvim_set_hl(0, "CursorLineWarn", { fg = "#FF9E3B", bg = "#363646" })

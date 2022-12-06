@@ -151,7 +151,6 @@ return {
                         return {
                             cmd = ft.repl,
                             name = ft.name .. " REPL " .. ft.num,
-                            components = { "def_dispose" }
                         }
                     end,
                     priority = 5,

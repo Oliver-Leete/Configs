@@ -100,7 +100,8 @@ return {
                 cmd = juliaCommand ..
                     [[--project -e 'using Revise, DaemonMode; print("Running test server"); serve(print_stack=true)']],
                 condition = isProject,
-                components = { "default_hide", "unique", "always_restart" },
+                strategy = { "toggleterm", open_on_start = false, hidden = true },
+                components = { "default", "unique", "always_restart" },
             },
             {
                 name = "Build Documentation",
@@ -113,21 +114,24 @@ return {
                 name = "Open Built Documentation",
                 cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
                 condition = { callback = function(opts) files.exists(files.join(opts.dir, "docs", "build", "index.html")) end },
-                components = { "default_hide", "unique" },
+                strategy = { "toggleterm", open_on_start = false },
+                components = { "default", "unique" },
             },
             {
                 name = "Start documentation Server",
                 tskName = vim.g.project .. " Doc Server",
                 cmd = juliaCommand .. [[--project=docs -E 'using Revise, ]] ..
                     vim.g.project .. [[, LiveServer; servedocs(launch_browser=true; include_dirs = ["src"])']],
-                components = { "default_hide", "unique", "always_restart" },
+                strategy = { "toggleterm", open_on_start = false, hidden = true },
+                components = { "default", "unique", "always_restart" },
                 condition = hasDocs,
             },
             {
                 name = "Open Documentation Server",
                 cmd = "browser http://localhost:8000 & sleep 5",
                 condition = hasDocs,
-                components = { "default_hide", "unique" },
+                strategy = { "toggleterm", open_on_start = false, hidden = true },
+                components = { "default", "unique" },
             },
             {
                 name = "Run Documentation Tests",
@@ -150,7 +154,8 @@ return {
                 cmd = juliaCommand ..
                     [[ -e 'using JuliaFormatter, PowderModel; format(]] ..
                     vim.g.project .. [[, format_markdown=true, verbose=true)']],
-                components = { "default_hide", "unique" },
+                strategy = { "toggleterm", open_on_start = false, hidden = true },
+                components = { "default", "unique" },
             },
             {
                 name = "Test Package",
@@ -240,6 +245,7 @@ return {
                             name = command.tskName or command.name,
                             cmd = command.cmd,
                             components = command.components,
+                            strategy = command.strategy,
                         }
                     end,
                     tags = command.tags,
@@ -274,7 +280,6 @@ return {
             end
         end
 
-        -- FIX: This doesn't actually work
         for _, result in pairs(test_results) do
             result = vim.fn.json_decode(result)
             if result and result.type == "match" then
@@ -293,7 +298,8 @@ return {
                                 run(\`/home/oleete/.config/bin/nvrWS 'lua No_Using_Toggle(\"Main.@infiltrate cond = ]] ..
                                     cond .. [[\")'\`)
                                 "]],
-                                components = { "default_hide", "unique",
+                                strategy = { "toggleterm", open_on_start = false },
+                                components = { "default", "unique",
                                     { "user.attach_toggleterm",
                                         send_on_start = [[@run_package_tests filter=ti->(ti.name == ]] .. name .. [[)]],
                                         goto_prev = true,

@@ -1,14 +1,12 @@
 local overseer = require("overseer")
 local STATUS = require("overseer.constants").STATUS
 
-local toggleterm_if_not = function(task)
-    local bufnr = task.strategy.bufnr
-    task.toggleterm = require("toggleterm.terminal").Terminal:new({ bufnr = bufnr })
-    task:add_components({ "user.attach_toggleterm" })
-    task.toggleterm.name = task.name
-    task.toggleterm.job_id = task.strategy.chan_id -- to make send work
-    task.toggleterm:toggle()
-    task.toggleterm:__resurrect()
+local tt = require("toggleterm.terminal")
+
+function Task_To_Term(task)
+    return vim.tbl_filter(function(term)
+        return term.bufnr == task.strategy.bufnr
+    end, tt.get_all(true))[1]
 end
 
 overseer.setup({
@@ -46,7 +44,6 @@ overseer.setup({
             "on_exit_set_status",
             { "on_complete_notify", system = "unfocused" },
             "on_complete_dispose",
-            -- { "user.attach_toggleterm", goto_prev = true },
             "unique",
             "display_duration",
         },
@@ -55,52 +52,22 @@ overseer.setup({
             "on_exit_set_status",
             { "on_complete_notify", system = "unfocused" },
             "on_complete_dispose",
-            -- "user.attach_toggleterm",
             "display_duration",
         },
-        default_hide = {
-            "on_output_summarize",
-            "on_exit_set_status",
-            { "on_complete_notify", system = "unfocused" },
-            "on_complete_dispose",
-            "display_duration",
-        },
-        def_dispose = {
-            "on_output_summarize",
-            "on_exit_set_status",
-            { "on_complete_notify", system = "unfocused" },
-            "on_complete_dispose",
-            -- "user.attach_toggleterm",
-            "display_duration",
-        },
-        -- def_dispose = {
-        --     "on_exit_set_status",
-        --     { "on_complete_dispose", timeout = 1 },
-        --     "user.attach_toggleterm",
-        -- },
         always_restart = { "on_complete_restart", statuses = { STATUS.FAILURE, STATUS.SUCCESS } },
     },
     template_timeout = 5000,
     template_cache_threshold = 0,
     actions = {
+        toggle = {
+            run = function(task)
+                local term = Task_To_Term(task)
+                term:toggle()
+            end
+        },
         ["open vsplit"] = false,
         ["open hsplit"] = false,
         ["set loclist diagnostics"] = false,
-        ["open"] = {
-            desc = "open in toggleterm",
-            run = function(task)
-                if task.toggleterm then
-                    task.toggleterm:toggle()
-                else
-                    toggleterm_if_not(task)
-                end
-                OTerm = task.toggleterm
-            end,
-            condition = function(task)
-                local bufnr = task:get_bufnr()
-                return bufnr and vim.api.nvim_buf_is_valid(bufnr)
-            end,
-        },
         ["open as buffer"] = {
             desc = "open terminal in the current window",
             condition = function(task)
@@ -112,33 +79,33 @@ overseer.setup({
                 vim.api.nvim_win_set_buf(0, task:get_bufnr())
             end,
         },
-        ["close terminal"] = {
+        ["toggle hide"] = {
             desc = "close and detach the toggleterm",
             run = function(task)
-                if OTerm == task.toggleterm then
-                    OTerm = nil
-                elseif STerm == task.toggleterm then
-                    STerm = nil
-                end
-                if task.toggleterm then
-                    task:remove_components({ "user.attach_toggleterm" })
-                    task.toggleterm:detach()
-                    task.toggleterm = nil
+                local term = Task_To_Term(task)
+                if term.hidden then
+                    term.hidden = false
+                    term:open()
+                    OTerm = term
+                else
+                    if OTerm == term then
+                        OTerm = nil
+                    end
+                    if STerm == term then
+                        STerm = nil
+                    end
+                    term.hidden = true
+                    term:close()
                 end
             end,
-            condition = function(task)
-                local bufnr = task:get_bufnr()
-                return bufnr and vim.api.nvim_buf_is_valid(bufnr) and task:has_component("user.attach_toggleterm")
-            end
         },
         ["set as recive terminal"] = {
             desc = "set this task as the terminal to recive sent text and commands",
             run = function(task)
-                if not task.toggleterm then
-                    toggleterm_if_not(task)
-                end
-                OTerm = task.toggleterm
-                STerm = task.toggleterm
+                local term = Task_To_Term(task)
+                term.hidden = false
+                OTerm = term
+                STerm = term
             end,
         },
         ["keep runnning"] = {
@@ -153,11 +120,10 @@ overseer.setup({
         ["unwatch"] = {
             desc = "stop from running on finish or file watch",
             run = function(task)
-                if task:has_component("on_complete_restart") then
-                    task:remove_components({ "on_complete_restart" })
-                end
-                if task:has_component("restart_on_save") then
-                    task:remove_components({ "restart_on_save" })
+                for _, component in pairs({ "on_complete_restart", "on_complete_restart" }) do
+                    if task:has_component(component) then
+                        task:remove_components({ component })
+                    end
                 end
             end,
             condition = function(task)
@@ -168,6 +134,9 @@ overseer.setup({
             desc = "keep the task until manually disposed",
             run = function(task)
                 task:remove_components({ "on_complete_dispose" })
+            end,
+            condition = function(task)
+                return task:has_component("on_complete_dispose")
             end
         },
         ["dump task"] = {

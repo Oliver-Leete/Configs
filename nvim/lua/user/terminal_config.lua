@@ -2,6 +2,9 @@ Temp_Num = 50
 Term_on_open = function(term)
     vim.b[0].my_term_id = term.id
     vim.wo.winbar = "%{%v:lua.Term_Winbar()%}"
+    if not term.hidden then
+        OTerm = term
+    end
 end
 
 function _G.my_toggleterm_winbar_click(id)
@@ -21,7 +24,7 @@ function Term_Winbar()
     local hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveEnds#"
 
     local term_id = vim.b[0].my_term_id
-    local term_list = require("toggleterm.terminal").get_all(true)
+    local term_list = require("toggleterm.terminal").get_all()
     local cur_win = vim.api.nvim_get_current_win()
     local winbar = ""
     for _, term in pairs(term_list) do

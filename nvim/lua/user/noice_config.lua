@@ -79,7 +79,7 @@ require("noice").setup({
         long_message_to_split = true,
         command_palette = false,
         lsp_doc_border = true,
-        inc_rename = true,
+        -- inc_rename = true,
     },
     views = {
         split = {
