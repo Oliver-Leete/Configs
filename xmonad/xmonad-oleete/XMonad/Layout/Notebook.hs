@@ -27,7 +27,8 @@ module XMonad.Layout.Notebook (
                               IncColumnN(..),
                               ToggleMiddle(..),
                               ToggleSide(..),
-                              ToggleStackDir(..)
+                              ToggleStackDir(..),
+                              SResize(..)
                              ) where
 
 import           XMonad                      (IncMasterN (IncMasterN),
@@ -95,14 +96,18 @@ data ToggleStackDir = ToggleStackDir deriving (Read, Show, Typeable)
 instance Message ToggleStackDir
 
 -- | Arguments are nmaster, delta, fraction, mirror fraction
-data Notebook a = Notebook{ notebookMiddle :: !Bool, notebookSide :: !Bool, stackDirection :: !Bool, notebookMaster :: !Int, notebookColumn :: !Int, notebookDelta :: !Rational, notebookMirrorDelta :: !Rational, notebookFrac :: !Rational, notebookMirrorFrac :: !Rational}
+data Notebook a = Notebook{ notebookMiddle :: !Bool, notebookSide :: !Bool, stackDirection :: !Bool, notebookMaster :: !Int, notebookColumn :: !Int, notebookDelta :: !Rational, notebookMirrorDelta :: !Rational, notebookFrac :: !Rational, notebookMirrorFrac :: !Rational, notebookStackFrac :: !Rational }
     deriving (Show,Read)
 
+data SResize     = SShrink | SExpand
+instance Message SResize
+
 instance LayoutClass Notebook a where
-    pureLayout (Notebook mid s dir n c _ _ f mf) r    = doL mid s dir n c f mf r
+    pureLayout (Notebook mid s dir n c _ _ f mf sf) r    = doL mid s dir n c f mf sf r
     handleMessage l m =
         return $ msum   [fmap resize         (fromMessage m)
                         ,fmap mresize        (fromMessage m)
+                        ,fmap sresize        (fromMessage m)
                         ,fmap incmastern     (fromMessage m)
                         ,fmap inccolumnn     (fromMessage m)
                         ,fmap togglemiddle   (fromMessage m)
@@ -112,6 +117,8 @@ instance LayoutClass Notebook a where
                     resize Expand = l { notebookFrac = min 10 $ f+d }
                     mresize MirrorShrink = l { notebookMirrorFrac = max (1/10) $ mf-dm }
                     mresize MirrorExpand = l { notebookMirrorFrac = min (9/10) $ mf+dm }
+                    sresize SShrink = l { notebookStackFrac = max 1 $ sf-d }
+                    sresize SExpand = l { notebookStackFrac = min 10 $ sf+d }
                     incmastern (IncColumnN x) = l { notebookMaster = max 0 $ min c (n+x) }
                     inccolumnn (IncMasterN x) = l { notebookColumn = max n (c+x) }
                     togglemiddle ToggleMiddle = l { notebookMiddle = not mid}
@@ -125,16 +132,17 @@ instance LayoutClass Notebook a where
                     dm = notebookMirrorDelta l
                     f = notebookFrac l
                     mf = notebookMirrorFrac l
+                    sf = notebookStackFrac l
                     dir = stackDirection l
     description _ = "Notebook"
 
-doL :: Bool -> Bool -> Bool -> Int -> Int -> Rational -> Rational -> Rectangle -> W.Stack a -> [(a, Rectangle)]
-doL m s dir n c f mf r st = zip sti (newWide m s dir n c nwin f mf r)
+doL :: Bool -> Bool -> Bool -> Int -> Int -> Rational -> Rational -> Rational -> Rectangle -> W.Stack a -> [(a, Rectangle)]
+doL m s dir n c f mf sf r st = zip sti (newWide m s dir n c nwin f mf sf r)
         where   sti = W.integrate st
                 nwin = length sti
 
-newWide ::Bool -> Bool -> Bool -> Int -> Int -> Int -> Rational -> Rational -> Rectangle -> [Rectangle]
-newWide m s d n c nwin f mf r
+newWide ::Bool -> Bool -> Bool -> Int -> Int -> Int -> Rational -> Rational -> Rational -> Rectangle -> [Rectangle]
+newWide m s d n c nwin f mf sf r
     | c == 0 = map (`modY` r) (splitHorizontally nwin r)
     | nwin <= ncol + nmain = map ((`modY` r) . fst) listCols
     | otherwise = listWithStack
@@ -158,7 +166,7 @@ newWide m s d n c nwin f mf r
                 | c <= 1 = 0
                 | ncol == 0 = floor (toRational width/2)
                 | otherwise = floor (toRational (toRational (rect_width r) - (toRational width*toRational nmain)) / toRational ncol)
-            minWidth = colWidth * nstack
+            minWidth = floor (fromIntegral colWidth * sf * fromIntegral nstack)
 
             nmain
                 | n == 0 = 0

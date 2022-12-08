@@ -182,7 +182,7 @@ yellow     = "#DCA561"
 
 -- sizes
 gap    = 3
-reSize = 1/10
+reSize = 1/12
 moreReSize = 1/2
 myBorder = 3
 
@@ -221,10 +221,10 @@ myLayoutHook = smartBorders
              $ mkToggle (single FULLCENTER)
                notebookLayout
     where
-    notebookMulti   = Notebook True True True 1 2 moreReSize reSize 3 (2/3)
-    notebookThesis  = Notebook True True True 1 3 moreReSize reSize 2 (2/3)
-    notebookTwoMain = Notebook False True True 2 3 moreReSize reSize 3 (2/3)
-    notebookColumns = Notebook False True True 4 4 moreReSize reSize 2 (2/3)
+    notebookMulti   = Notebook True True True 1 2 moreReSize reSize 3 (2/3) 1
+    notebookThesis  = Notebook True True True 1 3 moreReSize reSize 2 (2/3) 1
+    notebookTwoMain = Notebook False True True 2 3 moreReSize reSize 3 (2/3) 1
+    notebookColumns = Notebook False True True 4 4 moreReSize reSize 2 (2/3) 1
 
     notebookDifferent = onWorkspaces ["Thesis", "Print"] notebookThesis $ onWorkspaces ["Comments"] notebookTwoMain notebookMulti
 
@@ -327,6 +327,8 @@ myKeys =
     , ("M-]"             , sendMessage Expand)
     , ("M-S-["           , sendMessage MirrorShrink)
     , ("M-S-]"           , sendMessage MirrorExpand)
+    , ("M-S-9"           , sendMessage SShrink)
+    , ("M-S-0"           , sendMessage SExpand)
 
     , ("M-a"             , spawn "/home/oleete/.config/bin/wsHarpoon jump 1")
     , ("M-r"             , spawn "/home/oleete/.config/bin/wsHarpoon jump 2")
@@ -524,6 +526,8 @@ myCommands =
     , ("layout-dir"          , upFocus $ sendMessage ToggleSide)
     , ("layout-stack-dir"    , upFocus $ sendMessage ToggleStackDir)
     , ("layout-style"        , upFocus $ sendMessage ToggleMiddle)
+    , ("layout-stack-shrink" , sendMessage SShrink)
+    , ("layout-stack-expand" , sendMessage SExpand)
 
     , ("sendF"               , P.sendKey noModMask xK_f)
     , ("sendF11"             , P.sendKey noModMask xK_F11)

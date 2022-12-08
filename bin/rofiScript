@@ -66,6 +66,8 @@ menu () {
     mirror
     mirror_stack
     centre_main
+    shrink_stack
+    expand_stack
 
     full-screen
     full-bar
@@ -127,6 +129,8 @@ menu () {
         mirror)             /home/oleete/.cabal/bin/xmonadctl-exe layout-dir ;;
         mirror_stack)       /home/oleete/.cabal/bin/xmonadctl-exe layout-stack-dir ;;
         centre_main)        /home/oleete/.cabal/bin/xmonadctl-exe layout-style ;;
+        shrink_stack)       /home/oleete/.cabal/bin/xmonadctl-exe layout-stack-shrink ;;
+        expand_stack)       /home/oleete/.cabal/bin/xmonadctl-exe layout-stack-expand ;;
         full-screen)        /home/oleete/.cabal/bin/xmonadctl-exe layout-full ;;
         full-bar)           /home/oleete/.cabal/bin/xmonadctl-exe layout-fullbar ;;
         centre-screen)      /home/oleete/.cabal/bin/xmonadctl-exe layout-fullcentre ;;
