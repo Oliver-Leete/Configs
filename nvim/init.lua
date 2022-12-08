@@ -46,7 +46,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'MunifTanjim/nui.nvim'
     Plug 'folke/noice.nvim'
     Plug 'nvim-zh/colorful-winsep.nvim'
-    Plug 'kevinhwang91/nvim-ufo'
 
     Plug 'mbbill/undotree'
     Plug 'kyazdani42/nvim-tree.lua'
@@ -65,7 +64,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'SmiteshP/nvim-navic'
     Plug 'camilledejoye/nvim-lsp-selection-range'
-    " Plug 'smjonas/inc-rename.nvim'
     Plug 'DNLHC/glance.nvim'
     Plug 'yioneko/nvim-type-fmt'
 

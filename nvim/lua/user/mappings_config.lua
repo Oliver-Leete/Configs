@@ -163,11 +163,6 @@ Hydra({
 
 Map({ "n", "x" }, "m", "v")
 
--- Z mappings
-
-Map('n', 'zR', require('ufo').openAllFolds)
-Map('n', 'zM', require('ufo').closeAllFolds)
-
 -- Text leader mappings: ,
 
 Map({"n", "x"}, ",j", require("treesj").join)

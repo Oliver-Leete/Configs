@@ -23,7 +23,7 @@ local miniAiGitsigns = function()
         local from_line = hunk.added.start
         local from_col = 1
         local to_line = hunk.vend
-        local to_col = #vim.api.nvim_buf_get_lines(0, to_line - 1, to_line, false)[1] + 1
+        local to_col = #vim.api.nvim_buf_get_lines(bufnr, to_line - 1, to_line, false)[1] + 1
         return {
             from = { line = from_line, col = from_col },
             to = { line = to_line, col = to_col },

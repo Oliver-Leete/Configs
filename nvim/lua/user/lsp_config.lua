@@ -24,12 +24,13 @@ local lsp_auto = vim.api.nvim_create_augroup("lsp_autocmd", { clear = true })
 
 local custom_attach = function(client, bufnr)
     local sc = client.server_capabilities
+    local bmap = function(mode, key, action) Map(mode, key, action, { buffer = bufnr }) end
+
     if sc.documentSymbolProvider and not client.name == "jedi_language_server" then
         require("nvim-navic").attach(client, bufnr)
     end
     lsp_selection_range.setup({})
 
-    local bmap = function(mode, key, action) Map(mode, key, action, { buffer = bufnr }) end
     -- LSP Binding Override
     if client.name ~= "null-ls" then
         bmap("n", "gd", "<cmd>Glance definitions<cr>")
@@ -87,13 +88,20 @@ lspconfig.pyright.setup(default)
 lspconfig.marksman.setup(default)
 lspconfig.taplo.setup(default)
 
-lspconfig.jedi_language_server.setup({
+require("lspconfig").pylsp.setup({
     on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
-    init_options = { diagnostics = { enable = false, }, }
+    settings = {
+        pylsp = {
+            plugins = {
+                pydocstyle = { enabled = true },
+                rope_completion = { enabled = false },
+                jedi_completion = { enabled = false },
+            },
+        },
+    },
 })
-
 lspconfig.sourcery.setup({
     on_attach = custom_attach,
     capabilities = capabilities,
@@ -263,19 +271,12 @@ require("null-ls").setup({
     diagnostics_format = "[#{c}] #{m} (#{s})",
     sources = {
         null_ls.builtins.code_actions.gitrebase,
-        -- null_ls.builtins.code_actions.gitsigns,
-        -- null_ls.builtins.code_actions.refactoring,
         null_ls.builtins.diagnostics.chktex,
         null_ls.builtins.diagnostics.fish,
-        -- null_ls.builtins.diagnostics.flake8,
         null_ls.builtins.diagnostics.gitlint,
         null_ls.builtins.diagnostics.jsonlint,
         null_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013", "MD046", "MD009" } }),
-        null_ls.builtins.diagnostics.pydocstyle,
-        null_ls.builtins.formatting.black,
-        null_ls.builtins.formatting.cbfmt,
         null_ls.builtins.formatting.fish_indent,
-        null_ls.builtins.formatting.isort,
         null_ls.builtins.formatting.jq.with({ extra_args = { "--indent", "4" } }),
         null_ls.builtins.formatting.latexindent,
         null_ls.builtins.formatting.markdownlint,
@@ -285,10 +286,9 @@ require("null-ls").setup({
         null_ls.builtins.formatting.trim_whitespace,
         null_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
         null_ls.builtins.hover.printenv,
+        require("null-ls-embedded").nls_source,
     },
 })
-
-require('ufo').setup()
 
 -- Non lsp diagnostics
 QfDiag = vim.api.nvim_create_namespace("qfDiag")
