@@ -162,6 +162,11 @@ require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
     },
 })
 
+
+require("cmp").setup.filetype("DressingInput", {
+	sources = cmp.config.sources { {name = "omni"} },
+})
+
 vim.cmd([[autocmd FileType toml lua require('cmp').setup.buffer { sources = { { name = 'crates' } } }]])
 
 vim.g.diagnostic_auto_popup_while_jump = 0

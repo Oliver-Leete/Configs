@@ -1,5 +1,10 @@
 -- Command Panel Bindings
 local telescopeFileBrowser = "Telescope file_browser respect_gitignore=false theme=get_ivy"
+local genghis = require("genghis")
+local trash_put = function()
+    vim.cmd("!trash-put %")
+    vim.cmd.bdelete()
+end
 GlobalCommands = {
     { source = "coverage", name = "Coverage summary", command = "CoverageSummary" },
     { source = "coverage", name = "Load coverage", command = "Coverage" },
@@ -20,6 +25,11 @@ GlobalCommands = {
     { source = "info", name = "Null-ls info", command = "NullLsInfo" },
     { source = "info", name = "Mason info", command = "Mason" },
     { source = "info", name = "Overseer info", command = "OverseerInfo" },
+
+    { source = "file", name = "Rename file", func = genghis.renameFile },
+    { source = "file", name = "Copy file", func = genghis.duplicateFile },
+    { source = "file", name = "Make file executable", func = genghis.chmodx },
+    { source = "file", name = "Trash file", func = trash_put },
 
     { source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
     { source = "finders", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },

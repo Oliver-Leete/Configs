@@ -102,6 +102,8 @@ Map({ "n", "x", "o" }, "`", "'")
 Map("x", "<", "<gv")
 Map("x", ">", ">gv")
 
+Map("x", "/", "<esc>/\\%V")
+
 Map("n", "<c-v>", "<cmd>silent vsplit<cr>")
 Map("n", "<c-x>", "<cmd>silent split<cr>")
 
@@ -168,9 +170,6 @@ Map({ "n", "x" }, "m", "v")
 Map({"n", "x"}, ",j", require("treesj").join)
 Map({"n", "x"}, ",k", require("treesj").split)
 
--- Map("n", ",j", "m1J`1")
--- Map("n", ",k", require("trevj").format_at_cursor)
--- Map("x", ",j", "J")
 
 Map({ "n", "x" }, "R", "<plug>(SubversiveSubstitute)")
 
@@ -183,8 +182,7 @@ Map({ "n", "x" }, ",rs", require("ssr").open)
 
 Map("n", ",rf", function() require("refactoring").refactor("Extract Block") end)
 Map("x", ",rf", function() require("refactoring").refactor("Extract Function") end)
-Map("n", ",rF", function() require("refactoring").refactor("Extract Block to File") end)
-Map("x", ",rF", function() require("refactoring").refactor("Extract Function to File") end)
+Map("x", ",rF", require("genghis").moveSelectionToNewFile)
 Map("n", ",re", "mia:lua require('refactoring').refactor('Extract Variable')<cr>", { remap = true })
 Map("x", ",re", function() require("refactoring").refactor("Extract Variable") end)
 Map({ "n", "x" }, ",ri", function() require("refactoring").refactor("Inline Variable") end)
