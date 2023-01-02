@@ -9,53 +9,6 @@ vim.bo.commentstring = [[#%s]]
 
 Jul_perf_flat = function() require("perfanno").load_traces(vim.json.decode(io.open("/tmp/jlprof.json", "rb"):read("*all"))) end
 
-Run_closest = function()
-    local line = vim.api.nvim_win_get_cursor(0)[1]
-
-    local query = require 'nvim-treesitter.query'
-    local nodes = {}
-    local qs = { "@function.name", "@class.name", "@test.name" }
-    for _, q in pairs(qs) do
-        vim.list_extend(nodes,
-            query.get_capture_matches_recursively(0, q, "textobjects")
-        )
-    end
-
-    local results = {}
-    for _, node in pairs(nodes) do
-        local res = node.node:start()
-        local name = require("vim.treesitter.query").get_node_text(node.node, 0)
-        table.insert(results,
-            { res + 1, name }
-        )
-    end
-
-    Res = results
-    local name = ""
-    local min_distance = 10000
-    for _, result in pairs(results) do
-        local dist = math.abs(line - result[1])
-        if min_distance > dist then
-            min_distance = dist
-            name = result[2]
-        end
-    end
-
-    if not name:match('^".*"$') then
-        name = '"' .. name .. '"'
-    end
-
-    local file = vim.fn.expand("%:p")
-    local testfile = vim.fn.expand("%:p:r"):gsub("/src/", "/test/") .. "_tests.jl"
-    local location
-    if require("overseer.files").exists(testfile) then
-        location = testfile .. "::" .. name
-    else
-        location = file .. "::" .. name
-    end
-    require("neotest").run.run(location)
-end
-
 local bp_remover = function(imp_line, bp_pattern, mod_pat)
     vim.cmd("delete")
 
@@ -137,8 +90,6 @@ BP_Remove_All = function(imp_names, bp_names)
 end
 
 Map("n", ",rb", "<cmd>call julia#toggle_function_blockassign()<cr>")
-
-Map("n", "<leader>l", Run_closest, { buffer = 0 })
 
 Map("n", ",dd", function() BP_Toggle("Debugger", "@bp") end, { buffer = 0 })
 Map("n", ",di", function() No_Using_Toggle("Main.@infiltrate") end, { buffer = 0 })
