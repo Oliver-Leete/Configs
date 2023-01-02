@@ -6,15 +6,15 @@
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# OPTIONS_GHC -Wno-missing-fields #-}
-import qualified Data.Map                            as M
+import qualified Data.Map                               as M
 import           Data.Monoid
 import           Graphics.X11.Types
-import           XMonad                              hiding ((|||))
-import qualified XMonad.StackSet                     as W
+import           XMonad                                 hiding ((|||))
+import qualified XMonad.StackSet                        as W
 
 import           XMonad.Actions.CopyWindow
-import           XMonad.Actions.CycleWS              (nextScreen,
-                                                      shiftNextScreen)
+import           XMonad.Actions.CycleWS                 (nextScreen,
+                                                         shiftNextScreen)
 import           XMonad.Actions.CycleWSLocal
 import           XMonad.Actions.DynamicProjectsLocal
 import           XMonad.Actions.DynamicWorkspaces
@@ -25,10 +25,10 @@ import           XMonad.Actions.SwapPromote
 import           XMonad.Actions.UpdateFocus
 import           XMonad.Actions.UpdatePointer
 import           XMonad.Actions.WindowGoLocal
-import           XMonad.Actions.WithAll              (sinkAll)
+import           XMonad.Actions.WithAll                 (sinkAll)
 
 import           XMonad.Hooks.DebugStack
-import           XMonad.Hooks.EwmhDesktops           (ewmh)
+import           XMonad.Hooks.EwmhDesktops              (ewmh)
 import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
@@ -37,7 +37,7 @@ import           XMonad.Hooks.ServerMode
 import           XMonad.Hooks.ShowWName
 import           XMonad.Hooks.StatusBar
 import           XMonad.Hooks.StatusBar.PP
-import           XMonad.Hooks.WorkspaceHistory       (workspaceHistoryHookExclude)
+import           XMonad.Hooks.WorkspaceHistory          (workspaceHistoryHookExclude)
 
 import           XMonad.Layout.DraggingVisualizer
 import           XMonad.Layout.FourColumns
@@ -129,10 +129,10 @@ projects =
     where
         nvim   = bF $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")])
         nvimF  = upPointer $ spawn (myTerminal ++ " fish -C nvrStart")
-        kitty  = upPointer $ runOrRaise "kittyMaker" (className =? "kitty")
+        kitty  = upPointer $ runOrRaiseNext "kittyMaker" (className =? "kitty")
         kittyF = upPointer $ spawn "kitty"
 
-        sameForce r c = (upPointer $ runOrRaise r (className =? c), upPointer $ spawn r)
+        sameForce r c = (upPointer $ runOrRaiseNext r (className =? c), upPointer $ spawn r)
         (zathura, zathuraF)   = sameForce "zathura" "Zathura"
         (foxit, foxitF)       = sameForce "foxitreader" "Foxit Reader"
         (obsidian, obsidianF) = sameForce "flatpak run org.paraview.Paraview" "ParaView"
