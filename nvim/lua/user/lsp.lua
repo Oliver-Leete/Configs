@@ -26,7 +26,7 @@ local custom_attach = function(client, bufnr)
     local sc = client.server_capabilities
     local bmap = function(mode, key, action) Map(mode, key, action, { buffer = bufnr }) end
 
-    if sc.documentSymbolProvider and not client.name == "jedi_language_server" then
+    if sc.documentSymbolProvider then
         require("nvim-navic").attach(client, bufnr)
     end
     lsp_selection_range.setup({})
@@ -95,7 +95,17 @@ require("lspconfig").pylsp.setup({
     settings = {
         pylsp = {
             plugins = {
-                pydocstyle = { enabled = true },
+                pydocstyle = {
+                    enabled = true,
+                    ignore = { "D101", "D102", "D103", "D107", "D203" }
+                },
+                pycodestyle = {
+                    enabled = true,
+                    ignore = { "E501", "W503" }
+                },
+                pyflakes = {
+                    enabled = false,
+                },
                 rope_completion = { enabled = false },
                 jedi_completion = { enabled = false },
             },

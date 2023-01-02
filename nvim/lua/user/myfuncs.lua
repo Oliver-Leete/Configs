@@ -91,6 +91,7 @@ function DeleteBuffer()
     end
 
     local num_bufs = LoadedBufCount()
+
     local num_tab_wins = TabWinCount(tabnr)
 
     if num_tab_wins > 1 then
@@ -121,7 +122,7 @@ TabNext = function()
     if vim.bo[0].filetype == "toggleterm" then
         local term_id = vim.b[0].my_term_id
         local term_list = require("toggleterm.terminal").get_all(true)
-        local cur_index
+        local cur_index = 1
         for i, term in pairs(term_list) do
             if tonumber(term_id) == term.id then
                 cur_index = i
@@ -142,7 +143,7 @@ TabPrev = function()
     if vim.bo[0].filetype == "toggleterm" then
         local term_id = vim.b[0].my_term_id
         local term_list = require("toggleterm.terminal").get_all(true)
-        local cur_index
+        local cur_index = #term_list
         for i, term in pairs(term_list) do
             if tonumber(term_id) == term.id then
                 cur_index = i

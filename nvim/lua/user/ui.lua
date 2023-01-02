@@ -52,7 +52,7 @@ vim.api.nvim_set_hl(0, "IndentBlanklineContextStart", { underline = true, sp = "
 
 vim.api.nvim_set_hl(0, "MiniMapNormal", { fg = Tc.fujiWhite })
 
-require("indent_blankline").setup {
+require("indent_blankline").setup({
     char = "",
     context_char = "▎",
     space_char_blankline = " ",
@@ -80,7 +80,7 @@ require("indent_blankline").setup {
         "array",
         "struct",
     },
-}
+})
 
 require("notify").setup({
     top_down = false,
@@ -110,8 +110,8 @@ local colorful_winsep = require("colorful-winsep")
 colorful_winsep.setup({
     -- Window divider color definition
     highlight = {
-        guibg = Tc.bg,
-        guifg = Tc.crystalBlue
+        bg = Tc.bg,
+        fg = Tc.crystalBlue
     },
     -- timer refresh rate
     interval = 30,

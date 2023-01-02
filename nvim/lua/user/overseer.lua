@@ -21,8 +21,8 @@ overseer.setup({
             ["?"] = "ShowHelp",
             ["<CR>"] = "RunAction",
             ["<C-e>"] = "Edit",
-            ["o"] = "Open",
-            ["O"] = "<cmd>OverseerQuickAction open as buffer<cr>",
+            ["o"] = "Toggle",
+            ["O"] = "Open",
             ["p"] = "TogglePreview",
             ["<C-l>"] = "IncreaseDetail",
             ["<C-h>"] = "DecreaseDetail",
@@ -68,17 +68,6 @@ overseer.setup({
         ["open vsplit"] = false,
         ["open hsplit"] = false,
         ["set loclist diagnostics"] = false,
-        ["open as buffer"] = {
-            desc = "open terminal in the current window",
-            condition = function(task)
-                local bufnr = task:get_bufnr()
-                return bufnr and vim.api.nvim_buf_is_valid(bufnr)
-            end,
-            run = function(task)
-                vim.cmd([[normal! m']])
-                vim.api.nvim_win_set_buf(0, task:get_bufnr())
-            end,
-        },
         ["toggle hide"] = {
             desc = "close and detach the toggleterm",
             run = function(task)

@@ -94,7 +94,7 @@ minimap.setup({
         scroll_view = '┃',
     },
 })
-minimap.open()
+-- minimap.open()
 
 Map("n", "<leader>:", minimap.toggle_focus)
 Map("n", "<leader>;", minimap.toggle)

@@ -30,7 +30,6 @@ require("telescope").setup({
         },
         mappings = {
             i = {
-                -- ["<cr>"] = openAndList,
                 ["<tab>"] = actions.move_selection_worse,
                 ["<S-tab>"] = actions.move_selection_better,
                 ["<c-u>"] = false,
@@ -41,10 +40,9 @@ require("telescope").setup({
                 ["<C-Q>"] = actions.smart_add_to_qflist,
                 ["<C-n>"] = actions.cycle_history_next,
                 ["<C-p>"] = actions.cycle_history_prev,
-                ["<C-space>"] = actions.toggle_selection + actions.move_selection_worse,
+                ["<C-cr>"] = actions.toggle_selection + actions.move_selection_worse,
             },
             n = {
-                -- ["<cr>"] = openAndList,
                 ["<tab>"] = actions.move_selection_worse,
                 ["<S-tab>"] = actions.move_selection_better,
                 ["<c-f>"] = actions.to_fuzzy_refine,
@@ -52,7 +50,7 @@ require("telescope").setup({
                 ["<C-Q>"] = actions.smart_add_to_qflist,
                 ["<C-n>"] = actions.cycle_history_next,
                 ["<C-p>"] = actions.cycle_history_prev,
-                ["<C-space>"] = actions.toggle_selection + actions.move_selection_worse,
+                ["<C-cr>"] = actions.toggle_selection + actions.move_selection_worse,
             },
         },
     },
