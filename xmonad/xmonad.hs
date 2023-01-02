@@ -39,6 +39,7 @@ import           XMonad.Hooks.StatusBar
 import           XMonad.Hooks.StatusBar.PP
 import           XMonad.Hooks.WorkspaceHistory       (workspaceHistoryHookExclude)
 
+import           XMonad.Layout.DraggingVisualizer
 import           XMonad.Layout.FourColumns
 import           XMonad.Layout.MultiToggle
 import           XMonad.Layout.MultiToggle.Instances
@@ -46,15 +47,18 @@ import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Notebook
 import           XMonad.Layout.PerScreen
 import           XMonad.Layout.PerWorkspace
+import           XMonad.Layout.SimpleDecoration
 import           XMonad.Layout.SimpleFocus
 import           XMonad.Layout.Spacing
+import           XMonad.Layout.WindowSwitcherDecoration
 
+import           XMonad.Layout.Decoration
 import           XMonad.Util.ClickableWorkspaces
 import           XMonad.Util.Cursor
 import           XMonad.Util.EZConfig
 import           XMonad.Util.Hacks
 import           XMonad.Util.NamedScratchpadLocal
-import           XMonad.Util.Paste                   as P
+import           XMonad.Util.Paste                      as P
 import           XMonad.Util.SpawnOnce
 
 ----------------------------------------------------------------------------------------------------
@@ -186,7 +190,7 @@ yellow     = "#DCA561"
 gap    = 3
 reSize = 1/12
 moreReSize = 1/2
-myBorder = 3
+myBorder = 0
 
 myWideFont :: [Char]
 myWideFont  = "xft:Eurostar Black Extended:" ++ "style=Regular:pixelsize=180:hinting=true"
@@ -199,30 +203,47 @@ myShowWNameTheme = def
     , swn_color             = background
     }
 
+myDecoTheme = def
+    { inactiveColor = background
+    , inactiveBorderColor = background
+    , inactiveTextColor = background
+    , activeColor = active
+    , activeBorderColor = active
+    , activeTextColor = active
+    , decoHeight = 6
+    }
+
 ----------------------------------------------------------------------------------------------------
 -- Layouts                                                                                        --
 ----------------------------------------------------------------------------------------------------
+
+mySpacing = spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
+
 data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
 
-barFull :: SimpleFocus a
-barFull = SimpleFocus 1 (reSize/2) 0
+barFull :: ModifiedLayout Spacing SimpleFocus a
+barFull = mySpacing $ SimpleFocus 1 (reSize/2) 0
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance Transformer FULLCENTER Window where
     transform FULLCENTER x k = k centerFull (const x)
 
-centerFull :: SimpleFocus a
-centerFull = SimpleFocus (1/2) (reSize/2) 600
+centerFull :: ModifiedLayout Spacing SimpleFocus a
+centerFull = mySpacing $ SimpleFocus (1/2) (reSize/2) 600
 
 myLayoutHook = smartBorders
              $ mkToggle (single FULL)
-             $ spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
              $ mkToggle (single FULLBAR)
              $ mkToggle (single FULLCENTER)
+             $ myDeco
+             $ draggingVisualizer
+             $ mySpacing
                notebookLayout
     where
+    myDeco = windowSwitcherDecoration shrinkText myDecoTheme
+
     notebookMulti   = Notebook True True True 1 2 moreReSize reSize 3 (2/3) 1
     notebookThesis  = Notebook True True True 1 3 moreReSize reSize 2 (2/3) 1
     notebookTwoMain = Notebook False True True 2 3 moreReSize reSize 3 (2/3) 1
