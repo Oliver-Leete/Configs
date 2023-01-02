@@ -26,6 +26,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'svermeulen/vim-subversive'
     Plug 'inkarkat/vim-unconditionalpaste'
     Plug 'andymass/vim-matchup'
+    Plug 'chrisgrieser/nvim-genghis'
 
     Plug 'cshuaimin/ssr.nvim/'
 
@@ -48,7 +49,6 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'nvim-zh/colorful-winsep.nvim'
 
     Plug 'mbbill/undotree'
-    Plug 'kyazdani42/nvim-tree.lua'
     Plug 'folke/todo-comments.nvim'
 
     Plug 'williamboman/mason.nvim'
