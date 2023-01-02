@@ -50,24 +50,29 @@ be warned.
 
 ### Multiple Leaders
 
-I am slowly moving things over to a system of having a few top level leaders,
-each with its own use. The main thing here is separating the normal leader
-key in two, with 'program level commands' on a space leader and extra editing
-commands on a comma leader. Backslash is my local leader (although most of that
-stuff is moving to my command palette).
+The comma leader handles commands that make changes to the buffer in normal use,
+but hydras allow for it to be temporarily be changed to git or debug commands
+when needed.
+
+Program level commands, like running tests, toggling terminals, opening the
+command palette, or using harpoon, are all under the space leader key (the
+actually defined leader key).
 
 Square brackets are used as directional leaders (covered more in the Repeat
 section), for all manner of jumping about and nothing else (At some point I'll
-get rid of all the other things vim defaults to using it for). I am trying to
-limit g to just be goto commands, I'll hopefully remove all the normal extra
-crap it's used for at some point. v is a view related key (thanks Kakoune for
-the inspiration). Unlike Kakoune, I have v lock into a view mode if any of the
-bindings you might want to repeat are pressed. This is done with Hydra.
+get rid of all the other things vim defaults to using it for).
+
+I am trying to limit g to just be goto commands, I'll hopefully remove all the
+normal extra crap it's used for at some point.
+
+v is a view related key (thanks Kakoune for the inspiration). Unlike Kakoune, I
+have v lock into a view mode if any of the bindings you might want to repeat are
+pressed. This also done as a hydra.
 
 ### Text objects
 
 There are four sets of mappings I'd like to have for each textobject (some
-things like quickfix list are listed for completeness, even if only some of the
+things like quickfix list are listed for completeness, even if only some
 commands make sense).
 
 1) Select inside/around the current instance of that text object (mapped to a/i). Obviously this is the basic functionality.
@@ -75,10 +80,10 @@ commands make sense).
 3) Jump to the start of the next or last instance of that text object (mapped to [/]). I'd like it so that it always goes to the previous object instead of first going to the start of the current one.
 4) Jump to the left or right inside and outside edge of the current instance of that text object (mapped to {/}/(/)).
 
-Scope and block use treesitter-textobjects queries (and a stolen function)
-along with mini.ai. Neither name is great, and block doesn't even match with
-the mapping (I currently have it mapped to o). But 'scope' joins @class and
-@function and block joins @block, @conditional and @loops.
+Scope and block use treesitter-textobjects queries along with mini.ai. Neither
+name is great, and block doesn't even match with the mapping (I currently have
+it mapped to o). But 'scope' joins @class and @function and block joins @block,
+@conditional and @loops.
 
 The current (assuming I remember to update this) state of my mappings cover
 these combinations (where one tick is any support and two is preferable
@@ -117,7 +122,7 @@ like in the example below. I also have all my jump mappings include zz at the
 end for that nice screen centring and m\` to add it to the jump list.
 
 vim-slash is used to set dirJumps="search" after each search (and I have it set
-to default to that), so that n and N still work for searching for jumps.
+to default to that), so that n and N can still be used for searching.
 
 ```lua
 function _G.commandRepeat(leader, varName)
@@ -204,21 +209,12 @@ therefore neotest tests). Things I still want to do:
 
 ### Julia
 
-I am slowly trying collect all the tools I want for Julia development. I have
-the hacky task runner mentioned above for all my task running needs (I even have
-a function to run the matching test for the current function, assuming the test
-has the same name as the function). And I have started working on a neotest
-adaptor for Julia, although it's very early stages right now.
+I am slowly trying collect all the tools I want for Julia development.
 
-nvim-coverage already has some nice Julia support, so all I need to do is write
-an overseer task to run the full test suite with coverage and then load it in to
-nvim-coverage when it's finished.
+nvim-coverage already has some nice Julia support.
 
-I have a very hacky Julia profile trace reader for perfanno, it is very dumb at
-the moment and is waiting for me to make a Julia function to properly export the
-profile data instead of just flattening it. What I do have though is a hacky way
-of loading the profile data into perfanno when a profile run is finished by my
-task runner.
+I have a made a Julia profile trace reader for perfanno that runs after the
+overseer profiling task is finished.
 
 As I can't get dap to work with Julia I have made some functions to toggle
 Debugger.jl and Infiltrator.jl breakpoints, including adding the using statement
@@ -228,20 +224,15 @@ removed.
 So still on the list to do at some point is to (not that I'll ever get around to
 them):
 
-- [ ] Add Julia support for neogen (actually it looks like someone has already started
-  on that).
-- [ ] Add Julia support for refactoring.nvim
-- [ ] Figure out if a wrapper can be made to use DebugAdapter.jl in Neovim.
+- [x] Add Julia support for neogen (someone else has already started on that).
+  Covered by the LSP adding doc string updating and luasnip being as good as it is.
 - [x] Make a Julia server to run tests and finish the neotest adaptor.
 - [x] Make a similar thing for benchmarks, and probably a neotest consumer for
   benchmark results.
-- [ ] Make a better profile data exporter.
-- [ ] Extend the profile runner and exporter to allocation profiles.
-- [X] I would also like to have Julia support in something like splitjoin.vim, but I
-  really don't like vimscript, so I'll never do that myself. I have got basic
-  functionality from nvim-trevJ.lua and the julia#toggle_function_blockassign()
-  function from julia-vim. (OK, I gave up on this one because the mix of the two
-  above and juliaformatter cover 99% of my uses)
+- [x] Make a better profile data exporter.
+- [x] Extend the profile runner and exporter to allocation profiles.
+- [x] Something like splitjoin.vim. Covered by TreeSJ and JuliaFormatter
+- [ ] Figure out if a wrapper can be made to use DebugAdapter.jl in Neovim.
 
 ## XMonad
 
