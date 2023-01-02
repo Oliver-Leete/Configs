@@ -116,10 +116,11 @@ projects =
     , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = commentSpawn "Comments" }
     , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",   pApp1 = nvim,     pApp1F = nvimF,     pApp2 = paraview,  pApp2F = paraviewF, pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ANSYS" }
 
-    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Main" }
+    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = scinCont,  pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Main" }
     , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys", pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Print" }
     , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware", pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Firm" }
     , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Docs" }
+    , Project { pName = "Scin-Test",  pDir = "~/Projects/Scintilla/Main",     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = scinCont,  pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
     ]
     where
         nvim   = bF $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")])
@@ -137,6 +138,7 @@ projects =
         (deluge, delugeF)     = sameForce "deluge" "Deluge-gtk"
         (steam, steamF)       = sameForce "steam" "Steam"
         (hdfview, hdfviewF)   = sameForce "hdfview" "SWT"
+        scinCont              = upPointer $ raise (title =? "Scintilla Control")
 
         sl i = "sleep .1; " ++ i
         termBrowSpawn ws = Just $ do spawnOn ws $ sl myTerminal; spawnOn ws ("sleep .5; " ++ myBrowser)
@@ -417,6 +419,9 @@ myManageHook =
             [ resource  =? "desktop_window"       -?> doIgnore
             , resource  =? "prusa-slicer"         -?> doSink <+> insertPosition End Newer
             , resource  =? "stalonetray"          -?> doIgnore
+
+            , title =? "Scintilla Control"        -?> doShift "Scin-Test"
+            , title =? "Scintilla Variable Editor"-?> doRectFloat bigFloat
 
             , resource  =? "pavucontrol"          -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
             , className =? "Nm-connection-editor" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
