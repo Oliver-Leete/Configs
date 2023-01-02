@@ -380,10 +380,12 @@ Ls.add_snippets("tex", {
         t("\t\\caption["), m(1, "^(.-)%."), t("]{"), i(1, "caption"), t("}\\label{alg:"), i(2), t({ "}", "" }),
         t({ "\\end{algorithm}" })
     }),
-    s({ trig = "pseudo" }, {
+    s({ trig = "algorithm" }, {
         t({ "\\begin{algorithm}[htbp]", "" }),
-        t({ "\t\\begin{algorithmic}[1]", "" }),
-        i(0), t({ "", "" }),
+        t({ "\t\\begin{algorithmic}[1]\\setstretch{1.2}", "" }),
+        t({ "\t\t\\Procedure{" }), i(3, "name"), t({ "}{" }), i(4, "args"), t({ "}" }),
+        i(0), t({ "", "\t\t\\EndProcedure" }),
+        t({ "", "" }),
         t({ "\t\\end{algorithmic}", "" }),
         t("\t\\caption["), m(1, "^(.-)%."), t("]{"), i(1, "caption"), t("}\\label{alg:"), i(2), t({ "}", "" }),
         t({ "\\end{algorithm}" })
@@ -403,14 +405,25 @@ Ls.add_snippets("tex", {
         t("\t"), i(0),
         t({ "", "\\begin{" }), f(copy, 1), t("}")
     }),
-    s({ trig = "im", name = "Inline Maths", dscr = "Start an inline math enviroment" }, {
-        t("\\("), i(0), t("\\)")
+    s({ trig = "equation", name = "equation" }, {
+        t("\\begin{equation}\\label{eq:"), i(1), t({ "}", "" }),
+        t("\t"), i(0),
+        t({ "", "\\end{equation}" })
     }),
-    s({ trig = "dm", name = "Multiline Maths", dscr = "Start a multiline math enviroment" }, {
-        t({ "\\[", "\t" }), i(0), t({ "", "\\]" })
+    s({ trig = "subequation", name = "subequation", dscr = "alligned sub equation" }, {
+        t("\\begin{subequations}\\label{eq:"), i(1), t({ "}", "" }),
+        t("\t\\begin{align}\\label{eq:"), i(1), t({ "}", "" }),
+        t("\t\t"), i(0),
+        t({ "", "\t\\end{align}" }),
+        t({ "", "\\end{subequations}" })
     }),
 
     -- NOTE : MATHS
+    s({ trig = "int", name = "integer" }, {
+        t("\\overset{\\#}{"), i(1), t("}"),
+    },
+        { show_condition = tex.in_mathzone, condition = tex.in_mathzone }
+    ),
     s({ trig = "%s/", name = "fraction", regTrig = true }, {
         t("\\frac{"), i(1), t("}{"), i(2), t("}")
     },
