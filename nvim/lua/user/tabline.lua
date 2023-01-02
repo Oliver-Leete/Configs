@@ -1,7 +1,7 @@
 function Tabline()
     local tabline = ""
     for i, num in pairs(vim.api.nvim_list_tabpages()) do
-        local tabname = vim.t[num].tabname or ("Tab " .. num)
+        local tabname = vim.t[num].tabname or vim.fn.getcwd(-1, num):match(".*/(.-)$")
 
         local is_active = i == vim.fn.tabpagenr()
 
