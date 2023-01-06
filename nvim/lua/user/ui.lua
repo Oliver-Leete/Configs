@@ -94,6 +94,7 @@ for mode, colour in pairs(mode_colours) do
     vim.api.nvim_set_hl(0, "WinBar" .. mode, { fg = Tc.bg, bg = colour })
     vim.api.nvim_set_hl(0, "WinBar" .. mode .. "Ends", { fg = colour, bg = Tc.bg })
     vim.api.nvim_set_hl(0, "WinBar" .. mode .. "MidEnds", { fg = colour, bg = Tc.fujiGray })
+    vim.api.nvim_set_hl(0, "WinBar" .. mode .. "NavicEnds", { fg = colour, bg = Tc.winterBlue })
 
 end
 vim.api.nvim_set_hl(0, "WinBarInactiveSpecial", { fg = Tc.bg, bg = Tc.waveBlue2 })

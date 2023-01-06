@@ -2,4 +2,4 @@
 	name = Oliver Leete
 	email = oliverleete@gmail.com
 [core]
-	editor = /home/oleete/.config/bin/nvrTab --remote-wait
+	editor = /home/oleete/.config/bin/nvrStart --remote-wait

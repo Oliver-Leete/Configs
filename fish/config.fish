@@ -4,8 +4,8 @@ starship init fish | source
 
 set -Ux BROWSER "/home/oleete/.config/bin/browser"
 set -gx BROWSER "/home/oleete/.config/bin/browser"
-set -Ux EDITOR "/home/oleete/.config/bin/nvrTab --remote-wait"
-set -Ux VISUAL "/home/oleete/.config/bin/nvrTab --remote-wait"
+set -Ux EDITOR "/home/oleete/.config/bin/nvrStart --remote-wait"
+set -Ux VISUAL "/home/oleete/.config/bin/nvrStart --remote-wait"
 set -Ux PYENV_ROOT "/home/oleete/.pyenv"
 fish_add_path --path $PYENV_ROOT/bin
 fish_add_path --path /home/oleete/.cargo/bin
@@ -49,9 +49,6 @@ abbr  lga "exa -a -l -T --level=2 --git --git-ignore --icons --group-directories
 abbr -a bk backup
 abbr -a re restore
 
-alias .. "cd .."
-alias .... "cd ../.."
-alias ...... "cd ../../.."
 alias edrive "cd /run/media/oleete"
 
 abbr  htop 'htop -t'

@@ -1,5 +1,5 @@
 #!/bin/bash
 
 WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
-serverID="nvr-$WS"
-nvr -s --servername "/tmp/$serverID" $@
+serverID="/tmp/nvr-$WS"
+nvr -s --servername "$serverID" $@

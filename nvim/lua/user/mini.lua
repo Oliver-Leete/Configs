@@ -18,22 +18,22 @@ require("mini.comment").setup({
     },
 })
 
-require("mini.pairs").setup({
-    modes = { insert = true, command = true, terminal = true },
-    mappings = {
-        ["("] = { action = "open", pair = "()", neigh_pattern = "[^\\]%s" },
-        ["["] = { action = "open", pair = "[]", neigh_pattern = "[^\\]%s" },
-        ["{"] = { action = "open", pair = "{}", neigh_pattern = "[^\\]%s" },
-
-        [")"] = { action = "close", pair = "()", neigh_pattern = "[^\\]." },
-        ["]"] = { action = "close", pair = "[]", neigh_pattern = "[^\\]." },
-        ["}"] = { action = "close", pair = "{}", neigh_pattern = "[^\\]." },
-
-        ['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^\\][^%w]", register = { cr = false } },
-        ["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^%a\\][^%w]", register = { cr = false } },
-        ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^\\][^%w]", register = { cr = false } },
-    },
-})
+-- require("mini.pairs").setup({
+--     modes = { insert = true, command = true, terminal = true },
+--     mappings = {
+--         ["("] = { action = "open", pair = "()", neigh_pattern = "[^\\]%s" },
+--         ["["] = { action = "open", pair = "[]", neigh_pattern = "[^\\]%s" },
+--         ["{"] = { action = "open", pair = "{}", neigh_pattern = "[^\\]%s" },
+--
+--         [")"] = { action = "close", pair = "()", neigh_pattern = "[^\\]." },
+--         ["]"] = { action = "close", pair = "[]", neigh_pattern = "[^\\]." },
+--         ["}"] = { action = "close", pair = "{}", neigh_pattern = "[^\\]." },
+--
+--         ['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^\\][^%w]", register = { cr = false } },
+--         ["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^%a\\][^%w]", register = { cr = false } },
+--         ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^\\][^%w]", register = { cr = false } },
+--     },
+-- })
 
 require("mini.surround").setup({
     mappings = {

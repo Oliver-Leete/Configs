@@ -13,6 +13,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'knubie/vim-kitty-navigator'
     Plug 'stevearc/stickybuf.nvim'
+    Plug 'famiu/bufdelete.nvim'
     Plug 'tpope/vim-projectionist'
     Plug 'ThePrimeagen/harpoon'
 
@@ -50,6 +51,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
 
     Plug 'mbbill/undotree'
     Plug 'folke/todo-comments.nvim'
+    Plug 'nvim-neo-tree/neo-tree.nvim'
 
     Plug 'williamboman/mason.nvim'
     Plug 'williamboman/mason-lspconfig.nvim'

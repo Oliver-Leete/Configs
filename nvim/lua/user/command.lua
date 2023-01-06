@@ -12,11 +12,11 @@ GlobalCommands = {
 
     { source = "default", name = "Message", command = "message" },
     { source = "default", name = "History", command = "Noice" },
-    { source = "default", name = "Delete buffer", command = "bdelete" },
+    { source = "default", name = "Delete buffer", command = "Bdelete" },
     { source = "default", name = "Clear search", command = "let @/=''" },
     { source = "default", name = "Close tab", command = "tabclose" },
     { source = "default", name = "Toggle text wraping", "set wrap!" },
-    { source = "default", name = "File tree", command = "NvimTreeToggle" },
+    { source = "default", name = "File tree", command = "Neotree" },
     { source = "default", name = "Undo tree", command = "UndotreeToggle" },
     { source = "default", name = "Reload snippets", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
     { source = "default", name = "Toggle Minimap", func = function() require("mini.map").toggle() end },
@@ -26,6 +26,7 @@ GlobalCommands = {
     { source = "info", name = "Mason info", command = "Mason" },
     { source = "info", name = "Overseer info", command = "OverseerInfo" },
 
+    { source = "file", name = "New file", func = genghis.createNewFile },
     { source = "file", name = "Rename file", func = genghis.renameFile },
     { source = "file", name = "Copy file", func = genghis.duplicateFile },
     { source = "file", name = "Make file executable", func = genghis.chmodx },

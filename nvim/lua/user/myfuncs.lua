@@ -11,7 +11,7 @@ Special_types = {
     toggleterm = { exit_func = winclose },
     notify = { exit_func = winclose },
     undotree = { name = "碑Undos", exit_func = function() vim.cmd("UndotreeHide") end },
-    NvimTree = { name = " Files", exit_func = winclose },
+    ["neo-tree"] = { name = " Files", exit_func = winclose, on_panel = true },
     DiffviewFileHistory = { name = " Diffs", exit_func = function() vim.cmd("DiffviewClose") end },
     DiffviewFiles = { name = " Diffs", exit_func = function() vim.cmd("DiffviewClose") end },
     OverseerList = { name = " Tasks", exit_func = function() vim.cmd("OverseerClose") end },
@@ -108,7 +108,8 @@ end
 vim.api.nvim_create_user_command("DeleteBuffer", DeleteBuffer, { nargs = 0 })
 
 ZenOrFull = function()
-    local num_windows = tonumber(vim.fn.systemlist([[kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length"]])[1])
+    local num_windows = tonumber(vim.fn.systemlist([[kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length"]])
+        [1])
 
     if num_windows > 1 then
         vim.cmd([[silent !xdotool key --clearmodifiers "ctrl+alt+f"]])
@@ -133,6 +134,8 @@ TabNext = function()
         vim.api.nvim_win_set_buf(cur_win, term_list[next_index].bufnr)
         OTerm = term_list[next_index]
         OTerm.window = vim.api.nvim_get_current_win()
+    elseif vim.bo[0].filetype == "neo-tree" then
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(">", true, true, true), "m", false)
     else
         vim.cmd("tabnext")
     end
@@ -154,6 +157,8 @@ TabPrev = function()
         vim.api.nvim_win_set_buf(cur_win, term_list[next_index].bufnr)
         OTerm = term_list[next_index]
         OTerm.window = vim.api.nvim_get_current_win()
+    elseif vim.bo[0].filetype == "neo-tree" then
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<", true, true, true), "m", false)
     else
         vim.cmd("tabprevious")
     end

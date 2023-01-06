@@ -66,28 +66,53 @@ require("lualine").setup({
         }
     },
     sections = {
-        lualine_a = { "mode",
+        lualine_a = {
+            "mode",
             {
                 require("hydra.statusline").get_name,
-                cond = require("hydra.statusline").is_active
+                cond = require("hydra.statusline").is_active,
             },
             {
                 harpoon,
                 cond = harpoon_cond,
+                on_click = function() vim.defer_fn(require("harpoon.ui").toggle_quick_menu, 100) end,
             },
         },
         lualine_b = {
-            { "b:gitsigns_head", icon = "" },
-            { "diff", source = diff_source, symbols = { added = " ", modified = " ", removed = " " } },
-            { "diagnostics", symbols = { error = " ", warn = " ", info = " ", hint = " " } },
-            { "overseer", symbols = ov_list },
+            {
+                "b:gitsigns_head",
+                icon = "",
+                on_click = function() vim.defer_fn(function() vim.cmd("DiffviewOpen") end, 100) end,
+            },
+            {
+                "diff",
+                source = diff_source,
+                symbols = { added = " ", modified = " ", removed = " " },
+                on_click = function() vim.defer_fn(function() vim.cmd("DiffviewOpen") end, 100) end,
+            },
+            {
+                "diagnostics",
+                symbols = { error = " ", warn = " ", info = " ", hint = " " },
+                on_click = function() vim.defer_fn(function() vim.cmd("Telescope diagnostics bufnr=0 theme=get_ivy") end
+                        , 100)
+                end,
+            },
+            {
+                "overseer",
+                symbols = ov_list,
+                on_click = function() vim.defer_fn(require("overseer").toggle, 100) end,
+            },
         },
         lualine_c = {
             {
                 noice_wrapper,
                 cond = require("noice").api.status.message.has,
+                on_click = function() vim.defer_fn(function() vim.cmd("Noice") end, 100) end,
             },
-            { require("dap").status }
+            {
+                require("dap").status,
+                on_click = function() vim.defer_fn(require("dap").continue, 100) end,
+            }
         },
         lualine_x = {
             {
@@ -110,6 +135,16 @@ require("lualine").setup({
                 cond = function() return vim.bo.fileformat ~= "unix" end,
             }
         },
-        lualine_z = { lsp_status, "location" }
+        lualine_z = {
+            {
+                lsp_status,
+                on_click = function() vim.defer_fn(function() vim.cmd("LspInfo") end, 100) end,
+            },
+            {
+                "location",
+                on_click = function() vim.defer_fn(function() vim.cmd("Telescope current_buffer_fuzzy_find") end, 100 ) end
+
+            },
+        }
     },
 })

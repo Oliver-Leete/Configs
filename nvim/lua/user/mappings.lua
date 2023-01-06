@@ -117,6 +117,7 @@ Map({ "n", "x", "o" }, "gt", "H")
 Map({ "n", "x", "o" }, "gm", "M")
 Map({ "n", "x", "o" }, "gb", "L")
 
+Map({ "n", "x", "o" }, "gV", "`[v`]")
 Map("n", "gF", ":edit <cfile><cr>")
 Map("n", "gx", ":!xdg-open <cfile> &<cr><cr>")
 
