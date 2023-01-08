@@ -43,11 +43,16 @@ require('treesj').setup({
 
     langs = {
         julia = {
-            matrix_expression = { both = { separator = ';' }, join = {}, split = { last_separator = true } },
+            matrix_expression = { both = { separator = ';' }, join = { force_insert = ";" }, split = {} },
             argument_list = tsj_utils.set_preset_for_list({ join = { space_in_brackets = false } }),
-            parameter_list = { join = { space_in_brackets = false }, both = { last_separator = false, omit = { "keyword_parameters" } } },
+            parameter_list = { join = { space_in_brackets = false },
+                both = { last_separator = false, omit = { "keyword_parameters" } } },
             tuple_expression = tsj_utils.set_preset_for_list({ join = { space_in_brackets = false } }),
             parenthesized_expression = tsj_utils.set_preset_for_list({ join = { space_in_brackets = false } }),
         },
     },
+})
+
+require("ts-node-action").setup({
+    julia = require("ts-node-action.filetypes.julia")
 })

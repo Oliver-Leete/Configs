@@ -101,7 +101,7 @@ function DeleteBuffer()
     elseif num_bufs <= 1 then
         vim.cmd.quitall()
     else
-        vim.cmd.bdelete()
+        vim.cmd.Bdelete()
     end
 end
 

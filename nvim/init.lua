@@ -100,6 +100,7 @@ vim.cmd([[call plug#begin('~/.config/nvim/pluged')
     Plug 'mizlan/iswap.nvim'
     Plug 'AckslD/nvim-trevJ.lua'
     Plug 'Wansmer/treesj'
+    Plug 'CKolkey/ts-node-action'
     " Plug 'Dkendal/nvim-treeclimber'
 
     Plug 'stevearc/overseer.nvim'
