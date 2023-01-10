@@ -179,7 +179,7 @@ Map("n", ",rr", vim.lsp.buf.rename)
     -- return ":IncRename " .. vim.fn.expand("<cword>")
 -- end, { expr = true })
 
-Map({ "n", "x" }, ",rs", require("ssr").open)
+-- Map({ "n", "x" }, ",rs", require("ssr").open)
 
 Map("n", ",rf", function() require("refactoring").refactor("Extract Block") end)
 Map("x", ",rf", function() require("refactoring").refactor("Extract Function") end)
@@ -202,20 +202,12 @@ Map("n", ",ss", "<Plug>OpsortLines", { remap = true })
 
 Map("n", ",n", require("ts-node-action").node_action)
 
-vim.g.UnconditionalPaste_no_mappings = true
-Map("n", ",Pb", "<Plug>UnconditionalPasteBlockBefore", { remap = true })
-Map("n", ",PB", "<Plug>UnconditionalPasteJaggedBefore", { remap = true })
-Map("n", ",Pi", "<Plug>UnconditionalPasteInlinedBefore", { remap = true })
-Map("n", ",Pl", "<plug>UnconditionalPasteLineBefore", { remap = true })
-Map("n", ",PS", "<Plug>UnconditionalPasteParagraphedBefore", { remap = true })
-Map("n", ",Ps", "<Plug>UnconditionalPasteSpacedBefore", { remap = true })
-
-Map("n", ",pb", "<Plug>UnconditionalPasteBlockAfter", { remap = true })
-Map("n", ",pB", "<Plug>UnconditionalPasteJaggedAfter", { remap = true })
-Map("n", ",pi", "<Plug>UnconditionalPasteInlinedAfter", { remap = true })
-Map("n", ",pl", "<plug>UnconditionalPasteLineAfter", { remap = true })
-Map("n", ",pS", "<Plug>UnconditionalPasteParagraphedAfter", { remap = true })
-Map("n", ",ps", "<Plug>UnconditionalPasteSpacedAfter", { remap = true })
+Map({"n", "x"}, ",pl", function() PasteSpecial(vim.v.register, "l", "p") end)
+Map({"n", "x"}, ",Pl", function() PasteSpecial(vim.v.register, "l", "P") end)
+Map({"n", "x"}, ",pi", function() PasteSpecial(vim.v.register, "c", "p") end)
+Map({"n", "x"}, ",Pi", function() PasteSpecial(vim.v.register, "c", "P") end)
+Map({"n", "x"}, ",pb", function() PasteSpecial(vim.v.register, "b", "p") end)
+Map({"n", "x"}, ",Pb", function() PasteSpecial(vim.v.register, "b", "P") end)
 
 Map({ "n", "x" }, ",ff", vim.lsp.buf.format)
 Map({ "n", "x" }, ",fe", require("null-ls-embedded").format_current)

@@ -166,10 +166,11 @@ local julia_func_short = function(node)
     local ret
     if name == nil then
         if where ~= "" then return vim.fn.split(helpers.node_text(node), "\n") end
-        if body[#body-1]:sub(1, 7) == "return " then body[#body-1] = body[1]:sub(8, #body[#body-1]) end
         if #body > 1 then
+            if body[#body-1]:sub(1, 7) == "return " then body[#body-1] = body[1]:sub(8, #body[#body-1]) end
             ret = julia_make_begin(body, node, params .. " -> ")
         else
+            if body[1]:sub(1, 7) == "return " then body[1] = body[1]:sub(8, #body[1]) end
             ret = params .. " -> " .. body[1]
         end
     elseif #body > 1 then

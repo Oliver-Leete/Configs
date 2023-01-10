@@ -1,6 +1,7 @@
 local winclose = function() vim.cmd.wincmd({ args = { "c" } }) end
 
 Special_types = {
+    lazy = { exit_func = winclose },
     qf = { name = " QuickFix", exit_func = winclose },
     help = { name = " Help", exit_func = winclose },
     ["vim-plug"] = { name = " Plugs", exit_func = winclose },
@@ -15,7 +16,7 @@ Special_types = {
     DiffviewFileHistory = { name = " Diffs", exit_func = function() vim.cmd("DiffviewClose") end },
     DiffviewFiles = { name = " Diffs", exit_func = function() vim.cmd("DiffviewClose") end },
     OverseerList = { name = " Tasks", exit_func = function() vim.cmd("OverseerClose") end },
-    OverseerForm = {  exit_func = winclose },
+    OverseerForm = { exit_func = winclose },
     ["dap-float"] = { exit_func = winclose },
     ["dapui_scopes"] = { name = "Scopes", exit_func = winclose },
     ["dapui_breakpoints"] = { name = "Breakpoints", exit_func = winclose },
@@ -27,9 +28,9 @@ Special_types = {
     ["vim"] = { exit_func = winclose },
     ["gitcommit"] = { name = "Git Commit Message", exit_func = winclose },
     ["noice"] = { name = "Noice", exit_func = function() vim.cmd.quit() end },
-    ["mason"] = {  exit_func = winclose },
-    ["null-ls-info"] = {  exit_func = winclose },
-    ["Glance"] = {  exit_func = require('glance').actions.close },
+    ["mason"] = { exit_func = winclose },
+    ["null-ls-info"] = { exit_func = winclose },
+    ["Glance"] = { exit_func = require('glance').actions.close },
     [""] = { exit_func = winclose },
 }
 
@@ -206,4 +207,10 @@ VimMode = function()
         return { mode_code, 'Normal' }
     end
     return mode_map[mode_code]
+end
+
+PasteSpecial = function(reg, type, put)
+    local val = vim.fn.getreg(reg)
+    vim.fn.setreg(reg, val, type)
+    vim.fn.feedkeys(vim.api.nvim_replace_termcodes('"' .. reg .. put, true, true, true))
 end
