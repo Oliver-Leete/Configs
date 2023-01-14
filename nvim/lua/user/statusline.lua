@@ -1,4 +1,4 @@
-local function lsp_status()
+local lsp_status = function()
     local ret = ""
     local bufnr = vim.api.nvim_get_current_buf()
     if vim.lsp.get_active_clients({ bufnr = bufnr }) then
@@ -17,7 +17,7 @@ local function lsp_status()
     return ret
 end
 
-local function diff_source()
+local diff_source = function()
     local gitsigns = vim.b.gitsigns_status_dict
     if gitsigns then
         return {
@@ -37,22 +37,22 @@ local ov_list = {
     [st.PENDING] = " ",
 }
 
-local function noice_wrapper()
+local noice_wrapper = function()
     local message = require("noice").api.status.message.get()
     return message:sub(1, 80)
 end
 
 local harp = require("harpoon.mark")
-local function harpoon()
+local harpoon = function()
     return "[H]"
 end
 
-local function harpoon_cond()
+local harpoon_cond = function()
     local bufname = vim.api.nvim_buf_get_name(0)
     return harp.valid_index(harp.get_index_of(bufname))
 end
 
-local function is_wide()
+local is_wide = function()
     return vim.go.columns >= 200
 end
 

@@ -442,7 +442,8 @@ myManageHook =
             , resource  =? "stalonetray"          -?> doIgnore
 
             , title =? "Scintilla Control"        -?> doShift "Scin-Test"
-            , title =? "Scintilla Variable Editor"-?> doRectFloat bigFloat
+            , title =? "Scintilla Variable Editor"-?> doRectFloat halfNhalf
+            , title =? "Scintilla Strategy Editor"-?> doRectFloat bigFloat
 
             , resource  =? "pavucontrol"          -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
             , className =? "Nm-connection-editor" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))

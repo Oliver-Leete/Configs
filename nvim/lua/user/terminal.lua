@@ -1,3 +1,4 @@
+local func = require("user.myfuncs")
 Temp_Num = 50
 Term_on_open = function(term)
     vim.b[0].my_term_id = term.id
@@ -17,7 +18,7 @@ end
 
 function Term_Winbar()
     local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
-    local mode = VimMode()[2]
+    local mode = func.vim_mode()[2]
     if not mode then return "" end
     local hlb = "%#WinBarBlank#"
     local hl = is_active and "%#WinBar" .. mode .. "#" or "%#WinBarInactive#"
@@ -32,7 +33,7 @@ function Term_Winbar()
         if is_active and is_cur_term then
             hl = "%#WinBar" .. mode .. "#"
             hle = "%#WinBar" .. mode .. "Ends#"
-        elseif is_cur_term then
+        elseif is_cur_term and #term_list > 1 then
             hl = "%#WinBarInactiveSpecial#"
             hle = "%#WinBarInactiveSpecialEnds#"
         else
@@ -48,9 +49,14 @@ function Term_Winbar()
 end
 
 require("toggleterm").setup({
+    -- size = function()
+    --     local height = vim.api.nvim_list_uis()[1].height
+    --     return math.floor(height * 0.3)
+    -- end,
     size = function()
-        local height = vim.api.nvim_list_uis()[1].height
-        return math.floor(height * 0.3)
+        local width = vim.api.nvim_list_uis()[1].width
+        local half =  math.floor(width * 0.5)
+        return half < 100 and half or 100
     end,
     on_open = function(term)
         Term_on_open(term)
@@ -62,7 +68,7 @@ require("toggleterm").setup({
     insert_mappings = true,
     terminal_mappings = true,
     persist_size = true,
-    direction = "horizontal",
+    direction = "vertical",
     close_on_exit = false,
     shell = "fish",
     float_opts = {

@@ -164,7 +164,7 @@ require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
 
 
 require("cmp").setup.filetype("DressingInput", {
-	sources = cmp.config.sources { {name = "omni"} },
+    sources = cmp.config.sources { { name = "omni" } },
 })
 
 vim.cmd([[autocmd FileType toml lua require('cmp').setup.buffer { sources = { { name = 'crates' } } }]])
@@ -185,4 +185,41 @@ end
 -- Neogen setup
 require("neogen").setup({
     snippet_engine = "luasnip",
+    languages = {
+        python = {
+            template = {
+                annotation_convention = "numpydoc"
+            }
+        }
+    }
+})
+
+local npairs = require('nvim-autopairs')
+
+npairs.setup({
+    disable_in_macro = true,
+    disable_in_visualblock = true,
+    check_ts = true,
+     enable_afterquote = false
+})
+
+local cond = require('nvim-autopairs.conds')
+local rule = require('nvim-autopairs.rule')
+local endwise = require('nvim-autopairs.ts-rule').endwise
+
+npairs.add_rules({
+    rule("$", "$", { "tex", "latex" }):with_move(cond.none()),
+    rule("[", "]", { "lua" }):with_move(cond.none()),
+})
+
+npairs.add_rules({
+    endwise('function.*(.*)$', 'end', 'julia', 'function_definition'),
+    endwise('for .*$', 'end', 'julia', 'for_statement'),
+    endwise('while .*$', 'end', 'julia', 'while_statement'),
+    endwise('if .*$', 'end', 'julia', 'if_statement'),
+    endwise('let.*$', 'end', 'julia', 'let_statement'),
+    endwise('begin$', 'end', 'julia', 'compound_statement'),
+    endwise('try$', 'end', 'julia', 'try_statement'),
+    endwise('(.*) do.*$', 'end', 'julia', nil),
+    endwise('module$', 'end', 'julia', nil),
 })

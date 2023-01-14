@@ -19,6 +19,8 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
 
+require("hex").setup()
+
 local util = require("perfanno.util")
 
 require("perfanno").setup({

@@ -18,7 +18,7 @@ return {
                 builder = function()
                     return {
                         name = "PIO Build",
-                        cmd = "platformio run -e STM32F429ZG_btt_USB",
+                        cmd = "platformio run",
                         components = { "default", "unique" },
                     }
                 end,
@@ -33,7 +33,7 @@ return {
                 builder = function()
                     return {
                         name = "PIO Clean",
-                        cmd = "platformio run --target clean -e STM32F429ZG_btt_USB",
+                        cmd = "platformio run --target clean",
                         components = { "default", "unique" },
                     }
                 end,
@@ -48,7 +48,7 @@ return {
                 builder = function()
                     return {
                         name = "PIO Upload",
-                        cmd = "platformio run --target upload -e STM32F429ZG_btt_USB",
+                        cmd = "platformio run --target upload",
                         components = { "default", "unique" },
                     }
                 end,
@@ -63,7 +63,7 @@ return {
                 builder = function()
                     return {
                         name = "PIO Program",
-                        cmd = "platformio run --target program -e STM32F429ZG_btt_USB",
+                        cmd = "platformio run --target program",
                         components = { "default", "unique" },
                     }
                 end,
@@ -78,7 +78,7 @@ return {
                 builder = function()
                     return {
                         name = "PIO Test",
-                        cmd = "platformio test upload -e STM32F429ZG_btt_USB",
+                        cmd = "platformio test upload",
                         components = { "default", "unique" },
                     }
                 end,
@@ -93,7 +93,7 @@ return {
                 builder = function()
                     return {
                         name = "PIO Remote",
-                        cmd = "platformio remote run --target upload -e STM32F429ZG_btt_USB",
+                        cmd = "platformio remote run --target upload",
                         components = { "default", "unique" },
                     }
                 end,
@@ -108,7 +108,7 @@ return {
                 builder = function()
                     return {
                         name = "PIO Make Compile_Command.json",
-                        cmd = "platformio run --target compiledb -e STM32F429ZG_btt_USB",
+                        cmd = "platformio run --target compiledb",
                         components = { "default", "unique" },
                     }
                 end,
@@ -123,7 +123,7 @@ return {
                 builder = function()
                     return {
                         name = "PIO Debug",
-                        cmd = "platformio debug -e STM32F429ZG_btt_USB",
+                        cmd = "platformio debug",
                         components = { "default", "unique" },
                     }
                 end,

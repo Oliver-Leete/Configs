@@ -1,6 +1,8 @@
+M = {}
+
 local winclose = function() vim.cmd.wincmd({ args = { "c" } }) end
 
-Special_types = {
+M.special_types = {
     lazy = { exit_func = winclose },
     qf = { name = " QuickFix", exit_func = winclose },
     help = { name = " Help", exit_func = winclose },
@@ -8,6 +10,7 @@ Special_types = {
     juliadoc = { name = " Docs", exit_func = winclose },
     lspinfo = { exit_func = winclose },
     tsplayground = { name = " TSPlayground", exit_func = winclose },
+    query = { name = " TS Query", exit_func = winclose },
     ["harpoon-menu"] = { exit_func = winclose },
     toggleterm = { exit_func = winclose },
     notify = { exit_func = winclose },
@@ -35,18 +38,18 @@ Special_types = {
 }
 
 -- Check if a given buffer is "special"
-Is_special = function(bufnr)
+M.is_special = function(bufnr)
     local filetype = vim.bo[bufnr].filetype
     local buftype = vim.bo[bufnr].buftype
-    return vim.tbl_contains(vim.tbl_keys(Special_types), filetype) or
+    return vim.tbl_contains(vim.tbl_keys(M.special_types), filetype) or
         (buftype == "nofile" and (filetype == "" or filetype == "vim"))
 end
 
 -- Count normal windows on current tab page
-function TabWinCount(tabnr)
+local tab_win_count = function(tabnr)
     local tab_wins = vim.tbl_filter(function(win)
         local win_buf = vim.api.nvim_win_get_buf(win)
-        if Is_special(win_buf) then
+        if M.is_special(win_buf) then
             return false
         end
         if 1 ~= vim.fn.buflisted(win_buf) then
@@ -59,7 +62,7 @@ function TabWinCount(tabnr)
 end
 
 -- Count loaded normal buffers
-function LoadedBufCount()
+local loaded_buf_count = function()
     local bufnrs = vim.tbl_filter(function(b)
         if 1 ~= vim.fn.buflisted(b) then
             return false
@@ -74,16 +77,16 @@ function LoadedBufCount()
     return num_bufs
 end
 
-function DeleteBuffer()
+local delete_buffer = function()
     local tabnr = vim.api.nvim_get_current_tabpage()
     local bufnr = vim.api.nvim_get_current_buf()
 
     local num_tabs = #vim.api.nvim_list_tabpages()
 
     -- Handle special buffers
-    if Is_special(bufnr) then
+    if M.is_special(bufnr) then
         local filetype = vim.bo[bufnr].filetype
-        Special_types[filetype].exit_func()
+        M.special_types[filetype].exit_func()
         return
     elseif vim.b[bufnr].is_diffview_file then
         vim.b.is_diffview_file = false
@@ -91,9 +94,9 @@ function DeleteBuffer()
         return
     end
 
-    local num_bufs = LoadedBufCount()
+    local num_bufs = loaded_buf_count()
 
-    local num_tab_wins = TabWinCount(tabnr)
+    local num_tab_wins = tab_win_count(tabnr)
 
     if num_tab_wins > 1 then
         winclose()
@@ -106,9 +109,9 @@ function DeleteBuffer()
     end
 end
 
-vim.api.nvim_create_user_command("DeleteBuffer", DeleteBuffer, { nargs = 0 })
+vim.api.nvim_create_user_command("DeleteBuffer", delete_buffer, { nargs = 0 })
 
-ZenOrFull = function()
+local zen_or_full = function()
     local num_windows = tonumber(vim.fn.systemlist([[kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length"]])
         [1])
 
@@ -118,9 +121,9 @@ ZenOrFull = function()
         require("mini.misc").zoom()
     end
 end
-vim.api.nvim_create_user_command("ZenOrFull", ZenOrFull, { nargs = 0 })
+vim.api.nvim_create_user_command("ZenOrFull", zen_or_full, { nargs = 0 })
 
-TabNext = function()
+local tab_next = function()
     if vim.bo[0].filetype == "toggleterm" then
         local term_id = vim.b[0].my_term_id
         local term_list = require("toggleterm.terminal").get_all(true)
@@ -141,9 +144,9 @@ TabNext = function()
         vim.cmd("tabnext")
     end
 end
-vim.api.nvim_create_user_command("TabNext", TabNext, { nargs = 0 })
+vim.api.nvim_create_user_command("TabNext", tab_next, { nargs = 0 })
 
-TabPrev = function()
+local tab_prev = function()
     if vim.bo[0].filetype == "toggleterm" then
         local term_id = vim.b[0].my_term_id
         local term_list = require("toggleterm.terminal").get_all(true)
@@ -164,7 +167,7 @@ TabPrev = function()
         vim.cmd("tabprevious")
     end
 end
-vim.api.nvim_create_user_command("TabPrev", TabPrev, { nargs = 0 })
+vim.api.nvim_create_user_command("TabPrev", tab_prev, { nargs = 0 })
 
 local mode_map = {
     ['n'] = { 'NORMAL', 'Normal' },
@@ -201,7 +204,7 @@ local mode_map = {
     ['t'] = { 'TERMINAL', 'Command' },
 }
 
-VimMode = function()
+M.vim_mode = function()
     local mode_code = vim.api.nvim_get_mode().mode
     if mode_map[mode_code] == nil then
         return { mode_code, 'Normal' }
@@ -209,8 +212,15 @@ VimMode = function()
     return mode_map[mode_code]
 end
 
-PasteSpecial = function(reg, type, put)
+M.paste_special = function(reg, type, put)
     local val = vim.fn.getreg(reg)
     vim.fn.setreg(reg, val, type)
     vim.fn.feedkeys(vim.api.nvim_replace_termcodes('"' .. reg .. put, true, true, true))
 end
+
+M.trash_put = function()
+    vim.cmd("!trash-put %")
+    vim.cmd.bdelete()
+end
+
+return M

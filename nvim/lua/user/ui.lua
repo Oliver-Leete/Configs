@@ -40,7 +40,7 @@ for sign, colour in pairs(sign_colours) do
     vim.api.nvim_set_hl(0, "GitSigns" .. sign .. "Cul", highlight)
 end
 
-vim.api.nvim_set_hl(0, "CursorLineNr", { fg = Tc.roninYellow, bg = Tc.sumiInk3, bold = true })
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = Tc.sumiInk4, bg = Tc.sumiInk3, bold = true })
 vim.api.nvim_set_hl(0, "CursorLineSign", { link = "CursorLine" })
 vim.api.nvim_set_hl(0, "CursorLineFold", { link = "CursorLine" })
 

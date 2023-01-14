@@ -1,6 +1,7 @@
+local func = require("user.myfuncs")
 -- Settings for filmpicker script
-function Filmpicker_winbar()
-    local mode = VimMode()[2]
+Filmpicker_winbar = function()
+    local mode = func.vim_mode()[2]
     local hlb = "%#WinBarBlank#"
     local hl = "%#WinBar" .. mode .. "#"
     local hle = "%#WinBar" .. mode .. "Ends#"

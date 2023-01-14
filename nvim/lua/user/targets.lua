@@ -140,7 +140,7 @@ require("mini.ai").setup({
     search_method = "cover_or_nearest",
 })
 
-function _G.markAndGoMini(count, direction, id)
+local mark_and_go_mini = function(count, direction, id)
     vim.g.dirJumps = id
     vim.cmd("norm! m`")
     repeat
@@ -149,14 +149,14 @@ function _G.markAndGoMini(count, direction, id)
     until count <= 0
 end
 
-function _G.commandRepeat(leader, varName)
+local command_repeat = function(leader, varName)
     local key = vim.api.nvim_get_var(varName)
     local return_map
     if key == "search" then
         if leader == "]" then
-            return_map = "nvv"
+            return_map = "nzz"
         else
-            return_map = "Nvv"
+            return_map = "Nzz"
         end
     else
         return_map = leader .. key
@@ -165,8 +165,8 @@ function _G.commandRepeat(leader, varName)
 end
 
 vim.g.dirJumps = "search"
-Map({ "n", "x", "o" }, "n", "v:lua.commandRepeat(']', 'dirJumps')", { expr = true, remap = true })
-Map({ "n", "x", "o" }, "N", "v:lua.commandRepeat('[', 'dirJumps')", { expr = true, remap = true })
+Map({ "n", "x", "o" }, "n", function() return command_repeat(']', 'dirJumps') end, { expr = true, remap = true })
+Map({ "n", "x", "o" }, "N", function() return command_repeat('[', 'dirJumps') end, { expr = true, remap = true })
 
 Map({ "n", "x", "o" }, "[[", "[s", { remap = true })
 Map({ "n", "x", "o" }, "]]", "]s", { remap = true })
@@ -175,8 +175,8 @@ Map({ "n", "x", "o" }, "[l", "<cmd>call v:lua.markAndGo(v:count, 'cprev', 'l')<c
 Map({ "n", "x", "o" }, "]l", "<cmd>call v:lua.markAndGo(v:count, 'cnext', 'l')<cr>")
 
 for _, o in pairs(vim.tbl_keys(custom_objects)) do
-    Map({ "n", "x", "o" }, "[" .. o, function() _G.markAndGoMini(vim.v.count, 'prev', o) end)
-    Map({ "n", "x", "o" }, "]" .. o, function() _G.markAndGoMini(vim.v.count, 'next', o) end)
+    Map({ "n", "x", "o" }, "[" .. o, function() mark_and_go_mini(vim.v.count, 'prev', o) end)
+    Map({ "n", "x", "o" }, "]" .. o, function() mark_and_go_mini(vim.v.count, 'next', o) end)
 end
 
 vim.api.nvim_create_autocmd("BufEnter",

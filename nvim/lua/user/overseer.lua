@@ -3,7 +3,7 @@ local STATUS = require("overseer.constants").STATUS
 
 local tt = require("toggleterm.terminal")
 
-function Task_To_Term(task)
+local task_to_term = function(task)
     return vim.tbl_filter(function(term)
         return term.bufnr == task.strategy.bufnr
     end, tt.get_all(true))[1]
@@ -61,7 +61,7 @@ overseer.setup({
     actions = {
         toggle = {
             run = function(task)
-                local term = Task_To_Term(task)
+                local term = task_to_term(task)
                 term:toggle()
             end
         },
@@ -71,7 +71,7 @@ overseer.setup({
         ["toggle hide"] = {
             desc = "close and detach the toggleterm",
             run = function(task)
-                local term = Task_To_Term(task)
+                local term = task_to_term(task)
                 if term.hidden then
                     term.hidden = false
                     term:open()
@@ -91,7 +91,7 @@ overseer.setup({
         ["set as recive terminal"] = {
             desc = "set this task as the terminal to recive sent text and commands",
             run = function(task)
-                local term = Task_To_Term(task)
+                local term = task_to_term(task)
                 term.hidden = false
                 OTerm = term
                 STerm = term

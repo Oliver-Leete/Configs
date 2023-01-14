@@ -18,23 +18,7 @@ require("mini.comment").setup({
     },
 })
 
--- require("mini.pairs").setup({
---     modes = { insert = true, command = true, terminal = true },
---     mappings = {
---         ["("] = { action = "open", pair = "()", neigh_pattern = "[^\\]%s" },
---         ["["] = { action = "open", pair = "[]", neigh_pattern = "[^\\]%s" },
---         ["{"] = { action = "open", pair = "{}", neigh_pattern = "[^\\]%s" },
---
---         [")"] = { action = "close", pair = "()", neigh_pattern = "[^\\]." },
---         ["]"] = { action = "close", pair = "[]", neigh_pattern = "[^\\]." },
---         ["}"] = { action = "close", pair = "{}", neigh_pattern = "[^\\]." },
---
---         ['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^\\][^%w]", register = { cr = false } },
---         ["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^%a\\][^%w]", register = { cr = false } },
---         ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^\\][^%w]", register = { cr = false } },
---     },
--- })
-
+local ts_input = require('mini.surround').gen_spec.input.treesitter
 require("mini.surround").setup({
     mappings = {
         add = "yp",
@@ -47,6 +31,35 @@ require("mini.surround").setup({
     },
     n_lines = 200,
     search_method = "cover_or_nearest",
+    custom_surroundings = {
+        f = {
+            input = ts_input({ outer = '@call.outer', inner = '@call.inner' })
+        },
+        o = {
+            input = ts_input({
+                outer = "@block.outer",
+                inner = "@block.inner",
+            }),
+        },
+        s = {
+            input = ts_input({
+                outer = "@function.outer",
+                inner = "@function.inner",
+            }),
+        },
+        k = {
+            input = ts_input({
+                outer = "@key.outer",
+                inner = "@key.inner",
+            }),
+        },
+        v = {
+            input = ts_input({
+                outer = "@value.outer",
+                inner = "@value.inner",
+            }),
+        },
+    }
 })
 vim.keymap.del("x", "yp")
 

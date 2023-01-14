@@ -168,15 +168,15 @@ Map({ "n", "x" }, "m", "v")
 
 -- Text leader mappings: ,
 
-Map({"n", "x"}, ",j", require("treesj").join)
-Map({"n", "x"}, ",k", require("treesj").split)
+Map({ "n", "x" }, ",j", require("treesj").join)
+Map({ "n", "x" }, ",k", require("treesj").split)
 
 
 Map({ "n", "x" }, "R", "<plug>(SubversiveSubstitute)")
 
 Map("n", ",rr", vim.lsp.buf.rename)
 -- Map("n", ",rr", function()
-    -- return ":IncRename " .. vim.fn.expand("<cword>")
+-- return ":IncRename " .. vim.fn.expand("<cword>")
 -- end, { expr = true })
 
 -- Map({ "n", "x" }, ",rs", require("ssr").open)
@@ -194,20 +194,20 @@ Map("n", ",at", function() require("neogen").generate({ type = "type" }) end)
 Map("n", ",af", function() require("neogen").generate({ type = "file" }) end)
 
 Map("n", ",dd", function() require("refactoring").debug.printf({}) end)
-Map({ "n", "x" }, ",dv", function()require("refactoring").debug.print_var({})end, { remap = false })
-Map("n", ",dq", function()require("refactoring").debug.cleanup({})end)
+Map({ "n", "x" }, ",dv", function() require("refactoring").debug.print_var({}) end, { remap = false })
+Map("n", ",dq", function() require("refactoring").debug.cleanup({}) end)
 
 Map({ "n", "x" }, ",s", "<Plug>Opsort", { remap = true })
 Map("n", ",ss", "<Plug>OpsortLines", { remap = true })
 
 Map("n", ",n", require("ts-node-action").node_action)
 
-Map({"n", "x"}, ",pl", function() PasteSpecial(vim.v.register, "l", "p") end)
-Map({"n", "x"}, ",Pl", function() PasteSpecial(vim.v.register, "l", "P") end)
-Map({"n", "x"}, ",pi", function() PasteSpecial(vim.v.register, "c", "p") end)
-Map({"n", "x"}, ",Pi", function() PasteSpecial(vim.v.register, "c", "P") end)
-Map({"n", "x"}, ",pb", function() PasteSpecial(vim.v.register, "b", "p") end)
-Map({"n", "x"}, ",Pb", function() PasteSpecial(vim.v.register, "b", "P") end)
+Map({ "n", "x" }, ",pl", function() require("user.myfuncs").paste_special(vim.v.register, "l", "p") end)
+Map({ "n", "x" }, ",Pl", function() require("user.myfuncs").paste_special(vim.v.register, "l", "P") end)
+Map({ "n", "x" }, ",pi", function() require("user.myfuncs").paste_special(vim.v.register, "c", "p") end)
+Map({ "n", "x" }, ",Pi", function() require("user.myfuncs").paste_special(vim.v.register, "c", "P") end)
+Map({ "n", "x" }, ",pb", function() require("user.myfuncs").paste_special(vim.v.register, "b", "p") end)
+Map({ "n", "x" }, ",Pb", function() require("user.myfuncs").paste_special(vim.v.register, "b", "P") end)
 
 Map({ "n", "x" }, ",ff", vim.lsp.buf.format)
 Map({ "n", "x" }, ",fe", require("null-ls-embedded").format_current)

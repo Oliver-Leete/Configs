@@ -193,7 +193,7 @@ local debug_win = nil
 local debug_tab = nil
 local debug_tabnr = nil
 
-local function open_in_tab()
+local open_in_tab = function()
     if debug_win and vim.api.nvim_win_is_valid(debug_win) then
         vim.api.nvim_set_current_win(debug_win)
         return
@@ -209,7 +209,7 @@ local function open_in_tab()
     dapui.open()
 end
 
-local function close_tab()
+local close_tab = function()
     dapui.close()
 
     if debug_tab and vim.api.nvim_tabpage_is_valid(debug_tab) then

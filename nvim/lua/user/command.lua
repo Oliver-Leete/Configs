@@ -1,11 +1,14 @@
 -- Command Panel Bindings
 local telescopeFileBrowser = "Telescope file_browser respect_gitignore=false theme=get_ivy"
 local genghis = require("genghis")
-local trash_put = function()
-    vim.cmd("!trash-put %")
-    vim.cmd.bdelete()
-end
+local tele = require("user.telescope")
+local func = require("user.myfuncs")
+
 GlobalCommands = {
+    { source = "compiler", name = "Compiler explorer", command = "CECompile" },
+    { source = "compiler", name = "Live compiler explorer", command = "CECompileLive" },
+    { source = "compiler", name = "Hex toggle", func = require("hex").toggle },
+
     { source = "coverage", name = "Coverage summary", command = "CoverageSummary" },
     { source = "coverage", name = "Load coverage", command = "Coverage" },
     { source = "coverage", name = "Toggle coverage", command = "CoverageToggle" },
@@ -17,10 +20,11 @@ GlobalCommands = {
     { source = "default", name = "Close tab", command = "tabclose" },
     { source = "default", name = "Toggle text wraping", "set wrap!" },
     { source = "default", name = "File tree", command = "Neotree" },
-    { source = "default", name = "Undo tree", command = "UndotreeToggle" },
+    { source = "default", name = "Undo list", command = "Telescope undo undo" },
     { source = "default", name = "Reload snippets", command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
-    { source = "default", name = "Toggle Minimap", func = function() require("mini.map").toggle() end },
+    { source = "default", name = "Toggle Minimap", func = require("mini.map").toggle },
 
+    { source = "info", name = "Lazy", command = "Lazy" },
     { source = "info", name = "Lsp info", command = "LspInfo" },
     { source = "info", name = "Null-ls info", command = "NullLsInfo" },
     { source = "info", name = "Mason info", command = "Mason" },
@@ -30,7 +34,7 @@ GlobalCommands = {
     { source = "file", name = "Rename file", func = genghis.renameFile },
     { source = "file", name = "Copy file", func = genghis.duplicateFile },
     { source = "file", name = "Make file executable", func = genghis.chmodx },
-    { source = "file", name = "Trash file", func = trash_put },
+    { source = "file", name = "Trash file", func = func.trash_put },
 
     { source = "finders", name = "Buffers", command = "Telescope buffers theme=get_ivy" },
     { source = "finders", name = "Diagnostics", command = "Telescope diagnostics bufnr=0 theme=get_ivy" },
@@ -55,10 +59,10 @@ GlobalCommands = {
     { source = "settings", name = "Reload Module", command = "Telescope reloader theme=get_ivy" },
     { source = "settings", name = "File types", command = "Telescope filetypes theme=get_ivy" },
 
-    { source = "git", name = "Diff against a commit", func = function() git_commits_againsthead() end, },
-    { source = "git", name = "Diff of a branch from current", func = function() git_branch_dif() end, },
-    { source = "git", name = "Diff of a branch from master", func = function() git_branch_mergebase() end, },
-    { source = "git", name = "Diff of a commit", func = function() git_commits_onechange() end, },
+    { source = "git", name = "Diff against a commit", func = tele.git_commits_againsthead, },
+    { source = "git", name = "Diff of a branch from current", func = tele.git_branch_dif, },
+    { source = "git", name = "Diff of a branch from master", func = tele.git_branch_mergebase, },
+    { source = "git", name = "Diff of a commit", func = tele.git_commits_onechange, },
     { source = "git", name = "Diff of unstaged", command = "DiffviewOpen" },
     { source = "git", name = "File diff history", command = "DiffviewFileHistory %" },
     { source = "git", name = "Folder diff history", command = "DiffviewFileHistory" },
@@ -85,10 +89,9 @@ GlobalCommands = {
     { source = "tasks", name = "Clear Task Cache", command = "OverseerClearCache" },
 }
 
-Map("n", "<leader>p", function() CommandCentre({}, true) end)
 
 
-local function append_command(runnables, to_add)
+local append_command = function(runnables, to_add)
     local function always_extend(dst, src)
         if not vim.tbl_islist(src) then
             src = vim.tbl_values(src)
@@ -105,7 +108,7 @@ local function append_command(runnables, to_add)
     end
 end
 
-function CommandCentre(argCommands, extend)
+local command_centre = function(argCommands, extend)
     if not extend then extend = false end
     if not argCommands then argCommands = {} end
 
@@ -151,31 +154,4 @@ function CommandCentre(argCommands, extend)
     end)
 end
 
-Global_Runnables = {}
-
-
-function Select_runnables()
-    local runnables = {}
-
-    -- Config sources
-    local runnable_sources = { Global_Runnables, vim.g.runnables, vim.b[0].runnables }
-
-    -- runnables from tasks.lua files in directory
-    local task_files = vim.fn.systemlist([[fd -I tasks.lua]])
-    if task_files then
-        for name in pairs(task_files) do
-            name = name:gsub("%./", ""):gsub("%.lua", "")
-            table.insert(runnable_sources, require(name))
-        end
-    end
-
-    for _, source in pairs(runnable_sources) do
-        append_command(runnables, source)
-    end
-
-    if #runnables ~= 0 then
-        CommandCentre(runnables)
-    else
-        vim.cmd.echomsg({ args = { "'Nothing to Run'" } })
-    end
-end
+Map("n", "<leader>p", function() command_centre({}, true) end)

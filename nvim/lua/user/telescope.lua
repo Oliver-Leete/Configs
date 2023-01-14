@@ -1,9 +1,12 @@
+local M = {}
+
 local action_state = require("telescope.actions.state")
 local actions = require("telescope.actions")
 
 require("telescope").load_extension("dap")
 require("telescope").load_extension("refactoring")
 require("telescope").load_extension("noice")
+require("telescope").load_extension("undo")
 
 require("telescope").setup({
     defaults = {
@@ -94,7 +97,7 @@ local open_single_dif = function()
     vim.cmd(cmd)
 end
 
-function _G.git_commits_againsthead()
+function M.git_commits_againsthead()
     require("telescope.builtin").git_commits({
         attach_mappings = function(_, map)
             map("n", "<cr>", open_dif)
@@ -104,7 +107,7 @@ function _G.git_commits_againsthead()
     })
 end
 
-function _G.git_commits_onechange()
+function M.git_commits_onechange()
     require("telescope.builtin").git_commits({
         attach_mappings = function(_, map)
             map("n", "<cr>", open_single_dif)
@@ -114,7 +117,7 @@ function _G.git_commits_onechange()
     })
 end
 
-function _G.git_branch_dif()
+function M.git_branch_dif()
     require("telescope.builtin").git_branches({
         attach_mappings = function(_, map)
             map("n", "<cr>", open_dif)
@@ -124,7 +127,7 @@ function _G.git_branch_dif()
     })
 end
 
-function _G.git_branch_mergebase()
+function M.git_branch_mergebase()
     require("telescope.builtin").git_branches({
         attach_mappings = function(_, map)
             map("n", "<cr>", open_dif_mergebase)
@@ -145,3 +148,5 @@ function ProjectFiles()
         require("telescope.builtin").find_files(require("telescope.themes").get_ivy())
     end
 end
+
+return M

@@ -3,6 +3,8 @@ local lspconfig = require("lspconfig")
 local lsp_selection_range = require('lsp-selection-range')
 -- require("inc_rename").setup()
 
+require("lspconfig.ui.windows").default_options.border = Border
+
 vim.api.nvim_set_hl(0, "CursorLineError", { fg = "#E82424", bg = "#363646" })
 vim.api.nvim_set_hl(0, "CursorLineWarn", { fg = "#FF9E3B", bg = "#363646" })
 vim.api.nvim_set_hl(0, "CursorLineInfo", { fg = "#658494", bg = "#363646" })
@@ -26,9 +28,17 @@ local custom_attach = function(client, bufnr)
     local sc = client.server_capabilities
     local bmap = function(mode, key, action) Map(mode, key, action, { buffer = bufnr }) end
 
-    if sc.documentSymbolProvider then
+    if client.name == "pylsp" then
+        sc.renameProvider = false
+        sc.definitionProvider = false
+        sc.referencesProvider = false
+        -- sc.documentSymbolProvider = false
+    end
+
+    if sc.documentSymbolProvider and client.name ~= "pyright" then
         require("nvim-navic").attach(client, bufnr)
     end
+
     lsp_selection_range.setup({})
 
     -- LSP Binding Override
@@ -37,8 +47,7 @@ local custom_attach = function(client, bufnr)
         bmap("n", "gr", "<cmd>Glance references<cr>")
         bmap("n", "gD", "<cmd>Glance type_definitions<cr>")
         bmap("n", "gI", "<cmd>Glance implementations<cr>")
-        bmap("n", "gs", "<cmd>Telescope lsp_workspace_symbols theme=get_ivy<cr>")
-        bmap("n", "gS", "<cmd>Telescope lsp_document_symbols theme=get_ivy<cr>")
+
         bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls theme=get_ivy<cr>")
         bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>")
 
@@ -64,7 +73,7 @@ local custom_attach = function(client, bufnr)
     end
 end
 
-require("mason").setup({})
+require("mason").setup({ ui = { border = Border } })
 require("mason-lspconfig").setup({})
 
 
@@ -84,10 +93,13 @@ local default = {
 lspconfig.julials.setup(default)
 lspconfig.bashls.setup(default)
 lspconfig.fortls.setup(default)
-lspconfig.pyright.setup(default)
 lspconfig.marksman.setup(default)
 lspconfig.taplo.setup(default)
+lspconfig.asm_lsp.setup(default)
+lspconfig.arduino_language_server.setup(default)
+lspconfig.teal_ls.setup(default)
 
+lspconfig.pyright.setup(default)
 require("lspconfig").pylsp.setup({
     on_attach = custom_attach,
     capabilities = capabilities,
@@ -97,7 +109,8 @@ require("lspconfig").pylsp.setup({
             plugins = {
                 pydocstyle = {
                     enabled = true,
-                    ignore = { "D101", "D102", "D103", "D107", "D203" }
+                    addIgnore = { "D101", "D102", "D103", "D107", "D203" },
+                    convention = "numpy",
                 },
                 pycodestyle = {
                     enabled = true,
@@ -148,6 +161,23 @@ lspconfig.sumneko_lua.setup({
     on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
+    settings = {
+        Lua = {
+            runtime = {
+                version = 'LuaJIT',
+            },
+            diagnostics = {
+                globals = { 'vim' },
+            },
+            workspace = {
+                library = vim.api.nvim_get_runtime_file('', true),
+                checkThirdParty = false,
+            },
+            telemetry = {
+                enable = false,
+            },
+        }
+    }
 })
 
 lspconfig.texlab.setup({
@@ -304,7 +334,7 @@ require("null-ls").setup({
 QfDiag = vim.api.nvim_create_namespace("qfDiag")
 QfToDiagGroup = vim.api.nvim_create_augroup("qfToDiag", { clear = true })
 
-local function UpdateDiagnostics(diagnostics, namespace)
+local update_diagnostics = function(diagnostics, namespace)
     vim.diagnostic.reset(namespace)
     local buffers = {}
     local tmp = {}
@@ -326,10 +356,12 @@ local function UpdateDiagnostics(diagnostics, namespace)
     end
 end
 
-QFtoDiag = function()
+local qf_to_diag = function()
     local qf = vim.diagnostic.fromqflist(vim.fn.getqflist())
-    UpdateDiagnostics(qf, QfDiag)
+    update_diagnostics(qf, QfDiag)
 end
-vim.api.nvim_create_autocmd("QuickFixCmdPost", { pattern = "*", callback = QFtoDiag, group = QfToDiagGroup })
-vim.api.nvim_create_autocmd("User", { pattern = "VimtexEventCompileFailed", callback = QFtoDiag, group = QfToDiagGroup })
-vim.api.nvim_create_autocmd("User", { pattern = "VimtexEventCompileSuccess", callback = QFtoDiag, group = QfToDiagGroup })
+vim.api.nvim_create_autocmd("QuickFixCmdPost", { pattern = "*", callback = qf_to_diag, group = QfToDiagGroup })
+vim.api.nvim_create_autocmd("User",
+    { pattern = "VimtexEventCompileFailed", callback = qf_to_diag, group = QfToDiagGroup })
+vim.api.nvim_create_autocmd("User",
+    { pattern = "VimtexEventCompileSuccess", callback = qf_to_diag, group = QfToDiagGroup })
