@@ -64,4 +64,23 @@ for _, plugin in pairs(disabled_built_ins) do
     vim.g["loaded_" .. plugin] = 1
 end
 
--- require("ssr").setup({})
+require("ssr").setup({})
+require('Comment').setup({
+    toggler = {
+        line = ',cc',
+        block = nil,
+    },
+    opleader = {
+        line = ',c',
+        block = ',b',
+    },
+    extra = {
+        above = ',cO',
+        below = ',co',
+        eol = ',cA',
+    },
+    mappings = {
+        basic = true,
+        extra = true,
+    },
+})

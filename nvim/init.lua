@@ -27,6 +27,7 @@ require("lazy").setup(
         "anuvyklack/keymap-layer.nvim",
         "kevinhwang91/promise-async",
 
+        "chrisgrieser/nvim-genghis",
         { "knubie/vim-kitty-navigator" },
         "stevearc/stickybuf.nvim",
         "famiu/bufdelete.nvim",
@@ -42,7 +43,7 @@ require("lazy").setup(
         "Konfekt/vim-CtrlXA",
         "svermeulen/vim-subversive",
         "andymass/vim-matchup",
-        "chrisgrieser/nvim-genghis",
+        "numToStr/Comment.nvim",
 
         "cshuaimin/ssr.nvim",
 

@@ -38,6 +38,11 @@ local custom_objects = {
     a = gen_spec.argument({ separators = { ',', ';' } }),
     -- Brackets
     b = { { '%b()', '%b[]', '%b{}' }, '^.().*().$' },
+    -- Comments
+    c = gen_spec.treesitter({
+        a = { "@comment.outer" },
+        i = { "@comment.outer" }
+    }),
     -- digits
     d = { '%f[%d]%d+' },
     -- diagnostics
