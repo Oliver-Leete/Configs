@@ -9,6 +9,8 @@
 import qualified Data.Map                               as M
 import           Data.Monoid
 import           Graphics.X11.Types
+import qualified Graphics.X11.Xlib as X11
+import qualified Graphics.X11.Xinerama as X11
 import           XMonad                                 hiding ((|||))
 import qualified XMonad.StackSet                        as W
 
@@ -66,21 +68,22 @@ import           XMonad.Util.SpawnOnce
 ----------------------------------------------------------------------------------------------------
 main :: IO ()
 main = do
+    numberOfScreens <- getScreens
     xmonad
-        $ dynamicProjects projects
+        $ dynamicProjects (projects numberOfScreens)
         $ withNavigation2DConfig myNav2DConf
         $ dynamicSBs barSpawner
         $ ewmh
-        $ docks myConfig
+        $ docks (myConfig numberOfScreens)
 
-myConfig = def
+myConfig n = def
         { borderWidth        = myBorder
         , clickJustFocuses   = True
         , focusFollowsMouse  = True
         , normalBorderColor  = background
         , focusedBorderColor = active
-        , manageHook         = myManageHook
-        , handleEventHook    = myHandleEventHook
+        , manageHook         = myManageHook n
+        , handleEventHook    = myHandleEventHook n
         , layoutHook         = myLayoutHook
         , logHook            = myLogHook
         , modMask            = myModMask
@@ -88,15 +91,24 @@ myConfig = def
         , startupHook        = myStartupHook
         , terminal           = myTerminal
         , workspaces         = myWorkspaces
-        } `additionalKeysP` myKeys
+        } `additionalKeysP` myKeys n
 
+-- | Get number of screens
+getScreens :: IO Int
+getScreens = do
+  screens <- do
+    dpy <- X11.openDisplay ""
+    rects <- X11.getScreenInfo dpy
+    X11.closeDisplay dpy
+    return rects
+  pure $ length screens
 
 ----------------------------------------------------------------------------------------------------
 -- Workspaces                                                                                     --
 ----------------------------------------------------------------------------------------------------
 
-projects :: [Project]
-projects =
+projects :: Int -> [Project]
+projects n =
     [ Project { pName = "Tmp",        pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
     , Project { pName = "Tmp2",       pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
 
@@ -148,11 +160,13 @@ projects =
         termBrowSpawn ws = Just $ do spawnOn ws $ sl myTerminal; spawnOn ws ("sleep .5; " ++ myBrowser)
         browSpawn ws = Just $ do spawnOn ws ("sleep .5; " ++ myBrowser)
         oneSpawn ws app = Just $ do spawnOn ws $ sl app
-        commentSpawn ws = Just $ do spawnOn ws $ sl myTerminal; spawnOn ws ("sleep .2; " ++ myBrowser); spawnOn ws $ sl "sleep .4; foxitreader"
+        commentSpawn ws = if n > 1
+            then Just $ spawnOn ws $ sl "sleep .4; foxitreader"
+            else Just $ do spawnOn ws $ sl myTerminal; spawnOn ws ("sleep .2; " ++ myBrowser); spawnOn ws $ sl "sleep .4; foxitreader"
         filmSpawn ws = Just $ do spawnOn ws $ sl myBrowser; spawnOn ws ("sleep .2; " ++ myTerminal); spawnOn ws $ sl "deluge"
 
 myWorkspaces :: [[Char]]
-myWorkspaces = map pName projects
+myWorkspaces = map pName (projects 1)
 
 ----------------------------------------------------------------------------------------------------
 -- Applications                                                                                   --
@@ -278,8 +292,8 @@ myModMask = mod4Mask
 -- ┗━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┛
 --         ┃   -   ┃   -   ┃       ┃tabPrev┃ wsLast┃winPrev┃   ┃winNext┃  term ┃tabNext┃       ┃   -   ┃   -   ┃
 --         ┗━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━━━━━━━━━┛   ┗━━━━━━━┻━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━┛
-myKeys :: [(String, X ())]
-myKeys =
+myKeys :: Int -> [(String, X ())]
+myKeys n =
     [ ("<XF86MonBrightnessDown>" , spawn "/home/oleete/.config/bin/brightness -dec 5")
     , ("<XF86MonBrightnessUp>"   , spawn "/home/oleete/.config/bin/brightness -inc 5")
     , ("<XF86AudioLowerVolume>"  , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ -5%" )
@@ -365,8 +379,8 @@ myKeys =
     , ("M-d"             , spawn "/home/oleete/.config/bin/wsHarpoon jumpName Configs")
     , ("M-S-d"           , spawn "/home/oleete/.config/bin/wsHarpoon moveName Configs")
 
-    , ("M-<Tab>"         , upPointer nextScreen)
-    , ("M-S-<Tab>"       , upPointer shiftNextScreen)
+    , ("M-<Tab>"         , tabCommand)
+    , ("M-S-<Tab>"       , shiftTabCommand)
     , ("M-<Space>"       , upFocus $ toggleWS' ["NSP"])
     , ("M-S-<Space>"     , upFocus $ shiftToggleWS' ["NSP"])
     ]
@@ -374,6 +388,14 @@ myKeys =
         toggleFloat w = windows (\s -> if M.member w (W.floating s)
                             then W.sink w s
                             else W.float w (W.RationalRect (1/4) (1/4) (1/2) (1/2)) s)
+        tabCommand = if n > 1
+            then upPointer nextScreen
+            else upFocus $ toggleWS' ["NSP"]
+
+        shiftTabCommand = if n > 1
+            then upPointer shiftNextScreen
+            else upFocus $ shiftToggleWS' ["NSP"]
+
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {} = M.fromList
@@ -428,8 +450,8 @@ myLogHook = do
 -- New Window Actions                                                                             --
 ----------------------------------------------------------------------------------------------------
 
-myManageHook :: ManageHook
-myManageHook =
+myManageHook :: Int -> ManageHook
+myManageHook n =
         manageSpecific
     <+> manageDocks
     <+> insertPosition Master Newer
@@ -441,7 +463,7 @@ myManageHook =
             , resource  =? "prusa-slicer"         -?> doSink <+> insertPosition End Newer
             , resource  =? "stalonetray"          -?> doIgnore
 
-            , title =? "Scintilla Control"        -?> doShift "Scin-Test"
+            , title =? "Scintilla Control"        -?> scinTestShift
             , title =? "Scintilla Variable Editor"-?> doRectFloat halfNhalf
             , title =? "Scintilla Strategy Editor"-?> doRectFloat bigFloat
 
@@ -473,15 +495,18 @@ myManageHook =
         isBrowserDialog = isDialog <&&> className =? myBrowserClass
         halfNhalf = W.RationalRect (1/4) (1/4) (1/2) (1/2)
         bigFloat = W.RationalRect (1/8) (1/8) (3/4) (3/4)
+        scinTestShift = if n > 1
+            then doShift "Scin-Test"
+            else doSink <+> insertPosition End Newer
 
 ----------------------------------------------------------------------------------------------------
 -- HangleEventHook                                                                                --
 ----------------------------------------------------------------------------------------------------
 
-myHandleEventHook :: Event -> X All
-myHandleEventHook = handleEventHook def
+myHandleEventHook :: Int -> Event -> X All
+myHandleEventHook n = handleEventHook def
                 <+> XMonad.Util.Hacks.windowedFullscreenFixEventHook
-                <+> myServerModeEventHook
+                <+> myServerModeEventHook n
 
 ----------------------------------------------------------------------------------------------------
 -- Helper Functions                                                                               --
@@ -517,19 +542,19 @@ bF = bindFirst
 -- Server Commands                                                                                --
 ----------------------------------------------------------------------------------------------------
 
-myServerModeEventHook :: Event -> X All
-myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
+myServerModeEventHook :: Int -> Event -> X All
+myServerModeEventHook n = serverModeEventHookCmd' $ return (myCommands' n)
 
-myCommands' :: [(String, X ())]
-myCommands' = myCommands ++ sendTo ++ swapTo ++ copyTo
+myCommands' :: Int -> [(String, X ())]
+myCommands' n = myCommands n ++ sendTo ++ swapTo ++ copyTo
     where sendTo = zipM "move-to-" nums (withNthWorkspace W.shift)
           swapTo = zipM "jump-to-" nums (withNthWorkspace W.greedyView)
           copyTo = zipM "copy-to-" nums (withNthWorkspace copy)
           nums = [0..(length myWorkspaces)]
           zipM  m ks f = zipWith (\k d -> (m ++ show k, upFocus $ f d)) ks ks
 
-myCommands :: [(String, X ())]
-myCommands =
+myCommands :: Int -> [(String, X ())]
+myCommands _ =
     [ ("togglework"          , toggleWS' ["NSP"])
     , ("winGo-left"          , upPointer $ windowGo L True)
     , ("winGo-bottom"        , upPointer $ windowGo D True)
@@ -561,5 +586,4 @@ myCommands =
 
     , ("dump-stack"          , debugStack)
     , ("dump-full-stack"     , debugStackFull)
-    , ("shift-next-screen"   , upPointer shiftNextScreen)
     ]
