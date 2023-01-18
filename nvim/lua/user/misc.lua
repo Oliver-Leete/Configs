@@ -8,13 +8,13 @@ vim.g.matchup_text_obj_enabled = false
 vim.g.matchup_mouse_enabled = false
 
 vim.api.nvim_create_autocmd('BufReadPost', {
-  callback = function()
-    local mark = vim.api.nvim_buf_get_mark(0, '"')
-    local lcount = vim.api.nvim_buf_line_count(0)
-    if mark[1] > 0 and mark[1] <= lcount then
-      pcall(vim.api.nvim_win_set_cursor, 0, mark)
-    end
-  end,
+    callback = function()
+        local mark = vim.api.nvim_buf_get_mark(0, '"')
+        local lcount = vim.api.nvim_buf_line_count(0)
+        if mark[1] > 0 and mark[1] <= lcount then
+            pcall(vim.api.nvim_win_set_cursor, 0, mark)
+        end
+    end,
 })
 
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
@@ -83,4 +83,22 @@ require('Comment').setup({
         basic = true,
         extra = true,
     },
+})
+
+require("quarto").setup({
+    lspFeatures = {
+        enabled = true,
+        languages = { "r", "python", "julia" },
+        diagnostics = {
+            enabled = true,
+            triggers = { "BufWrite" }
+        },
+        completion = {
+            enabled = true
+        },
+        keymap = {
+            hover = 'KK',
+            definition = 'gd'
+        }
+    }
 })

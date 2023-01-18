@@ -113,9 +113,9 @@ end
 --     return winbar
 -- end
 
-File_on_click = function(bufnr)
-    vim.cmd("Neotree " .. vim.api.nvim_buf_get_name(bufnr))
-end
+-- File_on_click = function(bufnr)
+--     vim.cmd("Neotree " .. vim.api.nvim_buf_get_name(bufnr))
+-- end
 
 local default_winbar = function(bufnr, hl, is_active, hle)
     local winbar = hl

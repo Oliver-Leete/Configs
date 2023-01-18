@@ -35,10 +35,8 @@ Map({ "n", "x", "o" }, "<m-F>", ",")
 Map({ "n", "x", "o" }, "<m-t>", ";")
 Map({ "n", "x", "o" }, "<m-T>", ",")
 
-Map({ "n", "x" }, "+", "<c-a>")
-Map({ "n", "x" }, "-", "<c-x>")
-Map({ "n", "x" }, "g+", "g<c-a>")
-Map({ "n", "x" }, "g-", "g<c-x>")
+Map({ "n", "x" }, "<c-r>", "<c-x>")
+Map({ "n", "x" }, "g<c-r>", "g<c-x>")
 
 Map("x", "y", "m1y`1", { nowait = true })
 Map("x", "d", "d", { nowait = true })

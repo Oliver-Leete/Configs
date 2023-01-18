@@ -10,8 +10,6 @@ end
 
 require("statuscol").setup({
   separator = "",
-  setopt = true,
-  order = "NSFs",
   -- Click actions
   Lnum                   = builtin.lnum_click,
   FoldPlus               = builtin.foldplus_click,
@@ -30,3 +28,14 @@ require("statuscol").setup({
   GitSignsChangedelete   = builtin.gitsigns_click,
   GitSignsDelete         = builtin.gitsigns_click,
 })
+
+-- ScGs = function()
+--     local sign = vim.fn.sign_getplaced(0, { lnum = vim.v.lnum, group = "gitsigns_vimfn_signs_" })[1].signs
+--     local hl = "@comment"
+--     if #sign >= 1 and sign[1].name then
+--         hl = sign[1].name
+--     end
+--     return "%#" .. hl .. "#" .. "🭰"
+-- end
+
+vim.o.statuscolumn = "%=%l%@v:lua.ScSa@%s%T"

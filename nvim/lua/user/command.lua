@@ -19,7 +19,6 @@ GlobalCommands = {
     { source = "default",   name = "Clear search",                      command = "let @/=''" },
     { source = "default",   name = "Close tab",                         command = "tabclose" },
     { source = "default",   name = "Toggle text wraping",               command = "set wrap!" },
-    { source = "default",   name = "File tree",                         command = "Neotree" },
     { source = "default",   name = "Undo list",                         command = "Telescope undo undo" },
     { source = "default",   name = "Reload snippets",                   command = "source ~/.config/nvim/after/plugin/luasnip.lua" },
     { source = "default",   name = "Toggle Minimap",                    func = require("mini.map").toggle },

@@ -68,7 +68,6 @@ require("lazy").setup(
 
         "mbbill/undotree",
         "folke/todo-comments.nvim",
-        "nvim-neo-tree/neo-tree.nvim",
 
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
@@ -146,6 +145,11 @@ require("lazy").setup(
 
         "folke/neodev.nvim",
         "nvim-neotest/neotest-plenary",
+        { 'quarto-dev/quarto-nvim',
+            dependencies = {
+                'jmbuhr/otter.nvim',
+            },
+        },
     },
     {
         install = {

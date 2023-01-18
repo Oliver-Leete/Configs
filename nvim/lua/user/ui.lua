@@ -154,7 +154,7 @@ glance.setup({
             ['<C-u>'] = actions.preview_scroll_win(5),
             ['<C-d>'] = actions.preview_scroll_win(-5),
             ['<c-v>'] = actions.jump_vsplit,
-            ['<c-s>'] = actions.jump_split,
+            ['<c-x>'] = actions.jump_split,
             ['<CR>'] = actions.jump,
             ['o'] = actions.enter_win('preview'),
             ['<Esc>'] = actions.close,

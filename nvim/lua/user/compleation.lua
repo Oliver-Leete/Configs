@@ -79,6 +79,7 @@ require("cmp").setup({
         { name = "luasnip_choice" },
         { name = "luasnip" },
         { name = "cmp_git" },
+        { name = 'otter' },
         { name = "nvim_lsp" },
         { name = "latex_symbols" },
         { name = "fish" },
@@ -92,6 +93,7 @@ require("cmp").setup({
                 luasnip_choice = "(CHOICE)",
                 luasnip = "(SNIP)",
                 git = "(GIT)",
+                otter = "(LSP)",
                 nvim_lsp = "(LSP)",
                 latex_symbols = "(SYM)",
                 fish = "(FISH)",
@@ -200,7 +202,7 @@ npairs.setup({
     disable_in_macro = true,
     disable_in_visualblock = true,
     check_ts = true,
-     enable_afterquote = false
+    enable_afterquote = false
 })
 
 local cond = require('nvim-autopairs.conds')
