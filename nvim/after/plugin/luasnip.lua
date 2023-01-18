@@ -337,7 +337,9 @@ Ls.add_snippets("tex", {
         t({ "\t{" }), i(3, "directory"), t("}{"), i(4, "label"), t("}{"), i(5, "caption"), t({ "}%", "" }),
         t({ "\t{" }), i(6, "directory"), t("}{"), i(7, "label"), t("}{"), i(8, "caption"), t({ "}%", "" }),
         t({ "\t{" }), i(9, "directory"), t("}{"), i(10, "label"), t("}{"), i(11, "caption"), t({ "}%", "" }),
+        t({ "", "" }),
         t(" \t\\caption["), m(1, "^(.-)%."), t("]{"), i(1, "caption"), t("}\\label{fig:"), i(2), t({ "}", "" }),
+        t({ "", "" }),
         t({ "\\end{figure}" }), i(0)
     }),
     s({ trig = "twofigure", name = "two figures", dscr = "Two figures of equal width" }, {
@@ -347,14 +349,18 @@ Ls.add_snippets("tex", {
         t({ "\t\\twosubfigures%", "" }),
         t({ "\t{" }), i(3, "directory"), t("}{"), i(4, "label"), t("}{"), i(5, "caption"), t({ "}%", "" }),
         t({ "\t{" }), i(6, "directory"), t("}{"), i(7, "label"), t("}{"), i(8, "caption"), t({ "}", "" }),
+        t({ "", "" }),
         t("\t\\caption["), m(1, "^(.-)%."), t("]{"), i(1, "caption"), t("}\\label{fig:"), i(2), t({ "}", "" }),
+        t({ "", "" }),
         t({ "\\end{figure}" }), i(0)
     }),
     s({ trig = "figure", name = "single figure", dscr = "insert a single figure" }, {
         t({ "\\begin{figure}[htbp]", "" }),
         t({ "\t\\centering", "" }),
         t("\t\\includegraphics[width=1\\textwidth]{"), i(3, "directory"), t({ "}", "" }),
+        t({ "", "" }),
         t("\t\\caption["), m(1, "^(.-)%."), t("]{"), i(1, "caption"), t("}\\label{fig:"), i(2), t({ "}", "" }),
+        t({ "", "" }),
         t("\\end{figure}"), i(0)
     }),
     s({ trig = "flow", name = "flowchart", dscr = "makes flowcharts in the style of chapter intro" }, {
@@ -370,7 +376,9 @@ Ls.add_snippets("tex", {
         i(0), t({ "", "" }),
         t({ "\t\t\\end{jllisting}", "" }),
         t({ "\t}", "" }),
+        t({ "", "" }),
         t("\t\\caption["), m(1, "^(.-)%."), t("]{"), i(1, "caption"), t("}\\label{lst:"), i(2), t({ "}", "" }),
+        t({ "", "" }),
         t({ "\\end{codeblock}" })
     }),
     s({ trig = "fortran" }, {
@@ -378,7 +386,9 @@ Ls.add_snippets("tex", {
         t({ "\t\\begin{Fortran}[1]", "" }),
         i(0), t({ "", "" }),
         t({ "\t\\end{Fortran}", "" }),
+        t({ "", "" }),
         t("\t\\caption["), m(1, "^(.-)%."), t("]{"), i(1, "caption"), t("}\\label{alg:"), i(2), t({ "}", "" }),
+        t({ "", "" }),
         t({ "\\end{algorithm}" })
     }),
     s({ trig = "algorithm" }, {
@@ -388,7 +398,9 @@ Ls.add_snippets("tex", {
         i(0), t({ "", "\t\t\\EndProcedure" }),
         t({ "", "" }),
         t({ "\t\\end{algorithmic}", "" }),
+        t({ "", "" }),
         t("\t\\caption["), m(1, "^(.-)%."), t("]{"), i(1, "caption"), t("}\\label{alg:"), i(2), t({ "}", "" }),
+        t({ "", "" }),
         t({ "\\end{algorithm}" })
     }),
     s({ trig = "table", name = "table", dscr = "my normal table settings" }, {
@@ -398,7 +410,9 @@ Ls.add_snippets("tex", {
         t("\t\t"), i(3), t({ "  \\\\ \\midrule", "" }),
         d(4, rec_tab, {}),
         t({ "", "\t\\end{tabular}", "" }),
+        t({ "", "" }),
         t("\t\\caption["), m(1, "^(.-)%."), t("]{"), i(1, "caption"), t("}\\label{tab:"), i(2), t({ "}", "" }),
+        t({ "", "" }),
         t({ "\\end{table}", "" })
     }),
     s({ trig = "env", name = "begin enviroment", dscr = "begin and end an enviroment" }, {
