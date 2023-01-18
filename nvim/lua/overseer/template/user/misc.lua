@@ -64,6 +64,18 @@ return {
                 params = {},
             },
             {
+                name = "Edit Directory",
+                builder = function()
+                    return {
+                        name = "edir",
+                        cmd = "fish -c 'fd -HL | edir -Z'",
+                        strategy = { "toggleterm", open_on_start = false },
+                    }
+                end,
+                priority = 5,
+                params = {}
+            },
+            {
                 name = "Build Document",
                 builder = function()
                     return {
