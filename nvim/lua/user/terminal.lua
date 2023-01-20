@@ -6,6 +6,7 @@ Term_on_open = function(term)
     if not term.hidden then
         OTerm = term
     end
+    vim.wo.statuscolumn = ""
 end
 
 function _G.my_toggleterm_winbar_click(id)

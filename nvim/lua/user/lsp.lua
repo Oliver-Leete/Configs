@@ -5,14 +5,10 @@ local lsp_selection_range = require('lsp-selection-range')
 
 require("lspconfig.ui.windows").default_options.border = Border
 
-vim.api.nvim_set_hl(0, "CursorLineError", { fg = "#E82424", bg = "#363646" })
-vim.api.nvim_set_hl(0, "CursorLineWarn", { fg = "#FF9E3B", bg = "#363646" })
-vim.api.nvim_set_hl(0, "CursorLineInfo", { fg = "#658494", bg = "#363646" })
-vim.api.nvim_set_hl(0, "CursorLineHint", { fg = "#6A9589", bg = "#363646" })
-vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
-vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn", culhl = "CursorLineWarn" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo", culhl = "CursorLineInfo" })
-vim.fn.sign_define("DiagnosticSignHint", { text = " ", texthl = "DiagnosticSignHint", culhl = "CursorLineHint" })
+vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError", culhl = "DiagnosticSignErrorCur" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn", culhl = "DiagnosticSignWarnCur" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo", culhl = "DiagnosticSignInfoCur" })
+vim.fn.sign_define("DiagnosticSignHint", { text = " ", texthl = "DiagnosticSignHint", culhl = "DiagnosticSignHintCur" })
 
 vim.diagnostic.config({
     underline = { severity = { min = "Warn", }, },
