@@ -1,5 +1,6 @@
 require("todo-comments").setup({
     signs = true,
+    sign_priority = 20,
     keywords = {
         FIX = { icon = " ", color = "error", alt = { "FIXME", "BUG", "FIXIT", "FIX", "ISSUE" } },
         TODO = { icon = " ", color = "info" },

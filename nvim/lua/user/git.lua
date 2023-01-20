@@ -14,7 +14,7 @@ require("gitsigns").setup({
     --     topdelete = { hl = 'GitSignsDelete', text = '▔', numhl = 'GitSignsDeleteNr', linehl = 'GitSignsDeleteLn' },
     --     changedelete = { hl = 'GitSignsChange', text = '', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn' },
     -- },
-    -- _signs_staged_enable=true,
+    _signs_staged_enable = true,
 })
 vim.api.nvim_set_hl(0, 'GitSignsAddCur', { fg = Tc.autumnGreen, bg = Tc.sumiInk3 })
 vim.api.nvim_set_hl(0, 'GitSignsChangeCur', { fg = Tc.autumnYellow, bg = Tc.sumiInk3 })
@@ -66,6 +66,21 @@ require("diffview").setup({
 local Hydra = require("hydra")
 local gitsigns = require('gitsigns')
 
+local on = false
+local toggle_show = function()
+    if on then
+        on = false
+        gitsigns.toggle_linehl(false)
+        gitsigns.toggle_deleted(false)
+        gitsigns.toggle_word_diff(false)
+    else
+        on = true
+        gitsigns.toggle_linehl(true)
+        gitsigns.toggle_deleted(true)
+        gitsigns.toggle_word_diff(true)
+    end
+end
+
 Old_dir_jump = "search"
 local hint = [[
  n: next hunk
@@ -80,8 +95,7 @@ local hint = [[
  _,K_: blame line
  _,p_: preview hunk
 
- _,d_: show deleted
- _,w_: show word diff
+ _,d_: show diff
 ^^━━━━━━━━━━━━━━━━━━━━
  _,f_: file finder
  _,<esc>_: exit
@@ -99,10 +113,10 @@ Hydra({
         on_enter = function()
             Old_dir_jump = vim.g.dirJumps
             vim.g.dirJumps = "h"
-            gitsigns.toggle_linehl(true)
         end,
         on_exit = function()
             vim.g.dirJumps = Old_dir_jump
+            on = false
             gitsigns.toggle_linehl(false)
             gitsigns.toggle_deleted(false)
             gitsigns.toggle_word_diff(false)
@@ -116,9 +130,8 @@ Hydra({
         { ',u', gitsigns.undo_stage_hunk, { desc = 'undo last stage' } },
         { ',S', gitsigns.stage_buffer, { desc = 'stage buffer' } },
         { ',p', gitsigns.preview_hunk, { desc = 'preview hunk' } },
-        { ',d', gitsigns.toggle_deleted, { nowait = true, desc = 'toggle deleted' } },
+        { ',d', toggle_show, { nowait = true, desc = 'toggle diff' } },
         { ',K', gitsigns.blame_line, { desc = 'blame' } },
-        { ",w", gitsigns.toggle_word_diff },
         { ",f", "<cmd>Telescope git_status theme=get_ivy<cr>" },
         { ',<esc>', nil, { exit = true, nowait = true, desc = 'exit' } },
         { '<leader>g', nil, { exit = true, nowait = true, desc = false } },

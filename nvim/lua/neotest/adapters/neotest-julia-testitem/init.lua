@@ -1,4 +1,5 @@
 local lib = require("neotest.lib")
+local async = require("neotest.async")
 
 local adapter = { name = "neotest-julia-testitem" }
 
@@ -26,6 +27,7 @@ end
 
 function adapter.build_spec(args)
     local position = args.tree:data()
+    local res_file = async.fn.tempname() .. ".json"
 
     local command = "julia --color=yes --project -e '" ..
         [[using DaemonMode;
@@ -33,10 +35,9 @@ function adapter.build_spec(args)
         runargs()]]
         .. "' /home/oleete/.config/nvim/lua/neotest/adapters/neotest-julia-testitem/juliaTestClient.jl "
         .. position.name
+        .. " '" .. res_file .. "'"
 
-    if position.type == "file" then
-        return
-    end
+    if position.type == "file" then return end
     return {
         command = command,
         context = {
@@ -44,14 +45,20 @@ function adapter.build_spec(args)
             name = position.name,
             uses_server = true,
             tsk_name = position.name:sub(2, -2) .. " test",
+            res_file = res_file
         },
     }
 end
 
 function adapter.results(spec, result)
     local pos_id = spec.context.pos_id
+    local res_file = io.open(spec.context.res_file, "rb")
+    if not res_file then return { [pos_id] = { status = "skipped" } } end
+    local data = vim.json.decode(res_file:read("*all"))
+    if not data or not data.passed then return { [pos_id] = { status = "failed" } } end
+
     return { [pos_id] = {
-        status = result.code == 0 and "passed" or "failed",
+        status = data.passed and "passed" or "failed",
     } }
 end
 

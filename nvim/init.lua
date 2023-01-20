@@ -57,7 +57,7 @@ require("lazy").setup(
         "sindrets/diffview.nvim",
 
         "rebelot/kanagawa.nvim",
-        "lukas-reineke/indent-blankline.nvim",
+        -- "lukas-reineke/indent-blankline.nvim",
         "stevearc/dressing.nvim",
         "rcarriga/nvim-notify",
         "nvim-lualine/lualine.nvim",

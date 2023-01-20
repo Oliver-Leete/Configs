@@ -47,40 +47,9 @@ vim.api.nvim_set_hl(0, "CursorLineFold", { link = "CursorLine" })
 vim.g.matchup_matchparen_deferred = true
 vim.g.matchup_matchparen_hi_surround_always = true
 
-vim.api.nvim_set_hl(0, "IndentBlanklineContextChar", { link = "MatchParen" })
-vim.api.nvim_set_hl(0, "IndentBlanklineContextStart", { underline = true, sp = "#ff9e3b" })
-
-vim.api.nvim_set_hl(0, "MiniMapNormal", { fg = Tc.fujiWhite })
-
-require("indent_blankline").setup({
-    char = "",
-    context_char = "▎",
-    space_char_blankline = " ",
-    show_current_context = true,
-    show_current_context_start = true,
-    show_current_context_start_on_current_line = true,
-    context_patterns = {
-        "class",
-        "^func",
-        "method",
-        "^if",
-        "while",
-        "for",
-        "with",
-        "try",
-        "except",
-        "arguments",
-        "argument_list",
-        "object",
-        "dictionary",
-        "element",
-        "table",
-        "tuple",
-        "do_block",
-        "array",
-        "struct",
-    },
-})
+local CursorMatchParen = vim.api.nvim_get_hl_by_name("MatchParen", true)
+CursorMatchParen.background = background
+vim.api.nvim_set_hl(0, "CursorMatchParen", CursorMatchParen)
 
 require("notify").setup({
     top_down = false,
