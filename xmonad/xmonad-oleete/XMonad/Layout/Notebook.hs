@@ -117,7 +117,7 @@ instance LayoutClass Notebook a where
                     resize Expand = l { notebookFrac = min 10 $ f+d }
                     mresize MirrorShrink = l { notebookMirrorFrac = max (1/10) $ mf-dm }
                     mresize MirrorExpand = l { notebookMirrorFrac = min (9/10) $ mf+dm }
-                    sresize SShrink = l { notebookStackFrac = max 1 $ sf-d }
+                    sresize SShrink = l { notebookStackFrac = max 0.3 $ sf-d }
                     sresize SExpand = l { notebookStackFrac = min 10 $ sf+d }
                     incmastern (IncColumnN x) = l { notebookMaster = max 0 $ min c (n+x) }
                     inccolumnn (IncMasterN x) = l { notebookColumn = max n (c+x) }

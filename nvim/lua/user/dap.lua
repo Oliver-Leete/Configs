@@ -132,25 +132,31 @@ dap.configurations.sh = {
 }
 
 local hint = [[
-^^^^         Step
-^^^^━━━━━━━━━━━━━━━━━━━━━━━━
-^^^          back
-^^           _,k_
-     out _,h_ ^^ _,l_ into
-^^           _,j_
-^^^          over
-^  ns-out _,<_  _,>_ ns-in
-
-^^          Action
-^^^^^━━━━━━━━━━━━━━━━━━━━━━━━
- ^^_,t_: toggle breakpoint
- ^^_,T_: special breakpoint
- ^^_,r_: continue
- ^^_,R_: continue to cursor
- ^^_,p_: pause
- ^^_,X_: terminate
-
- _,<esc>_: exit
+┏^^^━━━━━━━━┳━━━━━━┳━━━━━━━━^^^┓
+┃^^^        ┃  DAP ┃        ^^^┃
+┃^^^        ┗━━━━━━┛        ^^^┃
+┃^^^          Step          ^^^┃
+┣^^^━━━━━━━━━━━━━━━━━━━━━━━━^^^┫
+┃^^^                        ^^^┃
+┃^^^          back          ^^^┃
+┃^^           _,k_           ^^┃
+┃     out _,h_ ^^ _,l_ into    ┃
+┃^^           _,j_           ^^┃
+┃^^^          over          ^^^┃
+┃^  ns-out _,<_  _,>_ ns-in   ^┃
+┃^^^                        ^^^┃
+┃^^^          Jump          ^^^┃
+┣^^^━━━━━━━━━━━━━━━━━━━━━━━━^^^┫
+┃ _,t_: toggle breakpoint  ^^^^┃
+┃ _,T_: special breakpoint ^^^^┃
+┃ _,r_: continue           ^^^^┃
+┃ _,R_: continue to cursor ^^^^┃
+┃ _,p_: pause              ^^^^┃
+┃ _,X_: terminate          ^^^^┃
+┣^^━━━━━━━━━━━━━━━━━━━━━━━━^^^^┫
+┃ _,f_: breakpoint finder  ^^^^┃
+┃ _,<esc>_: exit           ^^^^┃
+┗^^━━━━━━━━━━━━━━━━━━━━━━━━^^^^┛
 ]]
 DapHydra = require('hydra')({
     name = 'Debug',
@@ -159,8 +165,8 @@ DapHydra = require('hydra')({
         color = 'pink',
         invoke_on_body = true,
         hint = {
-            border = Border,
-            position = "middle-right"
+            border = nil,
+            position = "top-right"
         },
     },
     mode = { 'n' },
@@ -184,6 +190,7 @@ DapHydra = require('hydra')({
         { ',X', dap.terminate, { desc = 'terminate' } },
         { ",p", dap.pause },
         { ',<esc>', nil, { exit = true, nowait = true, desc = 'exit' } },
+        { ",f", "<cmd>Telescope dap list_breakpoints theme=get_ivy<cr>" },
         { '<leader>d', nil, { exit = true, nowait = true, desc = false } },
     }
 })

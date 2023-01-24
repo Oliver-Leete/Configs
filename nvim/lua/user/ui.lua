@@ -18,6 +18,20 @@ require("dressing").setup({
         telescope = require("telescope.themes").get_ivy({
             height = 30,
         }),
+        get_config = function(opts)
+            Kind = opts.kind
+            if opts.kind == 'codeaction' then
+                return {
+                    backend = 'telescope',
+                    telescope = require("telescope.themes").get_cursor({})
+                }
+            elseif vim.tbl_contains({"overseer_template", "overseer_task_options", "overseer_task"}, opts.kind) then
+                return {
+                    backend = 'telescope',
+                    telescope = require("telescope.themes").get_dropdown()
+                }
+            end
+        end
     },
 })
 

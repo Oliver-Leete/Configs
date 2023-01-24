@@ -203,7 +203,7 @@ yellow     = "#DCA561"
 -- sizes
 gap    = 3
 reSize = 1/12
-moreReSize = 1/2
+moreReSize = 1/4
 myBorder = 0
 
 myWideFont :: [Char]
@@ -263,7 +263,9 @@ myLayoutHook = smartBorders
     notebookTwoMain = Notebook False True True 2 3 moreReSize reSize 3 (2/3) 1
     notebookColumns = Notebook False True True 4 4 moreReSize reSize 2 (2/3) 1
 
-    notebookDifferent = onWorkspaces ["Thesis", "Print"] notebookThesis $ onWorkspaces ["Comments"] notebookTwoMain notebookMulti
+    notebookDND = Notebook False True True 4 4 moreReSize reSize 2 (2/3) 0.5
+
+    notebookDifferent = onWorkspaces ["Dnd"] notebookDND $ onWorkspaces ["Thesis", "Print"] notebookThesis $ onWorkspaces ["Comments"] notebookTwoMain notebookMulti
 
     notebookLaptop = FourTall 1 reSize (2/3)
     notebookLayout = ifWider 1920 (onWorkspaces ["Tmp", "Tmp2", "Home", "Wrk"] notebookColumns notebookDifferent) notebookLaptop

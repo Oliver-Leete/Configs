@@ -64,9 +64,7 @@ local custom_attach = function(client, bufnr)
             { callback = vim.lsp.codelens.refresh, buffer = bufnr, group = lsp_auto }
         )
     end
-    if sc.codeActionProvider then
-        bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action)
-    end
+    bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action)
 end
 
 require("mason").setup({ ui = { border = Border } })

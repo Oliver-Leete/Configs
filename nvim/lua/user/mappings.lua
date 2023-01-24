@@ -119,28 +119,41 @@ Map({ "n", "x", "o" }, "gV", "`[v`]")
 Map("n", "gF", ":edit <cfile><cr>")
 Map("n", "gx", ":!xdg-open <cfile> &<cr><cr>")
 
+local view_hint = [[
+┏^^^^━━━━━┳━━━━━━┳━━━━━^^^^┓
+┃^^^^     ┃ View ┃     ^^^^┃
+┃^^^^     ┗━━━━━━┛     ^^^^┃
+┃^^^^       Move       ^^^^┃
+┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
+┃ _h_/_j_/_k_/_l_: ←/↓/↑/→ ┃
+┃ _H_/_J_/_K_/_L_: ⇚/⟱/⤊/⇛ ┃
+┃^^^^                  ^^^^┃
+┃^^^^       Jump       ^^^^┃
+┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
+┃^^    _t_: top        ^^^^┃
+┃^^    _v_: middle     ^^^^┃
+┃^^    _b_: bottom     ^^^^┃
+┃^^    _s_: start      ^^^^┃
+┃^^    _m_: middle     ^^^^┃
+┃^^    _e_: end        ^^^^┃
+┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
+┃^^    _<esc>_: exit   ^^^^┃
+┗^^^^━━━━━━━━━━━━━━━━━━^^^^┛
+]]
 -- VIEW
 Hydra({
     name = "View",
     mode = { "n", "x" },
     body = "v",
     config = {
+        color = "teal",
         invoke_on_body = true,
         hint = {
-            position = "middle-right",
-            border = Border
+            position = "top-right",
+            border = nil
         }
     },
-    hint = [[
- _h_/_j_/_k_/_l_: ←/↓/↑/→
- _H_/_J_/_K_/_L_: ⇚/⟱/⤊/⇛
-       _t_: top
-       _v_: middle
-       _b_: bottom
-       _s_: start
-       _m_: middle
-       _e_: end
-]]   ,
+    hint = view_hint,
     heads = {
         { "h", "zh" },
         { "J", "<c-d>" },
@@ -152,13 +165,49 @@ Hydra({
         { "k", "<c-y>" },
         { "l", "zl" },
 
-        { "t", "zt", { exit = true } },
-        { "v", "zz", { exit = true } },
-        { "b", "zb", { exit = true } },
+        { "t", "zt" },
+        { "v", "zz" },
+        { "b", "zb" },
 
-        { "s", "zs", { exit = true } },
-        { "m", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>", { exit = true } },
-        { "e", "ze", { exit = true } },
+        { "s", "zs" },
+        { "m", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
+        { "e", "ze" },
+        { "<esc>", nil, { exit = true, nowait = true, desc = 'exit' } },
+    }
+})
+
+Hydra({
+    name = "View",
+    mode = { "n", "x" },
+    body = "V",
+    config = {
+        color = 'amaranth',
+        invoke_on_body = true,
+        hint = {
+            position = "top-right",
+            border = nil
+        }
+    },
+    hint = view_hint,
+    heads = {
+        { "h", "zh" },
+        { "J", "<c-d>" },
+        { "K", "<c-u>" },
+        { "L", "zL" },
+
+        { "H", "zH" },
+        { "j", "<c-e>" },
+        { "k", "<c-y>" },
+        { "l", "zl" },
+
+        { "t", "zt" },
+        { "v", "zz" },
+        { "b", "zb" },
+
+        { "s", "zs" },
+        { "m", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
+        { "e", "ze" },
+        { "<esc>", nil, { exit = true, nowait = true, desc = 'exit' } },
     }
 })
 
@@ -177,7 +226,7 @@ Map("n", ",rr", vim.lsp.buf.rename)
 -- return ":IncRename " .. vim.fn.expand("<cword>")
 -- end, { expr = true })
 
--- Map({ "n", "x" }, ",rs", require("ssr").open)
+Map({ "n", "x" }, ",rs", require("ssr").open)
 
 Map("n", ",rf", function() require("refactoring").refactor("Extract Block") end)
 Map("x", ",rf", function() require("refactoring").refactor("Extract Function") end)
@@ -318,7 +367,7 @@ Map("n", "<c-rightmouse>", "gf")
 
 Ls = require("luasnip")
 Map({ "i", "s" }, "<tab>", function()
-    if Ls.expand_or_jumpable() then
+    if Ls.expand_or_locally_jumpable() then
         Ls.expand_or_jump()
     else
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<tab>", true, true, true), "n", false)
@@ -326,7 +375,7 @@ Map({ "i", "s" }, "<tab>", function()
 end, { silent = true })
 
 Map({ "i", "s" }, "<s-tab>", function()
-    if Ls.jumpable(-1) then
+    if Ls.locally_jumpable(-1) then
         Ls.jump(-1)
     else
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<s-tab>", true, true, true), "n", false)

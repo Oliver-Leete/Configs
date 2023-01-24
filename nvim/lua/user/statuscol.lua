@@ -32,12 +32,12 @@ require("statuscol").setup({
 local gitconfig = require("gitsigns.config").config
 
 local gitsigns = {
-    GitSignsAdd          = "▐",
-    GitSignsChange       = "▐",
-    GitSignsDelete       = "▐",
-    GitSignsTopdelete    = "▐",
-    GitSignsChangedelete = "▐",
-    GitSignsUntracked    = "░",
+    GitSignsAdd          = "┃",
+    GitSignsChange       = "┃",
+    GitSignsDelete       = "╽",
+    GitSignsTopdelete    = "╿",
+    GitSignsChangedelete = "┃",
+    GitSignsUntracked    = "┋",
 }
 
 ScGs = function()
@@ -45,7 +45,7 @@ ScGs = function()
     local sign = vim.fn.sign_getplaced(bufnr, { lnum = vim.v.lnum, group = "gitsigns_vimfn_signs_" })[1].signs
     local signstaged = vim.fn.sign_getplaced(bufnr, { lnum = vim.v.lnum, group = "gitsigns_vimfn_signs_staged" })[1].signs
     local hl
-    local text = "▕"
+    local text = "│"
     if #sign >= 1 and sign[1].name then
         local name = sign[1].name
         hl = "%#" .. name .. (vim.v.lnum == vim.fn.line(".") and "Cur" or "") .. "#"
@@ -79,6 +79,10 @@ vim.api.nvim_set_hl(0, "DiagnosticSignErrorCur", { fg = "#E82424", bg = "#363646
 vim.api.nvim_set_hl(0, "DiagnosticSignWarnCur", { fg = "#FF9E3B", bg = "#363646" })
 vim.api.nvim_set_hl(0, "DiagnosticSignInfoCur", { fg = "#658494", bg = "#363646" })
 vim.api.nvim_set_hl(0, "DiagnosticSignHintCur", { fg = "#6A9589", bg = "#363646" })
+vim.api.nvim_set_hl(0, "NeotestPassedCur", { fg = "#96F291", bg = Tc.sumiInk3 })
+vim.api.nvim_set_hl(0, "NeotestFailedCur", { fg = "#F70067", bg = Tc.sumiInk3 })
+vim.api.nvim_set_hl(0, "NeotestRunningCur", { fg = "#FFEC63", bg = Tc.sumiInk3 })
+vim.api.nvim_set_hl(0, "NeotestSkippedCur", { fg = "#00f1f5", bg = Tc.sumiInk3 })
 
 ScEs = function()
     local sign

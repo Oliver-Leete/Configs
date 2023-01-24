@@ -12,7 +12,7 @@ require("neotest").setup({
             python = "venv/bin/python",
             is_test_file = function(file_path)
                 local ending = ".py"
-                return file_path:sub(-#ending) == ending
+                return file_path:sub(- #ending) == ending
             end
         }),
         require("neotest-haskell"),
@@ -26,7 +26,7 @@ require("neotest").setup({
         max_width = 0.9,
     },
     icons = {
-        running_animated = {"⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"},
+        running_animated = { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" },
         passed = " ",
         running = " ",
         failed = " ",

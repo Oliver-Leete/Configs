@@ -83,22 +83,28 @@ end
 
 Old_dir_jump = "search"
 local hint = [[
- n: next hunk
- N: prev hunk
-
- _,s_: stage hunk
- _,r_: reset hunk
- _,u_: undo last stage
-
- _,S_: stage buffer
-^^^━━━━━━━━━━━━━━━━━━━━
- _,K_: blame line
- _,p_: preview hunk
-
- _,d_: show diff
-^^━━━━━━━━━━━━━━━━━━━━
- _,f_: file finder
- _,<esc>_: exit
+┏^━━━━━━━━┳━━━━━┳━━━━━━━^┓
+┃^        ┃ GIT ┃       ^┃
+┃^        ┗━━━━━┛       ^┃
+┃^         Hunks        ^┃
+┣^━━━━━━━━━━━━━━━━━━━━━━^┫
+┃^ n: next hunk         ^┃
+┃^ N: prev hunk         ^┃
+┃^                      ^┃
+┃ _,s_: stage hunk       ┃
+┃ _,r_: reset hunk       ┃
+┃ _,u_: undo last stage  ┃
+┃ _,S_: stage buffer     ┃
+┃^                      ^┃
+┃^          View        ^┃
+┣^━━━━━━━━━━━━━━━━━━━━━━^┫
+┃ _,K_: blame line       ┃
+┃ _,p_: preview hunk     ┃
+┃ _,d_: show diff        ┃
+┣^━━━━━━━━━━━━━━━━━━━━━━^┫
+┃ _,f_: file finder      ┃
+┃ _,<esc>_: exit         ┃
+┗^━━━━━━━━━━━━━━━━━━━━━━^┛
 ]]
 Hydra({
     name = 'Git',
@@ -107,15 +113,17 @@ Hydra({
         color = 'pink',
         invoke_on_body = true,
         hint = {
-            position = "middle-right",
-            border = Border
+            position = "top-right",
+            border = nil
         },
         on_enter = function()
             Old_dir_jump = vim.g.dirJumps
             vim.g.dirJumps = "h"
         end,
         on_exit = function()
-            vim.g.dirJumps = Old_dir_jump
+            if vim.g.dirJumps == "h" then
+                vim.g.dirJumps = Old_dir_jump
+            end
             on = false
             gitsigns.toggle_linehl(false)
             gitsigns.toggle_deleted(false)

@@ -7,6 +7,7 @@ require("telescope").load_extension("dap")
 require("telescope").load_extension("refactoring")
 require("telescope").load_extension("noice")
 require("telescope").load_extension("undo")
+local command_center = require("command_center")
 
 require("telescope").setup({
     defaults = {
@@ -66,9 +67,22 @@ require("telescope").setup({
         lsp_handlers = {
             require("telescope.themes").get_dropdown(),
         },
+        command_center = {
+            components = {
+                command_center.component.CATEGORY,
+                command_center.component.DESC,
+                command_center.component.KEYS,
+            },
+            sort_by = {
+                command_center.component.CATEGORY,
+                command_center.component.DESC,
+            },
+            theme = require("telescope.themes").get_dropdown,
+        },
     },
 })
 
+require("telescope").load_extension("command_center")
 require("telescope").load_extension("file_browser")
 require("telescope").load_extension("fzf")
 

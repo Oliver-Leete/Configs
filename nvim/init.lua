@@ -48,6 +48,7 @@ require("lazy").setup(
         "cshuaimin/ssr.nvim",
 
         "lervag/vimtex",
+        "iurimateus/luasnip-latex-snippets.nvim",
         "fladson/vim-kitty",
         "wilriker/gcode.vim",
         "LhKipp/nvim-nu",
@@ -111,6 +112,7 @@ require("lazy").setup(
         { "nvim-telescope/telescope-fzf-native.nvim",
             build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build" },
         "debugloop/telescope-undo.nvim",
+        "FeiyouG/command_center.nvim",
 
         { "nvim-treesitter/nvim-treesitter", build = ":TSInstall all | TSUpdate" },
         "nvim-treesitter/playground",

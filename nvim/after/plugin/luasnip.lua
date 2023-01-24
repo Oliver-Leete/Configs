@@ -434,11 +434,6 @@ Ls.add_snippets("tex", {
     }),
 
     -- NOTE : MATHS
-    s({ trig = "int", name = "integer" }, {
-        t("\\overset{\\#}{"), i(1), t("}"),
-    },
-        { show_condition = tex.in_mathzone, condition = tex.in_mathzone }
-    ),
     s({ trig = "%s/", name = "fraction", regTrig = true }, {
         t("\\frac{"), i(1), t("}{"), i(2), t("}")
     },
@@ -474,4 +469,21 @@ Ls.add_snippets("tex", {
         t("\\node ("), i(1, "nodeID"), t(") ["), i(2, "style"), t(", "), i(3, "position"), t("] {"), i(4, "text"),
         t("};")
     }),
+})
+
+require("luasnip-latex-snippets").setup()
+
+Ls.add_snippets("tex",
+    {
+        s(
+            { trig = "<-", name = "gets" }, { t("\\gets"), },
+            { show_condition = tex.in_mathzone, condition = tex.in_mathzone }
+        ),
+        s(
+            { trig = "->", name = "to", }, { t("\\to"), },
+            { show_condition = tex.in_mathzone, condition = tex.in_mathzone }
+        ),
+    }, {
+    type = "autosnippets",
+    default_priority = 0,
 })
