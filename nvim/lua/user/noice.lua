@@ -77,7 +77,7 @@ require("noice").setup({
     },
     presets = {
         long_message_to_split = true,
-        command_palette = true,
+        -- command_palette = false,
         lsp_doc_border = true,
         -- inc_rename = true,
     },

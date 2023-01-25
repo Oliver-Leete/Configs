@@ -80,7 +80,37 @@ return {
                 builder = function()
                     return {
                         name = "Build Document",
-                        cmd = "latexmk -pdf -file-line-error -synctex=1 OML-Thesis.tex",
+                        cmd = "latexmk -silent",
+                        strategy = { "toggleterm", open_on_start = false },
+                        components = { "default", 'unique' }
+                    }
+                end,
+                priority = 5,
+                condition = {
+                    dir = "/home/oleete/UniversityDrive/Thesis/thesis"
+                }
+            },
+            {
+                name = "Verbose Build Document",
+                builder = function()
+                    return {
+                        name = "Build Document",
+                        cmd = "latexmk",
+                        strategy = { "toggleterm", open_on_start = true },
+                        components = { "default", 'unique' }
+                    }
+                end,
+                priority = 5,
+                condition = {
+                    dir = "/home/oleete/UniversityDrive/Thesis/thesis"
+                }
+            },
+            {
+                name = "Clean Build Files",
+                builder = function()
+                    return {
+                        name = "Clean Build Files",
+                        cmd = "latexmk -c",
                         strategy = { "toggleterm", open_on_start = false },
                         components = { "default", 'unique' }
                     }

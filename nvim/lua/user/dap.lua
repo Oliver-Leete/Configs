@@ -104,23 +104,23 @@ dap.configurations.cpp = {
 dap.configurations.c = dap.configurations.cpp
 
 dap.adapters.bashdb = {
-    type = 'executable';
-    command = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/bash-debug-adapter';
-    name = 'bashdb';
+    type = "executable";
+    command = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/bash-debug-adapter";
+    name = "bashdb";
 }
 
 dap.configurations.sh = {
     {
-        type = 'bashdb';
-        request = 'launch';
+        type = "bashdb";
+        request = "launch";
         name = "Launch file";
         showDebugOutput = true;
-        pathBashdb = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb';
-        pathBashdbLib = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir';
+        pathBashdb = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb";
+        pathBashdbLib = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir";
         trace = true;
         file = "${file}";
         program = "${file}";
-        cwd = '${workspaceFolder}';
+        cwd = "${workspaceFolder}";
         pathCat = "cat";
         pathBash = "/bin/bash";
         pathMkfifo = "mkfifo";
@@ -158,40 +158,40 @@ local hint = [[
 ┃ _,<esc>_: exit           ^^^^┃
 ┗^^━━━━━━━━━━━━━━━━━━━━━━━━^^^^┛
 ]]
-DapHydra = require('hydra')({
-    name = 'Debug',
+DapHydra = require("hydra")({
+    name = "Debug",
     hint = hint,
     config = {
-        color = 'pink',
+        color = "pink",
         invoke_on_body = true,
         hint = {
             border = nil,
             position = "top-right"
         },
     },
-    mode = { 'n' },
-    body = '<leader>d',
+    mode = { "n" },
+    body = "<leader>d",
     heads = {
-        { ',h', dap.step_out, { desc = 'step out' } },
-        { ',j', dap.step_over, { desc = 'step over' } },
-        { ',k', dap.step_back, { desc = 'step back' } },
-        { ',l', dap.step_into, { desc = 'step into' } },
-        { ',t', dap.toggle_breakpoint, { desc = 'toggle breakpoint' } },
+        { ",h", dap.step_out, { desc = "step out" } },
+        { ",j", dap.step_over, { desc = "step over" } },
+        { ",k", dap.step_back, { desc = "step back" } },
+        { ",l", dap.step_into, { desc = "step into" } },
+        { ",t", dap.toggle_breakpoint, { desc = "toggle breakpoint" } },
         { ",T", function()
-            local cond = vim.fn.input('Breakpoint condition: ')
-            local hit = vim.fn.input('Hit condition: ')
-            local log = vim.fn.input('Log message: ')
+            local cond = vim.fn.input("Breakpoint condition: ")
+            local hit = vim.fn.input("Hit condition: ")
+            local log = vim.fn.input("Log message: ")
             dap.set_breakpoint(cond, hit, log)
         end },
         { ",<", dap.up },
         { ",>", dap.down },
-        { ',r', dap.continue, { desc = 'continue' } },
+        { ",r", dap.continue, { desc = "continue" } },
         { ",R", dap.run_to_cursor },
-        { ',X', dap.terminate, { desc = 'terminate' } },
+        { ",X", dap.terminate, { desc = "terminate" } },
         { ",p", dap.pause },
-        { ',<esc>', nil, { exit = true, nowait = true, desc = 'exit' } },
+        { ",<esc>", nil, { exit = true, nowait = true, desc = "exit" } },
         { ",f", "<cmd>Telescope dap list_breakpoints theme=get_ivy<cr>" },
-        { '<leader>d', nil, { exit = true, nowait = true, desc = false } },
+        { "<leader>d", nil, { exit = true, nowait = true, desc = false } },
     }
 })
 

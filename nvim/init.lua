@@ -9,7 +9,7 @@ if not vim.loop.fs_stat(lazypath) then
         "clone",
         "--filter=blob:none",
         "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable", -- latest stable release
+        "--branch=stable",
         lazypath,
     })
 end
@@ -58,7 +58,6 @@ require("lazy").setup(
         "sindrets/diffview.nvim",
 
         "rebelot/kanagawa.nvim",
-        -- "lukas-reineke/indent-blankline.nvim",
         "stevearc/dressing.nvim",
         "rcarriga/nvim-notify",
         "nvim-lualine/lualine.nvim",
@@ -67,7 +66,6 @@ require("lazy").setup(
         "nvim-zh/colorful-winsep.nvim",
         "luukvbaal/statuscol.nvim",
 
-        "mbbill/undotree",
         "folke/todo-comments.nvim",
 
         "williamboman/mason.nvim",

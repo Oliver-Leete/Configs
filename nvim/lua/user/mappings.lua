@@ -172,7 +172,7 @@ Hydra({
         { "s", "zs" },
         { "m", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
         { "e", "ze" },
-        { "<esc>", nil, { exit = true, nowait = true, desc = 'exit' } },
+        { "<esc>", nil, { exit = true, nowait = true, desc = "exit" } },
     }
 })
 
@@ -181,7 +181,7 @@ Hydra({
     mode = { "n", "x" },
     body = "V",
     config = {
-        color = 'amaranth',
+        color = "amaranth",
         invoke_on_body = true,
         hint = {
             position = "top-right",
@@ -207,7 +207,8 @@ Hydra({
         { "s", "zs" },
         { "m", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
         { "e", "ze" },
-        { "<esc>", nil, { exit = true, nowait = true, desc = 'exit' } },
+        { "<esc>", nil, { exit = true, nowait = true, desc = "exit" } },
+        { "V", nil, { exit = true, nowait = true, desc = false } },
     }
 })
 
