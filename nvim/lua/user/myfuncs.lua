@@ -10,7 +10,7 @@ M.special_types = {
     juliadoc = { name = " Docs", exit_func = winclose },
     lspinfo = { exit_func = winclose },
     tsplayground = { name = " TSPlayground", exit_func = winclose },
-    query = { name = " TS Query", exit_func = winclose },
+    -- query = { name = " TS Query", exit_func = winclose },
     ["harpoon-menu"] = { exit_func = winclose },
     toggleterm = { exit_func = winclose },
     notify = { exit_func = winclose },
@@ -33,6 +33,7 @@ M.special_types = {
     ["mason"] = { exit_func = winclose },
     ["null-ls-info"] = { exit_func = winclose },
     ["Glance"] = { exit_func = require('glance').actions.close },
+    asm = { name = "Compiler Explorer", exit_func = winclose },
     [""] = { exit_func = winclose },
 }
 
@@ -41,7 +42,7 @@ M.is_special = function(bufnr)
     local filetype = vim.bo[bufnr].filetype
     local buftype = vim.bo[bufnr].buftype
     return vim.tbl_contains(vim.tbl_keys(M.special_types), filetype) or
-        (buftype == "nofile" and (filetype == "" or filetype == "vim"))
+        (buftype == "nofile" and (filetype == "" or filetype == "vim" or filetype == "asm"))
 end
 
 -- Count normal windows on current tab page

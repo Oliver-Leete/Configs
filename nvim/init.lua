@@ -64,7 +64,6 @@ require("lazy").setup(
         "MunifTanjim/nui.nvim",
         "folke/noice.nvim",
         "nvim-zh/colorful-winsep.nvim",
-        "luukvbaal/statuscol.nvim",
 
         "folke/todo-comments.nvim",
 

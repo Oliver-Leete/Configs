@@ -34,6 +34,7 @@ zsh/
 !/broot/conf.hjson
 !/vifm/vifmrc
 !/nvim/after/plugin/*
+!/nvim/after/queries/*
 !/nvim/after/ftplugin/*
 !topgrade.toml
 !/**/tasks.lua

@@ -21,6 +21,18 @@ require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
 
 require("hex").setup()
 
+require("compiler-explorer").setup({
+    diagnostics = {
+        underline = false,
+        virtual_text = true,
+        signs = true,
+    },
+    autocmd = {
+        enable = true,
+        hl = "Search",
+    }
+})
+
 local util = require("perfanno.util")
 
 require("perfanno").setup({

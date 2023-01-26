@@ -22,13 +22,3 @@ require("todo-comments").setup({
         default = { "Identifier", "#7C3AED" },
     },
 })
-
-require("compiler-explorer").setup({
-    autocmd = {
-        enable = true,
-        hl = "Search",
-    }
-})
-
-vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1]])
-
