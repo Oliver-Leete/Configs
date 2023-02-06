@@ -1,1 +1,1 @@
-return { "attach_toggleterm", "dispose_now" }
+return { "dispose_now", "start_open" }

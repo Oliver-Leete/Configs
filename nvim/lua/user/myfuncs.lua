@@ -12,7 +12,6 @@ M.special_types = {
     tsplayground = { name = " TSPlayground", exit_func = winclose },
     -- query = { name = " TS Query", exit_func = winclose },
     ["harpoon-menu"] = { exit_func = winclose },
-    toggleterm = { exit_func = winclose },
     notify = { exit_func = winclose },
     undotree = { name = "碑Undos", exit_func = function() vim.cmd("UndotreeHide") end },
     DiffviewFileHistory = { name = " Diffs", exit_func = function() vim.cmd("DiffviewClose") end },
@@ -27,7 +26,6 @@ M.special_types = {
     ["dap-repl"] = { name = "Debug REPL", exit_func = winclose },
     ["dapui_console"] = { name = "Debug Console", exit_func = winclose },
     ["neotest-summary"] = { name = " Tests", exit_func = winclose },
-    ["vim"] = { exit_func = winclose },
     ["gitcommit"] = { name = "Git Commit Message", exit_func = winclose },
     ["noice"] = { name = "Noice", exit_func = function() vim.cmd.quit() end },
     ["mason"] = { exit_func = winclose },
@@ -42,7 +40,7 @@ M.is_special = function(bufnr)
     local filetype = vim.bo[bufnr].filetype
     local buftype = vim.bo[bufnr].buftype
     return vim.tbl_contains(vim.tbl_keys(M.special_types), filetype) or
-        (buftype == "nofile" and (filetype == "" or filetype == "vim" or filetype == "asm"))
+        (buftype == "nofile" and (filetype == "" or filetype == "asm"))
 end
 
 -- Count normal windows on current tab page
@@ -122,48 +120,6 @@ local zen_or_full = function()
     end
 end
 vim.api.nvim_create_user_command("ZenOrFull", zen_or_full, { nargs = 0 })
-
-local tab_next = function()
-    if vim.bo[0].filetype == "toggleterm" then
-        local term_id = vim.b[0].my_term_id
-        local term_list = require("toggleterm.terminal").get_all(true)
-        local cur_index = 1
-        for i, term in pairs(term_list) do
-            if tonumber(term_id) == term.id then
-                cur_index = i
-            end
-        end
-        local next_index = cur_index == #term_list and 1 or cur_index + 1
-        local cur_win = vim.api.nvim_get_current_win()
-        vim.api.nvim_win_set_buf(cur_win, term_list[next_index].bufnr)
-        OTerm = term_list[next_index]
-        OTerm.window = vim.api.nvim_get_current_win()
-    else
-        vim.cmd("tabnext")
-    end
-end
-vim.api.nvim_create_user_command("TabNext", tab_next, { nargs = 0 })
-
-local tab_prev = function()
-    if vim.bo[0].filetype == "toggleterm" then
-        local term_id = vim.b[0].my_term_id
-        local term_list = require("toggleterm.terminal").get_all(true)
-        local cur_index = #term_list
-        for i, term in pairs(term_list) do
-            if tonumber(term_id) == term.id then
-                cur_index = i
-            end
-        end
-        local next_index = cur_index == 1 and #term_list or cur_index - 1
-        local cur_win = vim.api.nvim_get_current_win()
-        vim.api.nvim_win_set_buf(cur_win, term_list[next_index].bufnr)
-        OTerm = term_list[next_index]
-        OTerm.window = vim.api.nvim_get_current_win()
-    else
-        vim.cmd("tabprevious")
-    end
-end
-vim.api.nvim_create_user_command("TabPrev", tab_prev, { nargs = 0 })
 
 local mode_map = {
     ['n'] = { 'NORMAL', 'Normal' },

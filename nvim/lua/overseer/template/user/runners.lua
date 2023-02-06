@@ -132,7 +132,7 @@ return {
                         return {
                             cmd = ft.filerunner(),
                             name = "Running " .. vim.fn.expand("%:t:r"),
-                            components = { "default", "unique" }
+                            components = { "default", "unique", "user.start_open" }
                         }
                     end,
                     priority = 4,
@@ -151,6 +151,7 @@ return {
                         return {
                             cmd = ft.repl,
                             name = ft.name .. " REPL " .. ft.num,
+                            components = { "default", "user.start_open" }
                         }
                     end,
                     priority = 5,

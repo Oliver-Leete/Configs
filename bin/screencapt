@@ -20,8 +20,8 @@ capture () {
 	FILENAME="/home/oleete/Pictures/captures/$(date +'%Y-%m-%d-%H-%M-%S').$FILETYPE"
 
 	getarea # sets W H X Y
-  scrot -a ${X},${Y},${W},${H} $FILENAME
-  xclip -selection clipboard -t image/png -i $FILENAME
+    scrot -a ${X},${Y},${W},${H} $FILENAME
+    xclip -selection clipboard -t image/png -i $FILENAME
 
 	# notify-send "scrot -a ${X}x${Y}x${W}x${H} $FILENAME'"
 	notify-send "Screen capture taken\n$(basename $FILENAME)"

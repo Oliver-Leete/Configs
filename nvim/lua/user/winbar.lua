@@ -75,11 +75,16 @@ local navic_maker = function(hl)
     return ret
 end
 
+local overseer = require("overseer")
 local special_name = function(bufnr)
     if vim.bo[bufnr].filetype == "help" then
         local help_title = vim.fn.expand("%:t:r")
         help_title = help_title:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end)
         return help_title .. " Help"
+    elseif vim.bo[bufnr].buftype == "terminal" then
+        return vim.tbl_filter(
+            function(t) if t.strategy.bufnr == bufnr then return true end end, overseer.list_tasks()
+        )[1].name
     else
         local filetype = func.special_types[vim.bo[bufnr].filetype].name
         if filetype then
@@ -93,25 +98,6 @@ local special_winbar = function(bufnr, hl)
     if not specialname then return "" end
     return hl .. " " .. specialname .. " "
 end
-
--- local panel_types = {
---     "OverseerList",
---     "neo-tree",
---     "neotest-summary"
--- }
---
--- Panel_on_click = function(id)
---     old = math.floor(id / 1000)
---     new = id - (old * 1000)
---     vim.api.nvim_win_close(old)
---     Special_types[panel_types[new]].open()
--- end
---
--- local function panel_winbar(type, bufnr)
---     local winbar = ""
---     -- local pos = panel_types[vim.bo[bufnr].filetype] * 1000
---     return winbar
--- end
 
 -- File_on_click = function(bufnr)
 --     vim.cmd("Neotree " .. vim.api.nvim_buf_get_name(bufnr))
@@ -166,12 +152,6 @@ Normal_Winbar = function()
 
     local winbar = ""
     if func.is_special(bufnr) then
-        -- local type = Special_types[vim.bo[bufnr].filetype]
-        -- if type.on_panel then
-        --     winbar = panel_winbar(type, bufnr)
-        --     return "test"
-        --     -- return winbar .. hlb .. "%="
-        -- end
         winbar = special_winbar(bufnr, hl)
         if winbar == "" then return "" end
         return hlb .. "%=" .. hle .. "" .. winbar .. hle .. "" .. hlb .. "%=" .. hlb

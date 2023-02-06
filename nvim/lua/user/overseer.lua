@@ -1,16 +1,8 @@
 local overseer = require("overseer")
 local STATUS = require("overseer.constants").STATUS
 
-local tt = require("toggleterm.terminal")
-
-local task_to_term = function(task)
-    return vim.tbl_filter(function(term)
-        return term.bufnr == task.strategy.bufnr
-    end, tt.get_all(true))[1]
-end
-
 overseer.setup({
-    strategy = "toggleterm",
+    strategy = "terminal",
     form = { border = Border, win_opts = { winblend = 0, }, },
     task_editor = { border = Border, win_opts = { winblend = 0, }, },
     task_win = { border = Border, win_opts = { winblend = 0, }, },
@@ -21,7 +13,7 @@ overseer.setup({
             ["?"] = "ShowHelp",
             ["<CR>"] = "RunAction",
             ["<C-e>"] = "Edit",
-            ["o"] = "Toggle",
+            ["o"] = "oven vsplit",
             ["O"] = "Open",
             ["p"] = "TogglePreview",
             ["<C-l>"] = "IncreaseDetail",
@@ -48,55 +40,27 @@ overseer.setup({
             "display_duration",
         },
         default = {
+            "display_duration",
             "on_output_summarize",
             "on_exit_set_status",
             { "on_complete_notify", system = "unfocused" },
             "on_complete_dispose",
-            "display_duration",
         },
         always_restart = { "on_complete_restart", statuses = { STATUS.FAILURE, STATUS.SUCCESS } },
     },
     template_timeout = 5000,
     template_cache_threshold = 0,
     actions = {
-        toggle = {
-            run = function(task)
-                local term = task_to_term(task)
-                term:toggle()
-            end
-        },
-        ["open vsplit"] = false,
-        ["open hsplit"] = false,
         ["set loclist diagnostics"] = false,
-        ["toggle hide"] = {
-            desc = "close and detach the toggleterm",
-            run = function(task)
-                local term = task_to_term(task)
-                if term.hidden then
-                    term.hidden = false
-                    term:open()
-                    OTerm = term
-                else
-                    if OTerm == term then
-                        OTerm = nil
-                    end
-                    if STerm == term then
-                        STerm = nil
-                    end
-                    term.hidden = true
-                    term:close()
-                end
-            end,
-        },
-        ["set as recive terminal"] = {
-            desc = "set this task as the terminal to recive sent text and commands",
-            run = function(task)
-                local term = task_to_term(task)
-                term.hidden = false
-                OTerm = term
-                STerm = term
-            end,
-        },
+        -- ["set as recive terminal"] = {
+        --     desc = "set this task as the terminal to recive sent text and commands",
+        --     run = function(task)
+        --         local term = task_to_term(task)
+        --         term.hidden = false
+        --         OTerm = term
+        --         STerm = term
+        --     end,
+        -- },
         ["keep runnning"] = {
             desc = "restart the task even if it succeeds",
             run = function(task)

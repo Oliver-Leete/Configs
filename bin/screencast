@@ -12,6 +12,7 @@ FRAMERATE=60
 main () {
 	case ${1:-} in
 		stat*) status ;;
+		gif-last) convert_last_to_gif;;
 		slop|area|select|region) GETAREA=true; toggle ;;
 		window) GETWINDOW=true; toggle;;
 		*) toggle ;;
@@ -37,6 +38,7 @@ status () {
 
 start () {
 	FILENAME="$HOME/Videos/captures/$SCRIPTNAME-$(date +'%Y-%m-%d-%H-%M-%S').$FILETYPE"
+	FILENAMEGIF="$HOME/Videos/captures/$SCRIPTNAME-$(date +'%Y-%m-%d-%H-%M-%S').gif"
 
 	getarea # sets W H X Y
 
@@ -59,6 +61,14 @@ stop () {
 	rm $PIDFILE
 	notify-send "Screen recording complete\n$(basename $FILENAME)"
 	echo -n $FILENAME | xclip -sel clipboard
+}
+
+convert_last_to_gif () {
+    FILENAME="$HOME/Videos/captures/$(ls -Art "$HOME/Videos/captures" | rg mkv\$ | tail -n 1)"
+    FILENAMEGIF="${FILENAME%.*}.gif"
+	ffmpeg -i $FILENAME -vf "fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 $FILENAMEGIF
+	notify-send "Converted recording to gif\n$(basename $FILENAMEGIF)"
+	echo -n $FILENAMEGIF | xclip -sel clipboard
 }
 
 getarea () {

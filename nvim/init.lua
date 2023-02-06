@@ -125,8 +125,8 @@ require("lazy").setup(
         "andythigpen/nvim-coverage",
         "t-troebst/perfanno.nvim",
         "krady21/compiler-explorer.nvim",
-        "RaafatTurki/hex.nvim",
-        "akinsho/toggleterm.nvim",
+        -- "RaafatTurki/hex.nvim",
+        -- "akinsho/toggleterm.nvim",
 
         "mfussenegger/nvim-dap",
         "rcarriga/nvim-dap-ui",

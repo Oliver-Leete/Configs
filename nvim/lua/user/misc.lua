@@ -19,7 +19,7 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 
 require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
 
-require("hex").setup()
+-- require("hex").setup()
 
 require("compiler-explorer").setup({
     diagnostics = {

@@ -316,20 +316,6 @@ Map("n", "<leader>i", function()
         vim.cmd.echomsg({ args = { "'No O-Terminal found'" } })
     end
 end)
-Map("n", "<leader>I", function()
-    if STerm and vim.api.nvim_buf_is_valid(STerm.bufnr) then
-        vim.cmd.ToggleTermSendCurrentLine({ args = { STerm.id } })
-    else
-        vim.cmd.echomsg({ args = { "'No S-Terminal found'" } })
-    end
-end)
-Map("x", "<leader>I", function()
-    if STerm and vim.api.nvim_buf_is_valid(STerm.bufnr) then
-        vim.cmd.ToggleTermSendVisualLines({ args = { STerm.id } })
-    else
-        vim.cmd.echomsg({ args = { "'No S-Terminal found'" } })
-    end
-end)
 Map("n", "<leader>o", function() require("neotest").summary.toggle() end)
 
 Map("n", "<leader>l", function() require("neotest").run.run() end)
@@ -350,6 +336,11 @@ Map("n", "<leader>/B", "<cmd>silent EmainBench<cr>")
 Map("n", "<leader>f", function() ProjectFiles() end)
 Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
 
+-- Mouse Bindings
+
+Map("n", "<c-leftmouse>", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
+Map("n", "<c-rightmouse>", "gf")
+
 -- Insert Bindings
 
 vim.cmd([[inoremap <expr> <nowait> <c-y> matchstr(getline(line('.')-1),'\%'.virtcol('.').'v\%(\k\+\\|.\)')]])
@@ -362,9 +353,6 @@ Map({ "i", "s", "c" }, "<c-e>", "<END>")
 
 Map({ "i", "s" }, "<c-]>", "<plug>luasnip-next-choice")
 Map({ "i", "s", "c" }, "<c-space>", function() _G.cmp_toggle() end)
-
-Map("n", "<c-leftmouse>", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
-Map("n", "<c-rightmouse>", "gf")
 
 Ls = require("luasnip")
 Map({ "i", "s" }, "<tab>", function()

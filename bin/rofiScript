@@ -60,6 +60,7 @@ menu () {
     screenshot-area
     screencap
     screencap-area
+    screencap-to-gif
     screenkey
     screenkey-settings
 
@@ -72,6 +73,9 @@ menu () {
     full-screen
     full-bar
     centre-screen
+
+    kill-self
+    kill-others
 
     status
 
@@ -123,6 +127,7 @@ menu () {
         screenshot-area)    /home/oleete/.config/bin/screencapt area ;;
         screencap)          /home/oleete/.config/bin/screencast ;;
         screencap-area)     /home/oleete/.config/bin/screencast area ;;
+        screencap-to-gif)   /home/oleete/.config/bin/screencast gif-last ;;
         screenkey)          killall screenkey || screenkey ;;
         screenkey-settings) screenkey --show-settings ;;
 
@@ -134,6 +139,9 @@ menu () {
         full-screen)        /home/oleete/.cabal/bin/xmonadctl-exe layout-full ;;
         full-bar)           /home/oleete/.cabal/bin/xmonadctl-exe layout-fullbar ;;
         centre-screen)      /home/oleete/.cabal/bin/xmonadctl-exe layout-fullcentre ;;
+
+        kill-self)          /home/oleete/.cabal/bin/xmonadctl-exe kill-self ;;
+        kill-others)        /home/oleete/.cabal/bin/xmonadctl-exe kill-others ;;
 
         status)             /home/oleete/.config/bin/statusNotify ;;
 

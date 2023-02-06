@@ -9,8 +9,8 @@
 import qualified Data.Map                               as M
 import           Data.Monoid
 import           Graphics.X11.Types
-import qualified Graphics.X11.Xlib as X11
-import qualified Graphics.X11.Xinerama as X11
+import qualified Graphics.X11.Xinerama                  as X11
+import qualified Graphics.X11.Xlib                      as X11
 import           XMonad                                 hiding ((|||))
 import qualified XMonad.StackSet                        as W
 
@@ -330,8 +330,8 @@ myKeys n =
     , ("M-S-i"           , runProjectApp3Force)
     , ("M-S-o"           , upPointer $ spawn myBrowser)
 
-    , ("M-<Left>"        , bF $ nv "TabPrev" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_Left)  $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
-    , ("M-<Right>"       , bF $ nv "TabNext" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_Right) $ l (P.sendKey controlMask xK_Tab))
+    , ("M-<Left>"        , bF $ nv "tabprev" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_Left)  $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
+    , ("M-<Right>"       , bF $ nv "tabnext" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_Right) $ l (P.sendKey controlMask xK_Tab))
     , ("M-<Down>"        , windows W.focusDown)
     , ("M-<Up>"          , windows W.focusUp)
 
@@ -588,4 +588,7 @@ myCommands _ =
 
     , ("dump-stack"          , debugStack)
     , ("dump-full-stack"     , debugStackFull)
+
+    , ("kill-others"         , killAllOtherCopies)
+    , ("kill-self"           , kill1)
     ]

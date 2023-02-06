@@ -192,9 +192,14 @@ lspconfig.texlab.setup({
                 onSave = false,
             },
             chktex = {
-                onEdit = false,
-                onOpenAndSave = false,
+                onEdit = true,
+                onOpenAndSave = true,
             },
+            latexFormatter = "latexindent",
+            latexindent = {
+                ["local"] = ".latexindent.yaml",
+                modifyLineBreaks = true,
+            }
         },
     },
 })
@@ -305,14 +310,12 @@ require("null-ls").setup({
     diagnostics_format = "[#{c}] #{m} (#{s})",
     sources = {
         null_ls.builtins.code_actions.gitrebase,
-        null_ls.builtins.diagnostics.chktex,
         null_ls.builtins.diagnostics.fish,
         null_ls.builtins.diagnostics.gitlint,
         null_ls.builtins.diagnostics.jsonlint,
         null_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013", "MD046", "MD009" } }),
         null_ls.builtins.formatting.fish_indent,
         null_ls.builtins.formatting.jq.with({ extra_args = { "--indent", "4" } }),
-        null_ls.builtins.formatting.latexindent,
         null_ls.builtins.formatting.markdownlint,
         null_ls.builtins.formatting.shellharden,
         null_ls.builtins.formatting.shfmt,

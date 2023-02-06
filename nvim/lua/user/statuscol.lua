@@ -79,9 +79,22 @@ ScMn = function()
     return hl .. vim.v.lnum
 end
 
-vim.o.statuscolumn = "%{%v:lua.ScEs()%}%=%{%v:lua.ScMn()%}%{%v:lua.ScGs()%}"
-
 local colGroup = vim.api.nvim_create_augroup("colGroup", {})
+vim.api.nvim_create_autocmd(
+    "BufEnter",
+    {
+        pattern = "*",
+        callback = function(info)
+            if vim.bo[info.buf].buftype == "" then
+                vim.wo.statuscolumn = "%{%v:lua.ScEs()%}%=%{%v:lua.ScMn()%}%{%v:lua.ScGs()%}"
+            else
+                vim.wo.statuscolumn = "%C"
+            end
+        end,
+        group = colGroup,
+    }
+)
+
 for _, filetype in pairs(vim.tbl_keys(require("user.myfuncs").special_types)) do
     if filetype ~= "" then
         vim.api.nvim_create_autocmd(

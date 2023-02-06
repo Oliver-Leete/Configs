@@ -406,4 +406,5 @@ return {
     compound_statement = {{ begin_to_par, name = "Change to parenthesized expression" }},
     parenthesized_expression = {{ par_to_begin, name = "Change to compound statement" }},
     call_expression = {{ toggle_do, name = "Toggle do block" }},
+    do_clause = {{ toggle_do, name = "Toggle do block" }},
 }

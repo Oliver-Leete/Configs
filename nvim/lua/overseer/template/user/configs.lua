@@ -34,19 +34,6 @@ return {
                 params = {},
             },
             {
-                name = "Source NVim Module",
-                builder = function()
-                    require("telescope.builtin").reloader(require("telescope.themes").get_ivy())
-                    return {
-                        cmd = "",
-                        name = "",
-                        components = { "user.dispose_now" },
-                    }
-                end,
-                priority = 59,
-                params = {},
-            },
-            {
                 name = "Reload XMonad",
                 builder = function()
                     return {
@@ -66,7 +53,7 @@ return {
                     return {
                         name = "Reload Kitty",
                         cmd = "pkill -10 kitty",
-                        components = { "default", "unique" }
+                        components = { "default", "unique" },
                     }
                 end,
                 priority = 60,
@@ -79,7 +66,7 @@ return {
                         name = "Log XMonad Stack",
                         cmd = { "/home/oleete/.cabal/bin/xmonadctl-exe", "dump-stack" },
                         components = { "default", "unique" },
-                        strategy = { "toggleterm", open_on_start = false, hidden = true },
+                        metadata = { hidden = true },
                     }
                 end,
                 priority = 61,
@@ -91,7 +78,7 @@ return {
                     return {
                         name = "Log XMonad Full Stack",
                         cmd = { "/home/oleete/.cabal/bin/xmonadctl-exe", "dump-full-stack" },
-                        strategy = { "toggleterm", open_on_start = false, hidden = true },
+                        metadata = { hidden = true },
                         components = { "default", "unique" }
                     }
                 end,
@@ -104,7 +91,7 @@ return {
                     return {
                         name = "View xsession Logs",
                         cmd = "tail --follow --retry ~/.xsession-errors | less -S",
-                        components = { "default", "unique" }
+                        components = { "default", "unique", "user.start_open" }
                     }
                 end,
                 priority = 60,

@@ -6,10 +6,6 @@ require("stickybuf").setup({
     filetype = {
         OverseerList = "bufnr",
     },
-    buftype = {
-        terminal = "buftype",
-        help = "buftype",
-    },
 })
 
 require("dressing").setup({

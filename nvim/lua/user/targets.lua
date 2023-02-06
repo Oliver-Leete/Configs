@@ -1,4 +1,4 @@
-local gen_spec = require('mini.ai').gen_spec
+local gen_spec = require("mini.ai").gen_spec
 
 local miniAiDiagnostics = function()
     local diagnostics = vim.diagnostic.get(0)
@@ -35,16 +35,16 @@ end
 
 local custom_objects = {
     -- argument
-    a = gen_spec.argument({ separators = { ',', ';' } }),
+    a = gen_spec.argument({ separator = "[,;]" }),
     -- Brackets
-    b = { { '%b()', '%b[]', '%b{}' }, '^.().*().$' },
+    b = { { "%b()", "%b[]", "%b{}" }, "^.().*().$" },
     -- Comments
     c = gen_spec.treesitter({
         a = { "@comment.outer" },
         i = { "@comment.outer" }
     }),
     -- digits
-    d = { '%f[%d]%d+' },
+    d = { "%f[%d]%d+" },
     -- diagnostics
     e = miniAiDiagnostics,
     -- Function call
@@ -52,15 +52,15 @@ local custom_objects = {
     -- grammer (sentence)
     g = {
         {
-            '\n%s*\n()().-()\n%s*\n[%s]*()', -- normal paragraphs
-            '^()().-()\n%s*\n[%s]*()', -- paragraph at start of file
-            '\n%s*\n()().-()()$', -- paragraph at end of file
+            "\n%s*\n()().-()\n%s*\n[%s]*()", -- normal paragraphs
+            "^()().-()\n%s*\n[%s]*()", -- paragraph at start of file
+            "\n%s*\n()().-()()$", -- paragraph at end of file
         },
         {
-            '[%.?!][%s]+()().-[^%s].-()[%.?!]()[%s]', -- normal sentence
-            '^[%s]*()().-[^%s].-()[%.?!]()[%s]', -- sentence at start of paragraph
-            '[%.?!][%s]+()().-[^%s].-()()[\n]*$', -- sentence at end of paragraph
-            '^[%s]*()().-[^%s].-()()[%s]+$', -- sentence at end of paragraph (no final punctuation)
+            "[%.?!][%s]+()().-[^%s].-()[%.?!]()[%s]", -- normal sentence
+            "^[%s]*()().-[^%s].-()[%.?!]()[%s]", -- sentence at start of paragraph
+            "[%.?!][%s]+()().-[^%s].-()()[\n]*$", -- sentence at end of paragraph
+            "^[%s]*()().-[^%s].-()()[%s]+$", -- sentence at end of paragraph (no final punctuation)
         }
     },
     -- git hunks
@@ -77,21 +77,21 @@ local custom_objects = {
     }),
     -- paragraph
     p = { {
-        '\n%s*\n()().-()\n%s*\n[%s]*()', -- normal paragraphs
-        '^()().-()\n%s*\n[%s]*()', -- paragraph at start of file
-        '\n%s*\n()().-()()$', -- paragraph at end of file
+        "\n%s*\n()().-()\n%s*\n[%s]*()", -- normal paragraphs
+        "^()().-()\n%s*\n[%s]*()", -- paragraph at start of file
+        "\n%s*\n()().-()()$", -- paragraph at end of file
     } },
     -- Quotes
-    q = { { "%b''", '%b""', '%b``' }, '^.().*().$' },
+    q = { { "%b''", '%b""', "%b``" }, "^.().*().$" },
     -- sub-word (below w on my keyboard)
     r = {
         {
-            '%u[%l%d]+%f[^%l%d]',
-            '%f[%S][%l%d]+%f[^%l%d]',
-            '%f[%P][%l%d]+%f[^%l%d]',
-            '^[%l%d]+%f[^%l%d]',
+            "%u[%l%d]+%f[^%l%d]",
+            "%f[%S][%l%d]+%f[^%l%d]",
+            "%f[%P][%l%d]+%f[^%l%d]",
+            "^[%l%d]+%f[^%l%d]",
         },
-        '^().*()$'
+        "^().*()$"
     },
     -- scope
     s = gen_spec.treesitter({
@@ -99,7 +99,7 @@ local custom_objects = {
         i = { "@function.inner", "@class.inner", "@testitem.inner" },
     }),
     -- Tag
-    t = { '<(%w-)%f[^<%w][^<>]->.-</%1>', '^<.->().*()</[^/]->$' },
+    t = { "<(%w-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" },
     -- value (from key value pair)
     v = gen_spec.treesitter({
         i = { "@value.inner" },
@@ -107,19 +107,19 @@ local custom_objects = {
     }),
     -- WORD
     W = { {
-        '()()%f[%w%p][%w%p]+()[ \t]*()',
+        "()()%f[%w%p][%w%p]+()[ \t]*()",
     } },
     -- word
-    w = { '()()%f[%w_][%w_]+()[ \t]*()' },
+    w = { "()()%f[%w_][%w_]+()[ \t]*()" },
     -- line (same key as visual line in my mappings)
     x = { {
-        '\n()%s*().-()\n()',
-        '^()%s*().-()\n()'
+        "\n()%s*().-()\n()",
+        "^()%s*().-()\n()"
     } },
     -- chunk (as in from vim-textobj-chunk)
     z = {
-        '\n.-%b{}',
-        '\n().-%{\n().*()\n.*%}()'
+        "\n.-%b{}",
+        "\n().-%{\n().*()\n.*%}()"
     },
     ["$"] = gen_spec.pair("$", "$", { type = "balanced" }),
 }
@@ -131,10 +131,10 @@ require("mini.ai").setup({
         around = "a",
         inside = "i",
 
-        around_next = 'an',
-        inside_next = 'in',
-        around_last = 'al',
-        inside_last = 'il',
+        around_next = "an",
+        inside_next = "in",
+        around_last = "al",
+        inside_last = "il",
 
         goto_left = "{",
         goto_right = "}",
@@ -170,8 +170,8 @@ local command_repeat = function(leader, varName)
 end
 
 vim.g.dirJumps = "search"
-Map({ "n", "x", "o" }, "n", function() return command_repeat(']', 'dirJumps') end, { expr = true, remap = true })
-Map({ "n", "x", "o" }, "N", function() return command_repeat('[', 'dirJumps') end, { expr = true, remap = true })
+Map({ "n", "x", "o" }, "n", function() return command_repeat("]", "dirJumps") end, { expr = true, remap = true })
+Map({ "n", "x", "o" }, "N", function() return command_repeat("[", "dirJumps") end, { expr = true, remap = true })
 
 Map({ "n", "x", "o" }, "[[", "[s", { remap = true })
 Map({ "n", "x", "o" }, "]]", "]s", { remap = true })
@@ -180,8 +180,8 @@ Map({ "n", "x", "o" }, "[l", "<cmd>call v:lua.markAndGo(v:count, 'cprev', 'l')<c
 Map({ "n", "x", "o" }, "]l", "<cmd>call v:lua.markAndGo(v:count, 'cnext', 'l')<cr>")
 
 for _, o in pairs(vim.tbl_keys(custom_objects)) do
-    Map({ "n", "x", "o" }, "[" .. o, function() mark_and_go_mini(vim.v.count, 'prev', o) end)
-    Map({ "n", "x", "o" }, "]" .. o, function() mark_and_go_mini(vim.v.count, 'next', o) end)
+    Map({ "n", "x", "o" }, "[" .. o, function() mark_and_go_mini(vim.v.count, "prev", o) end)
+    Map({ "n", "x", "o" }, "]" .. o, function() mark_and_go_mini(vim.v.count, "next", o) end)
 end
 
 vim.api.nvim_create_autocmd("BufEnter",

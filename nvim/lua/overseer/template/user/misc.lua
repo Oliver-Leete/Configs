@@ -20,7 +20,7 @@ return {
                     return {
                         name = "lazygit",
                         cmd = "lazygit",
-                        components = { "default", "unique" }
+                        components = { "default", "unique", "user.start_open" }
                     }
                 end,
                 priority = 2,
@@ -33,7 +33,6 @@ return {
                         name = "Git Commit",
                         cmd = "git commit",
                         components = { "default", "unique" },
-                        strategy = { "toggleterm", open_on_start = false, hidden = true },
                     }
                 end,
                 priority = 2,
@@ -45,7 +44,7 @@ return {
                     return {
                         name = "lazydocker",
                         cmd = "lazydocker",
-                        components = { "default", "unique" }
+                        components = { "default", "unique", "user.start_open" },
                     }
                 end,
                 priority = 3,
@@ -57,7 +56,7 @@ return {
                     return {
                         name = "btop",
                         cmd = "btop",
-                        components = { "default", "unique" }
+                        components = { "default", "unique", "user.start_open" },
                     }
                 end,
                 priority = 3,
@@ -69,7 +68,6 @@ return {
                     return {
                         name = "edir",
                         cmd = "fish -c 'fd -HL | edir -Z'",
-                        strategy = { "toggleterm", open_on_start = false },
                     }
                 end,
                 priority = 5,
@@ -81,7 +79,6 @@ return {
                     return {
                         name = "Build Document",
                         cmd = "latexmk -silent",
-                        strategy = { "toggleterm", open_on_start = false },
                         components = { "default", 'unique' }
                     }
                 end,
@@ -96,7 +93,6 @@ return {
                     return {
                         name = "Build Document",
                         cmd = "latexmk",
-                        strategy = { "toggleterm", open_on_start = true },
                         components = { "default", 'unique' }
                     }
                 end,
@@ -111,7 +107,6 @@ return {
                     return {
                         name = "Clean Build Files",
                         cmd = "latexmk -c",
-                        strategy = { "toggleterm", open_on_start = false },
                         components = { "default", 'unique' }
                     }
                 end,

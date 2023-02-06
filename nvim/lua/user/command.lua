@@ -9,7 +9,7 @@ local command_center = require("command_center")
 command_center.add({
     { category = "compiler", desc = "Compiler explorer", cmd = "<cmd>CECompile<cr>" },
     { category = "compiler", desc = "Live compiler explorer", cmd = "<cmd>CECompileLive<cr>" },
-    { category = "compiler", desc = "Hex toggle", cmd = require("hex").toggle },
+    -- { category = "compiler", desc = "Hex toggle", cmd = require("hex").toggle },
 
     { category = "coverage", desc = "Coverage summary", cmd = "<cmd>CoverageSummary<cr>" },
     { category = "coverage", desc = "Load coverage", cmd = "<cmd>Coverage<cr>" },
