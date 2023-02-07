@@ -66,7 +66,6 @@ return {
                         name = "Log XMonad Stack",
                         cmd = { "/home/oleete/.cabal/bin/xmonadctl-exe", "dump-stack" },
                         components = { "default", "unique" },
-                        metadata = { hidden = true },
                     }
                 end,
                 priority = 61,
@@ -78,7 +77,6 @@ return {
                     return {
                         name = "Log XMonad Full Stack",
                         cmd = { "/home/oleete/.cabal/bin/xmonadctl-exe", "dump-full-stack" },
-                        metadata = { hidden = true },
                         components = { "default", "unique" }
                     }
                 end,
@@ -91,7 +89,12 @@ return {
                     return {
                         name = "View xsession Logs",
                         cmd = "tail --follow --retry ~/.xsession-errors | less -S",
-                        components = { "default", "unique", "user.start_open" }
+                        components = { "default", "unique",
+                            {
+                                "user.start_open",
+                                goto_prev = true,
+                            },
+                        }
                     }
                 end,
                 priority = 60,

@@ -23,7 +23,7 @@ require("dressing").setup({
                     backend = 'telescope',
                     telescope = require("telescope.themes").get_cursor({})
                 }
-            elseif vim.tbl_contains({"overseer_template", "overseer_task_options", "overseer_task"}, opts.kind) then
+            elseif vim.tbl_contains({ "overseer_template", "overseer_task_options", "overseer_task" }, opts.kind) then
                 return {
                     backend = 'telescope',
                     telescope = require("telescope.themes").get_dropdown()
@@ -69,14 +69,19 @@ require("notify").setup({
 
 vim.notify = require("notify")
 
-local mode_colours = { Normal = Tc.crystalBlue, Insert = Tc.autumnGreen, Visual = Tc.oniViolet, Replace = Tc.autumnRed,
-    Command = Tc.boatYellow2, Inactive = Tc.fujiGray }
+local mode_colours = {
+    Normal = Tc.crystalBlue,
+    Insert = Tc.autumnGreen,
+    Visual = Tc.oniViolet,
+    Replace = Tc.autumnRed,
+    Command = Tc.boatYellow2,
+    Inactive = Tc.fujiGray
+}
 for mode, colour in pairs(mode_colours) do
     vim.api.nvim_set_hl(0, "WinBar" .. mode, { fg = Tc.bg, bg = colour })
     vim.api.nvim_set_hl(0, "WinBar" .. mode .. "Ends", { fg = colour, bg = Tc.bg })
     vim.api.nvim_set_hl(0, "WinBar" .. mode .. "MidEnds", { fg = colour, bg = Tc.fujiGray })
     vim.api.nvim_set_hl(0, "WinBar" .. mode .. "NavicEnds", { fg = colour, bg = Tc.winterBlue })
-
 end
 vim.api.nvim_set_hl(0, "WinBarInactiveSpecial", { fg = Tc.bg, bg = Tc.waveBlue2 })
 vim.api.nvim_set_hl(0, "WinBarInactiveSpecialEnds", { fg = Tc.waveBlue2, bg = Tc.bg })
@@ -133,7 +138,7 @@ glance.setup({
             ['n'] = actions.next_location,
             ['N'] = actions.previous_location,
             ['<C-u>'] = actions.preview_scroll_win(5),
-            ['<C-d>'] = actions.preview_scroll_win(-5),
+            ['<C-d>'] = actions.preview_scroll_win( -5),
             ['<c-v>'] = actions.jump_vsplit,
             ['<c-x>'] = actions.jump_split,
             ['<CR>'] = actions.jump,
@@ -158,18 +163,21 @@ vim.api.nvim_create_autocmd(
     {
         pattern = "*",
         callback = function(info)
-            if vim.bo[info.buf].buftype == "" and not funcs.is_special(info.buf) and vim.bo[info.buf].filetype ~= "" then
+            local is_file = (
+                vim.fn.filereadable(vim.api.nvim_buf_get_name(info.buf)) == 1
+                or vim.bo[info.buf].filetype ~= ""
+                ) and true or false
+            if vim.bo[info.buf].buftype == "" and not funcs.is_special(info.buf) and is_file then
                 vim.wo.statuscolumn = "%{%v:lua.ScEs()%}%=%{%v:lua.ScMn()%}%{%v:lua.ScGs()%}"
                 vim.wo.winbar = "%{%v:lua.Normal_Winbar()%}"
             elseif funcs.is_special(info.buf) or vim.bo[info.buf].buftype == "terminal" then
-                vim.wo.statuscolumn = "%C"
+                vim.wo.statuscolumn = "%s"
                 vim.wo.winbar = "%{%v:lua.Special_Winbar()%}"
             else
-                vim.wo.statuscolumn = "%C"
+                vim.wo.statuscolumn = "%s"
                 vim.wo.winbar = ""
             end
         end,
         group = colGroup,
     }
 )
-

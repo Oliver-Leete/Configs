@@ -9,7 +9,12 @@ return {
                     return {
                         name = "Fish " .. OvTermNum,
                         cmd = "fish",
-                        components = { "default", "user.start_open" }
+                        components = { "default",
+                            {
+                                "user.start_open",
+                                start_insert = true,
+                            },
+                        },
                     }
                 end,
                 priority = 1,
@@ -21,7 +26,12 @@ return {
                     return {
                         name = "lazygit",
                         cmd = "lazygit",
-                        components = { "default", "unique", "user.start_open" }
+                        components = { "default", "unique",
+                            {
+                                "user.start_open",
+                                start_insert = true,
+                            },
+                        },
                     }
                 end,
                 priority = 2,
@@ -45,7 +55,12 @@ return {
                     return {
                         name = "lazydocker",
                         cmd = "lazydocker",
-                        components = { "default", "unique", "user.start_open" },
+                        components = { "default", "unique",
+                            {
+                                "user.start_open",
+                                start_insert = true,
+                            },
+                        },
                     }
                 end,
                 priority = 3,
@@ -57,7 +72,12 @@ return {
                     return {
                         name = "btop",
                         cmd = "btop",
-                        components = { "default", "unique", "user.start_open" },
+                        components = { "default", "unique",
+                            {
+                                "user.start_open",
+                                goto_prev = true,
+                            },
+                        },
                     }
                 end,
                 priority = 3,
@@ -94,7 +114,12 @@ return {
                     return {
                         name = "Build Document",
                         cmd = "latexmk -f",
-                        components = { "default", 'unique' }
+                        components = { "default", "unique",
+                            {
+                                "user.start_open",
+                                goto_prev = true,
+                            },
+                        },
                     }
                 end,
                 priority = 5,

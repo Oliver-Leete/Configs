@@ -60,10 +60,9 @@ command_center.add({
     { category = "settings", desc = "Reload Module", cmd = "<cmd>Telescope reloader theme=get_ivy<cr>" },
     { category = "settings", desc = "File types", cmd = "<cmd>Telescope filetypes theme=get_ivy<cr>" },
 
-    { category = "git", desc = "Diff against a commit", cmd = tele.git_commits_againsthead, },
-    { category = "git", desc = "Diff of a branch from current", cmd = tele.git_branch_dif, },
-    { category = "git", desc = "Diff of a branch from master", cmd = tele.git_branch_mergebase, },
-    { category = "git", desc = "Diff of a commit", cmd = tele.git_commits_onechange, },
+    { category = "git", desc = "Commits", cmd = "<cmd>Telescope git_commits<cr>" },
+    { category = "git", desc = "Branches", cmd = "<cmd>Telescope git_branches<cr>", },
+    { category = "git", desc = "Stashes", cmd = "<cmd>Telescope git_stash<cr>", },
     { category = "git", desc = "Diff of unstaged", cmd = "<cmd>DiffviewOpen<cr>" },
     { category = "git", desc = "File diff history", cmd = "<cmd>DiffviewFileHistory %<cr>" },
     { category = "git", desc = "Folder diff history", cmd = "<cmd>DiffviewFileHistory<cr>" },

@@ -69,28 +69,10 @@ vim.o.foldenable = true
 
 -- Numbering
 vim.opt.signcolumn = "no"
-vim.opt.number = true
--- vim.opt.relativenumber = true
+vim.opt.numberwidth = 1
+vim.opt.number = false
 vim.opt.cursorline = true
 vim.cmd([[call matchadd('TabLineSel', '\%101v', 203)]])
-
--- local numbertoggle = vim.api.nvim_create_augroup("numbertoggle", { clear = true })
--- vim.api.nvim_create_autocmd(
---     { "BufEnter", "FocusGained", "InsertLeave", "WinEnter" },
---     { group = numbertoggle, command = "if &nu && mode() != 'i' | set rnu   | endif" }
--- )
--- vim.api.nvim_create_autocmd(
---     { "BufLeave", "FocusLost", "InsertEnter", "WinLeave" },
---     { group = numbertoggle, command = "if &nu                  | set nornu | endif" }
--- )
--- vim.api.nvim_create_autocmd(
---     { "BufEnter", "FocusGained", "InsertLeave", "WinEnter" },
---     { group = numbertoggle, command = "setlocal cursorline" }
--- )
--- vim.api.nvim_create_autocmd(
---     { "BufLeave", "FocusLost", "InsertEnter", "WinLeave" },
---     { group = numbertoggle, command = "setlocal nocursorline" }
--- )
 
 -- Splitting
 vim.opt.splitbelow = true

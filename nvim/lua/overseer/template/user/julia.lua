@@ -53,7 +53,12 @@ return {
                     return {
                         name = "Julia Repl " .. julReplNum,
                         cmd = juliaCommand,
-                        components = { "default", "user.start_open" },
+                        components = { "default",
+                            {
+                                "user.start_open",
+                                start_insert = true,
+                            },
+                        },
                     }
                 end,
                 priority = pr(),
@@ -68,7 +73,12 @@ return {
                     return {
                         name = vim.g.project .. " Project Repl " .. julReplNum,
                         cmd = juliaCommand .. "--project",
-                        components = { "default", "user.start_open" },
+                        components = { "default",
+                            {
+                                "user.start_open",
+                                start_insert = true,
+                            },
+                        },
                     }
                 end,
                 condition = isProject,
@@ -84,7 +94,12 @@ return {
                     return {
                         name = otherProjectName .. " Project Repl " .. julReplNum,
                         cmd = "julia --threads=auto --project=" .. otherProject,
-                        components = { "default", "user.start_open" },
+                        components = { "default",
+                            {
+                                "user.start_open",
+                                start_insert = true,
+                            },
+                        },
                     }
                 end,
                 condition = {
@@ -103,7 +118,6 @@ return {
                 cmd = juliaCommand ..
                     [[--project -e 'using Revise, DaemonMode; print("Running test server"); serve(print_stack=true)']],
                 condition = isProject,
-                metadata = { hidden = true },
                 components = { "default", "unique", "always_restart" },
             },
             {
@@ -118,7 +132,6 @@ return {
                 cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
                 condition = { callback = function(opts) files.exists(files.join(opts.dir, "docs", "build", "index.html")) end },
                 components = { "default", "unique" },
-                metadata = { hidden = true },
             },
             {
                 name = "Start documentation Server",
@@ -126,14 +139,12 @@ return {
                 cmd = juliaCommand .. [[--project=docs -E 'using Revise, ]] ..
                     vim.g.project .. [[, LiveServer; servedocs(launch_browser=true; include_dirs = ["src"])']],
                 components = { "default", "unique", "always_restart" },
-                metadata = { hidden = true },
                 condition = hasDocs,
             },
             {
                 name = "Open Documentation Server",
                 cmd = "browser http://localhost:8000 & sleep 5",
                 condition = hasDocs,
-                metadata = { hidden = true },
                 components = { "default", "unique" },
             },
             {

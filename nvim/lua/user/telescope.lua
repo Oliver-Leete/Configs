@@ -6,8 +6,51 @@ local actions = require("telescope.actions")
 require("telescope").load_extension("dap")
 require("telescope").load_extension("refactoring")
 require("telescope").load_extension("noice")
-require("telescope").load_extension("undo")
 local command_center = require("command_center")
+
+local open_dif = function()
+    local selected_entry = action_state.get_selected_entry()
+    local value = selected_entry["value"]
+    -- close Telescope window properly prior to switching windows
+    vim.api.nvim_win_close(0, true)
+    vim.cmd("stopinsert")
+    vim.schedule(function()
+        vim.cmd("DiffviewOpen " .. value)
+    end)
+end
+local open_dif_mergebase = function()
+    local selected_entry = action_state.get_selected_entry()
+    local value = selected_entry["value"]
+    -- close Telescope window properly prior to switching windows
+    vim.api.nvim_win_close(0, true)
+    vim.cmd("stopinsert")
+    vim.schedule(function()
+        vim.cmd("DiffviewOpen ..." .. value)
+    end)
+end
+local open_single_dif = function()
+    local selected_entry = action_state.get_selected_entry()
+    local value = selected_entry["value"]
+    -- close Telescope window properly prior to switching windows
+    vim.api.nvim_win_close(0, true)
+    vim.cmd("stopinsert")
+    vim.schedule(function()
+        vim.cmd("DiffviewOpen " .. value .. "~1.." .. value)
+    end)
+end
+
+local git_mappings = {
+    i = {
+        ["<cr>"] = open_dif,
+        ["<s-cr>"] = open_single_dif,
+        ["<c-cr>"] = actions.select_default,
+    },
+    n = {
+        ["<cr>"] = open_dif,
+        ["<s-cr>"] = open_single_dif,
+        ["<c-cr>"] = actions.select_default,
+    }
+}
 
 require("telescope").setup({
     defaults = {
@@ -79,37 +122,30 @@ require("telescope").setup({
             },
             theme = require("telescope.themes").get_dropdown,
         },
+        undo = {
+            side_by_side = true,
+            layout_strategy = "vertical",
+            diff_context_lines = 3,
+            layout_config = {
+                preview_height = 0.8,
+            },
+        },
+    },
+    pickers = {
+        git_commits = {
+            mappings = git_mappings
+        },
+        git_stash = {
+            mappings = git_mappings
+        },
     },
 })
 
+require("telescope").load_extension("undo")
 require("telescope").load_extension("command_center")
 require("telescope").load_extension("file_browser")
 require("telescope").load_extension("fzf")
 
-local open_dif = function()
-    local selected_entry = action_state.get_selected_entry()
-    local value = selected_entry["value"]
-    -- close Telescope window properly prior to switching windows
-    vim.api.nvim_win_close(0, true)
-    local cmd = "DiffviewOpen " .. value
-    vim.cmd(cmd)
-end
-local open_dif_mergebase = function()
-    local selected_entry = action_state.get_selected_entry()
-    local value = selected_entry["value"]
-    -- close Telescope window properly prior to switching windows
-    vim.api.nvim_win_close(0, true)
-    local cmd = "DiffviewOpen ..." .. value
-    vim.cmd(cmd)
-end
-local open_single_dif = function()
-    local selected_entry = action_state.get_selected_entry()
-    local value = selected_entry["value"]
-    -- close Telescope window properly prior to switching windows
-    vim.api.nvim_win_close(0, true)
-    local cmd = "DiffviewOpen " .. value .. "~1.." .. value
-    vim.cmd(cmd)
-end
 
 function M.git_commits_againsthead()
     require("telescope.builtin").git_commits({
