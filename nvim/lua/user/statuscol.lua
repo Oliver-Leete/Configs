@@ -1,11 +1,3 @@
-local function diagnostic_click(args)
-    if args.button == "l" then
-        vim.diagnostic.open_float({ border = Border, scope = "line", source = "always" })
-    elseif args.button == "m" then
-        vim.lsp.buf.code_action()
-    end
-end
-
 local gitsigns = {
     GitSignsAdd          = "┃",
     GitSignsChange       = "┃",
@@ -77,33 +69,4 @@ ScMn = function()
     local hl = "LineNr#"
     hl = (vim.v.lnum == vim.fn.line(".") and "%#Cursor" or "%#") .. hl
     return hl .. vim.v.lnum
-end
-
-local colGroup = vim.api.nvim_create_augroup("colGroup", {})
-vim.api.nvim_create_autocmd(
-    "BufEnter",
-    {
-        pattern = "*",
-        callback = function(info)
-            if vim.bo[info.buf].buftype == "" then
-                vim.wo.statuscolumn = "%{%v:lua.ScEs()%}%=%{%v:lua.ScMn()%}%{%v:lua.ScGs()%}"
-            else
-                vim.wo.statuscolumn = "%C"
-            end
-        end,
-        group = colGroup,
-    }
-)
-
-for _, filetype in pairs(vim.tbl_keys(require("user.myfuncs").special_types)) do
-    if filetype ~= "" then
-        vim.api.nvim_create_autocmd(
-            "FileType",
-            {
-                pattern = filetype,
-                callback = function() vim.wo.statuscolumn = "%C" end,
-                group = colGroup,
-            }
-        )
-    end
 end

@@ -10,7 +10,6 @@ M.special_types = {
     juliadoc = { name = " Docs", exit_func = winclose },
     lspinfo = { exit_func = winclose },
     tsplayground = { name = " TSPlayground", exit_func = winclose },
-    -- query = { name = " TS Query", exit_func = winclose },
     ["harpoon-menu"] = { exit_func = winclose },
     notify = { exit_func = winclose },
     undotree = { name = "碑Undos", exit_func = function() vim.cmd("UndotreeHide") end },
@@ -32,15 +31,14 @@ M.special_types = {
     ["null-ls-info"] = { exit_func = winclose },
     ["Glance"] = { exit_func = require('glance').actions.close },
     asm = { name = "Compiler Explorer", exit_func = winclose },
-    [""] = { exit_func = winclose },
 }
 
 -- Check if a given buffer is "special"
 M.is_special = function(bufnr)
     local filetype = vim.bo[bufnr].filetype
     local buftype = vim.bo[bufnr].buftype
-    return vim.tbl_contains(vim.tbl_keys(M.special_types), filetype) or
-        (buftype == "nofile" and (filetype == "" or filetype == "asm"))
+    if buftype == "terminal" then return false end
+    return vim.tbl_contains(vim.tbl_keys(M.special_types), filetype)
 end
 
 -- Count normal windows on current tab page
@@ -55,8 +53,7 @@ local tab_win_count = function(tabnr)
         end
         return true
     end, vim.api.nvim_tabpage_list_wins(tabnr))
-    local num_tab_wins = #tab_wins
-    return num_tab_wins
+    return tab_wins
 end
 
 -- Count loaded normal buffers
@@ -71,8 +68,7 @@ local loaded_buf_count = function()
         end
         return true
     end, vim.api.nvim_list_bufs())
-    local num_bufs = #bufnrs
-    return num_bufs
+    return bufnrs
 end
 
 local delete_buffer = function()
@@ -84,7 +80,11 @@ local delete_buffer = function()
     -- Handle special buffers
     if M.is_special(bufnr) then
         local filetype = vim.bo[bufnr].filetype
-        M.special_types[filetype].exit_func()
+        if filetype == "" then
+            winclose()
+        else
+            M.special_types[filetype].exit_func()
+        end
         return
     elseif vim.b[bufnr].is_diffview_file then
         vim.b.is_diffview_file = false
@@ -92,16 +92,24 @@ local delete_buffer = function()
         return
     end
 
-    local num_bufs = loaded_buf_count()
+    local bufs = loaded_buf_count()
 
-    local num_tab_wins = tab_win_count(tabnr)
+    local tab_wins = tab_win_count(tabnr)
 
-    if num_tab_wins > 1 then
+    if #tab_wins > 1 then
         winclose()
     elseif num_tabs > 1 then
-        vim.cmd.tabclose()
-    elseif num_bufs <= 1 then
-        vim.cmd.quitall()
+        if bufs[1] == bufnr then
+            vim.cmd.tabclose()
+        else
+            winclose()
+        end
+    elseif #bufs <= 1 then
+        if bufs[1] == bufnr then
+            vim.cmd.quitall()
+        else
+            winclose()
+        end
     else
         vim.cmd.Bdelete()
     end

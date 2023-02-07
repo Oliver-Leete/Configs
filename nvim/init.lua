@@ -52,7 +52,7 @@ require("lazy").setup(
         "fladson/vim-kitty",
         "wilriker/gcode.vim",
         "LhKipp/nvim-nu",
-        { "toppair/peek.nvim", build = "deno task --quiet build:fast" },
+        { "toppair/peek.nvim",         build = "deno task --quiet build:fast" },
 
         "lewis6991/gitsigns.nvim",
         "sindrets/diffview.nvim",
@@ -125,8 +125,6 @@ require("lazy").setup(
         "andythigpen/nvim-coverage",
         "t-troebst/perfanno.nvim",
         "krady21/compiler-explorer.nvim",
-        -- "RaafatTurki/hex.nvim",
-        -- "akinsho/toggleterm.nvim",
 
         "mfussenegger/nvim-dap",
         "rcarriga/nvim-dap-ui",
@@ -181,7 +179,6 @@ pcall(require("user.compleation"))
 pcall(require("user.panels"))
 pcall(require("user.myfuncs"))
 pcall(require("user.lsp"))
-pcall(require("user.dap"))
 pcall(require("user.treesitter"))
 
 pcall(require("user.ui"))
@@ -190,7 +187,6 @@ pcall(require("user.tabline"))
 pcall(require("user.winbar"))
 pcall(require("user.statuscol"))
 
-pcall(require("user.terminal"))
 pcall(require("user.projects"))
 pcall(require("user.overseer"))
 pcall(require("user.testing"))
@@ -200,3 +196,5 @@ pcall(require("user.mini"))
 pcall(require("user.noice"))
 
 pcall(require("user.filmpicker"))
+
+pcall(require("user.dap"))

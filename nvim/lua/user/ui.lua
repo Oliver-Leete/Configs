@@ -1,3 +1,5 @@
+local funcs = require("user.myfuncs")
+
 -- Theme
 vim.opt.termguicolors = true
 vim.opt.guifont = "JuliaMono:h10"
@@ -146,3 +148,28 @@ glance.setup({
         },
     },
 })
+
+vim.go.winbar = ""
+vim.go.statuscolumn = "%C"
+
+local colGroup = vim.api.nvim_create_augroup("colGroup", {})
+vim.api.nvim_create_autocmd(
+    "BufEnter",
+    {
+        pattern = "*",
+        callback = function(info)
+            if vim.bo[info.buf].buftype == "" and not funcs.is_special(info.buf) and vim.bo[info.buf].filetype ~= "" then
+                vim.wo.statuscolumn = "%{%v:lua.ScEs()%}%=%{%v:lua.ScMn()%}%{%v:lua.ScGs()%}"
+                vim.wo.winbar = "%{%v:lua.Normal_Winbar()%}"
+            elseif funcs.is_special(info.buf) or vim.bo[info.buf].buftype == "terminal" then
+                vim.wo.statuscolumn = "%C"
+                vim.wo.winbar = "%{%v:lua.Special_Winbar()%}"
+            else
+                vim.wo.statuscolumn = "%C"
+                vim.wo.winbar = ""
+            end
+        end,
+        group = colGroup,
+    }
+)
+

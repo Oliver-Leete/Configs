@@ -300,9 +300,13 @@ return {
                                     cond .. [[\")'\`)
                                 "]],
                                 components = { "default", "unique",
-                                    { "user.attach_toggleterm",
-                                        send_on_start = [[@run_package_tests filter=ti->(ti.name == ]] .. name .. [[)]],
+                                    {
+                                        "user.start_open",
                                         goto_prev = true,
+                                    },
+                                    {
+                                        "user.send_on_open",
+                                        send_on_open = [[@run_package_tests filter=ti->(ti.name == ]] .. name .. [[)]],
                                     }
                                 },
                             }

@@ -302,20 +302,6 @@ end
 Map("n", "<leader>h", "<cmd>OverseerTaskAction<cr>")
 Map("n", "<leader>n", "<cmd>OverseerToggle<cr>")
 Map("n", "<leader>e", "<cmd>OverseerRun<cr>")
-Map("n", "<leader>i", function()
-    if OTerm then
-        if OTerm:is_open() then
-            vim.cmd("ToggleTermToggleAll")
-        elseif vim.api.nvim_buf_is_valid(OTerm.bufnr) then
-            OTerm:open()
-        else
-            OTerm:detach()
-            vim.cmd.echomsg({ args = { "'No O-Terminal found'" } })
-        end
-    else
-        vim.cmd.echomsg({ args = { "'No O-Terminal found'" } })
-    end
-end)
 Map("n", "<leader>o", function() require("neotest").summary.toggle() end)
 
 Map("n", "<leader>l", function() require("neotest").run.run() end)

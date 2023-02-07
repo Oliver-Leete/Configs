@@ -59,7 +59,7 @@ Navic_on_click = function(pos)
     vim.api.nvim_win_set_cursor(vim.fn.win_getid(0), { line, col })
 end
 
-local navic_maker = function(hl)
+local navic_maker = function()
     local data = require("nvim-navic").get_data() or {}
     local ret = ""
     for i, d in ipairs(data) do
@@ -82,9 +82,11 @@ local special_name = function(bufnr)
         help_title = help_title:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end)
         return help_title .. " Help"
     elseif vim.bo[bufnr].buftype == "terminal" then
-        return vim.tbl_filter(
+        local task = vim.tbl_filter(
             function(t) if t.strategy.bufnr == bufnr then return true end end, overseer.list_tasks()
-        )[1].name
+        )[1]
+        if task then return task.name end
+        return "Terminal"
     else
         local filetype = func.special_types[vim.bo[bufnr].filetype].name
         if filetype then
@@ -93,19 +95,38 @@ local special_name = function(bufnr)
     end
 end
 
-local special_winbar = function(bufnr, hl)
+Special_Winbar = function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
+
+    local mode = func.vim_mode()[2]
+    if not mode then return "" end
+
+    local hlb = "%#WinBarBlank#"
+    local hl = is_active and "%#WinBar" .. mode .. "#" or "%#WinBarInactive#"
+    local hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveEnds#"
+
     local specialname = special_name(bufnr)
     if not specialname then return "" end
-    return hl .. " " .. specialname .. " "
+    return hlb .. "%=" .. hle .. "" .. hl .. " " .. specialname .. " " .. hle .. "" .. hlb .. "%=" .. hlb
 end
 
 -- File_on_click = function(bufnr)
 --     vim.cmd("Neotree " .. vim.api.nvim_buf_get_name(bufnr))
 -- end
 
-local default_winbar = function(bufnr, hl, is_active, hle)
-    local winbar = hl
+Normal_Winbar = function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
+
+    local mode = func.vim_mode()[2]
+    if not mode then return "" end
+
     local hlb = "%#WinBarBlank#"
+    local hl = is_active and "%#WinBar" .. mode .. "#" or "%#WinBarInactive#"
+    local hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveEnds#"
+
+    local winbar = hl
     -- Ismodified icon
     if vim.bo.modified or vim.bo.modifiable == false then
         winbar = winbar .. " "
@@ -118,9 +139,8 @@ local default_winbar = function(bufnr, hl, is_active, hle)
     -- Code location
     winbar = winbar .. "%X"
     if is_active and require("nvim-navic").is_available() then
-        local mode = func.vim_mode()[2]
         winbar = winbar .. " " .. "%#WinBar" .. mode .. "NavicEnds#" .. " "
-        winbar = winbar .. navic_maker(hl) .. " " .. "%#NavicEnd#" .. ""
+        winbar = winbar .. navic_maker() .. " " .. "%#NavicEnd#" .. ""
     else
         winbar = winbar .. " " .. hle .. ""
     end
@@ -138,29 +158,3 @@ local default_winbar = function(bufnr, hl, is_active, hle)
     end
     return winbar
 end
-
-Normal_Winbar = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local is_active = vim.api.nvim_get_current_win() == tonumber(vim.g.actual_curwin)
-
-    local mode = func.vim_mode()[2]
-    if not mode then return "" end
-
-    local hlb = "%#WinBarBlank#"
-    local hl = is_active and "%#WinBar" .. mode .. "#" or "%#WinBarInactive#"
-    local hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveEnds#"
-
-    local winbar = ""
-    if func.is_special(bufnr) then
-        winbar = special_winbar(bufnr, hl)
-        if winbar == "" then return "" end
-        return hlb .. "%=" .. hle .. "" .. winbar .. hle .. "" .. hlb .. "%=" .. hlb
-    else -- Default winbar
-        winbar = default_winbar(bufnr, hl, is_active, hle)
-    end
-
-    if winbar == "" then return "" end
-    return winbar
-end
-
-vim.go.winbar = "%{%v:lua.Normal_Winbar()%}"

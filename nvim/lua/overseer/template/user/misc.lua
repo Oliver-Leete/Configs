@@ -9,6 +9,7 @@ return {
                     return {
                         name = "Fish " .. OvTermNum,
                         cmd = "fish",
+                        components = { "default", "user.start_open" }
                     }
                 end,
                 priority = 1,
@@ -78,7 +79,7 @@ return {
                 builder = function()
                     return {
                         name = "Build Document",
-                        cmd = "latexmk -silent",
+                        cmd = "latexmk -f -silent",
                         components = { "default", 'unique' }
                     }
                 end,
@@ -92,7 +93,7 @@ return {
                 builder = function()
                     return {
                         name = "Build Document",
-                        cmd = "latexmk",
+                        cmd = "latexmk -f",
                         components = { "default", 'unique' }
                     }
                 end,
