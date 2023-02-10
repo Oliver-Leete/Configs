@@ -167,8 +167,7 @@ require("lazy").setup(
     }
 )
 
-OTerm = nil
-STerm = nil
+SendID = nil
 
 pcall(require("user.misc"))
 pcall(require("user.mappings"))
@@ -180,6 +179,7 @@ pcall(require("user.panels"))
 pcall(require("user.myfuncs"))
 pcall(require("user.lsp"))
 pcall(require("user.treesitter"))
+pcall(require("user.dap"))
 
 pcall(require("user.ui"))
 pcall(require("user.statusline"))
@@ -196,5 +196,3 @@ pcall(require("user.mini"))
 pcall(require("user.noice"))
 
 pcall(require("user.filmpicker"))
-
-pcall(require("user.dap"))

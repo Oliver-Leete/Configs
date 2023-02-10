@@ -39,7 +39,7 @@ require("cmp").setup({
         end,
     },
     mapping = {
-        ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
+        ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs( -4), { "i", "c" }),
         ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
         ["<down>"] = cmp.mapping({
             i = function()
@@ -74,7 +74,6 @@ require("cmp").setup({
         ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "i" }),
         ["<C-CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "c" }),
     },
-
     sources = {
         { name = "luasnip_choice" },
         { name = "luasnip" },
@@ -85,27 +84,27 @@ require("cmp").setup({
         { name = "fish" },
         { name = "path" },
         { name = "nvim_lua" },
-        { name = "buffer", keyword_length = 3 },
+        { name = "buffer",        keyword_length = 3 },
     },
     formatting = {
         format = function(entry, vim_item)
             vim_item.menu = ({
-                luasnip_choice = "(CHOICE)",
-                luasnip = "(SNIP)",
-                git = "(GIT)",
-                otter = "(LSP)",
-                nvim_lsp = "(LSP)",
-                latex_symbols = "(SYM)",
-                fish = "(FISH)",
-                path = "(PATH)",
-                nvim_lua = "(NVIM)",
-                buffer = "(BUFF)",
-                cmdline = "(CMD)",
-                cmdline_history = "(CMDH)",
-                dictionary = "(DICT)",
-                omni = "(TEX?)",
-                nvim_lsp_document_symbol = "(LSP)",
-            })[entry.source.name]
+                    luasnip_choice = "(CHOICE)",
+                    luasnip = "(SNIP)",
+                    git = "(GIT)",
+                    otter = "(LSP)",
+                    nvim_lsp = "(LSP)",
+                    latex_symbols = "(SYM)",
+                    fish = "(FISH)",
+                    path = "(PATH)",
+                    nvim_lua = "(NVIM)",
+                    buffer = "(BUFF)",
+                    cmdline = "(CMD)",
+                    cmdline_history = "(CMDH)",
+                    dictionary = "(DICT)",
+                    omni = "(TEX?)",
+                    nvim_lsp_document_symbol = "(LSP)",
+                })[entry.source.name]
             vim_item.kind = M.icons[vim_item.kind]
             return vim_item
         end,
@@ -144,7 +143,7 @@ require("cmp").setup.filetype("tex", {
         { name = "omni" },
         { name = "nvim_lsp" },
         { name = "path" },
-        { name = "buffer", keyword_length = 3 },
+        { name = "buffer",     keyword_length = 3 },
         { name = "dictionary", keyword_length = 3 },
     },
 })
@@ -169,7 +168,17 @@ require("cmp").setup.filetype("DressingInput", {
     sources = cmp.config.sources { { name = "omni" } },
 })
 
-vim.cmd([[autocmd FileType toml lua require('cmp').setup.buffer { sources = { { name = 'crates' } } }]])
+local crates_augroup = vim.api.nvim_create_augroup("crates", { clear = true })
+vim.api.nvim_create_autocmd(
+    "Filetype",
+    {
+        pattern = "toml",
+        callback = function()
+            require('cmp').setup.buffer({ sources = { { name = 'crates' } } })
+        end,
+        group = crates_augroup
+    }
+)
 
 vim.g.diagnostic_auto_popup_while_jump = 0
 vim.g.diagnostic_enable_virtual_text = 0
@@ -225,3 +234,11 @@ npairs.add_rules({
     endwise('(.*) do.*$', 'end', 'julia', nil),
     endwise('module$', 'end', 'julia', nil),
 })
+
+Ls = require("luasnip")
+Ls.config.set_config({
+    history = false,
+    updateevents = "TextChanged,TextChangedI",
+})
+require("luasnip.loaders.from_lua").load({paths = "/home/oleete/.config/nvim/snippets"})
+require("luasnip-latex-snippets").setup()

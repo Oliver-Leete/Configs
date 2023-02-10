@@ -68,5 +68,11 @@ end
 ScMn = function()
     local hl = "LineNr#"
     hl = (vim.v.lnum == vim.fn.line(".") and "%#Cursor" or "%#") .. hl
-    return hl .. vim.v.lnum
+    local num = vim.v.lnum
+    local len = string.len(num)
+    if len < 3 then
+        num = string.rep(" ", 3-string.len(vim.v.lnum)) .. vim.v.lnum
+    end
+    return hl .. num
+    -- return hl .. vim.v.lnum
 end

@@ -63,11 +63,6 @@ require("mini.surround").setup({
 })
 vim.keymap.del("x", "yp")
 
--- removes the difference between inner and outer treesitter
--- not using mini, but related to surround
-Map("n", "dpS", "misy<c-o>Ras", { remap = true })
-Map("n", "dpO", "mioy<c-o>Rao", { remap = true })
-
 require("mini.misc").setup({
     make_global = { "put_text", "zoom" },
 })

@@ -68,7 +68,10 @@ Map("n", "£", [[:exe "let @/='" . expand("<cWORD>") . "' "<cr>]], { silent = tr
 
 -- UnMap Plugins
 vim.g.kitty_navigator_no_mappings = true
+vim.g.vimtex_mappings_enabled = 0
+vim.g.vimtex_text_obj_enabled = 0
 vim.g.julia_blocks = false
+vim.g.vimtex_imaps_enabled = 0
 
 Map({ "n", "x", "o" }, "j", [[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], { expr = true })
 Map({ "n", "x", "o" }, "k", [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], { expr = true })
@@ -155,24 +158,24 @@ Hydra({
     },
     hint = view_hint,
     heads = {
-        { "h", "zh" },
-        { "J", "<c-d>" },
-        { "K", "<c-u>" },
-        { "L", "zL" },
+        { "h",     "zh" },
+        { "J",     "<c-d>" },
+        { "K",     "<c-u>" },
+        { "L",     "zL" },
 
-        { "H", "zH" },
-        { "j", "<c-e>" },
-        { "k", "<c-y>" },
-        { "l", "zl" },
+        { "H",     "zH" },
+        { "j",     "<c-e>" },
+        { "k",     "<c-y>" },
+        { "l",     "zl" },
 
-        { "t", "zt" },
-        { "v", "zz" },
-        { "b", "zb" },
+        { "t",     "zt" },
+        { "v",     "zz" },
+        { "b",     "zb" },
 
-        { "s", "zs" },
-        { "m", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
-        { "e", "ze" },
-        { "<esc>", nil, { exit = true, nowait = true, desc = "exit" } },
+        { "s",     "zs" },
+        { "m",     "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
+        { "e",     "ze" },
+        { "<esc>", nil,                                                           { exit = true, nowait = true, desc = "exit" } },
     }
 })
 
@@ -190,25 +193,25 @@ Hydra({
     },
     hint = view_hint,
     heads = {
-        { "h", "zh" },
-        { "J", "<c-d>" },
-        { "K", "<c-u>" },
-        { "L", "zL" },
+        { "h",     "zh" },
+        { "J",     "<c-d>" },
+        { "K",     "<c-u>" },
+        { "L",     "zL" },
 
-        { "H", "zH" },
-        { "j", "<c-e>" },
-        { "k", "<c-y>" },
-        { "l", "zl" },
+        { "H",     "zH" },
+        { "j",     "<c-e>" },
+        { "k",     "<c-y>" },
+        { "l",     "zl" },
 
-        { "t", "zt" },
-        { "v", "zz" },
-        { "b", "zb" },
+        { "t",     "zt" },
+        { "v",     "zz" },
+        { "b",     "zb" },
 
-        { "s", "zs" },
-        { "m", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
-        { "e", "ze" },
-        { "<esc>", nil, { exit = true, nowait = true, desc = "exit" } },
-        { "V", nil, { exit = true, nowait = true, desc = false } },
+        { "s",     "zs" },
+        { "m",     "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
+        { "e",     "ze" },
+        { "<esc>", nil,                                                           { exit = true, nowait = true, desc = "exit" } },
+        { "V",     nil,                                                           { exit = true, nowait = true, desc = false } },
     }
 })
 
@@ -257,7 +260,10 @@ Map({ "n", "x" }, ",Pi", function() require("user.myfuncs").paste_special(vim.v.
 Map({ "n", "x" }, ",pb", function() require("user.myfuncs").paste_special(vim.v.register, "b", "p") end)
 Map({ "n", "x" }, ",Pb", function() require("user.myfuncs").paste_special(vim.v.register, "b", "P") end)
 
-Map({ "n", "x" }, ",ff", vim.lsp.buf.format)
+Map({ "n", "x" }, ",ff", function()
+    vim.cmd.LuaSnipUnlinkCurrent();
+    vim.lsp.buf.format()
+end)
 Map({ "n", "x" }, ",fe", require("null-ls-embedded").format_current)
 Map("n", ",fw", function()
     return "m1!ippar w" .. (vim.b.textwidth or vim.g.textwidth) .. "<cr>`1"
@@ -299,9 +305,47 @@ for i, key in pairs(harpoon_keys) do
     Map("n", "<leader>" .. key, function() require("harpoon.ui").nav_file(i) end)
 end
 
-Map("n", "<leader>h", "<cmd>OverseerTaskAction<cr>")
+local action_util = require("overseer.action_util")
+local overseer = require("overseer")
+Map("n", "<leader>h", function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local task = vim.tbl_filter(function(t) if t.strategy.bufnr == bufnr then return true end end, overseer.list_tasks())
+        [1]
+    if task then
+        action_util.run_task_action(task)
+    else
+        vim.cmd("OverseerTaskAction")
+    end
+end)
+Map("n", "<leader>H", "<cmd>OverseerTaskAction<cr>")
 Map("n", "<leader>n", "<cmd>OverseerToggle<cr>")
 Map("n", "<leader>e", "<cmd>OverseerRun<cr>")
+Map("n", "<leader>I", function()
+    if SendID then
+        vim.fn.chansend(SendID, vim.api.nvim_get_current_line() .. "\n")
+    else
+        vim.cmd.echomsg({ args = { "'No Term set as send term'" } })
+    end
+end)
+Map("x", "<leader>I", function()
+    if SendID then
+        -- does not handle rectangular selection
+        local s_start = vim.fn.getpos("'<")
+        local s_end = vim.fn.getpos("'>")
+        local n_lines = math.abs(s_end[2] - s_start[2]) + 1
+        local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false)
+        lines[1] = string.sub(lines[1], s_start[3], -1)
+        if n_lines == 1 then
+            lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3] - s_start[3] + 1)
+        else
+            lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3])
+        end
+        local selection = table.concat(lines, '\n')
+        vim.fn.chansend(SendID, selection .. "\n")
+    else
+        vim.cmd.echomsg({ args = { "'No Term set as send term'" } })
+    end
+end)
 Map("n", "<leader>o", function() require("neotest").summary.toggle() end)
 
 Map("n", "<leader>l", function() require("neotest").run.run() end)
@@ -350,8 +394,8 @@ Map({ "i", "s" }, "<tab>", function()
 end, { silent = true })
 
 Map({ "i", "s" }, "<s-tab>", function()
-    if Ls.locally_jumpable(-1) then
-        Ls.jump(-1)
+    if Ls.locally_jumpable( -1) then
+        Ls.jump( -1)
     else
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<s-tab>", true, true, true), "n", false)
     end

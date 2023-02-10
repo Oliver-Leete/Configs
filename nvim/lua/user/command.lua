@@ -22,7 +22,8 @@ command_center.add({
     { category = "default", desc = "Close tab", cmd = "<cmd>tabclose<cr>" },
     { category = "default", desc = "Toggle text wraping", cmd = "<cmd>set wrap!<cr>" },
     { category = "default", desc = "Undo list", cmd = "<cmd>Telescope undo undo<cr>" },
-    { category = "default", desc = "Reload snippets", cmd = "<cmd>source ~/.config/nvim/after/plugin/luasnip.lua<cr>" },
+    -- { category = "default", desc = "Reload snippets", cmd = "<cmd>source ~/.config/nvim/after/plugin/luasnip.lua<cr>" },
+    { category = "default", desc = "Edit Snippets", cmd = function() require("luasnip.loaders").edit_snippet_files({ edit = function(file) vim.cmd("vsplit " .. file) end}) end},
     { category = "default", desc = "Toggle Minimap", cmd = require("mini.map").toggle },
 
     { category = "info", desc = "Lazy", cmd = "<cmd>Lazy<cr>" },
@@ -88,70 +89,5 @@ command_center.add({
     { category = "tasks", desc = "Terminals", cmd = "<cmd>Telescope termfinder theme=get_ivy<cr>" },
     { category = "tasks", desc = "Clear Task Cache", cmd = "<cmd>OverseerClearCache<cr>" },
 })
-
-
-
-local append_command = function(runnables, to_add)
-    local function always_extend(dst, src)
-        if not vim.tbl_islist(src) then
-            src = vim.tbl_values(src)
-        end
-        vim.list_extend(dst, src)
-    end
-
-    if to_add then
-        if type(to_add) == "table" then
-            always_extend(runnables, to_add)
-        elseif type(to_add) == "function" then
-            always_extend(runnables, to_add())
-        end
-    end
-end
-
-local command_centre = function(argCommands, extend)
-    if not extend then extend = false end
-    if not argCommands then argCommands = {} end
-
-    local commands = {}
-    local command_sources = { argCommands }
-
-    if extend then
-        local default_sources = { GlobalCommands, vim.b[0].localCommands }
-        for _, source in pairs(default_sources) do
-            table.insert(command_sources, source)
-        end
-    end
-
-    for _, source in pairs(command_sources) do
-        append_command(commands, source)
-    end
-
-    table.sort(commands, function(a, b) return a.name < b.name end)
-    table.sort(commands, function(a, b) return a.source < b.source end)
-
-    vim.ui.select(commands, {
-        prompt = "Command Centre",
-        format_item = function(item)
-            return "[" .. item.source:sub(1, 3) .. "] " .. item.name
-        end,
-        telescope = require("telescope.themes").get_ivy(),
-    }, function(choice)
-        if not choice then
-            vim.cmd.echomsg({ args = { "'No command entered'" } })
-            return
-        end
-
-        if choice.func ~= nil then
-            choice.func()
-        elseif choice.command ~= nil then
-            vim.cmd(choice.command)
-        elseif choice.keymap ~= nil then
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(choice.keymap, true, true, true), "n", false)
-        else
-            vim.cmd.echomsg({ args = { "'Command does not have an action'" } })
-            return
-        end
-    end)
-end
 
 Map("n", "<leader>p", "<cmd>Telescope command_center<cr>")

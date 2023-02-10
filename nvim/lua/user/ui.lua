@@ -18,14 +18,14 @@ require("dressing").setup({
         }),
         get_config = function(opts)
             Kind = opts.kind
-            if opts.kind == 'codeaction' then
+            if opts.kind == "codeaction" then
                 return {
-                    backend = 'telescope',
+                    backend = "telescope",
                     telescope = require("telescope.themes").get_cursor({})
                 }
-            elseif vim.tbl_contains({ "overseer_template", "overseer_task_options", "overseer_task" }, opts.kind) then
+            elseif vim.tbl_contains({ "luasnip", "overseer_template", "overseer_task_options", "overseer_task" }, opts.kind) then
                 return {
-                    backend = 'telescope',
+                    backend = "telescope",
                     telescope = require("telescope.themes").get_dropdown()
                 }
             end
@@ -165,10 +165,10 @@ vim.api.nvim_create_autocmd(
         callback = function(info)
             local is_file = (
                 vim.fn.filereadable(vim.api.nvim_buf_get_name(info.buf)) == 1
-                or vim.bo[info.buf].filetype ~= ""
+                -- or vim.bo[info.buf].filetype ~= ""
                 ) and true or false
             if vim.bo[info.buf].buftype == "" and not funcs.is_special(info.buf) and is_file then
-                vim.wo.statuscolumn = "%{%v:lua.ScEs()%}%=%{%v:lua.ScMn()%}%{%v:lua.ScGs()%}"
+                vim.wo.statuscolumn = "%{%v:lua.ScEs()%}%{%v:lua.ScMn()%}%{%v:lua.ScGs()%}"
                 vim.wo.winbar = "%{%v:lua.Normal_Winbar()%}"
             elseif funcs.is_special(info.buf) or vim.bo[info.buf].buftype == "terminal" then
                 vim.wo.statuscolumn = "%s"

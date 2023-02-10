@@ -3,3 +3,5 @@
 	email = oliverleete@gmail.com
 [core]
 	editor = /home/oleete/.config/bin/nvrStart --remote-wait
+[diff]
+	external = difft

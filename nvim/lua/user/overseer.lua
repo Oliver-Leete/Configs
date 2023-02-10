@@ -52,15 +52,12 @@ overseer.setup({
     template_cache_threshold = 0,
     actions = {
         ["set loclist diagnostics"] = false,
-        -- ["set as recive terminal"] = {
-        --     desc = "set this task as the terminal to recive sent text and commands",
-        --     run = function(task)
-        --         local term = task_to_term(task)
-        --         term.hidden = false
-        --         OTerm = term
-        --         STerm = term
-        --     end,
-        -- },
+        ["set as recive terminal"] = {
+            desc = "set this task as the terminal to recive sent text and commands",
+            run = function(task)
+                SendID = task.strategy.chan_id
+            end,
+        },
         ["keep runnning"] = {
             desc = "restart the task even if it succeeds",
             run = function(task)

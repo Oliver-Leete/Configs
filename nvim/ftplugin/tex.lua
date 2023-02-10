@@ -1,8 +1,8 @@
 vim.b[0].localCommands = {
-    { source = "tex", name = "Build project", command = "silent VimtexCompileSS" },
+    { source = "tex", name = "Build project",    command = "silent VimtexCompileSS" },
     { source = "tex", name = "Table of content", command = "VimtexTocToggle" },
-    { source = "tex", name = "Forward Search", command = "TexlabForward" },
-    { source = "tex", name = "Word Count", command = "VimtexCountWord" },
+    { source = "tex", name = "Forward Search",   command = "TexlabForward" },
+    { source = "tex", name = "Word Count",       command = "VimtexCountWord" },
 }
 
 Map("n", "<localleader><localleader>", "<cmd>TexlabForward<cr>", { buffer = 0, silent = true })
@@ -36,21 +36,29 @@ Map({ "n", "x", "o" }, "]m", "<cmd>let g:dirJumps='n'<cr>m`<plug>(vimtex-]n)zz",
 Map({ "x", "o" }, "anm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-a$)')<cr>", { buffer = 0 })
 Map({ "x", "o" }, "inm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-i$)')<cr>", { buffer = 0 })
 
-Map("n", "dpc", "<plug>(vimtex-env-delete)", { buffer = 0, remap = true })
-Map("n", "dpe", "<plug>(vimtex-cmd-delete)", { buffer = 0, remap = true })
-Map("n", "dp$", "<plug>(vimtex-cmd-delete-math)", { buffer = 0, remap = true })
+Map("n", "dpe", "<plug>(vimtex-env-delete)", { buffer = 0, remap = true })
+Map("n", "dpc", "<plug>(vimtex-cmd-delete)", { buffer = 0, remap = true })
 Map("n", "dpd", "<plug>(vimtex-delim-delete)", { buffer = 0, remap = true })
-Map("n", "cpc", "<plug>(vimtex-env-change)", { buffer = 0, remap = true })
-Map("n", "cpe", "<plug>(vimtex-cmd-change)", { buffer = 0, remap = true })
-Map("n", "cp$", "<plug>(vimtex-cmd-change-math)", { buffer = 0, remap = true })
+Map("n", "cpe", "<plug>(vimtex-env-change)", { buffer = 0, remap = true })
+Map("n", "cpc", "<plug>(vimtex-cmd-change)", { buffer = 0, remap = true })
 Map("n", "cpd", "<plug>(vimtex-delim-change)", { buffer = 0, remap = true })
+
+Map("n", "ype", "<plug>(vimtex-env-surround-operator)", { buffer = 0, remap = true })
+Map("x", "ype", "<plug>(vimtex-env-surround-visual)", { buffer = 0, remap = true })
+
+Map("n", "<localleader>d", "<plug>(vimtex-delim-add-modifiers)", { buffer = 0, remap = true })
+Map("n", "%", "<plug>(vimtex-%)", { buffer = 0, remap = true })
+
+-- vim.keymap.del("n", ",n", { buffer = 0 })
+Map("n", ",nm", "<plug>(vimtex-env-toggle-math)", { buffer = 0, remap = true })
+Map("n", ",nf", "<plug>(vimtex-cmd-toggle-frac)", { buffer = 0, remap = true })
+Map("n", ",nd", "<plug>(vimtex-delim-toggle-modifier)", { buffer = 0, remap = true })
 
 vim.api.nvim_buf_set_option(0, "textwidth", 100)
 
--- vim.cmd([[let g:vimtex_toc_config=[{"mode":3, "split_width":60}]]])
-vim.g.AngryReviewerEnglish = "british"
 vim.g.tex_flavor = "latex"
 vim.g.vimtex_quickfix_mode = 0
+vim.g.vimtex_doc_confirm_single = 0
 vim.g.vimtex_view_general_viewer = "zathura"
 vim.g.vimtex_view_forward_search_on_start = 1
 vim.g.vimtex_view_automatic = 0
@@ -65,9 +73,11 @@ vim.g.vimtex_compiler_latexmk = {
 vim.opt_local.conceallevel = 2
 vim.g.vimtex_syntax_conceal = {
     ["accents"] = true,
+    ["ligatures"] = true,
     ["cites"] = true,
     ["fancy"] = true,
     ["greek"] = true,
+    ["spacing"] = true,
     ["math_bounds"] = true,
     ["math_delimiters"] = true,
     ["math_fracs"] = true,
