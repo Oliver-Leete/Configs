@@ -79,6 +79,7 @@ Map({ "n", "x", "o" }, "k", [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], { 
 Map({ "n", "x", "o" }, "H", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true })
 Map({ "n", "x", "o" }, "L", "$")
 
+Map({ "n", "x" }, "u", "<cmd>LuaSnipUnlinkCurrent<cr>u")
 Map({ "n", "x" }, "U", "<c-r>")
 
 Map("n", "G", "<nop>")
@@ -261,7 +262,7 @@ Map({ "n", "x" }, ",pb", function() require("user.myfuncs").paste_special(vim.v.
 Map({ "n", "x" }, ",Pb", function() require("user.myfuncs").paste_special(vim.v.register, "b", "P") end)
 
 Map({ "n", "x" }, ",ff", function()
-    vim.cmd.LuaSnipUnlinkCurrent();
+    Ls.unlink_current()
     vim.lsp.buf.format()
 end)
 Map({ "n", "x" }, ",fe", require("null-ls-embedded").format_current)

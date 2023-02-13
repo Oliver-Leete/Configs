@@ -231,7 +231,7 @@ them):
   benchmark results.
 - [x] Make a better profile data exporter.
 - [x] Extend the profile runner and exporter to allocation profiles.
-- [x] Something like splitjoin.vim. Covered by TreeSJ and JuliaFormatter
+- [x] Something like splitjoin.vim. Covered by ts-node-actions and JuliaFormatter
 - [ ] Figure out if a wrapper can be made to use DebugAdapter.jl in Neovim.
 
 ## XMonad

@@ -68,7 +68,7 @@ require("telescope").setup({
                 ["<c-u>"] = false,
                 ["<c-a>"] = { "<home>", type = "command" },
                 ["<c-e>"] = { "<end>", type = "command" },
-                ["<c-f>"] = actions.to_fuzzy_refine,
+                ["<c-space>"] = actions.to_fuzzy_refine,
                 ["<C-q>"] = actions.smart_send_to_qflist,
                 ["<C-Q>"] = actions.smart_add_to_qflist,
                 ["<C-n>"] = actions.cycle_history_next,
@@ -78,7 +78,7 @@ require("telescope").setup({
             n = {
                 ["<tab>"] = actions.toggle_selection + actions.move_selection_worse,
                 ["<S-tab>"] = actions.toggle_selection + actions.move_selection_better,
-                ["<c-f>"] = actions.to_fuzzy_refine,
+                ["<c-space>"] = actions.to_fuzzy_refine,
                 ["<C-q>"] = actions.smart_send_to_qflist,
                 ["<C-Q>"] = actions.smart_add_to_qflist,
                 ["<C-n>"] = actions.cycle_history_next,

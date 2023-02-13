@@ -238,7 +238,8 @@ npairs.add_rules({
 Ls = require("luasnip")
 Ls.config.set_config({
     history = false,
-    updateevents = "TextChanged,TextChangedI",
+    update_events = "TextChanged,TextChangedI",
+    delete_check_events = "TextChanged",
 })
 require("luasnip.loaders.from_lua").load({paths = "/home/oleete/.config/nvim/snippets"})
 require("luasnip-latex-snippets").setup()
