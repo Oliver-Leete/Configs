@@ -5,7 +5,8 @@ local lsp_selection_range = require('lsp-selection-range')
 
 require("lspconfig.ui.windows").default_options.border = Border
 
-vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError", culhl = "DiagnosticSignErrorCur" })
+vim.fn.sign_define("DiagnosticSignError",
+    { text = " ", texthl = "DiagnosticSignError", culhl = "DiagnosticSignErrorCur" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn", culhl = "DiagnosticSignWarnCur" })
 vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo", culhl = "DiagnosticSignInfoCur" })
 vim.fn.sign_define("DiagnosticSignHint", { text = " ", texthl = "DiagnosticSignHint", culhl = "DiagnosticSignHintCur" })
@@ -13,7 +14,7 @@ vim.fn.sign_define("DiagnosticSignHint", { text = " ", texthl = "DiagnosticSi
 vim.diagnostic.config({
     underline = { severity = { min = "Warn", }, },
     virtual_text = { severity = { min = "Warn", }, source = "if_many", prefix = " ", },
-    signs = true,
+    signs = { priority = 6 },
     update_in_insert = false,
     severity_sort = true,
 })
@@ -102,12 +103,12 @@ require("lspconfig").pylsp.setup({
         pylsp = {
             plugins = {
                 pydocstyle = {
-                    enabled = true,
+                    enabled = false,
                     addIgnore = { "D101", "D102", "D103", "D107", "D203" },
                     convention = "numpy",
                 },
                 pycodestyle = {
-                    enabled = true,
+                    enabled = false,
                     ignore = { "E501", "W503" }
                 },
                 pyflakes = {
@@ -115,6 +116,10 @@ require("lspconfig").pylsp.setup({
                 },
                 rope_completion = { enabled = false },
                 jedi_completion = { enabled = false },
+                ruff = {
+                    enabled = true,
+                    lineLength = 120,
+                },
             },
         },
     },
@@ -151,7 +156,7 @@ lspconfig.yamlls.setup({
     settings = { yaml = { schemaStore = { enable = yaml_schemas, } } }
 })
 
-lspconfig.sumneko_lua.setup({
+lspconfig.lua_ls.setup({
     on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
@@ -310,6 +315,7 @@ require("null-ls").setup({
     diagnostics_format = "[#{c}] #{m} (#{s})",
     sources = {
         null_ls.builtins.code_actions.gitrebase,
+        null_ls.builtins.code_actions.refactoring.with({ disabled_filetypes = { "python" } }),
         null_ls.builtins.diagnostics.fish,
         null_ls.builtins.diagnostics.gitlint,
         null_ls.builtins.diagnostics.jsonlint,

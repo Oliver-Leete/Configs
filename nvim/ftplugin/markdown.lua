@@ -1,5 +1,7 @@
 local peek = require("peek")
-peek.setup({})
+peek.setup({
+    app = "browser",
+})
 Map("n", "<localleader><localleader>", function()
     if not peek.is_open() then
         peek.open()

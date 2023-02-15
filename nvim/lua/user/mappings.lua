@@ -79,7 +79,10 @@ Map({ "n", "x", "o" }, "k", [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], { 
 Map({ "n", "x", "o" }, "H", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true })
 Map({ "n", "x", "o" }, "L", "$")
 
-Map({ "n", "x" }, "u", "<cmd>LuaSnipUnlinkCurrent<cr>u")
+Map({ "n", "x" }, "u", function()
+    pcall(Ls.unlink_current)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("u", true, true, true), "n", false)
+end)
 Map({ "n", "x" }, "U", "<c-r>")
 
 Map("n", "G", "<nop>")
@@ -227,9 +230,6 @@ Map({ "n", "x" }, ",k", require("treesj").split)
 Map({ "n", "x" }, "R", "<plug>(SubversiveSubstitute)")
 
 Map("n", ",rr", vim.lsp.buf.rename)
--- Map("n", ",rr", function()
--- return ":IncRename " .. vim.fn.expand("<cword>")
--- end, { expr = true })
 
 Map({ "n", "x" }, ",rs", require("ssr").open)
 
@@ -262,7 +262,7 @@ Map({ "n", "x" }, ",pb", function() require("user.myfuncs").paste_special(vim.v.
 Map({ "n", "x" }, ",Pb", function() require("user.myfuncs").paste_special(vim.v.register, "b", "P") end)
 
 Map({ "n", "x" }, ",ff", function()
-    Ls.unlink_current()
+    pcall(Ls.unlink_current)
     vim.lsp.buf.format()
 end)
 Map({ "n", "x" }, ",fe", require("null-ls-embedded").format_current)
@@ -310,7 +310,7 @@ local action_util = require("overseer.action_util")
 local overseer = require("overseer")
 Map("n", "<leader>h", function()
     local bufnr = vim.api.nvim_get_current_buf()
-    local task = vim.tbl_filter(function(t) if t.strategy.bufnr == bufnr then return true end end, overseer.list_tasks())
+    local task = vim.tbl_filter(function(t) return (t.strategy.bufnr == bufnr) end, overseer.list_tasks())
         [1]
     if task then
         action_util.run_task_action(task)

@@ -52,7 +52,7 @@ require("lazy").setup(
         "fladson/vim-kitty",
         "wilriker/gcode.vim",
         "LhKipp/nvim-nu",
-        { "toppair/peek.nvim",         build = "deno task --quiet build:fast" },
+        { "toppair/peek.nvim", build = "deno task --quiet build:fast" },
 
         "lewis6991/gitsigns.nvim",
         "sindrets/diffview.nvim",
@@ -175,7 +175,6 @@ pcall(require("user.command"))
 pcall(require("user.targets"))
 pcall(require("user.telescope"))
 pcall(require("user.compleation"))
-pcall(require("user.panels"))
 pcall(require("user.myfuncs"))
 pcall(require("user.lsp"))
 pcall(require("user.treesitter"))

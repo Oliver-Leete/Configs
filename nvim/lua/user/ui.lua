@@ -168,7 +168,7 @@ vim.api.nvim_create_autocmd(
                 -- or vim.bo[info.buf].filetype ~= ""
                 ) and true or false
             if vim.bo[info.buf].buftype == "" and not funcs.is_special(info.buf) and is_file then
-                vim.wo.statuscolumn = "%{%v:lua.ScEs()%}%{%v:lua.ScMn()%}%{%v:lua.ScGs()%}"
+                vim.wo.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
                 vim.wo.winbar = "%{%v:lua.Normal_Winbar()%}"
             elseif funcs.is_special(info.buf) or vim.bo[info.buf].buftype == "terminal" then
                 vim.wo.statuscolumn = "%s"

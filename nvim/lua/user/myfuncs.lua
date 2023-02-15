@@ -26,23 +26,28 @@ M.special_types = {
     ["dapui_console"] = { name = "Debug Console", exit_func = winclose },
     ["neotest-summary"] = { name = " Tests", exit_func = winclose },
     ["gitcommit"] = { name = "Git Commit Message", exit_func = winclose },
-    ["noice"] = { name = "Noice", exit_func = function() vim.cmd.quit() end },
+    ["noice"] = {  exit_func = function() vim.cmd.quit() end },
     ["mason"] = { exit_func = winclose },
     ["null-ls-info"] = { exit_func = winclose },
     ["Glance"] = { exit_func = require('glance').actions.close },
     asm = { name = "Compiler Explorer", exit_func = winclose },
 }
 
--- Check if a given buffer is "special"
+
+---Check if a given buffer is "special"
+---@param bufnr number
+---@return boolean
 M.is_special = function(bufnr)
     local filetype = vim.bo[bufnr].filetype
     local buftype = vim.bo[bufnr].buftype
     if buftype == "terminal" then return false end
-    return vim.tbl_contains(vim.tbl_keys(M.special_types), filetype)
+    return vim.tbl_contains(vim.tbl_keys(M.special_types), filetype) and M.special_types[filetype].name ~= nil
 end
 
--- Count normal windows on current tab page
-local tab_win_count = function(tabnr)
+---Count normal windows on current tab page
+---@param tabnr number
+---@return number[]
+local tab_win_bufnrs = function(tabnr)
     local tab_wins = vim.tbl_filter(function(win)
         local win_buf = vim.api.nvim_win_get_buf(win)
         if M.is_special(win_buf) then
@@ -56,8 +61,9 @@ local tab_win_count = function(tabnr)
     return tab_wins
 end
 
--- Count loaded normal buffers
-local loaded_buf_count = function()
+---Count loaded normal buffers
+---@return number[]
+local loaded_bufnrs = function()
     local bufnrs = vim.tbl_filter(function(b)
         if 1 ~= vim.fn.buflisted(b) then
             return false
@@ -81,7 +87,7 @@ local delete_buffer = function()
     if M.is_special(bufnr) then
         local filetype = vim.bo[bufnr].filetype
         if filetype == "" then
-            winclose()
+            vim.cmd.quit()
         else
             M.special_types[filetype].exit_func()
         end
@@ -92,9 +98,9 @@ local delete_buffer = function()
         return
     end
 
-    local bufs = loaded_buf_count()
+    local bufs = loaded_bufnrs()
 
-    local tab_wins = tab_win_count(tabnr)
+    local tab_wins = tab_win_bufnrs(tabnr)
 
     if #tab_wins > 1 then
         winclose()
@@ -164,6 +170,8 @@ local mode_map = {
     ['t'] = { 'TERMINAL', 'Command' },
 }
 
+---Return the current mode
+---@return string[]
 M.vim_mode = function()
     local mode_code = vim.api.nvim_get_mode().mode
     if mode_map[mode_code] == nil then
@@ -172,6 +180,10 @@ M.vim_mode = function()
     return mode_map[mode_code]
 end
 
+---Paste linewise or charwise (or even blockwise)
+---@param reg string
+---@param type string
+---@param put string
 M.paste_special = function(reg, type, put)
     local val = vim.fn.getreg(reg)
     vim.fn.setreg(reg, val, type)

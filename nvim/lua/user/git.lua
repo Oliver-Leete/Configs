@@ -16,13 +16,6 @@ require("gitsigns").setup({
     -- },
     _signs_staged_enable = true,
 })
-vim.api.nvim_set_hl(0, "GitSignsAddCur", { fg = Tc.autumnGreen, bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "GitSignsChangeCur", { fg = Tc.autumnYellow, bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "GitSignsChangedeleteCur", { fg = Tc.autumnYellow, bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "GitSignsDeleteCur", { fg = Tc.autumnRed, bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "GitSignsTopdeleteCur", { fg = Tc.autumnRed, bg = Tc.sumiInk3 })
-
-vim.api.nvim_set_hl(0, "GitSignsUntrackedCur", { fg = Tc.autumnGreen, bg = Tc.sumiInk3 })
 
 -- DiffView.nvim
 local actions = require("diffview.config").actions
