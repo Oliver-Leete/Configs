@@ -39,10 +39,6 @@ local custom_objects = {
     -- Brackets
     b = { { "%b()", "%b[]", "%b{}" }, "^.().*().$" },
     -- Comments
-    c = gen_spec.treesitter({
-        a = { "@comment.outer" },
-        i = { "@comment.outer" }
-    }),
     -- digits
     d = { "%f[%d]%d+" },
     -- diagnostics
@@ -65,11 +61,14 @@ local custom_objects = {
     },
     -- git hunks
     h = miniAiGitsigns,
+    -- Indents
+    -- Jumps
     -- key (from key value pair)
     k = gen_spec.treesitter({
         i = { "@key.inner" },
         a = { "@key.inner" },
     }),
+    -- List (quickfix)
     -- blOck
     o = gen_spec.treesitter({
         a = { "@block.outer", "@conditional.outer", "@loop.outer" },
@@ -118,15 +117,14 @@ local custom_objects = {
     } },
     -- chunk (as in from vim-textobj-chunk)
     z = {
-        "\n.-%b{}",
-        "\n().-%{\n().*()\n.*%}()"
+        "\n.-%b{}.-\n",
+        "\n().-()%{\n.*\n.*%}().-\n()"
     },
     ["$"] = gen_spec.pair("$", "$", { type = "balanced" }),
 }
 
 require("mini.ai").setup({
     custom_textobjects = custom_objects,
-
     mappings = {
         around = "a",
         inside = "i",
@@ -139,17 +137,17 @@ require("mini.ai").setup({
         goto_left = "{",
         goto_right = "}",
     },
-
     n_lines = 500,
-
     search_method = "cover_or_nearest",
 })
 
-local mark_and_go_mini = function(count, direction, id)
+local mark_and_go_mini = function(direction, id, side)
+    local count = vim.v.count
     vim.g.dirJumps = id
+    id = id:lower()
     vim.cmd("norm! m`")
     repeat
-        MiniAi.move_cursor("left", "a", id, { search_method = direction, n_times = vim.v.count })
+        MiniAi.move_cursor(side, "a", id, { search_method = direction, n_times = vim.v.count })
         count = count - 1
     until count <= 0
 end
@@ -176,12 +174,14 @@ Map({ "n", "x", "o" }, "N", function() return command_repeat("[", "dirJumps") en
 Map({ "n", "x", "o" }, "[[", "[s", { remap = true })
 Map({ "n", "x", "o" }, "]]", "]s", { remap = true })
 
-Map({ "n", "x", "o" }, "[l", "<cmd>call v:lua.markAndGo(v:count, 'cprev', 'l')<cr>")
-Map({ "n", "x", "o" }, "]l", "<cmd>call v:lua.markAndGo(v:count, 'cnext', 'l')<cr>")
-
 for _, o in pairs(vim.tbl_keys(custom_objects)) do
-    Map({ "n", "x", "o" }, "[" .. o, function() mark_and_go_mini(vim.v.count, "prev", o) end)
-    Map({ "n", "x", "o" }, "]" .. o, function() mark_and_go_mini(vim.v.count, "next", o) end)
+    Map({ "n", "x", "o" }, "[" .. o, function() mark_and_go_mini("prev", o, "left") end)
+    Map({ "n", "x", "o" }, "]" .. o, function() mark_and_go_mini("next", o, "left") end)
+    local O = o:upper()
+    if O ~= o then
+        Map({ "n", "x", "o" }, "[" .. O, function() mark_and_go_mini("prev", O, "right") end)
+        Map({ "n", "x", "o" }, "]" .. O, function() mark_and_go_mini("next", O, "right") end)
+    end
 end
 
 vim.api.nvim_create_autocmd("BufEnter",
@@ -216,3 +216,27 @@ function _G.markAndGo(count, command, key)
         count = count - 1
     until count <= 0
 end
+
+local magmini = function(func, args, key)
+    local count = vim.v.count
+    vim.g.dirJumps = key
+    vim.cmd("norm! m`")
+    repeat
+        func(args)
+        count = count - 1
+    until count <= 0
+end
+
+local bracketed = require("mini.bracketed")
+
+Map({ "n", "x", "o" }, "[c", function() magmini(bracketed.comment, "backward", "c") end)
+Map({ "n", "x", "o" }, "]c", function() magmini(bracketed.comment, "forward", "c") end)
+
+Map({ "n", "x", "o" }, "[i", function() magmini(bracketed.indent, "backward", "i") end)
+Map({ "n", "x", "o" }, "]i", function() magmini(bracketed.indent, "forward", "i") end)
+
+Map({ "n", "x", "o" }, "[j", function() magmini(bracketed.jump, "backward", "j") end)
+Map({ "n", "x", "o" }, "]j", function() magmini(bracketed.jump, "forward", "j") end)
+
+Map({ "n", "x", "o" }, "[l", function() magmini(bracketed.quickfix, "backward", "l") end)
+Map({ "n", "x", "o" }, "]l", function() magmini(bracketed.quickfix, "forward", "l") end)

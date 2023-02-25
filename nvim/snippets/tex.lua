@@ -111,6 +111,11 @@ rec_tab = function()
         })
 end
 
+local ref_or_subref = function(num)
+    return c(num, { t("Figure~\\ref{"), t("\\subref{") } )
+end
+
+
 return {
         s({ trig = "label", name = "label", dscr = "Insert a label" }, {
             t("\\label{"),
@@ -119,7 +124,7 @@ return {
         }),
         -- NOTE : LABEL REFERENCES
         s({ trig = "fig", name = "figure reference", dscr = "figure reference" }, {
-            t({ "Figure~\\ref{fig:" }), i(1), t({ "}" }),
+            ref_or_subref(2), t("fig:"), i(1), t({ "}" }),
         }),
         s({ trig = "sect", name = "section reference", dscr = "section reference" }, {
             t({ "Section~\\ref{sect:" }), i(1), t({ "}" }),
@@ -250,7 +255,7 @@ return {
             t({ "", "\\end{equation}" })
         }),
         s({ trig = "subequation", name = "subequation", dscr = "alligned sub equation" }, {
-            t("\\begin{subequations}\\label{eq:"), i(1), t({ "}", "" }),
+            t("\\begin{subequations}"),
             t("\t\\begin{align}\\label{eq:"), i(1), t({ "}", "" }),
             t("\t\t"), i(0),
             t({ "", "\t\\end{align}" }),

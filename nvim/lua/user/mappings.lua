@@ -97,8 +97,6 @@ Map("n", "KD", function() require("dap.ui.widgets").hover() end, { silent = true
 Map("n", "Q", "@q")
 Map("x", "Q", ":norm! @q<cr>")
 
-Map("n", "S", "<cmd>ISwapWith<cr>")
-
 Map({ "n", "x", "o" }, "s", require("hop").hint_char1)
 
 Map({ "n", "x", "o" }, "'", "`")
@@ -221,6 +219,70 @@ Hydra({
 
 Map({ "n", "x" }, "m", "v")
 
+local mini_move_hint = [[
+┏^^^^━━━━━┳━━━━━━┳━━━━━^^^^┓
+┃^^^^     ┃ Tree ┃     ^^^^┃
+┃^^^^     ┗━━━━━━┛     ^^^^┃
+┃^^^^       Move       ^^^^┃
+┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
+┃ _H_/_J_/_K_/_L_: ⇚/⟱/⤊/⇛ ┃
+┃^^^^                  ^^^^┃
+┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
+┃^^    _<esc>_: exit   ^^^^┃
+┗^^^^━━━━━━━━━━━━━━━━━━^^^^┛
+]]
+local old_virt = vim.wo.virtualedit
+require('hydra')({
+    name = "Move",
+    mode = { "x" },
+    body = "M",
+    config = {
+        color = "pink",
+        invoke_on_body = true,
+        hint = {
+            position = "top-right",
+            border = nil
+        },
+        on_enter = function()
+            old_virt = vim.wo.virtualedit
+            vim.wo.virtualedit = "all"
+        end,
+        on_exit = function()
+            vim.wo.virtualedit = old_virt
+        end,
+    },
+    hint = mini_move_hint,
+    heads = {
+        { 'H',     function() require('mini.move').move_selection("left") end,  { nowait = true } },
+        { 'J',     function() require('mini.move').move_selection("down") end,  { nowait = true } },
+        { 'K',     function() require('mini.move').move_selection("up") end,    { nowait = true } },
+        { 'L',     function() require('mini.move').move_selection("right") end, { nowait = true } },
+        { 'M',     nil,                                                         { exit = true, nowait = true, desc = false } },
+        { '<esc>', nil,                                                         { exit = true, nowait = true } },
+    }
+})
+require('hydra')({
+    name = "Move Line",
+    mode = { "n" },
+    body = "M",
+    config = {
+        color = "pink",
+        invoke_on_body = true,
+        hint = {
+            position = "top-right",
+            border = nil
+        }
+    },
+    hint = mini_move_hint,
+    heads = {
+        { 'H',     function() require('mini.move').move_line("left") end,  { nowait = true } },
+        { 'J',     function() require('mini.move').move_line("down") end,  { nowait = true } },
+        { 'K',     function() require('mini.move').move_line("up") end,    { nowait = true } },
+        { 'L',     function() require('mini.move').move_line("right") end, { nowait = true } },
+        { 'M',     nil,                                                    { exit = true, nowait = true, desc = false } },
+        { '<esc>', nil,                                                    { exit = true, nowait = true } },
+    }
+})
 -- Text leader mappings: ,
 
 Map({ "n", "x" }, ",j", require("treesj").join)

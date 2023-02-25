@@ -85,7 +85,7 @@ vim.api.nvim_create_autocmd(
     { group = windowPositioning, pattern = "help", command = ":wincmd H | vertical resize 90<cr>" }
 )
 vim.api.nvim_create_autocmd({ "FileType" }, { group = windowPositioning, pattern = "juliadoc", command = "wincmd H" })
-vim.api.nvim_create_autocmd({ "FileType" }, { group = windowPositioning, pattern = "qf", command = "windcmd J" })
+vim.api.nvim_create_autocmd({ "FileType" }, { group = windowPositioning, pattern = "qf", command = "wincmd J" })
 
 -- Yank
 local LuaHighlight = vim.api.nvim_create_augroup("LuaHighlight", { clear = true })

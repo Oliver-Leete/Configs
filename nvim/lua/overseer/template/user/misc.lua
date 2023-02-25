@@ -38,6 +38,23 @@ return {
                 params = {},
             },
             {
+                name = "Gitui",
+                builder = function()
+                    return {
+                        name = "Gitui",
+                        cmd = "gitui",
+                        components = { "default", "unique",
+                            {
+                                "user.start_open",
+                                start_insert = true,
+                            },
+                        },
+                    }
+                end,
+                priority = 2,
+                params = {},
+            },
+            {
                 name = "Git Commit",
                 builder = function()
                     return {
@@ -47,6 +64,18 @@ return {
                     }
                 end,
                 priority = 2,
+                params = {},
+            },
+            {
+                name = "Pomodoro",
+                builder = function()
+                    return {
+                        name = "Pomodoro",
+                        cmd = "porsmo",
+                        components = { "default", "unique" },
+                    }
+                end,
+                priority = 3,
                 params = {},
             },
             {
@@ -99,7 +128,7 @@ return {
                 builder = function()
                     return {
                         name = "Build Document",
-                        cmd = "latexmk -f -silent",
+                        cmd = "latexmk -synctex=1 -f -silent",
                         components = { "default", 'unique' }
                     }
                 end,
@@ -113,7 +142,7 @@ return {
                 builder = function()
                     return {
                         name = "Build Document",
-                        cmd = "latexmk -f",
+                        cmd = "latexmk -synctex=1 -f",
                         components = { "default", "unique",
                             {
                                 "user.start_open",

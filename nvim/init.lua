@@ -111,14 +111,14 @@ require("lazy").setup(
         "debugloop/telescope-undo.nvim",
         "FeiyouG/command_center.nvim",
 
-        { "nvim-treesitter/nvim-treesitter", build = ":TSInstall all | TSUpdate" },
+        { "nvim-treesitter/nvim-treesitter", build = ":TSInstall all | TSUpdate | TSUninstall comment" },
         "nvim-treesitter/playground",
         "nvim-treesitter/nvim-treesitter-textobjects",
         "ThePrimeagen/refactoring.nvim",
-        "mizlan/iswap.nvim",
         "AckslD/nvim-trevJ.lua",
         "Wansmer/treesj",
         "CKolkey/ts-node-action",
+        "drybalka/tree-climber.nvim",
 
         "stevearc/overseer.nvim",
         "nvim-neotest/neotest",

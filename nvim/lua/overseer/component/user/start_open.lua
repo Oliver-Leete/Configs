@@ -44,9 +44,12 @@ return {
                     for _, winid in ipairs(winids) do
                         vim.api.nvim_win_close(winid, true)
                     end
+                    overseer.run_action(task, "open vsplit")
+                else
+                    overseer.run_action(task, "open")
                 end
 
-                overseer.run_action(task, "open vsplit")
+
                 if params.goto_prev then
                     vim.cmd.wincmd({ args = { "p" } })
                 end

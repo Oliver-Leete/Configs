@@ -143,6 +143,7 @@ glance.setup({
             ['<c-x>'] = actions.jump_split,
             ['<CR>'] = actions.jump,
             ['o'] = actions.enter_win('preview'),
+            ['p'] = actions.enter_win('preview'),
             ['<Esc>'] = actions.close,
         },
         preview = {
@@ -157,27 +158,22 @@ glance.setup({
 vim.go.winbar = ""
 vim.go.statuscolumn = "%C"
 
+local init_ui_elements = function(info)
+    local is_file = (
+        vim.fn.filereadable(vim.api.nvim_buf_get_name(info.buf)) == 1
+        -- or vim.bo[info.buf].filetype ~= ""
+        ) and true or false
+    if vim.bo[info.buf].buftype == "" and not funcs.is_special(info.buf) and is_file then
+        vim.wo.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
+        vim.wo.winbar = "%{%v:lua.Normal_Winbar()%}"
+    elseif funcs.is_special(info.buf) or vim.bo[info.buf].buftype == "terminal" then
+        vim.wo.statuscolumn = "%s"
+        vim.wo.winbar = "%{%v:lua.Special_Winbar()%}"
+    else
+        vim.wo.statuscolumn = "%s"
+        vim.wo.winbar = ""
+    end
+end
+
 local colGroup = vim.api.nvim_create_augroup("colGroup", {})
-vim.api.nvim_create_autocmd(
-    "BufEnter",
-    {
-        pattern = "*",
-        callback = function(info)
-            local is_file = (
-                vim.fn.filereadable(vim.api.nvim_buf_get_name(info.buf)) == 1
-                -- or vim.bo[info.buf].filetype ~= ""
-                ) and true or false
-            if vim.bo[info.buf].buftype == "" and not funcs.is_special(info.buf) and is_file then
-                vim.wo.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
-                vim.wo.winbar = "%{%v:lua.Normal_Winbar()%}"
-            elseif funcs.is_special(info.buf) or vim.bo[info.buf].buftype == "terminal" then
-                vim.wo.statuscolumn = "%s"
-                vim.wo.winbar = "%{%v:lua.Special_Winbar()%}"
-            else
-                vim.wo.statuscolumn = "%s"
-                vim.wo.winbar = ""
-            end
-        end,
-        group = colGroup,
-    }
-)
+vim.api.nvim_create_autocmd("BufEnter", { pattern = "*", callback = init_ui_elements, group = colGroup, })

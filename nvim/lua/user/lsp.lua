@@ -286,7 +286,9 @@ require("lspconfig").ltex.setup({
                 environments = { Fortran = "ignore", jllisting = "ignore", algorithmic = "ignore" },
                 commands = {
                     ["\\twosubfigures{}{}{}{}{}{}"] = "ignore",
+                    ["\\twosubfiguresuncorrected{}{}{}{}{}{}"] = "ignore",
                     ["\\threesubfigures{}{}{}{}{}{}{}{}{}"] = "ignore",
+                    ["\\threesubfiguresuncorrected{}{}{}{}{}{}{}{}{}"] = "ignore",
                     ["\\subfile{}"] = "ignore",
                     ["\\glsname{}"] = "dummy",
                     ["\\gls{}"] = "dummy",

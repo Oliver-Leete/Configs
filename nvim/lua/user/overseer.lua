@@ -96,7 +96,7 @@ overseer.setup({
             end,
         }
     },
-    templates = { "builtin", "user" }
+    templates = { "cargo", "just", "make", "npm", "shell", "tox", "vscode", "mix", "rake", "task", "user" }
 })
 
 vim.api.nvim_set_hl(0, "OverseerTaskBorder", { link = "Normal" })

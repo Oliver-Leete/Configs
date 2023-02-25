@@ -2,13 +2,13 @@ local constants = require("overseer.constants")
 local files = require("overseer.files")
 local TAG = constants.TAG
 
-local isInProject = function(opts) return files.exists(files.join(opts.dir, "Project.toml")) end
+local isInProject = function(opts) return files.exists(files.join(vim.fn.getcwd(), "Project.toml")) end
 local isFile = { filetype = "julia" }
 local isProject = { callback = isInProject }
-local hasTest = { callback = function(opts) return isProject and files.exists(files.join(opts.dir, "test")) end }
-local hasBenchmark = { callback = function(opts) return isProject and files.exists(files.join(opts.dir, "benchmark")) end }
-local hasDocs = { callback = function(opts) return isProject and files.exists(files.join(opts.dir, "docs")) end }
-local hasBuild = { callback = function(opts) return isProject and files.exists(files.join(opts.dir, "build")) end }
+local hasTest = { callback = function(opts) return isInProject(opts) and files.exists(files.join(vim.fn.getcwd(), "test")) end }
+local hasBenchmark = { callback = function(opts) return isInProject(opts)  and files.exists(files.join(vim.fn.getcwd(), "benchmark")) end }
+local hasDocs = { callback = function(opts) return isInProject(opts) and files.exists(files.join(vim.fn.getcwd(), "docs")) end }
+local hasBuild = { callback = function(opts) return isInProject(opts) and files.exists(files.join(vim.fn.getcwd(), "build")) end }
 
 local otherProjectFinder = function()
     local projectDir
@@ -137,7 +137,7 @@ return {
                 name = "Start documentation Server",
                 tskName = vim.g.project .. " Doc Server",
                 cmd = juliaCommand .. [[--project=docs -E 'using Revise, ]] ..
-                    vim.g.project .. [[, LiveServer; servedocs(launch_browser=true; include_dirs = ["src"])']],
+                    vim.g.project .. [[, LiveServer; servedocs(launch_browser=true; include_dirs = ["src", "data"])']],
                 components = { "default", "unique", "always_restart" },
                 condition = hasDocs,
             },
@@ -206,6 +206,13 @@ return {
                 cmd = juliaCommand .. vim.fn.expand("%:p"),
                 condition = isFile,
                 components = { "default", "unique" },
+            },
+            {
+                name = "Run Julia File Interactivly (" .. vim.fn.expand("%:t:r") .. ")",
+                tskName = "Running " .. vim.fn.expand("%:t:r") .. "Interactivly",
+                cmd = juliaCommand .. "-i " .. vim.fn.expand("%:p"),
+                condition = isFile,
+                components = { "default", "unique", "user.start_open" },
             },
             {
                 name = "Profile Package Imports",

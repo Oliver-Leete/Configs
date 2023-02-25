@@ -390,14 +390,14 @@ local argument_list = function(node)
 end
 
 return {
-    vector_expression = toggle_multiline,
+    vector_expression = {{ toggle_multiline, name = "Toggle Vector Multiline"}},
     matrix_expression = {{ matrix_toggle_multiline, name = "Toggle Matrix Multiline"}},
     argument_list = {{ argument_list, name = "Toggle argument list multiline" }},
-    parameter_list = toggle_multiline,
-    tuple_expression = toggle_multiline,
+    parameter_list = {{ toggle_multiline, name = "Toggle Parameter Multiline"}},
+    tuple_expression = {{ toggle_multiline, name = "Toggle Tuple Multiline"}},
     boolean_literal = {{ toggle_julia_boolean, name = "Toggle bool" }},
-    identifier = cycle_case,
-    operator = toggle_operator,
+    identifier = {{ cycle_case, name = "Cycle Case"}},
+    operator = {{ toggle_operator, name = "Toggle Operator"}},
     if_statement = {{ julia_if_tern, name = "Change to ternary expression" }},
     ternary_expression = {{ julia_tern_if, name = "Change to if expression" }},
     function_definition = {{ julia_func_short, name = "Change to short function definition" }},

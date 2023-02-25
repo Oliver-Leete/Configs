@@ -57,7 +57,7 @@ local filerunners = {
     },
     rust = {
         name = "Rust",
-        repl = "papyrus",
+        repl = "irust",
         filerunner = function() return { "rustc", vim.fn.expand("%:p") } end,
     },
     lua = {

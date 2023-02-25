@@ -40,6 +40,7 @@ end
 
 require("telescope").setup({
     defaults = {
+        file_ignore_patterns = { "%.jld2" },
         vimgrep_arguments = {
             "rg",
             "--color=never",
@@ -71,6 +72,8 @@ require("telescope").setup({
                 ["<c-space>"] = actions.to_fuzzy_refine,
                 ["<C-q>"] = actions.smart_send_to_qflist,
                 ["<C-Q>"] = actions.smart_add_to_qflist,
+                ["<C-l>"] = actions.smart_send_to_qflist,
+                ["<C-L>"] = actions.smart_add_to_qflist,
                 ["<C-n>"] = actions.cycle_history_next,
                 ["<C-p>"] = actions.cycle_history_prev,
                 ["<C-cr>"] = actions.toggle_selection + actions.move_selection_worse,
@@ -81,6 +84,8 @@ require("telescope").setup({
                 ["<c-space>"] = actions.to_fuzzy_refine,
                 ["<C-q>"] = actions.smart_send_to_qflist,
                 ["<C-Q>"] = actions.smart_add_to_qflist,
+                ["<C-l>"] = actions.smart_send_to_qflist,
+                ["<C-L>"] = actions.smart_add_to_qflist,
                 ["<C-n>"] = actions.cycle_history_next,
                 ["<C-p>"] = actions.cycle_history_prev,
                 ["<C-cr>"] = actions.toggle_selection + actions.move_selection_worse,
@@ -174,8 +179,10 @@ function ProjectFiles()
     if results == nil then
         vim.cmd.echomsg({ args = { "'Something went wrong'" } })
     elseif results[1] then
-        require("telescope.builtin").git_files(require("telescope.themes").get_ivy())
+        require("telescope.builtin").git_files(vim.tbl_extend("force", require("telescope.themes").get_ivy(), {
+        }))
     else
-        require("telescope.builtin").find_files(require("telescope.themes").get_ivy())
+        require("telescope.builtin").find_files(vim.tbl_extend("force", require("telescope.themes").get_ivy(), {
+        }))
     end
 end
