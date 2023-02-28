@@ -65,8 +65,8 @@ local custom_objects = {
     -- Jumps
     -- key (from key value pair)
     k = gen_spec.treesitter({
-        i = { "@key.inner" },
-        a = { "@key.inner" },
+        i = { "@key.inner", "@assignment.lhs" },
+        a = { "@key.inner", "@assignment.lhs" },
     }),
     -- List (quickfix)
     -- blOck
@@ -101,8 +101,8 @@ local custom_objects = {
     t = { "<(%w-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" },
     -- value (from key value pair)
     v = gen_spec.treesitter({
-        i = { "@value.inner" },
-        a = { "@value.inner" },
+        i = { "@value.inner", "@assignment.rhs" },
+        a = { "@value.inner", "@assignment.rhs" },
     }),
     -- WORD
     W = { {
@@ -217,26 +217,26 @@ function _G.markAndGo(count, command, key)
     until count <= 0
 end
 
-local magmini = function(func, args, key)
+local magmini = function(func, key, args, opts)
     local count = vim.v.count
     vim.g.dirJumps = key
     vim.cmd("norm! m`")
     repeat
-        func(args)
+        func(args, opts)
         count = count - 1
     until count <= 0
 end
 
 local bracketed = require("mini.bracketed")
 
-Map({ "n", "x", "o" }, "[c", function() magmini(bracketed.comment, "backward", "c") end)
-Map({ "n", "x", "o" }, "]c", function() magmini(bracketed.comment, "forward", "c") end)
+Map({ "n", "x", "o" }, "[c", function() magmini(bracketed.comment, "c", "backward") end)
+Map({ "n", "x", "o" }, "]c", function() magmini(bracketed.comment, "c", "forward") end)
 
-Map({ "n", "x", "o" }, "[i", function() magmini(bracketed.indent, "backward", "i") end)
-Map({ "n", "x", "o" }, "]i", function() magmini(bracketed.indent, "forward", "i") end)
+Map({ "n", "x", "o" }, "[i", function() magmini(bracketed.indent, "i", "backward", {change_type="diff"}) end)
+Map({ "n", "x", "o" }, "]i", function() magmini(bracketed.indent, "i", "forward", {change_type="diff"}) end)
 
-Map({ "n", "x", "o" }, "[j", function() magmini(bracketed.jump, "backward", "j") end)
-Map({ "n", "x", "o" }, "]j", function() magmini(bracketed.jump, "forward", "j") end)
+Map({ "n", "x", "o" }, "[j", function() magmini(bracketed.jump, "j", "backward") end)
+Map({ "n", "x", "o" }, "]j", function() magmini(bracketed.jump, "j", "forward") end)
 
-Map({ "n", "x", "o" }, "[l", function() magmini(bracketed.quickfix, "backward", "l") end)
-Map({ "n", "x", "o" }, "]l", function() magmini(bracketed.quickfix, "forward", "l") end)
+Map({ "n", "x", "o" }, "[l", function() magmini(bracketed.quickfix, "l", "backward") end)
+Map({ "n", "x", "o" }, "]l", function() magmini(bracketed.quickfix, "l", "forward") end)

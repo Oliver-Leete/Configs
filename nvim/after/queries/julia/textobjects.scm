@@ -16,3 +16,8 @@
   (#eq? @pairopp "=>")
   (_) @value.inner
 ) @key.outer @value.outer
+
+(assignment
+  (_) @assignment.lhs
+  (_)
+  (_) @assignment.inner @assignment.rhs) @assignment.outer

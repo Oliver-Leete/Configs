@@ -99,9 +99,9 @@ require('hydra')({
     hint = ts_surf_hint,
     heads = {
         { 'h',     function() require('tree-climber').goto_parent(ts_surf_settings) end,    { nowait = true } },
-        { 'l',     function() require('tree-climber').goto_child(ts_surf_settings) end,     { nowait = true } },
-        { 'k',     function() require('tree-climber').goto_prev(ts_surf_settings) end,      { nowait = true } },
         { 'j',     function() require('tree-climber').goto_next(ts_surf_settings) end,      { nowait = true } },
+        { 'k',     function() require('tree-climber').goto_prev(ts_surf_settings) end,      { nowait = true } },
+        { 'l',     function() require('tree-climber').goto_child(ts_surf_settings) end,     { nowait = true } },
         { 'K',     function() require('tree-climber').swap_prev(ts_surf_settings) end,      { nowait = true } },
         { 'J',     function() require('tree-climber').swap_next(ts_surf_settings) end,      { nowait = true } },
         { 'm',     function() require('tree-climber').select_node(ts_surf_settings) end,    { nowait = true } },

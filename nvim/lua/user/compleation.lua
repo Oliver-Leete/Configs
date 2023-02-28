@@ -77,6 +77,7 @@ require("cmp").setup({
     sources = {
         { name = "luasnip_choice" },
         { name = "luasnip" },
+        { name = "jupyter" },
         { name = "cmp_git" },
         { name = 'otter' },
         { name = "nvim_lsp" },
@@ -91,6 +92,7 @@ require("cmp").setup({
             vim_item.menu = ({
                     luasnip_choice = "(CHOICE)",
                     luasnip = "(SNIP)",
+                    jupyter = "(JUP)",
                     git = "(GIT)",
                     otter = "(LSP)",
                     nvim_lsp = "(LSP)",
