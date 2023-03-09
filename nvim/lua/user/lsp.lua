@@ -1,7 +1,7 @@
+M = {}
+
 require("neodev").setup({})
 local lspconfig = require("lspconfig")
-local lsp_selection_range = require('lsp-selection-range')
--- require("inc_rename").setup()
 
 require("lspconfig.ui.windows").default_options.border = Border
 
@@ -11,13 +11,16 @@ vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSi
 vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo", culhl = "DiagnosticSignInfoCur" })
 vim.fn.sign_define("DiagnosticSignHint", { text = " ", texthl = "DiagnosticSignHint", culhl = "DiagnosticSignHintCur" })
 
-vim.diagnostic.config({
+local default_diagnostic_config = {
     underline = { severity = { min = "Warn", }, },
     virtual_text = { severity = { min = "Warn", }, source = "if_many", prefix = " ", },
     signs = { priority = 6 },
     update_in_insert = false,
     severity_sort = true,
-})
+    virtual_lines = false,
+}
+
+vim.diagnostic.config(default_diagnostic_config)
 
 local lsp_auto = vim.api.nvim_create_augroup("lsp_autocmd", { clear = true })
 
@@ -36,8 +39,6 @@ local custom_attach = function(client, bufnr)
         require("nvim-navic").attach(client, bufnr)
     end
 
-    lsp_selection_range.setup({})
-
     -- LSP Binding Override
     if client.name ~= "null-ls" then
         bmap("n", "gd", "<cmd>Glance definitions<cr>")
@@ -48,15 +49,7 @@ local custom_attach = function(client, bufnr)
         bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls theme=get_ivy<cr>")
         bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>")
 
-        bmap("n", "Gd", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
-        bmap("n", "Gr", "<cmd>Telescope lsp_references theme=get_ivy<cr>")
-        bmap("n", "GI", "<cmd>Telescope lsp_implementations theme=get_ivy<cr>")
-        bmap("n", "GD", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>")
-
         bmap("n", "KK", vim.lsp.buf.hover)
-
-        bmap("n", "mm", require("lsp-selection-range").trigger)
-        bmap("x", "mm", require("lsp-selection-range").expand)
     end
     if sc.codeLensProvider ~= nil then
         bmap("n", "<C-,>", vim.lsp.codelens.run)
@@ -77,7 +70,6 @@ capabilities.textDocument.foldingRange = {
     dynamicRegistration = false,
     lineFoldingOnly = true
 }
-capabilities = lsp_selection_range.update_capabilities(capabilities)
 
 local default = {
     on_attach = custom_attach,
@@ -202,7 +194,7 @@ lspconfig.texlab.setup({
             },
             latexFormatter = "latexindent",
             latexindent = {
-                ["local"] = ".latexindent.yaml",
+                    ["local"] = ".latexindent.yaml",
                 modifyLineBreaks = true,
             }
         },
@@ -241,7 +233,7 @@ require("rust-tools").setup({
         flags = { debounce_text_changes = 1000 },
         standalone = true,
         settings = {
-            ["rust-analyzer"] = {
+                ["rust-analyzer"] = {
                 checkOnSave = {
                     command = { "cargo", "clippy" },
                 },
@@ -285,23 +277,24 @@ require("lspconfig").ltex.setup({
             latex = {
                 environments = { Fortran = "ignore", jllisting = "ignore", algorithmic = "ignore" },
                 commands = {
-                    ["\\twosubfigures{}{}{}{}{}{}"] = "ignore",
-                    ["\\twosubfiguresuncorrected{}{}{}{}{}{}"] = "ignore",
-                    ["\\threesubfigures{}{}{}{}{}{}{}{}{}"] = "ignore",
-                    ["\\threesubfiguresuncorrected{}{}{}{}{}{}{}{}{}"] = "ignore",
-                    ["\\subfile{}"] = "ignore",
-                    ["\\glsname{}"] = "dummy",
-                    ["\\gls{}"] = "dummy",
-                    ["\\glsfirst{}"] = "dummy",
-                    ["\\pgls{}"] = "dummy",
-                    ["\\ac{}"] = "dummy",
-                    ["\\acl{}"] = "dummy",
-                    ["\\acs{}"] = "dummy",
-                    ["\\acf{}"] = "dummy",
-                    ["\\pac{}"] = "dummy",
-                    ["\\Pac{}"] = "dummy",
-                    ["\\subref{}"] = "dummy",
-                    ["\\SI{}{}"] = "dummy",
+                        ["\\twosubfigures{}{}{}{}{}{}"] = "ignore",
+                        ["\\twosubfiguresuncorrected{}{}{}{}{}{}"] = "ignore",
+                        ["\\threesubfigures{}{}{}{}{}{}{}{}{}"] = "ignore",
+                        ["\\threesubfiguresuncorrected{}{}{}{}{}{}{}{}{}"] = "ignore",
+                        ["\\notationnote{}"] = "ignore",
+                        ["\\subfile{}"] = "ignore",
+                        ["\\glsname{}"] = "dummy",
+                        ["\\gls{}"] = "dummy",
+                        ["\\glsfirst{}"] = "dummy",
+                        ["\\pgls{}"] = "dummy",
+                        ["\\ac{}"] = "dummy",
+                        ["\\acl{}"] = "dummy",
+                        ["\\acs{}"] = "dummy",
+                        ["\\acf{}"] = "dummy",
+                        ["\\pac{}"] = "dummy",
+                        ["\\Pac{}"] = "dummy",
+                        ["\\subref{}"] = "dummy",
+                        ["\\SI{}{}"] = "dummy",
                 },
             },
             dictionary = {},
@@ -336,37 +329,69 @@ require("null-ls").setup({
 })
 
 -- Non lsp diagnostics
-QfDiag = vim.api.nvim_create_namespace("qfDiag")
-QfToDiagGroup = vim.api.nvim_create_augroup("qfToDiag", { clear = true })
+-- QfDiag = vim.api.nvim_create_namespace("qfDiag")
+-- QfToDiagGroup = vim.api.nvim_create_augroup("qfToDiag", { clear = true })
+--
+-- local update_diagnostics = function(diagnostics, namespace)
+--     vim.diagnostic.reset(namespace)
+--     local buffers = {}
+--     local tmp = {}
+--     for i, item in pairs(diagnostics) do
+--         if (tmp[item.bufnr] ~= nil) then
+--             table.insert(buffers, item.bufnr)
+--         end
+--         tmp[item.bufnr] = i
+--     end
+--
+--     for _, buffer in pairs(buffers) do
+--         local diag = {}
+--         for _, d in pairs(diagnostics) do
+--             if d.bufnr == buffer then
+--                 table.insert(diag, d)
+--             end
+--         end
+--         vim.diagnostic.set(namespace, buffer, diag)
+--     end
+-- end
+--
+-- local qf_to_diag = function()
+--     local qf = vim.diagnostic.fromqflist(vim.fn.getqflist())
+--     update_diagnostics(qf, QfDiag)
+-- end
+-- vim.api.nvim_create_autocmd("QuickFixCmdPost", { pattern = "*", callback = qf_to_diag, group = QfToDiagGroup })
+-- vim.api.nvim_create_autocmd("User",
+--     { pattern = "VimtexEventCompileFailed", callback = qf_to_diag, group = QfToDiagGroup })
+-- vim.api.nvim_create_autocmd("User",
+--     { pattern = "VimtexEventCompileSuccess", callback = qf_to_diag, group = QfToDiagGroup })
 
-local update_diagnostics = function(diagnostics, namespace)
-    vim.diagnostic.reset(namespace)
-    local buffers = {}
-    local tmp = {}
-    for i, item in pairs(diagnostics) do
-        if (tmp[item.bufnr] ~= nil) then
-            table.insert(buffers, item.bufnr)
-        end
-        tmp[item.bufnr] = i
-    end
+local toggled_diagnostic_config = {
+    underline = true,
+    virtual_text = false,
+    signs = { priority = 6 },
+    update_in_insert = false,
+    severity_sort = true,
+    virtual_lines = { only_current_line = true },
+}
 
-    for _, buffer in pairs(buffers) do
-        local diag = {}
-        for _, d in pairs(diagnostics) do
-            if d.bufnr == buffer then
-                table.insert(diag, d)
-            end
-        end
-        vim.diagnostic.set(namespace, buffer, diag)
-    end
+require("lsp_lines").setup()
+
+local clear_preview_inline = function()
+    vim.diagnostic.config(default_diagnostic_config)
 end
 
-local qf_to_diag = function()
-    local qf = vim.diagnostic.fromqflist(vim.fn.getqflist())
-    update_diagnostics(qf, QfDiag)
+M.preview_diagnostics_inline = function()
+    local bufnr = vim.api.nvim_get_current_buf()
+
+    vim.diagnostic.config(toggled_diagnostic_config)
+
+    vim.api.nvim_create_autocmd({ 'CursorMoved', 'InsertEnter' }, {
+        buffer = bufnr,
+        desc = 'Clear diagnostics inline preview',
+        callback = function()
+            clear_preview_inline()
+        end,
+        once = true,
+    })
 end
-vim.api.nvim_create_autocmd("QuickFixCmdPost", { pattern = "*", callback = qf_to_diag, group = QfToDiagGroup })
-vim.api.nvim_create_autocmd("User",
-    { pattern = "VimtexEventCompileFailed", callback = qf_to_diag, group = QfToDiagGroup })
-vim.api.nvim_create_autocmd("User",
-    { pattern = "VimtexEventCompileSuccess", callback = qf_to_diag, group = QfToDiagGroup })
+
+return M

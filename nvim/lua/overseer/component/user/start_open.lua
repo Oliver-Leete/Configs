@@ -42,9 +42,8 @@ return {
                 if bufnr then
                     local winids = get_win_id(bufnr)
                     for _, winid in ipairs(winids) do
-                        vim.api.nvim_win_close(winid, true)
+                        vim.api.nvim_win_set_buf(winid, task.strategy.bufnr)
                     end
-                    overseer.run_action(task, "open vsplit")
                 else
                     overseer.run_action(task, "open")
                 end

@@ -86,7 +86,7 @@ local ts_surf_hint = [[
 ]]
 require('hydra')({
     name = "Treesitter",
-    mode = { "n", "x", "o" },
+    mode = { "n", "x" },
     body = "S",
     config = {
         color = "pink",

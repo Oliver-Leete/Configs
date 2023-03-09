@@ -4,12 +4,6 @@ local funcs = require("user.myfuncs")
 vim.opt.termguicolors = true
 vim.opt.guifont = "JuliaMono:h10"
 
-require("stickybuf").setup({
-    filetype = {
-        OverseerList = "bufnr",
-    },
-})
-
 require("dressing").setup({
     select = {
         backend = { "telescope" },
@@ -131,26 +125,26 @@ glance.setup({
     },
     mappings = {
         list = {
-            ['j'] = actions.next,
-            ['k'] = actions.previous,
-            ['<Down>'] = actions.next,
-            ['<Up>'] = actions.previous,
-            ['n'] = actions.next_location,
-            ['N'] = actions.previous_location,
-            ['<C-u>'] = actions.preview_scroll_win(5),
-            ['<C-d>'] = actions.preview_scroll_win( -5),
-            ['<c-v>'] = actions.jump_vsplit,
-            ['<c-x>'] = actions.jump_split,
-            ['<CR>'] = actions.jump,
-            ['o'] = actions.enter_win('preview'),
-            ['p'] = actions.enter_win('preview'),
-            ['<Esc>'] = actions.close,
+                ['j'] = actions.next,
+                ['k'] = actions.previous,
+                ['<Down>'] = actions.next,
+                ['<Up>'] = actions.previous,
+                ['n'] = actions.next_location,
+                ['N'] = actions.previous_location,
+                ['<C-u>'] = actions.preview_scroll_win(5),
+                ['<C-d>'] = actions.preview_scroll_win(-5),
+                ['<c-v>'] = actions.jump_vsplit,
+                ['<c-x>'] = actions.jump_split,
+                ['<CR>'] = actions.jump,
+                ['o'] = actions.enter_win('preview'),
+                ['p'] = actions.enter_win('preview'),
+                ['<Esc>'] = actions.close,
         },
         preview = {
-            ['n'] = actions.next_location,
-            ['N'] = actions.previous_location,
-            ['<esc>'] = actions.enter_win('list'),
-            ['<leader><cr>'] = actions.enter_win('list'),
+                ['n'] = actions.next_location,
+                ['N'] = actions.previous_location,
+                ['<esc>'] = actions.enter_win('list'),
+                ['<leader><cr>'] = actions.enter_win('list'),
         },
     },
 })
@@ -159,14 +153,18 @@ vim.go.winbar = ""
 vim.go.statuscolumn = "%C"
 
 local init_ui_elements = function(info)
+    local special = function(bufnr)
+        return funcs.is_special(bufnr) and
+            funcs.special_types[vim.bo[bufnr].filetype].name ~= nil
+    end
     local is_file = (
         vim.fn.filereadable(vim.api.nvim_buf_get_name(info.buf)) == 1
         -- or vim.bo[info.buf].filetype ~= ""
         ) and true or false
-    if vim.bo[info.buf].buftype == "" and not funcs.is_special(info.buf) and is_file then
+    if vim.bo[info.buf].buftype == "" and not special(info.buf) and is_file then
         vim.wo.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
         vim.wo.winbar = "%{%v:lua.Normal_Winbar()%}"
-    elseif funcs.is_special(info.buf) or vim.bo[info.buf].buftype == "terminal" then
+    elseif special(info.buf) or vim.bo[info.buf].buftype == "terminal" then
         vim.wo.statuscolumn = "%s"
         vim.wo.winbar = "%{%v:lua.Special_Winbar()%}"
     else

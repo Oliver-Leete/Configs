@@ -90,7 +90,8 @@ Map("n", "K", "<nop>")
 Map("n", "KK", "K")
 Map("n", "KG", require("gitsigns").preview_hunk_inline)
 Map("n", "KB", function() require("gitsigns").blame_line({ full = true }) end)
-Map("n", "KE", function() vim.diagnostic.open_float({ border = Border, scope = "line", source = "always" }) end)
+-- Map("n", "KE", function() vim.diagnostic.open_float({ border = Border, scope = "line", source = "always" }) end)
+Map("n", "KE", require("user.lsp").preview_diagnostics_inline)
 Map("n", "KT", function() require("neotest").output.open() end)
 Map("n", "KD", function() require("dap.ui.widgets").hover() end, { silent = true })
 
@@ -426,6 +427,8 @@ Map("n", "<leader>/p", "<cmd>silent Edeps<cr>")
 Map("n", "<leader>/b", "<cmd>silent Ebench<cr>")
 Map("n", "<leader>/B", "<cmd>silent EmainBench<cr>")
 
+Map("n", "<leader>w", function() require("telescope.builtin").lsp_workspace_symbols(require("telescope.themes").get_ivy()) end)
+Map("n", "<leader>W", function() require("telescope.builtin").live_grep(require("telescope.themes").get_ivy()) end)
 Map("n", "<leader>f", function() ProjectFiles() end)
 Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
 

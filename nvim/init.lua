@@ -28,8 +28,7 @@ require("lazy").setup(
         "kevinhwang91/promise-async",
 
         "chrisgrieser/nvim-genghis",
-        { "knubie/vim-kitty-navigator" },
-        "stevearc/stickybuf.nvim",
+        { "knubie/vim-kitty-navigator", commit = "e48aae3" },
         "famiu/bufdelete.nvim",
         "tpope/vim-projectionist",
         "ThePrimeagen/harpoon",
@@ -52,12 +51,12 @@ require("lazy").setup(
         "fladson/vim-kitty",
         "wilriker/gcode.vim",
         "LhKipp/nvim-nu",
-        { "toppair/peek.nvim", build = "deno task --quiet build:fast" },
+        { "toppair/peek.nvim",         build = "deno task --quiet build:fast" },
 
         "lewis6991/gitsigns.nvim",
         "sindrets/diffview.nvim",
 
-        "rebelot/kanagawa.nvim",
+        { "rebelot/kanagawa.nvim",     commit = "4c8d48726621a7f3998c7ed35b2c2535abc22def" },
         "stevearc/dressing.nvim",
         "rcarriga/nvim-notify",
         "nvim-lualine/lualine.nvim",
@@ -79,9 +78,9 @@ require("lazy").setup(
         "LostNeophyte/null-ls-embedded",
 
         "SmiteshP/nvim-navic",
-        "camilledejoye/nvim-lsp-selection-range",
         "DNLHC/glance.nvim",
         "yioneko/nvim-type-fmt",
+        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
 
         "hrsh7th/nvim-cmp",
         "hrsh7th/cmp-buffer",
@@ -106,11 +105,13 @@ require("lazy").setup(
 
         "nvim-telescope/telescope.nvim",
         "nvim-telescope/telescope-file-browser.nvim",
-        { "nvim-telescope/telescope-fzf-native.nvim",
-            build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build" },
+        {
+            "nvim-telescope/telescope-fzf-native.nvim",
+            build =
+            "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build"
+        },
         "debugloop/telescope-undo.nvim",
         "FeiyouG/command_center.nvim",
-
         { "nvim-treesitter/nvim-treesitter", build = ":TSInstall all | TSUpdate | TSUninstall comment" },
         "nvim-treesitter/playground",
         "nvim-treesitter/nvim-treesitter-textobjects",
@@ -142,7 +143,8 @@ require("lazy").setup(
 
         "folke/neodev.nvim",
         "nvim-neotest/neotest-plenary",
-        { 'quarto-dev/quarto-nvim',
+        {
+            'quarto-dev/quarto-nvim',
             dependencies = {
                 'jmbuhr/otter.nvim',
             },

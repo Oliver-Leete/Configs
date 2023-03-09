@@ -48,15 +48,16 @@ local custom_objects = {
     -- grammer (sentence)
     g = {
         {
+            "%b{}",
             "\n%s*\n()().-()\n%s*\n[%s]*()", -- normal paragraphs
-            "^()().-()\n%s*\n[%s]*()", -- paragraph at start of file
-            "\n%s*\n()().-()()$", -- paragraph at end of file
+            "^()().-()\n%s*\n[%s]*()",       -- paragraph at start of file
+            "\n%s*\n()().-()()$",            -- paragraph at end of file
         },
         {
-            "[%.?!][%s]+()().-[^%s].-()[%.?!]()[%s]", -- normal sentence
-            "^[%s]*()().-[^%s].-()[%.?!]()[%s]", -- sentence at start of paragraph
-            "[%.?!][%s]+()().-[^%s].-()()[\n]*$", -- sentence at end of paragraph
-            "^[%s]*()().-[^%s].-()()[%s]+$", -- sentence at end of paragraph (no final punctuation)
+            "[%.?!][%s]+()().-[^%s].-()[%.?!]()[%s]",   -- normal sentence
+            "^[%{%[]?[%s]*()().-[^%s].-()[%.?!]()[%s]", -- sentence at start of paragraph
+            "[%.?!][%s]+()().-[^%s].-()()[\n%}%]]?$",   -- sentence at end of paragraph
+            "^[%s]*()().-[^%s].-()()[%s]+$",            -- sentence at that fills paragraph (no final punctuation)
         }
     },
     -- git hunks
@@ -77,8 +78,8 @@ local custom_objects = {
     -- paragraph
     p = { {
         "\n%s*\n()().-()\n%s*\n[%s]*()", -- normal paragraphs
-        "^()().-()\n%s*\n[%s]*()", -- paragraph at start of file
-        "\n%s*\n()().-()()$", -- paragraph at end of file
+        "^()().-()\n%s*\n[%s]*()",       -- paragraph at start of file
+        "\n%s*\n()().-()()$",            -- paragraph at end of file
     } },
     -- Quotes
     q = { { "%b''", '%b""', "%b``" }, "^.().*().$" },
@@ -120,7 +121,7 @@ local custom_objects = {
         "\n.-%b{}.-\n",
         "\n().-()%{\n.*\n.*%}().-\n()"
     },
-    ["$"] = gen_spec.pair("$", "$", { type = "balanced" }),
+        ["$"] = gen_spec.pair("$", "$", { type = "balanced" }),
 }
 
 require("mini.ai").setup({
@@ -128,12 +129,10 @@ require("mini.ai").setup({
     mappings = {
         around = "a",
         inside = "i",
-
         around_next = "an",
         inside_next = "in",
         around_last = "al",
         inside_last = "il",
-
         goto_left = "{",
         goto_right = "}",
     },
@@ -232,11 +231,34 @@ local bracketed = require("mini.bracketed")
 Map({ "n", "x", "o" }, "[c", function() magmini(bracketed.comment, "c", "backward") end)
 Map({ "n", "x", "o" }, "]c", function() magmini(bracketed.comment, "c", "forward") end)
 
-Map({ "n", "x", "o" }, "[i", function() magmini(bracketed.indent, "i", "backward", {change_type="diff"}) end)
-Map({ "n", "x", "o" }, "]i", function() magmini(bracketed.indent, "i", "forward", {change_type="diff"}) end)
+Map({ "n", "x", "o" }, "[i", function() magmini(bracketed.indent, "i", "backward", { change_type = "diff" }) end)
+Map({ "n", "x", "o" }, "]i", function() magmini(bracketed.indent, "i", "forward", { change_type = "diff" }) end)
 
 Map({ "n", "x", "o" }, "[j", function() magmini(bracketed.jump, "j", "backward") end)
 Map({ "n", "x", "o" }, "]j", function() magmini(bracketed.jump, "j", "forward") end)
 
 Map({ "n", "x", "o" }, "[l", function() magmini(bracketed.quickfix, "l", "backward") end)
 Map({ "n", "x", "o" }, "]l", function() magmini(bracketed.quickfix, "l", "forward") end)
+
+require('mini.bracketed').setup({
+    buffer     = { suffix = "", options = {} },
+    comment    = { suffix = "", options = {} },
+    conflict   = { suffix = "", options = {} },
+    diagnostic = { suffix = "", options = {} },
+    file       = { suffix = "", options = {} },
+    indent     = { suffix = "", options = {} },
+    jump       = { suffix = "", options = {} },
+    location   = { suffix = "", options = {} },
+    oldfile    = { suffix = "", options = {} },
+    quickfix   = { suffix = "", options = {} },
+    treesitter = { suffix = "", options = {} },
+    undo       = { suffix = "", options = {} },
+    window     = { suffix = "", options = {} },
+    yank       = { suffix = "y", options = {} },
+})
+
+local put_keys = { "p", "P" }
+for _, lhs in ipairs(put_keys) do
+    local rhs = 'v:lua.MiniBracketed.register_put_region("' .. lhs .. '")'
+    vim.keymap.set({ "n", "x" }, lhs, rhs, { expr = true })
+end
