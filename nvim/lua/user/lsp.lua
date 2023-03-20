@@ -64,6 +64,14 @@ end
 require("mason").setup({ ui = { border = Border } })
 require("mason-lspconfig").setup({})
 
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+    callback = function(ev)
+        local bufnr = ev.buf
+        local client = vim.lsp.get_client_by_id(ev.data.client_id)
+        custom_attach(client, bufnr)
+    end,
+})
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities.textDocument.foldingRange = {
@@ -72,7 +80,7 @@ capabilities.textDocument.foldingRange = {
 }
 
 local default = {
-    on_attach = custom_attach,
+    -- on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
 }
@@ -88,7 +96,7 @@ lspconfig.teal_ls.setup(default)
 
 lspconfig.pyright.setup(default)
 require("lspconfig").pylsp.setup({
-    on_attach = custom_attach,
+    -- on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
     settings = {
@@ -117,7 +125,7 @@ require("lspconfig").pylsp.setup({
     },
 })
 lspconfig.sourcery.setup({
-    on_attach = custom_attach,
+    -- on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
     init_options = {
@@ -128,28 +136,21 @@ lspconfig.sourcery.setup({
 })
 
 lspconfig.jsonls.setup({
-    on_attach = custom_attach,
+    -- on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
     settings = { json = { schemas = require("schemastore").json.schemas(), }, },
 })
 
--- HACK: replace once https://github.com/b0o/SchemaStore.nvim/pull/10 merged
-local json_schemas = require('schemastore').json.schemas {}
-local yaml_schemas = {}
-vim.tbl_map(function(schema)
-    yaml_schemas[schema.url] = schema.fileMatch
-end, json_schemas)
-
 lspconfig.yamlls.setup({
-    on_attach = custom_attach,
+    -- on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
-    settings = { yaml = { schemaStore = { enable = yaml_schemas, } } }
+    settings = { yaml = { schemas = require('schemastore').yaml.schemas() } }
 })
 
 lspconfig.lua_ls.setup({
-    on_attach = custom_attach,
+    -- on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
     settings = {
@@ -172,7 +173,7 @@ lspconfig.lua_ls.setup({
 })
 
 lspconfig.texlab.setup({
-    on_attach = custom_attach,
+    -- on_attach = custom_attach,
     flags = { debounce_text_changes = 1000 },
     root_dir = lspconfig.util.root_pattern(".git"),
     settings = {
@@ -194,7 +195,7 @@ lspconfig.texlab.setup({
             },
             latexFormatter = "latexindent",
             latexindent = {
-                    ["local"] = ".latexindent.yaml",
+                ["local"] = ".latexindent.yaml",
                 modifyLineBreaks = true,
             }
         },
@@ -204,7 +205,7 @@ lspconfig.texlab.setup({
 local ht = require('haskell-tools')
 ht.setup({
     hls = {
-        on_attach = custom_attach,
+        -- on_attach = custom_attach,
         flags = { debounce_text_changes = 1000 },
         root_dir = lspconfig.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"),
         settings = {
@@ -220,7 +221,7 @@ local clangd_cap = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol
 clangd_cap.offsetEncoding = "utf-8"
 require("clangd_extensions").setup({
     server = {
-        on_attach = custom_attach,
+        -- on_attach = custom_attach,
         capabilities = clangd_cap,
         flags = { debounce_text_changes = 1000 },
     },
@@ -228,12 +229,12 @@ require("clangd_extensions").setup({
 
 require("rust-tools").setup({
     server = {
-        on_attach = custom_attach,
+        -- on_attach = custom_attach,
         capabilities = capabilities,
         flags = { debounce_text_changes = 1000 },
         standalone = true,
         settings = {
-                ["rust-analyzer"] = {
+            ["rust-analyzer"] = {
                 checkOnSave = {
                     command = { "cargo", "clippy" },
                 },
@@ -261,7 +262,7 @@ require("lspconfig").ltex.setup({
             path = nil,
             log_level = "none",
         })
-        custom_attach(client, bufnr)
+        -- custom_attach(client, bufnr)
     end,
     settings = {
         ltex = {
@@ -277,24 +278,31 @@ require("lspconfig").ltex.setup({
             latex = {
                 environments = { Fortran = "ignore", jllisting = "ignore", algorithmic = "ignore" },
                 commands = {
-                        ["\\twosubfigures{}{}{}{}{}{}"] = "ignore",
-                        ["\\twosubfiguresuncorrected{}{}{}{}{}{}"] = "ignore",
-                        ["\\threesubfigures{}{}{}{}{}{}{}{}{}"] = "ignore",
-                        ["\\threesubfiguresuncorrected{}{}{}{}{}{}{}{}{}"] = "ignore",
-                        ["\\notationnote{}"] = "ignore",
-                        ["\\subfile{}"] = "ignore",
-                        ["\\glsname{}"] = "dummy",
-                        ["\\gls{}"] = "dummy",
-                        ["\\glsfirst{}"] = "dummy",
-                        ["\\pgls{}"] = "dummy",
-                        ["\\ac{}"] = "dummy",
-                        ["\\acl{}"] = "dummy",
-                        ["\\acs{}"] = "dummy",
-                        ["\\acf{}"] = "dummy",
-                        ["\\pac{}"] = "dummy",
-                        ["\\Pac{}"] = "dummy",
-                        ["\\subref{}"] = "dummy",
-                        ["\\SI{}{}"] = "dummy",
+                    ["\\twosubfigures{}{}{}{}{}{}"] = "ignore",
+                    ["\\twosubfiguresuncorrected{}{}{}{}{}{}"] = "ignore",
+                    ["\\threesubfigures{}{}{}{}{}{}{}{}{}"] = "ignore",
+                    ["\\threesubfiguresuncorrected{}{}{}{}{}{}{}{}{}"] = "ignore",
+                    ["\\notationnote{}"] = "ignore",
+                    ["\\subfile{}"] = "ignore",
+                    ["\\Call{}"] = "dummy",
+                    ["\\glsname{}"] = "dummy",
+                    ["\\gls{}"] = "dummy",
+                    ["\\glsfirst{}"] = "dummy",
+                    ["\\pgls{}"] = "dummy",
+                    ["\\ac{}"] = "dummy",
+                    ["\\acl{}"] = "dummy",
+                    ["\\acs{}"] = "dummy",
+                    ["\\acf{}"] = "dummy",
+                    ["\\pac{}"] = "dummy",
+                    ["\\Pac{}"] = "dummy",
+                    ["\\subref{}"] = "dummy",
+                    ["\\qty{}{}"] = "dummy",
+                    ["\\qtyrange{}{}{}"] = "dummy",
+                    ["\\qtylist{}{}"] = "dummy",
+                    ["\\unit{}"] = "dummy",
+                    ["\\num{}"] = "dummy",
+                    ["\\numrange{}{}"] = "dummy",
+                    ["\\numlist{}"] = "dummy",
                 },
             },
             dictionary = {},
@@ -315,8 +323,10 @@ require("null-ls").setup({
         null_ls.builtins.diagnostics.gitlint,
         null_ls.builtins.diagnostics.jsonlint,
         null_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013", "MD046", "MD009" } }),
+        null_ls.builtins.formatting.bibclean,
         null_ls.builtins.formatting.fish_indent,
         null_ls.builtins.formatting.jq.with({ extra_args = { "--indent", "4" } }),
+        null_ls.builtins.formatting.latexindent.with({ extra_args = { "-l=.latexindent.yaml" } }),
         null_ls.builtins.formatting.markdownlint,
         null_ls.builtins.formatting.shellharden,
         null_ls.builtins.formatting.shfmt,
@@ -327,42 +337,6 @@ require("null-ls").setup({
         require("null-ls-embedded").nls_source,
     },
 })
-
--- Non lsp diagnostics
--- QfDiag = vim.api.nvim_create_namespace("qfDiag")
--- QfToDiagGroup = vim.api.nvim_create_augroup("qfToDiag", { clear = true })
---
--- local update_diagnostics = function(diagnostics, namespace)
---     vim.diagnostic.reset(namespace)
---     local buffers = {}
---     local tmp = {}
---     for i, item in pairs(diagnostics) do
---         if (tmp[item.bufnr] ~= nil) then
---             table.insert(buffers, item.bufnr)
---         end
---         tmp[item.bufnr] = i
---     end
---
---     for _, buffer in pairs(buffers) do
---         local diag = {}
---         for _, d in pairs(diagnostics) do
---             if d.bufnr == buffer then
---                 table.insert(diag, d)
---             end
---         end
---         vim.diagnostic.set(namespace, buffer, diag)
---     end
--- end
---
--- local qf_to_diag = function()
---     local qf = vim.diagnostic.fromqflist(vim.fn.getqflist())
---     update_diagnostics(qf, QfDiag)
--- end
--- vim.api.nvim_create_autocmd("QuickFixCmdPost", { pattern = "*", callback = qf_to_diag, group = QfToDiagGroup })
--- vim.api.nvim_create_autocmd("User",
---     { pattern = "VimtexEventCompileFailed", callback = qf_to_diag, group = QfToDiagGroup })
--- vim.api.nvim_create_autocmd("User",
---     { pattern = "VimtexEventCompileSuccess", callback = qf_to_diag, group = QfToDiagGroup })
 
 local toggled_diagnostic_config = {
     underline = true,

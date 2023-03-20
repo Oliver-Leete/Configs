@@ -34,25 +34,6 @@ require("nvim-treesitter.configs").setup({
     },
 })
 
-local tsj_utils = require('treesj.langs.utils')
-require('treesj').setup({
-    use_default_keymaps = false,
-    max_join_length = 1000,
-    langs = {
-        julia = {
-            matrix_expression = { both = { separator = ';' }, join = { force_insert = ";" }, split = {} },
-            argument_list = tsj_utils.set_preset_for_list({ join = { space_in_brackets = false } }),
-            parameter_list = { join = { space_in_brackets = false }, both = { last_separator = false, omit = { "keyword_parameters" } } },
-            tuple_expression = tsj_utils.set_preset_for_list({ join = { space_in_brackets = false } }),
-            parenthesized_expression = tsj_utils.set_preset_for_list({ join = { space_in_brackets = false } }),
-            function_definition = { both = { omit = { "parameter_list" }, seperator = ";" }, join = { force_insert = ";", space_in_brackets = true } },
-            if_statement = { both = { seperator = ";" }, join = { force_insert = ";", space_in_brackets = true } },
-            else_clause = { both = { seperator = ";" }, join = { force_insert = ";", space_in_brackets = true } },
-            for_statement = { both = { omit = { "for_binding" }, seperator = ";" }, join = { force_insert = ";", space_in_brackets = true } },
-        },
-    },
-})
-
 require("ts-node-action").setup({
     julia = require("ts-node-action.filetypes.julia")
 })
@@ -66,10 +47,13 @@ require "null-ls".register({
     }
 })
 
-local ts_surf_settings = {
+local tc_settings = {
     highlight = true,
     higroup = "Search",
 }
+local tc = require('tree-climber')
+
+local no_exit = false
 local ts_surf_hint = [[
 ┏^^^^━━━━━┳━━━━━━┳━━━━━^^^^┓
 ┃^^^^     ┃ Tree ┃     ^^^^┃
@@ -89,23 +73,31 @@ require('hydra')({
     mode = { "n", "x" },
     body = "S",
     config = {
-        color = "pink",
+        color = "red",
         invoke_on_body = true,
         hint = {
             position = "top-right",
             border = nil
-        }
+        },
+        on_enter = function() tc.highlight_node(tc_settings) end,
+        on_exit = function()
+            if no_exit == true then
+                no_exit = false
+            else
+                tc.select_node(tc_settings)
+            end
+        end,
     },
     hint = ts_surf_hint,
     heads = {
-        { 'h',     function() require('tree-climber').goto_parent(ts_surf_settings) end,    { nowait = true } },
-        { 'j',     function() require('tree-climber').goto_next(ts_surf_settings) end,      { nowait = true } },
-        { 'k',     function() require('tree-climber').goto_prev(ts_surf_settings) end,      { nowait = true } },
-        { 'l',     function() require('tree-climber').goto_child(ts_surf_settings) end,     { nowait = true } },
-        { 'K',     function() require('tree-climber').swap_prev(ts_surf_settings) end,      { nowait = true } },
-        { 'J',     function() require('tree-climber').swap_next(ts_surf_settings) end,      { nowait = true } },
-        { 'm',     function() require('tree-climber').select_node(ts_surf_settings) end,    { nowait = true } },
-        { 'S',     function() require('tree-climber').highlight_node(ts_surf_settings) end, { exit = true, nowait = true, desc = false } },
-        { '<esc>', function() require('tree-climber').highlight_node(ts_surf_settings) end, { exit = true, nowait = true } },
+        { 'h',     function() tc.goto_parent(tc_settings) end, { nowait = true } },
+        { 'j',     function() tc.goto_next(tc_settings) end,   { nowait = true } },
+        { 'k',     function() tc.goto_prev(tc_settings) end,   { nowait = true } },
+        { 'l',     function() tc.goto_child(tc_settings) end,  { nowait = true } },
+        { 'K',     function() tc.swap_prev(tc_settings) end,   { nowait = true } },
+        { 'J',     function() tc.swap_next(tc_settings) end,   { nowait = true } },
+        { 'm',     function() tc.select_node(tc_settings) end, { nowait = true } },
+        { 'S',     function() no_exit = true end,              { exit = true, nowait = true, desc = false } },
+        { '<esc>', function() no_exit = true end,              { exit = true, nowait = true } },
     }
 })

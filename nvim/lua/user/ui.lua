@@ -69,7 +69,8 @@ local mode_colours = {
     Visual = Tc.oniViolet,
     Replace = Tc.autumnRed,
     Command = Tc.boatYellow2,
-    Inactive = Tc.fujiGray
+    Inactive = Tc.fujiGray,
+    Terminal = Tc.waveRed,
 }
 for mode, colour in pairs(mode_colours) do
     vim.api.nvim_set_hl(0, "WinBar" .. mode, { fg = Tc.bg, bg = colour })

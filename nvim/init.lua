@@ -51,12 +51,12 @@ require("lazy").setup(
         "fladson/vim-kitty",
         "wilriker/gcode.vim",
         "LhKipp/nvim-nu",
-        { "toppair/peek.nvim",         build = "deno task --quiet build:fast" },
+        { "toppair/peek.nvim",          build = "deno task --quiet build:fast" },
 
         "lewis6991/gitsigns.nvim",
         "sindrets/diffview.nvim",
 
-        { "rebelot/kanagawa.nvim",     commit = "4c8d48726621a7f3998c7ed35b2c2535abc22def" },
+        { "rebelot/kanagawa.nvim",           commit = "4c8d48726621a7f3998c7ed35b2c2535abc22def" },
         "stevearc/dressing.nvim",
         "rcarriga/nvim-notify",
         "nvim-lualine/lualine.nvim",
@@ -102,6 +102,7 @@ require("lazy").setup(
         "L3MON4D3/LuaSnip",
         "danymat/neogen",
         "windwp/nvim-autopairs",
+        "abecodes/tabout.nvim",
 
         "nvim-telescope/telescope.nvim",
         "nvim-telescope/telescope-file-browser.nvim",
@@ -117,9 +118,10 @@ require("lazy").setup(
         "nvim-treesitter/nvim-treesitter-textobjects",
         "ThePrimeagen/refactoring.nvim",
         "AckslD/nvim-trevJ.lua",
-        "Wansmer/treesj",
         "CKolkey/ts-node-action",
         "drybalka/tree-climber.nvim",
+        "Dkendal/nvim-treeclimber",
+
 
         "stevearc/overseer.nvim",
         "nvim-neotest/neotest",

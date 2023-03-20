@@ -106,3 +106,22 @@ minimap.setup({
 
 Map("n", "<leader>:", minimap.toggle_focus)
 Map("n", "<leader>;", minimap.toggle)
+
+local splitjoin = require("mini.splitjoin")
+splitjoin.setup({
+    mappings = {
+        toggle = ',j',
+    },
+    detect = {
+        separator = '[,;]',
+    },
+    split = {
+        hooks_pre = {},
+        hooks_post = {},
+    },
+    -- Join options
+    join = {
+        hooks_pre = {},
+        hooks_post = {},
+    },
+})

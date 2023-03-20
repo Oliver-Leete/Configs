@@ -164,7 +164,7 @@ local mode_map = {
     ['rm'] = { 'MORE', 'Normal' },
     ['r?'] = { 'CONFIRM', 'Normal' },
     ['!'] = { 'SHELL', 'Normal' },
-    ['t'] = { 'TERMINAL', 'Command' },
+    ['t'] = { 'TERMINAL', 'Terminal' },
 }
 
 ---Return the current mode

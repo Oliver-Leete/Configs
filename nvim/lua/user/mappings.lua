@@ -269,6 +269,13 @@ require('hydra')({
     config = {
         color = "pink",
         invoke_on_body = true,
+        on_enter = function()
+            old_virt = vim.wo.virtualedit
+            vim.wo.virtualedit = "all"
+        end,
+        on_exit = function()
+            vim.wo.virtualedit = old_virt
+        end,
         hint = {
             position = "top-right",
             border = nil
@@ -285,10 +292,6 @@ require('hydra')({
     }
 })
 -- Text leader mappings: ,
-
-Map({ "n", "x" }, ",j", require("treesj").join)
-Map({ "n", "x" }, ",k", require("treesj").split)
-
 
 Map({ "n", "x" }, "R", "<plug>(SubversiveSubstitute)")
 
@@ -455,7 +458,7 @@ Map({ "i", "s" }, "<tab>", function()
     if Ls.expand_or_locally_jumpable() then
         Ls.expand_or_jump()
     else
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<tab>", true, true, true), "n", false)
+        require("tabout").tabout()
     end
 end, { silent = true })
 
@@ -463,7 +466,7 @@ Map({ "i", "s" }, "<s-tab>", function()
     if Ls.locally_jumpable( -1) then
         Ls.jump( -1)
     else
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<s-tab>", true, true, true), "n", false)
+        require("tabout").taboutBack()
     end
 end, { silent = true })
 

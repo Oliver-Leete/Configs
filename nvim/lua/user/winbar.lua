@@ -80,17 +80,17 @@ local special_name = function(bufnr)
     if vim.bo[bufnr].filetype == "help" then
         local help_title = vim.fn.expand("%:t:r")
         help_title = help_title:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end)
-        return help_title .. " Help"
+        return help_title .. " Help", false
     elseif vim.bo[bufnr].buftype == "terminal" then
         local task = vim.tbl_filter(
             function(t) if t.strategy.bufnr == bufnr then return true end end, overseer.list_tasks()
         )[1]
-        if task then return task.name end
-        return "Terminal"
+        if task then return task.name, true end
+        return "Terminal", true
     else
         local filetype = func.special_types[vim.bo[bufnr].filetype].name
         if filetype then
-            return filetype
+            return filetype, false
         end
     end
 end
@@ -106,9 +106,13 @@ Special_Winbar = function()
     local hl = is_active and "%#WinBar" .. mode .. "#" or "%#WinBarInactive#"
     local hle = is_active and "%#WinBar" .. mode .. "Ends#" or "%#WinBarInactiveEnds#"
 
-    local specialname = special_name(bufnr)
+    local specialname, is_term = special_name(bufnr)
     if not specialname then return "" end
-    return hlb .. "%=" .. hle .. "" .. hl .. " " .. specialname .. " " .. hle .. "" .. hlb .. "%=" .. hlb
+    if is_term and is_active and mode == "Terminal" then
+        return hl .. "%= " .. specialname .. " %="
+    else
+        return hlb .. "%=" .. hle .. "" .. hl .. " " .. specialname .. " " .. hle .. "" .. hlb .. "%=" .. hlb
+    end
 end
 
 -- File_on_click = function(bufnr)

@@ -39,9 +39,9 @@ require("cmp").setup({
         end,
     },
     mapping = {
-        ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs( -4), { "i", "c" }),
-        ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-        ["<down>"] = cmp.mapping({
+            ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
+            ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
+            ["<down>"] = cmp.mapping({
             i = function()
                 if cmp.visible() then
                     cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
@@ -56,7 +56,7 @@ require("cmp").setup({
                 cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
             end,
         }),
-        ["<up>"] = cmp.mapping({
+            ["<up>"] = cmp.mapping({
             i = function()
                 if cmp.visible() then
                     cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
@@ -71,8 +71,8 @@ require("cmp").setup({
                 cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
             end,
         }),
-        ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "i" }),
-        ["<C-CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "c" }),
+            ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "i" }),
+            ["<C-CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "c" }),
     },
     sources = {
         { name = "luasnip_choice" },
@@ -154,8 +154,8 @@ require("cmp_git").setup({})
 
 require("cmp_dictionary").setup({
     dic = {
-        ["tex"] = "/home/oleete/.config/nvim/pluged/cmp-dictionary/british_english.dic",
-        ["markdown"] = "/home/oleete/.config/nvim/pluged/cmp-dictionary/british_english.dic",
+            ["tex"] = "/home/oleete/.config/nvim/pluged/cmp-dictionary/british_english.dic",
+            ["markdown"] = "/home/oleete/.config/nvim/pluged/cmp-dictionary/british_english.dic",
     },
 })
 
@@ -243,5 +243,28 @@ Ls.config.set_config({
     update_events = "TextChanged,TextChangedI",
     delete_check_events = "TextChanged",
 })
-require("luasnip.loaders.from_lua").load({paths = "/home/oleete/.config/nvim/snippets"})
+require("luasnip.loaders.from_lua").load({ paths = "/home/oleete/.config/nvim/snippets" })
 require("luasnip-latex-snippets").setup()
+
+require('tabout').setup {
+    tabkey = '',
+    backwards_tabkey = '',
+    act_as_tab = true,
+    act_as_shift_tab = true,
+    enable_backwards = true,
+    completion = false,
+    tabouts = {
+        { open = "'", close = "'" },
+        { open = '"', close = '"' },
+        { open = '`', close = '`' },
+        { open = '(', close = ')' },
+        { open = '[', close = ']' },
+        { open = '{', close = '}' },
+        { open = '[[', close = ']]' },
+        { open = '```', close = '```' },
+        { open = '"""', close = '"""' },
+        { open = '$', close = '$' },
+    },
+    ignore_beginning = true,
+    exclude = {}
+}
