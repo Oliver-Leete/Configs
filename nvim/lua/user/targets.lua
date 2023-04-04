@@ -40,7 +40,7 @@ local custom_objects = {
     b = { { "%b()", "%b[]", "%b{}" }, "^.().*().$" },
     -- Comments
     -- digits
-    d = { "%f[%d]%d+" },
+    d = { "%f[%d%._][%d%._]+" },
     -- diagnostics
     e = miniAiDiagnostics,
     -- Function call

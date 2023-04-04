@@ -1,8 +1,8 @@
 #!/bin/sh
 # uses playerctl
-
-artist=$(playerctl metadata | grep artist | cut -d' ' -f 3- | awk -v len=35 '{ if (length($0) > len) print substr($0, 1, len-3) "..."; else print; }' | xargs)
-title=$(playerctl metadata | grep title | cut -d' ' -f 3- | awk -v len=35 '{ if (length($0) > len) print substr($0, 1, len-3) "..."; else print; }' | xargs)
+len=30
+artist=$(playerctl metadata | grep artist | cut -d' ' -f 3- | awk -v len=$len '{ if (length($0) > len) print substr($0, 1, len-3) "..."; else print; }' | xargs)
+title=$(playerctl metadata | grep title | cut -d' ' -f 3- | awk -v len=$len '{ if (length($0) > len) print substr($0, 1, len-3) "..."; else print; }' | xargs)
 
 if $(playerctl -a status | rg -q Playing); then
     color="#76946A"

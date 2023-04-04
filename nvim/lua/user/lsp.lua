@@ -33,6 +33,8 @@ local custom_attach = function(client, bufnr)
         sc.definitionProvider = false
         sc.referencesProvider = false
         -- sc.documentSymbolProvider = false
+    elseif client.name == "texlab" then
+        sc.documentFormattingProvider = false
     end
 
     if sc.documentSymbolProvider and client.name ~= "pyright" then
@@ -285,6 +287,7 @@ require("lspconfig").ltex.setup({
                     ["\\notationnote{}"] = "ignore",
                     ["\\subfile{}"] = "ignore",
                     ["\\Call{}"] = "dummy",
+                    ["\\CallText{}"] = "dummy",
                     ["\\glsname{}"] = "dummy",
                     ["\\gls{}"] = "dummy",
                     ["\\glsfirst{}"] = "dummy",
@@ -297,12 +300,16 @@ require("lspconfig").ltex.setup({
                     ["\\Pac{}"] = "dummy",
                     ["\\subref{}"] = "dummy",
                     ["\\qty{}{}"] = "dummy",
+                    ["\\qtyproduct{}{}"] = "dummy",
                     ["\\qtyrange{}{}{}"] = "dummy",
                     ["\\qtylist{}{}"] = "dummy",
                     ["\\unit{}"] = "dummy",
                     ["\\num{}"] = "dummy",
+                    ["\\numproduct{}"] = "dummy",
                     ["\\numrange{}{}"] = "dummy",
                     ["\\numlist{}"] = "dummy",
+                    ["\\coord{}"] = "dummy",
+                    ["\\cmidrule(){}"] = "ignore",
                 },
             },
             dictionary = {},
