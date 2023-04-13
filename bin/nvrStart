@@ -1,5 +1,19 @@
 #!/bin/bash
 
-WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
-serverID="/tmp/nvr-$WS"
-nvr -s --servername "$serverID" $@
+NAME=$(xdotool getwindowfocus getwindowname)
+if [[ $NAME =~ Neovim_.* ]]; then
+    nvr -s --servername "/tmp/$NAME" "$@"
+else
+    WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
+    serverID="Neovim_$WS"
+    if [[ -e "/tmp/$serverID" || -L "/tmp/$serverID" ]]; then
+        i=2
+        while [[ -e "/tmp/$serverID$i" || -L "/tmp/$serverID$i" ]]; do
+            let i++
+        done
+        serverID="$serverID$i"
+    fi
+    kitty @ set-window-title "$serverID"
+    nvr -s --servername "/tmp/$serverID" "$@"
+fi
+

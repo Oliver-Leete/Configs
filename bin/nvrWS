@@ -1,4 +1,5 @@
 #!/bin/bash
 
-WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
-nvr --servername /tmp/nvr-"$WS" --nostart -c "$@"
+# WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
+NAME=$(xdotool getwindowfocus getwindowname)
+nvr --servername /tmp/"$NAME" --nostart -c "$@"
