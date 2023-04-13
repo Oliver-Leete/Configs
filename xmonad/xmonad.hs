@@ -113,35 +113,33 @@ projects n =
     , Project { pName = "Tmp2",       pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
 
     , Project { pName = "Home",       pDir = "~/PersonalDrive",               pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Home" }
-    , Project { pName = "CodeTuts",   pDir = "~/Projects/rustBook",           pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "CodeTuts" }
+    , Project { pName = "CodeTuts",   pDir = "~/Projects/rustBook",           pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "CodeTuts" }
     , Project { pName = "Print",      pDir = "~/Projects/Printing",           pApp1 = prusa,    pApp1F = prusaF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = oneSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer" }
     , Project { pName = "Games",      pDir = "~/Documents",                   pApp1 = steam,    pApp1F = steamF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = oneSpawn "Games" "steam" }
     , Project { pName = "Films",      pDir = "~/Videos/films",                pApp1 = kitty,    pApp1F = kittyF,    pApp2 = mpv,       pApp2F = mpvF,      pApp3 = deluge,    pApp3F = delugeF,   pStart = filmSpawn "Films" }
     , Project { pName = "Dnd",        pDir = "~/Projects/Rpgs",               pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Dnd" }
 
-    , Project { pName = "Configs",    pDir = "~/.config",                     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Configs" }
-    , Project { pName = "QMK",        pDir = "~/Projects/qmk_firmware",       pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "QMK" }
-    , Project { pName = "ZMK",        pDir = "~/Projects/zmk-config",         pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ZMK" }
+    , Project { pName = "Configs",    pDir = "~/.config",                     pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Configs" }
+    , Project { pName = "QMK",        pDir = "~/Projects/qmk_firmware",       pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "QMK" }
+    , Project { pName = "ZMK",        pDir = "~/Projects/zmk-config",         pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ZMK" }
 
     , Project { pName = "Wrk",        pDir = "~/UniDrive",                    pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Wrk" }
     , Project { pName = "WrkNotes",   pDir = "~/Projects/Thesis/Notes",       pApp1 = obsidian, pApp1F = obsidianF, pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = oneSpawn "WrkNotes" "flatpak run md.obsidian.Obsidian" }
-    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = termBrowSpawn "Thesis" }
-    , Project { pName = "Sim",        pDir = "~/Projects/PowderModel",        pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Sim" }
-    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",      pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Exp" }
-    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = hdfview,   pApp3F = hdfviewF,  pStart = termBrowSpawn "Scripts" }
-    , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",      pApp1 = nvim,     pApp1F = nvimF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = commentSpawn "Comments" }
-    , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",   pApp1 = nvim,     pApp1F = nvimF,     pApp2 = paraview,  pApp2F = paraviewF, pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ANSYS" }
+    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",      pApp1 = kitty,     pApp1F = kittyF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = termBrowSpawn "Thesis" }
+    , Project { pName = "Sim",        pDir = "~/Projects/PowderModel",        pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Sim" }
+    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",      pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Exp" }
+    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",     pApp1 = kitty,     pApp1F = kittyF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = hdfview,   pApp3F = hdfviewF,  pStart = termBrowSpawn "Scripts" }
+    , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",      pApp1 = kitty,     pApp1F = kittyF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = commentSpawn "Comments" }
+    , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",   pApp1 = kitty,     pApp1F = kittyF,     pApp2 = paraview,  pApp2F = paraviewF, pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ANSYS" }
 
-    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = scinCont,  pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Main" }
-    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys", pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Print" }
-    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware", pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Firm" }
-    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Docs" }
-    , Project { pName = "Scin-Test",  pDir = "~/Projects/Scintilla/Main",     pApp1 = nvim,     pApp1F = nvimF,     pApp2 = scinCont,  pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
+    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",     pApp1 = kitty,     pApp1F = kittyF,     pApp2 = scinCont,  pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Main" }
+    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys", pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Print" }
+    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware", pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Firm" }
+    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",     pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Docs" }
+    , Project { pName = "Scin-Test",  pDir = "~/Projects/Scintilla/Main",     pApp1 = kitty,     pApp1F = kittyF,     pApp2 = scinCont,  pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
     ]
     where
-        nvim   = bF $ kt " focusEditor" $ l (upPointer $ sequence_ [raise (className =? "kitty"), spawn (myTerminalRemote ++ " focusEditor")])
-        nvimF  = upPointer $ spawn (myTerminal ++ " fish -C nvrStart")
-        kitty  = upPointer $ runOrRaiseNext "kittyMaker" (className =? "kitty")
+        kitty  = upPointer $ runOrRaiseNext "kitty" (className =? "kitty")
         kittyF = upPointer $ spawn "kitty"
 
         sameForce r c = (upPointer $ runOrRaiseNext r (className =? c), upPointer $ spawn r)
@@ -171,9 +169,8 @@ myWorkspaces = map pName (projects 1)
 ----------------------------------------------------------------------------------------------------
 -- Applications                                                                                   --
 ----------------------------------------------------------------------------------------------------
-myTerminal, myTerminalRemote, myBrowser, myBrowserClass :: [Char]
-myTerminal     = "/home/oleete/.config/bin/kittyMaker"
-myTerminalRemote = "/home/oleete/.config/bin/kittyRemote"
+myTerminal, myBrowser, myBrowserClass :: [Char]
+myTerminal     = "kitty"
 myBrowser      = "/home/oleete/.config/bin/browser"
 myBrowserClass = "google-chrome-stable"
 
@@ -315,10 +312,10 @@ myKeys n =
     , ("M-<Esc>"         , upPointer $ sequence_ $ hideAllNamedScratchPads scratchpads)
 
 
-    , ("M-<Return>"      , bF $ kt " kittyWin" $ l(upPointer $ spawn myTerminal))
+    , ("M-<Return>"      , bF $ nv "OpenTerm" $ l (upPointer $ spawn myTerminal))
     , ("M-S-<Return>"    , upPointer $ spawn myTerminal)
 
-    , ("M-<Backspace>"   , bF $ nv "DeleteBuffer" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_BackSpace) $ crm (P.sendKey controlMask xK_w) $ l kill)
+    , ("M-<Backspace>"   , bF $ nv "DeleteBuffer" $ crm (P.sendKey controlMask xK_w) $ l kill)
     , ("M-S-<Backspace>" , kill)
 
     , ("M-n"             , runProjectApp1)
@@ -330,28 +327,27 @@ myKeys n =
     , ("M-S-i"           , runProjectApp3Force)
     , ("M-S-o"           , upPointer $ spawn myBrowser)
 
-    , ("M-<Left>"        , bF $ nv "tabprev" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_Left)  $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
-    , ("M-<Right>"       , bF $ nv "tabnext" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_Right) $ l (P.sendKey controlMask xK_Tab))
+    , ("M-<Left>"        , bF $ nv "tabprev" $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
+    , ("M-<Right>"       , bF $ nv "tabnext" $ l (P.sendKey controlMask xK_Tab))
     , ("M-<Down>"        , windows W.focusDown)
     , ("M-<Up>"          , windows W.focusUp)
 
 
-    , ("M-w"             , bF $ nv "ZenOrFull" $ rKt (P.sendKey (controlMask .|. mod1Mask) xK_f) $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
+    , ("M-w"             , bF $ nv "ZenOrFull" $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
     , ("M-z"             , toggleLayout FULL)
     , ("M-x"             , toggleLayout FULLBAR)
     , ("M-c"             , toggleLayout FULLCENTER)
 
-    , ("M-h"             , bF $ nv "KittyNavigateleft"   $ kt " moveWindow left"   $ l (upPointer $ windowGo L True))
-    , ("M-j"             , bF $ nv "KittyNavigatebottom" $ kt " moveWindow bottom" $ l (upPointer $ windowGo D True))
-    , ("M-k"             , bF $ nv "KittyNavigatetop"    $ kt " moveWindow top"    $ l (upPointer $ windowGo U True))
-    , ("M-l"             , bF $ nv "KittyNavigateright"  $ kt " moveWindow right"  $ l (upPointer $ windowGo R True))
+    , ("M-h"             , bF $ nv "KittyNavigateleft"   $ l (upPointer $ windowGo L True))
+    , ("M-j"             , bF $ nv "KittyNavigatebottom" $ l (upPointer $ windowGo D True))
+    , ("M-k"             , bF $ nv "KittyNavigatetop"    $ l (upPointer $ windowGo U True))
+    , ("M-l"             , bF $ nv "KittyNavigateright"  $ l (upPointer $ windowGo R True))
     , ("M-S-h"           , upPointer $ windowSwap L True)
     , ("M-S-j"           , upPointer $ windowSwap D True)
     , ("M-S-k"           , upPointer $ windowSwap U True)
     , ("M-S-l"           , upPointer $ windowSwap R True)
 
-    , ("M-m"             , bF $ kt " mainMove" $ l (upPointer $ swapPromote' False))
-    , ("M-S-m"           , upPointer $ swapPromote' False)
+    , ("M-m"             , upPointer $ swapPromote' False)
 
     , ("M-u"             , killAllOtherCopies)
     , ("M-S-u"           , kill1)
@@ -529,11 +525,7 @@ toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ 
 l :: Applicative f => b -> [(f Bool, b)]
 l raw = [(pure True, raw)] -- leftover
 nv :: MonadIO m => [Char] -> [(Query Bool, m ())] -> [(Query Bool, m ())]
-nv command list = (title =? "MainEditor", spawn ("/home/oleete/.config/bin/nvrWS " ++ command)) : list -- neovim
-kt :: MonadIO m => [Char] -> [(Query Bool, m ())] -> [(Query Bool, m ())]
-kt command list = (className =? "kitty", spawn (myTerminalRemote ++ command)) : list -- kitty
-rKt :: b -> [(Query Bool, b)] -> [(Query Bool, b)]
-rKt raw list = (className =? "kitty", raw) : list -- kitty raw
+nv command list = (title ~? "Neovim_", spawn ("/home/oleete/.config/bin/nvrWS " ++ command)) : list -- neovim
 crm :: b -> [(Query Bool, b)] -> [(Query Bool, b)]
 crm raw list = (isRole =? "browser", raw) : list -- chrome
 

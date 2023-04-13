@@ -1,4 +1,0 @@
-#!/bin/sh
-
-WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
-kitty @ --to unix:/tmp/kitty-$WS launch --type=overlay $@

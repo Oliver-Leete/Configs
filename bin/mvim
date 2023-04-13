@@ -1,5 +1,3 @@
 #!/bin/bash
 
-tabID=$(kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .id")
-WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
-nvr -s --servername /tmp/nvr-$WS $@
+nvrStart $@

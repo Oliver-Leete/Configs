@@ -310,6 +310,8 @@ require("lspconfig").ltex.setup({
                     ["\\numlist{}"] = "dummy",
                     ["\\coord{}"] = "dummy",
                     ["\\cmidrule(){}"] = "ignore",
+                    ["\\CatchFileDef{}{}{}"] = "ignore",
+                    ["\\labelcref{}"] = "dummy",
                 },
             },
             dictionary = {},

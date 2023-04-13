@@ -1,9 +1,0 @@
-#!/bin/bash
-project="$(basename "$PWD")"
-cd test || exit
-# julia --project -i -e "include(\"$project\")"
-julia --threads=16 --project -i -e '
-using Revise, ReTest, BenchmarkTools, Debugger, Infiltrator, Profile, ProfileCanvas, '"$project"';
-ReTest.load("PackageTests.jl", revise=true);
-loadProfData() = run(`/home/oleete/.config/bin/nvrWS "lua _G.jul_perf_flat()"`);
-'"$@"

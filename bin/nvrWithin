@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# NAME=$(xdotool getwindowfocus getwindowname)
-# nvr -s --servername "/tmp/$NAME" "$@"
-nvrStart "$@"

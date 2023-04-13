@@ -61,7 +61,7 @@ local ts_surf_hint = [[
 ┃^^^^       Move       ^^^^┃
 ┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
 ┃ _h_/_j_/_k_/_l_: ←/↓/↑/→ ┃
-┃^^     _J_/_K_: ⟱/⤊     ^^┃
+┃^^     _H_/_L_: ⇚/⇛     ^^┃
 ┃^^^^                  ^^^^┃
 ┃^^   _m_: select node ^^^^┃
 ┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
@@ -90,12 +90,12 @@ require('hydra')({
     },
     hint = ts_surf_hint,
     heads = {
-        { 'h',     function() tc.goto_parent(tc_settings) end, { nowait = true } },
-        { 'j',     function() tc.goto_next(tc_settings) end,   { nowait = true } },
-        { 'k',     function() tc.goto_prev(tc_settings) end,   { nowait = true } },
-        { 'l',     function() tc.goto_child(tc_settings) end,  { nowait = true } },
-        { 'K',     function() tc.swap_prev(tc_settings) end,   { nowait = true } },
-        { 'J',     function() tc.swap_next(tc_settings) end,   { nowait = true } },
+        { 'h',     function() tc.goto_prev(tc_settings) end,   { nowait = true } },
+        { 'j',     function() tc.goto_child(tc_settings) end,  { nowait = true } },
+        { 'k',     function() tc.goto_parent(tc_settings) end, { nowait = true } },
+        { 'l',     function() tc.goto_next(tc_settings) end,   { nowait = true } },
+        { 'H',     function() tc.swap_prev(tc_settings) end,   { nowait = true } },
+        { 'L',     function() tc.swap_next(tc_settings) end,   { nowait = true } },
         { 'm',     function() tc.select_node(tc_settings) end, { nowait = true } },
         { 'S',     function() no_exit = true end,              { exit = true, nowait = true, desc = false } },
         { '<esc>', function() no_exit = true end,              { exit = true, nowait = true } },

@@ -112,41 +112,11 @@ rec_tab = function()
 end
 
 local ref_or_subref = function(num)
-    return c(num, { t("Figure~\\ref{"), t("\\subref{") } )
+    return c(num, { t("\\cref{"), t("\\subref{") } )
 end
 
 
 return {
-        s({ trig = "label", name = "label", dscr = "Insert a label" }, {
-            t("\\label{"),
-            c(1, { t("sect"), t("ch"), t("ap"), t("fig"), t("eq"), t("tab"), t("alg"), t("lst") }),
-            t(":"), i(2), t("}"),
-        }),
-        -- NOTE : LABEL REFERENCES
-        s({ trig = "fig", name = "figure reference", dscr = "figure reference" }, {
-            ref_or_subref(2), t("fig:"), i(1), t({ "}" }),
-        }),
-        s({ trig = "sect", name = "section reference", dscr = "section reference" }, {
-            t({ "Section~\\ref{sect:" }), i(1), t({ "}" }),
-        }),
-        s({ trig = "ch", name = "chapter reference", dscr = "chapter reference" }, {
-            t({ "Chapter~\\ref{ch:" }), i(1), t({ "}" }),
-        }),
-        s({ trig = "eq", name = "equation reference", dscr = "equation reference" }, {
-            t({ "Equation~\\ref{eq:" }), i(1), t({ "}" }),
-        }),
-        s({ trig = "alg", name = "algorithm reference", dscr = "algorithm reference" }, {
-            t({ "Algorithm~\\ref{alg:" }), i(1), t({ "}" }),
-        }),
-        s({ trig = "ap", name = "appendix reference", dscr = "appendix reference" }, {
-            t({ "Appendix~\\ref{ap:" }), i(1), t({ "}" }),
-        }),
-        s({ trig = "tab", name = "table reference", dscr = "table reference" }, {
-            t({ "Table~\\ref{tab:" }), i(1), t({ "}" }),
-        }),
-        s({ trig = "lst", name = "listing reference", dscr = "listing reference" }, {
-            t({ "Listing~\\ref{lst:" }), i(1), t({ "}" }),
-        }),
 
         -- NOTE : ENVIROMENTS
         s({ trig = "ls", name = "list", dscr = "An infinite list of items" }, {
@@ -268,6 +238,39 @@ return {
             t("};")
         }, { condition = tikz }),
     }, {
+        s({ trig = "lbl", name = "label", dscr = "Insert a label" }, {
+            t("\\label{"),
+            c(1, { t("sect"), t("ch"), t("ap"), t("fig"), t("eq"), t("tab"), t("alg"), t("lst") }),
+            t(":"), i(2), t("}"),
+        }),
+        s({ trig = " cite", name = "cite", dscr = "cite" }, {
+            t({ "~\\cite{" }), i(1), t({ "}" }),
+        }),
+        -- NOTE : LABEL REFERENCES
+        s({ trig = "Fig", name = "figure reference", dscr = "figure reference" }, {
+            ref_or_subref(2), t("fig:"), i(1), t({ "}" }),
+        }),
+        s({ trig = "Sect", name = "section reference", dscr = "section reference" }, {
+            t({ "\\cref{sect:" }), i(1), t({ "}" }),
+        }),
+        s({ trig = "Chap", name = "chapter reference", dscr = "chapter reference" }, {
+            t({ "\\cref{ch:" }), i(1), t({ "}" }),
+        }),
+        s({ trig = "Equat", name = "equation reference", dscr = "equation reference" }, {
+            t({ "\\cref{eq:" }), i(1), t({ "}" }),
+        }),
+        s({ trig = "Alger", name = "algorithm reference", dscr = "algorithm reference" }, {
+            t({ "\\cref{alg:" }), i(1), t({ "}" }),
+        }),
+        s({ trig = "Appen", name = "appendix reference", dscr = "appendix reference" }, {
+            t({ "\\cref{ap:" }), i(1), t({ "}" }),
+        }),
+        s({ trig = "Table", name = "table reference", dscr = "table reference" }, {
+            t({ "\\cref{tab:" }), i(1), t({ "}" }),
+        }),
+        s({ trig = "Listi", name = "listing reference", dscr = "listing reference" }, {
+            t({ "\\cref{lst:" }), i(1), t({ "}" }),
+        }),
         -- NOTE : Math auto
         s(
             { trig = "<-", name = "gets" }, { t("\\gets"), },

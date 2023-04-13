@@ -9,24 +9,6 @@ Map("n", "<localleader><localleader>", "<cmd>TexlabForward<cr>", { buffer = 0, s
 
 Map("n", "KK", "<cmd>VimtexDocPackage<cr>", { buffer = 0 })
 
-Map({ "x", "o" }, "as", "<plug>(vimtex-aP)", { buffer = 0, remap = true })
-Map({ "x", "o" }, "is", "<plug>(vimtex-iP)", { buffer = 0, remap = true })
-Map({ "n", "x", "o" }, "[s", "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-[[)zz", { buffer = 0 })
-Map({ "x", "o" }, "als", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[])', '(vimtex-aP)')<cr>", { buffer = 0 })
-Map({ "x", "o" }, "ils", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[])', '(vimtex-iP)')<cr>", { buffer = 0 })
-Map({ "n", "x", "o" }, "]s", "<cmd>let g:dirJumps='s'<cr>m`<plug>(vimtex-]])zz", { buffer = 0 })
-Map({ "x", "o" }, "ins", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-iP)')<cr>", { buffer = 0 })
-Map({ "x", "o" }, "ans", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]])', '(vimtex-aP)')<cr>", { buffer = 0 })
-
-Map({ "x", "o" }, "aj", "<plug>(vimtex-ae)", { buffer = 0, remap = true })
-Map({ "x", "o" }, "ij", "<plug>(vimtex-ie)", { buffer = 0, remap = true })
-Map({ "n", "x", "o" }, "[j", "<cmd>let g:dirJumps='m'<cr>m`<plug>(vimtex-[m)zz", { buffer = 0 })
-Map({ "x", "o" }, "alj", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[M)', '(vimtex-ae)')<cr>", { buffer = 0 })
-Map({ "x", "o" }, "ilj", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[M)', '(vimtex-ie)')<cr>", { buffer = 0 })
-Map({ "n", "x", "o" }, "]j", "<cmd>let g:dirJumps='m'<cr>m`<plug>(vimtex-]m)zz", { buffer = 0 })
-Map({ "x", "o" }, "anj", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ae)')<cr>", { buffer = 0 })
-Map({ "x", "o" }, "inj", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]m)', '(vimtex-ie)')<cr>", { buffer = 0 })
-
 Map({ "x", "o" }, "am", "<plug>(vimtex-a$)", { buffer = 0, remap = true })
 Map({ "x", "o" }, "im", "<plug>(vimtex-i$)", { buffer = 0, remap = true })
 Map({ "n", "x", "o" }, "[m", "<cmd>let g:dirJumps='n'<cr>m`<plug>(vimtex-[n)zz", { buffer = 0 })
@@ -59,7 +41,7 @@ vim.api.nvim_buf_set_option(0, "textwidth", 100)
 vim.g.tex_flavor = "latex"
 vim.g.vimtex_quickfix_mode = 0
 vim.g.vimtex_doc_confirm_single = 0
-vim.g.vimtex_view_general_viewer = "zathura"
+vim.g.vimtex_view_general_viewer = "zathura --synctex-editor-command='nvr --servername " .. vim.v.servername .. " +%{line} %{input}'"
 vim.g.vimtex_view_forward_search_on_start = 1
 vim.g.vimtex_view_automatic = 0
 vim.g.vimtex_compiler_latexmk = {
@@ -70,21 +52,250 @@ vim.g.vimtex_compiler_latexmk = {
     ["options"] = { "-pdf", "-verbose", "-file-line-error", "-synctex=1", "-interaction=nonstopmode" },
 }
 
-vim.opt_local.conceallevel = 2
+local conceal_table = {
+    {
+        name = "unit",
+        conceal = true,
+    },
+    {
+        name = "num",
+        conceal = true,
+    },
+    {
+        name = "numproduct",
+        conceal = true,
+    },
+    {
+        name = "numlist",
+        conceal = true,
+    },
+    {
+        name = "ch",
+        conceal = true,
+        argstyle = "bold",
+    },
+}
+
+for _, cmd in pairs({
+    { name = "per",     symbol = "/" },
+    { name = "percent", symbol = "%" },
+    { name = "ampere",  symbol = "A" },
+    -- { name = "candela",   symbol = "cd" },
+    { name = "kelvin",  symbol = "K" },
+    -- { name = "kilogram",  symbol = "kg" },
+    { name = "gram",    symbol = "g" },
+    { name = "metre",   symbol = "m" },
+    { name = "meter",   symbol = "m" },
+    -- { name = "mole",      symbol = "mol" },
+    { name = "second",  symbol = "s" },
+    { name = "minute",  symbol = "m" },
+    { name = "hour",    symbol = "h" },
+    { name = "newton",  symbol = "N" },
+    { name = "celsius", symbol = "C" },
+    { name = "ohm",     symbol = "Ω" },
+    -- { name = "coulomb",   symbol = "C" },
+    -- { name = "pascal",    symbol = "Pa" },
+    { name = "farad",   symbol = "F" },
+    -- { name = "radian",    symbol = "rad" },
+    -- { name = "gray",      symbol = "Gy" },
+    { name = "siemens", symbol = "S" },
+    -- { name = "hertz",     symbol = "Hz" },
+    -- { name = "sievert",   symbol = "Sv" },
+    { name = "henry",   symbol = "H" },
+    -- { name = "steradian", symbol = "sr" },
+    { name = "joule",   symbol = "J" },
+    { name = "tesla",   symbol = "T" },
+    -- { name = "lumen",     symbol = "lm" },
+    { name = "volt",    symbol = "V" },
+    -- { name = "katal",     symbol = "kat" },
+    { name = "watt",    symbol = "W" },
+    -- { name = "lux",       symbol = "lx" },
+    -- { name = "weber",     symbol = "Wb" },
+    { name = "quecto",  symbol = "q" },
+    { name = "ronto",   symbol = "r" },
+    { name = "yocto",   symbol = "y" },
+    { name = "atto",    symbol = "a" },
+    { name = "zepto",   symbol = "z" },
+    { name = "femto",   symbol = "f" },
+    { name = "pico",    symbol = "p" },
+    { name = "nano",    symbol = "n" },
+    { name = "micro",   symbol = "µ" },
+    { name = "milli",   symbol = "m" },
+    { name = "centi",   symbol = "c" },
+    { name = "deci",    symbol = "d" },
+    { name = "hecto",   symbol = "h" },
+    { name = "kilo",    symbol = "k" },
+    { name = "mega",    symbol = "M" },
+    { name = "giga",    symbol = "G" },
+    { name = "tera",    symbol = "T" },
+    { name = "peta",    symbol = "P" },
+    { name = "exa",     symbol = "E" },
+    { name = "zetta",   symbol = "Z" },
+    { name = "yotta",   symbol = "Y" },
+    { name = "ronna",   symbol = "R" },
+    { name = "quetta",  symbol = "Q" },
+}) do
+    table.insert(conceal_table, {
+        name = cmd.name,
+        conceal = true,
+        concealchar = cmd.symbol,
+        arg = false,
+    })
+    table.insert(conceal_table, {
+        name = cmd.name,
+        conceal = true,
+        concealchar = cmd.symbol,
+        arg = false,
+        mathmode = true,
+    })
+end
+
+for _, cmdname in pairs({ "ac", "acf", "acs", "acl", "pac", "Ac", "Acf", "Acs", "Acl", "Pac" }) do
+    table.insert(conceal_table, {
+        name = cmdname,
+        conceal = true,
+        argstyle = "bold",
+    })
+    table.insert(conceal_table, {
+        name = cmdname,
+        conceal = true,
+        argstyle = "bold",
+        mathmode = true,
+    })
+end
+
+-- vim.g.vimtex_syntax_custom_cmds = conceal_table
+
+local conceal_pairs_table = {
+    {
+        name = "qty",
+        conceal = true,
+        nargs = 2,
+        cchar_mid = " ",
+    },
+    {
+        name = "qtyproduct",
+        conceal = true,
+        nargs = 2,
+        cchar_mid = " ",
+    },
+    {
+        name = "qtyrange",
+        conceal = true,
+        nargs = 3,
+        cchar_mid = "-",
+    },
+    {
+        name = "qtylist",
+        conceal = true,
+        nargs = 2,
+        cchar_mid = " ",
+    },
+    {
+        name = "numrange",
+        conceal = true,
+        nargs = 2,
+        cchar_mid = "-",
+    },
+    {
+        name = "qty",
+        conceal = true,
+        nargs = 2,
+        cchar_mid = " ",
+        mathmode = true,
+    },
+    {
+        name = "qtyproduct",
+        conceal = true,
+        nargs = 2,
+        cchar_mid = " ",
+        mathmode = true,
+    },
+    {
+        name = "qtyrange",
+        conceal = true,
+        nargs = 3,
+        cchar_mid = "-",
+        mathmode = true,
+    },
+    {
+        name = "qtylist",
+        conceal = true,
+        nargs = 2,
+        cchar_mid = " ",
+        mathmode = true,
+    },
+    {
+        name = "numrange",
+        conceal = true,
+        nargs = 2,
+        cchar_mid = "-",
+        mathmode = true,
+    },
+    {
+        name = "coord",
+        conceal = true,
+        nargs = 1,
+        cchar_open = "(",
+        cchar_close = ")",
+    },
+    {
+        name = "Int",
+        conceal = true,
+        nargs = 1,
+        cchar_open = "#",
+        mathmode = true,
+    },
+    {
+        name = "Call",
+        conceal = true,
+        nargs = 2,
+        argstyle = "bold",
+        cchar_mid = "(",
+        cchar_close = ")",
+    },
+    {
+        name = "Call",
+        conceal = true,
+        nargs = 2,
+        argstyle = "bold",
+        cchar_mid = "(",
+        cchar_close = ")",
+        mathmode = true,
+    },
+}
+-- vim.g.vimtex_syntax_custom_cmds_with_concealed_delims = conceal_pairs_table
+
+-- vim.opt_local.conceallevel = 2
+-- vim.g.vimtex_syntax_conceal = {
+--     ["accents"] = true,
+--     ["ligatures"] = true,
+--     ["cites"] = true,
+--     ["fancy"] = true,
+--     ["greek"] = true,
+--     ["spacing"] = true,
+--     ["math_bounds"] = true,
+--     ["math_delimiters"] = true,
+--     ["math_fracs"] = true,
+--     ["math_super_sub"] = false,
+--     ["math_symbols"] = true,
+--     ["sections"] = true,
+--     ["styles"] = true,
+-- }
 vim.g.vimtex_syntax_conceal = {
-    ["accents"] = true,
-    ["ligatures"] = true,
-    ["cites"] = true,
-    ["fancy"] = true,
-    ["greek"] = true,
-    ["spacing"] = true,
-    ["math_bounds"] = true,
-    ["math_delimiters"] = true,
-    ["math_fracs"] = true,
-    ["math_super_sub"] = false,
-    ["math_symbols"] = true,
-    ["sections"] = true,
-    ["styles"] = true,
+    ["accents"] = false,
+    ["ligatures"] = false,
+    ["cites"] = false,
+    ["fancy"] = false,
+    ["greek"] = false,
+    ["spacing"] = false,
+    ["math_bounds"] = false,
+    ["math_delimiters"] = false,
+    ["math_fracs"] = false,
+    ["math_super_sub"] = true,
+    ["math_symbols"] = false,
+    ["sections"] = false,
+    ["styles"] = false,
 }
 
 vim.g.projectionist_heuristics = {

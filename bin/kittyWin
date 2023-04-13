@@ -1,4 +1,0 @@
-#!/bin/bash
-
-kitty @ launch
-kitty @ goto-layout fat:bias=70

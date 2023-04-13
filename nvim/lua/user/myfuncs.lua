@@ -93,6 +93,9 @@ local delete_buffer = function()
         vim.b.is_diffview_file = false
         vim.cmd("DiffviewFocusFiles")
         return
+    elseif vim.bo[bufnr].buftype == "terminal" then
+        winclose()
+        return
     end
 
     local bufs = loaded_bufnrs()
@@ -120,17 +123,7 @@ end
 
 vim.api.nvim_create_user_command("DeleteBuffer", delete_buffer, { nargs = 0 })
 
-local zen_or_full = function()
-    local num_windows = tonumber(vim.fn.systemlist([[kitty @ ls | jq ".[].tabs[] | select(.is_focused) | .windows | length"]])
-        [1])
-
-    if num_windows > 1 then
-        vim.cmd([[silent !xdotool key --clearmodifiers "ctrl+alt+f"]])
-    else
-        require("mini.misc").zoom()
-    end
-end
-vim.api.nvim_create_user_command("ZenOrFull", zen_or_full, { nargs = 0 })
+vim.api.nvim_create_user_command("ZenOrFull", require("mini.misc").zoom, { nargs = 0 })
 
 local mode_map = {
     ['n'] = { 'NORMAL', 'Normal' },
@@ -191,5 +184,11 @@ M.trash_put = function()
     vim.cmd("!trash-put %")
     vim.cmd.bdelete()
 end
+
+local openterm = function()
+    vim.cmd("silent split")
+    vim.cmd("OverseerRun Fish")
+end
+vim.api.nvim_create_user_command("OpenTerm", openterm, { nargs = 0 })
 
 return M
