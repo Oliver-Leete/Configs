@@ -46,12 +46,12 @@ for i, id in pairs(type_hl) do
     end
     local name = "navic" .. id
     Data = hl
-    hl.background = Tc.winterBlue
+    hl.background = Ct.diff.change
     vim.api.nvim_set_hl(0, name, hl)
     type_hl[i] = name
 end
 vim.api.nvim_set_hl(0, "NavicSep", { fg = Tc.fujiWhite, bg = Tc.winterBlue })
-vim.api.nvim_set_hl(0, "NavicEnd", { fg = Tc.winterBlue, bg = Tc.sumiInk1 })
+vim.api.nvim_set_hl(0, "NavicEnd", { fg = Ct.diff.change, bg = Ct.ui.bg })
 
 Navic_on_click = function(pos)
     local line = math.floor(pos / 100000)

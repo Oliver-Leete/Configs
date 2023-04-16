@@ -183,8 +183,8 @@ scratchpads =
     ,   NS "toggl" "flatpak run com.toggl.TogglDesktop" (className =? "Toggl Desktop") nonFloating
     ,   NS "youtubeMusic"  "youtube-music" (className =? "YouTube Music") nonFloating
     ,   NS "calc"  "gnome-calculator" (className =? "gnome-calculator") nonFloating
-    ,   NS "console"  "alacritty --class console" (resource =? "console") nonFloating
-    ,   NS "sysMon"  "alacritty --class sysMon -t 'System Monitor' -e btop" (resource =? "sysMon") nonFloating
+    ,   NS "console"  "kitty --class=console" (resource =? "console") nonFloating
+    ,   NS "sysMon"  "kitty --class=sysMon btop" (resource =? "sysMon") nonFloating
     ]
 
 ----------------------------------------------------------------------------------------------------

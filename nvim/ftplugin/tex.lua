@@ -1,11 +1,15 @@
-vim.b[0].localCommands = {
-    { source = "tex", name = "Build project",    command = "silent VimtexCompileSS" },
-    { source = "tex", name = "Table of content", command = "VimtexTocToggle" },
-    { source = "tex", name = "Forward Search",   command = "TexlabForward" },
-    { source = "tex", name = "Word Count",       command = "VimtexCountWord" },
-}
+-- vim.b[0].localCommands = {
+--     { source = "tex", name = "Build project",    command = "silent VimtexCompileSS" },
+--     { source = "tex", name = "Table of content", command = "VimtexTocToggle" },
+--     { source = "tex", name = "Forward Search",   command = "TexlabForward" },
+--     { source = "tex", name = "Word Count",       command = "VimtexCountWord" },
+-- }
 
-Map("n", "<localleader><localleader>", "<cmd>TexlabForward<cr>", { buffer = 0, silent = true })
+Map("n", "<localleader><localleader>", function()
+    vim.cmd("TexlabForward")
+    vim.cmd("sleep 150m")
+    vim.cmd("silent !xdotool key super+n")
+end, { buffer = 0, silent = true })
 
 Map("n", "KK", "<cmd>VimtexDocPackage<cr>", { buffer = 0 })
 

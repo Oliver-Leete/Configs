@@ -40,6 +40,9 @@ function adapter.build_spec(args)
     if position.type == "file" then return end
     return {
         command = command,
+        position = {
+            name = position.name
+        },
         context = {
             pos_id = position.id,
             name = position.name,

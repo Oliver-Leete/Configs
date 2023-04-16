@@ -259,7 +259,7 @@ return {
         s({ trig = "Equat", name = "equation reference", dscr = "equation reference" }, {
             t({ "\\cref{eq:" }), i(1), t({ "}" }),
         }),
-        s({ trig = "Alger", name = "algorithm reference", dscr = "algorithm reference" }, {
+        s({ trig = "Algor", name = "algorithm reference", dscr = "algorithm reference" }, {
             t({ "\\cref{alg:" }), i(1), t({ "}" }),
         }),
         s({ trig = "Appen", name = "appendix reference", dscr = "appendix reference" }, {

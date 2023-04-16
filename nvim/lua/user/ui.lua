@@ -28,14 +28,23 @@ require("dressing").setup({
 })
 
 require("kanagawa").setup({
-    keywordStyle = {},
-    statementStyle = {},
-    variablebuiltinStyle = {},
-    globalStatus = true,
+    keywordStyle = { italic = false },
+    statementStyle = { italic = false, bold = false },
+    variablebuiltinStyle = { italic = false },
+    overrides = function(colors)
+        local theme = colors.theme
+        return {
+            Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+            PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
+            PmenuSbar = { bg = theme.ui.bg_m1 },
+            PmenuThumb = { bg = theme.ui.bg_p2 },
+        }
+    end,
 })
 
 vim.cmd("colorscheme kanagawa")
-Tc = require("kanagawa.colors").setup()
+Tc = require("kanagawa.colors").setup().palette
+Ct = require("kanagawa.colors").setup().theme
 
 local background = vim.api.nvim_get_hl_by_name("CursorLine", true).background
 
@@ -46,9 +55,10 @@ for sign, colour in pairs(sign_colours) do
     vim.api.nvim_set_hl(0, "GitSigns" .. sign .. "Cul", highlight)
 end
 
-vim.api.nvim_set_hl(0, "CursorLineNr", { fg = Tc.sumiInk4, bg = Tc.sumiInk3, bold = true })
-vim.api.nvim_set_hl(0, "CursorLineSign", { link = "CursorLine" })
-vim.api.nvim_set_hl(0, "CursorLineFold", { link = "CursorLine" })
+vim.api.nvim_set_hl(0, "LineNr", { fg = Tc.sumiInk5, bg = Tc.sumiInk3, bold = false })
+vim.api.nvim_set_hl(0, "LineSep", { fg = Tc.sumiInk5, bg = Tc.sumiInk3, bold = false })
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = Tc.fujiWhite, bg = Tc.sumiInk5, bold = true })
+vim.api.nvim_set_hl(0, "CursorLineSep", { fg = Tc.sumiInk5, bg = Tc.sumiInk5, bold = true })
 
 vim.g.matchup_matchparen_deferred = true
 vim.g.matchup_matchparen_hi_surround_always = true
@@ -64,22 +74,19 @@ require("notify").setup({
 vim.notify = require("notify")
 
 local mode_colours = {
-    Normal = Tc.crystalBlue,
-    Insert = Tc.autumnGreen,
-    Visual = Tc.oniViolet,
-    Replace = Tc.autumnRed,
-    Command = Tc.boatYellow2,
+    Normal = Ct.syn.fun,
+    Insert = Ct.diag.ok,
+    Visual = Ct.syn.keyword,
+    Replace = Ct.syn.constant,
+    Command = Ct.syn.operator,
     Inactive = Tc.fujiGray,
     Terminal = Tc.waveRed,
 }
 for mode, colour in pairs(mode_colours) do
-    vim.api.nvim_set_hl(0, "WinBar" .. mode, { fg = Tc.bg, bg = colour })
-    vim.api.nvim_set_hl(0, "WinBar" .. mode .. "Ends", { fg = colour, bg = Tc.bg })
-    vim.api.nvim_set_hl(0, "WinBar" .. mode .. "MidEnds", { fg = colour, bg = Tc.fujiGray })
+    vim.api.nvim_set_hl(0, "WinBar" .. mode, { fg = Ct.ui.bg, bg = colour })
+    vim.api.nvim_set_hl(0, "WinBar" .. mode .. "Ends", { fg = colour, bg = Ct.ui.bg })
     vim.api.nvim_set_hl(0, "WinBar" .. mode .. "NavicEnds", { fg = colour, bg = Tc.winterBlue })
 end
-vim.api.nvim_set_hl(0, "WinBarInactiveSpecial", { fg = Tc.bg, bg = Tc.waveBlue2 })
-vim.api.nvim_set_hl(0, "WinBarInactiveSpecialEnds", { fg = Tc.waveBlue2, bg = Tc.bg })
 vim.api.nvim_set_hl(0, "WinBarBlank", { fg = Tc.sumiInk, bg = Tc.sumiInk })
 vim.api.nvim_set_hl(0, "WinBarBlank", { fg = Tc.sumiInk, bg = Tc.sumiInk })
 
@@ -126,26 +133,28 @@ glance.setup({
     },
     mappings = {
         list = {
-                ['j'] = actions.next,
-                ['k'] = actions.previous,
-                ['<Down>'] = actions.next,
-                ['<Up>'] = actions.previous,
-                ['n'] = actions.next_location,
-                ['N'] = actions.previous_location,
-                ['<C-u>'] = actions.preview_scroll_win(5),
-                ['<C-d>'] = actions.preview_scroll_win(-5),
-                ['<c-v>'] = actions.jump_vsplit,
-                ['<c-x>'] = actions.jump_split,
-                ['<CR>'] = actions.jump,
-                ['o'] = actions.enter_win('preview'),
-                ['p'] = actions.enter_win('preview'),
-                ['<Esc>'] = actions.close,
+            ['j'] = actions.next,
+            ['k'] = actions.previous,
+            ['<Down>'] = actions.next,
+            ['<Up>'] = actions.previous,
+            ['n'] = actions.next_location,
+            ['N'] = actions.previous_location,
+            ['<C-u>'] = actions.preview_scroll_win(5),
+            ['<C-d>'] = actions.preview_scroll_win(-5),
+            ['<c-v>'] = actions.jump_vsplit,
+            ['<c-x>'] = actions.jump_split,
+            ['<CR>'] = actions.jump,
+            ['o'] = actions.enter_win('preview'),
+            ['p'] = actions.enter_win('preview'),
+            ["<C-q>"] = actions.quickfix,
+            ["<C-l>"] = actions.quickfix,
+            ['<Esc>'] = actions.close,
         },
         preview = {
-                ['n'] = actions.next_location,
-                ['N'] = actions.previous_location,
-                ['<esc>'] = actions.enter_win('list'),
-                ['<leader><cr>'] = actions.enter_win('list'),
+            ['n'] = actions.next_location,
+            ['N'] = actions.previous_location,
+            ['<esc>'] = actions.enter_win('list'),
+            ['<leader><cr>'] = actions.enter_win('list'),
         },
     },
 })

@@ -55,7 +55,7 @@ addWS () {
 }
 
 modifyWS () {
-    alacritty --class wsHarpoon -t 'System Monitor' -e "nvim" +"nnoremap <esc> :wq<cr>|nnoremap q :wq<cr>" "$HARPFILE"
+    kitty --class=wsHarpoon "nvim" +"nnoremap <esc> :wq<cr>|nnoremap q :wq<cr>" "$HARPFILE"
 }
 
 selectPreset () {
@@ -74,7 +74,7 @@ makePreset () {
 modifyPreset () {
     FILE=$((for item in "$HARPFOLDER"/*; do echo $(basename "$item"); done) | rofi -matching fuzzy -window-title "Workspace Presets" -dmenu "WorkspacePresets")
     if [ ! -z "$FILE" ]; then
-        alacritty --class wsHarpoon -t 'System Monitor' -e "nvim" +"nnoremap <esc> :wq<cr>|nnoremap q :wq<cr>" "$HARPFOLDER/$FILE"
+        kitty --class=wsHarpoon "nvim" +"nnoremap <esc> :wq<cr>|nnoremap q :wq<cr>" "$HARPFOLDER/$FILE"
     fi
 }
 

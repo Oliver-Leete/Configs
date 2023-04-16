@@ -55,6 +55,7 @@ require("lazy").setup(
 
         "lewis6991/gitsigns.nvim",
         "sindrets/diffview.nvim",
+        "cvigilv/diferente.nvim",
 
         { "rebelot/kanagawa.nvim",           commit = "4c8d48726621a7f3998c7ed35b2c2535abc22def" },
         "stevearc/dressing.nvim",
@@ -121,7 +122,7 @@ require("lazy").setup(
         "CKolkey/ts-node-action",
         "drybalka/tree-climber.nvim",
         "Dkendal/nvim-treeclimber",
-
+        "desdic/agrolens.nvim",
 
         "stevearc/overseer.nvim",
         "nvim-neotest/neotest",

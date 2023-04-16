@@ -11,26 +11,26 @@ local gitsigns = {
     GitSignsUntracked    = "┋",
 }
 
-vim.api.nvim_set_hl(0, "CursorGitSignsAdd", { fg = Tc.autumnGreen, bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorGitSignsChange", { fg = Tc.autumnYellow, bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorGitSignsChangedelete", { fg = Tc.autumnYellow, bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorGitSignsDelete", { fg = Tc.autumnRed, bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorGitSignsTopdelete", { fg = Tc.autumnRed, bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorGitSignsUntracked", { fg = Tc.autumnGreen, bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorTodoSignFIX", { fg = "#DC2626", bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorTodoSignTODO", { fg = "#2563EB", bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorTodoSignHACK", { fg = "#FBBF24", bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorTodoSignWARN", { fg = "#FBBF24", bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorTodoSignPERF", { fg = "#7C3AED", bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorTodoSignNOTE", { fg = "#10B981", bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorDiagnosticSignError", { fg = "#E82424", bg = "#363646" })
-vim.api.nvim_set_hl(0, "CursorDiagnosticSignWarn", { fg = "#FF9E3B", bg = "#363646" })
-vim.api.nvim_set_hl(0, "CursorDiagnosticSignInfo", { fg = "#658494", bg = "#363646" })
-vim.api.nvim_set_hl(0, "CursorDiagnosticSignHint", { fg = "#6A9589", bg = "#363646" })
-vim.api.nvim_set_hl(0, "CursorNeotestPassed", { fg = "#96F291", bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorNeotestFailed", { fg = "#F70067", bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorNeotestRunning", { fg = "#FFEC63", bg = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "CursorNeotestSkipped", { fg = "#00f1f5", bg = Tc.sumiInk3 })
+vim.api.nvim_set_hl(0, "CursorGitSignsAdd", { fg = Tc.autumnGreen, bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorGitSignsChange", { fg = Tc.autumnYellow, bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorGitSignsChangedelete", { fg = Tc.autumnYellow, bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorGitSignsDelete", { fg = Tc.autumnRed, bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorGitSignsTopdelete", { fg = Tc.autumnRed, bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorGitSignsUntracked", { fg = Tc.autumnGreen, bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorTodoSignFIX", { fg = "#DC2626", bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorTodoSignTODO", { fg = "#2563EB", bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorTodoSignHACK", { fg = "#FBBF24", bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorTodoSignWARN", { fg = "#FBBF24", bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorTodoSignPERF", { fg = "#7C3AED", bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorTodoSignNOTE", { fg = "#10B981", bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorDiagnosticSignError", { fg = "#E82424", bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorDiagnosticSignWarn", { fg = "#FF9E3B", bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorDiagnosticSignInfo", { fg = "#658494", bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorDiagnosticSignHint", { fg = "#6A9589", bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorNeotestPassed", { fg = "#96F291", bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorNeotestFailed", { fg = "#F70067", bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorNeotestRunning", { fg = "#FFEC63", bg = Tc.sumiInk5 })
+vim.api.nvim_set_hl(0, "CursorNeotestSkipped", { fg = "#00f1f5", bg = Tc.sumiInk5 })
 
 
 
@@ -47,7 +47,7 @@ local make_sep = function(hl_prefix)
     elseif #signstaged >= 1 and signstaged[1].name then
         name = signstaged[1].name
     else
-        name = "LineNr"
+        name = "LineSep"
     end
     local hl = hl_prefix .. name .. "#"
     return hl .. text
