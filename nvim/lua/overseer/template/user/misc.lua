@@ -38,23 +38,6 @@ return {
                 params = {},
             },
             {
-                name = "Gitui",
-                builder = function()
-                    return {
-                        name = "Gitui",
-                        cmd = "gitui",
-                        components = { "default", "unique",
-                            {
-                                "user.start_open",
-                                start_insert = true,
-                            },
-                        },
-                    }
-                end,
-                priority = 2,
-                params = {},
-            },
-            {
                 name = "Git Commit",
                 builder = function()
                     return {
@@ -186,6 +169,16 @@ return {
                         return vim.go.makeprg ~= "make"
                     end
                 }
+            },
+            {
+                name = "Open Test Outputs",
+                builder = function()
+                    require("neotest").output_panel.open()
+                    vim.cmd("edit")
+                    return { cmd = "", name = "", components = { "user.dispose_now" }, }
+                end,
+                priority = 6,
+                params = {},
             },
             {
                 name = "View Animation",

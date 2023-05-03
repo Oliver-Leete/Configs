@@ -38,10 +38,14 @@ require("cmp").setup({
             require("luasnip").lsp_expand(args.body)
         end,
     },
+    window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+    },
     mapping = {
-            ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
-            ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-            ["<down>"] = cmp.mapping({
+        ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
+        ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
+        ["<down>"] = cmp.mapping({
             i = function()
                 if cmp.visible() then
                     cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
@@ -56,7 +60,7 @@ require("cmp").setup({
                 cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
             end,
         }),
-            ["<up>"] = cmp.mapping({
+        ["<up>"] = cmp.mapping({
             i = function()
                 if cmp.visible() then
                     cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
@@ -71,13 +75,12 @@ require("cmp").setup({
                 cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
             end,
         }),
-            ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "i" }),
-            ["<C-CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "c" }),
+        ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "i" }),
+        ["<C-CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "c" }),
     },
     sources = {
         { name = "luasnip_choice" },
-        { name = "luasnip" },
-        { name = "jupyter" },
+        { name = "luasnip",       option = { show_autosnippets = true } },
         { name = "cmp_git" },
         { name = 'otter' },
         { name = "nvim_lsp" },
@@ -85,28 +88,39 @@ require("cmp").setup({
         { name = "fish" },
         { name = "path" },
         { name = "nvim_lua" },
-        { name = "buffer",        keyword_length = 3 },
+        {
+            name = "buffer",
+            keyword_length = 3,
+            option = {
+                get_bufnrs = function()
+                    local bufs = {}
+                    for _, win in ipairs(vim.api.nvim_list_wins()) do
+                        bufs[vim.api.nvim_win_get_buf(win)] = true
+                    end
+                    return vim.tbl_keys(bufs)
+                end
+            },
+        },
     },
     formatting = {
         format = function(entry, vim_item)
             vim_item.menu = ({
-                    luasnip_choice = "(CHOICE)",
-                    luasnip = "(SNIP)",
-                    jupyter = "(JUP)",
-                    git = "(GIT)",
-                    otter = "(LSP)",
-                    nvim_lsp = "(LSP)",
-                    latex_symbols = "(SYM)",
-                    fish = "(FISH)",
-                    path = "(PATH)",
-                    nvim_lua = "(NVIM)",
-                    buffer = "(BUFF)",
-                    cmdline = "(CMD)",
-                    cmdline_history = "(CMDH)",
-                    dictionary = "(DICT)",
-                    omni = "(TEX?)",
-                    nvim_lsp_document_symbol = "(LSP)",
-                })[entry.source.name]
+                luasnip_choice = "(CHOICE)",
+                luasnip = "(SNIP)",
+                git = "(GIT)",
+                otter = "(LSP)",
+                nvim_lsp = "(LSP)",
+                latex_symbols = "(SYM)",
+                fish = "(FISH)",
+                path = "(PATH)",
+                nvim_lua = "(NVIM)",
+                buffer = "(BUFF)",
+                cmdline = "(CMD)",
+                cmdline_history = "(CMDH)",
+                dictionary = "(DICT)",
+                omni = "(TEX?)",
+                nvim_lsp_document_symbol = "(LSP)",
+            })[entry.source.name]
             vim_item.kind = M.icons[vim_item.kind]
             return vim_item
         end,
@@ -114,7 +128,12 @@ require("cmp").setup({
     enabled = function()
         return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
             or require("cmp_dap").is_dap_buffer()
-    end
+    end,
+    sorting = {
+        comparators = {
+            function(...) return require('cmp_buffer'):compare_locality(...) end,
+        },
+    },
 })
 
 require('cmp_luasnip_choice').setup({
@@ -124,7 +143,19 @@ require('cmp_luasnip_choice').setup({
 cmp.setup.cmdline("/", {
     sources = {
         { name = 'nvim_lsp_document_symbol' },
-        { name = "buffer" },
+        {
+            name = "buffer",
+            keyword_length = 3,
+            option = {
+                get_bufnrs = function()
+                    local bufs = {}
+                    for _, win in ipairs(vim.api.nvim_list_wins()) do
+                        bufs[vim.api.nvim_win_get_buf(win)] = true
+                    end
+                    return vim.tbl_keys(bufs)
+                end
+            },
+        },
         { name = "cmdline_history" },
         { name = "latex_symbols" },
     },
@@ -133,7 +164,19 @@ cmp.setup.cmdline("/", {
 cmp.setup.cmdline(":", {
     sources = cmp.config.sources({
         { name = "path" },
-        { name = "buffer" },
+        {
+            name = "buffer",
+            keyword_length = 3,
+            option = {
+                get_bufnrs = function()
+                    local bufs = {}
+                    for _, win in ipairs(vim.api.nvim_list_wins()) do
+                        bufs[vim.api.nvim_win_get_buf(win)] = true
+                    end
+                    return vim.tbl_keys(bufs)
+                end
+            },
+        },
         { name = "cmdline_history" },
         { name = "cmdline" },
         { name = "latex_symbols" },
@@ -141,11 +184,30 @@ cmp.setup.cmdline(":", {
 })
 require("cmp").setup.filetype("tex", {
     sources = {
-        { name = "luasnip" },
+        { name = "luasnip", option = { show_autosnippets = true } },
         { name = "omni" },
         { name = "nvim_lsp" },
-        { name = "path" },
-        { name = "buffer",     keyword_length = 3 },
+        {
+            name = "path",
+            option = {
+                -- get_cwd = function()
+                --     return vim.fn.getcwd()
+                -- end,
+            }
+        },
+        {
+            name = "buffer",
+            keyword_length = 3,
+            option = {
+                get_bufnrs = function()
+                    local bufs = {}
+                    for _, win in ipairs(vim.api.nvim_list_wins()) do
+                        bufs[vim.api.nvim_win_get_buf(win)] = true
+                    end
+                    return vim.tbl_keys(bufs)
+                end
+            },
+        },
         { name = "dictionary", keyword_length = 3 },
     },
 })
@@ -154,8 +216,8 @@ require("cmp_git").setup({})
 
 require("cmp_dictionary").setup({
     dic = {
-            ["tex"] = "/home/oleete/.config/nvim/pluged/cmp-dictionary/british_english.dic",
-            ["markdown"] = "/home/oleete/.config/nvim/pluged/cmp-dictionary/british_english.dic",
+        ["tex"] = "/home/oleete/.config/nvim/pluged/cmp-dictionary/british_english.dic",
+        ["markdown"] = "/home/oleete/.config/nvim/pluged/cmp-dictionary/british_english.dic",
     },
 })
 
@@ -254,16 +316,16 @@ require('tabout').setup {
     enable_backwards = true,
     completion = false,
     tabouts = {
-        { open = "'", close = "'" },
-        { open = '"', close = '"' },
-        { open = '`', close = '`' },
-        { open = '(', close = ')' },
-        { open = '[', close = ']' },
-        { open = '{', close = '}' },
-        { open = '[[', close = ']]' },
+        { open = "'",   close = "'" },
+        { open = '"',   close = '"' },
+        { open = '`',   close = '`' },
+        { open = '(',   close = ')' },
+        { open = '[',   close = ']' },
+        { open = '{',   close = '}' },
+        { open = '[[',  close = ']]' },
         { open = '```', close = '```' },
         { open = '"""', close = '"""' },
-        { open = '$', close = '$' },
+        { open = '$',   close = '$' },
     },
     ignore_beginning = true,
     exclude = {}

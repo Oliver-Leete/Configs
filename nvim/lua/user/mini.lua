@@ -74,39 +74,6 @@ require("mini.align").setup({
     }
 })
 
-local perfanno_minimap = function()
-    return function()
-        local bufnr = vim.api.nvim_get_current_buf()
-        local ret = require("perfanno.annotate").minimap[bufnr]
-        if ret then
-            return ret
-        else
-            return {}
-        end
-    end
-end
-
-local minimap = require("mini.map")
-minimap.setup({
-    integrations = {
-        perfanno_minimap(),
-        minimap.gen_integration.builtin_search(),
-        minimap.gen_integration.diagnostic(),
-        minimap.gen_integration.gitsigns(),
-    },
-    window = {
-        show_integration_count = false,
-    },
-    symbols = {
-        scroll_line = '🮚',
-        scroll_view = '┃',
-    },
-})
--- minimap.open()
-
-Map("n", "<leader>:", minimap.toggle_focus)
-Map("n", "<leader>;", minimap.toggle)
-
 local splitjoin = require("mini.splitjoin")
 splitjoin.setup({
     mappings = {

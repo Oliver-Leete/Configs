@@ -25,6 +25,8 @@ M.special_types = {
     ["dap-repl"] = { name = "Debug REPL", exit_func = winclose },
     ["dapui_console"] = { name = "Debug Console", exit_func = winclose },
     ["neotest-summary"] = { name = " Tests", exit_func = winclose },
+    ["neotest-output-panel"] = { name = " Test Output", exit_func = winclose },
+    ["neotest-output"] = { name = " Tests", exit_func = winclose },
     ["gitcommit"] = { name = "Git Commit Message", exit_func = winclose },
     ["noice"] = {  exit_func = function() vim.cmd.quit() end },
     ["mason"] = { exit_func = winclose },
@@ -37,7 +39,7 @@ M.special_types = {
 M.is_special = function(bufnr)
     local filetype = vim.bo[bufnr].filetype
     local buftype = vim.bo[bufnr].buftype
-    if buftype == "terminal" then return false end
+    if buftype == "terminal" and filetype ~= "neotest-output-panel" and filetype ~= "neotest-output" then return false end
     return vim.tbl_contains(vim.tbl_keys(M.special_types), filetype)
 end
 
@@ -190,5 +192,21 @@ local openterm = function()
     vim.cmd("OverseerRun Fish")
 end
 vim.api.nvim_create_user_command("OpenTerm", openterm, { nargs = 0 })
+
+M.toggle_autowrap = function()
+    if vim.b[0].to_wrap == nil or vim.b[0].to_wrap == true then
+        vim.b[0].to_wrap = false
+        vim.b[0].old_wrap = vim.b[0].textwidth
+        vim.b[0].textwidth = 0
+        if vim.g.textwidth ~= 0 then
+            vim.g.old_text_width = vim.g.textwidth
+            vim.g.textwidth = 0
+        end
+    else
+        vim.b[0].to_wrap = true
+        vim.b[0].textwidth = vim.b[0].old_wrap
+        vim.g.textwidth = vim.g.old_text_width
+    end
+end
 
 return M

@@ -34,6 +34,8 @@ require("nvim-treesitter.configs").setup({
     },
 })
 
+require("ssr").setup({})
+
 require("ts-node-action").setup({
     julia = require("ts-node-action.filetypes.julia")
 })

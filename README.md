@@ -114,12 +114,12 @@ these combinations (where one tick is any support and two is preferable
 #### Repeat Mappings
 
 OK, I love this one. I use the jumping around mappings covered above a lot (the
-ones bound to [/]), only problem is I hate having to keep pressing the
-letters after, makes jumping through a load of spelling mistakes to correct
-them all very tedious. So I came up with this little function. Then in all my
-mappings for the jumps themselves I add a bit to overwrite the dirJumps variable
-like in the example below. I also have all my jump mappings include zz at the
-end for that nice screen centring and m\` to add it to the jump list.
+ones bound to [/]) only problem is I hate having to keep pressing the letters
+after, makes jumping through a load of spelling mistakes to correct them all
+very tedious. So I came up with this little function. Then in all my mappings
+for the jumps themselves I add a bit to overwrite the dirJumps variable like in
+the example below. I also have all my jump mappings include zz at the end for
+that nice screen centring and m\` to add it to the jump list.
 
 vim-slash is used to set dirJumps="search" after each search (and I have it set
 to default to that), so that n and N can still be used for searching.
@@ -201,7 +201,7 @@ OK, moved to overseer and neotest for task and test running. I've got a super
 hacky way of attaching a toggleterm terminal to all the overseer tasks (and
 therefore neotest tests). Things I still want to do:
 
-- [ ] Overseer tasks that just run lua code.
+- [x] Overseer tasks that just run lua code.
 - [ ] Use the above to add dap debugging to overseer (using the above for the
   starting of tasks, and using dap events to update the task somehow).
 - [ ] Get a list of neotest tests in Overseer list, with variations for starting

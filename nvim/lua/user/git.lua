@@ -56,7 +56,9 @@ require("diffview").setup({
     },
 })
 
-require("diferente").setup({})
+require("diferente").setup({
+    ratio = 0.4,
+})
 
 local Hydra = require("hydra")
 local gitsigns = require("gitsigns")

@@ -30,6 +30,11 @@ Map({ "n", "x", "o" }, ")", "<nop>")
 -- NOTE: _, =, |, ;, ^, <BS>, <CR> are free to map
 
 -- Mappings
+Map("n", "<esc>", function()
+    vim.cmd("Noice dismiss")
+    require("substitute.exchange").cancel()
+end)
+
 Map({ "n", "x", "o" }, "<m-f>", ";")
 Map({ "n", "x", "o" }, "<m-F>", ",")
 Map({ "n", "x", "o" }, "<m-t>", ";")
@@ -293,11 +298,17 @@ require('hydra')({
 })
 -- Text leader mappings: ,
 
-Map({ "n", "x" }, "R", "<plug>(SubversiveSubstitute)")
+Map("n", "R", require("substitute").operator)
+Map("x", "R", require("substitute").visual)
+Map("n", "$", require("substitute.exchange").operator)
+Map("x", "$", require("substitute.exchange").visual)
 
 Map("n", ",rr", vim.lsp.buf.rename)
 
-Map({ "n", "x" }, ",rs", require("ssr").open)
+Map({ "n", "x" }, ",rt", require("ssr").open)
+Map({ "n", "x" }, ",rs", ":MurenFresh<cr>")
+Map({ "n", "x" }, ",rS", ":MurenOpen<cr>")
+Map({ "n", "x" }, ",r/", ":MurenUnique<cr>")
 
 Map("n", ",rf", function() require("refactoring").refactor("Extract Block") end)
 Map("x", ",rf", function() require("refactoring").refactor("Extract Function") end)

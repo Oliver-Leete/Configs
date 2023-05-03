@@ -25,6 +25,10 @@ require("neotest").setup({
         max_height = 0.9,
         max_width = 0.9,
     },
+    output_panel = {
+        enabled = true,
+        open = "",
+    },
     icons = {
         running_animated = { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" },
         passed = " ",

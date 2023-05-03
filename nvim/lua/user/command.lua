@@ -21,6 +21,7 @@ command_center.add({
     { category = "default", desc = "Clear search", cmd = "<cmd>let @/=''<cr>" },
     { category = "default", desc = "Close tab", cmd = "<cmd>tabclose<cr>" },
     { category = "default", desc = "Toggle text wraping", cmd = "<cmd>set wrap!<cr>" },
+    { category = "default", desc = "Toggle autowrapping", cmd = func.toggle_autowrap },
     { category = "default", desc = "Undo list", cmd = "<cmd>Telescope undo undo<cr>" },
     -- { category = "default", desc = "Reload snippets", cmd = "<cmd>source ~/.config/nvim/after/plugin/luasnip.lua<cr>" },
     { category = "default", desc = "Edit Snippets", cmd = function() require("luasnip.loaders").edit_snippet_files({ edit = function(file) vim.cmd("vsplit " .. file) end}) end},

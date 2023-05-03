@@ -31,6 +31,15 @@ require("kanagawa").setup({
     keywordStyle = { italic = false },
     statementStyle = { italic = false, bold = false },
     variablebuiltinStyle = { italic = false },
+    colors = {
+        theme = {
+            all = {
+                ui = {
+                    bg_gutter = "none"
+                }
+            }
+        }
+    },
     overrides = function(colors)
         local theme = colors.theme
         return {

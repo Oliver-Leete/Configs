@@ -40,11 +40,12 @@ require("lazy").setup(
         "arthurxavierx/vim-caser",
         "ralismark/opsort.vim",
         "Konfekt/vim-CtrlXA",
-        "svermeulen/vim-subversive",
+        "gbprod/substitute.nvim",
         "andymass/vim-matchup",
         "numToStr/Comment.nvim",
 
         "cshuaimin/ssr.nvim",
+        "AckslD/muren.nvim",
 
         "lervag/vimtex",
         "iurimateus/luasnip-latex-snippets.nvim",
@@ -95,7 +96,7 @@ require("lazy").setup(
         "uga-rosa/cmp-dictionary",
         "mtoohey31/cmp-fish",
         "saadparwaiz1/cmp_luasnip",
-        "doxnit/cmp-luasnip-choice",
+        "L3MON4D3/cmp-luasnip-choice",
         "kdheepak/cmp-latex-symbols",
         "kdheepak/cmp-latex-symbols",
         "rcarriga/cmp-dap",

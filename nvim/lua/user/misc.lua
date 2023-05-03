@@ -31,6 +31,8 @@ require("compiler-explorer").setup({
     }
 })
 
+require("muren").setup()
+
 local util = require("perfanno.util")
 
 require("perfanno").setup({
@@ -74,7 +76,6 @@ for _, plugin in pairs(disabled_built_ins) do
     vim.g["loaded_" .. plugin] = 1
 end
 
-require("ssr").setup({})
 require('Comment').setup({
     toggler = {
         line = ',cc',
@@ -136,4 +137,11 @@ require("todo-comments").setup({
         hint = { "LspDiagnosticsDefaultHint", "#10B981" },
         default = { "Identifier", "#7C3AED" },
     },
+})
+
+require("substitute").setup({
+  exchange = {
+    motion = false,
+    use_esc_to_cancel = true,
+  },
 })

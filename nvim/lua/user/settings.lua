@@ -60,6 +60,8 @@ vim.opt.linebreak = true
 vim.opt.breakindent = true
 vim.opt.breakindentopt = "shift:2"
 vim.g.textwidth = 100
+vim.g.wrapmargin = 0
+vim.opt.smoothscroll = true
 
 -- Folds
 vim.o.foldcolumn = '0'
