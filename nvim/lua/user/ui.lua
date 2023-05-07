@@ -55,6 +55,8 @@ vim.cmd("colorscheme kanagawa")
 Tc = require("kanagawa.colors").setup().palette
 Ct = require("kanagawa.colors").setup().theme
 
+vim.api.nvim_set_hl(0, "SubstituteExchange", { link = "MatchParen" })
+
 local background = vim.api.nvim_get_hl_by_name("CursorLine", true).background
 
 local sign_colours = { Add = "Added", Change = "Changed", Delete = "Deleted" }
@@ -178,8 +180,8 @@ local init_ui_elements = function(info)
     end
     local is_file = (
         vim.fn.filereadable(vim.api.nvim_buf_get_name(info.buf)) == 1
-        -- or vim.bo[info.buf].filetype ~= ""
-        ) and true or false
+    -- or vim.bo[info.buf].filetype ~= ""
+    ) and true or false
     if vim.bo[info.buf].buftype == "" and not special(info.buf) and is_file then
         vim.wo.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
         vim.wo.winbar = "%{%v:lua.Normal_Winbar()%}"

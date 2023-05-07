@@ -34,7 +34,7 @@ return {
                 params = {},
             },
             {
-                name = "Reload XMonad",
+                name = "Build and Reload XMonad",
                 builder = function()
                     return {
                         name = "Reload XMonad",

@@ -89,7 +89,7 @@ require("cmp").setup({
         { name = "path" },
         { name = "nvim_lua" },
         {
-            name = "buffer",
+            name = "juffer",
             keyword_length = 3,
             option = {
                 get_bufnrs = function()
@@ -184,15 +184,15 @@ cmp.setup.cmdline(":", {
 })
 require("cmp").setup.filetype("tex", {
     sources = {
-        { name = "luasnip", option = { show_autosnippets = true } },
+        { name = "luasnip" },
         { name = "omni" },
         { name = "nvim_lsp" },
         {
             name = "path",
             option = {
-                -- get_cwd = function()
-                --     return vim.fn.getcwd()
-                -- end,
+                get_cwd = function()
+                    return vim.fn.getcwd()
+                end,
             }
         },
         {

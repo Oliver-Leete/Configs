@@ -55,6 +55,7 @@ menu () {
     terminal
     calculator
     colour-picker
+    ruler
 
     screenshot
     screenshot-area
@@ -73,6 +74,7 @@ menu () {
     full-screen
     full-bar
     centre-screen
+    two-pane
 
     kill-self
     kill-others
@@ -122,6 +124,7 @@ menu () {
         terminal)           /home/oleete/.cabal/bin/xmonadctl-exe nsp-cons ;;
         calculator)         /home/oleete/.cabal/bin/xmonadctl-exe nsp-calc ;;
         colour-picker)      /home/oleete/.config/bin/colorPicker ;;
+        ruler)              kruler ;;
 
         screenshot)         /home/oleete/.config/bin/screencapt ;;
         screenshot-area)    /home/oleete/.config/bin/screencapt area ;;
@@ -139,6 +142,7 @@ menu () {
         full-screen)        /home/oleete/.cabal/bin/xmonadctl-exe layout-full ;;
         full-bar)           /home/oleete/.cabal/bin/xmonadctl-exe layout-fullbar ;;
         centre-screen)      /home/oleete/.cabal/bin/xmonadctl-exe layout-fullcentre ;;
+        two-pane)           /home/oleete/.cabal/bin/xmonadctl-exe layout-twopane ;;
 
         kill-self)          /home/oleete/.cabal/bin/xmonadctl-exe kill-self ;;
         kill-others)        /home/oleete/.cabal/bin/xmonadctl-exe kill-others ;;

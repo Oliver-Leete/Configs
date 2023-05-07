@@ -77,7 +77,7 @@ local custom_objects = {
     }),
     -- paragraph
     p = { {
-        "\n%s*\n()().-()\n%s*\n[%s]*()", -- normal paragraphs
+        "\n%s*\n()().-()\n%s*\n()[%s]*", -- normal paragraphs
         "^()().-()\n%s*\n[%s]*()",       -- paragraph at start of file
         "\n%s*\n()().-()()$",            -- paragraph at end of file
     } },
@@ -151,14 +151,39 @@ local mark_and_go_mini = function(direction, id, side)
     until count <= 0
 end
 
+local mark_and_select_mini = function(ai, id, direction)
+    local count = vim.v.count
+    vim.g.dirJumps = id
+    id = id:lower()
+    vim.cmd("norm! m`")
+    repeat
+        MiniAi.select_textobject(
+            ai,
+            id,
+            {
+                search_method = direction,
+                vis_mode = "v"
+            }
+        )
+        count = count - 1
+    until count <= 0
+end
+
 local command_repeat = function(leader, varName)
     local key = vim.api.nvim_get_var(varName)
     local return_map
+    local mode = vim.api.nvim_get_mode().mode
     if key == "search" then
         if leader == "]" then
             return_map = "nzz"
         else
             return_map = "Nzz"
+        end
+    elseif mode == "v" or mode == "V" or mode == "" then
+        if leader == "]" then
+            return_map = "<esc>)" .. key
+        else
+            return_map = "<esc>(" .. key
         end
     else
         return_map = leader .. key
@@ -176,10 +201,17 @@ Map({ "n", "x", "o" }, "]]", "]s", { remap = true })
 for _, o in pairs(vim.tbl_keys(custom_objects)) do
     Map({ "n", "x", "o" }, "[" .. o, function() mark_and_go_mini("prev", o, "left") end)
     Map({ "n", "x", "o" }, "]" .. o, function() mark_and_go_mini("next", o, "left") end)
+    Map({ "n", "x" }, ")" .. o, function() mark_and_select_mini("i", o, "next") end)
+    Map({ "n", "x" }, "(" .. o, function() mark_and_select_mini("i", o, "prev") end)
+
+    Map({ "n", "x" }, "m" .. o, function() MiniAi.select_textobject("i", o, { search_method = "cover_or_nearest", vis_mode = "v" }) end)
     local O = o:upper()
     if O ~= o then
+        Map({ "n", "x" }, "m" .. O, function() MiniAi.select_textobject("a", o, { search_method = "cover_or_nearest", vis_mode = "v" }) end)
         Map({ "n", "x", "o" }, "[" .. O, function() mark_and_go_mini("prev", O, "right") end)
         Map({ "n", "x", "o" }, "]" .. O, function() mark_and_go_mini("next", O, "right") end)
+        Map({ "n", "x" }, ")" .. O, function() mark_and_select_mini("a", O, "next") end)
+        Map({ "n", "x" }, "(" .. O, function() mark_and_select_mini("a", O, "prev") end)
     end
 end
 

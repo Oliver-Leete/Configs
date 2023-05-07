@@ -1,5 +1,6 @@
 # Don't ask for confirmations
 #assume_yes = true
+skip_notify=true
 
 # Disable specific steps - same options as the command line flag
 disable = [ "vim" ]

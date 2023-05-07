@@ -24,10 +24,19 @@ Map({ "n", "x", "o" }, "Y", "<nop>")
 Map({ "n", "x", "o" }, "C", "<nop>")
 Map({ "n", "x", "o" }, "D", "<nop>")
 Map({ "n", "x", "o" }, "S", "<nop>")
+Map({ "n", "x", "o" }, "G", "<nop>")
+Map({ "n", "x", "o" }, "K", "<nop>")
+Map({ "n", "x" }, "H", "<nop>")
+
+
+Map({ "n", "x", "o" }, "$", "<nop>")
+Map({ "n", "x", "o" }, "^", "<nop>")
 
 Map({ "n", "x", "o" }, "(", "<nop>")
-Map({ "n", "x", "o" }, ")", "<nop>")
--- NOTE: _, =, |, ;, ^, <BS>, <CR> are free to map
+Map({ "n", "x", "o" }, ")", "<nop>, test")
+-- NOTE: D, Y, K, L, £, _, =, |, ;, ^, <BS>, <CR> are free to map
+-- NOTE: H and L are taken in op mode
+-- NOTE: y, d, c are free in op mode
 
 -- Mappings
 Map("n", "<esc>", function()
@@ -63,13 +72,11 @@ Map("n", "<m-O>", "m1O<esc>`1")
 Map("x", "<m-o>", "<esc>`>o<esc>gv")
 Map("x", "<m-O>", "<esc>`<O<esc>gv")
 
-Map("x", "I", "I")
-Map("x", "A", "A")
+Map("x", "I", "<Plug>(niceblock-I)")
+Map("x", "A", "<Plug>(niceblock-A)")
 
 Map("n", "<c-/>", ",cc", { remap = true })
 Map("x", "<c-/>", ",c", { remap = true })
-
-Map("n", "£", [[:exe "let @/='" . expand("<cWORD>") . "' "<cr>]], { silent = true })
 
 -- UnMap Plugins
 vim.g.kitty_navigator_no_mappings = true
@@ -81,8 +88,8 @@ vim.g.vimtex_imaps_enabled = 0
 Map({ "n", "x", "o" }, "j", [[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], { expr = true })
 Map({ "n", "x", "o" }, "k", [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], { expr = true })
 
-Map({ "n", "x", "o" }, "H", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true })
-Map({ "n", "x", "o" }, "L", "$")
+Map("o", "H", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true })
+Map("o", "L", "$")
 
 Map({ "n", "x" }, "u", function()
     pcall(Ls.unlink_current)
@@ -90,23 +97,57 @@ Map({ "n", "x" }, "u", function()
 end)
 Map({ "n", "x" }, "U", "<c-r>")
 
-Map("n", "G", "<nop>")
-Map("n", "K", "<nop>")
-Map("n", "KK", "K")
-Map("n", "KG", require("gitsigns").preview_hunk_inline)
-Map("n", "KB", function() require("gitsigns").blame_line({ full = true }) end)
--- Map("n", "KE", function() vim.diagnostic.open_float({ border = Border, scope = "line", source = "always" }) end)
-Map("n", "KE", require("user.lsp").preview_diagnostics_inline)
-Map("n", "KT", function() require("neotest").output.open() end)
-Map("n", "KD", function() require("dap.ui.widgets").hover() end, { silent = true })
+local help_hint = [[
+┏^^^^━━━━━┳━━━━━━┳━━━━━^^^^┓
+┃^^^^     ┃ Help ┃     ^^^^┃
+┃^^^^     ┗━━━━━━┛     ^^^^┃
+┃^^^^      Inline      ^^^^┃
+┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
+┃^^    _E_: errors     ^^^^┃
+┃^^    _G_: git diff   ^^^^┃
+┃^^^^                  ^^^^┃
+┃^^^^      Pop-up      ^^^^┃
+┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
+┃^^    _g_: git diff   ^^^^┃
+┃^^    _b_: gid blame  ^^^^┃
+┃^^    _e_: errors     ^^^^┃
+┃^^    _t_: test out   ^^^^┃
+┃^^    _d_: debug out  ^^^^┃
+┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
+┃^^    _<esc>_: exit   ^^^^┃
+┗^^^^━━━━━━━━━━━━━━━━━━^^^^┛
+]]
+-- VIEW
+Hydra({
+    name = "Help",
+    mode = { "n", "x" },
+    body = "H",
+    config = {
+        color = "blue",
+        invoke_on_body = true,
+        hint = {
+            position = "top-right",
+            border = nil
+        }
+    },
+    hint = help_hint,
+    heads = {
+        { "H",     vim.lsp.buf.hover },
+        { "G",     require("gitsigns").preview_hunk_inline },
+        { "E",     require("user.lsp").preview_diagnostics_inline },
+        { "g",     require("gitsigns").preview_hunk },
+        { "b",     function() require("gitsigns").blame_line({ full = true }) end },
+        { "e",     function() vim.diagnostic.open_float({ border = Border, scope = "line", source = "always" }) end },
+        { "t",     function() require("neotest").output.open() end },
+        { "d",     function() require("dap.ui.widgets").hover() end,                                                { silent = true } },
+        { "<esc>", nil,                                                                                             { nowait = true } },
+    }
+})
 
 Map("n", "Q", "@q")
 Map("x", "Q", ":norm! @q<cr>")
 
 Map({ "n", "x", "o" }, "s", require("hop").hint_char1)
-
-Map({ "n", "x", "o" }, "'", "`")
-Map({ "n", "x", "o" }, "`", "'")
 
 Map("x", "<", "<gv")
 Map("x", ">", ">gv")
@@ -166,24 +207,28 @@ Hydra({
     },
     hint = view_hint,
     heads = {
-        { "h",     "zh" },
-        { "J",     "<c-d>" },
-        { "K",     "<c-u>" },
-        { "L",     "zL" },
+        { "H", "zH" },
+        { "J", "<c-d>" },
+        { "K", "<c-u>" },
+        { "L", "zL" },
 
-        { "H",     "zH" },
-        { "j",     "<c-e>" },
-        { "k",     "<c-y>" },
-        { "l",     "zl" },
+        { "h", "zh" },
+        { "j", "<c-e>" },
+        { "k", "<c-y>" },
+        { "l", "zl" },
 
-        { "t",     "zt" },
-        { "v",     "zz" },
-        { "b",     "zb" },
+        { "t", "zt" },
+        { "v", "zz" },
+        { "b", "zb" },
 
-        { "s",     "zs" },
-        { "m",     "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
-        { "e",     "ze" },
-        { "<esc>", nil,                                                           { exit = true, nowait = true, desc = "exit" } },
+        { "s", "zs" },
+        { "m", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
+        { "e", "ze" },
+        { "<esc>", nil, {
+            exit = true,
+            nowait = true,
+            desc = "exit"
+        } },
     }
 })
 
@@ -201,29 +246,37 @@ Hydra({
     },
     hint = view_hint,
     heads = {
-        { "h",     "zh" },
-        { "J",     "<c-d>" },
-        { "K",     "<c-u>" },
-        { "L",     "zL" },
+        { "H", "zH" },
+        { "J", "<c-d>" },
+        { "K", "<c-u>" },
+        { "L", "zL" },
 
-        { "H",     "zH" },
-        { "j",     "<c-e>" },
-        { "k",     "<c-y>" },
-        { "l",     "zl" },
+        { "h", "zh" },
+        { "j", "<c-e>" },
+        { "k", "<c-y>" },
+        { "l", "zl" },
 
-        { "t",     "zt" },
-        { "v",     "zz" },
-        { "b",     "zb" },
+        { "t", "zt" },
+        { "v", "zz" },
+        { "b", "zb" },
 
-        { "s",     "zs" },
-        { "m",     "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
-        { "e",     "ze" },
-        { "<esc>", nil,                                                           { exit = true, nowait = true, desc = "exit" } },
-        { "V",     nil,                                                           { exit = true, nowait = true, desc = false } },
+        { "s", "zs" },
+        { "m", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
+        { "e", "ze" },
+        { "<esc>", nil, {
+            exit = true,
+            nowait = true,
+            desc = "exit"
+        } },
+        { "V", nil, {
+            exit = true,
+            nowait = true,
+            desc = false
+        } },
     }
 })
 
-Map({ "n", "x" }, "m", "v")
+-- Map({ "n", "x" }, "m", "v")
 
 local mini_move_hint = [[
 ┏^^^^━━━━━┳━━━━━━┳━━━━━^^^^┓
@@ -259,12 +312,16 @@ require('hydra')({
     },
     hint = mini_move_hint,
     heads = {
-        { 'H',     function() require('mini.move').move_selection("left") end,  { nowait = true } },
-        { 'J',     function() require('mini.move').move_selection("down") end,  { nowait = true } },
-        { 'K',     function() require('mini.move').move_selection("up") end,    { nowait = true } },
-        { 'L',     function() require('mini.move').move_selection("right") end, { nowait = true } },
-        { 'M',     nil,                                                         { exit = true, nowait = true, desc = false } },
-        { '<esc>', nil,                                                         { exit = true, nowait = true } },
+        { 'H', function() require('mini.move').move_selection("left") end,  { nowait = true } },
+        { 'J', function() require('mini.move').move_selection("down") end,  { nowait = true } },
+        { 'K', function() require('mini.move').move_selection("up") end,    { nowait = true } },
+        { 'L', function() require('mini.move').move_selection("right") end, { nowait = true } },
+        { 'M', nil, {
+            exit = true,
+            nowait = true,
+            desc = false
+        } },
+        { '<esc>', nil, { exit = true, nowait = true } },
     }
 })
 require('hydra')({
@@ -427,6 +484,7 @@ end)
 Map("n", "<leader>o", function() require("neotest").summary.toggle() end)
 
 Map("n", "<leader>l", function() require("neotest").run.run() end)
+Map("n", "<leader>L", function() require("neotest").run.run_last() end)
 
 
 Map("n", "<leader>//", "<cmd>silent A<cr>")
@@ -441,7 +499,8 @@ Map("n", "<leader>/p", "<cmd>silent Edeps<cr>")
 Map("n", "<leader>/b", "<cmd>silent Ebench<cr>")
 Map("n", "<leader>/B", "<cmd>silent EmainBench<cr>")
 
-Map("n", "<leader>w", function() require("telescope.builtin").lsp_workspace_symbols(require("telescope.themes").get_ivy()) end)
+Map("n", "<leader>w",
+    function() require("telescope.builtin").lsp_workspace_symbols(require("telescope.themes").get_ivy()) end)
 Map("n", "<leader>W", function() require("telescope.builtin").live_grep(require("telescope.themes").get_ivy()) end)
 Map("n", "<leader>f", function() ProjectFiles() end)
 Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
@@ -474,8 +533,8 @@ Map({ "i", "s" }, "<tab>", function()
 end, { silent = true })
 
 Map({ "i", "s" }, "<s-tab>", function()
-    if Ls.locally_jumpable( -1) then
-        Ls.jump( -1)
+    if Ls.locally_jumpable(-1) then
+        Ls.jump(-1)
     else
         require("tabout").taboutBack()
     end

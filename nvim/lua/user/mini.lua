@@ -67,6 +67,10 @@ require("mini.misc").setup({
     make_global = { "put_text", "zoom" },
 })
 
+require("mini.misc").setup_restore_cursor({
+    center = true
+})
+
 require("mini.align").setup({
     mappings = {
         start = "",

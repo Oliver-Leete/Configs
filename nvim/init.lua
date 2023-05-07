@@ -29,7 +29,6 @@ require("lazy").setup(
 
         "chrisgrieser/nvim-genghis",
         { "knubie/vim-kitty-navigator", commit = "e48aae3" },
-        "famiu/bufdelete.nvim",
         "tpope/vim-projectionist",
         "ThePrimeagen/harpoon",
 
@@ -43,6 +42,7 @@ require("lazy").setup(
         "gbprod/substitute.nvim",
         "andymass/vim-matchup",
         "numToStr/Comment.nvim",
+        "kana/vim-niceblock",
 
         "cshuaimin/ssr.nvim",
         "AckslD/muren.nvim",
@@ -122,8 +122,8 @@ require("lazy").setup(
         "AckslD/nvim-trevJ.lua",
         "CKolkey/ts-node-action",
         "drybalka/tree-climber.nvim",
-        "Dkendal/nvim-treeclimber",
-        "desdic/agrolens.nvim",
+
+        "guns/vim-sexp",
 
         "stevearc/overseer.nvim",
         "nvim-neotest/neotest",
@@ -201,3 +201,8 @@ pcall(require("user.mini"))
 pcall(require("user.noice"))
 
 pcall(require("user.filmpicker"))
+
+
+-- need to put this after targets
+Map("x", "i", "<Plug>(niceblock-I)", { remap = true, nowait = true })
+Map("x", "a", "<Plug>(niceblock-A)", { remap = true, nowait = true })

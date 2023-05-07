@@ -17,7 +17,7 @@ command_center.add({
 
     { category = "default", desc = "Message", cmd = "<cmd>message<cr>" },
     { category = "default", desc = "History", cmd = "<cmd>Noice<cr>" },
-    { category = "default", desc = "Delete buffer", cmd = "<cmd>Bdelete<cr>" },
+    { category = "default", desc = "Delete buffer", cmd = require("mini.bufremove").delete },
     { category = "default", desc = "Clear search", cmd = "<cmd>let @/=''<cr>" },
     { category = "default", desc = "Close tab", cmd = "<cmd>tabclose<cr>" },
     { category = "default", desc = "Toggle text wraping", cmd = "<cmd>set wrap!<cr>" },

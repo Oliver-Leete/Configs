@@ -52,6 +52,7 @@ import           XMonad.Layout.PerWorkspace
 import           XMonad.Layout.SimpleDecoration
 import           XMonad.Layout.SimpleFocus
 import           XMonad.Layout.Spacing
+import           XMonad.Layout.TwoPanePersistentLocal
 import           XMonad.Layout.WindowSwitcherDecoration
 
 import           XMonad.Layout.Decoration
@@ -184,6 +185,7 @@ scratchpads =
     ,   NS "youtubeMusic"  "youtube-music" (className =? "YouTube Music") nonFloating
     ,   NS "calc"  "gnome-calculator" (className =? "gnome-calculator") nonFloating
     ,   NS "console"  "kitty --class=console" (resource =? "console") nonFloating
+    ,   NS "ruler"  "kruler" (resource =? "kruler") nonFloating
     ,   NS "sysMon"  "kitty --class=sysMon btop" (resource =? "sysMon") nonFloating
     ]
 
@@ -244,12 +246,20 @@ instance Transformer FULLCENTER Window where
 centerFull :: ModifiedLayout Spacing SimpleFocus a
 centerFull = mySpacing $ SimpleFocus (1/2) (reSize/2) 600
 
+data TWOPANE = TWOPANE deriving (Read, Show, Eq, Typeable)
+instance Transformer TWOPANE Window where
+    transform TWOPANE x k = k twoPane (const x)
+
+-- twoPane :: ModifiedLayout Spacing SimpleFocus a
+twoPane = mySpacing $ TwoPanePersistent Nothing (reSize) (1/2)
+
 myLayoutHook = smartBorders
              $ mkToggle (single FULL)
              $ mkToggle (single FULLBAR)
              $ mkToggle (single FULLCENTER)
              $ myDeco
              $ draggingVisualizer
+             $ mkToggle (single TWOPANE)
              $ mySpacing
                notebookLayout
     where
@@ -287,7 +297,7 @@ myModMask = mod4Mask
 -- ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫                                   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
 -- ┃  ws1  ┃  ws2  ┃  ws3  ┃  ws4  ┃ wsCONF┃                                   ┃winLeft┃  app1 ┃  app2 ┃  app3 ┃  app4 ┃
 -- ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┳━━━━━━━┓   ┏━━━━━━━┳━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
--- ┃fullScr┃fullBar┃fullCen┃   -   ┃   -   ┃nspAway┃nextScr┃   ┃   -   ┃  kill ┃ winUp ┃ Master┃ decCol┃ incCol┃   -   ┃
+-- ┃fullScr┃fullBar┃fullCen┃twoPane┃   -   ┃nspAway┃nextScr┃   ┃   -   ┃  kill ┃ winUp ┃ Master┃ decCol┃ incCol┃   -   ┃
 -- ┗━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┛
 --         ┃   -   ┃   -   ┃       ┃tabPrev┃ wsLast┃winPrev┃   ┃winNext┃  term ┃tabNext┃       ┃   -   ┃   -   ┃
 --         ┗━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━━━━━━━━━┛   ┗━━━━━━━┻━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━┛
@@ -337,6 +347,7 @@ myKeys n =
     , ("M-z"             , toggleLayout FULL)
     , ("M-x"             , toggleLayout FULLBAR)
     , ("M-c"             , toggleLayout FULLCENTER)
+    , ("M-v"             , toggleLayout TWOPANE)
 
     , ("M-h"             , bF $ nv "KittyNavigateleft"   $ l (upPointer $ windowGo L True))
     , ("M-j"             , bF $ nv "KittyNavigatebottom" $ l (upPointer $ windowGo D True))
@@ -480,6 +491,7 @@ myManageHook n =
             , resource  =? "console"              -?> doRectFloat (W.RationalRect (4 / 7) (4 / 7) (2 / 5) (2 / 5))
             , resource  =? "youtube music"        -?> doRectFloat halfNhalf
             , className =? "discord"              -?> doRectFloat halfNhalf
+            , resource  =? "kruler"               -?> doFloat
 
             , transience
             , isBrowserDialog -?> doCenterFloat
@@ -558,6 +570,7 @@ myCommands _ =
 
     , ("nsp-calc"            , upPointer $ namedScratchpadAction scratchpads "calc")
     , ("nsp-cons"            , upPointer $ namedScratchpadAction scratchpads "console")
+    , ("nsp-rulr"            , upPointer $ namedScratchpadAction scratchpads "ruler")
     , ("nsp-disc"            , upPointer $ namedScratchpadAction scratchpads "discord")
     , ("nsp-musc"            , upPointer $ namedScratchpadAction scratchpads "youtubeMusic")
     , ("nsp-sysm"            , upPointer $ namedScratchpadAction scratchpads "sysMon")
@@ -569,6 +582,7 @@ myCommands _ =
     , ("layout-full"         , toggleLayout FULL)
     , ("layout-fullbar"      , toggleLayout FULLBAR)
     , ("layout-fullcentre"   , toggleLayout FULLCENTER)
+    , ("layout-twopane"      , toggleLayout TWOPANE)
     , ("layout-dir"          , upFocus $ sendMessage ToggleSide)
     , ("layout-stack-dir"    , upFocus $ sendMessage ToggleStackDir)
     , ("layout-style"        , upFocus $ sendMessage ToggleMiddle)

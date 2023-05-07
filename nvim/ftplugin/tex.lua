@@ -7,8 +7,12 @@
 
 Map("n", "<localleader><localleader>", function()
     vim.cmd("TexlabForward")
-    vim.cmd("sleep 200m")
-    vim.cmd("silent !xdotool key super+n")
+    -- if tonumber(vim.fn.systemlist([[xrandr | grep \* | rg -o -e '\d+' | head -n1]])[1]) > 1920 then
+        vim.cmd("sleep 20m")
+        vim.cmd("silent !xdotool key Escape")
+        vim.cmd("sleep 200m")
+        vim.cmd("silent !xdotool key super+n")
+    -- end
 end, { buffer = 0, silent = true })
 
 Map("n", "KK", "<cmd>VimtexDocPackage<cr>", { buffer = 0 })
@@ -45,7 +49,8 @@ vim.api.nvim_buf_set_option(0, "textwidth", 100)
 vim.g.tex_flavor = "latex"
 vim.g.vimtex_quickfix_mode = 0
 vim.g.vimtex_doc_confirm_single = 0
-vim.g.vimtex_view_general_viewer = "zathura --synctex-editor-command='nvr --servername " .. vim.v.servername .. " +%{line} %{input}'"
+vim.g.vimtex_view_general_viewer = "zathura --synctex-editor-command='nvr --servername " ..
+vim.v.servername .. " +%{line} %{input}'"
 vim.g.vimtex_view_forward_search_on_start = 1
 vim.g.vimtex_view_automatic = 0
 vim.g.vimtex_compiler_latexmk = {

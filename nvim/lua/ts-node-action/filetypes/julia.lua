@@ -31,9 +31,9 @@ local operators = {
 }
 
 local actions = require("ts-node-action.actions")
-local cycle_case       = actions.cycle_case()
-local toggle_multiline = actions.toggle_multiline(padding)
-local toggle_operator = actions.toggle_operator(operators)
+local cycle_case       = actions.cycle_case()[1][1]
+local toggle_multiline = actions.toggle_multiline(padding)[1][1]
+local toggle_operator = actions.toggle_operator(operators)[1][1]
 local helpers          = require("ts-node-action.helpers")
 
 local toggle_julia_boolean = function(node)

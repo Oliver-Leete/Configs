@@ -137,7 +137,12 @@ return {
                 name = "Start documentation Server",
                 tskName = vim.g.project .. " Doc Server",
                 cmd = juliaCommand .. [[--project=docs -E 'using Revise, ]] ..
-                    vim.g.project .. [[, LiveServer; servedocs(launch_browser=true; include_dirs = ["src", "data"])']],
+                    vim.g.project .. [[, LiveServer; servedocs(
+                        launch_browser=true;
+                        literate=joinpath("docs","lit"),
+                    )']],
+                        -- FIX: including this makes it infini loop
+                        -- include_dirs = ["src", "data"],
                 components = { "default", "unique", "always_restart" },
                 condition = hasDocs,
             },
@@ -226,8 +231,7 @@ return {
                 tskName = "Profiling " .. vim.fn.expand("%:t:r"),
                 cmd = juliaCommand .. "-e ~/.config/nvim/filetype/julia/prof.jl " .. vim.fn.expand("%:p"),
                 condition = isFile,
-                components = { "default", "unique",
-                    { "on_complete_callback", on_complete = function() Jul_perf_flat() end } },
+                components = { "default", "unique", "load_prof" },
             },
             {
                 name = "Run Build",
@@ -373,9 +377,7 @@ return {
                             name = name .. " profiling",
                             cmd = juliaCommand .. "/home/oleete/.config/nvim/filetype/julia/profBench.jl '" ..
                                 vim.fn.getcwd() .. "' '" .. command .. "' '" .. setup .. "'",
-                            components = { "default", "unique",
-                                { "on_complete_callback",
-                                    on_complete = function(_, _, status) return status == "SUCCESS" and Jul_perf_flat() end } },
+                            components = { "default", "unique", "load_prof" },
                         }
                     end,
                     priority = pr(),
@@ -391,9 +393,7 @@ return {
                             name = name .. " profiling allocs",
                             cmd = juliaCommand .. "/home/oleete/.config/nvim/filetype/julia/profAllocBench.jl '" ..
                                 vim.fn.getcwd() .. "' '" .. command .. "' '" .. setup .. "'",
-                            components = { "default", "unique",
-                                { "on_complete_callback",
-                                    on_complete = function(_, _, status) return status == "SUCCESS" and Jul_perf_flat() end } },
+                            components = { "default", "unique", "load_prof" },
                         }
                     end,
                     priority = pr(),

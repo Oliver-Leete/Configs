@@ -50,8 +50,6 @@ local custom_attach = function(client, bufnr)
 
         bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls theme=get_ivy<cr>")
         bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>")
-
-        bmap("n", "KK", vim.lsp.buf.hover)
     end
     if sc.codeLensProvider ~= nil then
         bmap("n", "<C-,>", vim.lsp.codelens.run)
@@ -204,20 +202,19 @@ lspconfig.texlab.setup({
     },
 })
 
-local ht = require('haskell-tools')
-ht.setup({
-    hls = {
-        -- on_attach = custom_attach,
-        flags = { debounce_text_changes = 1000 },
-        root_dir = lspconfig.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"),
-        settings = {
-            haskell = {
-                formattingProvider = "stylish-haskell",
-                checkProject = true,
-            }
-        }
-    }
-})
+-- local ht = require('haskell-tools')
+-- ht.setup({
+--     hls = {
+--         flags = { debounce_text_changes = 1000 },
+--         root_dir = lspconfig.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"),
+--         settings = {
+--             haskell = {
+--                 formattingProvider = "stylish-haskell",
+--                 checkProject = true,
+--             }
+--         }
+--     }
+-- })
 
 local clangd_cap = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 clangd_cap.offsetEncoding = "utf-8"

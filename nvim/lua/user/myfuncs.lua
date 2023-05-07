@@ -119,7 +119,7 @@ local delete_buffer = function()
             winclose()
         end
     else
-        vim.cmd.Bdelete()
+        require("mini.bufremove").delete()
     end
 end
 

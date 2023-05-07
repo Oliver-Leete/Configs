@@ -80,15 +80,6 @@ overseer.setup({
                 return task:has_component("on_complete_restart") or task:has_component("restart_on_save")
             end
         },
-        ["don't dispose"] = {
-            desc = "keep the task until manually disposed",
-            run = function(task)
-                task:remove_components({ "on_complete_dispose" })
-            end,
-            condition = function(task)
-                return task:has_component("on_complete_dispose")
-            end
-        },
         ["dump task"] = {
             desc = "save task table to DumpTask (for debugging)",
             run = function(task)
