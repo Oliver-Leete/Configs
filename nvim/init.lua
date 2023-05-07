@@ -28,7 +28,6 @@ require("lazy").setup(
         "kevinhwang91/promise-async",
 
         "chrisgrieser/nvim-genghis",
-        { "knubie/vim-kitty-navigator", commit = "e48aae3" },
         "tpope/vim-projectionist",
         "ThePrimeagen/harpoon",
 

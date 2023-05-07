@@ -349,10 +349,10 @@ myKeys n =
     , ("M-c"             , toggleLayout FULLCENTER)
     , ("M-v"             , toggleLayout TWOPANE)
 
-    , ("M-h"             , bF $ nv "KittyNavigateleft"   $ l (upPointer $ windowGo L True))
-    , ("M-j"             , bF $ nv "KittyNavigatebottom" $ l (upPointer $ windowGo D True))
-    , ("M-k"             , bF $ nv "KittyNavigatetop"    $ l (upPointer $ windowGo U True))
-    , ("M-l"             , bF $ nv "KittyNavigateright"  $ l (upPointer $ windowGo R True))
+    , ("M-h"             , bF $ nv "Navigateleft"   $ l (upPointer $ windowGo L True))
+    , ("M-j"             , bF $ nv "Navigatebottom" $ l (upPointer $ windowGo D True))
+    , ("M-k"             , bF $ nv "Navigatetop"    $ l (upPointer $ windowGo U True))
+    , ("M-l"             , bF $ nv "Navigateright"  $ l (upPointer $ windowGo R True))
     , ("M-S-h"           , upPointer $ windowSwap L True)
     , ("M-S-j"           , upPointer $ windowSwap D True)
     , ("M-S-k"           , upPointer $ windowSwap U True)
@@ -562,10 +562,10 @@ myCommands' n = myCommands n ++ sendTo ++ swapTo ++ copyTo
 myCommands :: Int -> [(String, X ())]
 myCommands _ =
     [ ("togglework"          , toggleWS' ["NSP"])
-    , ("winGo-left"          , upPointer $ windowGo L True)
-    , ("winGo-bottom"        , upPointer $ windowGo D True)
-    , ("winGo-top"           , upPointer $ windowGo U True)
-    , ("winGo-right"         , upPointer $ windowGo R True)
+    , ("winGo-h"             , upPointer $ windowGo L True)
+    , ("winGo-j"             , upPointer $ windowGo D True)
+    , ("winGo-k"             , upPointer $ windowGo U True)
+    , ("winGo-l"             , upPointer $ windowGo R True)
     , ("winGo-main"          , upPointer $ swapPromote' False)
 
     , ("nsp-calc"            , upPointer $ namedScratchpadAction scratchpads "calc")

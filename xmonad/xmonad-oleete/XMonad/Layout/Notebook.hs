@@ -179,19 +179,27 @@ newWide m s d n c nwin f mf sf r
                 | otherwise = c - n
             nstack = nwin - nmain - ncol
 
-            listCols
-                | m     && s     = splitMiddleMaster (-1) (fromInteger startPoint) (fromIntegral width) colWidth 1 nmain ncol f r
-                | not m && s     = splitLeftMaster (fromInteger startPoint) (fromIntegral width) colWidth 1 nmain ncol f r
-                | m     && not s = splitRightMiddleMaster 1 (fromInteger startPoint) (fromIntegral width) colWidth 1 nmain ncol f r
-                | otherwise = splitRightMaster (fromInteger startPoint) (fromIntegral width) colWidth 1 nmain ncol f r
+            colLister
+                | m     && s     = splitMiddleMaster (-1)
+                | not m && s     = splitLeftMaster
+                | m     && not s = splitRightMiddleMaster 1
+                | otherwise = splitRightMaster
 
-            listAll
-                | d     = splitColumns (sortByXLocation listCols) (fromIntegral minWidth - 10) initStackRect mf d r
-                | otherwise = splitColumns (sortByRevXLocation listCols) (fromIntegral minWidth - 10) initStackRect mf d r
+            listCols = colLister (fromInteger startPoint) (fromIntegral width) colWidth 1 nmain ncol f r
 
-            listWithStack
-                | d     = map fst (sortByIndex $ init listAll) ++ splitHorizontally nstack (fst $ last listAll)
-                | otherwise = map fst (sortByIndex $ init listAll) ++ reverse (splitHorizontally nstack (fst $ last listAll))
+            colSorter
+                | d = sortByXLocation
+                | otherwise = sortByRevXLocation
+
+            listAll = splitColumns (colSorter listCols) (fromIntegral minWidth - 10) initStackRect mf d r
+
+            splitStack = splitHorizontally nstack (fst $ last listAll)
+
+            splitStackRMaybe
+                | d = splitStack
+                | otherwise = reverse splitStack
+
+            listWithStack = map fst (sortByIndex $ init listAll) ++ splitStackRMaybe
 
             initYPos = floor $ fromIntegral (rect_height r) * mf
             initHeight = rect_height r - fromIntegral initYPos

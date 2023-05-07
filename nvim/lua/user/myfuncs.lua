@@ -28,7 +28,7 @@ M.special_types = {
     ["neotest-output-panel"] = { name = " Test Output", exit_func = winclose },
     ["neotest-output"] = { name = " Tests", exit_func = winclose },
     ["gitcommit"] = { name = "Git Commit Message", exit_func = winclose },
-    ["noice"] = {  exit_func = function() vim.cmd.quit() end },
+    ["noice"] = { exit_func = function() vim.cmd.quit() end },
     ["mason"] = { exit_func = winclose },
     ["null-ls-info"] = { exit_func = winclose },
     ["Glance"] = { exit_func = require('glance').actions.close },
@@ -208,5 +208,19 @@ M.toggle_autowrap = function()
         vim.g.textwidth = vim.g.old_text_width
     end
 end
+
+local nav_dir = function(direction)
+    local curwin = vim.api.nvim_get_current_win()
+    vim.cmd.wincmd({ args = { direction } })
+    if curwin == vim.api.nvim_get_current_win() then
+        vim.fn.system("/home/oleete/.cabal/bin/xmonadctl-exe winGo-" .. direction)
+    end
+end
+
+
+vim.api.nvim_create_user_command("Navigateleft", function() nav_dir("h") end, { nargs = 0 })
+vim.api.nvim_create_user_command("Navigatebottom", function() nav_dir("j") end, { nargs = 0 })
+vim.api.nvim_create_user_command("Navigatetop", function() nav_dir("k") end, { nargs = 0 })
+vim.api.nvim_create_user_command("Navigateright", function() nav_dir("l") end, { nargs = 0 })
 
 return M

@@ -96,7 +96,6 @@
   "vim-auto-save": { "branch": "master", "commit": "2e3e54ea4c0fc946c21b0a4ee4c1c295ba736ee8" },
   "vim-caser": { "branch": "master", "commit": "6bc9f41d170711c58e0157d882a5fe8c30f34bf6" },
   "vim-kitty": { "branch": "main", "commit": "11ed0c3f97596e402c9aef226535e2fefd65f3d7" },
-  "vim-kitty-navigator": { "branch": "master", "commit": "e48aae3c7e3136682b3f4c6cfd85867b392f7f1a" },
   "vim-matchup": { "branch": "master", "commit": "a8d1b8e635d666b19effa842f331ffa32beb57c2" },
   "vim-niceblock": { "branch": "master", "commit": "9302f527eefc0fde8df983cbb9710ad52c4213b5" },
   "vim-projectionist": { "branch": "master", "commit": "e292c4e33b2c44074c47c06e8ce8b309fd8099bc" },

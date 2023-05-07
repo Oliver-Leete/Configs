@@ -34,7 +34,7 @@ Map({ "n", "x", "o" }, "^", "<nop>")
 
 Map({ "n", "x", "o" }, "(", "<nop>")
 Map({ "n", "x", "o" }, ")", "<nop>, test")
--- NOTE: D, Y, K, L, £, _, =, |, ;, ^, <BS>, <CR> are free to map
+-- NOTE: D, Y, H, L, £, _, =, |, ;, ^, <BS>, <CR> are free to map
 -- NOTE: H and L are taken in op mode
 -- NOTE: y, d, c are free in op mode
 
@@ -78,11 +78,14 @@ Map("x", "A", "<Plug>(niceblock-A)")
 Map("n", "<c-/>", ",cc", { remap = true })
 Map("x", "<c-/>", ",c", { remap = true })
 
+Map("n", "R", require("substitute").operator)
+Map("x", "R", require("substitute").visual)
+Map("n", "$", require("substitute.exchange").operator)
+Map("x", "$", require("substitute.exchange").visual)
+
 -- UnMap Plugins
-vim.g.kitty_navigator_no_mappings = true
 vim.g.vimtex_mappings_enabled = 0
 vim.g.vimtex_text_obj_enabled = 0
-vim.g.julia_blocks = false
 vim.g.vimtex_imaps_enabled = 0
 
 Map({ "n", "x", "o" }, "j", [[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], { expr = true })
@@ -108,6 +111,7 @@ local help_hint = [[
 ┃^^^^                  ^^^^┃
 ┃^^^^      Pop-up      ^^^^┃
 ┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
+┃^^    _K_: info       ^^^^┃
 ┃^^    _g_: git diff   ^^^^┃
 ┃^^    _b_: gid blame  ^^^^┃
 ┃^^    _e_: errors     ^^^^┃
@@ -121,7 +125,7 @@ local help_hint = [[
 Hydra({
     name = "Help",
     mode = { "n", "x" },
-    body = "H",
+    body = "K",
     config = {
         color = "blue",
         invoke_on_body = true,
@@ -132,7 +136,7 @@ Hydra({
     },
     hint = help_hint,
     heads = {
-        { "H",     vim.lsp.buf.hover },
+        { "K",     vim.lsp.buf.hover },
         { "G",     require("gitsigns").preview_hunk_inline },
         { "E",     require("user.lsp").preview_diagnostics_inline },
         { "g",     require("gitsigns").preview_hunk },
@@ -171,6 +175,7 @@ Map({ "n", "x", "o" }, "gV", "`[v`]")
 Map("n", "gF", ":edit <cfile><cr>")
 Map("n", "gx", ":!xdg-open <cfile> &<cr><cr>")
 
+-- VIEW
 local view_hint = [[
 ┏^^^^━━━━━┳━━━━━━┳━━━━━^^^^┓
 ┃^^^^     ┃ View ┃     ^^^^┃
@@ -192,7 +197,28 @@ local view_hint = [[
 ┃^^    _<esc>_: exit   ^^^^┃
 ┗^^^^━━━━━━━━━━━━━━━━━━^^^^┛
 ]]
--- VIEW
+
+local view_heads = {
+    { "H", "zH" },
+    { "J", "<c-d>" },
+    { "K", "<c-u>" },
+    { "L", "zL" },
+
+    { "h", "zh" },
+    { "j", "<c-e>" },
+    { "k", "<c-y>" },
+    { "l", "zl" },
+
+    { "t", "zt" },
+    { "v", "zz" },
+    { "b", "zb" },
+
+    { "s", "zs" },
+    { "m", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
+    { "e", "ze" },
+    { "<esc>", nil, { exit = true, nowait = true, desc = "exit" } },
+}
+
 Hydra({
     name = "View",
     mode = { "n", "x" },
@@ -206,30 +232,7 @@ Hydra({
         }
     },
     hint = view_hint,
-    heads = {
-        { "H", "zH" },
-        { "J", "<c-d>" },
-        { "K", "<c-u>" },
-        { "L", "zL" },
-
-        { "h", "zh" },
-        { "j", "<c-e>" },
-        { "k", "<c-y>" },
-        { "l", "zl" },
-
-        { "t", "zt" },
-        { "v", "zz" },
-        { "b", "zb" },
-
-        { "s", "zs" },
-        { "m", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
-        { "e", "ze" },
-        { "<esc>", nil, {
-            exit = true,
-            nowait = true,
-            desc = "exit"
-        } },
-    }
+    heads = view_heads,
 })
 
 Hydra({
@@ -245,35 +248,7 @@ Hydra({
         }
     },
     hint = view_hint,
-    heads = {
-        { "H", "zH" },
-        { "J", "<c-d>" },
-        { "K", "<c-u>" },
-        { "L", "zL" },
-
-        { "h", "zh" },
-        { "j", "<c-e>" },
-        { "k", "<c-y>" },
-        { "l", "zl" },
-
-        { "t", "zt" },
-        { "v", "zz" },
-        { "b", "zb" },
-
-        { "s", "zs" },
-        { "m", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
-        { "e", "ze" },
-        { "<esc>", nil, {
-            exit = true,
-            nowait = true,
-            desc = "exit"
-        } },
-        { "V", nil, {
-            exit = true,
-            nowait = true,
-            desc = false
-        } },
-    }
+    heads = vim.list_extend({{"V", nil, { exit = true, nowait = true, desc = false }}}, view_heads)
 })
 
 -- Map({ "n", "x" }, "m", "v")
@@ -354,11 +329,6 @@ require('hydra')({
     }
 })
 -- Text leader mappings: ,
-
-Map("n", "R", require("substitute").operator)
-Map("x", "R", require("substitute").visual)
-Map("n", "$", require("substitute.exchange").operator)
-Map("x", "$", require("substitute.exchange").visual)
 
 Map("n", ",rr", vim.lsp.buf.rename)
 
