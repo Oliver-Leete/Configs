@@ -117,7 +117,7 @@ instance LayoutClass Notebook a where
                     resize Expand = l { notebookFrac = min 10 $ f+d }
                     mresize MirrorShrink = l { notebookMirrorFrac = max (1/10) $ mf-dm }
                     mresize MirrorExpand = l { notebookMirrorFrac = min (9/10) $ mf+dm }
-                    sresize SShrink = l { notebookStackFrac = max 0.3 $ sf-d }
+                    sresize SShrink = l { notebookStackFrac = max 0.2 $ sf-d }
                     sresize SExpand = l { notebookStackFrac = min 10 $ sf+d }
                     incmastern (IncColumnN x) = l { notebookMaster = max 0 $ min c (n+x) }
                     inccolumnn (IncMasterN x) = l { notebookColumn = max n (c+x) }
@@ -261,16 +261,16 @@ splitRightMiddleMaster sign xpos width colWidth count main colu f rect
 
 splitColumns :: [(Rectangle, Int)] -> Int -> Rectangle -> Rational -> Bool -> Rectangle -> [(Rectangle, Int)]
 splitColumns list minWidth stackRect mf d bigRect
-    | not (null list) && rect_width stackRect <= fromIntegral minWidth = (modMastRect, index) : splitColumns listN minWidth stackRectN mf d bigRect
-    | not (null list) = (modRect, index) : splitColumns listN minWidth stackRect mf d bigRect
+    | not (null list) && rect_width stackRect <= fromIntegral minWidth = (modMastRect, index) : splitColumns listNew minWidth stackRectNew mf d bigRect
+    | not (null list) = (modRect, index) : splitColumns listNew minWidth stackRect mf d bigRect
     | otherwise = [(stackRect, 0)]
     where   rect = fst $ head list
             index = snd $ head list
-            listN = tail list
+            listNew = tail list
             modMastRect = modY masterRect bigRect
             modRect = modY rect bigRect
             (masterRect, stackRectAdd) = splitVerticallyBy mf rect
-            stackRectN
+            stackRectNew
                 | d     = rectangleDiff stackRect stackRectAdd
                 | otherwise = rectangleDiff stackRectAdd stackRect
 

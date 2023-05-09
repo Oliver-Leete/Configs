@@ -44,20 +44,26 @@ require("neotest").setup({
         child_indent = "│",
         final_child_indent = " ",
     },
-    mappings = {
-        expand = { "<CR>", "<2-LeftMouse>" },
-        expand_all = "e",
-        output = "p",
-        short = "P",
-        attach = "a",
-        jumpto = "i",
-        stop = "u",
-        run = "r",
-        mark = "m",
-        run_marked = "R",
-        clear_marked = "M",
-        target = "t",
-        clear_target = "T",
-    },
-
+    summary = {
+        open = "topleft vsplit | vertical resize 50",
+        mappings = {
+            attach = "a",
+            clear_marked = "M",
+            clear_target = "T",
+            debug = "d",
+            debug_marked = "D",
+            expand = { "<CR>", "<2-LeftMouse>" },
+            expand_all = "e",
+            jumpto = "i",
+            mark = "m",
+            next_failed = "J",
+            output = "p",
+            prev_failed = "K",
+            run = "r",
+            run_marked = "R",
+            short = "P",
+            stop = "u",
+            target = "t"
+        },
+    }
 })

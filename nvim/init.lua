@@ -1,5 +1,6 @@
 vim.api.nvim_set_var("$SHELL", "/bin/zsh")
 vim.opt.shell = "/bin/zsh"
+vim.g.neo_tree_remove_legacy_commands = true
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
@@ -51,13 +52,14 @@ require("lazy").setup(
         "fladson/vim-kitty",
         "wilriker/gcode.vim",
         "LhKipp/nvim-nu",
-        { "toppair/peek.nvim",          build = "deno task --quiet build:fast" },
+        { "toppair/peek.nvim",      build = "deno task --quiet build:fast" },
 
         "lewis6991/gitsigns.nvim",
         "sindrets/diffview.nvim",
         "cvigilv/diferente.nvim",
+        { 'topaxi/gh-actions.nvim', build = 'make' },
 
-        { "rebelot/kanagawa.nvim",           commit = "4c8d48726621a7f3998c7ed35b2c2535abc22def" },
+        { "rebelot/kanagawa.nvim",  commit = "4c8d48726621a7f3998c7ed35b2c2535abc22def" },
         "stevearc/dressing.nvim",
         "rcarriga/nvim-notify",
         "nvim-lualine/lualine.nvim",
@@ -66,6 +68,8 @@ require("lazy").setup(
         "nvim-zh/colorful-winsep.nvim",
 
         "folke/todo-comments.nvim",
+        "nvim-neo-tree/neo-tree.nvim",
+        "mrbjarksen/neo-tree-diagnostics.nvim",
 
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
@@ -184,6 +188,7 @@ pcall(require("user.myfuncs"))
 pcall(require("user.lsp"))
 pcall(require("user.treesitter"))
 pcall(require("user.dap"))
+pcall(require("user.panels"))
 
 pcall(require("user.ui"))
 pcall(require("user.statusline"))

@@ -223,4 +223,23 @@ vim.api.nvim_create_user_command("Navigatebottom", function() nav_dir("j") end, 
 vim.api.nvim_create_user_command("Navigatetop", function() nav_dir("k") end, { nargs = 0 })
 vim.api.nvim_create_user_command("Navigateright", function() nav_dir("l") end, { nargs = 0 })
 
+
+TabNext = function()
+    if vim.bo[0].filetype == "neo-tree" then
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(">", true, true, true), "m", false)
+    else
+        vim.cmd("tabnext")
+    end
+end
+vim.api.nvim_create_user_command("TabNext", TabNext, { nargs = 0 })
+
+TabPrev = function()
+    if vim.bo[0].filetype == "neo-tree" then
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<", true, true, true), "m", false)
+    else
+        vim.cmd("tabprevious")
+    end
+end
+vim.api.nvim_create_user_command("TabPrev", TabPrev, { nargs = 0 })
+
 return M

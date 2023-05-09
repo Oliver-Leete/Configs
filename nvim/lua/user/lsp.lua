@@ -9,7 +9,7 @@ vim.fn.sign_define("DiagnosticSignError",
     { text = " ", texthl = "DiagnosticSignError", culhl = "DiagnosticSignErrorCur" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn", culhl = "DiagnosticSignWarnCur" })
 vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo", culhl = "DiagnosticSignInfoCur" })
-vim.fn.sign_define("DiagnosticSignHint", { text = " ", texthl = "DiagnosticSignHint", culhl = "DiagnosticSignHintCur" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "󰅽 ", texthl = "DiagnosticSignHint", culhl = "DiagnosticSignHintCur" })
 
 local default_diagnostic_config = {
     underline = { severity = { min = "Warn", }, },

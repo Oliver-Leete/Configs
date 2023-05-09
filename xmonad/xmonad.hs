@@ -337,8 +337,8 @@ myKeys n =
     , ("M-S-i"           , runProjectApp3Force)
     , ("M-S-o"           , upPointer $ spawn myBrowser)
 
-    , ("M-<Left>"        , bF $ nv "tabprev" $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
-    , ("M-<Right>"       , bF $ nv "tabnext" $ l (P.sendKey controlMask xK_Tab))
+    , ("M-<Left>"        , bF $ nv "TabPrev" $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
+    , ("M-<Right>"       , bF $ nv "TabNext" $ l (P.sendKey controlMask xK_Tab))
     , ("M-<Down>"        , windows W.focusDown)
     , ("M-<Up>"          , windows W.focusUp)
 

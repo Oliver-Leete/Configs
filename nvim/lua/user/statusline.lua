@@ -44,7 +44,7 @@ end
 
 local harp = require("harpoon.mark")
 local harpoon = function()
-    return "[H]"
+    return "[⥣]"
 end
 
 local harpoon_cond = function()
@@ -92,7 +92,7 @@ require("lualine").setup({
             },
             {
                 "diagnostics",
-                symbols = { error = " ", warn = " ", info = " ", hint = " " },
+                symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
                 on_click = function() vim.defer_fn(function() vim.cmd("Telescope diagnostics bufnr=0 theme=get_ivy") end
                         , 100)
                 end,
