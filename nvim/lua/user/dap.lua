@@ -1,11 +1,13 @@
 local dap = require("dap")
 require("dap.ext.vscode").load_launchjs()
 
-vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
-vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
-vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DiagnosticSignWarn", culhl = "CursorLineWarn" })
+vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
+vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
+vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DiagnosticSignWarn", culhl = "CursorLineWarn" })
 vim.fn.sign_define("DapStopped", { text = "→", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
-vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DiagnosticSignInfo", culhl = "CursorLineInfo" })
+vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DiagnosticSignInfo", culhl = "CursorLineInfo" })
+
+require('nvim-dap-repl-highlights').setup()
 
 require("nvim-dap-virtual-text").setup()
 require("dapui").setup({
@@ -15,14 +17,14 @@ require("dapui").setup({
     controls = {
         enabled = false,
         icons = {
-            pause = " ",
-            play = " ",
-            step_into = " ",
-            step_over = " ",
-            step_out = " ",
-            step_back = " ",
-            run_last = " ",
-            terminate = " ",
+            pause = "",
+            play = " ",
+            step_into = "",
+            step_over = " ",
+            step_out = "",
+            step_back = " ",
+            run_last = " ",
+            terminate = " ",
         },
     },
     layouts = {

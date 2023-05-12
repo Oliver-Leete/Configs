@@ -71,6 +71,8 @@ command_center.add({
     { category = "git", desc = "Reset File", cmd = "<cmd>Gitsigns reset_buffer<cr>" },
     { category = "git", desc = "Stage File", cmd = "<cmd>Gitsigns stage_buffer<cr>" },
 
+    { category = "dap", desc = "Run Debugger", cmd = "<cmd>DapContinue<cr>" },
+
     { category = "profiling", desc = "Profile Annotate Function", cmd = "<cmd>PerfAnnotateFunction<cr>" },
     { category = "profiling", desc = "Profile Cycle Format", cmd = "<cmd>PerfCycleFormat<cr>" },
     { category = "profiling", desc = "Profile Hottest Callers Function", cmd = "<cmd>PerfHottestCallersFunction<cr>" },

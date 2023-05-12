@@ -128,10 +128,3 @@ Hydra({
         { "<leader>g", nil, { exit = true, nowait = true, desc = false } },
     }
 })
-
-require('gh-actions').setup({
-  browser = "/home/oleete/.config/bin/browser",
-  split = {
-      position = "left",
-  }
-})

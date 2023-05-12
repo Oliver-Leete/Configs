@@ -12,7 +12,6 @@ M.special_types = {
     tsplayground = { name = " TSPlayground", exit_func = winclose },
     ["harpoon-menu"] = { exit_func = winclose },
     notify = { exit_func = winclose },
-    undotree = { name = "碑Undos", exit_func = function() vim.cmd("UndotreeHide") end },
     DiffviewFileHistory = { name = " Diffs", exit_func = function() vim.cmd("DiffviewClose") end },
     DiffviewFiles = { name = " Diffs", exit_func = function() vim.cmd("DiffviewClose") end },
     OverseerList = { name = " Tasks", exit_func = function() vim.cmd("OverseerClose") end },
@@ -188,7 +187,7 @@ M.trash_put = function()
 end
 
 local openterm = function()
-    vim.cmd("silent split")
+    -- vim.cmd("silent split")
     vim.cmd("OverseerRun Fish")
 end
 vim.api.nvim_create_user_command("OpenTerm", openterm, { nargs = 0 })
@@ -209,7 +208,7 @@ M.toggle_autowrap = function()
     end
 end
 
-local nav_dir = function(direction)
+M.nav_dir = function(direction)
     local curwin = vim.api.nvim_get_current_win()
     vim.cmd.wincmd({ args = { direction } })
     if curwin == vim.api.nvim_get_current_win() then
@@ -218,10 +217,10 @@ local nav_dir = function(direction)
 end
 
 
-vim.api.nvim_create_user_command("Navigateleft", function() nav_dir("h") end, { nargs = 0 })
-vim.api.nvim_create_user_command("Navigatebottom", function() nav_dir("j") end, { nargs = 0 })
-vim.api.nvim_create_user_command("Navigatetop", function() nav_dir("k") end, { nargs = 0 })
-vim.api.nvim_create_user_command("Navigateright", function() nav_dir("l") end, { nargs = 0 })
+vim.api.nvim_create_user_command("Navigateleft", function() M.nav_dir("h") end, { nargs = 0 })
+vim.api.nvim_create_user_command("Navigatebottom", function() M.nav_dir("j") end, { nargs = 0 })
+vim.api.nvim_create_user_command("Navigatetop", function() M.nav_dir("k") end, { nargs = 0 })
+vim.api.nvim_create_user_command("Navigateright", function() M.nav_dir("l") end, { nargs = 0 })
 
 
 TabNext = function()

@@ -1,6 +1,7 @@
 vim.api.nvim_set_var("$SHELL", "/bin/zsh")
 vim.opt.shell = "/bin/zsh"
 vim.g.neo_tree_remove_legacy_commands = true
+vim.g.sexp_filetypes = "clojure,scheme,lisp,timl,fennel,janet"
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
@@ -57,9 +58,8 @@ require("lazy").setup(
         "lewis6991/gitsigns.nvim",
         "sindrets/diffview.nvim",
         "cvigilv/diferente.nvim",
-        { 'topaxi/gh-actions.nvim', build = 'make' },
 
-        { "rebelot/kanagawa.nvim",  commit = "4c8d48726621a7f3998c7ed35b2c2535abc22def" },
+        { "rebelot/kanagawa.nvim",           commit = "4c8d48726621a7f3998c7ed35b2c2535abc22def" },
         "stevearc/dressing.nvim",
         "rcarriga/nvim-notify",
         "nvim-lualine/lualine.nvim",
@@ -126,8 +126,6 @@ require("lazy").setup(
         "CKolkey/ts-node-action",
         "drybalka/tree-climber.nvim",
 
-        "guns/vim-sexp",
-
         "stevearc/overseer.nvim",
         "nvim-neotest/neotest",
         "andythigpen/nvim-coverage",
@@ -138,6 +136,7 @@ require("lazy").setup(
         "rcarriga/nvim-dap-ui",
         "theHamsta/nvim-dap-virtual-text",
         "nvim-telescope/telescope-dap.nvim",
+        "LiadOz/nvim-dap-repl-highlights",
 
         "simrat39/rust-tools.nvim",
         "rouge8/neotest-rust",
@@ -147,6 +146,10 @@ require("lazy").setup(
 
         "MrcJkb/haskell-tools.nvim",
         "mrcjkb/neotest-haskell",
+
+        "guns/vim-sexp",
+        "Olical/aniseed",
+        -- "Olical/conjure",
 
         "folke/neodev.nvim",
         "nvim-neotest/neotest-plenary",
@@ -205,7 +208,6 @@ pcall(require("user.mini"))
 pcall(require("user.noice"))
 
 pcall(require("user.filmpicker"))
-
 
 -- need to put this after targets
 Map("x", "i", "<Plug>(niceblock-I)", { remap = true, nowait = true })

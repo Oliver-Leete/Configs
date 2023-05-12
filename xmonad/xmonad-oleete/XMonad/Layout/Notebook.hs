@@ -43,7 +43,7 @@ import           Data.Ratio                  ((%))
 
 import           Control.Monad               (msum)
 import           Data.List                   (sortOn)
-import           Graphics.X11.Xlib           (Rectangle (..))
+import           Graphics.X11.Xlib           (Rectangle (..), Dimension)
 -- import qualified Basement.Compat.Base as GHC.Int
 import qualified Data.Ord
 import           XMonad.Core                 (Message)
@@ -146,27 +146,12 @@ newWide m s d n c nwin f mf sf r
     | c == 0 = map (`modY` r) (splitHorizontally nwin r)
     | nwin <= ncol + nmain = map ((`modY` r) . fst) listCols
     | otherwise = listWithStack
-    where   startPoint
-                | m && s     && even (nmain+ncol)               = toInteger (rect_x r) + (floor (nmain%2) * fromIntegral width) + (ceiling (ncol%2) * fromIntegral colWidth)
-                | m && s                                        = toInteger (rect_x r) + (floor (nmain%2) * fromIntegral width) + (floor (ncol%2) * fromIntegral colWidth)
-                | m && not s && even (nmain+ncol) && odd nmain  = toInteger (rect_x r) + (floor (nmain%2) * fromIntegral width) + (ceiling ((ncol-1)%2) * fromIntegral colWidth)
-                | m && not s                                    = toInteger (rect_x r) + (floor ((nmain-1)%2) * fromIntegral width) + (ceiling (ncol%2) * fromIntegral colWidth)
-                | not m && s                                    = toInteger (rect_x r)
-                | not m && not s                                = toInteger (rect_x r) + toInteger (rect_width r) - toInteger width
-                | otherwise                                     = toInteger width
+    where
+            startPoint = startPointFinder m s nmain ncol width colWidth r
 
-            width
-                | n == 0 = floor (rect_width r % fromIntegral ncol)
-                | c <= 1 = rect_width r
-                | ncol == 0 = floor (rect_width r % fromIntegral nmain)
-                | otherwise = floor ((toRational (rect_width r) / t) * f)
-                where t = toRational ncol + (f * toRational nmain)
-            colWidth
-                | n == 0 = fromIntegral width
-                | c <= 1 = 0
-                | ncol == 0 = floor (toRational width/2)
-                | otherwise = floor (toRational (toRational (rect_width r) - (toRational width*toRational nmain)) / toRational ncol)
-            minWidth = floor (fromIntegral colWidth * sf * fromIntegral nstack)
+            width = widthFinder n c nmain ncol f r
+            colWidth = colWidthFinder n c nmain ncol width r
+            minWidth = floor (fromIntegral colWidth * sf * fromIntegral nstack)::Int
 
             nmain
                 | n == 0 = 0
@@ -185,19 +170,15 @@ newWide m s d n c nwin f mf sf r
                 | m     && not s = splitRightMiddleMaster 1
                 | otherwise = splitRightMaster
 
-            listCols = colLister (fromInteger startPoint) (fromIntegral width) colWidth 1 nmain ncol f r
+            listCols = colLister startPoint (fromIntegral width) colWidth 1 nmain ncol f r
 
-            colSorter
-                | d = sortByXLocation
-                | otherwise = sortByRevXLocation
+            (colSorter, splitStackRMaybe)
+                | d = (sortByXLocation, splitStack)
+                | otherwise = (sortByRevXLocation, reverse splitStack)
 
             listAll = splitColumns (colSorter listCols) (fromIntegral minWidth - 10) initStackRect mf d r
 
             splitStack = splitHorizontally nstack (fst $ last listAll)
-
-            splitStackRMaybe
-                | d = splitStack
-                | otherwise = reverse splitStack
 
             listWithStack = map fst (sortByIndex $ init listAll) ++ splitStackRMaybe
 
@@ -205,6 +186,34 @@ newWide m s d n c nwin f mf sf r
             initHeight = rect_height r - fromIntegral initYPos
             initStackRect = Rectangle (rect_x r) (initYPos + rect_y r) 0 initHeight
 
+
+startPointFinder :: Bool -> Bool -> Int -> Int -> Int -> Int -> Rectangle -> Int
+startPointFinder m s nmain ncol width colWidth (Rectangle rx _ rw _)
+    | not m && s              = rxi
+    | not m && not s          = rxi + rwi - width
+    | s     && even nlist     = rxi + nmainOffset + (ceiling (ncol%2) * colWidth)
+    | s                       = rxi + nmainOffset + (floor (ncol%2) * colWidth)
+    | even nlist && odd nmain = rxi + nmainOffset + (ceiling ((ncol-1)%2) * colWidth)
+    | otherwise               = rxi + (floor ((nmain-1)%2) * fromIntegral width) + (ceiling (ncol%2) * colWidth)
+    where rxi = fromIntegral rx
+          rwi = fromIntegral rw
+          nmainOffset = floor (nmain%2) * width
+          nlist = nmain + ncol
+
+widthFinder :: Int -> Int -> Int -> Int -> Rational -> Rectangle -> Int
+widthFinder n c nmain ncol f r
+    | n == 0 = floor (rect_width r % fromIntegral ncol)
+    | c <= 1 = fromIntegral (rect_width r)
+    | ncol == 0 = floor (rect_width r % fromIntegral nmain)
+    | otherwise = floor ((toRational (rect_width r) / t) * f)
+    where t = toRational ncol + (f * toRational nmain)
+
+colWidthFinder :: Int -> Int -> Int -> Int -> Int -> Rectangle -> Int
+colWidthFinder n c nmain ncol width r
+    | n == 0 = fromIntegral width
+    | c <= 1 = 0
+    | ncol == 0 = floor (toRational width/2)
+    | otherwise = floor (toRational (toRational (rect_width r) - (toRational width*toRational nmain)) / toRational ncol)
 
 splitLeftMaster :: Int -> Int -> Int -> Int -> Int -> Int -> Rational -> Rectangle -> [(Rectangle, Int)]
 splitLeftMaster xpos width colWidth count main colu f rect

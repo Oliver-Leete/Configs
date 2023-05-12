@@ -93,9 +93,25 @@ lspconfig.taplo.setup(default)
 lspconfig.asm_lsp.setup(default)
 lspconfig.arduino_language_server.setup(default)
 lspconfig.teal_ls.setup(default)
+lspconfig.fennel_language_server.setup({
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 1000 },
+    settings = {
+        fennel = {
+            workspace = {
+                -- If you are using hotpot.nvim or aniseed,
+                -- make the server aware of neovim runtime files.
+                library = vim.api.nvim_list_runtime_paths(),
+            },
+            diagnostics = {
+                globals = { 'vim' },
+            },
+        },
+    },
+})
 
 lspconfig.pyright.setup(default)
-require("lspconfig").pylsp.setup({
+lspconfig.pylsp.setup({
     -- on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },

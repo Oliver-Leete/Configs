@@ -199,24 +199,24 @@ local view_hint = [[
 ]]
 
 local view_heads = {
-    { "H", "zH" },
-    { "J", "<c-d>" },
-    { "K", "<c-u>" },
-    { "L", "zL" },
+    { "H",     "zH" },
+    { "J",     "<c-d>" },
+    { "K",     "<c-u>" },
+    { "L",     "zL" },
 
-    { "h", "zh" },
-    { "j", "<c-e>" },
-    { "k", "<c-y>" },
-    { "l", "zl" },
+    { "h",     "zh" },
+    { "j",     "<c-e>" },
+    { "k",     "<c-y>" },
+    { "l",     "zl" },
 
-    { "t", "zt" },
-    { "v", "zz" },
-    { "b", "zb" },
+    { "t",     "zt" },
+    { "v",     "zz" },
+    { "b",     "zb" },
 
-    { "s", "zs" },
-    { "m", "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
-    { "e", "ze" },
-    { "<esc>", nil, { exit = true, nowait = true, desc = "exit" } },
+    { "s",     "zs" },
+    { "m",     "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
+    { "e",     "ze" },
+    { "<esc>", nil,                                                           { exit = true, nowait = true, desc = "exit" } },
 }
 
 Hydra({
@@ -248,7 +248,7 @@ Hydra({
         }
     },
     hint = view_hint,
-    heads = vim.list_extend({{"V", nil, { exit = true, nowait = true, desc = false }}}, view_heads)
+    heads = vim.list_extend({ { "V", nil, { exit = true, nowait = true, desc = false } } }, view_heads)
 })
 
 -- Map({ "n", "x" }, "m", "v")
@@ -423,7 +423,7 @@ Map("n", "<leader>h", function()
     end
 end)
 Map("n", "<leader>H", "<cmd>OverseerTaskAction<cr>")
-Map("n", "<leader>n", "<cmd>OverseerToggle<cr>")
+Map("n", "<leader>n", "<cmd>OverseerToggle bottom<cr>")
 Map("n", "<leader>e", "<cmd>OverseerRun<cr>")
 Map("n", "<leader>I", function()
     if SendID then
@@ -519,3 +519,18 @@ end)
 -- Terminal Bindings
 
 Map("t", "<c-]>", "<c-\\><c-n>")
+
+local termMap = vim.api.nvim_create_augroup("termMap", {})
+vim.api.nvim_create_autocmd(
+    "BufEnter",
+    {
+        pattern = "*",
+        group = termMap,
+        callback = function()
+            if vim.bo.buftype == "terminal" then
+                Map("n", "<esc>", "<cmd>OverseerOpen bottom<cr>", { buffer = 0 })
+            end
+        end
+    }
+
+)

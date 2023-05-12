@@ -28,7 +28,12 @@ overseer.setup({
             ["}"] = "",
             ["<C-v>"] = "",
             ["<C-f>"] = "OpenFloat",
+            ["<esc>"] = function() overseer.close() end,
         },
+        direction = "bottom",
+        min_height = 20,
+        height = math.floor(vim.o.lines * 0.3),
+        max_height = 40,
     },
     component_aliases = {
         default_neotest = {
