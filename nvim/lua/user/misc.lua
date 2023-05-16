@@ -1,5 +1,6 @@
 local enterAndExitVim = vim.api.nvim_create_augroup("enterAndExitVim", { clear = true })
-vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-window-title ""', group = enterAndExitVim })
+-- vim.api.nvim_create_autocmd("VimEnter", { command = 'silent! !kitty @ set-window-title ""', group = enterAndExitVim })
+-- vim.api.nvim_create_autocmd("VimLeave", { command = 'silent! !kitty @ set-window-title ""', group = enterAndExitVim })
 
 vim.g.matchup_matchparen_offscreen = { method = false }
 vim.g.matchup_text_obj_enabled = false

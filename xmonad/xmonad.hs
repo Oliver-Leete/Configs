@@ -265,12 +265,12 @@ myLayoutHook = smartBorders
     where
     myDeco = windowSwitcherDecoration shrinkText myDecoTheme
 
-    notebookMulti   = Notebook True True True 1 2 moreReSize reSize 3 (2/3) 1
-    notebookThesis  = Notebook True True True 1 3 moreReSize reSize 2 (2/3) 1
-    notebookTwoMain = Notebook False True True 2 3 moreReSize reSize 3 (2/3) 1
-    notebookColumns = Notebook False True True 4 4 moreReSize reSize 2 (2/3) 1
+    notebookMulti   = Notebook True False True 1 2 moreReSize reSize 3 (2/3) 1
+    notebookThesis  = Notebook True False True 1 3 moreReSize reSize 2 (2/3) 1
+    notebookTwoMain = Notebook False False True 2 3 moreReSize reSize 3 (2/3) 1
+    notebookColumns = Notebook False False True 4 4 moreReSize reSize 2 (2/3) 1
 
-    notebookDND = Notebook False True True 4 4 moreReSize reSize 2 (2/3) 0.5
+    notebookDND = Notebook False False True 4 4 moreReSize reSize 2 (2/3) 0.5
 
     notebookDifferent = onWorkspaces ["Dnd"] notebookDND $ onWorkspaces ["Thesis", "Print"] notebookThesis $ onWorkspaces ["Comments"] notebookTwoMain notebookMulti
 

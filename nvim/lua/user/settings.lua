@@ -37,6 +37,11 @@ vim.opt.undofile = true
 vim.g.auto_save = 1
 vim.g.auto_save_silent = 1
 
+-- Title
+vim.opt.title = true
+vim.opt.titlelen = 0
+vim.opt.titlestring = vim.v.servername:gsub("/tmp/", "")
+
 -- Search
 vim.opt.ignorecase = true
 vim.opt.smartcase = true

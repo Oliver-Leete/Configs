@@ -1,0 +1,13 @@
+#!/bin/bash
+
+WS=$(wmctrl -d | grep '*' | awk '{print $NF}')
+serverID="Neovim_$WS"
+if [[ -e "/tmp/$serverID" || -L "/tmp/$serverID" ]]; then
+    i=2
+    while [[ -e "/tmp/$serverID$i" || -L "/tmp/$serverID$i" ]]; do
+        let i++
+    done
+    serverID="$serverID$i"
+fi
+
+echo $serverID
