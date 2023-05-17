@@ -457,18 +457,6 @@ Map("n", "<leader>l", function() require("neotest").run.run() end)
 Map("n", "<leader>L", function() require("neotest").run.run_last() end)
 
 
-Map("n", "<leader>//", "<cmd>silent A<cr>")
-Map("n", "<leader>/r", "<cmd>silent Ereadme<cr>")
-Map("n", "<leader>/d", "<cmd>silent Edoc<cr>")
-Map("n", "<leader>/D", "<cmd>silent EmainDoc<cr>")
-Map("n", "<leader>/s", "<cmd>silent Esource<cr>")
-Map("n", "<leader>/S", "<cmd>silent EmainSource<cr>")
-Map("n", "<leader>/t", "<cmd>silent Etest<cr>")
-Map("n", "<leader>/T", "<cmd>silent EmainTest<cr>")
-Map("n", "<leader>/p", "<cmd>silent Edeps<cr>")
-Map("n", "<leader>/b", "<cmd>silent Ebench<cr>")
-Map("n", "<leader>/B", "<cmd>silent EmainBench<cr>")
-
 Map("n", "<leader>w",
     function() require("telescope.builtin").lsp_workspace_symbols(require("telescope.themes").get_ivy()) end)
 Map("n", "<leader>W", function() require("telescope.builtin").live_grep(require("telescope.themes").get_ivy()) end)

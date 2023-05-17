@@ -1,18 +1,9 @@
--- vim.b[0].localCommands = {
---     { source = "tex", name = "Build project",    command = "silent VimtexCompileSS" },
---     { source = "tex", name = "Table of content", command = "VimtexTocToggle" },
---     { source = "tex", name = "Forward Search",   command = "TexlabForward" },
---     { source = "tex", name = "Word Count",       command = "VimtexCountWord" },
--- }
-
 Map("n", "<localleader><localleader>", function()
     vim.cmd("TexlabForward")
-    -- if tonumber(vim.fn.systemlist([[xrandr | grep \* | rg -o -e '\d+' | head -n1]])[1]) > 1920 then
-        vim.cmd("sleep 20m")
-        vim.cmd("silent !xdotool key Escape")
-        vim.cmd("sleep 200m")
-        vim.cmd("silent !xdotool key super+n")
-    -- end
+    vim.cmd("sleep 20m")
+    vim.cmd("silent !xdotool key Escape")
+    vim.cmd("sleep 200m")
+    vim.cmd("silent !xdotool key super+n")
 end, { buffer = 0, silent = true })
 
 Map("n", "KK", "<cmd>VimtexDocPackage<cr>", { buffer = 0 })
@@ -46,11 +37,30 @@ Map("n", ",nd", "<plug>(vimtex-delim-toggle-modifier)", { buffer = 0, remap = tr
 
 vim.api.nvim_buf_set_option(0, "textwidth", 100)
 
+Map("n", "<leader>/", function()
+    local test_results = vim.fn.systemlist([[rg --json '\\input\{]] .. vim.fn.expand("%:r") .. [[(\.tex)?}']])
+    for _, result in pairs(test_results) do
+        result = vim.json.decode(result)
+        if result and result.type == "match" then
+            local file = result.data.path.text
+            local linenr = result.data.line_number
+            local colnr
+            if result.data.submatch and result.data.submatch[1] then
+                colnr = result.data.submatch[1].start
+            else
+                colnr = 0
+            end
+            vim.cmd.edit({ args = {file} })
+            vim.api.nvim_win_set_cursor(0, { linenr, colnr + 7})
+        end
+    end
+end)
+
 vim.g.tex_flavor = "latex"
 vim.g.vimtex_quickfix_mode = 0
 vim.g.vimtex_doc_confirm_single = 0
 vim.g.vimtex_view_general_viewer = "zathura --synctex-editor-command='nvr --servername " ..
-vim.v.servername .. " +%{line} %{input}'"
+    vim.v.servername .. " +%{line} %{input}'"
 vim.g.vimtex_view_forward_search_on_start = 1
 vim.g.vimtex_view_automatic = 0
 vim.g.vimtex_compiler_latexmk = {
@@ -59,77 +69,6 @@ vim.g.vimtex_compiler_latexmk = {
     ["executable"] = "latexmk",
     ["hooks"] = {},
     ["options"] = { "-pdf", "-verbose", "-file-line-error", "-synctex=1", "-interaction=nonstopmode" },
-}
-
-vim.g.vimtex_syntax_conceal = {
-    ["accents"] = false,
-    ["ligatures"] = false,
-    ["cites"] = false,
-    ["fancy"] = false,
-    ["greek"] = false,
-    ["spacing"] = false,
-    ["math_bounds"] = false,
-    ["math_delimiters"] = false,
-    ["math_fracs"] = false,
-    ["math_super_sub"] = true,
-    ["math_symbols"] = false,
-    ["sections"] = false,
-    ["styles"] = false,
-}
-
-vim.g.projectionist_heuristics = {
-    ["OML-Thesis.tex"] = {
-        ["1.tex"] = {
-            type = "chapter",
-            alternate = "OML-Thesis.tex",
-        },
-        ["2.tex"] = {
-            type = "chapter",
-            alternate = "OML-Thesis.tex",
-        },
-        ["3.tex"] = {
-            type = "chapter",
-            alternate = "OML-Thesis.tex",
-        },
-        ["4.tex"] = {
-            type = "chapter",
-            alternate = "OML-Thesis.tex",
-        },
-        ["5.tex"] = {
-            type = "chapter",
-            alternate = "OML-Thesis.tex",
-        },
-        ["6.tex"] = {
-            type = "chapter",
-            alternate = "OML-Thesis.tex",
-        },
-        ["7.tex"] = {
-            type = "chapter",
-            alternate = "OML-Thesis.tex",
-        },
-        ["Appendix.tex"] = {
-            type = "chapter",
-            alternate = "OML-Thesis.tex",
-        },
-        ["*.tex"] = {
-            type = "section",
-            alternate = "{dirname}.tex",
-        },
-        ["Scripts/*.tex"] = {
-            type = "scripts",
-            alternate = "OML-Thesis.tex",
-        },
-        ["Scripts/Packages.tex"] = { type = "deps" },
-        ["IntroductiontoAM.tex"] = { type = "chapOneMain" },
-        ["PowderBedFusion.tex"] = { type = "chapTwoMain" },
-        ["ModellingofAM.tex"] = { type = "chapThreeMain" },
-        ["PowderCharacterisation.tex"] = { type = "chapFourMain" },
-        ["PowderModel.tex"] = { type = "chapFiveMain" },
-        ["MachineModel.tex"] = { type = "chapSixMain" },
-        ["ProcessModel.tex"] = { type = "chapSevenMain" },
-        ["OML-Thesis.tex"] = { type = "main" },
-        ["Citations.bib"] = { type = "citations" },
-    },
 }
 
 if vim.g.viewerOpen ~= 1 then

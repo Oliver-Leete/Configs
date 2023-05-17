@@ -5,10 +5,14 @@ local TAG = constants.TAG
 local isInProject = function(opts) return files.exists(files.join(vim.fn.getcwd(), "Project.toml")) end
 local isFile = { filetype = "julia" }
 local isProject = { callback = isInProject }
-local hasTest = { callback = function(opts) return isInProject(opts) and files.exists(files.join(vim.fn.getcwd(), "test")) end }
-local hasBenchmark = { callback = function(opts) return isInProject(opts)  and files.exists(files.join(vim.fn.getcwd(), "benchmark")) end }
-local hasDocs = { callback = function(opts) return isInProject(opts) and files.exists(files.join(vim.fn.getcwd(), "docs")) end }
-local hasBuild = { callback = function(opts) return isInProject(opts) and files.exists(files.join(vim.fn.getcwd(), "build")) end }
+local hasTest = {
+    callback = function(opts) return isInProject(opts) and files.exists(files.join(vim.fn.getcwd(), "test")) end }
+local hasBenchmark = {
+    callback = function(opts) return isInProject(opts) and files.exists(files.join(vim.fn.getcwd(), "benchmark")) end }
+local hasDocs = {
+    callback = function(opts) return isInProject(opts) and files.exists(files.join(vim.fn.getcwd(), "docs")) end }
+local hasBuild = {
+    callback = function(opts) return isInProject(opts) and files.exists(files.join(vim.fn.getcwd(), "build")) end }
 
 local otherProjectFinder = function()
     local projectDir
@@ -38,7 +42,9 @@ return {
         local otherProjectName = vim.fs.basename(otherProject) or ""
         local ret = {}
         local priority = 60
-        local pr = function() priority = priority + 1; return priority end
+        local pr = function()
+            priority = priority + 1; return priority
+        end
 
         if files.exists(files.join(vim.fn.getcwd(), "JuliaSysimage.so")) then
             juliaCommand = juliaCommand .. "--sysimage JuliaSysimage.so "
@@ -103,23 +109,54 @@ return {
                     }
                 end,
                 condition = {
-                    callback = function() return otherProjectName ~= vim.g.project and
+                    callback = function()
+                        return otherProjectName ~= vim.g.project and
                             otherProjectName ~= "."
                     end,
                 },
                 priority = pr(),
             }
         )
-
-        local commands = {
+        table.insert(
+            ret,
             {
                 name = "Start Test Server",
-                tskName = vim.g.project .. " Test Server",
-                cmd = juliaCommand ..
-                    [[--project -e 'using Revise, DaemonMode; print("Running test server"); serve(print_stack=true)']],
+                builder = function()
+                    return {
+                        name = vim.g.project .. " Test Server",
+                        cmd = juliaCommand ..
+                            [[--project -e 'using Revise, DaemonMode; print("Running test server"); serve(print_stack=true)']],
+                        components = { "default", "unique", "always_restart" },
+                        metadata = { run_on_open = true },
+                    }
+                end,
                 condition = isProject,
-                components = { "default", "unique", "always_restart" },
-            },
+                priority = pr(),
+            }
+        )
+        table.insert(
+            ret,
+            {
+                name = "Start documentation Server",
+                builder = function()
+                    return {
+                        name = vim.g.project .. " Doc Server",
+                        cmd = juliaCommand .. [[--project=docs -E 'using Revise, ]] ..
+                            vim.g.project .. [[, LiveServer; servedocs(
+                            launch_browser=true;
+                            literate=joinpath("docs","lit"),
+                            include_dirs = ["src", "data"],
+                        )']],
+                        components = { "default", "unique", "always_restart" },
+                        metadata = { run_on_open = true },
+                    }
+                end,
+                condition = hasDocs,
+                priority = pr(),
+            }
+        )
+
+        local commands = {
             {
                 name = "Build Documentation",
                 tskName = vim.g.project .. " Doc Build",
@@ -130,21 +167,9 @@ return {
             {
                 name = "Open Built Documentation",
                 cmd = "browser " .. vim.fn.expand("%:p:h") .. "/docs/build/index.html & sleep 5",
-                condition = { callback = function(opts) files.exists(files.join(opts.dir, "docs", "build", "index.html")) end },
+                condition = {
+                    callback = function(opts) files.exists(files.join(opts.dir, "docs", "build", "index.html")) end },
                 components = { "default", "unique" },
-            },
-            {
-                name = "Start documentation Server",
-                tskName = vim.g.project .. " Doc Server",
-                cmd = juliaCommand .. [[--project=docs -E 'using Revise, ]] ..
-                    vim.g.project .. [[, LiveServer; servedocs(
-                        launch_browser=true;
-                        literate=joinpath("docs","lit"),
-                    )']],
-                        -- FIX: including this makes it infini loop
-                        -- include_dirs = ["src", "data"],
-                components = { "default", "unique", "always_restart" },
-                condition = hasDocs,
             },
             {
                 name = "Open Documentation Server",
@@ -364,7 +389,8 @@ return {
             end
         end
 
-        local profilable = vim.fn.systemlist([[rg --no-filename --no-heading --no-line-number -e ".*\[\"(.*?)\"\].*@benchmarkable(.*?)(setup\s*=\s*\((.*)\))?\$" -r "\$1║\$2║\$4"]])
+        local profilable = vim.fn.systemlist(
+            [[rg --no-filename --no-heading --no-line-number -e ".*\[\"(.*?)\"\].*@benchmarkable(.*?)(setup\s*=\s*\((.*)\))?\$" -r "\$1║\$2║\$4"]])
         for _, s in pairs(profilable) do
             local name, command, setup = s:match("(.+)║(.+)║(.*)")
             TEST = { name, command, setup }

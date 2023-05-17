@@ -30,7 +30,6 @@ require("lazy").setup(
         "kevinhwang91/promise-async",
 
         "chrisgrieser/nvim-genghis",
-        "tpope/vim-projectionist",
         "ThePrimeagen/harpoon",
 
         "echasnovski/mini.nvim",
@@ -166,12 +165,6 @@ require("lazy").setup(
         },
         ui = {
             border = Border,
-            icons = {
-                cmd = " ",
-                config = "",
-                event = "",
-                start = " ",
-            },
         },
         dev = {
             path = "~/Projects",

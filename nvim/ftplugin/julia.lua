@@ -93,4 +93,18 @@ Map("n", ",rb", "<cmd>call julia#toggle_function_blockassign()<cr>")
 
 Map("n", ",dd", function() BP_Toggle("Debugger", "@bp") end, { buffer = 0 })
 Map("n", ",di", function() No_Using_Toggle("Main.@infiltrate") end, { buffer = 0 })
-Map("n", ",dq", function() BP_Remove_All({ "Debugger", "Infiltrator" }, { "@bp", "@infiltrate", "Main.@infiltrate" }) end, { buffer = 0 })
+Map("n", ",dq", function() BP_Remove_All({ "Debugger", "Infiltrator" }, { "@bp", "@infiltrate", "Main.@infiltrate" }) end,
+    { buffer = 0 })
+
+Map("n", "<leader>/", function()
+    local path = vim.fn.expand("%")
+    if vim.startswith(path, "docs/") then
+        vim.cmd.edit({ args = { "docs/make.jl" } })
+    elseif vim.startswith(path, "test/") then
+        vim.cmd.edit({ args = { "test/runtests.jl" } })
+    elseif vim.startswith(path, "benchmark/") then
+        vim.cmd.edit({ args = { "benchmark/benchmarks.jl" } })
+    else
+        vim.cmd.edit({ args = { "src/" .. vim.g.project .. ".jl" } })
+    end
+end)
