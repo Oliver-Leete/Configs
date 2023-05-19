@@ -161,7 +161,7 @@ newWide m s d nMainLimit nTotColLimit nwin f mf sf r
             minWidth = floor (fromIntegral colWidth * sf * fromIntegral nstack)::Int
 
             nmain = minimum [nMainLimit,nTotColLimit,nwin]
-            ncol = (min (max (nTotColLimit - nmain) 0) (nwin - nmain))
+            ncol = min (max (nTotColLimit - nmain) 0) (nwin - nmain)
             nstack = nwin - nmain - ncol
 
             startOffset
