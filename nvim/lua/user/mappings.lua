@@ -399,15 +399,11 @@ Map("x", ",f.", "<Plug>CaserVDotCase", { remap = true })
 
 Map("n", "<leader><leader>", "<cmd>silent e #<cr>")
 
-Map("n", "<leader>c", function()
-    local bufname = vim.api.nvim_buf_get_name(0)
-    require("harpoon.mark").toggle_file(bufname)
-end)
-Map("n", "<leader>v", require("harpoon.ui").toggle_quick_menu)
-Map("n", "<leader>V", require("harpoon.mark").clear_all)
-local harpoon_keys = { "a", "r", "s", "t" }
-for i, key in pairs(harpoon_keys) do
-    Map("n", "<leader>" .. key, function() require("harpoon.ui").nav_file(i) end)
+Map("n", "<leader>c", require("grapple").toggle)
+Map("n", "<leader>v", require("grapple").popup_tags)
+local grapple_keys = { "a", "r", "s", "t" }
+for i, key in pairs(grapple_keys) do
+    Map("n", "<leader>" .. key, function() require("grapple").select({ key = i}) end)
 end
 
 local action_util = require("overseer.action_util")
@@ -434,6 +430,7 @@ Map("n", "<leader>I", function()
 end)
 Map("x", "<leader>I", function()
     if SendID then
+        vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, true, true))
         -- does not handle rectangular selection
         local s_start = vim.fn.getpos("'<")
         local s_end = vim.fn.getpos("'>")
@@ -462,6 +459,9 @@ Map("n", "<leader>w",
 Map("n", "<leader>W", function() require("telescope.builtin").live_grep(require("telescope.themes").get_ivy()) end)
 Map("n", "<leader>f", function() ProjectFiles() end)
 Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
+
+Map("n", "<leader>M", function() vim.ui.input({prompt = "Session Name:"}, require("resession").save_tab) end)
+Map("n", "<leader>m", require("resession").load)
 
 -- Mouse Bindings
 

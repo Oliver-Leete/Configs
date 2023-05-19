@@ -174,6 +174,7 @@ vim.go.winbar = ""
 vim.go.statuscolumn = "%C"
 
 local init_ui_elements = function(info)
+    Info = info
     local special = function(bufnr)
         return funcs.is_special(bufnr) and
             funcs.special_types[vim.bo[bufnr].filetype].name ~= nil
@@ -196,3 +197,5 @@ end
 
 local colGroup = vim.api.nvim_create_augroup("colGroup", {})
 vim.api.nvim_create_autocmd("BufEnter", { pattern = "*", callback = init_ui_elements, group = colGroup, })
+vim.api.nvim_create_autocmd("WinEnter", { pattern = "*", callback = init_ui_elements, group = colGroup, })
+vim.api.nvim_create_autocmd("TermOpen", { pattern = "*", callback = init_ui_elements, group = colGroup, })

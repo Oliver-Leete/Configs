@@ -2,31 +2,49 @@ vim.o.completeopt = "menuone,noselect"
 
 local M = {}
 M.icons = {
-    Class = "ﴯ",
-    Color = "",
-    Constant = "",
-    Constructor = "",
-    Enum = "",
-    EnumMember = "",
-    Event = "",
-    Field = "ﰠ",
-    File = "",
-    Folder = "",
-    Function = "",
-    Interface = "",
-    Keyword = "",
-    Method = "",
-    Module = "",
-    Operator = "",
-    Property = "ﰠ",
-    Reference = "",
-    Snippet = "",
-    Struct = "",
-    Text = "",
-    TypeParameter = "",
-    Unit = "",
-    Value = "",
-    Variable = "",
+    Text = '  ',
+    Method = '  ',
+    Function = '  ',
+    Constructor = '  ',
+    Field = '  ',
+    Variable = '  ',
+    Class = '  ',
+    Interface = '  ',
+    Module = '  ',
+    Property = '  ',
+    Unit = '  ',
+    Value = '  ',
+    Enum = '  ',
+    Keyword = '  ',
+    Snippet = '  ',
+    Color = '  ',
+    File = '  ',
+    Reference = '  ',
+    Folder = '  ',
+    EnumMember = '  ',
+    Constant = '  ',
+    Struct = '  ',
+    Event = '  ',
+    Operator = '  ',
+    TypeParameter = '  ',
+}
+
+M.sources = {
+    luasnip_choice = "(CHOICE)",
+    luasnip = "(SNIP)",
+    git = "(GIT)",
+    otter = "(LSP)",
+    nvim_lsp = "(LSP)",
+    latex_symbols = "(SYM)",
+    fish = "(FISH)",
+    path = "(PATH)",
+    nvim_lua = "(NVIM)",
+    buffer = "(BUFF)",
+    cmdline = "(CMD)",
+    cmdline_history = "(CMDH)",
+    dictionary = "(DICT)",
+    omni = "(TEX?)",
+    nvim_lsp_document_symbol = "(LSP)",
 }
 
 Map("c", "<C-CR>", "<nop>")
@@ -39,8 +57,13 @@ require("cmp").setup({
         end,
     },
     window = {
-        completion = cmp.config.window.bordered(),
+        completion = cmp.config.window.bordered({
+              winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+              col_offset = -3,
+              side_padding = 0,
+        }),
         documentation = cmp.config.window.bordered(),
+
     },
     mapping = {
         ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
@@ -80,7 +103,7 @@ require("cmp").setup({
     },
     sources = {
         { name = "luasnip_choice" },
-        { name = "luasnip",       option = { show_autosnippets = true } },
+        { name = "luasnip" },
         { name = "cmp_git" },
         { name = 'otter' },
         { name = "nvim_lsp" },
@@ -89,7 +112,7 @@ require("cmp").setup({
         { name = "path" },
         { name = "nvim_lua" },
         {
-            name = "juffer",
+            name = "buffer",
             keyword_length = 3,
             option = {
                 get_bufnrs = function()
@@ -103,24 +126,9 @@ require("cmp").setup({
         },
     },
     formatting = {
+        fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
-            vim_item.menu = ({
-                luasnip_choice = "(CHOICE)",
-                luasnip = "(SNIP)",
-                git = "(GIT)",
-                otter = "(LSP)",
-                nvim_lsp = "(LSP)",
-                latex_symbols = "(SYM)",
-                fish = "(FISH)",
-                path = "(PATH)",
-                nvim_lua = "(NVIM)",
-                buffer = "(BUFF)",
-                cmdline = "(CMD)",
-                cmdline_history = "(CMDH)",
-                dictionary = "(DICT)",
-                omni = "(TEX?)",
-                nvim_lsp_document_symbol = "(LSP)",
-            })[entry.source.name]
+            vim_item.menu = M.sources[entry.source.name]
             vim_item.kind = M.icons[vim_item.kind]
             return vim_item
         end,

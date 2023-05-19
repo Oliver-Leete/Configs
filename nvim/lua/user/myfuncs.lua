@@ -10,7 +10,6 @@ M.special_types = {
     juliadoc = { name = " Docs", exit_func = winclose },
     lspinfo = { exit_func = winclose },
     tsplayground = { name = " TSPlayground", exit_func = winclose },
-    ["harpoon-menu"] = { exit_func = winclose },
     notify = { exit_func = winclose },
     DiffviewFileHistory = { name = " Diffs", exit_func = function() vim.cmd("DiffviewClose") end },
     DiffviewFiles = { name = " Diffs", exit_func = function() vim.cmd("DiffviewClose") end },

@@ -42,14 +42,8 @@ local noice_wrapper = function()
     return message:sub(1, 80)
 end
 
-local harp = require("harpoon.mark")
-local harpoon = function()
+local grapple = function()
     return "[⥣]"
-end
-
-local harpoon_cond = function()
-    local bufname = vim.api.nvim_buf_get_name(0)
-    return harp.valid_index(harp.get_index_of(bufname))
 end
 
 local is_wide = function()
@@ -73,9 +67,9 @@ require("lualine").setup({
                 cond = require("hydra.statusline").is_active,
             },
             {
-                harpoon,
-                cond = harpoon_cond,
-                on_click = function() vim.defer_fn(require("harpoon.ui").toggle_quick_menu, 100) end,
+                grapple,
+                cond = require("grapple").exists,
+                on_click = function() vim.defer_fn(require("grapple").popup_tags, 100) end,
             },
         },
         lualine_b = {
@@ -144,6 +138,10 @@ require("lualine").setup({
                 "location",
                 on_click = function() vim.defer_fn(function() vim.cmd("Telescope current_buffer_fuzzy_find") end, 100 ) end
 
+            },
+            {
+                require("resession").get_current,
+                cond = function() return require("resession").get_current() ~= nil end,
             },
         }
     },

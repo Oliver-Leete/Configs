@@ -30,7 +30,8 @@ require("lazy").setup(
         "kevinhwang91/promise-async",
 
         "chrisgrieser/nvim-genghis",
-        "ThePrimeagen/harpoon",
+        "stevearc/resession.nvim",
+        "cbochs/grapple.nvim",
 
         "echasnovski/mini.nvim",
         "ap/vim-you-keep-using-that-word",
@@ -85,6 +86,7 @@ require("lazy").setup(
         "DNLHC/glance.nvim",
         "yioneko/nvim-type-fmt",
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+        "onsails/lspkind.nvim",
 
         "hrsh7th/nvim-cmp",
         "hrsh7th/cmp-buffer",
