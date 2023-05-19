@@ -9,6 +9,13 @@ local gitsigns = {
     GitSignsTopdelete    = "╿",
     GitSignsChangedelete = "┃",
     GitSignsUntracked    = "┋",
+
+    GitSignsAddAdd                   = "┃",
+    GitSignsChangeChange             = "┃",
+    GitSignsDeleteDelete             = "╽",
+    GitSignsTopdeleteTopdelete       = "╿",
+    GitSignsChangedeleteChangedelete = "┃",
+    GitSignsUntrackedUntracked       = "┋",
 }
 
 vim.api.nvim_set_hl(0, "CursorGitSignsAdd", { fg = Tc.autumnGreen, bg = Tc.sumiInk5 })
@@ -43,9 +50,11 @@ local make_sep = function(hl_prefix)
     local name
     if #sign >= 1 and sign[1].name then
         name = sign[1].name
+        name = name:gsub("%u%l-$", "")
         text = gitsigns[name]
     elseif #signstaged >= 1 and signstaged[1].name then
         name = signstaged[1].name
+        name = name:gsub("%u%l-$", "")
     else
         name = "LineSep"
     end

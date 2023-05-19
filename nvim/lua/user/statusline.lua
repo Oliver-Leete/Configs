@@ -1,3 +1,8 @@
+local left = ""
+local right = ""
+local leftc = ""
+local rightc = ""
+
 local lsp_status = function()
     local ret = ""
     local bufnr = vim.api.nvim_get_current_buf()
@@ -11,7 +16,7 @@ local lsp_status = function()
             end
         end
         if next(clients) then
-            ret = ret .. " " .. table.concat(clients, "   ")
+            ret = ret .. table.concat(clients, " " .. rightc .. " ")
         end
     end
     return ret
@@ -42,6 +47,16 @@ local noice_wrapper = function()
     return message:sub(1, 80)
 end
 
+local recession_wrapper = function()
+    local message = require("resession").get_current()
+    if message:len() <= 20 then
+        return message
+    else
+        return "..." .. message:sub((message:len() - 17))
+    end
+    return
+end
+
 local grapple = function()
     return "[⥣]"
 end
@@ -52,8 +67,8 @@ end
 
 require("lualine").setup({
     options = {
-        component_separators = { left = "", right = "" },
-        section_separators = { left = "", right = "" },
+        component_separators = { left = leftc, right = rightc },
+        section_separators = { left = left, right = right },
         globalstatus = true,
         refresh = {
             statusline = 1000,
@@ -61,7 +76,14 @@ require("lualine").setup({
     },
     sections = {
         lualine_a = {
-            "mode",
+            {
+                function() return "" end,
+                draw_empty = true,
+                separator = { left = " ", right = left },
+            },
+            {
+                "mode",
+            },
             {
                 require("hydra.statusline").get_name,
                 cond = require("hydra.statusline").is_active,
@@ -76,7 +98,7 @@ require("lualine").setup({
             {
                 "b:gitsigns_head",
                 icon = "",
-                on_click = function() vim.defer_fn(function() vim.cmd("DiffviewOpen") end, 100) end,
+                on_click = function() vim.defer_fn(function() vim.cmd("Telescope git_branches") end, 100) end,
             },
             {
                 "diff",
@@ -87,8 +109,9 @@ require("lualine").setup({
             {
                 "diagnostics",
                 symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
-                on_click = function() vim.defer_fn(function() vim.cmd("Telescope diagnostics bufnr=0 theme=get_ivy") end
-                        , 100)
+                on_click = function()
+                    vim.defer_fn(function() vim.cmd("Telescope diagnostics bufnr=0 theme=get_ivy") end
+                    , 100)
                 end,
             },
             {
@@ -135,13 +158,18 @@ require("lualine").setup({
                 on_click = function() vim.defer_fn(function() vim.cmd("LspInfo") end, 100) end,
             },
             {
-                "location",
-                on_click = function() vim.defer_fn(function() vim.cmd("Telescope current_buffer_fuzzy_find") end, 100 ) end
+                recession_wrapper,
+                cond = function() return require("resession").get_current() ~= nil end,
+                on_click = function() vim.defer_fn(function() require("resession").load() end, 100) end
 
             },
             {
-                require("resession").get_current,
-                cond = function() return require("resession").get_current() ~= nil end,
+                "location",
+            },
+            {
+                function() return "" end,
+                draw_empty = true,
+                separator = { left = right, right = " " },
             },
         }
     },

@@ -121,7 +121,7 @@ local custom_objects = {
         "\n.-%b{}.-\n",
         "\n().-()%{\n.*\n.*%}().-\n()"
     },
-        ["$"] = gen_spec.pair("$", "$", { type = "balanced" }),
+    ["$"] = gen_spec.pair("$", "$", { type = "balanced" }),
 }
 
 require("mini.ai").setup({
@@ -195,8 +195,17 @@ vim.g.dirJumps = "search"
 Map({ "n", "x", "o" }, "n", function() return command_repeat("]", "dirJumps") end, { expr = true, remap = true })
 Map({ "n", "x", "o" }, "N", function() return command_repeat("[", "dirJumps") end, { expr = true, remap = true })
 
-Map({ "n", "x", "o" }, "[[", "[s", { remap = true })
-Map({ "n", "x", "o" }, "]]", "]s", { remap = true })
+-- require('buffer_browser').setup()
+-- local bufMapover = vim.api.nvim_create_augroup("bufmapOver", { clear = true })
+-- vim.api.nvim_create_autocmd(
+--     { "BufEnter" },
+--     { group = bufMapover, callback = function()
+--         Map({ "n", "x", "o" }, "[[", require("buffer_browser").prev, { buffer = 0 })
+--         Map({ "n", "x", "o" }, "]]", require("buffer_browser").next, { buffer = 0 })
+--     end }
+-- )
+-- Map({ "n", "x", "o" }, "[[", require("buffer_browser").prev)
+-- Map({ "n", "x", "o" }, "]]", require("buffer_browser").next)
 
 for _, o in pairs(vim.tbl_keys(custom_objects)) do
     Map({ "n", "x", "o" }, "[" .. o, function() mark_and_go_mini("prev", o, "left") end)
@@ -204,10 +213,12 @@ for _, o in pairs(vim.tbl_keys(custom_objects)) do
     Map({ "n", "x" }, ")" .. o, function() mark_and_select_mini("i", o, "next") end)
     Map({ "n", "x" }, "(" .. o, function() mark_and_select_mini("i", o, "prev") end)
 
-    Map({ "n", "x" }, "m" .. o, function() MiniAi.select_textobject("i", o, { search_method = "cover_or_nearest", vis_mode = "v" }) end)
+    Map({ "n", "x" }, "m" .. o,
+        function() MiniAi.select_textobject("i", o, { search_method = "cover_or_nearest", vis_mode = "v" }) end)
     local O = o:upper()
     if O ~= o then
-        Map({ "n", "x" }, "m" .. O, function() MiniAi.select_textobject("a", o, { search_method = "cover_or_nearest", vis_mode = "v" }) end)
+        Map({ "n", "x" }, "m" .. O,
+            function() MiniAi.select_textobject("a", o, { search_method = "cover_or_nearest", vis_mode = "v" }) end)
         Map({ "n", "x", "o" }, "[" .. O, function() mark_and_go_mini("prev", O, "right") end)
         Map({ "n", "x", "o" }, "]" .. O, function() mark_and_go_mini("next", O, "right") end)
         Map({ "n", "x" }, ")" .. O, function() mark_and_select_mini("a", O, "next") end)

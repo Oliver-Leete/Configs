@@ -52,3 +52,4 @@ zsh/
 /xmobar/xmobar-git
 /nvim/neovim
 /kak/kakoune
+/nvim/lua/user/secrets.lua

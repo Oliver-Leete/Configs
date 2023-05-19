@@ -76,6 +76,8 @@ require("telescope").setup({
                 ["<C-L>"] = actions.smart_add_to_qflist,
                 ["<C-n>"] = actions.cycle_history_next,
                 ["<C-p>"] = actions.cycle_history_prev,
+                ["<C-j>"] = actions.preview_scrolling_down,
+                ["<C-k>"] = actions.preview_scrolling_up,
                 ["<C-cr>"] = actions.toggle_selection + actions.move_selection_worse,
             },
             n = {
@@ -88,6 +90,8 @@ require("telescope").setup({
                 ["<C-L>"] = actions.smart_add_to_qflist,
                 ["<C-n>"] = actions.cycle_history_next,
                 ["<C-p>"] = actions.cycle_history_prev,
+                ["<C-j>"] = actions.preview_scrolling_down,
+                ["<C-k>"] = actions.preview_scrolling_up,
                 ["<C-cr>"] = actions.toggle_selection + actions.move_selection_worse,
             },
         },
@@ -186,3 +190,42 @@ function ProjectFiles()
         }))
     end
 end
+
+require('telescope-all-recent').setup({
+    default = {
+        disable = true,
+        use_cwd = true,
+        sorting = 'frecent'
+    },
+    pickers = {
+        command_center = {
+            disable = false,
+            use_cwd = false,
+            sorting = 'frecent',
+        },
+        ["dap#configurations"] = {
+            disable = false,
+            use_cwd = true,
+            sorting = 'frecent',
+        },
+        vim_ui_select = {
+            kinds = {
+                overseer_template = {
+                    use_cwd = true,
+                    prompt = "Task template",
+                    name_include_prompt = true,
+                },
+                overseer_task_options = {
+                    use_cwd = true,
+                    prompt = "Task template",
+                    name_include_prompt = true,
+                },
+                dap_run = {
+                    use_cwd = true,
+                    prompt = "Configuration: ",
+                    name_include_prompt = true,
+                },
+            }
+        },
+    },
+})

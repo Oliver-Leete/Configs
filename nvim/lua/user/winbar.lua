@@ -1,6 +1,9 @@
 require("nvim-navic").setup({})
 local func = require("user.myfuncs")
 
+local left = ""
+local right = ""
+
 local type_hl = {
     File = "Directory",
     Module = "@include",
@@ -31,7 +34,6 @@ local type_hl = {
 }
 for i, id in pairs(type_hl) do
     local is_hl_set = function(hl_name)
-
         local exists, hl = pcall(vim.api.nvim_get_hl_by_name, hl_name, true)
         local color = hl.foreground or hl.background or hl.reverse
         return exists and color ~= nil
@@ -39,7 +41,6 @@ for i, id in pairs(type_hl) do
 
     local hl
     if is_hl_set(id) then
-
         hl = vim.api.nvim_get_hl_by_name(id, true)
     else
         hl = vim.api.nvim_get_hl_by_name("Normal", true)
@@ -61,7 +62,7 @@ end
 
 local navic_maker = function()
     local data = require("nvim-navic").get_data() or {}
-    local ret = ""
+    local ret = " "
     for i, d in ipairs(data) do
         local pos = d.scope.start.line * 100000 + d.scope.start.character
         if i > 1 then ret = ret .. "  " end
@@ -83,7 +84,14 @@ local special_name = function(bufnr)
         return help_title .. " Help", false
     elseif vim.bo[bufnr].buftype == "terminal" then
         local task = vim.tbl_filter(
-            function(t) if t.strategy.bufnr == bufnr then return true end end, overseer.list_tasks()
+            function(t)
+                if t.strategy.bufnr == bufnr then
+                    return true
+                else
+                    return false
+                end
+            end,
+            overseer.list_tasks()
         )[1]
         if task then return task.name, true end
         return "Terminal", true
@@ -111,7 +119,7 @@ Special_Winbar = function()
     if is_term and is_active and mode == "Terminal" then
         return hl .. "%= " .. specialname .. " %="
     else
-        return hlb .. "%=" .. hle .. "" .. hl .. " " .. specialname .. " " .. hle .. "" .. hlb .. "%=" .. hlb
+        return hlb .. "%=" .. hle .. "" .. hl .. " " .. specialname .. " " .. hle .. "" .. hlb .. "%=" .. hlb
     end
 end
 
@@ -143,10 +151,10 @@ Normal_Winbar = function()
     -- Code location
     winbar = winbar .. "%X"
     if is_active and require("nvim-navic").is_available() then
-        winbar = winbar .. " " .. "%#WinBar" .. mode .. "NavicEnds#" .. " "
-        winbar = winbar .. navic_maker() .. " " .. "%#NavicEnd#" .. ""
+        winbar = winbar .. " " .. "%#WinBar" .. mode .. "NavicEnds#" .. right
+        winbar = winbar .. navic_maker() .. " " .. "%#NavicEnd#" .. right
     else
-        winbar = winbar .. " " .. hle .. ""
+        winbar = winbar .. " " .. hle .. right
     end
     winbar = winbar .. hlb .. "%="
     -- File icon
@@ -160,5 +168,5 @@ Normal_Winbar = function()
         end
         winbar = winbar .. "%#" .. iconhl .. "#" .. icon .. " "
     end
-    return winbar
+    return hle .. " " .. winbar
 end

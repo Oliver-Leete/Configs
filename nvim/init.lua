@@ -32,6 +32,7 @@ require("lazy").setup(
         "chrisgrieser/nvim-genghis",
         "stevearc/resession.nvim",
         "cbochs/grapple.nvim",
+        "https://git.sr.ht/~marcc/BufferBrowser",
 
         "echasnovski/mini.nvim",
         "ap/vim-you-keep-using-that-word",
@@ -53,13 +54,13 @@ require("lazy").setup(
         "fladson/vim-kitty",
         "wilriker/gcode.vim",
         "LhKipp/nvim-nu",
-        { "toppair/peek.nvim",      build = "deno task --quiet build:fast" },
+        { "toppair/peek.nvim",     build = "deno task --quiet build:fast" },
 
         "lewis6991/gitsigns.nvim",
         "sindrets/diffview.nvim",
         "cvigilv/diferente.nvim",
 
-        { "rebelot/kanagawa.nvim",           commit = "4c8d48726621a7f3998c7ed35b2c2535abc22def" },
+        { "rebelot/kanagawa.nvim", commit = "4c8d48726621a7f3998c7ed35b2c2535abc22def" },
         "stevearc/dressing.nvim",
         "rcarriga/nvim-notify",
         "nvim-lualine/lualine.nvim",
@@ -68,8 +69,7 @@ require("lazy").setup(
         "nvim-zh/colorful-winsep.nvim",
 
         "folke/todo-comments.nvim",
-        "nvim-neo-tree/neo-tree.nvim",
-        "mrbjarksen/neo-tree-diagnostics.nvim",
+        "folke/trouble.nvim",
 
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
@@ -87,6 +87,7 @@ require("lazy").setup(
         "yioneko/nvim-type-fmt",
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
         "onsails/lspkind.nvim",
+        { "lvimuser/lsp-inlayhints.nvim",    branch = "anticonceal" },
 
         "hrsh7th/nvim-cmp",
         "hrsh7th/cmp-buffer",
@@ -119,6 +120,8 @@ require("lazy").setup(
         },
         "debugloop/telescope-undo.nvim",
         "FeiyouG/command_center.nvim",
+        "kkharji/sqlite.lua",
+        "prochri/telescope-all-recent.nvim",
         { "nvim-treesitter/nvim-treesitter", build = ":TSInstall all | TSUpdate | TSUninstall comment" },
         "nvim-treesitter/playground",
         "nvim-treesitter/nvim-treesitter-textobjects",
@@ -135,7 +138,7 @@ require("lazy").setup(
 
         "mfussenegger/nvim-dap",
         "rcarriga/nvim-dap-ui",
-        "theHamsta/nvim-dap-virtual-text",
+        { "theHamsta/nvim-dap-virtual-text", branch = "inline-text" },
         "nvim-telescope/telescope-dap.nvim",
         "LiadOz/nvim-dap-repl-highlights",
 

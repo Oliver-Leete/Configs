@@ -22,11 +22,11 @@ Filmpicker_winbar = function()
     local minutes = math.floor(math.fmod(runtime, 3600) / 60)
     local seconds = math.floor(math.fmod(runtime, 60))
     local winbar = hl .. string.format("%02d:%02d:%02d", hours, minutes, seconds)
-    return hlb .. hle .. "" .. winbar .. hl .. " " .. hle .. "" .. hlb .. "%=" .. hlb
+    return hlb .. "%=" .. hle .. "" .. winbar .. hl .. " " .. hle .. "" .. hlb .. "%=" .. hlb
 end
 
 local filmPicker = vim.api.nvim_create_augroup("filmPicker", { clear = true })
-vim.api.nvim_create_autocmd("BufRead", { pattern = "*.films", callback = function()
+vim.api.nvim_create_autocmd("BufRead", { pattern = "/tmp/film_list.films", callback = function()
     Map("n", "<leader>a", "vip:!sort -k1<cr><cr>")
     Map("n", "<leader>r", "vip:!sort -k3<cr><cr>")
     Map("n", "<leader>s", "vip:!sort -k5<cr><cr>")

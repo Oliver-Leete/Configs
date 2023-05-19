@@ -66,8 +66,8 @@ require("cmp").setup({
 
     },
     mapping = {
-        ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
-        ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
+        ["<C-k>"] = cmp.mapping(cmp.mapping.scroll_docs(-5), { "i", "c" }),
+        ["<C-j>"] = cmp.mapping(cmp.mapping.scroll_docs(5), { "i", "c" }),
         ["<down>"] = cmp.mapping({
             i = function()
                 if cmp.visible() then

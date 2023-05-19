@@ -16,7 +16,7 @@ function make_dict(a)
 end
 
 try
-    result = @run_package_tests filter = ti -> (ti.name == ARGS[1]) verbose = true;
+    result = @run_package_tests filter = ti -> (ti.name == ARGS[1]);
     write(ARGS[2], JSON.json(make_dict(result)))
 catch
     write(ARGS[2], JSON.json(Dict("passed" => false)))

@@ -60,36 +60,37 @@ dap.adapters.codelldb = {
     }
 }
 
-dap.adapters.juliadb = {
-    type = "executable",
-    command = "/usr/bin/julia",
-    args = {
-        "--color=yes",
-        "--startup-file=no",
-        "--history-file=no",
-        "--project",
-        "/home/oleete/Projects/julia-vscode/scripts/debugger/run_debugger.jl",
-    },
-}
-
-dap.configurations.julia = {
-    {
-        name = "Run active Julia file (stop on enter)",
-        type = "juliadb",
-        request = "attach",
-        program = "${file}",
-        cwd = "${workspaceFolder}",
-        stopOnEntry = true,
-    },
-    {
-        name = "Run active Julia file",
-        type = "juliadb",
-        request = "attach",
-        program = "${file}",
-        cwd = "${workspaceFolder}",
-        stopOnEntry = false,
-    },
-}
+-- FIX : well, this never worked, so not fix but more 'make work in the first place'
+-- dap.adapters.juliadb = {
+--     type = "executable",
+--     command = "/usr/bin/julia",
+--     args = {
+--         "--color=yes",
+--         "--startup-file=no",
+--         "--history-file=no",
+--         "--project",
+--         "/home/oleete/Projects/julia-vscode/scripts/debugger/run_debugger.jl",
+--     },
+-- }
+--
+-- dap.configurations.julia = {
+--     {
+--         name = "Run active Julia file (stop on enter)",
+--         type = "juliadb",
+--         request = "attach",
+--         program = "${file}",
+--         cwd = "${workspaceFolder}",
+--         stopOnEntry = true,
+--     },
+--     {
+--         name = "Run active Julia file",
+--         type = "juliadb",
+--         request = "attach",
+--         program = "${file}",
+--         cwd = "${workspaceFolder}",
+--         stopOnEntry = false,
+--     },
+-- }
 
 dap.configurations.cpp = {
     {

@@ -19,6 +19,11 @@ local default_diagnostic_config = {
     severity_sort = true,
     virtual_lines = false,
 }
+require("lsp-inlayhints").setup({
+    inlay_hints = {
+        highlight = "NvimDapVirtualText"
+    }
+})
 
 vim.diagnostic.config(default_diagnostic_config)
 
@@ -59,6 +64,8 @@ local custom_attach = function(client, bufnr)
         )
     end
     bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action)
+
+    require("lsp-inlayhints").on_attach(client, bufnr)
 end
 
 require("mason").setup({ ui = { border = Border } })
@@ -145,7 +152,7 @@ lspconfig.sourcery.setup({
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
     init_options = {
-        token = "user_ncjcsKxRD7LGXBwHUwLWu7iSmWgu81zaRMbDjwNZqfGkUhRaDVMuZ9pwVyA",
+        token = require("user.secrets").sourcery,
         extension_version = "vim.lsp",
         editor_version = "vim",
     },
@@ -171,15 +178,20 @@ lspconfig.lua_ls.setup({
     flags = { debounce_text_changes = 1000 },
     settings = {
         Lua = {
-            runtime = {
-                version = 'LuaJIT',
+            hint = {
+                arrayIndex = "Auto",
+                enable = true,
+                paramName = "Disable",
+            },
+            completion = {
+                callSnippet = "Replace",
             },
             diagnostics = {
                 globals = { 'vim' },
             },
             workspace = {
                 library = vim.api.nvim_get_runtime_file('', true),
-                checkThirdParty = false,
+                checkThirdParty = true,
             },
             telemetry = {
                 enable = false,
@@ -235,6 +247,9 @@ lspconfig.texlab.setup({
 local clangd_cap = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 clangd_cap.offsetEncoding = "utf-8"
 require("clangd_extensions").setup({
+    extensions = {
+        autoSetHints = false,
+    },
     server = {
         -- on_attach = custom_attach,
         capabilities = clangd_cap,
@@ -258,6 +273,9 @@ require("rust-tools").setup({
     },
     tools = {
         executor = require("rust-tools/executors").overseer,
+        inlay_hints = {
+            auto = false
+        },
     },
     dap = {
         adapter = require("rust-tools.dap").get_codelldb_adapter(

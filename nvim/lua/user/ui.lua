@@ -17,7 +17,8 @@ require("dressing").setup({
                     backend = "telescope",
                     telescope = require("telescope.themes").get_cursor({})
                 }
-            elseif vim.tbl_contains({ "luasnip", "overseer_template", "overseer_task_options", "overseer_task" }, opts.kind) then
+            -- elseif vim.tbl_contains({ "luasnip", "overseer_template", "overseer_task_options", "overseer_task", "dap_run" }, opts.kind) then
+            else
                 return {
                     backend = "telescope",
                     telescope = require("telescope.themes").get_dropdown()
@@ -150,8 +151,8 @@ glance.setup({
             ['<Up>'] = actions.previous,
             ['n'] = actions.next_location,
             ['N'] = actions.previous_location,
-            ['<C-u>'] = actions.preview_scroll_win(5),
-            ['<C-d>'] = actions.preview_scroll_win(-5),
+            ['<C-k>'] = actions.preview_scroll_win(5),
+            ['<C-j>'] = actions.preview_scroll_win(-5),
             ['<c-v>'] = actions.jump_vsplit,
             ['<c-x>'] = actions.jump_split,
             ['<CR>'] = actions.jump,
@@ -168,13 +169,17 @@ glance.setup({
             ['<leader><cr>'] = actions.enter_win('list'),
         },
     },
+    folds = {
+        fold_closed = "",
+        fold_open = "",
+        folded = true,
+    },
 })
 
 vim.go.winbar = ""
 vim.go.statuscolumn = "%C"
 
 local init_ui_elements = function(info)
-    Info = info
     local special = function(bufnr)
         return funcs.is_special(bufnr) and
             funcs.special_types[vim.bo[bufnr].filetype].name ~= nil
@@ -183,7 +188,10 @@ local init_ui_elements = function(info)
         vim.fn.filereadable(vim.api.nvim_buf_get_name(info.buf)) == 1
     -- or vim.bo[info.buf].filetype ~= ""
     ) and true or false
-    if vim.bo[info.buf].buftype == "" and not special(info.buf) and is_file then
+    if vim.api.nvim_buf_get_name(0) == "/tmp/film_list.films" then
+        vim.go.winbar = "%{%v:lua.Filmpicker_winbar()%}"
+        vim.wo.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
+    elseif vim.bo[info.buf].buftype == "" and not special(info.buf) and is_file then
         vim.wo.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
         vim.wo.winbar = "%{%v:lua.Normal_Winbar()%}"
     elseif special(info.buf) or vim.bo[info.buf].buftype == "terminal" then
@@ -197,5 +205,6 @@ end
 
 local colGroup = vim.api.nvim_create_augroup("colGroup", {})
 vim.api.nvim_create_autocmd("BufEnter", { pattern = "*", callback = init_ui_elements, group = colGroup, })
+vim.api.nvim_create_autocmd("FileType", { pattern = "*", callback = init_ui_elements, group = colGroup, })
 vim.api.nvim_create_autocmd("WinEnter", { pattern = "*", callback = init_ui_elements, group = colGroup, })
 vim.api.nvim_create_autocmd("TermOpen", { pattern = "*", callback = init_ui_elements, group = colGroup, })

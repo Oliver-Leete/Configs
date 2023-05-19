@@ -5,9 +5,8 @@ local winclose = function() vim.cmd.wincmd({ args = { "c" } }) end
 M.special_types = {
     lazy = { exit_func = winclose },
     qf = { name = " QuickFix", exit_func = winclose },
-    help = { name = " Help", exit_func = winclose },
+    help = { name = "󰍉 Help", exit_func = winclose },
     ["vim-plug"] = { name = " Plugs", exit_func = winclose },
-    juliadoc = { name = " Docs", exit_func = winclose },
     lspinfo = { exit_func = winclose },
     tsplayground = { name = " TSPlayground", exit_func = winclose },
     notify = { exit_func = winclose },
@@ -15,6 +14,7 @@ M.special_types = {
     DiffviewFiles = { name = " Diffs", exit_func = function() vim.cmd("DiffviewClose") end },
     OverseerList = { name = " Tasks", exit_func = function() vim.cmd("OverseerClose") end },
     OverseerForm = { exit_func = winclose },
+    Trouble = { name = " QuickFix", exit_func = winclose },
     ["dap-float"] = { exit_func = winclose },
     ["dapui_scopes"] = { name = "Scopes", exit_func = winclose },
     ["dapui_breakpoints"] = { name = "Breakpoints", exit_func = winclose },

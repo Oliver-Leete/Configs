@@ -403,7 +403,7 @@ Map("n", "<leader>c", require("grapple").toggle)
 Map("n", "<leader>v", require("grapple").popup_tags)
 local grapple_keys = { "a", "r", "s", "t" }
 for i, key in pairs(grapple_keys) do
-    Map("n", "<leader>" .. key, function() require("grapple").select({ key = i}) end)
+    Map("n", "<leader>" .. key, function() require("grapple").select({ key = i }) end)
 end
 
 local action_util = require("overseer.action_util")
@@ -419,16 +419,36 @@ Map("n", "<leader>h", function()
     end
 end)
 Map("n", "<leader>H", "<cmd>OverseerTaskAction<cr>")
-Map("n", "<leader>n", "<cmd>OverseerToggle bottom<cr>")
-Map("n", "<leader>e", "<cmd>OverseerRun<cr>")
+Map("n", "<leader>n", function() require("neotest").summary.toggle() end)
+Map("n", "<leader>e", "<cmd>OverseerToggle bottom<cr>")
+Map("n", "<leader>E", "<cmd>OverseerQuickAction open<cr>")
+Map("n", "<leader>i", "<cmd>OverseerRun<cr>")
 Map("n", "<leader>I", function()
+    local overseer = require("overseer")
+    local tasks = overseer.list_tasks({ recent_first = true })
+    if vim.tbl_isempty(tasks) then
+        vim.notify("No tasks found", vim.log.levels.WARN)
+    else
+        overseer.run_action(tasks[1], "restart")
+    end
+end)
+Map("n", "<leader>o", function() require("trouble").toggle({ mode = "quickfix" }) end)
+
+Map("n", "<leader>l", function() require("neotest").run.run() end)
+Map("n", "<leader>L", function() require("neotest").run.run_last() end)
+Map("n", "<leader>j", function() require("neotest").run.run({ strategy = "dap" }) end)
+Map("n", "<leader>J", function() require("neotest").run.run_last({ strategy = "dap" }) end)
+
+Map("n", "<leader>u", function() require("noice").cmd("history") end)
+
+Map("n", "<leader><cr>", function()
     if SendID then
         vim.fn.chansend(SendID, vim.api.nvim_get_current_line() .. "\n")
     else
         vim.cmd.echomsg({ args = { "'No Term set as send term'" } })
     end
 end)
-Map("x", "<leader>I", function()
+Map("x", "<leader><cr>", function()
     if SendID then
         vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, true, true))
         -- does not handle rectangular selection
@@ -448,11 +468,6 @@ Map("x", "<leader>I", function()
         vim.cmd.echomsg({ args = { "'No Term set as send term'" } })
     end
 end)
-Map("n", "<leader>o", function() require("neotest").summary.toggle() end)
-
-Map("n", "<leader>l", function() require("neotest").run.run() end)
-Map("n", "<leader>L", function() require("neotest").run.run_last() end)
-
 
 Map("n", "<leader>w",
     function() require("telescope.builtin").lsp_workspace_symbols(require("telescope.themes").get_ivy()) end)
@@ -460,8 +475,10 @@ Map("n", "<leader>W", function() require("telescope.builtin").live_grep(require(
 Map("n", "<leader>f", function() ProjectFiles() end)
 Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
 
-Map("n", "<leader>M", function() vim.ui.input({prompt = "Session Name:"}, require("resession").save_tab) end)
-Map("n", "<leader>m", require("resession").load)
+local projects = require("user.projects")
+
+Map("n", "<leader>m", projects.load_session)
+Map("n", "<leader>M", projects.save_session)
 
 -- Mouse Bindings
 

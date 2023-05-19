@@ -31,12 +31,16 @@ require("diffview").setup({
             [",xn"] = actions.conflict_choose("none"),
         },
         file_panel = {
+            ["<c-j>"] = actions.scroll_view(5),
+            ["<c-k>"] = actions.scroll_view(-5),
             ["<esc>"] = function()
                 vim.b.is_diffview_file = false
                 vim.cmd("DiffviewClose")
             end,
         },
         file_history_panel = {
+            ["<c-j>"] = actions.scroll_view(5),
+            ["<c-k>"] = actions.scroll_view(-5),
             ["<esc>"] = function() vim.cmd("DiffviewClose") end,
         },
     },

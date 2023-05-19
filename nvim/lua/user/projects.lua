@@ -1,3 +1,5 @@
+M = {}
+
 require("grapple").setup({
     integrations = {
         resession = true
@@ -37,20 +39,48 @@ resession.setup({
 --     end,
 -- })
 
+local workspace_dir = "session/" .. vim.fn.system("wmctrl -d | grep '*' | awk '{print $NF}'"):gsub("\n", "")
+
+M.load_session = function()
+    local list = resession.list({ dir = workspace_dir })
+    if #list > 0 then
+        vim.ui.select(
+            list,
+            {},
+            function(name)
+                if name then
+                    resession.load(name, { dir = workspace_dir })
+                end
+            end
+        )
+    end
+end
+
+M.save_session = function()
+    vim.ui.input({ prompt = "Session Name:" }, function(name)
+        require("resession").save_tab(name, { dir = workspace_dir })
+    end)
+end
+
 vim.api.nvim_create_autocmd("VimLeavePre", {
     callback = function()
-        resession.save_tab(vim.fn.getcwd(), { notify = false })
+        resession.save_tab(vim.fn.getcwd(), { notify = false, dir = workspace_dir })
     end,
 })
 vim.api.nvim_create_autocmd("TabLeave", {
     callback = function()
-        resession.save_tab(vim.fn.getcwd(), { notify = false })
+        resession.save_tab(vim.fn.getcwd(), { notify = false, dir = workspace_dir })
     end,
 })
 
 -- Always save a special session named "last"
 vim.api.nvim_create_autocmd("VimLeavePre", {
     callback = function()
-        resession.save("last")
+        resession.save("last", { dir = workspace_dir })
     end,
 })
+
+M.load_session()
+
+
+return M
