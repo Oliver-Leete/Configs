@@ -87,7 +87,7 @@ require("lazy").setup(
         "yioneko/nvim-type-fmt",
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
         "onsails/lspkind.nvim",
-        { "lvimuser/lsp-inlayhints.nvim",    branch = "anticonceal" },
+        "lvimuser/lsp-inlayhints.nvim",
 
         "hrsh7th/nvim-cmp",
         "hrsh7th/cmp-buffer",
