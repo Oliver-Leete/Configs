@@ -3,6 +3,7 @@ local func = require("user.myfuncs")
 
 local left = ""
 local right = ""
+local outer_right = ""
 
 local type_hl = {
     File = "Directory",
@@ -152,9 +153,9 @@ Normal_Winbar = function()
     winbar = winbar .. "%X"
     if is_active and require("nvim-navic").is_available() then
         winbar = winbar .. " " .. "%#WinBar" .. mode .. "NavicEnds#" .. right
-        winbar = winbar .. navic_maker() .. " " .. "%#NavicEnd#" .. right
+        winbar = winbar .. navic_maker() .. " " .. "%#NavicEnd#" .. outer_right
     else
-        winbar = winbar .. " " .. hle .. right
+        winbar = winbar .. " " .. hle .. outer_right
     end
     winbar = winbar .. hlb .. "%="
     -- File icon

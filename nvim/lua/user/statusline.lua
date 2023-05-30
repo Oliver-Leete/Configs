@@ -54,7 +54,6 @@ local recession_wrapper = function()
     else
         return "..." .. message:sub((message:len() - 17))
     end
-    return
 end
 
 local grapple = function()
@@ -96,17 +95,6 @@ require("lualine").setup({
         },
         lualine_b = {
             {
-                "b:gitsigns_head",
-                icon = "",
-                on_click = function() vim.defer_fn(function() vim.cmd("Telescope git_branches") end, 100) end,
-            },
-            {
-                "diff",
-                source = diff_source,
-                symbols = { added = " ", modified = " ", removed = " " },
-                on_click = function() vim.defer_fn(function() vim.cmd("DiffviewOpen") end, 100) end,
-            },
-            {
                 "diagnostics",
                 symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
                 on_click = function()
@@ -118,6 +106,18 @@ require("lualine").setup({
                 "overseer",
                 symbols = ov_list,
                 on_click = function() vim.defer_fn(require("overseer").toggle, 100) end,
+            },
+            {
+                "diff",
+                source = diff_source,
+                symbols = { added = " ", modified = " ", removed = " " },
+                on_click = function() vim.defer_fn(function() vim.cmd("DiffviewOpen") end, 100) end,
+            },
+            {
+                "b:gitsigns_head",
+                icon = "",
+                on_click = function() vim.defer_fn(function() vim.cmd("Telescope git_branches") end, 100) end,
+                separator = { left = "", right = "" },
             },
         },
         lualine_c = {
@@ -139,6 +139,11 @@ require("lualine").setup({
             },
         },
         lualine_y = {
+            {
+                function() return "" end,
+                draw_empty = true,
+                separator = { left = "", right = "" },
+            },
             {
                 "encoding",
                 cond = function() return vim.bo.fenc ~= "utf-8" and vim.go.enc ~= "utf-8" end,
