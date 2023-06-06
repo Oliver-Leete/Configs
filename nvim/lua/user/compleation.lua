@@ -36,7 +36,6 @@ M.sources = {
     otter = "(LSP)",
     nvim_lsp = "(LSP)",
     latex_symbols = "(SYM)",
-    fish = "(FISH)",
     path = "(PATH)",
     nvim_lua = "(NVIM)",
     buffer = "(BUFF)",
@@ -108,7 +107,6 @@ require("cmp").setup({
         { name = 'otter' },
         { name = "nvim_lsp" },
         { name = "latex_symbols" },
-        { name = "fish" },
         { name = "path" },
         { name = "nvim_lua" },
         {

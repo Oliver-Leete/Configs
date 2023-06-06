@@ -1,5 +1,21 @@
 local overseer = require("overseer")
 local STATUS = require("overseer.constants").STATUS
+local util = require("overseer.util")
+
+local function close_task(bufnr)
+    for _, winnr in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if vim.api.nvim_win_is_valid(winnr) then
+            local winbufnr = vim.api.nvim_win_get_buf(winnr)
+            if vim.bo[winbufnr].filetype == "OverseerPanelTask" then
+                local oldwin = vim.tbl_filter(function(t) return (t.strategy.bufnr == bufnr) end,
+                    overseer.list_tasks())[1]
+                if oldwin then
+                    vim.api.nvim_win_close(winnr, true)
+                end
+            end
+        end
+    end
+end
 
 overseer.setup({
     strategy = "terminal",
@@ -30,7 +46,7 @@ overseer.setup({
             ["<C-f>"] = "OpenFloat",
             ["<esc>"] = function() overseer.close() end,
         },
-        direction = "bottom",
+        direction = "left",
         min_height = 20,
         height = math.floor(vim.o.lines * 0.3),
         max_height = 40,
@@ -90,11 +106,39 @@ overseer.setup({
             run = function(task)
                 DumpTask = task
             end,
-        }
+        },
+        ["open here"] = {
+            desc = "open as bottom pannel",
+            condition = function(task)
+                local bufnr = task:get_bufnr()
+                return bufnr and vim.api.nvim_buf_is_valid(bufnr)
+            end,
+            run = function(task)
+                vim.cmd([[normal! m']])
+                close_task(task.strategy.bufnr)
+                vim.bo[task.strategy.bufnr].filetype = "OverseerTask"
+                vim.api.nvim_win_set_buf(0, task:get_bufnr())
+                util.scroll_to_end(0)
+                vim.wo.winbar = "%{%v:lua.Special_Winbar()%}"
+            end,
+        },
+        ["open"] = {
+            desc = "open as bottom pannel",
+            condition = function(task)
+                local bufnr = task:get_bufnr()
+                return bufnr and vim.api.nvim_buf_is_valid(bufnr)
+            end,
+            run = function(task)
+                vim.cmd([[normal! m']])
+                close_task(task.strategy.bufnr)
+                vim.bo[task.strategy.bufnr].filetype = "OverseerPanelTask"
+                vim.cmd.vsplit()
+                vim.api.nvim_win_set_buf(0, task:get_bufnr())
+                util.scroll_to_end(0)
+            end,
+        },
     },
     templates = { "cargo", "just", "make", "npm", "shell", "tox", "vscode", "mix", "rake", "task", "user" }
 })
 
 vim.api.nvim_set_hl(0, "OverseerTaskBorder", { link = "Normal" })
-
-OpenTaskBufnr = {}

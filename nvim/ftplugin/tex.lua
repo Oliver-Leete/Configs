@@ -17,6 +17,8 @@ Map({ "n", "x", "o" }, "]m", "<cmd>let g:dirJumps='n'<cr>m`<plug>(vimtex-]n)zz",
 Map({ "x", "o" }, "anm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-a$)')<cr>", { buffer = 0 })
 Map({ "x", "o" }, "inm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-i$)')<cr>", { buffer = 0 })
 
+Map("n", "<c-leftmouse>", "<cmd>TexlabForward<cr>")
+
 Map("n", "dpe", "<plug>(vimtex-env-delete)", { buffer = 0, remap = true })
 Map("n", "dpc", "<plug>(vimtex-cmd-delete)", { buffer = 0, remap = true })
 Map("n", "dpd", "<plug>(vimtex-delim-delete)", { buffer = 0, remap = true })
@@ -37,7 +39,7 @@ Map("n", ",nd", "<plug>(vimtex-delim-toggle-modifier)", { buffer = 0, remap = tr
 
 vim.api.nvim_buf_set_option(0, "textwidth", 100)
 
-Map("n", "<leader>/", function()
+Map("n", "<leader>z", function()
     local test_results = vim.fn.systemlist([[rg --json '\\input\{]] .. vim.fn.expand("%:r") .. [[(\.tex)?}']])
     for _, result in pairs(test_results) do
         result = vim.json.decode(result)

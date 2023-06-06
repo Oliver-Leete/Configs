@@ -117,6 +117,11 @@ require("lualine").setup({
                 "b:gitsigns_head",
                 icon = "",
                 on_click = function() vim.defer_fn(function() vim.cmd("Telescope git_branches") end, 100) end,
+                separator = { left = "", right = "" },
+            },
+            {
+                function() return "" end,
+                draw_empty = true,
                 separator = { left = "", right = "" },
             },
         },

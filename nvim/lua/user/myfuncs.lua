@@ -1,20 +1,21 @@
 M = {}
 
 local winclose = function() vim.cmd.wincmd({ args = { "c" } }) end
+local edgy_left = function() require("edgy").close("left") end
+local edgy_bot = function() require("edgy").close("bottom") end
 
 M.special_types = {
     lazy = { exit_func = winclose },
     qf = { name = " QuickFix", exit_func = winclose },
-    help = { name = "󰍉 Help", exit_func = winclose },
+    help = { exit_func = edgy_left },
     ["vim-plug"] = { name = " Plugs", exit_func = winclose },
     lspinfo = { exit_func = winclose },
-    tsplayground = { name = " TSPlayground", exit_func = winclose },
     notify = { exit_func = winclose },
     DiffviewFileHistory = { name = " Diffs", exit_func = function() vim.cmd("DiffviewClose") end },
     DiffviewFiles = { name = " Diffs", exit_func = function() vim.cmd("DiffviewClose") end },
-    OverseerList = { name = " Tasks", exit_func = function() vim.cmd("OverseerClose") end },
+    OverseerList = { exit_func = edgy_left },
     OverseerForm = { exit_func = winclose },
-    Trouble = { name = " QuickFix", exit_func = winclose },
+    Trouble = { exit_func = edgy_bot },
     ["dap-float"] = { exit_func = winclose },
     ["dapui_scopes"] = { name = "Scopes", exit_func = winclose },
     ["dapui_breakpoints"] = { name = "Breakpoints", exit_func = winclose },
@@ -22,17 +23,16 @@ M.special_types = {
     ["dapui_watches"] = { name = "Watches", exit_func = winclose },
     ["dap-repl"] = { name = "Debug REPL", exit_func = winclose },
     ["dapui_console"] = { name = "Debug Console", exit_func = winclose },
-    ["neotest-summary"] = { name = " Tests", exit_func = winclose },
-    ["neotest-output-panel"] = { name = " Test Output", exit_func = winclose },
+    ["neotest-summary"] = { exit_func = edgy_left },
+    ["neotest-output-panel"] = { exit_func = edgy_bot },
     ["neotest-output"] = { name = " Tests", exit_func = winclose },
     ["gitcommit"] = { name = "Git Commit Message", exit_func = winclose },
-    ["noice"] = { exit_func = function() vim.cmd.quit() end },
+    ["NoiceHistory"] = { exit_func = edgy_bot },
     ["mason"] = { exit_func = winclose },
     ["null-ls-info"] = { exit_func = winclose },
     ["Glance"] = { exit_func = require('glance').actions.close },
     asm = { name = "Compiler Explorer", exit_func = winclose },
 }
-
 
 M.is_special = function(bufnr)
     local filetype = vim.bo[bufnr].filetype
@@ -239,5 +239,18 @@ TabPrev = function()
     end
 end
 vim.api.nvim_create_user_command("TabPrev", TabPrev, { nargs = 0 })
+
+M.toggle_noice = function()
+    for _, winnr in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if vim.api.nvim_win_is_valid(winnr) then
+            local bufnr = vim.api.nvim_win_get_buf(winnr)
+            if vim.bo[bufnr].filetype == "NoiceHistory" then
+                vim.api.nvim_win_close(winnr, true)
+            end
+        end
+    end
+    require("noice").cmd("history")
+    vim.bo.filetype = "NoiceHistory"
+end
 
 return M

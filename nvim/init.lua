@@ -25,14 +25,12 @@ require("lazy").setup(
         "tpope/vim-repeat",
         "kyazdani42/nvim-web-devicons",
         "907th/vim-auto-save",
-        "anuvyklack/hydra.nvim",
-        "anuvyklack/keymap-layer.nvim",
-        "kevinhwang91/promise-async",
+        { "anuvyklack/hydra.nvim", dependencies = { "anuvyklack/keymap-layer.nvim" } },
 
         "chrisgrieser/nvim-genghis",
         "stevearc/resession.nvim",
         "cbochs/grapple.nvim",
-        "https://git.sr.ht/~marcc/BufferBrowser",
+        "kazhala/close-buffers.nvim",
 
         "echasnovski/mini.nvim",
         "ap/vim-you-keep-using-that-word",
@@ -58,16 +56,14 @@ require("lazy").setup(
 
         "lewis6991/gitsigns.nvim",
         "sindrets/diffview.nvim",
-        "cvigilv/diferente.nvim",
 
         { "rebelot/kanagawa.nvim", commit = "4c8d48726621a7f3998c7ed35b2c2535abc22def" },
         "stevearc/dressing.nvim",
-        "rcarriga/nvim-notify",
         "nvim-lualine/lualine.nvim",
-        "MunifTanjim/nui.nvim",
-        "folke/noice.nvim",
+        { "folke/noice.nvim",      dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" } },
         "nvim-zh/colorful-winsep.nvim",
 
+        "folke/edgy.nvim",
         "folke/todo-comments.nvim",
         "folke/trouble.nvim",
 
@@ -76,20 +72,19 @@ require("lazy").setup(
         "jayp0521/mason-nvim-dap.nvim",
 
         "jose-elias-alvarez/null-ls.nvim",
+        "LostNeophyte/null-ls-embedded",
         "neovim/nvim-lspconfig",
         "barreiroleo/ltex_extra.nvim",
         "p00f/clangd_extensions.nvim",
         "b0o/schemastore.nvim",
-        "LostNeophyte/null-ls-embedded",
 
         "SmiteshP/nvim-navic",
         "DNLHC/glance.nvim",
         "yioneko/nvim-type-fmt",
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-        "onsails/lspkind.nvim",
         "lvimuser/lsp-inlayhints.nvim",
 
-        "hrsh7th/nvim-cmp",
+        { "hrsh7th/nvim-cmp", dependencies = { "onsails/lspkind.nvim", } },
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-path",
         "hrsh7th/cmp-nvim-lua",
@@ -99,10 +94,8 @@ require("lazy").setup(
         "hrsh7th/cmp-cmdline",
         "dmitmel/cmp-cmdline-history",
         "uga-rosa/cmp-dictionary",
-        "mtoohey31/cmp-fish",
         "saadparwaiz1/cmp_luasnip",
         "L3MON4D3/cmp-luasnip-choice",
-        "kdheepak/cmp-latex-symbols",
         "kdheepak/cmp-latex-symbols",
         "rcarriga/cmp-dap",
 
@@ -112,7 +105,6 @@ require("lazy").setup(
         "abecodes/tabout.nvim",
 
         "nvim-telescope/telescope.nvim",
-        "nvim-telescope/telescope-file-browser.nvim",
         {
             "nvim-telescope/telescope-fzf-native.nvim",
             build =
@@ -120,13 +112,10 @@ require("lazy").setup(
         },
         "debugloop/telescope-undo.nvim",
         "FeiyouG/command_center.nvim",
-        "kkharji/sqlite.lua",
-        "prochri/telescope-all-recent.nvim",
-        { "nvim-treesitter/nvim-treesitter", build = ":TSInstall all | TSUpdate | TSUninstall comment" },
-        "nvim-treesitter/playground",
+        { "prochri/telescope-all-recent.nvim", dependencies = { "kkharji/sqlite.lua" } },
+        { "nvim-treesitter/nvim-treesitter",   build = ":TSInstall all | TSUpdate | TSUninstall comment" },
         "nvim-treesitter/nvim-treesitter-textobjects",
         "ThePrimeagen/refactoring.nvim",
-        "AckslD/nvim-trevJ.lua",
         "CKolkey/ts-node-action",
         "drybalka/tree-climber.nvim",
 
@@ -150,10 +139,6 @@ require("lazy").setup(
 
         "MrcJkb/haskell-tools.nvim",
         "mrcjkb/neotest-haskell",
-
-        "guns/vim-sexp",
-        "Olical/aniseed",
-        -- "Olical/conjure",
 
         "folke/neodev.nvim",
         "nvim-neotest/neotest-plenary",
@@ -181,7 +166,6 @@ SendID = nil
 
 pcall(require("user.misc"))
 pcall(require("user.mappings"))
-pcall(require("user.command"))
 pcall(require("user.targets"))
 pcall(require("user.telescope"))
 pcall(require("user.compleation"))
@@ -206,7 +190,10 @@ pcall(require("user.mini"))
 pcall(require("user.noice"))
 
 pcall(require("user.filmpicker"))
+pcall(require("user.command"))
 
 -- need to put this after targets
 Map("x", "i", "<Plug>(niceblock-I)", { remap = true, nowait = true })
 Map("x", "a", "<Plug>(niceblock-A)", { remap = true, nowait = true })
+
+require("user.projects").load_session()

@@ -174,7 +174,6 @@ require("telescope").setup({
 
 require("telescope").load_extension("undo")
 require("telescope").load_extension("command_center")
-require("telescope").load_extension("file_browser")
 require("telescope").load_extension("fzf")
 
 function ProjectFiles()
@@ -210,20 +209,21 @@ require('telescope-all-recent').setup({
         },
         vim_ui_select = {
             kinds = {
+                resession_load = {
+                    use_cwd = false,
+                    sorting = 'frecent',
+                },
                 overseer_template = {
                     use_cwd = true,
-                    prompt = "Task template",
-                    name_include_prompt = true,
+                    sorting = 'frecent',
                 },
                 overseer_task_options = {
                     use_cwd = true,
-                    prompt = "Task template",
-                    name_include_prompt = true,
+                    sorting = 'frecent',
                 },
                 dap_run = {
                     use_cwd = true,
-                    prompt = "Configuration: ",
-                    name_include_prompt = true,
+                    sorting = 'frecent',
                 },
             }
         },

@@ -1,7 +1,5 @@
 -- Command Panel Bindings
-local telescopeFileBrowser = "Telescope file_browser respect_gitignore=false theme=get_ivy"
 local genghis = require("genghis")
-local tele = require("user.telescope")
 local func = require("user.myfuncs")
 
 local command_center = require("command_center")
@@ -9,7 +7,6 @@ local command_center = require("command_center")
 command_center.add({
     { category = "compiler", desc = "Compiler explorer", cmd = "<cmd>CECompile<cr>" },
     { category = "compiler", desc = "Live compiler explorer", cmd = "<cmd>CECompileLive<cr>" },
-    -- { category = "compiler", desc = "Hex toggle", cmd = require("hex").toggle },
 
     { category = "coverage", desc = "Coverage summary", cmd = "<cmd>CoverageSummary<cr>" },
     { category = "coverage", desc = "Load coverage", cmd = "<cmd>Coverage<cr>" },
@@ -23,9 +20,9 @@ command_center.add({
     { category = "default", desc = "Toggle text wraping", cmd = "<cmd>set wrap!<cr>" },
     { category = "default", desc = "Toggle autowrapping", cmd = func.toggle_autowrap },
     { category = "default", desc = "Undo list", cmd = "<cmd>Telescope undo undo<cr>" },
-    -- { category = "default", desc = "Reload snippets", cmd = "<cmd>source ~/.config/nvim/after/plugin/luasnip.lua<cr>" },
     { category = "default", desc = "Edit Snippets", cmd = function() require("luasnip.loaders").edit_snippet_files({ edit = function(file) vim.cmd("vsplit " .. file) end}) end},
-    { category = "default", desc = "Toggle Minimap", cmd = require("mini.map").toggle },
+    { category = "default", desc = "Delete Session", cmd = function() require("user.projects").delete_session() end },
+    { category = "default", desc = "Clean Up Buffers", cmd = function() require('close_buffers').delete({ type = 'hidden', force = true }) end },
 
     { category = "info", desc = "Lazy", cmd = "<cmd>Lazy<cr>" },
     { category = "info", desc = "Mason", cmd = "<cmd>Mason<cr>" },
@@ -41,8 +38,6 @@ command_center.add({
 
     { category = "finders", desc = "Buffers", cmd = "<cmd>Telescope buffers theme=get_ivy<cr>" },
     { category = "finders", desc = "Diagnostics", cmd = "<cmd>Telescope diagnostics bufnr=0 theme=get_ivy<cr>" },
-    { category = "finders", desc = "File browser", cmd = telescopeFileBrowser },
-    { category = "finders", desc = "File browser (relative)", cmd = telescopeFileBrowser .. " cwd=%:p:h" },
     { category = "finders", desc = "Files", cmd = "<cmd>Telescope git_files theme=get_ivy<cr>" },
     { category = "finders", desc = "Grep", cmd = "<cmd>Telescope live_grep theme=get_ivy<cr>" },
     { category = "finders", desc = "History (telescope)", cmd = "<cmd>Telescope noice theme=get_ivy<cr>" },

@@ -42,6 +42,7 @@ Map({ "n", "x", "o" }, ")", "<nop>, test")
 Map("n", "<esc>", function()
     vim.cmd("Noice dismiss")
     require("substitute.exchange").cancel()
+    require("edgy").close()
 end)
 
 Map({ "n", "x", "o" }, "<m-f>", ";")
@@ -408,22 +409,9 @@ end
 
 local action_util = require("overseer.action_util")
 local overseer = require("overseer")
-Map("n", "<leader>h", function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local task = vim.tbl_filter(function(t) return (t.strategy.bufnr == bufnr) end, overseer.list_tasks())
-        [1]
-    if task then
-        action_util.run_task_action(task)
-    else
-        vim.cmd("OverseerTaskAction")
-    end
-end)
-Map("n", "<leader>H", "<cmd>OverseerTaskAction<cr>")
-Map("n", "<leader>n", function() require("neotest").summary.toggle() end)
-Map("n", "<leader>e", "<cmd>OverseerToggle bottom<cr>")
-Map("n", "<leader>E", "<cmd>OverseerQuickAction open<cr>")
-Map("n", "<leader>i", "<cmd>OverseerRun<cr>")
-Map("n", "<leader>I", function()
+
+Map("n", "<leader>n", "<cmd>OverseerRun<cr>")
+Map("n", "<leader>N", function()
     local overseer = require("overseer")
     local tasks = overseer.list_tasks({ recent_first = true })
     if vim.tbl_isempty(tasks) then
@@ -432,14 +420,37 @@ Map("n", "<leader>I", function()
         overseer.run_action(tasks[1], "restart")
     end
 end)
-Map("n", "<leader>o", function() require("trouble").toggle({ mode = "quickfix" }) end)
+Map("n", "<leader>e", function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local task = vim.tbl_filter(function(t) return (t.strategy.bufnr == bufnr) end, overseer.list_tasks())[1]
+    if task then
+        action_util.run_task_action(task)
+    else
+        vim.cmd("OverseerTaskAction")
+    end
+end)
+Map("n", "<leader>E", "<cmd>OverseerTaskAction<cr>")
+Map("n", "<leader>i", function() require("neotest").run.run() end)
+Map("n", "<leader>I", function() require("neotest").run.run_last() end)
+Map("n", "<leader>o", function() require("neotest").run.run({ strategy = "dap" }) end)
+Map("n", "<leader>O", function() require("neotest").run.run_last({ strategy = "dap" }) end)
 
-Map("n", "<leader>l", function() require("neotest").run.run() end)
-Map("n", "<leader>L", function() require("neotest").run.run_last() end)
-Map("n", "<leader>j", function() require("neotest").run.run({ strategy = "dap" }) end)
-Map("n", "<leader>J", function() require("neotest").run.run_last({ strategy = "dap" }) end)
+Map("n", "<leader>h", "<cmd>OverseerToggle<cr>")
+Map("n", "<leader>k", function()
+    require("neotest").summary.toggle()
+    local win = vim.fn.bufwinid("Neotest Summary")
+    if win > -1 then
+        vim.api.nvim_set_current_win(win)
+    end
+end)
 
-Map("n", "<leader>u", function() require("noice").cmd("history") end)
+Map("n", "<leader>m", function() require("trouble").toggle({ mode = "quickfix" }) end)
+Map("n", "<leader>,", "<cmd>OverseerQuickAction open<cr>")
+Map("n", "<leader><", "<cmd>OverseerQuickAction open here<cr>")
+Map("n", "<leader>.", function()
+    require("user.myfuncs").toggle_noice()
+end)
+Map("n", "<leader>/", function() vim.cmd.vsplit(); require("neotest").output_panel.toggle() end)
 
 Map("n", "<leader><cr>", function()
     if SendID then
@@ -477,8 +488,8 @@ Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
 
 local projects = require("user.projects")
 
-Map("n", "<leader>m", projects.load_session)
-Map("n", "<leader>M", projects.save_session)
+Map("n", "<leader>b", projects.load_session)
+Map("n", "<leader>B", projects.save_session)
 
 -- Mouse Bindings
 
@@ -524,18 +535,3 @@ end)
 -- Terminal Bindings
 
 Map("t", "<c-]>", "<c-\\><c-n>")
-
-local termMap = vim.api.nvim_create_augroup("termMap", {})
-vim.api.nvim_create_autocmd(
-    "BufEnter",
-    {
-        pattern = "*",
-        group = termMap,
-        callback = function()
-            if vim.bo.buftype == "terminal" then
-                Map("n", "<esc>", "<cmd>OverseerOpen bottom<cr>", { buffer = 0 })
-            end
-        end
-    }
-
-)

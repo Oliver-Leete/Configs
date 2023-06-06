@@ -79,28 +79,20 @@ end
 
 local overseer = require("overseer")
 local special_name = function(bufnr)
-    if vim.bo[bufnr].filetype == "help" then
-        local help_title = vim.fn.expand("%:t:r")
-        help_title = help_title:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end)
-        return help_title .. " Help", false
-    elseif vim.bo[bufnr].buftype == "terminal" then
-        local task = vim.tbl_filter(
-            function(t)
-                if t.strategy.bufnr == bufnr then
-                    return true
-                else
-                    return false
-                end
-            end,
-            overseer.list_tasks()
-        )[1]
-        if task then return task.name, true end
-        return "Terminal", true
+    local task = vim.tbl_filter(
+        function(t)
+            if t.strategy.bufnr == bufnr then
+                return true
+            else
+                return false
+            end
+        end,
+        overseer.list_tasks()
+    )[1]
+    if task then
+        return task.name
     else
-        local filetype = func.special_types[vim.bo[bufnr].filetype].name
-        if filetype then
-            return filetype, false
-        end
+        return "Terminal"
     end
 end
 

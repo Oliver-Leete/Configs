@@ -176,35 +176,38 @@ glance.setup({
     },
 })
 
-vim.go.winbar = ""
-vim.go.statuscolumn = "%C"
+vim.go.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
+vim.go.winbar = "%{%v:lua.Normal_Winbar()%}"
 
-local init_ui_elements = function(info)
-    local special = function(bufnr)
-        return funcs.is_special(bufnr) and
-            funcs.special_types[vim.bo[bufnr].filetype].name ~= nil
-    end
-    local is_file = (
-        vim.fn.filereadable(vim.api.nvim_buf_get_name(info.buf)) == 1
-    -- or vim.bo[info.buf].filetype ~= ""
-    ) and true or false
-    if vim.api.nvim_buf_get_name(0) == "/tmp/film_list.films" then
-        vim.go.winbar = "%{%v:lua.Filmpicker_winbar()%}"
-        vim.wo.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
-    elseif vim.bo[info.buf].buftype == "" and not special(info.buf) and is_file then
-        vim.wo.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
-        vim.wo.winbar = "%{%v:lua.Normal_Winbar()%}"
-    elseif special(info.buf) or vim.bo[info.buf].buftype == "terminal" then
-        vim.wo.statuscolumn = "%s"
-        vim.wo.winbar = "%{%v:lua.Special_Winbar()%}"
-    else
-        vim.wo.statuscolumn = "%s"
-        vim.wo.winbar = ""
-    end
-end
+vim.wo.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
+vim.wo.winbar = "%{%v:lua.Normal_Winbar()%}"
 
-local colGroup = vim.api.nvim_create_augroup("colGroup", {})
-vim.api.nvim_create_autocmd("BufEnter", { pattern = "*", callback = init_ui_elements, group = colGroup, })
-vim.api.nvim_create_autocmd("FileType", { pattern = "*", callback = init_ui_elements, group = colGroup, })
-vim.api.nvim_create_autocmd("WinEnter", { pattern = "*", callback = init_ui_elements, group = colGroup, })
-vim.api.nvim_create_autocmd("TermOpen", { pattern = "*", callback = init_ui_elements, group = colGroup, })
+-- local init_ui_elements = function(info)
+--     local special = function(bufnr)
+--         return funcs.is_special(bufnr) and
+--             funcs.special_types[vim.bo[bufnr].filetype].name ~= nil
+--     end
+--     local is_file = (
+--         vim.fn.filereadable(vim.api.nvim_buf_get_name(info.buf)) == 1
+--     -- or vim.bo[info.buf].filetype ~= ""
+--     ) and true or false
+--     if vim.api.nvim_buf_get_name(0) == "/tmp/film_list.films" then
+--         vim.go.winbar = "%{%v:lua.Filmpicker_winbar()%}"
+--         vim.wo.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
+--     elseif vim.bo[info.buf].buftype == "" and not special(info.buf) and is_file then
+--         vim.wo.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
+--         vim.wo.winbar = "%{%v:lua.Normal_Winbar()%}"
+--     elseif special(info.buf) or vim.bo[info.buf].buftype == "terminal" then
+--         vim.wo.statuscolumn = "%s"
+--         vim.wo.winbar = "%{%v:lua.Special_Winbar()%}"
+--     else
+--         vim.wo.statuscolumn = "%s"
+--         vim.wo.winbar = ""
+--     end
+-- end
+--
+-- local colGroup = vim.api.nvim_create_augroup("colGroup", {})
+-- vim.api.nvim_create_autocmd("BufEnter", { pattern = "*", callback = init_ui_elements, group = colGroup, })
+-- vim.api.nvim_create_autocmd("FileType", { pattern = "*", callback = init_ui_elements, group = colGroup, })
+-- vim.api.nvim_create_autocmd("WinEnter", { pattern = "*", callback = init_ui_elements, group = colGroup, })
+-- vim.api.nvim_create_autocmd("TermOpen", { pattern = "*", callback = init_ui_elements, group = colGroup, })

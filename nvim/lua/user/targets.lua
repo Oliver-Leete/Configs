@@ -195,18 +195,6 @@ vim.g.dirJumps = "search"
 Map({ "n", "x", "o" }, "n", function() return command_repeat("]", "dirJumps") end, { expr = true, remap = true })
 Map({ "n", "x", "o" }, "N", function() return command_repeat("[", "dirJumps") end, { expr = true, remap = true })
 
--- require('buffer_browser').setup()
--- local bufMapover = vim.api.nvim_create_augroup("bufmapOver", { clear = true })
--- vim.api.nvim_create_autocmd(
---     { "BufEnter" },
---     { group = bufMapover, callback = function()
---         Map({ "n", "x", "o" }, "[[", require("buffer_browser").prev, { buffer = 0 })
---         Map({ "n", "x", "o" }, "]]", require("buffer_browser").next, { buffer = 0 })
---     end }
--- )
--- Map({ "n", "x", "o" }, "[[", require("buffer_browser").prev)
--- Map({ "n", "x", "o" }, "]]", require("buffer_browser").next)
-
 for _, o in pairs(vim.tbl_keys(custom_objects)) do
     Map({ "n", "x", "o" }, "[" .. o, function() mark_and_go_mini("prev", o, "left") end)
     Map({ "n", "x", "o" }, "]" .. o, function() mark_and_go_mini("next", o, "left") end)

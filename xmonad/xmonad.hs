@@ -114,30 +114,30 @@ projects n =
     , Project { pName = "Tmp2",       pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
 
     , Project { pName = "Home",       pDir = "~/PersonalDrive",               pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Home" }
-    , Project { pName = "CodeTuts",   pDir = "~/Projects/rustBook",           pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "CodeTuts" }
+    , Project { pName = "CodeTuts",   pDir = "~/Projects/rustBook",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "CodeTuts" }
     , Project { pName = "Print",      pDir = "~/Projects/Printing",           pApp1 = prusa,    pApp1F = prusaF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = oneSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer" }
     , Project { pName = "Games",      pDir = "~/Documents",                   pApp1 = steam,    pApp1F = steamF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = oneSpawn "Games" "steam" }
     , Project { pName = "Films",      pDir = "~/Videos/films",                pApp1 = kitty,    pApp1F = kittyF,    pApp2 = mpv,       pApp2F = mpvF,      pApp3 = deluge,    pApp3F = delugeF,   pStart = filmSpawn "Films" }
     , Project { pName = "Dnd",        pDir = "~/Projects/Rpgs",               pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Dnd" }
 
-    , Project { pName = "Configs",    pDir = "~/.config",                     pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Configs" }
-    , Project { pName = "QMK",        pDir = "~/Projects/qmk_firmware",       pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "QMK" }
-    , Project { pName = "ZMK",        pDir = "~/Projects/zmk-config",         pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ZMK" }
+    , Project { pName = "Configs",    pDir = "~/.config",                     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Configs" }
+    , Project { pName = "QMK",        pDir = "~/Projects/qmk_firmware",       pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "QMK" }
+    , Project { pName = "ZMK",        pDir = "~/Projects/zmk-config",         pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ZMK" }
 
     , Project { pName = "Wrk",        pDir = "~/UniDrive",                    pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Wrk" }
     , Project { pName = "WrkNotes",   pDir = "~/Projects/Thesis/Notes",       pApp1 = obsidian, pApp1F = obsidianF, pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = oneSpawn "WrkNotes" "flatpak run md.obsidian.Obsidian" }
-    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",      pApp1 = kitty,     pApp1F = kittyF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = termBrowSpawn "Thesis" }
-    , Project { pName = "Sim",        pDir = "~/Projects/PowderModel",        pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Sim" }
-    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",      pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Exp" }
-    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",     pApp1 = kitty,     pApp1F = kittyF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = hdfview,   pApp3F = hdfviewF,  pStart = termBrowSpawn "Scripts" }
-    , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",      pApp1 = kitty,     pApp1F = kittyF,     pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = commentSpawn "Comments" }
-    , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",   pApp1 = kitty,     pApp1F = kittyF,     pApp2 = paraview,  pApp2F = paraviewF, pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ANSYS" }
+    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",      pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = termBrowSpawn "Thesis" }
+    , Project { pName = "Sim",        pDir = "~/Projects/PowderModel",        pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Sim" }
+    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",      pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Exp" }
+    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = hdfview,   pApp3F = hdfviewF,  pStart = termBrowSpawn "Scripts" }
+    , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",      pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = commentSpawn "Comments" }
+    , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",   pApp1 = kitty,    pApp1F = kittyF,    pApp2 = paraview,  pApp2F = paraviewF, pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ANSYS" }
 
-    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",     pApp1 = kitty,     pApp1F = kittyF,     pApp2 = scinCont,  pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Main" }
-    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys", pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Print" }
-    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware", pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Firm" }
-    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",     pApp1 = kitty,     pApp1F = kittyF,     pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Docs" }
-    , Project { pName = "Scin-Test",  pDir = "~/Projects/Scintilla/Main",     pApp1 = kitty,     pApp1F = kittyF,     pApp2 = scinCont,  pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
+    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Main" }
+    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys", pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Print" }
+    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware", pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Firm" }
+    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Docs" }
+    , Project { pName = "Scin-Test",  pDir = "~/Projects/Scintilla/Main",     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
     ]
     where
         kitty  = upPointer $ runOrRaiseNext "kitty" (className =? "kitty")

@@ -1,22 +1,5 @@
 local overseer = require("overseer")
 
-local get_win_id = function(bufnr)
-    winids = {}
-    if bufnr then
-        for _, tabid in ipairs(vim.api.nvim_list_tabpages()) do
-            for _, winid in ipairs(vim.api.nvim_tabpage_list_wins(tabid)) do
-                local winbufnr = vim.api.nvim_win_get_buf(winid)
-                local winvalid = vim.api.nvim_win_is_valid(winid)
-
-                if winvalid and winbufnr == bufnr then
-                    table.insert(winids, winid)
-                end
-            end
-        end
-    end
-    return winids
-end
-
 return {
     desc = "Open in split on task start",
     editable = false,
@@ -38,16 +21,11 @@ return {
     constructor = function(params)
         return {
             on_start = function(_, task)
-                if task.cmd == "fish" then
-                    overseer.open()
-                    if not params.goto_prev then
-                        require("user.myfuncs").nav_dir("l")
-                        if params.start_insert then
-                            vim.cmd.startinsert()
-                        end
-                    else
-                        vim.cmd.wincmd({ args = { "p" } })
-                    end
+                overseer.run_action(task, "open")
+                if not params.goto_prev and params.start_insert then
+                    vim.cmd.startinsert()
+                else
+                    vim.cmd.wincmd({ args = { "p" } })
                 end
             end
         }
