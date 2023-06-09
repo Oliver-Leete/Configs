@@ -238,6 +238,13 @@ return {
                 components = { "default", "unique" },
             },
             {
+                name = "Run Julia File in Project (" .. vim.fn.expand("%:t:r") .. ")",
+                tskName = "Running " .. vim.fn.expand("%:t:r"),
+                cmd = juliaCommand .. "--project " .. vim.fn.expand("%:p"),
+                condition = isFile,
+                components = { "default", "unique" },
+            },
+            {
                 name = "Run Julia File Interactivly (" .. vim.fn.expand("%:t:r") .. ")",
                 tskName = "Running " .. vim.fn.expand("%:t:r") .. "Interactivly",
                 cmd = juliaCommand .. "-i " .. vim.fn.expand("%:p"),
