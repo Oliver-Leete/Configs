@@ -72,12 +72,3 @@ vim.g.vimtex_compiler_latexmk = {
     ["hooks"] = {},
     ["options"] = { "-pdf", "-verbose", "-file-line-error", "-synctex=1", "-interaction=nonstopmode" },
 }
-
-if vim.g.viewerOpen ~= 1 then
-    vim.g.viewerOpen = 1
-    vim.cmd("VimtexView")
-    vim.cmd("sleep 200m")
-    vim.cmd("silent !xdotool key super+n")
-end
-
-vim.go.winbar = "%{%v:lua.Normal_Winbar()%}"

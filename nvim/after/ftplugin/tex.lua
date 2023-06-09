@@ -19,3 +19,12 @@ if vim.g.countSaved ~= 1 then
     vim.fn.jobstart([[julia -e 'using CSV, DataFrames, Plots; a = CSV.File("/home/oleete/Documents/University/wordcount.csv") |> DataFrame; p = plot(a[!,1], a[!,2], legend=false); savefig(p, "/home/oleete/Documents/University/wordcount.png")']])
     vim.g.countSaved = 1
 end
+
+if vim.g.viewerOpen ~= 1 then
+    vim.g.viewerOpen = 1
+    vim.cmd("VimtexView")
+    vim.cmd("sleep 200m")
+    vim.cmd("silent !xdotool key super+n")
+end
+
+vim.go.winbar = "%{%v:lua.Normal_Winbar()%}"
