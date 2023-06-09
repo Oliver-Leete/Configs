@@ -309,7 +309,7 @@ myKeys n =
     , ("<XF86AudioRaiseVolume>"  , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ +5%" )
     , ("<XF86AudioMute>"         , spawn "/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ 0%" )
     , ("<XF86Display>"           , spawn "/home/oleete/.config/bin/displayctl" )
-    , ("<XF86AudioPlay>"         , spawn "playerctl play")
+    , ("<XF86AudioPlay>"         , spawn "playerctl play-pause")
     , ("<XF86AudioStop>"         , spawn "playerctl stop")
     , ("<XF86AudioPause>"        , spawn "playerctl pause")
     , ("<XF86AudioPrev>"         , spawn "playerctl previous")
@@ -341,7 +341,6 @@ myKeys n =
     , ("M-<Right>"       , bF $ nv "TabNext" $ l (P.sendKey controlMask xK_Tab))
     , ("M-<Down>"        , windows W.focusDown)
     , ("M-<Up>"          , windows W.focusUp)
-
 
     , ("M-w"             , bF $ nv "ZenOrFull" $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
     , ("M-z"             , toggleLayout FULL)
