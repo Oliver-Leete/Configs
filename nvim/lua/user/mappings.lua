@@ -450,7 +450,9 @@ Map("n", "<leader><", "<cmd>OverseerQuickAction open here<cr>")
 Map("n", "<leader>.", function()
     require("user.myfuncs").toggle_noice()
 end)
-Map("n", "<leader>/", function() vim.cmd.vsplit(); require("neotest").output_panel.toggle() end)
+Map("n", "<leader>/", function()
+    vim.cmd.vsplit(); require("neotest").output_panel.toggle()
+end)
 
 Map("n", "<leader><cr>", function()
     if SendID then

@@ -14,6 +14,8 @@ M.special_types = {
     DiffviewFileHistory = { name = " Diffs", exit_func = function() vim.cmd("DiffviewClose") end },
     DiffviewFiles = { name = " Diffs", exit_func = function() vim.cmd("DiffviewClose") end },
     OverseerList = { exit_func = edgy_left },
+    OverseerPanelTask = { exit_func = edgy_bot },
+    edgy = { exit_func = require("edgy").close },
     OverseerForm = { exit_func = winclose },
     Trouble = { exit_func = edgy_bot },
     ["dap-float"] = { exit_func = winclose },

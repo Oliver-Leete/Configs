@@ -25,7 +25,7 @@ return {
                 if not params.goto_prev and params.start_insert then
                     vim.cmd.startinsert()
                 else
-                    vim.cmd.wincmd({ args = { "p" } })
+                    require("edgy").goto_main()
                 end
             end
         }
