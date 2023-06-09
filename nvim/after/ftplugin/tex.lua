@@ -26,5 +26,3 @@ if vim.g.viewerOpen ~= 1 then
     vim.cmd("sleep 200m")
     vim.cmd("silent !xdotool key super+n")
 end
-
-vim.go.winbar = "%{%v:lua.Normal_Winbar()%}"
