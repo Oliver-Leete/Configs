@@ -57,7 +57,7 @@ local recession_wrapper = function()
 end
 
 local grapple = function()
-    return "[⥣]"
+    return "󱡅 "
 end
 
 local is_wide = function()
@@ -71,7 +71,11 @@ require("lualine").setup({
         globalstatus = true,
         refresh = {
             statusline = 1000,
-        }
+        },
+        disabled_filetypes = {
+            statusline = {},
+            winbar = vim.tbl_keys(require("user.myfuncs").special_types),
+        },
     },
     sections = {
         lualine_a = {
@@ -87,31 +91,18 @@ require("lualine").setup({
                 require("hydra.statusline").get_name,
                 cond = require("hydra.statusline").is_active,
             },
-            {
-                grapple,
-                cond = require("grapple").exists,
-                on_click = function() vim.defer_fn(require("grapple").popup_tags, 100) end,
-            },
         },
         lualine_b = {
-            {
-                "diagnostics",
-                symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
-                on_click = function()
-                    vim.defer_fn(function() vim.cmd("Telescope diagnostics bufnr=0 theme=get_ivy") end
-                    , 100)
-                end,
-            },
             {
                 "overseer",
                 symbols = ov_list,
                 on_click = function() vim.defer_fn(require("overseer").toggle, 100) end,
             },
             {
-                "diff",
-                source = diff_source,
-                symbols = { added = " ", modified = " ", removed = " " },
-                on_click = function() vim.defer_fn(function() vim.cmd("DiffviewOpen") end, 100) end,
+                recession_wrapper,
+                cond = function() return require("resession").get_current() ~= nil end,
+                on_click = function() vim.defer_fn(function() require("resession").load() end, 100) end
+
             },
             {
                 "b:gitsigns_head",
@@ -168,12 +159,6 @@ require("lualine").setup({
                 on_click = function() vim.defer_fn(function() vim.cmd("LspInfo") end, 100) end,
             },
             {
-                recession_wrapper,
-                cond = function() return require("resession").get_current() ~= nil end,
-                on_click = function() vim.defer_fn(function() require("resession").load() end, 100) end
-
-            },
-            {
                 "location",
             },
             {
@@ -183,4 +168,110 @@ require("lualine").setup({
             },
         }
     },
+    winbar = {
+        lualine_a = {
+            {
+                function() return "" end,
+                draw_empty = true,
+                separator = { left = " ", right = left },
+            },
+            {
+                grapple,
+                cond = require("grapple").exists,
+                on_click = function() vim.defer_fn(require("grapple").popup_tags, 100) end,
+            },
+            {
+                "filename",
+                path = 1,
+                symbols = {
+                    modified = "󰷫 ", -- Text to show when the file is modified.
+                    readonly = "󰏯 ", -- Text to show when the file is non-modifiable or readonly.
+                    unnamed = "",    -- Text to show for unnamed buffers.
+                    newfile = "󰎔 ", -- Text to show for newly created file before first write
+                },
+            },
+        },
+        lualine_b = {
+            {
+                "navic",
+                color_correction = "dynamic",
+                navic_opts = { separator = "  ", highlight = true, },
+                separator = { left = left, right = "" },
+                padding = { left = 1, right = 0 }
+            },
+            {
+                function() return " " end,
+                draw_empty = true,
+                separator = { left = left, right = "" },
+                padding = { left = 0, right = 0 }
+            },
+        },
+        lualine_c = {},
+        lualine_y = {
+            {
+                function() return "" end,
+                draw_empty = true,
+                separator = { left = "", right = "" },
+                padding = { left = 0, right = 0 }
+            },
+            {
+                "diff",
+                source = diff_source,
+                symbols = { added = " ", modified = " ", removed = " " },
+                on_click = function() vim.defer_fn(function() vim.cmd("DiffviewOpen") end, 100) end,
+            },
+            {
+                "diagnostics",
+                symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
+                on_click = function()
+                    vim.defer_fn(function() vim.cmd("Telescope diagnostics bufnr=0 theme=get_ivy") end,
+                        100)
+                end,
+            },
+        },
+        lualine_z = {
+            {
+                "filetype",
+                colored = false,
+                icon_only = true,
+                separator = { left = right, right = " " },
+            },
+        },
+    },
+    inactive_winbar = {
+        lualine_a = {
+            {
+                function() return "" end,
+                draw_empty = true,
+                separator = { left = " ", right = left },
+            },
+            {
+                grapple,
+                cond = require("grapple").exists,
+                on_click = function() vim.defer_fn(require("grapple").popup_tags, 100) end,
+            },
+            {
+                "filename",
+                path = 1,
+                symbols = {
+                    modified = "󰷫 ", -- Text to show when the file is modified.
+                    readonly = "󰏯 ", -- Text to show when the file is non-modifiable or readonly.
+                    unnamed = "",    -- Text to show for unnamed buffers.
+                    newfile = "󰎔 ", -- Text to show for newly created file before first write
+                },
+                separator = { left = " ", right = "" },
+            },
+        },
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {
+            {
+                "filetype",
+                colored = false,
+                icon_only = true,
+                separator = { left = "", right = " " },
+            },
+        },
+    },
 })
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg = Tc.sumiInk5, bg = Ct.ui.bg })

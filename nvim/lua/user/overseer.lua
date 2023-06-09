@@ -119,7 +119,6 @@ overseer.setup({
                 vim.bo[task.strategy.bufnr].filetype = "OverseerTask"
                 vim.api.nvim_win_set_buf(0, task:get_bufnr())
                 util.scroll_to_end(0)
-                vim.wo.winbar = "%{%v:lua.Special_Winbar()%}"
             end,
         },
         ["open"] = {

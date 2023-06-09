@@ -17,15 +17,14 @@ vim.opt.showmode = false
 vim.opt.laststatus = 3
 vim.opt.cmdheight = 0
 vim.opt.fillchars:append({
-    horiz = '━',
-    horizup = '┻',
+    horiz     = '━',
+    horizup   = '┻',
     horizdown = '┳',
-    vert = '┃',
-    vertleft = '┫',
+    vert      = '┃',
+    vertleft  = '┫',
     vertright = '┣',
     verthoriz = '╋',
-
-    diff = "╱",
+    diff      = "╱",
 })
 Border = "rounded"
 
