@@ -176,10 +176,9 @@ pcall(require("user.dap"))
 pcall(require("user.panels"))
 
 pcall(require("user.ui"))
-pcall(require("user.tabline"))
-pcall(require("user.winbar"))
-pcall(require("user.statuscol"))
 pcall(require("user.statusline"))
+pcall(require("user.tabline"))
+pcall(require("user.statuscol"))
 
 pcall(require("user.projects"))
 pcall(require("user.overseer"))
