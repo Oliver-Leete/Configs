@@ -176,6 +176,14 @@ Map({ "n", "x", "o" }, "gV", "`[v`]")
 Map("n", "gF", ":edit <cfile><cr>")
 Map("n", "gx", ":!xdg-open <cfile> &<cr><cr>")
 
+Map({ "n", "x" }, "gz", function()
+    if vim.b.upafunc then
+        vim.b.upafunc()
+    else
+        vim.notify("No up function found for this filetype", vim.log.levels.WARN)
+    end
+end)
+
 -- VIEW
 local view_hint = [[
 ┏^^^^━━━━━┳━━━━━━┳━━━━━^^^^┓
@@ -458,7 +466,7 @@ Map("n", "<leader><cr>", function()
     if SendID then
         vim.fn.chansend(SendID, vim.api.nvim_get_current_line() .. "\n")
     else
-        vim.cmd.echomsg({ args = { "'No Term set as send term'" } })
+        vim.notify("No Term set as send term", vim.log.levels.WARN)
     end
 end)
 Map("x", "<leader><cr>", function()
@@ -478,7 +486,7 @@ Map("x", "<leader><cr>", function()
         local selection = table.concat(lines, '\n')
         vim.fn.chansend(SendID, selection .. "\n")
     else
-        vim.cmd.echomsg({ args = { "'No Term set as send term'" } })
+        vim.notify("No Term set as send term", vim.log.levels.WARN)
     end
 end)
 

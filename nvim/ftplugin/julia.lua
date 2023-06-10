@@ -96,7 +96,7 @@ Map("n", ",di", function() No_Using_Toggle("Main.@infiltrate") end, { buffer = 0
 Map("n", ",dq", function() BP_Remove_All({ "Debugger", "Infiltrator" }, { "@bp", "@infiltrate", "Main.@infiltrate" }) end,
     { buffer = 0 })
 
-Map("n", "<leader>z", function()
+vim.b.upafunc = function()
     local path = vim.fn.expand("%")
     if vim.startswith(path, "docs/") then
         vim.cmd.edit({ args = { "docs/make.jl" } })
@@ -107,4 +107,4 @@ Map("n", "<leader>z", function()
     else
         vim.cmd.edit({ args = { "src/" .. vim.g.project .. ".jl" } })
     end
-end)
+end

@@ -180,7 +180,7 @@ function ProjectFiles()
     local results = require("telescope.utils").get_os_command_output({ "git", "rev-parse", "--git-dir" })
 
     if results == nil then
-        vim.cmd.echomsg({ args = { "'Something went wrong'" } })
+        vim.notify("Something went wrong", vim.log.levels.WARN)
     elseif results[1] then
         require("telescope.builtin").git_files(vim.tbl_extend("force", require("telescope.themes").get_ivy(), {
         }))
