@@ -30,21 +30,45 @@ require("dapui").setup({
     layouts = {
         {
             elements = {
-                "breakpoints",
-                "stacks",
-                "scopes",
+                "repl",
+            },
+            size = 0.3,
+            position = "bottom",
+        },
+        {
+            elements = {
+                "console",
+            },
+            size = 0.3,
+            position = "bottom",
+        },
+        {
+            elements = {
                 "watches",
+            },
+            size = 0.3,
+            position = "bottom",
+        },
+        {
+            elements = {
+                "breakpoints",
             },
             size = 0.2,
             position = "left",
         },
         {
             elements = {
-                "repl",
-                "console",
+                "stacks",
             },
-            size = 0.3,
-            position = "bottom",
+            size = 0.2,
+            position = "left",
+        },
+        {
+            elements = {
+                "scopes",
+            },
+            size = 0.2,
+            position = "left",
         },
     },
 })

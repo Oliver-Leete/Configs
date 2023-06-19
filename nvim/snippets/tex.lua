@@ -220,13 +220,13 @@ return {
             t({ "", "\\begin{" }), f(copy, 1), t("}")
         }),
         s({ trig = "equation", name = "equation" }, {
-            t("\\begin{equation}\\label{eq:"), i(1), t({ "}", "" }),
+            t("\\begin{equation}\\eqlabel{"), i(1), t({ "}", "" }),
             t("\t"), i(0),
             t({ "", "\\end{equation}" })
         }),
         s({ trig = "subequation", name = "subequation", dscr = "alligned sub equation" }, {
             t("\\begin{subequations}"),
-            t("\t\\begin{align}\\label{eq:"), i(1), t({ "}", "" }),
+            t("\t\\begin{align}\\eqlabel{"), i(1), t({ "}", "" }),
             t("\t\t"), i(0),
             t({ "", "\t\\end{align}" }),
             t({ "", "\\end{subequations}" })
@@ -239,9 +239,8 @@ return {
         }, { condition = tikz }),
     }, {
         s({ trig = "lbl", name = "label", dscr = "Insert a label" }, {
-            t("\\label{"),
-            c(1, { t("sect"), t("ch"), t("ap"), t("fig"), t("eq"), t("tab"), t("alg"), t("lst") }),
-            t(":"), i(2), t("}"),
+            c(1, { t("\\label{sect:"), t("\\label{ch:"), t("\\label{ap:"), t("\\label{fig:"), t("\\eqlabel{"), t("\\label{tab:"), t("\\label{alg:"), t("\\label{lst:") }),
+            i(2), t("}"),
         }),
         s({ trig = " cite", name = "cite", dscr = "cite" }, {
             t({ "~\\cite{" }), i(1), t({ "}" }),

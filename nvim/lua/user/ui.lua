@@ -24,20 +24,23 @@ require("dressing").setup({
     },
 })
 
+local kcolors = {
+    theme = {
+        all = {
+            ui = {
+                bg_gutter = "none",
+                bg_m3 = "none",
+            }
+        }
+    }
+}
+
 require("kanagawa").setup({
+    background = { light = "lotus", dark = "wave"},
     keywordStyle = { italic = false },
     statementStyle = { italic = false, bold = false },
     variablebuiltinStyle = { italic = false },
-    colors = {
-        theme = {
-            all = {
-                ui = {
-                    bg_gutter = "none",
-                    bg_m3 = "none",
-                }
-            }
-        }
-    },
+    colors = kcolors,
     overrides = function(colors)
         local theme = colors.theme
         return {
@@ -51,8 +54,7 @@ require("kanagawa").setup({
 })
 
 vim.cmd("colorscheme kanagawa")
-Tc = require("kanagawa.colors").setup().palette
-Ct = require("kanagawa.colors").setup().theme
+Ct = require("kanagawa.colors").setup({ colors = kcolors }).theme
 
 vim.api.nvim_set_hl(0, "SubstituteExchange", { link = "MatchParen" })
 
@@ -65,12 +67,12 @@ for sign, colour in pairs(sign_colours) do
     vim.api.nvim_set_hl(0, "GitSigns" .. sign .. "Cul", highlight)
 end
 
-vim.api.nvim_set_hl(0, "LineNr", { fg = Tc.sumiInk5, bg = Tc.sumiInk3, bold = false })
-vim.api.nvim_set_hl(0, "LineSep", { fg = Tc.sumiInk5, bg = Tc.sumiInk3, bold = false })
-vim.api.nvim_set_hl(0, "CursorLineNr", { fg = Tc.fujiWhite, bg = Tc.sumiInk5, bold = true })
-vim.api.nvim_set_hl(0, "CursorLineSep", { fg = Tc.sumiInk5, bg = Tc.sumiInk5, bold = true })
+vim.api.nvim_set_hl(0, "LineNr", { fg = Ct.ui.bg_p2, bg = Ct.ui.bg, bold = false })
+vim.api.nvim_set_hl(0, "LineSep", { fg = Ct.ui.bg_p2, bg = Ct.ui.bg, bold = false })
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = Ct.ui.fg, bg = Ct.ui.bg_p2, bold = true })
+vim.api.nvim_set_hl(0, "CursorLineSep", { fg = Ct.ui.bg_p2, bg = Ct.ui.bg_p2, bold = true })
 
-vim.api.nvim_set_hl(0, "StatusLineNC", { fg = Tc.sumiInk5, bg = Ct.ui.bg })
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg = Ct.ui.bg_p2, bg = Ct.ui.bg })
 
 vim.g.matchup_matchparen_deferred = true
 vim.g.matchup_matchparen_hi_surround_always = true
@@ -85,16 +87,16 @@ require("notify").setup({
 
 vim.notify = require("notify")
 
-vim.api.nvim_set_hl(0, "TabLine", { fg = Tc.bg, bg = Tc.fujiGray, sp = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "TabLineEnds", { fg = Tc.fujiGray, bg = Tc.bg, sp = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "TabLineActive", { fg = Tc.bg, bg = Tc.crystalBlue, sp = Tc.sumiInk3 })
-vim.api.nvim_set_hl(0, "TabLineActiveEnds", { fg = Tc.crystalBlue, bg = Tc.bg, sp = Tc.sumiInk3 })
+vim.api.nvim_set_hl(0, "TabLine", { fg = Ct.ui.bg, bg = Ct.syn.comment })
+vim.api.nvim_set_hl(0, "TabLineEnds", { fg = Ct.syn.comment, bg = Ct.ui.bg })
+vim.api.nvim_set_hl(0, "TabLineActive", { fg = Ct.ui.bg, bg = Ct.syn.fun })
+vim.api.nvim_set_hl(0, "TabLineActiveEnds", { fg = Ct.syn.fun, bg = Ct.ui.bg })
 
 local colorful_winsep = require("colorful-winsep")
 colorful_winsep.setup({
     highlight = {
-        bg = Tc.bg,
-        fg = Tc.crystalBlue
+        bg = Ct.ui.bg,
+        fg = Ct.syn.fun,
     },
     interval = 30,
     no_exec_files = { "packer", "TelescopePrompt", "mason", "CompetiTest", "NvimTree" },
@@ -111,9 +113,9 @@ colorful_winsep.setup({
 local glance = require('glance')
 local actions = glance.actions
 
-vim.api.nvim_set_hl(0, "GlanceBorderTop", { fg = Tc.crystalBlue, bg = "#2f2f39" })
-vim.api.nvim_set_hl(0, "GlanceListBorderBottom", { fg = Tc.crystalBlue, bg = "#2f2f39" })
-vim.api.nvim_set_hl(0, "GlancePreviewBorderBottom", { fg = Tc.crystalBlue, bg = "#2a2933" })
+vim.api.nvim_set_hl(0, "GlanceBorderTop", { fg = Ct.syn.fun, bg = "#2f2f39" })
+vim.api.nvim_set_hl(0, "GlanceListBorderBottom", { fg = Ct.syn.fun, bg = "#2f2f39" })
+vim.api.nvim_set_hl(0, "GlancePreviewBorderBottom", { fg = Ct.syn.fun, bg = "#2a2933" })
 
 glance.setup({
     height = 20,
@@ -155,5 +157,5 @@ glance.setup({
     },
 })
 
-vim.go.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
-vim.wo.statuscolumn = "%{%v:lua.Normal_StatusCol()%}"
+vim.go.statuscolumn = "%{%v:lua.StatusCol()%}"
+vim.wo.statuscolumn = "%{%v:lua.StatusCol()%}"

@@ -127,7 +127,7 @@ projects n =
     , Project { pName = "Wrk",        pDir = "~/UniDrive",                    pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Wrk" }
     , Project { pName = "WrkNotes",   pDir = "~/Projects/Thesis/Notes",       pApp1 = obsidian, pApp1F = obsidianF, pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = oneSpawn "WrkNotes" "flatpak run md.obsidian.Obsidian" }
     , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",      pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = termBrowSpawn "Thesis" }
-    , Project { pName = "Sim",        pDir = "~/Projects/PowderModel",        pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Sim" }
+    , Project { pName = "Sim",        pDir = "~/Projects/HSSSimulations",     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Sim" }
     , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",      pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Exp" }
     , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = hdfview,   pApp3F = hdfviewF,  pStart = termBrowSpawn "Scripts" }
     , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",      pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = commentSpawn "Comments" }
@@ -596,4 +596,9 @@ myCommands _ =
 
     , ("kill-others"         , killAllOtherCopies)
     , ("kill-self"           , kill1)
+    , ("restart-bars"        , do
+        killAllStatusBars
+        startAllStatusBars
+        spawn "feh --bg-fill --randomize ~/Pictures/wallpapers/"
+    )
     ]

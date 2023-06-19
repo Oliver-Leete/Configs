@@ -181,14 +181,9 @@ execute () {
     # sleep in specific cases to keep x from crashing when we run subsequent
     # commands (we have to wait for the display to fully switch on or change
     # mode/resolution prior to trying anything further)
-    case $mode in
-        span*)  sleep 3 ;;
-        ex*)    sleep 3 ;;
-        mirror) sleep 4 ;;
-    esac
 
     # if not locked, restart xmonad, largely to deal font issues
-    xmonad --restart
+    /home/oleete/.cabal/bin/xmonadctl-exe restart-bars
 
     # remember what our preferred config is for this output combination
     save_fingerprint $mode
@@ -290,7 +285,7 @@ auto () {
     then # internal mode
         internal
         # if not locked, restart xmonad, largely to deal font issues
-        xmonad --restart
+        /home/oleete/.cabal/bin/xmonadctl-exe restart-bars
     else # external mode
         # first check for an existing recorded fingerprint
         # of this combination of displays and lid

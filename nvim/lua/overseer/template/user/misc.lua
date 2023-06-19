@@ -27,10 +27,10 @@ return {
                         name = "lazygit",
                         cmd = "lazygit",
                         components = { "default", "unique",
-                            {
-                                "user.start_open",
-                                start_insert = true,
-                            },
+                            -- {
+                            --     "user.start_open",
+                            --     start_insert = true,
+                            -- },
                         },
                     }
                 end,
@@ -68,10 +68,10 @@ return {
                         name = "lazydocker",
                         cmd = "lazydocker",
                         components = { "default", "unique",
-                            {
-                                "user.start_open",
-                                start_insert = true,
-                            },
+                            -- {
+                            --     "user.start_open",
+                            --     start_insert = true,
+                            -- },
                         },
                     }
                 end,

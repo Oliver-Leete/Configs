@@ -203,6 +203,8 @@ local view_hint = [[
 ┃^^    _m_: middle     ^^^^┃
 ┃^^    _e_: end        ^^^^┃
 ┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
+┃^^    _o_: only window^^^^┃
+┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
 ┃^^    _<esc>_: exit   ^^^^┃
 ┗^^^^━━━━━━━━━━━━━━━━━━^^^^┛
 ]]
@@ -225,7 +227,9 @@ local view_heads = {
     { "s",     "zs" },
     { "m",     "<cmd>set sidescrolloff=999<cr>hl<cmd>set sidescrolloff=0<cr>" },
     { "e",     "ze" },
-    { "<esc>", nil,                                                           { exit = true, nowait = true, desc = "exit" } },
+
+    { "o",     "<c-w>o" },
+    { "<esc>", nil,                                                           { exit = true, nowait = true } },
 }
 
 Hydra({

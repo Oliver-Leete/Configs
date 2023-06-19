@@ -118,6 +118,7 @@ overseer.setup({
                 close_task(task.strategy.bufnr)
                 vim.bo[task.strategy.bufnr].filetype = "OverseerTask"
                 vim.api.nvim_win_set_buf(0, task:get_bufnr())
+                vim.wo.statuscolumn = "%s"
                 util.scroll_to_end(0)
             end,
         },

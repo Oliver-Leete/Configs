@@ -80,8 +80,8 @@ for i, id in pairs(type_hl) do
     vim.api.nvim_set_hl(0, name, hl)
     type_hl[i] = name
 end
-vim.api.nvim_set_hl(0, "NavicSeparator", { fg = Tc.fujiWhite, bg = Tc.winterBlue })
-vim.api.nvim_set_hl(0, "NavicText", { fg = Tc.fujiWhite, bg = Tc.winterBlue })
+vim.api.nvim_set_hl(0, "NavicSeparator", { fg = Ct.ui.fg, bg = Ct.syn.fun })
+vim.api.nvim_set_hl(0, "NavicText", { fg = Ct.ui.fg, bg = Ct.syn.fun })
 
 local lsp_status = function()
     local ret = ""
@@ -142,6 +142,27 @@ local is_wide = function()
     return vim.go.columns >= 200
 end
 
+local overseer = require("overseer")
+local overseertask = function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local task = vim.tbl_filter(function(t) return (t.strategy.bufnr == bufnr) end, overseer.list_tasks())[1]
+    return ov_list[task.status] .. task.name
+end
+
+local overseericon = function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local task = vim.tbl_filter(function(t) return (t.strategy.bufnr == bufnr) end, overseer.list_tasks())[1]
+    return ov_list[task.status]
+end
+
+local is_overseer = function()
+    return vim.bo.filetype == "OverseerTask"
+end
+
+local not_overseer = function()
+    return vim.bo.filetype ~= "OverseerTask"
+end
+
 require("lualine").setup({
     options = {
         component_separators = { left = leftc, right = rightc },
@@ -161,7 +182,7 @@ require("lualine").setup({
             {
                 function() return "" end,
                 draw_empty = true,
-                separator = { left = " ", right = left },
+                separator = { left = "", right = left },
             },
             {
                 "mode",
@@ -243,7 +264,7 @@ require("lualine").setup({
             {
                 function() return "" end,
                 draw_empty = true,
-                separator = { left = right, right = " " },
+                separator = { left = right, right = "" },
             },
         }
     },
@@ -252,7 +273,7 @@ require("lualine").setup({
             {
                 function() return "" end,
                 draw_empty = true,
-                separator = { left = " ", right = left },
+                separator = { left = "", right = left },
             },
             {
                 grapple,
@@ -268,7 +289,12 @@ require("lualine").setup({
                     unnamed = "",    -- Text to show for unnamed buffers.
                     newfile = "󰎔 ", -- Text to show for newly created file before first write
                 },
+                cond = not_overseer,
             },
+            {
+                overseertask,
+                cond = is_overseer,
+            }
         },
         lualine_b = {
             {
@@ -276,10 +302,12 @@ require("lualine").setup({
                 color_correction = "dynamic",
                 navic_opts = { separator = "  ", highlight = true, click = true },
                 separator = { left = left, right = "" },
-                padding = { left = 1, right = 0 }
+                padding = { left = 1, right = 0 },
+                cond = not_overseer,
             },
             {
                 function() return " " end,
+                cond = not_overseer,
                 draw_empty = true,
                 separator = { left = left, right = "" },
                 padding = { left = 0, right = 0 }
@@ -291,7 +319,8 @@ require("lualine").setup({
                 function() return "" end,
                 draw_empty = true,
                 separator = { left = "", right = "" },
-                padding = { left = 0, right = 0 }
+                padding = { left = 0, right = 0 },
+                cond = not_overseer,
             },
             {
                 "diff",
@@ -313,7 +342,13 @@ require("lualine").setup({
                 "filetype",
                 colored = false,
                 icon_only = true,
-                separator = { left = right, right = " " },
+                separator = { left = right, right = "" },
+                cond = not_overseer,
+            },
+            {
+                overseericon,
+                separator = { left = "", right = "" },
+                cond = is_overseer,
             },
         },
     },
@@ -322,7 +357,7 @@ require("lualine").setup({
             {
                 function() return "" end,
                 draw_empty = true,
-                separator = { left = " ", right = left },
+                separator = { left = "", right = left },
             },
             {
                 grapple,
@@ -338,7 +373,13 @@ require("lualine").setup({
                     unnamed = "",    -- Text to show for unnamed buffers.
                     newfile = "󰎔 ", -- Text to show for newly created file before first write
                 },
-                separator = { left = " ", right = "" },
+                separator = { left = "", right = "" },
+                cond = function() return vim.bo.filetype ~= "OverseerTask" end,
+            },
+            {
+                overseertask,
+                separator = { left = "", right = "" },
+                cond = is_overseer,
             },
         },
         lualine_x = {},
@@ -348,9 +389,15 @@ require("lualine").setup({
                 "filetype",
                 colored = false,
                 icon_only = true,
-                separator = { left = "", right = " " },
+                separator = { left = "", right = "" },
+                cond = not_overseer,
+            },
+            {
+                overseericon,
+                separator = { left = "", right = "" },
+                cond = is_overseer,
             },
         },
     },
 })
-vim.api.nvim_set_hl(0, "StatusLineNC", { fg = Tc.sumiInk5, bg = Ct.ui.bg })
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg = Ct.ui.bg_p2, bg = Ct.ui.bg })

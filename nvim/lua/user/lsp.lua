@@ -343,6 +343,7 @@ require("ltex_extra").setup({
                         ["\\cmidrule[]{}"] = "ignore",
                         ["\\CatchFileDef{}{}{}"] = "ignore",
                         ["\\labelcref{}"] = "dummy",
+                        ["\\eqlabel{}"] = "ingore",
                         ["\\fileInput{}"] = "ignore",
                     },
                 },

@@ -28,23 +28,23 @@ require("edgy").setup({
         bottom = { size = 30 },
     },
     bottom = {
+        {ft = "dapui_watches", title = "Watches"},
+        {ft = "dap-repl", title = "Debug REPL"},
+        {ft = "dapui_console", title = "Debug Console"},
         {
             ft = "Trouble",
             title = " Trouble",
-            pinned = true,
             open = function() require("trouble").toggle({ mode = "quickfix" }) end,
         },
         {
             ft = "OverseerPanelTask",
             title = " Task",
             open = "OverseerQuickAction open",
-            pinned = true,
         },
         {
             ft = "NoiceHistory",
             title = " Log",
             open = function() require("user.myfuncs").toggle_noice() end,
-            pinned = true,
         },
         {
             ft = "neotest-output-panel",
@@ -52,7 +52,6 @@ require("edgy").setup({
             open = function()
                 vim.cmd.vsplit(); require("neotest").output_panel.toggle()
             end,
-            pinned = true,
         },
     },
     left = {
@@ -64,17 +63,26 @@ require("edgy").setup({
                 return vim.bo[buf].buftype == "help"
             end,
         },
+        {ft = "dapui_scopes", title = "Scopes"},
+        {ft = "dapui_breakpoints", title = "Breakpoints"},
+        {ft = "dapui_stacks", title = "Stacks"},
+        {
+            ft = "DiffviewFileHistory",
+            title = " Diffs",
+        },
+        {
+            ft = "DiffviewFiles",
+            title = " Diffs",
+        },
         {
             ft = "OverseerList",
             title = "  Tasks",
             open = "OverseerOpen",
-            pinned = true,
         },
         {
             ft = "neotest-summary",
             title = "  Tests",
             open = function() require("neotest").summary.toggle() end,
-            pinned = true,
         },
     },
     keys = {

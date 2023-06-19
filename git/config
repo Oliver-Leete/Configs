@@ -1,5 +1,5 @@
 [user]
-	name = Oliver Leete
+	name = Oliver-Leete
 	email = oliverleete@gmail.com
 [core]
 	editor = /home/oleete/.config/bin/nvrStart --remote-wait

@@ -196,7 +196,7 @@ return {
                 name = "Format " .. vim.g.project,
                 tskName = vim.g.project .. " Formatting",
                 cmd = juliaCommand ..
-                    [[ -e 'using JuliaFormatter, PowderModel; format(]] ..
+                    [[ -e 'using JuliaFormatter, ]] .. vim.g.project .. [[; format(]] ..
                     vim.g.project .. [[, format_markdown=true, verbose=true)']],
                 components = { "default", "unique" },
             },

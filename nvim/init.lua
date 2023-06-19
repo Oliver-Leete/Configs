@@ -57,10 +57,10 @@ require("lazy").setup(
         "lewis6991/gitsigns.nvim",
         "sindrets/diffview.nvim",
 
-        { "rebelot/kanagawa.nvim", commit = "4c8d48726621a7f3998c7ed35b2c2535abc22def" },
+        { "rebelot/kanagawa.nvim" },
         "stevearc/dressing.nvim",
         "nvim-lualine/lualine.nvim",
-        { "folke/noice.nvim",      dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" } },
+        { "folke/noice.nvim",     dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" } },
         "nvim-zh/colorful-winsep.nvim",
 
         "folke/edgy.nvim",
@@ -84,7 +84,7 @@ require("lazy").setup(
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
         "lvimuser/lsp-inlayhints.nvim",
 
-        { "hrsh7th/nvim-cmp", dependencies = { "onsails/lspkind.nvim", } },
+        { "hrsh7th/nvim-cmp",                  dependencies = { "onsails/lspkind.nvim", } },
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-path",
         "hrsh7th/cmp-nvim-lua",
@@ -113,7 +113,7 @@ require("lazy").setup(
         "debugloop/telescope-undo.nvim",
         "FeiyouG/command_center.nvim",
         { "prochri/telescope-all-recent.nvim", dependencies = { "kkharji/sqlite.lua" } },
-        { "nvim-treesitter/nvim-treesitter",   build = ":TSInstall all | TSUpdate | TSUninstall comment" },
+        { "nvim-treesitter/nvim-treesitter",   build = ":TSInstall all | TSUpdate all | TSUninstall comment" },
         "nvim-treesitter/nvim-treesitter-textobjects",
         "ThePrimeagen/refactoring.nvim",
         "CKolkey/ts-node-action",
@@ -127,7 +127,7 @@ require("lazy").setup(
 
         "mfussenegger/nvim-dap",
         "rcarriga/nvim-dap-ui",
-        { "theHamsta/nvim-dap-virtual-text", branch = "inline-text" },
+        "theHamsta/nvim-dap-virtual-text",
         "nvim-telescope/telescope-dap.nvim",
         "LiadOz/nvim-dap-repl-highlights",
 
