@@ -216,6 +216,7 @@ myShowWNameTheme = def
     , swn_color             = background
     }
 
+myDecoTheme :: Theme
 myDecoTheme = def
     { inactiveColor = background
     , inactiveBorderColor = background
@@ -250,8 +251,8 @@ data TWOPANE = TWOPANE deriving (Read, Show, Eq, Typeable)
 instance Transformer TWOPANE Window where
     transform TWOPANE x k = k twoPane (const x)
 
--- twoPane :: ModifiedLayout Spacing SimpleFocus a
-twoPane = mySpacing $ TwoPanePersistent Nothing (reSize) (1/2)
+twoPane :: ModifiedLayout Spacing TwoPanePersistent a
+twoPane = mySpacing $ TwoPanePersistent Nothing reSize (1/2)
 
 myLayoutHook = smartBorders
              $ mkToggle (single FULL)
@@ -282,12 +283,6 @@ myLayoutHook = smartBorders
 ----------------------------------------------------------------------------------------------------
 myNav2DConf :: Navigation2DConfig
 myNav2DConf = def
-    -- { defaultTiledNavigation    = centerNavigation
-    -- , floatNavigation           = centerNavigation
-    -- , screenNavigation          = lineNavigation
-    -- -- , layoutNavigation          = [("Full", centerNavigation)]
-    -- , unmappedWindowRect        = [("Full", fullScreenRect)]
-    -- }
 
 myModMask :: KeyMask
 myModMask = mod4Mask
@@ -348,10 +343,10 @@ myKeys n =
     , ("M-c"             , toggleLayout FULLCENTER)
     , ("M-v"             , toggleLayout TWOPANE)
 
-    , ("M-h"             , bF $ nv "Navigateleft"   $ l (upPointer $ windowGo L True))
-    , ("M-j"             , bF $ nv "Navigatebottom" $ l (upPointer $ windowGo D True))
-    , ("M-k"             , bF $ nv "Navigatetop"    $ l (upPointer $ windowGo U True))
-    , ("M-l"             , bF $ nv "Navigateright"  $ l (upPointer $ windowGo R True))
+    , ("M-h"             , bF $ nv "Navigateleft"   $ l (upPointer (windowGo L True) >> bF (nv "PostNavLeft" $ l $ return ())))
+    , ("M-j"             , bF $ nv "Navigatebottom" $ l (upPointer (windowGo D True) >> bF (nv "PostNavBottom" $ l $ return ())))
+    , ("M-k"             , bF $ nv "Navigatetop"    $ l (upPointer (windowGo U True) >> bF (nv "PostNavTop" $ l $ return ())))
+    , ("M-l"             , bF $ nv "Navigateright"  $ l (upPointer (windowGo R True) >> bF (nv "PostNavRight" $ l $ return ())))
     , ("M-S-h"           , upPointer $ windowSwap L True)
     , ("M-S-j"           , upPointer $ windowSwap D True)
     , ("M-S-k"           , upPointer $ windowSwap U True)
@@ -535,8 +530,10 @@ toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ 
 -- app bindings
 l :: Applicative f => b -> [(f Bool, b)]
 l raw = [(pure True, raw)] -- leftover
+
 nv :: MonadIO m => [Char] -> [(Query Bool, m ())] -> [(Query Bool, m ())]
 nv command list = (title ~? "Neovim_", spawn ("/home/oleete/.config/bin/nvrWS " ++ command)) : list -- neovim
+
 crm :: b -> [(Query Bool, b)] -> [(Query Bool, b)]
 crm raw list = (isRole =? "browser", raw) : list -- chrome
 

@@ -224,8 +224,6 @@ removed.
 So still on the list to do at some point is to (not that I'll ever get around to
 them):
 
-- [x] Add Julia support for neogen (someone else has already started on that).
-  Covered by the LSP adding doc string updating and luasnip being as good as it is.
 - [x] Make a Julia server to run tests and finish the neotest adaptor.
 - [x] Make a similar thing for benchmarks, and probably a neotest consumer for
   benchmark results.
