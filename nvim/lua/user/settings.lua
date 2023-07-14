@@ -48,7 +48,11 @@ vim.opt.hlsearch = true
 vim.opt.inccommand = "split"
 vim.opt.gdefault = true
 vim.opt.incsearch = true
-vim.api.nvim_set_keymap("", "<plug>(slash-after)", "<cmd>let g:dirJumps='search'<cr>zz", { noremap = true })
+vim.keymap.set({ "n", "x", "o" }, "<plug>(slash-after)", function()
+    vim.g.dirJumps = "search"
+    -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("zz", true, true, true), "n", false)
+end
+)
 
 -- Indenting
 vim.opt.tabstop = 4

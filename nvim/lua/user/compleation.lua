@@ -263,18 +263,6 @@ _G.cmp_toggle = function()
     end
 end
 
--- Neogen setup
-require("neogen").setup({
-    snippet_engine = "luasnip",
-    languages = {
-        python = {
-            template = {
-                annotation_convention = "numpydoc"
-            }
-        }
-    }
-})
-
 local npairs = require('nvim-autopairs')
 
 npairs.setup({
@@ -313,26 +301,3 @@ Ls.config.set_config({
 })
 require("luasnip.loaders.from_lua").load({ paths = "/home/oleete/.config/nvim/snippets" })
 require("luasnip-latex-snippets").setup()
-
-require('tabout').setup {
-    tabkey = '',
-    backwards_tabkey = '',
-    act_as_tab = true,
-    act_as_shift_tab = true,
-    enable_backwards = true,
-    completion = false,
-    tabouts = {
-        { open = "'",   close = "'" },
-        { open = '"',   close = '"' },
-        { open = '`',   close = '`' },
-        { open = '(',   close = ')' },
-        { open = '[',   close = ']' },
-        { open = '{',   close = '}' },
-        { open = '[[',  close = ']]' },
-        { open = '```', close = '```' },
-        { open = '"""', close = '"""' },
-        { open = '$',   close = '$' },
-    },
-    ignore_beginning = true,
-    exclude = {}
-}

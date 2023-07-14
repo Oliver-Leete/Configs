@@ -36,7 +36,7 @@ local kcolors = {
 }
 
 require("kanagawa").setup({
-    background = { light = "lotus", dark = "wave"},
+    background = { light = "lotus", dark = "wave" },
     keywordStyle = { italic = false },
     statementStyle = { italic = false, bold = false },
     variablebuiltinStyle = { italic = false },
@@ -88,9 +88,12 @@ require("notify").setup({
 vim.notify = require("notify")
 
 vim.api.nvim_set_hl(0, "TabLine", { fg = Ct.ui.bg, bg = Ct.syn.comment })
+vim.api.nvim_set_hl(0, "TabLineMids", { fg = Ct.ui.bg, bg = Ct.syn.comment })
 vim.api.nvim_set_hl(0, "TabLineEnds", { fg = Ct.syn.comment, bg = Ct.ui.bg })
 vim.api.nvim_set_hl(0, "TabLineActive", { fg = Ct.ui.bg, bg = Ct.syn.fun })
+vim.api.nvim_set_hl(0, "TabLineActiveMids", { fg = Ct.syn.fun, bg = Ct.syn.comment })
 vim.api.nvim_set_hl(0, "TabLineActiveEnds", { fg = Ct.syn.fun, bg = Ct.ui.bg })
+vim.api.nvim_set_hl(0, "TabLineBlank", { fg = Ct.ui.bg, bg = Ct.ui.bg })
 
 local colorful_winsep = require("colorful-winsep")
 colorful_winsep.setup({

@@ -45,11 +45,6 @@ Map("n", "<esc>", function()
     require("edgy").close()
 end)
 
-Map({ "n", "x", "o" }, "<m-f>", ";")
-Map({ "n", "x", "o" }, "<m-F>", ",")
-Map({ "n", "x", "o" }, "<m-t>", ";")
-Map({ "n", "x", "o" }, "<m-T>", ",")
-
 Map({ "n", "x" }, "<c-r>", "<c-x>")
 Map({ "n", "x" }, "g<c-r>", "g<c-x>")
 
@@ -122,13 +117,12 @@ local help_hint = [[
 ┃^^    _<esc>_: exit   ^^^^┃
 ┗^^^^━━━━━━━━━━━━━━━━━━^^^^┛
 ]]
--- VIEW
 Hydra({
     name = "Help",
     mode = { "n", "x" },
     body = "K",
     config = {
-        color = "blue",
+        color = "teal",
         invoke_on_body = true,
         hint = {
             position = "top-right",
@@ -152,7 +146,9 @@ Hydra({
 Map("n", "Q", "@q")
 Map("x", "Q", ":norm! @q<cr>")
 
-Map({ "n", "x", "o" }, "s", require("hop").hint_char1)
+Map({ "n", "x", "o" }, "s", require("flash").jump)
+Map({ "n", "o" }, "z", require("flash").treesitter)
+Map({ "o" }, "S", require("flash").remote)
 
 Map("x", "<", "<gv")
 Map("x", ">", ">gv")
@@ -174,7 +170,7 @@ Map({ "n", "x", "o" }, "gb", "L")
 
 Map({ "n", "x", "o" }, "gV", "`[v`]")
 Map("n", "gF", ":edit <cfile><cr>")
-Map("n", "gx", ":!xdg-open <cfile> &<cr><cr>")
+Map("n", "gx", function() vim.ui.open(vim.fn.expand("<cfile>")) end)
 
 Map({ "n", "x" }, "gz", function()
     if vim.b.upafunc then
@@ -357,11 +353,6 @@ Map("n", ",re", "mia:lua require('refactoring').refactor('Extract Variable')<cr>
 Map("x", ",re", function() require("refactoring").refactor("Extract Variable") end)
 Map({ "n", "x" }, ",ri", function() require("refactoring").refactor("Inline Variable") end)
 
-Map("n", ",aa", function() require("neogen").generate({ type = "func" }) end)
-Map("n", ",as", function() require("neogen").generate({ type = "class" }) end)
-Map("n", ",at", function() require("neogen").generate({ type = "type" }) end)
-Map("n", ",af", function() require("neogen").generate({ type = "file" }) end)
-
 Map("n", ",dd", function() require("refactoring").debug.printf({}) end)
 Map({ "n", "x" }, ",dv", function() require("refactoring").debug.print_var({}) end, { remap = false })
 Map("n", ",dq", function() require("refactoring").debug.cleanup({}) end)
@@ -382,7 +373,6 @@ Map({ "n", "x" }, ",ff", function()
     pcall(Ls.unlink_current)
     vim.lsp.buf.format()
 end)
-Map({ "n", "x" }, ",fe", require("null-ls-embedded").format_current)
 Map("n", ",fw", function()
     return "m1!ippar w" .. (vim.b.textwidth or vim.g.textwidth) .. "<cr>`1"
 end, { expr = true, silent = true })
@@ -466,19 +456,17 @@ Map("n", "<leader>/", function()
     vim.cmd.vsplit(); require("neotest").output_panel.toggle()
 end)
 
-Map("n", "<leader><cr>", function()
+Map("n", "<s-cr>", function()
     if SendID then
         vim.fn.chansend(SendID, vim.api.nvim_get_current_line() .. "\n")
     else
         vim.notify("No Term set as send term", vim.log.levels.WARN)
     end
 end)
-Map("x", "<leader><cr>", function()
-    if SendID then
-        vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, true, true))
-        -- does not handle rectangular selection
-        local s_start = vim.fn.getpos("'<")
-        local s_end = vim.fn.getpos("'>")
+
+local send_code = function(start_mark, end_mark)
+        local s_start = vim.fn.getpos(start_mark)
+        local s_end = vim.fn.getpos(end_mark)
         local n_lines = math.abs(s_end[2] - s_start[2]) + 1
         local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false)
         lines[1] = string.sub(lines[1], s_start[3], -1)
@@ -489,13 +477,36 @@ Map("x", "<leader><cr>", function()
         end
         local selection = table.concat(lines, '\n')
         vim.fn.chansend(SendID, selection .. "\n")
+end
+
+Map("x", "<s-cr>", function()
+    if SendID then
+        vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, true, true))
+        send_code("'<", "'>")
     else
         vim.notify("No Term set as send term", vim.log.levels.WARN)
     end
 end)
 
+Send_motion_internal = function(motion)
+    if SendID then
+        if motion == nil then
+            vim.go.operatorfunc = [[v:lua.Send_motion_internal]]
+            vim.api.nvim_feedkeys('g@', 'ni', false)
+        end
+        send_code("'[", "']")
+    else
+        vim.notify("No Term set as send term", vim.log.levels.WARN)
+    end
+end
+
+Map("n", "<c-cr>", function()
+    vim.go.operatorfunc = [[v:lua.Send_motion_internal]]
+    vim.api.nvim_feedkeys('g@', 'ni', false)
+end)
+
 Map("n", "<leader>w",
-    function() require("telescope.builtin").lsp_workspace_symbols(require("telescope.themes").get_ivy()) end)
+    function() require("telescope.builtin").lsp_dynamic_workspace_symbols(require("telescope.themes").get_ivy()) end)
 Map("n", "<leader>W", function() require("telescope.builtin").live_grep(require("telescope.themes").get_ivy()) end)
 Map("n", "<leader>f", function() ProjectFiles() end)
 Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
@@ -528,7 +539,7 @@ Map({ "i", "s" }, "<tab>", function()
     if Ls.expand_or_locally_jumpable() then
         Ls.expand_or_jump()
     else
-        require("tabout").tabout()
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<tab>", true, true, true), "n", false)
     end
 end, { silent = true })
 
@@ -536,7 +547,7 @@ Map({ "i", "s" }, "<s-tab>", function()
     if Ls.locally_jumpable(-1) then
         Ls.jump(-1)
     else
-        require("tabout").taboutBack()
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<s-tab>", true, true, true), "n", false)
     end
 end, { silent = true })
 

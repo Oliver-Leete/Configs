@@ -218,6 +218,11 @@ M.nav_dir = function(direction)
 end
 
 
+vim.api.nvim_create_user_command("PostNavLeft", function() vim.cmd("wincmd 100 l") end, { nargs = 0 })
+vim.api.nvim_create_user_command("PostNavBottom", function() vim.cmd("wincmd 100 k") end, { nargs = 0 })
+vim.api.nvim_create_user_command("PostNavTop", function() vim.cmd("wincmd 100 j") end, { nargs = 0 })
+vim.api.nvim_create_user_command("PostNavRight", function() vim.cmd("wincmd 100 h") end, { nargs = 0 })
+
 vim.api.nvim_create_user_command("Navigateleft", function() M.nav_dir("h") end, { nargs = 0 })
 vim.api.nvim_create_user_command("Navigatebottom", function() M.nav_dir("j") end, { nargs = 0 })
 vim.api.nvim_create_user_command("Navigatetop", function() M.nav_dir("k") end, { nargs = 0 })

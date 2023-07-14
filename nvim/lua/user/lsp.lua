@@ -19,11 +19,8 @@ local default_diagnostic_config = {
     severity_sort = true,
     virtual_lines = false,
 }
-require("lsp-inlayhints").setup({
-    inlay_hints = {
-        highlight = "NvimDapVirtualText"
-    }
-})
+
+vim.api.nvim_set_hl(0, "LspInlayHint", { link = "NvimDapVirtualText" })
 
 vim.diagnostic.config(default_diagnostic_config)
 
@@ -65,7 +62,9 @@ local custom_attach = function(client, bufnr)
     end
     bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action)
 
-    require("lsp-inlayhints").on_attach(client, bufnr)
+    if client.server_capabilities.inlayHintProvider then
+        vim.lsp.inlay_hint(bufnr, true)
+    end
 end
 
 require("mason").setup({ ui = { border = Border } })
@@ -147,29 +146,17 @@ lspconfig.pylsp.setup({
         },
     },
 })
-lspconfig.sourcery.setup({
-    -- on_attach = custom_attach,
-    capabilities = capabilities,
-    flags = { debounce_text_changes = 1000 },
-    init_options = {
-        token = require("user.secrets").sourcery,
-        extension_version = "vim.lsp",
-        editor_version = "vim",
-    },
-})
 
 lspconfig.jsonls.setup({
     -- on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
-    settings = { json = { schemas = require("schemastore").json.schemas(), }, },
 })
 
 lspconfig.yamlls.setup({
     -- on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
-    settings = { yaml = { schemas = require('schemastore').yaml.schemas() } }
 })
 
 lspconfig.lua_ls.setup({
@@ -179,7 +166,7 @@ lspconfig.lua_ls.setup({
     settings = {
         Lua = {
             hint = {
-                arrayIndex = "Auto",
+                arrayIndex = "Disable",
                 enable = true,
                 paramName = "Disable",
             },
@@ -191,7 +178,7 @@ lspconfig.lua_ls.setup({
             },
             workspace = {
                 library = vim.api.nvim_get_runtime_file('', true),
-                checkThirdParty = true,
+                checkThirdParty = false,
             },
             telemetry = {
                 enable = false,
@@ -230,19 +217,19 @@ lspconfig.texlab.setup({
     },
 })
 
--- local ht = require('haskell-tools')
--- ht.setup({
---     hls = {
---         flags = { debounce_text_changes = 1000 },
---         root_dir = lspconfig.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"),
---         settings = {
---             haskell = {
---                 formattingProvider = "stylish-haskell",
---                 checkProject = true,
---             }
---         }
---     }
--- })
+local ht = require('haskell-tools')
+ht.setup({
+    hls = {
+        flags = { debounce_text_changes = 1000 },
+        root_dir = lspconfig.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"),
+        settings = {
+            haskell = {
+                formattingProvider = "stylish-haskell",
+                checkProject = true,
+            }
+        }
+    }
+})
 
 local clangd_cap = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 clangd_cap.offsetEncoding = "utf-8"
@@ -329,6 +316,7 @@ require("ltex_extra").setup({
                         ["\\pac{}"] = "dummy",
                         ["\\Pac{}"] = "dummy",
                         ["\\subref{}"] = "dummy",
+                        ["\\fullref{}"] = "dummy",
                         ["\\qty{}{}"] = "dummy",
                         ["\\qtyproduct{}{}"] = "dummy",
                         ["\\qtyrange{}{}{}"] = "dummy",
@@ -374,7 +362,6 @@ require("null-ls").setup({
         null_ls.builtins.formatting.trim_whitespace,
         null_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
         null_ls.builtins.hover.printenv,
-        require("null-ls-embedded").nls_source,
     },
 })
 

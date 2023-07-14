@@ -68,7 +68,7 @@ local ts_surf_hint = [[
 ┃ _h_/_j_/_k_/_l_: ←/↓/↑/→ ┃
 ┃^^     _[_/_]_: ⇚/⇛     ^^┃
 ┃^^^^                  ^^^^┃
-┃^^ _<up>_/_<down>_: swap^^┃
+┃^^   _H_/_L_: swap      ^^┃
 ┃^^^^                  ^^^^┃
 ┃^^   _R_: raise       ^^^^┃
 ┃^^   _m_: select node ^^^^┃
@@ -79,7 +79,7 @@ local ts_surf_hint = [[
 TreeHydra = require('hydra')({
     name = "Treesitter",
     mode = { "n", "x" },
-    body = "S",
+    body = "Z",
     config = {
         color = "red",
         invoke_on_body = true,
@@ -98,18 +98,18 @@ TreeHydra = require('hydra')({
     },
     hint = ts_surf_hint,
     heads = {
-        { '[',      tc_goto_first,                              { nowait = true } },
-        { ']',      tc_goto_last,                               { nowait = true } },
-        { 'h',      function() tc.goto_prev(tc_settings) end,   { nowait = true } },
-        { 'j',      function() tc.goto_child(tc_settings) end,  { nowait = true } },
-        { 'k',      function() tc.goto_parent(tc_settings) end, { nowait = true } },
-        { 'l',      function() tc.goto_next(tc_settings) end,   { nowait = true } },
-        { '<up>',   function() tc.swap_prev(tc_settings) end,   { nowait = true } },
-        { '<down>', function() tc.swap_next(tc_settings) end,   { nowait = true } },
-        { 'R',      function() tc.raise(tc_settings) end,       { nowait = true } },
-        { 'm',      function() tc.select_node(tc_settings) end, { nowait = true } },
-        { '$',      tc_ex,                                      { nowait = true, desc = false } },
-        { 'S',      function() no_exit = true end,              { exit = true, nowait = true, desc = false } },
-        { '<esc>',  function() no_exit = true end,              { exit = true, nowait = true } },
+        { '[',     tc_goto_first,                              { nowait = true } },
+        { ']',     tc_goto_last,                               { nowait = true } },
+        { 'h',     function() tc.goto_prev(tc_settings) end,   { nowait = true } },
+        { 'j',     function() tc.goto_child(tc_settings) end,  { nowait = true } },
+        { 'k',     function() tc.goto_parent(tc_settings) end, { nowait = true } },
+        { 'l',     function() tc.goto_next(tc_settings) end,   { nowait = true } },
+        { 'H',     function() tc.swap_prev(tc_settings) end,   { nowait = true } },
+        { 'L',     function() tc.swap_next(tc_settings) end,   { nowait = true } },
+        { 'R',     function() tc.raise(tc_settings) end,       { nowait = true } },
+        { 'm',     function() tc.select_node(tc_settings) end, { nowait = true } },
+        { '$',     tc_ex,                                      { nowait = true, desc = false } },
+        { 'Z',     function() no_exit = true end,              { exit = true, nowait = true, desc = false } },
+        { '<esc>', function() no_exit = true end,              { exit = true, nowait = true } },
     }
 })

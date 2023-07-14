@@ -16,6 +16,7 @@ command_center.add({
     { category = "default", desc = "History", cmd = "<cmd>Noice<cr>" },
     { category = "default", desc = "Delete buffer", cmd = require("mini.bufremove").delete },
     { category = "default", desc = "Clear search", cmd = "<cmd>let @/=''<cr>" },
+    { category = "default", desc = "Rename Tab", cmd = function() vim.ui.input({prompt = "Tab Name: "}, function(i) vim.t.tabname = i end) end },
     { category = "default", desc = "Close tab", cmd = "<cmd>tabclose<cr>" },
     { category = "default", desc = "Toggle text wraping", cmd = "<cmd>set wrap!<cr>" },
     { category = "default", desc = "Toggle autowrapping", cmd = func.toggle_autowrap },

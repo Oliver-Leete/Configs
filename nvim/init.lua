@@ -21,133 +21,201 @@ pcall(require("user.settings"))
 
 require("lazy").setup(
     {
-        "nvim-lua/plenary.nvim",
-        "tpope/vim-repeat",
-        "kyazdani42/nvim-web-devicons",
-        "907th/vim-auto-save",
-        { "anuvyklack/hydra.nvim", dependencies = { "anuvyklack/keymap-layer.nvim" } },
-
-        "chrisgrieser/nvim-genghis",
-        "stevearc/resession.nvim",
-        "cbochs/grapple.nvim",
-        "kazhala/close-buffers.nvim",
-
-        "echasnovski/mini.nvim",
-        "ap/vim-you-keep-using-that-word",
-        "phaazon/hop.nvim",
-        "junegunn/vim-slash",
-        "arthurxavierx/vim-caser",
-        "ralismark/opsort.vim",
-        "Konfekt/vim-CtrlXA",
-        "gbprod/substitute.nvim",
-        "andymass/vim-matchup",
-        "numToStr/Comment.nvim",
-        "kana/vim-niceblock",
-
-        "cshuaimin/ssr.nvim",
-        "AckslD/muren.nvim",
-
-        "lervag/vimtex",
-        "iurimateus/luasnip-latex-snippets.nvim",
-        "fladson/vim-kitty",
-        "wilriker/gcode.vim",
-        "LhKipp/nvim-nu",
-        { "toppair/peek.nvim",     build = "deno task --quiet build:fast" },
-
-        "lewis6991/gitsigns.nvim",
-        "sindrets/diffview.nvim",
-
-        { "rebelot/kanagawa.nvim" },
-        "stevearc/dressing.nvim",
-        "nvim-lualine/lualine.nvim",
-        { "folke/noice.nvim",     dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" } },
-        "nvim-zh/colorful-winsep.nvim",
-
-        "folke/edgy.nvim",
-        "folke/todo-comments.nvim",
-        "folke/trouble.nvim",
-
-        "williamboman/mason.nvim",
-        "williamboman/mason-lspconfig.nvim",
-        "jayp0521/mason-nvim-dap.nvim",
-
-        "jose-elias-alvarez/null-ls.nvim",
-        "LostNeophyte/null-ls-embedded",
-        "neovim/nvim-lspconfig",
-        "barreiroleo/ltex_extra.nvim",
-        "p00f/clangd_extensions.nvim",
-        "b0o/schemastore.nvim",
-
-        "SmiteshP/nvim-navic",
-        "DNLHC/glance.nvim",
-        "yioneko/nvim-type-fmt",
-        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-        "lvimuser/lsp-inlayhints.nvim",
-
-        { "hrsh7th/nvim-cmp",                  dependencies = { "onsails/lspkind.nvim", } },
-        "hrsh7th/cmp-buffer",
-        "hrsh7th/cmp-path",
-        "hrsh7th/cmp-nvim-lua",
-        "hrsh7th/cmp-nvim-lsp",
-        "hrsh7th/cmp-omni",
-        "petertriho/cmp-git",
-        "hrsh7th/cmp-cmdline",
-        "dmitmel/cmp-cmdline-history",
-        "uga-rosa/cmp-dictionary",
-        "saadparwaiz1/cmp_luasnip",
-        "L3MON4D3/cmp-luasnip-choice",
-        "kdheepak/cmp-latex-symbols",
-        "rcarriga/cmp-dap",
-
-        "L3MON4D3/LuaSnip",
-        "danymat/neogen",
-        "windwp/nvim-autopairs",
-        "abecodes/tabout.nvim",
-
-        "nvim-telescope/telescope.nvim",
+        -- Misc
+        { "907th/vim-auto-save" },
         {
-            "nvim-telescope/telescope-fzf-native.nvim",
-            build =
-            "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build"
+            "anuvyklack/hydra.nvim",
+            dependencies = { "anuvyklack/keymap-layer.nvim" }
         },
-        "debugloop/telescope-undo.nvim",
-        "FeiyouG/command_center.nvim",
-        { "prochri/telescope-all-recent.nvim", dependencies = { "kkharji/sqlite.lua" } },
-        { "nvim-treesitter/nvim-treesitter",   build = ":TSInstall all | TSUpdate all | TSUninstall comment" },
-        "nvim-treesitter/nvim-treesitter-textobjects",
-        "ThePrimeagen/refactoring.nvim",
-        "CKolkey/ts-node-action",
-        "drybalka/tree-climber.nvim",
-
-        "stevearc/overseer.nvim",
-        "nvim-neotest/neotest",
-        "andythigpen/nvim-coverage",
-        "t-troebst/perfanno.nvim",
-        "krady21/compiler-explorer.nvim",
-
-        "mfussenegger/nvim-dap",
-        "rcarriga/nvim-dap-ui",
-        "theHamsta/nvim-dap-virtual-text",
-        "nvim-telescope/telescope-dap.nvim",
-        "LiadOz/nvim-dap-repl-highlights",
-
-        "simrat39/rust-tools.nvim",
-        "rouge8/neotest-rust",
-
-        "nvim-neotest/neotest-python",
-        "mfussenegger/nvim-dap-python",
-
-        "MrcJkb/haskell-tools.nvim",
-        "mrcjkb/neotest-haskell",
-
-        "folke/neodev.nvim",
-        "nvim-neotest/neotest-plenary",
         {
-            'quarto-dev/quarto-nvim',
+            "chrisgrieser/nvim-genghis",
+            dependencies = { "stevearc/dressing.nvim" }
+        },
+        { "stevearc/resession.nvim" },
+        { "cbochs/grapple.nvim" },
+        { "kazhala/close-buffers.nvim" },
+
+        -- Editing
+        {
+            "echasnovski/mini.nvim",
+            dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
+        },
+        { "ap/vim-you-keep-using-that-word" },
+        { "arthurxavierx/vim-caser" },
+        {
+            "ralismark/opsort.vim",
+            dependencies = { "tpope/vim-repeat" }
+        },
+        {
+            "Konfekt/vim-CtrlXA",
+            dependencies = { "tpope/vim-repeat" }
+        },
+        { "gbprod/substitute.nvim" },
+        { "andymass/vim-matchup" },
+        { "numToStr/Comment.nvim" },
+        { "kana/vim-niceblock" },
+
+        -- Search/Replace
+        { "junegunn/vim-slash" },
+        { "folke/flash.nvim" },
+        { "cshuaimin/ssr.nvim" },
+        { "AckslD/muren.nvim" },
+
+        -- Git
+        {
+            "lewis6991/gitsigns.nvim",
+            dependencies = { "tpope/vim-repeat" }
+        },
+        {
+            "sindrets/diffview.nvim",
+            dependencies = { "kyazdani42/nvim-web-devicons" }
+        },
+
+        -- UI
+        { "rebelot/kanagawa.nvim" },
+        { "stevearc/dressing.nvim" },
+        {
+            "nvim-lualine/lualine.nvim",
+            dependencies = { "kyazdani42/nvim-web-devicons" }
+        },
+        { "nvim-zh/colorful-winsep.nvim" },
+        {
+            "folke/noice.nvim",
+            dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" }
+        },
+        { "folke/edgy.nvim" },
+        {
+            "folke/todo-comments.nvim",
+            dependencies = { "nvim-lua/plenary.nvim" }
+        },
+        {
+            "folke/trouble.nvim",
+            dependencies = { "kyazdani42/nvim-web-devicons" }
+        },
+
+        --
+        {
+            "williamboman/mason.nvim",
             dependencies = {
-                'jmbuhr/otter.nvim',
+                "williamboman/mason-lspconfig.nvim",
+                "jayp0521/mason-nvim-dap.nvim",
+            }
+        },
+        {
+            "jose-elias-alvarez/null-ls.nvim",
+            dependencies = { "nvim-lua/plenary.nvim" }
+        },
+        { "neovim/nvim-lspconfig" },
+
+        -- extra lsp
+        { "SmiteshP/nvim-navic" },
+        { "DNLHC/glance.nvim" },
+        { "yioneko/nvim-type-fmt" },
+        { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
+
+        -- run and test
+        { "stevearc/overseer.nvim" },
+        {
+            "nvim-neotest/neotest",
+            dependencies = {
+                { "rouge8/neotest-rust" },
+                { "nvim-neotest/neotest-python" },
+                { "mrcjkb/neotest-haskell" },
             },
         },
+        { "andythigpen/nvim-coverage" },
+        { "t-troebst/perfanno.nvim" },
+
+        -- debug
+        { "mfussenegger/nvim-dap" },
+        { "rcarriga/nvim-dap-ui" },
+        { "theHamsta/nvim-dap-virtual-text" },
+        { "nvim-telescope/telescope-dap.nvim" },
+
+        -- lang specific
+        {
+            "lervag/vimtex",
+            dependencies = { "tpope/vim-repeat" }
+        },
+        { "iurimateus/luasnip-latex-snippets.nvim" },
+        { "barreiroleo/ltex_extra.nvim" },
+        {
+            "toppair/peek.nvim",
+            build = "deno task --quiet build:fast"
+        },
+        { "fladson/vim-kitty" },
+        { "wilriker/gcode.vim" },
+        { "LhKipp/nvim-nu" },
+        { "simrat39/rust-tools.nvim" },
+        { "mfussenegger/nvim-dap-python" },
+        { "MrcJkb/haskell-tools.nvim" },
+        { "folke/neodev.nvim" },
+        { "p00f/clangd_extensions.nvim" },
+
+        -- compleation
+        {
+            "hrsh7th/nvim-cmp",
+            dependencies = {
+                { "onsails/lspkind.nvim" },
+                { "hrsh7th/cmp-buffer" },
+                { "hrsh7th/cmp-path" },
+                { "hrsh7th/cmp-nvim-lua" },
+                { "hrsh7th/cmp-nvim-lsp" },
+                { "hrsh7th/cmp-omni" },
+                { "petertriho/cmp-git" },
+                { "hrsh7th/cmp-cmdline" },
+                { "dmitmel/cmp-cmdline-history" },
+                { "uga-rosa/cmp-dictionary" },
+                { "saadparwaiz1/cmp_luasnip" },
+                { "L3MON4D3/cmp-luasnip-choice" },
+                { "kdheepak/cmp-latex-symbols" },
+                { "rcarriga/cmp-dap" },
+            }
+        },
+        {
+            "L3MON4D3/LuaSnip",
+            dependencies = { "tpope/vim-repeat" }
+        },
+        { "windwp/nvim-autopairs" },
+
+        -- telescope
+        {
+            "nvim-telescope/telescope.nvim",
+            dependencies = {
+                { "nvim-lua/plenary.nvim" },
+                { "kyazdani42/nvim-web-devicons" },
+                {
+                    "nvim-telescope/telescope-fzf-native.nvim",
+                    build = [[
+                        cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release &&
+                        cmake --build build --config Release &&
+                        cmake --install build --prefix build
+                    ]],
+                },
+                { "prochri/telescope-all-recent.nvim", dependencies = { "kkharji/sqlite.lua" } },
+                { "debugloop/telescope-undo.nvim" },
+                { "FeiyouG/command_center.nvim" },
+            },
+        },
+
+        {},
+        {},
+
+        -- treesitter
+        {
+            "nvim-treesitter/nvim-treesitter",
+            build = {
+                ":TSInstall all",
+                ":TSUpdate all",
+                ":TSUninstall comment"
+            },
+        },
+        { "ThePrimeagen/refactoring.nvim" },
+        {
+            "CKolkey/ts-node-action",
+            dependencies = { "tpope/vim-repeat" }
+        },
+        { "drybalka/tree-climber.nvim" },
     },
     {
         install = {
@@ -155,6 +223,7 @@ require("lazy").setup(
         },
         ui = {
             border = Border,
+            title = " Lazy ",
         },
         dev = {
             path = "~/Projects",

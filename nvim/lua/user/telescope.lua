@@ -209,6 +209,9 @@ require('telescope-all-recent').setup({
         },
         vim_ui_select = {
             kinds = {
+                codeaction = {
+                    disable = true,
+                },
                 resession_load = {
                     use_cwd = false,
                     sorting = 'frecent',

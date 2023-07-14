@@ -28,9 +28,9 @@ require("edgy").setup({
         bottom = { size = 30 },
     },
     bottom = {
-        {ft = "dapui_watches", title = "Watches"},
-        {ft = "dap-repl", title = "Debug REPL"},
-        {ft = "dapui_console", title = "Debug Console"},
+        { ft = "dapui_watches", title = "Watches" },
+        { ft = "dap-repl",      title = "Debug REPL" },
+        { ft = "dapui_console", title = "Debug Console" },
         {
             ft = "Trouble",
             title = " Trouble",
@@ -53,6 +53,10 @@ require("edgy").setup({
                 vim.cmd.vsplit(); require("neotest").output_panel.toggle()
             end,
         },
+        {
+            ft = "DiffviewFileHistory",
+            title = " Diffs",
+        },
     },
     left = {
         {
@@ -63,13 +67,9 @@ require("edgy").setup({
                 return vim.bo[buf].buftype == "help"
             end,
         },
-        {ft = "dapui_scopes", title = "Scopes"},
-        {ft = "dapui_breakpoints", title = "Breakpoints"},
-        {ft = "dapui_stacks", title = "Stacks"},
-        {
-            ft = "DiffviewFileHistory",
-            title = " Diffs",
-        },
+        { ft = "dapui_scopes",      title = "Scopes" },
+        { ft = "dapui_breakpoints", title = "Breakpoints" },
+        { ft = "dapui_stacks",      title = "Stacks" },
         {
             ft = "DiffviewFiles",
             title = " Diffs",

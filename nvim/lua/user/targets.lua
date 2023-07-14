@@ -175,9 +175,9 @@ local command_repeat = function(leader, varName)
     local mode = vim.api.nvim_get_mode().mode
     if key == "search" then
         if leader == "]" then
-            return_map = "nzz"
+            return_map = "n:norm! zz<cr>"
         else
-            return_map = "Nzz"
+            return_map = "N:norm! zz<cr>"
         end
     elseif mode == "v" or mode == "V" or mode == "" then
         if leader == "]" then
@@ -192,8 +192,8 @@ local command_repeat = function(leader, varName)
 end
 
 vim.g.dirJumps = "search"
-Map({ "n", "x", "o" }, "n", function() return command_repeat("]", "dirJumps") end, { expr = true, remap = true })
-Map({ "n", "x", "o" }, "N", function() return command_repeat("[", "dirJumps") end, { expr = true, remap = true })
+Map({ "n", "x", "o" }, "n", function() return command_repeat("]", "dirJumps") end, { expr = true, remap = true, silent = true })
+Map({ "n", "x", "o" }, "N", function() return command_repeat("[", "dirJumps") end, { expr = true, remap = true, silent = true })
 
 for _, o in pairs(vim.tbl_keys(custom_objects)) do
     Map({ "n", "x", "o" }, "[" .. o, function() mark_and_go_mini("prev", o, "left") end)

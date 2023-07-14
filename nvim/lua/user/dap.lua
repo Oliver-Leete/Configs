@@ -7,8 +7,6 @@ vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DiagnosticSignWarn",
 vim.fn.sign_define("DapStopped", { text = "→", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
 vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DiagnosticSignInfo", culhl = "CursorLineInfo" })
 
-require('nvim-dap-repl-highlights').setup()
-
 require("nvim-dap-virtual-text").setup()
 require("dapui").setup({
     floating = {

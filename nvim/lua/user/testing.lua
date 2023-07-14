@@ -16,7 +16,6 @@ require("neotest").setup({
             end
         }),
         require("neotest-haskell"),
-        require("neotest-plenary"),
         require("neotest.adapters.neotest-julia-testitem"),
         require("neotest.adapters.neotest-julia-benchmarktools")
     },

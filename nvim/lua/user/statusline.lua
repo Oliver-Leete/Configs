@@ -5,32 +5,32 @@ local rightc = ""
 
 require("nvim-navic").setup({
     icons = {
-        File = ' ',
-        Module = ' ',
-        Namespace = ' ',
-        Package = ' ',
-        Class = ' ',
-        Method = ' ',
-        Property = ' ',
-        Field = ' ',
-        Constructor = ' ',
-        Enum = ' ',
-        Interface = ' ',
-        Function = ' ',
-        Variable = ' ',
-        Constant = ' ',
-        String = ' ',
-        Number = ' ',
-        Boolean = ' ',
-        Array = ' ',
-        Object = ' ',
-        Key = ' ',
-        Null = ' ',
-        EnumMember = ' ',
-        Struct = ' ',
-        Event = ' ',
-        Operator = ' ',
-        TypeParameter = ' '
+        File = " ",
+        Module = " ",
+        Namespace = " ",
+        Package = " ",
+        Class = " ",
+        Method = " ",
+        Property = " ",
+        Field = " ",
+        Constructor = " ",
+        Enum = " ",
+        Interface = " ",
+        Function = " ",
+        Variable = " ",
+        Constant = " ",
+        String = " ",
+        Number = " ",
+        Boolean = " ",
+        Array = " ",
+        Object = " ",
+        Key = " ",
+        Null = " ",
+        EnumMember = " ",
+        Struct = " ",
+        Event = " ",
+        Operator = " ",
+        TypeParameter = " "
     },
 })
 local type_hl = {
@@ -284,10 +284,10 @@ require("lualine").setup({
                 "filename",
                 path = 1,
                 symbols = {
-                    modified = "󰷫 ", -- Text to show when the file is modified.
-                    readonly = "󰏯 ", -- Text to show when the file is non-modifiable or readonly.
-                    unnamed = "",    -- Text to show for unnamed buffers.
-                    newfile = "󰎔 ", -- Text to show for newly created file before first write
+                    modified = "󰷫 ",
+                    readonly = "󰏯 ",
+                    unnamed = "",
+                    newfile = "󰎔 ",
                 },
                 cond = not_overseer,
             },
@@ -309,8 +309,12 @@ require("lualine").setup({
                 function() return " " end,
                 cond = not_overseer,
                 draw_empty = true,
-                separator = { left = left, right = "" },
                 padding = { left = 0, right = 0 }
+            },
+            {
+                function() return "" end,
+                draw_empty = true,
+                separator = { left = left, right = "" },
             },
         },
         lualine_c = {},
@@ -320,7 +324,6 @@ require("lualine").setup({
                 draw_empty = true,
                 separator = { left = "", right = "" },
                 padding = { left = 0, right = 0 },
-                cond = not_overseer,
             },
             {
                 "diff",
@@ -347,7 +350,7 @@ require("lualine").setup({
             },
             {
                 overseericon,
-                separator = { left = "", right = "" },
+                separator = { left = right, right = "" },
                 cond = is_overseer,
             },
         },
@@ -368,10 +371,10 @@ require("lualine").setup({
                 "filename",
                 path = 1,
                 symbols = {
-                    modified = "󰷫 ", -- Text to show when the file is modified.
-                    readonly = "󰏯 ", -- Text to show when the file is non-modifiable or readonly.
-                    unnamed = "",    -- Text to show for unnamed buffers.
-                    newfile = "󰎔 ", -- Text to show for newly created file before first write
+                    modified = "󰷫 ",
+                    readonly = "󰏯 ",
+                    unnamed = "",
+                    newfile = "󰎔 ",
                 },
                 separator = { left = "", right = "" },
                 cond = function() return vim.bo.filetype ~= "OverseerTask" end,

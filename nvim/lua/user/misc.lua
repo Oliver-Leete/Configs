@@ -1,21 +1,23 @@
 vim.g.project = vim.fs.basename(vim.fn.getcwd())
-
 vim.g.matchup_matchparen_offscreen = { method = false }
 vim.g.matchup_text_obj_enabled = false
 vim.g.matchup_mouse_enabled = false
 
-require("hop").setup({ keys = "tnseriaodhgjplfuwybkvmcxzq" })
-
-require("compiler-explorer").setup({
-    diagnostics = {
-        underline = false,
-        virtual_text = true,
-        signs = true,
+require("flash").setup({
+    labels = "tnseriaodhgjplfuwybkvmcxzq",
+    jump = {
+        nohlsearch = true,
     },
-    autocmd = {
-        enable = true,
-        hl = "Search",
-    }
+    modes = {
+        search = {
+            enabled = false,
+        },
+        char = {
+            enabled = true,
+            keys = { "f", "F", "t", "T" },
+        },
+    },
+
 })
 
 require("muren").setup()
@@ -26,8 +28,8 @@ require("perfanno").setup({
     line_highlights = util.make_bg_highlights("#1F1F28", "#C34043", 10),
     vt_highlight = util.make_fg_highlights("#1F1F28", "#C34043", 10),
     formats = {
-        { percent = true, format = "%.2f%%", minimum = 0.0 },
-        { percent = false, format = "%d", minimum = 0.0001 },
+        { percent = true,  format = "%.2f%%", minimum = 0.0 },
+        { percent = false, format = "%d",     minimum = 0.0001 },
     },
 })
 require("coverage").setup({
@@ -83,24 +85,6 @@ require('Comment').setup({
     },
 })
 
-require("quarto").setup({
-    lspFeatures = {
-        enabled = true,
-        languages = { "r", "python", "julia" },
-        diagnostics = {
-            enabled = true,
-            triggers = { "BufWrite" }
-        },
-        completion = {
-            enabled = true
-        },
-        keymap = {
-            hover = 'KK',
-            definition = 'gd'
-        }
-    }
-})
-
 require("todo-comments").setup({
     signs = true,
     sign_priority = 2,
@@ -127,8 +111,8 @@ require("todo-comments").setup({
 })
 
 require("substitute").setup({
-  exchange = {
-    motion = false,
-    use_esc_to_cancel = true,
-  },
+    exchange = {
+        motion = false,
+        use_esc_to_cancel = true,
+    },
 })
