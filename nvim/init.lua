@@ -244,6 +244,7 @@ pcall(require("user.treesitter"))
 pcall(require("user.dap"))
 pcall(require("user.panels"))
 
+pcall(require("user.filmpicker"))
 pcall(require("user.ui"))
 pcall(require("user.statusline"))
 pcall(require("user.tabline"))
@@ -257,11 +258,6 @@ pcall(require("user.git"))
 pcall(require("user.mini"))
 pcall(require("user.noice"))
 
-pcall(require("user.filmpicker"))
 pcall(require("user.command"))
-
--- need to put this after targets
-Map("x", "i", "<Plug>(niceblock-I)", { remap = true, nowait = true })
-Map("x", "a", "<Plug>(niceblock-A)", { remap = true, nowait = true })
 
 require("user.projects").load_session()

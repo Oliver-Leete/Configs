@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Get a list of files
-LIST=$(find "$1" -type f)
+LIST=$(find "$1" -type f -not -name "*.srt" -not -name "*.sup")
 
 # In case of a space in file names, split on return
 IFS_ORIG=$IFS

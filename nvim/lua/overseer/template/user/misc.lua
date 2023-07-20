@@ -10,10 +10,6 @@ return {
                         name = "Fish " .. OvTermNum,
                         cmd = "fish",
                         components = { "default",
-                            {
-                                "user.start_open",
-                                start_insert = true,
-                            },
                         },
                     }
                 end,
@@ -27,10 +23,6 @@ return {
                         name = "lazygit",
                         cmd = "lazygit",
                         components = { "default", "unique",
-                            -- {
-                            --     "user.start_open",
-                            --     start_insert = true,
-                            -- },
                         },
                     }
                 end,
@@ -68,10 +60,6 @@ return {
                         name = "lazydocker",
                         cmd = "lazydocker",
                         components = { "default", "unique",
-                            -- {
-                            --     "user.start_open",
-                            --     start_insert = true,
-                            -- },
                         },
                     }
                 end,
@@ -85,10 +73,6 @@ return {
                         name = "btop",
                         cmd = "btop",
                         components = { "default", "unique",
-                            {
-                                "user.start_open",
-                                goto_prev = true,
-                            },
                         },
                     }
                 end,

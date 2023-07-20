@@ -190,6 +190,7 @@ end
 local openterm = function()
     -- vim.cmd("silent split")
     vim.cmd("OverseerRun Fish")
+    vim.cmd("OverseerQuickAction open")
 end
 vim.api.nvim_create_user_command("OpenTerm", openterm, { nargs = 0 })
 

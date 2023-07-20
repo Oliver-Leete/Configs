@@ -50,7 +50,6 @@ vim.opt.gdefault = true
 vim.opt.incsearch = true
 vim.keymap.set({ "n", "x", "o" }, "<plug>(slash-after)", function()
     vim.g.dirJumps = "search"
-    -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("zz", true, true, true), "n", false)
 end
 )
 

@@ -162,3 +162,5 @@ glance.setup({
 
 vim.go.statuscolumn = "%{%v:lua.StatusCol()%}"
 vim.wo.statuscolumn = "%{%v:lua.StatusCol()%}"
+
+local statcol = vim.api.nvim_create_augroup("StatusCol", {})

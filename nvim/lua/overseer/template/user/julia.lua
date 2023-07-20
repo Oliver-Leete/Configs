@@ -60,10 +60,6 @@ return {
                         name = "Julia Repl " .. julReplNum,
                         cmd = juliaCommand,
                         components = { "default",
-                            {
-                                "user.start_open",
-                                start_insert = true,
-                            },
                         },
                     }
                 end,
@@ -80,10 +76,6 @@ return {
                         name = vim.g.project .. " Project Repl " .. julReplNum,
                         cmd = juliaCommand .. "--project",
                         components = { "default",
-                            {
-                                "user.start_open",
-                                start_insert = true,
-                            },
                         },
                     }
                 end,
@@ -101,10 +93,6 @@ return {
                         name = otherProjectName .. " Project Repl " .. julReplNum,
                         cmd = "julia --threads=auto --project=" .. otherProject,
                         components = { "default",
-                            {
-                                "user.start_open",
-                                start_insert = true,
-                            },
                         },
                     }
                 end,
@@ -249,7 +237,7 @@ return {
                 tskName = "Running " .. vim.fn.expand("%:t:r") .. "Interactivly",
                 cmd = juliaCommand .. "-i " .. vim.fn.expand("%:p"),
                 condition = isFile,
-                components = { "default", "unique", "user.start_open" },
+                components = { "default", "unique" },
             },
             {
                 name = "Profile Package Imports",
@@ -354,10 +342,6 @@ return {
                                     cond .. [[\")'\`)
                                 "]],
                                 components = { "default", "unique",
-                                    {
-                                        "user.start_open",
-                                        goto_prev = true,
-                                    },
                                     {
                                         "user.send_on_open",
                                         send_on_open = [[@run_package_tests filter=ti->(ti.name == ]] .. name .. [[)]],

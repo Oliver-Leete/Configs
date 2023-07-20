@@ -499,7 +499,7 @@ myManageHook n =
         isBrowserDialog = isDialog <&&> className =? myBrowserClass
         halfNhalf = W.RationalRect (1/4) (1/4) (1/2) (1/2)
         bigFloat = W.RationalRect (1/8) (1/8) (3/4) (3/4)
-        scinTestShift = if n > 1
+        scinTestShift = if n >= 2
             then doShift "Scin-Test"
             else doSink <+> insertPosition End Newer
 

@@ -15,10 +15,7 @@ return {
                     return {
                         name = vim.fn.expand("%:t:r") .. " REPL",
                         cmd = cmd,
-                        components = { "default", "unique", {
-                            "user.start_open",
-                            start_insert = true,
-                        } }
+                        components = { "default", "unique" }
                     }
                 end,
                 condition = {

@@ -306,6 +306,12 @@ require("lualine").setup({
                 cond = not_overseer,
             },
             {
+                Filmpicker_endtime,
+                separator = { left = left, right = "" },
+                padding = { left = 1, right = 0 },
+                cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end,
+            },
+            {
                 function() return " " end,
                 cond = not_overseer,
                 draw_empty = true,
@@ -347,6 +353,11 @@ require("lualine").setup({
                 icon_only = true,
                 separator = { left = right, right = "" },
                 cond = not_overseer,
+            },
+            {
+                Filmpicker_winbar,
+                separator = { left = "", right = "" },
+                cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end,
             },
             {
                 overseericon,

@@ -153,10 +153,6 @@ return {
                             name = ft.name .. " REPL " .. ft.num,
                             components = {
                                 "default",
-                                {
-                                    "user.start_open",
-                                    start_insert = true,
-                                },
                             }
                         }
                     end,

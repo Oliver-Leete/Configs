@@ -30,11 +30,10 @@ local custom_attach = function(client, bufnr)
     local sc = client.server_capabilities
     local bmap = function(mode, key, action) Map(mode, key, action, { buffer = bufnr }) end
 
-    if client.name == "pylsp" then
+    if client.name == "ruff" then
         sc.renameProvider = false
         sc.definitionProvider = false
         sc.referencesProvider = false
-        -- sc.documentSymbolProvider = false
     elseif client.name == "texlab" then
         sc.documentFormattingProvider = false
     end
@@ -80,13 +79,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
-capabilities.textDocument.foldingRange = {
-    dynamicRegistration = false,
-    lineFoldingOnly = true
-}
 
 local default = {
-    -- on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
 }
@@ -99,68 +93,38 @@ lspconfig.taplo.setup(default)
 lspconfig.asm_lsp.setup(default)
 lspconfig.arduino_language_server.setup(default)
 lspconfig.teal_ls.setup(default)
-lspconfig.fennel_language_server.setup({
-    capabilities = capabilities,
-    flags = { debounce_text_changes = 1000 },
-    settings = {
-        fennel = {
-            workspace = {
-                -- If you are using hotpot.nvim or aniseed,
-                -- make the server aware of neovim runtime files.
-                library = vim.api.nvim_list_runtime_paths(),
-            },
-            diagnostics = {
-                globals = { 'vim' },
-            },
-        },
-    },
-})
 
-lspconfig.pyright.setup(default)
-lspconfig.pylsp.setup({
-    -- on_attach = custom_attach,
-    capabilities = capabilities,
-    flags = { debounce_text_changes = 1000 },
+local pyrightcapabilities = vim.lsp.protocol.make_client_capabilities()
+pyrightcapabilities.textDocument.publishDiagnostics.tagSupport.valueSet = { 2 }
+
+lspconfig.pyright.setup({
     settings = {
-        pylsp = {
-            plugins = {
-                pydocstyle = {
-                    enabled = false,
-                    addIgnore = { "D101", "D102", "D103", "D107", "D203" },
-                    convention = "numpy",
+        python = {
+            analysis = {
+                useLibraryCodeForTypes = true,
+                diagnosticSeverityOverrides = {
+                    reportUnusedVariable = "warning",
                 },
-                pycodestyle = {
-                    enabled = false,
-                    ignore = { "E501", "W503" }
-                },
-                pyflakes = {
-                    enabled = false,
-                },
-                rope_completion = { enabled = false },
-                jedi_completion = { enabled = false },
-                ruff = {
-                    enabled = true,
-                    lineLength = 120,
-                },
+                typeCheckingMode = "basic",
             },
         },
     },
+    capabilities = pyrightcapabilities,
+    flags = { debounce_text_changes = 1000 },
 })
+lspconfig.ruff_lsp.setup(default)
 
 lspconfig.jsonls.setup({
-    -- on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
 })
 
 lspconfig.yamlls.setup({
-    -- on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
 })
 
 lspconfig.lua_ls.setup({
-    -- on_attach = custom_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
     settings = {
@@ -188,7 +152,6 @@ lspconfig.lua_ls.setup({
 })
 
 lspconfig.texlab.setup({
-    -- on_attach = custom_attach,
     flags = { debounce_text_changes = 1000 },
     root_dir = lspconfig.util.root_pattern(".git"),
     settings = {
@@ -238,7 +201,6 @@ require("clangd_extensions").setup({
         autoSetHints = false,
     },
     server = {
-        -- on_attach = custom_attach,
         capabilities = clangd_cap,
         flags = { debounce_text_changes = 1000 },
     },
@@ -246,7 +208,6 @@ require("clangd_extensions").setup({
 
 require("rust-tools").setup({
     server = {
-        -- on_attach = custom_attach,
         capabilities = capabilities,
         flags = { debounce_text_changes = 1000 },
         standalone = true,
@@ -352,6 +313,7 @@ require("null-ls").setup({
         null_ls.builtins.diagnostics.jsonlint,
         null_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013", "MD046", "MD009" } }),
         null_ls.builtins.formatting.bibclean,
+        null_ls.builtins.formatting.black,
         null_ls.builtins.formatting.fish_indent,
         null_ls.builtins.formatting.jq.with({ extra_args = { "--indent", "4" } }),
         null_ls.builtins.formatting.latexindent.with({ extra_args = { "-l=.latexindent.yaml" } }),
