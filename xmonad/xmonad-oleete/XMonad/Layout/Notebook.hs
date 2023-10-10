@@ -221,18 +221,21 @@ splitColumns list minWidth stackRect mf d s bigRect
             index = snd $ head list
             listNew = tail list
             (rectN, stackRectAdd) = splitVerticallyBy mf rect
-            stackRectFunc True = rectangleDiff
+            stackRectFunc True  = rectangleDiff
             stackRectFunc False =  flip rectangleDiff
 
 modY :: Rectangle -> Rectangle -> Rectangle
-modY (Rectangle sx sy sw sh) (Rectangle bx _ _ _)=
+modY (Rectangle sx sy sw sh) (Rectangle bx _ bw _)=
     Rectangle sx (sy + ymoddifier) sw (sh - fromIntegral ymoddifier)
-    where   ymoddifier= if toInteger (8 + sx) < toInteger bx + 960
+    where   ymoddifier= if toInteger (8 + sx) < toInteger bx + xmobarWidth
                         then 31
                         else 0
+            xmobarWidth = if bw > 1920
+                            then 960
+                            else 1280
 
 sortByXLocation :: Bool -> [(Rectangle, b)] -> [(Rectangle, b)]
-sortByXLocation True = sortOn (rect_x . fst)
+sortByXLocation True  = sortOn (rect_x . fst)
 sortByXLocation False = sortOn (Data.Ord.Down . (rect_x . fst))
 
 sortByIndex :: [(Rectangle , Int)] -> [(Rectangle , Int)]

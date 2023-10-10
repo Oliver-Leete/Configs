@@ -1,7 +1,6 @@
 local is_cursorline = function()
     return vim.v.lnum == vim.fn.line(".")
 end
-
 local gitsigns = {
     GitSignsAdd          = "┃",
     GitSignsChange       = "┃",
@@ -44,18 +43,26 @@ vim.api.nvim_set_hl(0, "CursorNeotestSkipped", { fg = "#00f1f5", bg = Ct.ui.bg_p
 
 local make_sep = function(hl_prefix)
     local bufnr = vim.api.nvim_get_current_buf()
-    local sign = vim.fn.sign_getplaced(bufnr, { lnum = vim.v.lnum, group = "gitsigns_vimfn_signs_" })[1].signs
-    local signstaged = vim.fn.sign_getplaced(bufnr, { lnum = vim.v.lnum, group = "gitsigns_vimfn_signs_staged" })[1]
-        .signs
+    local gitsigns_unstaged = vim.api.nvim_get_namespaces().gitsigns_extmark_signs_
+    local sign
+    if gitsigns_unstaged then
+        sign = vim.api.nvim_buf_get_extmarks(bufnr, gitsigns_unstaged, { vim.v.lnum - 1, 0 }, { vim.v.lnum - 1, -1 },
+            { details = true })
+    end
+    local gitsigns_staged = vim.api.nvim_get_namespaces().gitsigns_extmark_signs_staged
+    local signstaged
+    if gitsigns_staged then
+        signstaged = vim.api.nvim_buf_get_extmarks(bufnr, gitsigns_staged, { vim.v.lnum - 1, 0 },
+            { vim.v.lnum - 1, -1 }, { details = true })
+    end
     local text = "│"
-    local name
-    if #sign >= 1 and sign[1].name then
-        name = sign[1].name
+    local name = "LineSep"
+    Sign = sign
+    if sign and #sign >= 1 and sign[1][4].sign_hl_group then
+        name = sign[1][4].sign_hl_group
         text = gitsigns[name]
-    elseif #signstaged >= 1 and signstaged[1].name then
-        name = signstaged[1].name
-    else
-        name = "LineSep"
+    elseif signstaged and #signstaged >= 1 and signstaged[1][4].sign_hl_group then
+        name = signstaged[1][4].sign_hl_group
     end
     local hl = hl_prefix .. name .. "#"
     return hl .. text
@@ -78,6 +85,7 @@ StatusCol = function()
     table.sort(signs, function(a, b)
         return a.priority > b.priority
     end)
+
 
     local num = vim.v.lnum
     local num_len = string.len(num)

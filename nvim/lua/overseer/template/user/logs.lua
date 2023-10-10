@@ -42,7 +42,7 @@ return {
                         name = "Plot " .. params.key,
                         cmd = [[echo temp > /tmp/T.csv; rg ']] ..
                         params.key ..
-                        [[' /home/oleete/Projects/PowderModel/test/test_outputs/full_out.log | rg -o '[0-9.]*$' >> /tmp/T.csv;
+                        [[' /home/oleete/Projects/HSSSimulations/test/test_outputs/full_out.log | rg -o '[0-9.]*$' >> /tmp/T.csv;
                                 julia -e '
                                     using Plots, CSV;
                                     ENV["GKSwstype"]="nul"
@@ -57,7 +57,7 @@ return {
                 end,
                 priority = 150,
                 condition = {
-                    dir = "/home/oleete/Projects/PowderModel"
+                    dir = "/home/oleete/Projects/HSSSimulations"
                 }
             },
         }

@@ -156,6 +156,8 @@ dap.configurations.sh = {
     }
 }
 
+local dapui = require("dapui")
+
 local hint = [[
 ┏^^^━━━━━━━━┳━━━━━━┳━━━━━━━━^^^┓
 ┃^^^        ┃  DAP ┃        ^^^┃
@@ -178,6 +180,13 @@ local hint = [[
 ┃ _,R_: continue to cursor ^^^^┃
 ┃ _,p_: pause              ^^^^┃
 ┃ _,X_: terminate          ^^^^┃
+┣^^^━━━━━━━━━━━━━━━━━━━━━━━━^^^┫
+┃ _<leader>j_: scopes      ^^^^┃
+┃ _<leader>h_: breakpoints ^^^^┃
+┃ _<leader>k_: stacks      ^^^^┃
+┃ _<leader>m_: watches     ^^^^┃
+┃ _<leader>,_: repl        ^^^^┃
+┃ _<leader>._: consol      ^^^^┃
 ┣^^━━━━━━━━━━━━━━━━━━━━━━━━^^^^┫
 ┃ _,f_: breakpoint finder  ^^^^┃
 ┃ _,<esc>_: exit           ^^^^┃
@@ -214,13 +223,18 @@ DapHydra = require("hydra")({
         { ",R", dap.run_to_cursor },
         { ",X", dap.terminate, { desc = "terminate" } },
         { ",p", dap.pause },
+        { "<leader>j", function() dapui.toggle({layout=6}) end },
+        { "<leader>h", function() dapui.toggle({layout=4}) end },
+        { "<leader>k", function() dapui.toggle({layout=5}) end },
+        { "<leader>m", function() dapui.toggle({layout=3}) end },
+        { "<leader>,", function() dapui.toggle({layout=2}) end },
+        { "<leader>.", function() dapui.toggle({layout=1}) end },
         { ",<esc>", nil, { exit = true, nowait = true, desc = "exit" } },
         { ",f", "<cmd>Telescope dap list_breakpoints theme=get_ivy<cr>" },
         { "<leader>d", nil, { exit = true, nowait = true, desc = false } },
     }
 })
 
-local dapui = require("dapui")
 local debug_win = nil
 local debug_tab = nil
 local debug_tabnr = nil
@@ -247,7 +261,7 @@ local close_tab = function()
     if debug_tab and vim.api.nvim_tabpage_is_valid(debug_tab) then
         vim.api.nvim_exec("tabclose " .. debug_tabnr, false)
     end
-    DapHydra:exit()
+    -- DapHydra:exit()
 
     debug_win = nil
     debug_tab = nil

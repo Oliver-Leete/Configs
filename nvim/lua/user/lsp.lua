@@ -1,5 +1,42 @@
 M = {}
 
+require('vim.lsp._watchfiles')._watchfunc = function(_, _, _) return function() return true end end
+vim.g.lsp_lens_on = true
+
+require("mason-tool-installer").setup({
+    ensure_installed = {
+        "arduino-language-server",
+        "bash-debug-adapter",
+        "bash-language-server",
+        "codelldb",
+        "cpptools",
+        "debugpy",
+        "delve",
+        "fortls",
+        "gitlint",
+        "gopls",
+        "jq",
+        "json-lsp",
+        "jsonlint",
+        "julia-lsp",
+        "ltex-ls",
+        "lua-language-server",
+        "markdownlint",
+        "marksman",
+        "pyright",
+        "python-lsp-server",
+        "ruff-lsp",
+        "rust-analyzer",
+        "shellharden",
+        "shfmt",
+        "sourcery",
+        "taplo",
+        "teal-language-server",
+        "texlab",
+        "yaml-language-server",
+    },
+})
+
 require("neodev").setup({})
 local lspconfig = require("lspconfig")
 
@@ -30,7 +67,12 @@ local custom_attach = function(client, bufnr)
     local sc = client.server_capabilities
     local bmap = function(mode, key, action) Map(mode, key, action, { buffer = bufnr }) end
 
-    if client.name == "ruff" then
+    if client.name == "pylsp" then
+        sc.renameProvider = false
+        sc.definitionProvider = false
+        sc.referencesProvider = false
+        sc.documentSymbolProvider = false
+    elseif client.name == "ruff" then
         sc.renameProvider = false
         sc.definitionProvider = false
         sc.referencesProvider = false
@@ -38,7 +80,7 @@ local custom_attach = function(client, bufnr)
         sc.documentFormattingProvider = false
     end
 
-    if sc.documentSymbolProvider and client.name ~= "pyright" then
+    if sc.documentSymbolProvider then
         require("nvim-navic").attach(client, bufnr)
     end
 
@@ -54,9 +96,18 @@ local custom_attach = function(client, bufnr)
     end
     if sc.codeLensProvider ~= nil then
         bmap("n", "<C-,>", vim.lsp.codelens.run)
+        vim.lsp.codelens.refresh()
         vim.api.nvim_create_autocmd(
-            "CursorHold",
-            { callback = vim.lsp.codelens.refresh, buffer = bufnr, group = lsp_auto }
+            "TextChanged",
+            {
+                callback = function()
+                    if vim.g.lsp_lens_on then
+                        vim.lsp.codelens.refresh()
+                    end
+                end,
+                buffer = bufnr,
+                group = lsp_auto,
+            }
         )
     end
     bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action)
@@ -93,6 +144,16 @@ lspconfig.taplo.setup(default)
 lspconfig.asm_lsp.setup(default)
 lspconfig.arduino_language_server.setup(default)
 lspconfig.teal_ls.setup(default)
+lspconfig.clangd.setup(default)
+lspconfig.hls.setup({
+    flags = { debounce_text_changes = 1000 },
+    settings = {
+        haskell = {
+            formattingProvider = "stylish-haskell",
+            checkProject = true,
+        }
+    }
+})
 
 local pyrightcapabilities = vim.lsp.protocol.make_client_capabilities()
 pyrightcapabilities.textDocument.publishDiagnostics.tagSupport.valueSet = { 2 }
@@ -112,7 +173,37 @@ lspconfig.pyright.setup({
     capabilities = pyrightcapabilities,
     flags = { debounce_text_changes = 1000 },
 })
+lspconfig.pylsp.setup({
+    -- on_attach = custom_attach,
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 1000 },
+    settings = {
+        pylsp = {
+            plugins = {
+                pydocstyle = { enabled = false },
+                pycodestyle = { enabled = false },
+                pyflakes = { enabled = false },
+                rope_completion = { enabled = false },
+                jedi_completion = { enabled = false },
+                ruff = { enabled = false },
+                isort = { enabled = false },
+                black = { enabled = true },
+            },
+        },
+    },
+})
 lspconfig.ruff_lsp.setup(default)
+lspconfig.sourcery.setup({
+    -- on_attach = custom_attach,
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 1000 },
+    init_options = {
+        -- token = require("user.secrets").sourcery,
+        extension_version = "vim.lsp",
+        editor_version = "vim",
+    },
+})
+
 
 lspconfig.jsonls.setup({
     capabilities = capabilities,
@@ -180,31 +271,13 @@ lspconfig.texlab.setup({
     },
 })
 
-local ht = require('haskell-tools')
-ht.setup({
-    hls = {
-        flags = { debounce_text_changes = 1000 },
-        root_dir = lspconfig.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"),
-        settings = {
-            haskell = {
-                formattingProvider = "stylish-haskell",
-                checkProject = true,
-            }
-        }
-    }
-})
-
-local clangd_cap = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
-clangd_cap.offsetEncoding = "utf-8"
-require("clangd_extensions").setup({
-    extensions = {
-        autoSetHints = false,
-    },
-    server = {
-        capabilities = clangd_cap,
-        flags = { debounce_text_changes = 1000 },
-    },
-})
+-- local ht = require('haskell-tools')
+-- ht.setup({
+--     hls = {
+--         flags = { debounce_text_changes = 1000 },
+--         root_dir = lspconfig.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"),
+--     }
+-- })
 
 require("rust-tools").setup({
     server = {
@@ -313,7 +386,6 @@ require("null-ls").setup({
         null_ls.builtins.diagnostics.jsonlint,
         null_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013", "MD046", "MD009" } }),
         null_ls.builtins.formatting.bibclean,
-        null_ls.builtins.formatting.black,
         null_ls.builtins.formatting.fish_indent,
         null_ls.builtins.formatting.jq.with({ extra_args = { "--indent", "4" } }),
         null_ls.builtins.formatting.latexindent.with({ extra_args = { "-l=.latexindent.yaml" } }),
@@ -322,6 +394,8 @@ require("null-ls").setup({
         null_ls.builtins.formatting.shfmt,
         null_ls.builtins.formatting.trim_newlines,
         null_ls.builtins.formatting.trim_whitespace,
+        null_ls.builtins.formatting.ruff.with({
+            args = { "--fix", "-e", "-n", "--fixable", "I001", "--stdin-filename", "$FILENAME", "-" } }), -- only format import block
         null_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
         null_ls.builtins.hover.printenv,
     },

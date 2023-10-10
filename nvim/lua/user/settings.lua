@@ -93,7 +93,6 @@ vim.api.nvim_create_autocmd(
     { "FileType" },
     { group = windowPositioning, pattern = "help", command = ":wincmd H | vertical resize 90<cr>" }
 )
-vim.api.nvim_create_autocmd({ "FileType" }, { group = windowPositioning, pattern = "juliadoc", command = "wincmd H" })
 vim.api.nvim_create_autocmd({ "FileType" }, { group = windowPositioning, pattern = "qf", command = "wincmd J" })
 
 -- Yank

@@ -164,20 +164,6 @@ return {
                 priority = 6,
                 params = {},
             },
-            {
-                name = "View Animation",
-                builder = function()
-                    return {
-                        name = "Animation",
-                        cmd = "mpv --loop-file=inf /tmp/fig.gif",
-                        components = { "unique", { "on_complete_dispose", timeout = 1 } }
-                    }
-                end,
-                priority = 151,
-                condition = {
-                    dir = "/home/oleete/Projects/PowderModel"
-                },
-            },
         }
         cb(ret)
     end

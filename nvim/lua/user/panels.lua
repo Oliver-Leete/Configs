@@ -1,19 +1,3 @@
-local bottom_size = math.ceil(vim.api.nvim_list_uis()[1].height / 5)
-
-if bottom_size > 40 then
-    bottom_size = 40
-elseif bottom_size < 20 then
-    bottom_size = 20
-end
-
-local left_size = math.ceil(vim.api.nvim_list_uis()[1].width / 5)
-
-if left_size > 50 then
-    left_size = 50
-elseif left_size < 30 then
-    left_size = 30
-end
-
 require("trouble").setup({
     position = "right",
     action_keys = {
@@ -40,8 +24,17 @@ require("edgy").setup({
         spinner = require("noice.util.spinners").spinners.circleFull,
     },
     options = {
-        left = { size = left_size },
-        bottom = { size = bottom_size },
+        left = {
+            size = function()
+                return math.max(math.min(math.ceil(vim.api.nvim_list_uis()[1].width / 5), 50), 30)
+            end
+        },
+        bottom = {
+            size = function()
+                return math.max(math.min(math.ceil(vim.api.nvim_list_uis()[1].height / 5), 40), 20)
+            end
+        }
+
     },
     bottom = {
         { ft = "dapui_watches", title = "Watches" },

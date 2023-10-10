@@ -41,7 +41,6 @@ Map({ "n", "x", "o" }, ")", "<nop>, test")
 -- Mappings
 Map("n", "<esc>", function()
     vim.cmd("Noice dismiss")
-    require("substitute.exchange").cancel()
     require("edgy").close()
 end)
 
@@ -73,11 +72,6 @@ Map("x", "A", "<Plug>(niceblock-A)")
 
 Map("n", "<c-/>", ",cc", { remap = true })
 Map("x", "<c-/>", ",c", { remap = true })
-
-Map("n", "R", require("substitute").operator)
-Map("x", "R", require("substitute").visual)
-Map("n", "$", require("substitute.exchange").operator)
-Map("x", "$", require("substitute.exchange").visual)
 
 -- UnMap Plugins
 vim.g.vimtex_mappings_enabled = 0
@@ -296,8 +290,8 @@ require('hydra')({
     },
     hint = mini_move_hint,
     heads = {
-        { 'H', function() require('mini.move').move_selection("left") end,  { nowait = true } },
         { 'J', function() require('mini.move').move_selection("down") end,  { nowait = true } },
+        { 'H', function() require('mini.move').move_selection("left") end,  { nowait = true } },
         { 'K', function() require('mini.move').move_selection("up") end,    { nowait = true } },
         { 'L', function() require('mini.move').move_selection("right") end, { nowait = true } },
         { 'M', nil, {
@@ -308,7 +302,7 @@ require('hydra')({
         { '<esc>', nil, { exit = true, nowait = true } },
     }
 })
-require('hydra')({
+MoveLine = require('hydra')({
     name = "Move Line",
     mode = { "n" },
     body = "M",
@@ -339,6 +333,8 @@ require('hydra')({
 })
 -- Text leader mappings: ,
 
+Map("n", ",,", require("binary-swap").swap_operands)
+
 Map("n", ",rr", vim.lsp.buf.rename)
 
 Map({ "n", "x" }, ",rt", require("ssr").open)
@@ -358,7 +354,6 @@ Map({ "n", "x" }, ",dv", function() require("refactoring").debug.print_var({}) e
 Map("n", ",dq", function() require("refactoring").debug.cleanup({}) end)
 
 Map({ "n", "x" }, ",s", "<Plug>Opsort", { remap = true })
-Map("n", ",ss", "<Plug>OpsortLines", { remap = true })
 
 Map("n", ",n", require("ts-node-action").node_action)
 
@@ -374,7 +369,8 @@ Map({ "n", "x" }, ",ff", function()
     vim.lsp.buf.format()
 end)
 Map("n", ",fw", function()
-    return "m1!ippar w" .. (vim.b.textwidth or vim.g.textwidth) .. "<cr>`1"
+    local num = vim.b.textwidth and vim.b.textwidth > 0 or vim.g.textwidth
+    return "m1!ippar w" .. num .. "<cr>`1"
 end, { expr = true, silent = true })
 Map("n", ",fW", [["<cmd>%!par w" . &textwidth . "<cr>"]], { expr = true })
 Map("x", ",fw", [["!par w" . &textwidth . "<cr>"]], { expr = true })
@@ -414,7 +410,6 @@ local overseer = require("overseer")
 
 Map("n", "<leader>n", "<cmd>OverseerRun<cr>")
 Map("n", "<leader>N", function()
-    local overseer = require("overseer")
     local tasks = overseer.list_tasks({ recent_first = true })
     if vim.tbl_isempty(tasks) then
         vim.notify("No tasks found", vim.log.levels.WARN)
@@ -465,18 +460,18 @@ Map("n", "<s-cr>", function()
 end)
 
 local send_code = function(start_mark, end_mark)
-        local s_start = vim.fn.getpos(start_mark)
-        local s_end = vim.fn.getpos(end_mark)
-        local n_lines = math.abs(s_end[2] - s_start[2]) + 1
-        local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false)
-        lines[1] = string.sub(lines[1], s_start[3], -1)
-        if n_lines == 1 then
-            lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3] - s_start[3] + 1)
-        else
-            lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3])
-        end
-        local selection = table.concat(lines, '\n')
-        vim.fn.chansend(SendID, selection .. "\n")
+    local s_start = vim.fn.getpos(start_mark)
+    local s_end = vim.fn.getpos(end_mark)
+    local n_lines = math.abs(s_end[2] - s_start[2]) + 1
+    local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false)
+    lines[1] = string.sub(lines[1], s_start[3], -1)
+    if n_lines == 1 then
+        lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3] - s_start[3] + 1)
+    else
+        lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3])
+    end
+    local selection = table.concat(lines, '\n')
+    vim.fn.chansend(SendID, selection .. "\n")
 end
 
 Map("x", "<s-cr>", function()

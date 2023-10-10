@@ -1,7 +1,5 @@
 vim.api.nvim_set_var("$SHELL", "/bin/zsh")
 vim.opt.shell = "/bin/zsh"
-vim.g.neo_tree_remove_legacy_commands = true
-vim.g.sexp_filetypes = "clojure,scheme,lisp,timl,fennel,janet"
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
@@ -50,7 +48,6 @@ require("lazy").setup(
             "Konfekt/vim-CtrlXA",
             dependencies = { "tpope/vim-repeat" }
         },
-        { "gbprod/substitute.nvim" },
         { "andymass/vim-matchup" },
         { "numToStr/Comment.nvim" },
         { "kana/vim-niceblock" },
@@ -99,6 +96,7 @@ require("lazy").setup(
             dependencies = {
                 "williamboman/mason-lspconfig.nvim",
                 "jayp0521/mason-nvim-dap.nvim",
+                "WhoIsSethDaniel/mason-tool-installer.nvim",
             }
         },
         {
@@ -148,9 +146,8 @@ require("lazy").setup(
         { "LhKipp/nvim-nu" },
         { "simrat39/rust-tools.nvim" },
         { "mfussenegger/nvim-dap-python" },
-        { "MrcJkb/haskell-tools.nvim" },
+        -- { "MrcJkb/haskell-tools.nvim" },
         { "folke/neodev.nvim" },
-        { "p00f/clangd_extensions.nvim" },
 
         -- compleation
         {
@@ -195,6 +192,7 @@ require("lazy").setup(
                 { "prochri/telescope-all-recent.nvim", dependencies = { "kkharji/sqlite.lua" } },
                 { "debugloop/telescope-undo.nvim" },
                 { "FeiyouG/command_center.nvim" },
+                { "Marskey/telescope-sg" },
             },
         },
 
@@ -216,6 +214,12 @@ require("lazy").setup(
             dependencies = { "tpope/vim-repeat" }
         },
         { "drybalka/tree-climber.nvim" },
+        { "Wansmer/treesj" },
+        { "Wansmer/binary-Swap.nvim" },
+        {
+            "chrisgrieser/nvim-puppeteer",
+            dependencies = "nvim-treesitter/nvim-treesitter",
+        },
     },
     {
         install = {

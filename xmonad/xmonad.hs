@@ -42,7 +42,6 @@ import           XMonad.Hooks.StatusBar.PP
 import           XMonad.Hooks.WorkspaceHistory          (workspaceHistoryHookExclude)
 
 import           XMonad.Layout.DraggingVisualizer
-import           XMonad.Layout.FourColumns
 import           XMonad.Layout.MultiToggle
 import           XMonad.Layout.MultiToggle.Instances
 import           XMonad.Layout.NoBorders
@@ -110,34 +109,35 @@ getScreens = do
 
 projects :: Int -> [Project]
 projects n =
-    [ Project { pName = "Tmp",        pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
-    , Project { pName = "Tmp2",       pDir = "/tmp",                          pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
+    [ Project { pName = "Tmp",        pDir = "/tmp",                                pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
+    , Project { pName = "Tmp2",       pDir = "/tmp",                                pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
 
-    , Project { pName = "Home",       pDir = "~/PersonalDrive",               pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Home" }
-    , Project { pName = "CodeTuts",   pDir = "~/Projects/rustBook",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "CodeTuts" }
-    , Project { pName = "Print",      pDir = "~/Projects/Printing",           pApp1 = prusa,    pApp1F = prusaF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = oneSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer" }
-    , Project { pName = "Games",      pDir = "~/Documents",                   pApp1 = steam,    pApp1F = steamF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = oneSpawn "Games" "steam" }
-    , Project { pName = "Films",      pDir = "~/Videos/films",                pApp1 = kitty,    pApp1F = kittyF,    pApp2 = mpv,       pApp2F = mpvF,      pApp3 = deluge,    pApp3F = delugeF,   pStart = filmSpawn "Films" }
-    , Project { pName = "Dnd",        pDir = "~/Projects/Rpgs",               pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Dnd" }
+    , Project { pName = "Home",       pDir = "~/PersonalDrive",                     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Home" }
+    , Project { pName = "CodeTuts",   pDir = "~/Projects/rustBook",                 pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "CodeTuts" }
+    , Project { pName = "Print",      pDir = "~/Projects/Printing",                 pApp1 = prusa,    pApp1F = prusaF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = oneSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer" }
+    , Project { pName = "Games",      pDir = "~/Documents",                         pApp1 = steam,    pApp1F = steamF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = oneSpawn "Games" "steam" }
+    , Project { pName = "Films",      pDir = "~/Videos/films",                      pApp1 = kitty,    pApp1F = kittyF,    pApp2 = mpv,       pApp2F = mpvF,      pApp3 = deluge,    pApp3F = delugeF,   pStart = filmSpawn "Films" }
+    , Project { pName = "Dnd",        pDir = "~/Projects/Rpgs",                     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Dnd" }
 
-    , Project { pName = "Configs",    pDir = "~/.config",                     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Configs" }
-    , Project { pName = "QMK",        pDir = "~/Projects/qmk_firmware",       pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "QMK" }
-    , Project { pName = "ZMK",        pDir = "~/Projects/zmk-config",         pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ZMK" }
+    , Project { pName = "Configs",    pDir = "~/.config",                           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Configs" }
+    , Project { pName = "QMK",        pDir = "~/Projects/qmk_firmware",             pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "QMK" }
+    , Project { pName = "ZMK",        pDir = "~/Projects/zmk-config",               pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ZMK" }
 
-    , Project { pName = "Wrk",        pDir = "~/UniDrive",                    pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Wrk" }
-    , Project { pName = "WrkNotes",   pDir = "~/Projects/Thesis/Notes",       pApp1 = obsidian, pApp1F = obsidianF, pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = oneSpawn "WrkNotes" "flatpak run md.obsidian.Obsidian" }
-    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",      pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = termBrowSpawn "Thesis" }
-    , Project { pName = "Sim",        pDir = "~/Projects/HSSSimulations",     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Sim" }
-    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",      pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Exp" }
-    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = hdfview,   pApp3F = hdfviewF,  pStart = termBrowSpawn "Scripts" }
-    , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",      pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = commentSpawn "Comments" }
-    , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",   pApp1 = kitty,    pApp1F = kittyF,    pApp2 = paraview,  pApp2F = paraviewF, pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ANSYS" }
+    , Project { pName = "Wrk",        pDir = "~/UniDrive",                          pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Wrk" }
+    , Project { pName = "WrkNotes",   pDir = "~/Projects/Thesis/Notes",             pApp1 = obsidian, pApp1F = obsidianF, pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = oneSpawn "WrkNotes" "flatpak run md.obsidian.Obsidian" }
+    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",            pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = termBrowSpawn "Thesis" }
+    , Project { pName = "Sim",        pDir = "~/Projects/HSSSimulations",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Sim" }
+    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",            pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Exp" }
+    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = hdfview,   pApp3F = hdfviewF,  pStart = termBrowSpawn "Scripts" }
+    , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",            pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = commentSpawn "Comments" }
+    , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",         pApp1 = kitty,    pApp1F = kittyF,    pApp2 = paraview,  pApp2F = paraviewF, pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ANSYS" }
 
-    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Main" }
-    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys", pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Print" }
-    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware", pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Firm" }
-    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Scin-Docs" }
-    , Project { pName = "Scin-Test",  pDir = "~/Projects/Scintilla/Main",     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
+    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura, pApp3F = zathuraF, pStart = termBrowSpawn "Scin-Main" }
+    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys",       pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura, pApp3F = zathuraF, pStart = termBrowSpawn "Scin-Print" }
+    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware",       pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura, pApp3F = zathuraF, pStart = termBrowSpawn "Scin-Firm" }
+    , Project { pName = "Scin-Heat",  pDir = "~/Projects/Scintilla/HCPCB/firmware", pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura, pApp3F = zathuraF, pStart = termBrowSpawn "Scin-Heat" }
+    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura, pApp3F = zathuraF, pStart = termBrowSpawn "Scin-Docs" }
+    , Project { pName = "Scin-Test",  pDir = "~/Projects/Scintilla/Main",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura, pApp3F = zathuraF, pStart = Just $ return () }
     ]
     where
         kitty  = upPointer $ runOrRaiseNext "kitty" (className =? "kitty")
@@ -153,7 +153,8 @@ projects n =
         (deluge, delugeF)     = sameForce "deluge" "Deluge-gtk"
         (steam, steamF)       = sameForce "steam" "Steam"
         (hdfview, hdfviewF)   = sameForce "hdfview" "SWT"
-        scinCont              = upPointer $ raise (title =? "Scintilla Control")
+        scinStart             = "cd /home/oleete/Projects/Scintilla/Main; .venv/bin/python main.py"
+        (scinCont, sintContF) = (upPointer $ runOrRaiseNext scinStart (title =? "Scintilla Control"), upPointer $ spawn scinStart)
 
         sl i = "sleep .1; " ++ i
         termBrowSpawn ws = Just $ do spawnOn ws $ sl myTerminal; spawnOn ws ("sleep .5; " ++ myBrowser)
@@ -203,10 +204,10 @@ yellow     = "#DCA561"
 gap    = 3
 reSize = 1/12
 moreReSize = 1/4
-myBorder = 0
+myBorder = 3
 
 myWideFont :: [Char]
-myWideFont  = "xft:Eurostar Black Extended:" ++ "style=Regular:pixelsize=180:hinting=true"
+myWideFont = "xft:Eurostar Black Extended:" ++ "style=Regular:pixelsize=180:hinting=true"
 
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def
@@ -275,7 +276,7 @@ myLayoutHook = smartBorders
 
     notebookDifferent = onWorkspaces ["Dnd"] notebookDND $ onWorkspaces ["Thesis", "Print"] notebookThesis $ onWorkspaces ["Comments"] notebookTwoMain notebookMulti
 
-    notebookLaptop = FourTall 1 reSize (2/3)
+    notebookLaptop = Notebook False False False 1 2 moreReSize reSize 2 (2/3) 1
     notebookLayout = ifWider 1920 (onWorkspaces ["Tmp", "Tmp2", "Home", "Wrk"] notebookColumns notebookDifferent) notebookLaptop
 
 ----------------------------------------------------------------------------------------------------
@@ -417,7 +418,6 @@ myMouseBindings XConfig {} = M.fromList
 myStartupHook :: X ()
 myStartupHook = do
     killAllStatusBars
-    spawn "feh --bg-fill --randomize ~/Pictures/wallpapers/"
     setDefaultCursor xC_left_ptr
     spawnOnce "picom -b --config ~/.config/picom/picom.conf"
     spawnOnce "insync start; insync hide"
@@ -467,8 +467,8 @@ myManageHook n =
             , resource  =? "stalonetray"          -?> doIgnore
 
             , title =? "Scintilla Control"        -?> scinTestShift
-            , title =? "Scintilla Variable Editor"-?> doRectFloat halfNhalf
-            , title =? "Scintilla Strategy Editor"-?> doRectFloat bigFloat
+            , title =? "Scintilla Option Editor"  -?> doCenterFloat
+            , title =? "Scintilla Strategy Editor"-?> doCenterFloat
 
             , resource  =? "pavucontrol"          -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
             , className =? "Nm-connection-editor" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
@@ -596,6 +596,6 @@ myCommands _ =
     , ("restart-bars"        , do
         killAllStatusBars
         startAllStatusBars
-        spawn "feh --bg-fill --randomize ~/Pictures/wallpapers/"
+        spawn "variety -n"
     )
     ]

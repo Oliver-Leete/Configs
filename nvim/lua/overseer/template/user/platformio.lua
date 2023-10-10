@@ -4,7 +4,9 @@ local TAG = require("overseer.constants").TAG
 return {
     condition = {
         callback = function(opts)
-            return files.exists(files.join(opts.dir, "platformio.ini"))
+            if files.exists(files.join(vim.fn.getcwd(), "platformio.ini")) then
+                return true
+            end
         end
     },
     generator = function(_, cb)

@@ -12,7 +12,7 @@ require("dressing").setup({
             if opts.kind == "codeaction" then
                 return {
                     backend = "telescope",
-                    telescope = require("telescope.themes").get_cursor({})
+                    telescope = require("telescope.themes").get_cursor({ layout_config = { height = 15 } })
                 }
             else
                 return {

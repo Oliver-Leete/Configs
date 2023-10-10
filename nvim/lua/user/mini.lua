@@ -97,9 +97,30 @@ splitjoin.setup({
     },
 })
 
+
 local hipatterns = require('mini.hipatterns')
 hipatterns.setup({
-  highlighters = {
-    hex_color = hipatterns.gen_highlighter.hex_color(),
-  },
+    highlighters = {
+        hex_color = hipatterns.gen_highlighter.hex_color(),
+    },
+})
+
+require("mini.files").setup({
+
+})
+
+require("mini.operators").setup({
+    evaluate = { prefix = ",="},
+    exchange = {
+        prefix = "$",
+        reindent_linewise = false,
+    },
+    multiply = {
+        prefix = "+"
+    },
+    replace = {
+        prefix = "R",
+        reindent_linewise = false,
+    },
+    sort = {},
 })

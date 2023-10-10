@@ -28,12 +28,14 @@ screen_command = "/home/oleete/.config/bin/displayctl auto"
 net_command = "/home/oleete/.config/bin/statusNotify net"
 
 # first values
+time.sleep(0.5)
+
 screenCount1 = count_screens(get(["xrandr"]))
 networkCount1 = count_nets(get(["nmcli", "-t", "device"]))
 lidOpen1 = get(["cat", "/proc/acpi/button/lid/LID/state"])
 
-time.sleep(0.5)
 run_command(screen_command)
+
 while True:
     time.sleep(1)
 

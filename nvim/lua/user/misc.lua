@@ -109,10 +109,3 @@ require("todo-comments").setup({
         default = { "Identifier", "#7C3AED" },
     },
 })
-
-require("substitute").setup({
-    exchange = {
-        motion = false,
-        use_esc_to_cancel = true,
-    },
-})

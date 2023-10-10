@@ -72,6 +72,8 @@ overseer.setup({
     template_timeout = 5000,
     template_cache_threshold = 0,
     actions = {
+        ["open vsplit"] = false,
+        ["open hsplit"] = false,
         ["set loclist diagnostics"] = false,
         ["set as recive terminal"] = {
             desc = "set this task as the terminal to recive sent text and commands",

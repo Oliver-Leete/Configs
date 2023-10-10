@@ -40,7 +40,12 @@ local no_exit = false
 
 local tc_ex = function()
     tc.select_node(tc_settings)
-    require("substitute.exchange").visual()
+    require("mini.operators").exchange("visual")
+end
+
+local tc_mul = function()
+    tc.select_node(tc_settings)
+    require("mini.operators").multipy("visual")
 end
 
 local tc_goto_first = function()
@@ -107,9 +112,68 @@ TreeHydra = require('hydra')({
         { 'H',     function() tc.swap_prev(tc_settings) end,   { nowait = true } },
         { 'L',     function() tc.swap_next(tc_settings) end,   { nowait = true } },
         { 'R',     function() tc.raise(tc_settings) end,       { nowait = true } },
-        { 'm',     function() tc.select_node(tc_settings) end, { nowait = true } },
         { '$',     tc_ex,                                      { nowait = true, desc = false } },
+        { '+',     tc_mul,                                     { nowait = true, desc = false } },
+        { 'm',     function() tc.select_node(tc_settings) end, { exit = true } },
         { 'Z',     function() no_exit = true end,              { exit = true, nowait = true, desc = false } },
         { '<esc>', function() no_exit = true end,              { exit = true, nowait = true } },
     }
+})
+
+local tsj_utils = require("treesj.langs.utils")
+local langs = require("treesj.langs")["presets"]
+
+for _, item in pairs(langs.python) do
+    if item.split then
+        item.split.last_separator = true
+    end
+end
+
+for _, item in pairs(langs) do
+    item.comment = {
+        both = {
+            fallback = function()
+                require("mini.splitjoin").toggle()
+            end
+        }
+    }
+end
+
+langs.julia = {
+    matrix_expression = { both = { separator = ';' }, join = { force_insert = ";" }, split = {} },
+    argument_list = tsj_utils.set_preset_for_list({ join = { space_in_brackets = false } }),
+    parameter_list = {
+        join = { space_in_brackets = false },
+        both = { last_separator = false, omit = { "keyword_parameters" } }
+    },
+    tuple_expression = tsj_utils.set_preset_for_list({ join = { space_in_brackets = false } }),
+    parenthesized_expression = tsj_utils.set_preset_for_list({ join = { space_in_brackets = false } }),
+    function_definition = {
+        both = { omit = { "parameter_list" }, seperator = ";" },
+        join = { force_insert = ";", space_in_brackets = true }
+    },
+    if_statement = { both = { seperator = ";" }, join = { force_insert = ";", space_in_brackets = true } },
+    else_clause = { both = { seperator = ";" }, join = { force_insert = ";", space_in_brackets = true } },
+    for_statement = {
+        both = { omit = { "for_binding" }, seperator = ";" },
+        join = { force_insert = ";", space_in_brackets = true }
+    },
+}
+
+require('treesj').setup({
+    use_default_keymaps = false,
+    max_join_length = 1000,
+    langs = langs,
+})
+
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+    pattern = '*',
+    callback = function()
+        local opts = { buffer = true }
+        if langs[vim.bo.filetype] then
+            vim.keymap.set("n", ",j", require("treesj").toggle, opts)
+        else
+            vim.keymap.set("n", ",j", require("mini.splitjoin").toggle, opts)
+        end
+    end
 })
