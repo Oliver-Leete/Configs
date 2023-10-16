@@ -183,7 +183,7 @@ scratchpads =
     ,   NS "discord"  (myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/discord  --class=discord  --app=https://discord.com/channels/@me") (className =? "discord") defaultFloating
 
     ,   NS "toggl" "flatpak run com.toggl.TogglDesktop" (className =? "Toggl Desktop") nonFloating
-    ,   NS "youtubeMusic"  "youtube-music" (className =? "YouTube Music") nonFloating
+    ,   NS "youtubeMusic"  (myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/youtubeMusic  --class=youtubemusic  --app=https://music.youtube.com/") (className =? "youtubemusic") defaultFloating
     ,   NS "calc"  "gnome-calculator" (className =? "gnome-calculator") nonFloating
     ,   NS "console"  "kitty --class=console" (resource =? "console") nonFloating
     ,   NS "ruler"  "kruler" (resource =? "kruler") nonFloating
@@ -462,30 +462,31 @@ myManageHook n =
     <+> manageSpawn
     where
         manageSpecific = composeOne
-            [ resource  =? "desktop_window"       -?> doIgnore
-            , resource  =? "prusa-slicer"         -?> doSink <+> insertPosition End Newer
-            , resource  =? "stalonetray"          -?> doIgnore
+            [ resource  =? "desktop_window"           -?> doIgnore
+            , resource  =? "prusa-slicer"             -?> doSink <+> insertPosition End Newer
+            , resource  =? "stalonetray"              -?> doIgnore
 
-            , title =? "Scintilla Control"        -?> scinTestShift
-            , title =? "Scintilla Option Editor"  -?> doCenterFloat
-            , title =? "Scintilla Strategy Editor"-?> doCenterFloat
+            , title =? "Scintilla Control"            -?> scinTestShift
+            , title =? "Scintilla Option Editor"      -?> doCenterFloat
+            , title =? "Scintilla Strategy Editor"    -?> doCenterFloat
+            , title =? "Scintilla Connection Manager" -?> doCenterFloat
 
-            , resource  =? "pavucontrol"          -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
-            , className =? "Nm-connection-editor" -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
-            , className =? "Nm-applet"            -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
-            , className =? "Tlp-UI"               -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
-            , className =? "Blueberry.py"         -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , resource  =? "pavucontrol"              -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "Nm-connection-editor"     -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "Nm-applet"                -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "Tlp-UI"                   -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
+            , className =? "Blueberry.py"             -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
 
-            , resource  =? "gnome-calculator"     -?> doCenterFloat
-            , className =? "GCal"                 -?> doRectFloat bigFloat
-            , className =? "WrkGCal"              -?> doRectFloat bigFloat
-            , className =? "Toggl Desktop"        -?> doRectFloat (W.RationalRect (3 / 8) (1 / 8) (1 / 4) (3 / 4))
-            , resource  =? "sysMon"               -?> doRectFloat (W.RationalRect (1 / 8) (1 / 8) (3 / 4) (3 / 4))
-            , resource  =? "wsHarpoon"            -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4))
-            , resource  =? "console"              -?> doRectFloat (W.RationalRect (4 / 7) (4 / 7) (2 / 5) (2 / 5))
-            , resource  =? "youtube music"        -?> doRectFloat halfNhalf
-            , className =? "discord"              -?> doRectFloat halfNhalf
-            , resource  =? "kruler"               -?> doFloat
+            , resource  =? "gnome-calculator"         -?> doCenterFloat
+            , className =? "GCal"                     -?> doRectFloat bigFloat
+            , className =? "WrkGCal"                  -?> doRectFloat bigFloat
+            , className =? "Toggl Desktop"            -?> doRectFloat (W.RationalRect (3 / 8) (1 / 8) (1 / 4) (3 / 4))
+            , resource  =? "sysMon"                   -?> doRectFloat (W.RationalRect (1 / 8) (1 / 8) (3 / 4) (3 / 4))
+            , resource  =? "wsHarpoon"                -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4))
+            , resource  =? "console"                  -?> doRectFloat (W.RationalRect (4 / 7) (4 / 7) (2 / 5) (2 / 5))
+            , resource  =? "youtubemusic"             -?> doRectFloat halfNhalf
+            , className =? "discord"                  -?> doRectFloat halfNhalf
+            , resource  =? "kruler"                   -?> doFloat
 
             , transience
             , isBrowserDialog -?> doCenterFloat
