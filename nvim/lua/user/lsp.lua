@@ -78,6 +78,8 @@ local custom_attach = function(client, bufnr)
         sc.referencesProvider = false
     elseif client.name == "texlab" then
         sc.documentFormattingProvider = false
+    elseif client.name == "sourcery" then
+        sc.codeLensProvider = false
     end
 
     if sc.documentSymbolProvider then
