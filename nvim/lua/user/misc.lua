@@ -109,3 +109,4 @@ require("todo-comments").setup({
         default = { "Identifier", "#7C3AED" },
     },
 })
+

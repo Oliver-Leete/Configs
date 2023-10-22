@@ -143,7 +143,7 @@ local is_wide = function()
 end
 
 local overseer = require("overseer")
-local overseertask = function()
+OverseerTask = function()
     local bufnr = vim.api.nvim_get_current_buf()
     local task = vim.tbl_filter(function(t) return (t.strategy.bufnr == bufnr) end, overseer.list_tasks())[1]
     return ov_list[task.status] .. task.name
@@ -292,7 +292,7 @@ require("lualine").setup({
                 cond = not_overseer,
             },
             {
-                overseertask,
+                OverseerTask,
                 cond = is_overseer,
             }
         },
@@ -391,7 +391,7 @@ require("lualine").setup({
                 cond = function() return vim.bo.filetype ~= "OverseerTask" end,
             },
             {
-                overseertask,
+                OverseerTask,
                 separator = { left = "", right = "" },
                 cond = is_overseer,
             },

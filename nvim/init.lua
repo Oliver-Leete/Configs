@@ -39,7 +39,6 @@ require("lazy").setup(
             dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
         },
         { "ap/vim-you-keep-using-that-word" },
-        { "arthurxavierx/vim-caser" },
         {
             "ralismark/opsort.vim",
             dependencies = { "tpope/vim-repeat" }
@@ -110,6 +109,7 @@ require("lazy").setup(
         { "DNLHC/glance.nvim" },
         { "yioneko/nvim-type-fmt" },
         { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
+        { "johmsalas/text-case.nvim" },
 
         -- run and test
         { "stevearc/overseer.nvim" },

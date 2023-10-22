@@ -47,7 +47,7 @@ require("edgy").setup({
         },
         {
             ft = "OverseerPanelTask",
-            title = " Task",
+            title = "%{%v:lua.OverseerTask()%}",
             open = "OverseerQuickAction open",
         },
         {

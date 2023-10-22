@@ -57,9 +57,9 @@ require("cmp").setup({
     },
     window = {
         completion = cmp.config.window.bordered({
-              winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
-              col_offset = -3,
-              side_padding = 0,
+            winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+            col_offset = -3,
+            side_padding = 0,
         }),
         documentation = cmp.config.window.bordered(),
 
@@ -144,6 +144,14 @@ require("cmp").setup({
 
 require('cmp_luasnip_choice').setup({
     auto_open = true,
+})
+
+require("cmp").setup.filetype("DressingInput", {
+    sources = cmp.config.sources {
+        { name = "nvim_lsp" },
+        { name = "omni" },
+        { name = "latex_symbols" },
+    },
 })
 
 cmp.setup.cmdline("/", {

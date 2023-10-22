@@ -318,7 +318,7 @@ require("ltex_extra").setup({
         flags = { debounce_text_changes = 1000 },
         settings = {
             ltex = {
-                enabled = { "latex", "tex", "bib", "markdown" },
+                enabled = { "latex", "tex", "bib", "markdown", "rst" },
                 checkFrequency = "save",
                 language = "en-GB",
                 setenceCacheSize = 2000,
