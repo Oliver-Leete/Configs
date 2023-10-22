@@ -26,7 +26,8 @@ import           XMonad.Actions.SpawnOn
 import           XMonad.Actions.SwapPromote
 import           XMonad.Actions.UpdateFocus
 import           XMonad.Actions.UpdatePointer
-import           XMonad.Actions.WindowGoLocal
+import           XMonad.Actions.WindowGo                as Wg
+import           XMonad.Actions.WindowGoLocal           as Wgl
 import           XMonad.Actions.WithAll                 (sinkAll)
 
 import           XMonad.Hooks.DebugStack
@@ -109,41 +110,41 @@ getScreens = do
 
 projects :: Int -> [Project]
 projects n =
-    [ Project { pName = "Tmp",        pDir = "/tmp",                                pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
-    , Project { pName = "Tmp2",       pDir = "/tmp",                                pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = Just $ return () }
+    [ Project { pName = "Tmp",        pDir = "/tmp",                                pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = Just $ return () }
+    , Project { pName = "Tmp2",       pDir = "/tmp",                                pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = Just $ return () }
 
-    , Project { pName = "Home",       pDir = "~/PersonalDrive",                     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Home" }
-    , Project { pName = "CodeTuts",   pDir = "~/Projects/rustBook",                 pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "CodeTuts" }
-    , Project { pName = "Print",      pDir = "~/Projects/Printing",                 pApp1 = prusa,    pApp1F = prusaF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = oneSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer" }
-    , Project { pName = "Games",      pDir = "~/Documents",                         pApp1 = steam,    pApp1F = steamF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = oneSpawn "Games" "steam" }
-    , Project { pName = "Films",      pDir = "~/Videos/films",                      pApp1 = kitty,    pApp1F = kittyF,    pApp2 = mpv,       pApp2F = mpvF,      pApp3 = deluge,    pApp3F = delugeF,   pStart = filmSpawn "Films" }
-    , Project { pName = "Dnd",        pDir = "~/Projects/Rpgs",                     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Dnd" }
+    , Project { pName = "Home",       pDir = "~/PersonalDrive",                     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = browSpawn persBrowser}
+    , Project { pName = "CodeTuts",   pDir = "~/Projects/rustBook",                 pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = termBrowSpawn "CodeTuts" persBrowser}
+    , Project { pName = "Print",      pDir = "~/Projects/Printing",                 pApp1 = prusa,    pApp1F = prusaF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = oneSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer" }
+    , Project { pName = "Games",      pDir = "~/Documents",                         pApp1 = steam,    pApp1F = steamF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = oneSpawn "Games" "steam" }
+    , Project { pName = "Films",      pDir = "~/Videos/films",                      pApp1 = kitty,    pApp1F = kittyF,    pApp2 = mpv,       pApp2F = mpvF,      pApp3 = deluge,    pApp3F = delugeF,   pApp4 = browser filmBrowser, pApp4F = browserForce filmBrowser, pStart = filmSpawn "Films" }
+    , Project { pName = "Dnd",        pDir = "~/Projects/Rpgs",                     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pApp4 = browser rpgsBrowser, pApp4F = browserForce rpgsBrowser, pStart = browSpawn rpgsBrowser}
 
-    , Project { pName = "Configs",    pDir = "~/.config",                           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Configs" }
-    , Project { pName = "QMK",        pDir = "~/Projects/qmk_firmware",             pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "QMK" }
-    , Project { pName = "ZMK",        pDir = "~/Projects/zmk-config",               pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ZMK" }
+    , Project { pName = "Configs",    pDir = "~/.config",                           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = termBrowSpawn "Configs" persBrowser}
+    , Project { pName = "QMK",        pDir = "~/Projects/qmk_firmware",             pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = termBrowSpawn "QMK" persBrowser}
+    , Project { pName = "ZMK",        pDir = "~/Projects/zmk-config",               pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = termBrowSpawn "ZMK" persBrowser}
 
-    , Project { pName = "Wrk",        pDir = "~/UniDrive",                          pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = browSpawn "Wrk" }
-    , Project { pName = "WrkNotes",   pDir = "~/Projects/Thesis/Notes",             pApp1 = obsidian, pApp1F = obsidianF, pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pStart = oneSpawn "WrkNotes" "flatpak run md.obsidian.Obsidian" }
-    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",            pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = termBrowSpawn "Thesis" }
-    , Project { pName = "Sim",        pDir = "~/Projects/HSSSimulations",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Sim" }
-    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",            pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "Exp" }
-    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = hdfview,   pApp3F = hdfviewF,  pStart = termBrowSpawn "Scripts" }
-    , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",            pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pStart = commentSpawn "Comments" }
-    , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",         pApp1 = kitty,    pApp1F = kittyF,    pApp2 = paraview,  pApp2F = paraviewF, pApp3 = return (), pApp3F = return (), pStart = termBrowSpawn "ANSYS" }
+    , Project { pName = "Wrk",        pDir = "~/UniDrive",                          pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = browSpawn workBrowser}
+    , Project { pName = "WrkNotes",   pDir = "~/Projects/Thesis/Notes",             pApp1 = obsidian, pApp1F = obsidianF, pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = oneSpawn "WrkNotes" "flatpak run md.obsidian.Obsidian" }
+    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",            pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = termBrowSpawn "Thesis" workBrowser}
+    , Project { pName = "Sim",        pDir = "~/Projects/HSSSimulations",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = termBrowSpawn "Sim" workBrowser}
+    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",            pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = termBrowSpawn "Exp" workBrowser}
+    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = hdfview,   pApp3F = hdfviewF,  pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = termBrowSpawn "Scripts" workBrowser}
+    , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",            pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = commentSpawn "Comments" }
+    , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",         pApp1 = kitty,    pApp1F = kittyF,    pApp2 = paraview,  pApp2F = paraviewF, pApp3 = return (), pApp3F = return (), pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = termBrowSpawn "ANSYS" workBrowser}
 
-    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura, pApp3F = zathuraF, pStart = termBrowSpawn "Scin-Main" }
-    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys",       pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura, pApp3F = zathuraF, pStart = termBrowSpawn "Scin-Print" }
-    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware",       pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura, pApp3F = zathuraF, pStart = termBrowSpawn "Scin-Firm" }
-    , Project { pName = "Scin-Heat",  pDir = "~/Projects/Scintilla/HCPCB/firmware", pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura, pApp3F = zathuraF, pStart = termBrowSpawn "Scin-Heat" }
-    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura, pApp3F = zathuraF, pStart = termBrowSpawn "Scin-Docs" }
-    , Project { pName = "Scin-Test",  pDir = "~/Projects/Scintilla/Main",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura, pApp3F = zathuraF, pStart = Just $ return () }
+    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura,   pApp3F = zathuraF,  pApp4 = browser scinBrowser, pApp4F = browserForce scinBrowser, pStart = termBrowSpawn "Scin-Main" scinBrowser}
+    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys",       pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura,   pApp3F = zathuraF,  pApp4 = browser scinBrowser, pApp4F = browserForce scinBrowser, pStart = termBrowSpawn "Scin-Print" scinBrowser}
+    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware",       pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura,   pApp3F = zathuraF,  pApp4 = browser scinBrowser, pApp4F = browserForce scinBrowser, pStart = termBrowSpawn "Scin-Firm" scinBrowser}
+    , Project { pName = "Scin-Heat",  pDir = "~/Projects/Scintilla/HCPCB/firmware", pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura,   pApp3F = zathuraF,  pApp4 = browser scinBrowser, pApp4F = browserForce scinBrowser, pStart = termBrowSpawn "Scin-Heat" scinBrowser}
+    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura,   pApp3F = zathuraF,  pApp4 = browser scinBrowser, pApp4F = browserForce scinBrowser, pStart = termBrowSpawn "Scin-Docs" scinBrowser}
+    , Project { pName = "Scin-Test",  pDir = "~/Projects/Scintilla/Main",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura,   pApp3F = zathuraF,  pApp4 = browser scinBrowser, pApp4F = browserForce scinBrowser, pStart = Just $ return () }
     ]
     where
-        kitty  = upPointer $ runOrRaiseNext "kitty" (className =? "kitty")
+        kitty  = upPointer $ Wgl.runOrRaiseNext "kitty" (className =? "kitty")
         kittyF = upPointer $ spawn "kitty"
 
-        sameForce r c = (upPointer $ runOrRaiseNext r (className =? c), upPointer $ spawn r)
+        sameForce r c = (upPointer $ Wgl.runOrRaiseNext r (className =? c), upPointer $ spawn r)
         (zathura, zathuraF)   = sameForce "zathura" "Zathura"
         (foxit, foxitF)       = sameForce "foxitreader" "Foxit Reader"
         (obsidian, obsidianF) = sameForce "flatpak run org.paraview.Paraview" "ParaView"
@@ -154,11 +155,20 @@ projects n =
         (steam, steamF)       = sameForce "steam" "Steam"
         (hdfview, hdfviewF)   = sameForce "hdfview" "SWT"
         scinStart             = "cd /home/oleete/Projects/Scintilla/Main; .venv/bin/python main.py"
-        (scinCont, sintContF) = (upPointer $ runOrRaiseNext scinStart (title =? "Scintilla Control"), upPointer $ spawn scinStart)
+        (scinCont, sintContF) = (upPointer $ Wgl.runOrRaiseNext scinStart (title =? "Scintilla Control"), upPointer $ spawn scinStart)
+
+        persBrowser  = "google-chrome-stable-Configs"
+        workBrowser  = "google-chrome-stable-Thesis"
+        scinBrowser  = "google-chrome-stable-Scin-Main"
+        rpgsBrowser  = "google-chrome-stable-Dnd"
+        filmBrowser  = "google-chrome-stable-Films"
+        browser na   = bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ browserSpawn na)
+        browserSpawn na = Wgl.raiseNextMaybeCustomFocus2 bringWindow (browserForce na) (className =? na)
+        browserForce na = upPointer $ spawn (myBrowserClass ++ " --class=" ++ na ++ " --user-data-dir=/home/oleete/.config/browser/" ++ na)
 
         sl i = "sleep .1; " ++ i
-        termBrowSpawn ws = Just $ do spawnOn ws $ sl myTerminal; spawnOn ws ("sleep .5; " ++ myBrowser)
-        browSpawn ws = Just $ do spawnOn ws ("sleep .5; " ++ myBrowser)
+        termBrowSpawn ws na = Just $ do spawnOn ws $ sl myTerminal; browserSpawn na
+        browSpawn na = Just $ do browserSpawn na
         oneSpawn ws app = Just $ do spawnOn ws $ sl app
         commentSpawn ws = if n > 1
             then Just $ spawnOn ws $ sl "sleep .4; foxitreader"
@@ -327,11 +337,11 @@ myKeys n =
     , ("M-n"             , runProjectApp1)
     , ("M-e"             , runProjectApp2)
     , ("M-i"             , runProjectApp3)
-    , ("M-o"             , bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ runOrRaise myBrowser (className =? "Google-chrome")))
+    , ("M-o"             , runProjectApp4)
     , ("M-S-n"           , runProjectApp1Force)
     , ("M-S-e"           , runProjectApp2Force)
     , ("M-S-i"           , runProjectApp3Force)
-    , ("M-S-o"           , upPointer $ spawn myBrowser)
+    , ("M-S-o"           , runProjectApp4Force)
 
     , ("M-<Left>"        , bF $ nv "TabPrev" $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
     , ("M-<Right>"       , bF $ nv "TabNext" $ l (P.sendKey controlMask xK_Tab))
@@ -541,6 +551,8 @@ crm raw list = (isRole =? "browser", raw) : list -- chrome
 bF :: [(Query Bool, X ())] -> X ()
 bF = bindFirst
 
+bringWindow w ws = W.focusWindow w $ W.shiftWinDown (W.currentTag ws) w ws
+
 ----------------------------------------------------------------------------------------------------
 -- Server Commands                                                                                --
 ----------------------------------------------------------------------------------------------------
@@ -585,6 +597,8 @@ myCommands _ =
     , ("layout-style"        , upFocus $ sendMessage ToggleMiddle)
     , ("layout-stack-shrink" , sendMessage SShrink)
     , ("layout-stack-expand" , sendMessage SExpand)
+
+    , ("project-browser"     , runProjectApp4)
 
     , ("sendF"               , P.sendKey noModMask xK_f)
     , ("sendF11"             , P.sendKey noModMask xK_F11)

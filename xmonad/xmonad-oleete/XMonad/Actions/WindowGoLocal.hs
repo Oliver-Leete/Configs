@@ -18,6 +18,7 @@ module XMonad.Actions.WindowGoLocal (
                  raiseMaybe,
                  raiseNextMaybe,
                  raiseNextMaybeCustomFocus,
+                 raiseNextMaybeCustomFocus2,
 
                  raiseBrowser,
                  raiseEditor,
@@ -31,15 +32,16 @@ module XMonad.Actions.WindowGoLocal (
                  module XMonad.ManageHook
                 ) where
 
-import qualified Data.List as L
-import XMonad.Prelude
-import XMonad (Query(), X(), ManageHook, WindowSet, withWindowSet, runQuery, liftIO, ask)
-import Graphics.X11 (Window)
-import XMonad.ManageHook
-import XMonad.Operations (windows)
-import XMonad.Prompt.Shell (getBrowser, getEditor)
-import qualified XMonad.StackSet as W
-import XMonad.Util.Run (safeSpawnProg)
+import qualified Data.List           as L
+import           Graphics.X11        (Window)
+import           XMonad              (ManageHook, Query, WindowSet, X, ask,
+                                      liftIO, runQuery, withWindowSet)
+import           XMonad.ManageHook
+import           XMonad.Operations   (windows)
+import           XMonad.Prelude
+import           XMonad.Prompt.Shell (getBrowser, getEditor)
+import qualified XMonad.StackSet     as W
+import           XMonad.Util.Run     (safeSpawnProg)
 {- $usage
 
 Import the module into your @~\/.xmonad\/xmonad.hs@:
@@ -155,7 +157,13 @@ raiseNextMaybe = raiseNextMaybeCustomFocus W.focusWindow
      'raiseNextMaybeCustomFocus' allows the user to supply the function that
      should be used to shift the focus to any window that is found. -}
 raiseNextMaybeCustomFocus :: (Window -> WindowSet -> WindowSet) -> X() -> Query Bool -> X()
-raiseNextMaybeCustomFocus focusFn f qry = flip (ifWindows qry) f $ \ws -> do
+raiseNextMaybeCustomFocus focusFn f qry = ifWindows qry (focusFoundWin focusFn) f
+
+raiseNextMaybeCustomFocus2 :: (Window -> WindowSet -> WindowSet) -> X() -> Query Bool -> X()
+raiseNextMaybeCustomFocus2 focusFn f qry = ifWindowsOld qry (focusFoundWin W.focusWindow) (focusFoundWin focusFn) f
+
+focusFoundWin :: (Window -> WindowSet -> WindowSet) -> [Window] -> X ()
+focusFoundWin focusFn ws = do
   foc <- withWindowSet $ return . W.peek
   case foc of
     Just w | w `elem` ws -> let (_:y:_) = dropWhile (/=w) $ cycle ws -- cannot fail to match
@@ -193,3 +201,24 @@ runOrRaiseAndDo = raiseAndDo . safeSpawnProg
      > raiseMaster (runInTerm "-title ghci"  "zsh -c 'ghci'") (title =? "ghci") -}
 raiseMaster :: X () -> Query Bool -> X ()
 raiseMaster raisef thatUserQuery = raiseAndDo raisef thatUserQuery (\_ -> windows W.swapMaster)
+
+-- | Get the list of workspaces sorted by their tag
+workspacesSortedOld :: Ord i => W.StackSet i l a s sd -> [W.Workspace i l a]
+workspacesSortedOld s = L.sortBy (\u t -> W.tag u `compare` W.tag t) $ W.workspaces s
+
+-- | Get a list of all windows in the 'StackSet' with an absolute ordering of workspaces
+allWindowsSortedOld :: Ord i => Eq a => W.StackSet i l a s sd -> [a]
+allWindowsSortedOld = L.nub . concatMap (W.integrate' . W.stack) . workspacesSortedOld
+
+-- | If windows that satisfy the query exist, apply the supplied
+-- function to them, otherwise run the action given as
+-- second parameter.
+ifWindowsOld :: Query Bool -> ([Window] -> X ()) -> ([Window] -> X ()) -> X () -> X ()
+ifWindowsOld qry f1 f2 el = withWindowSet $ \wins -> do
+  matches <- filterM (runQuery qry) $ allWindowsSortedOld wins
+  matches2 <- filterM (runQuery qry) $ allWindowsSorted wins
+  case matches of
+    [] -> el
+    ws -> case matches2 of
+        []  -> f2 ws
+        ws2 -> f1 ws2

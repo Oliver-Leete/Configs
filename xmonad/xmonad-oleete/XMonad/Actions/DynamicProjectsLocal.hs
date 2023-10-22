@@ -42,22 +42,26 @@ module XMonad.Actions.DynamicProjectsLocal
        , runProjectApp1
        , runProjectApp2
        , runProjectApp3
+       , runProjectApp4
        , runProjectApp1Force
        , runProjectApp2Force
        , runProjectApp3Force
+       , runProjectApp4Force
        ) where
 
 --------------------------------------------------------------------------------
-import Data.Map.Strict (Map)
-import qualified Data.Map.Strict as Map
-import System.Directory (setCurrentDirectory, getHomeDirectory, makeAbsolute)
-import XMonad.Prelude
-import XMonad
-import XMonad.Actions.DynamicWorkspaces
-import XMonad.Prompt
-import XMonad.Prompt.Directory
-import qualified XMonad.StackSet as W
-import qualified XMonad.Util.ExtensibleState as XS
+import           Data.Map.Strict                  (Map)
+import qualified Data.Map.Strict                  as Map
+import           System.Directory                 (getHomeDirectory,
+                                                   makeAbsolute,
+                                                   setCurrentDirectory)
+import           XMonad
+import           XMonad.Actions.DynamicWorkspaces
+import           XMonad.Prelude
+import           XMonad.Prompt
+import           XMonad.Prompt.Directory
+import qualified XMonad.StackSet                  as W
+import qualified XMonad.Util.ExtensibleState      as XS
 
 --------------------------------------------------------------------------------
 -- $overview
@@ -128,15 +132,17 @@ type ProjectTable = Map ProjectName Project
 --------------------------------------------------------------------------------
 -- | Details about a workspace that represents a project.
 data Project = Project
-  { pName      :: !ProjectName    -- ^ Workspace name.
-  , pDir :: !FilePath       -- ^ Working directory.
+  { pName  :: !ProjectName    -- ^ Workspace name.
+  , pDir   :: !FilePath       -- ^ Working directory.
   , pStart :: !(Maybe (X ())) -- ^ Optional start-up hook.
-  , pApp1      :: X () -- ^ Optional app
+  , pApp1  :: X () -- ^ Optional app
   , pApp1F :: X () -- ^ Optional app forced version
-  , pApp2      :: X () -- ^ Optional app
+  , pApp2  :: X () -- ^ Optional app
   , pApp2F :: X () -- ^ Optional app forced version
-  , pApp3      :: X () -- ^ Optional app
+  , pApp3  :: X () -- ^ Optional app
   , pApp3F :: X () -- ^ Optional app forced version
+  , pApp4  :: X () -- ^ Optional app
+  , pApp4F :: X () -- ^ Optional app forced version
   }
 
 --------------------------------------------------------------------------------
@@ -379,6 +385,10 @@ runProjectApp3 :: X ()
 runProjectApp3 = do
   p  <- currentProject
   pApp3 p
+runProjectApp4 :: X ()
+runProjectApp4 = do
+  p  <- currentProject
+  pApp4 p
 runProjectApp1Force :: X ()
 runProjectApp1Force = do
   p  <- currentProject
@@ -391,8 +401,12 @@ runProjectApp3Force :: X ()
 runProjectApp3Force = do
   p  <- currentProject
   pApp3F p
+runProjectApp4Force :: X ()
+runProjectApp4Force = do
+  p  <- currentProject
+  pApp4F p
 
 --------------------------------------------------------------------------------
 -- | Default project.
 defProject :: ProjectName -> Project
-defProject name = Project name "~/" Nothing (return ()) (return ()) (return ()) (return ()) (return ()) (return ())
+defProject name = Project name "~/" Nothing (return ()) (return ()) (return ()) (return ()) (return ()) (return ()) (return ()) (return ())

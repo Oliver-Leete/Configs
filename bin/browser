@@ -30,4 +30,24 @@ CACHEDIR=${XDG_CACHE_HOME:-${HOME}/.cache/browser}
 [ "$WSTAG" = "" ] && SUFFIX="" || SUFFIX="-$WSTAG"
 [ "$WSTAG" = "incognito" ] && INCOGNITO=" --incognito " || INCOGNITO=""
 
-"$BROWSER" "$INCOGNITO" --force-dark-mode --enable-features=WebUIDarkMode --disable-gpu-driver-bug-workarounds --enable-features=VaapiVideoDecoder,VaapiVideoEncoder --user-data-dir="$CONFIGDIR/$BROWSER$SUFFIX" "$*" &
+function exists_in_list() {
+    LIST=$1
+    DELIMITER=" "
+    VALUE=$3
+    echo $LIST | tr "$DELIMITER" '\n' | grep -F -q -x "$VALUE"
+}
+
+if exists_in_list "Tmp Tmp2 Home CodeTuts Print Games Configs QMK ZMK" "$WSTAG"; then
+    SUFFIX="-Configs"
+elif exists_in_list "Films" "$WSTAG"; then
+    SUFFIX="-Films"
+elif exists_in_list "Dnd" "$WSTAG"; then
+    SUFFIX="-Dnd"
+elif exists_in_list "Wrk WrkNotes Thesis Sim Exp Scripts Comments ANSYS" "$WSTAG"; then
+    SUFFIX="-Thesis"
+elif exists_in_list "Scin-Main Scin-Print Scin-Firm Scin-Heat Scin-Docs Scin-Test" "$WSTAG"; then
+    SUFFIX="-Scin-Main"
+fi
+
+/home/oleete/.cabal/bin/xmonadctl-exe project-browser
+"$BROWSER" "$INCOGNITO" --force-dark-mode --enable-features=WebUIDarkMode --disable-gpu-driver-bug-workarounds --class="$BROWSER$SUFFIX" --enable-features=VaapiVideoDecoder,VaapiVideoEncoder --user-data-dir="$CONFIGDIR/$BROWSER$SUFFIX" "$*" &
