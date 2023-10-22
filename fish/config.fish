@@ -26,6 +26,7 @@ set WORKSPACE (wmctrl -d | grep '*' | awk "{print $NF}")
 # aliases
 alias neovim nvim
 alias n nvrStart
+alias ne "n +LoadSession"
 alias k kak
 alias h hx
 

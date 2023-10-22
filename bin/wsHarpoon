@@ -55,7 +55,7 @@ addWS () {
 }
 
 modifyWS () {
-    kitty --class=wsHarpoon "nvim" +"nnoremap <esc> :wq<cr>|nnoremap q :wq<cr>" "$HARPFILE"
+    kitty --class=wsHarpoon "nvim" +"nnoremap <esc> :wq<cr>|nnoremap q :wq<cr>|lua vim.g.dont_save_session = true" "$HARPFILE"
 }
 
 selectPreset () {

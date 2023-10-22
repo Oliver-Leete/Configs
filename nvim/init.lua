@@ -264,4 +264,4 @@ pcall(require("user.noice"))
 
 pcall(require("user.command"))
 
-require("user.projects").load_session()
+-- require("user.projects").load_session()

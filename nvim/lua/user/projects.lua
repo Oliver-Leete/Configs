@@ -57,6 +57,8 @@ M.load_session = function()
     end
 end
 
+vim.api.nvim_create_user_command("LoadSession", M.load_session, {})
+
 M.delete_session = function()
     local list = resession.list({ dir = workspace_dir })
     if #list > 0 then
@@ -81,13 +83,17 @@ end
 vim.api.nvim_create_autocmd("VimLeavePre", {
     group = projects,
     callback = function()
-        resession.save_tab(vim.fn.getcwd(), { notify = false, dir = workspace_dir })
+        if not vim.g.dont_save_session then
+            resession.save_tab(vim.fn.getcwd(), { notify = false, dir = workspace_dir })
+        end
     end,
 })
 vim.api.nvim_create_autocmd("TabLeave", {
     group = projects,
     callback = function()
-        resession.save_tab(vim.fn.getcwd(), { notify = false, dir = workspace_dir })
+        if not vim.g.dont_save_session then
+            resession.save_tab(vim.fn.getcwd(), { notify = false, dir = workspace_dir })
+        end
     end,
 })
 
@@ -95,7 +101,9 @@ vim.api.nvim_create_autocmd("TabLeave", {
 vim.api.nvim_create_autocmd("VimLeavePre", {
     group = projects,
     callback = function()
-        resession.save("last", { dir = workspace_dir })
+        if not vim.g.dont_save_session then
+            resession.save("last", { dir = workspace_dir })
+        end
     end,
 })
 
