@@ -39,7 +39,7 @@ disable = [ "vim" ]
 [git]
 #max_concurrency = 5
 # Additional git repositories to pull
-repos = [
+pull_only_repos = [
     "~/.config/xmonad/xmonad-git",
     "~/.config/xmonad/xmonad-contrib-git",
     "~/.config/xmobar/xmobar-git",

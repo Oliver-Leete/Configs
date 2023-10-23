@@ -107,11 +107,42 @@ return {
         table.insert(
             ret,
             {
-                name = "Open Documentation",
+                name = "Build Documentation (pdf)",
+                builder = function()
+                    return {
+                        name = "Building Docs",
+                        cmd = "make latexpdf",
+                        cwd = "docs",
+                        components = { "default", "unique" }
+                    }
+                end,
+                conditon = { callback = function(opts) return files.exists(files.join(opts.dir, "docs")) end },
+                priority = pr(),
+            }
+        )
+        table.insert(
+            ret,
+            {
+                name = "Open Documentation (html)",
                 builder = function()
                     return {
                         name = "Open Docs",
-                        cmd = "browser docs/build/html/index.html",
+                        cmd = "'/home/oleete/.config/bin/browser' '/home/oleete/Projects/Scintilla/Main/docs/build/html/index.html'",
+                        components = { "default", "unique" }
+                    }
+                end,
+                conditon = { callback = function(opts) return files.exists(files.join(opts.dir, "docs")) end },
+                priority = pr(),
+            }
+        )
+        table.insert(
+            ret,
+            {
+                name = "Open Documentation (pdf)",
+                builder = function()
+                    return {
+                        name = "Open Docs",
+                        cmd = "zathura /home/oleete/Projects/Scintilla/Main/docs/build/latex/scintilla-controller.pdf ",
                         components = { "default", "unique" }
                     }
                 end,

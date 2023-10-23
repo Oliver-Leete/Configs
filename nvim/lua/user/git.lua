@@ -1,3 +1,22 @@
+require("neogit").setup({
+    log_view = {
+        kind = "vsplit",
+    },
+    reflog_view = {
+        kind = "vsplit",
+    },
+
+    signs = {
+        hunk = { "", "" },
+        item = { "", "" },
+        section = { "", "" },
+    },
+    mappings = {
+        status = {
+            ["<space>"] = "Toggle",
+        }
+    }
+})
 require("gitsigns").setup({
     sign_priority = 6,
     _signs_staged_enable = true,
@@ -34,7 +53,7 @@ require("diffview").setup({
             ["<c-j>"] = actions.scroll_view(5),
             ["<c-k>"] = actions.scroll_view(-5),
             ["<esc>"] = function()
-                vim.b.is_diffview_file = false
+                vim.b[vim.api.nvim_get_current_buf()].is_diffview_file = false
                 vim.cmd("DiffviewClose")
             end,
         },
@@ -116,15 +135,15 @@ Hydra({
     mode = { "n", "x" },
     body = "<leader>g",
     heads = {
-        { ",s", gitsigns.stage_hunk, { silent = true, desc = "stage hunk" } },
-        { ",r", gitsigns.reset_hunk, { silent = true, desc = "stage hunk" } },
-        { ",u", gitsigns.undo_stage_hunk, { desc = "undo last stage" } },
-        { ",S", gitsigns.stage_buffer, { desc = "stage buffer" } },
-        { ",p", gitsigns.preview_hunk, { desc = "preview hunk" } },
-        { ",d", toggle_show, { nowait = true, desc = "toggle diff" } },
-        { ",K", gitsigns.blame_line, { desc = "blame" } },
-        { ",f", "<cmd>Telescope git_status theme=get_ivy<cr>" },
-        { ",<esc>", nil, { exit = true, nowait = true, desc = "exit" } },
-        { "<leader>g", nil, { exit = true, nowait = true, desc = false } },
+        { ",s",        gitsigns.stage_hunk,                          { silent = true, desc = "stage hunk" } },
+        { ",r",        gitsigns.reset_hunk,                          { silent = true, desc = "stage hunk" } },
+        { ",u",        gitsigns.undo_stage_hunk,                     { desc = "undo last stage" } },
+        { ",S",        gitsigns.stage_buffer,                        { desc = "stage buffer" } },
+        { ",p",        gitsigns.preview_hunk,                        { desc = "preview hunk" } },
+        { ",d",        toggle_show,                                  { nowait = true, desc = "toggle diff" } },
+        { ",K",        gitsigns.blame_line,                          { desc = "blame" } },
+        { ",f",        "<cmd>Telescope git_status theme=get_ivy<cr>" },
+        { ",<esc>",    nil,                                          { exit = true, nowait = true, desc = "exit" } },
+        { "<leader>g", nil,                                          { exit = true, nowait = true, desc = false } },
     }
 })

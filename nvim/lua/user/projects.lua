@@ -57,6 +57,21 @@ M.load_session = function()
     end
 end
 
+M.load_session_reset = function()
+    local list = resession.list({ dir = workspace_dir })
+    if #list > 0 then
+        vim.ui.select(
+            list,
+            {},
+            function(name)
+                if name then
+                    resession.load(name, { dir = workspace_dir, reset = true })
+                end
+            end
+        )
+    end
+end
+
 vim.api.nvim_create_user_command("LoadSession", M.load_session, {})
 
 M.delete_session = function()

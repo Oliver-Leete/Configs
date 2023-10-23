@@ -264,4 +264,18 @@ M.toggle_noice = function()
     end
 end
 
+M.neogit = function()
+    require("neogit").open()
+    vim.t[vim.api.nvim_get_current_tabpage()].tabname = "Neogit"
+end
+
+M.codelens_toggle = function()
+    vim.g.lsp_lens_on = not vim.g.lsp_lens_on
+    if vim.g.lsp_lens_on then
+        vim.lsp.codelens.refresh()
+    else
+        vim.lsp.codelens.clear()
+    end
+end
+
 return M
