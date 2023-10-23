@@ -189,6 +189,7 @@ commander.add({
         cmd =
         "<cmd>Telescope filetypes theme=get_ivy<cr>"
     },
+    { cat = "git",       desc = "Neogit",                            cmd = "<cmd>Neogit<cr>" },
     { cat = "git",       desc = "Commits",                           cmd = "<cmd>Telescope git_commits<cr>" },
     { cat = "git",       desc = "Branches",                          cmd = "<cmd>Telescope git_branches<cr>", },
     { cat = "git",       desc = "Stashes",                           cmd = "<cmd>Telescope git_stash<cr>", },

@@ -59,6 +59,15 @@ require("lazy").setup(
 
         -- Git
         {
+            "NeogitOrg/neogit",
+            dependencies = {
+                "nvim-lua/plenary.nvim", -- required
+                "nvim-telescope/telescope.nvim", -- optional
+                "sindrets/diffview.nvim", -- optional
+            },
+            config = true
+        },
+        {
             "lewis6991/gitsigns.nvim",
             dependencies = { "tpope/vim-repeat" }
         },

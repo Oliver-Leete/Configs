@@ -266,6 +266,7 @@ twoPane :: ModifiedLayout Spacing TwoPanePersistent a
 twoPane = mySpacing $ TwoPanePersistent Nothing reSize (1/2)
 
 myLayoutHook = smartBorders
+             $ mkToggle (single MIRROR)
              $ mkToggle (single FULL)
              $ mkToggle (single FULLBAR)
              $ mkToggle (single FULLCENTER)
@@ -592,6 +593,7 @@ myCommands _ =
     , ("layout-fullbar"      , toggleLayout FULLBAR)
     , ("layout-fullcentre"   , toggleLayout FULLCENTER)
     , ("layout-twopane"      , toggleLayout TWOPANE)
+    , ("layout-rotate"       , toggleLayout MIRROR)
     , ("layout-dir"          , upFocus $ sendMessage ToggleSide)
     , ("layout-stack-dir"    , upFocus $ sendMessage ToggleStackDir)
     , ("layout-style"        , upFocus $ sendMessage ToggleMiddle)

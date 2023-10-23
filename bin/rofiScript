@@ -71,6 +71,7 @@ menu () {
     shrink_stack
     expand_stack
 
+    rotate-layout
     full-screen
     full-bar
     centre-screen
@@ -139,6 +140,7 @@ menu () {
         centre_main)        /home/oleete/.cabal/bin/xmonadctl-exe layout-style ;;
         shrink_stack)       /home/oleete/.cabal/bin/xmonadctl-exe layout-stack-shrink ;;
         expand_stack)       /home/oleete/.cabal/bin/xmonadctl-exe layout-stack-expand ;;
+        rotate-layout)        /home/oleete/.cabal/bin/xmonadctl-exe layout-rotate ;;
         full-screen)        /home/oleete/.cabal/bin/xmonadctl-exe layout-full ;;
         full-bar)           /home/oleete/.cabal/bin/xmonadctl-exe layout-fullbar ;;
         centre-screen)      /home/oleete/.cabal/bin/xmonadctl-exe layout-fullcentre ;;

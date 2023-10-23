@@ -104,8 +104,8 @@ StatusCol = function()
 
     local sign_out = ""
     for i = 1, sign_limit do
-        if signs[i] then
-            local sign_hl = hl_prefix .. signs[i].texthl .. "#"
+        if signs[i] and signs[i].text then
+            local sign_hl = signs[i].texthl and hl_prefix .. signs[i].texthl .. "#" or ""
             sign_out = sign_out .. sign_hl .. signs[i].text
         end
     end
