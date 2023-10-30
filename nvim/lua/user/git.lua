@@ -22,6 +22,13 @@ require("gitsigns").setup({
     _signs_staged_enable = true,
 })
 
+local gitstuff = vim.api.nvim_create_augroup("GitStuff", { clear = true })
+vim.api.nvim_create_autocmd('User', {
+  pattern = "NeogitCommitComplete",
+  group = gitstuff,
+  callback = require("gitsigns").reset_buffer,
+})
+
 -- DiffView.nvim
 local actions = require("diffview.config").actions
 
