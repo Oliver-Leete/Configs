@@ -30,11 +30,9 @@ net_command = "/home/oleete/.config/bin/statusNotify net"
 # first values
 time.sleep(0.5)
 
-screenCount1 = count_screens(get(["xrandr"]))
-networkCount1 = count_nets(get(["nmcli", "-t", "device"]))
+screenCount1 = 0
+networkCount1 = 0
 lidOpen1 = get(["cat", "/proc/acpi/button/lid/LID/state"])
-
-run_command(screen_command)
 
 while True:
     time.sleep(1)

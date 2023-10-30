@@ -183,7 +183,8 @@ execute () {
     # mode/resolution prior to trying anything further)
 
     # if not locked, restart xmonad, largely to deal font issues
-    /home/oleete/.cabal/bin/xmonadctl-exe restart-bars
+    xmonad --restart
+    # /home/oleete/.cabal/bin/xmonadctl-exe restart-bars
 
     # remember what our preferred config is for this output combination
     save_fingerprint $mode
