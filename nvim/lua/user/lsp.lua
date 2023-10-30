@@ -189,12 +189,24 @@ lspconfig.pylsp.setup({
                 jedi_completion = { enabled = false },
                 ruff = { enabled = false },
                 isort = { enabled = false },
-                black = { enabled = true },
+                black = { enabled = false },
             },
         },
     },
 })
-lspconfig.ruff_lsp.setup(default)
+lspconfig.ruff_lsp.setup(
+    {
+        capabilities = capabilities,
+        flags = { debounce_text_changes = 1000 },
+        init_options = {
+            settings = {
+                args = {
+                    "--preview",
+                }
+            }
+        }
+    }
+)
 lspconfig.sourcery.setup({
     -- on_attach = custom_attach,
     capabilities = capabilities,
@@ -382,7 +394,6 @@ require("null-ls").setup({
     diagnostics_format = "[#{c}] #{m} (#{s})",
     sources = {
         null_ls.builtins.code_actions.gitrebase,
-        null_ls.builtins.code_actions.refactoring.with({ disabled_filetypes = { "python" } }),
         null_ls.builtins.diagnostics.fish,
         null_ls.builtins.diagnostics.gitlint,
         null_ls.builtins.diagnostics.jsonlint,

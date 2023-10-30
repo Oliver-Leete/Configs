@@ -112,14 +112,4 @@ vim.api.nvim_create_autocmd("TabLeave", {
     end,
 })
 
--- Always save a special session named "last"
-vim.api.nvim_create_autocmd("VimLeavePre", {
-    group = projects,
-    callback = function()
-        if not vim.g.dont_save_session then
-            resession.save("last", { dir = workspace_dir })
-        end
-    end,
-})
-
 return M

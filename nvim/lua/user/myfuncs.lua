@@ -187,10 +187,15 @@ M.trash_put = function()
     vim.cmd.bdelete()
 end
 
+local overseer = require("overseer")
 local openterm = function()
-    -- vim.cmd("silent split")
-    vim.cmd("OverseerRun Fish")
-    vim.cmd("OverseerQuickAction open")
+    local task = vim.tbl_filter(function(t) return (t.name:find("^Fish") ~= nil) end, overseer.list_tasks())[1]
+    if task then
+        overseer.run_action(task, "open")
+    else
+        vim.cmd("OverseerRun Fish")
+        vim.cmd("OverseerQuickAction open")
+    end
 end
 vim.api.nvim_create_user_command("OpenTerm", openterm, { nargs = 0 })
 

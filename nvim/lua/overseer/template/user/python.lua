@@ -95,7 +95,7 @@ return {
                 name = "Build Documentation (html)",
                 builder = function()
                     return {
-                        name = "Building Docs",
+                        name = "Building HTML Docs",
                         cmd = "sphinx-build -b html docs/source docs/build/html",
                         components = { "default", "unique" }
                     }
@@ -110,7 +110,7 @@ return {
                 name = "Build Documentation (pdf)",
                 builder = function()
                     return {
-                        name = "Building Docs",
+                        name = "Building PDF Docs",
                         cmd = "make latexpdf",
                         cwd = "docs",
                         components = { "default", "unique" }
@@ -157,7 +157,7 @@ return {
                 builder = function()
                     return {
                         name = "Format all files",
-                        cmd = "black scintilla_control/",
+                        cmd = "ruff format --preview scintilla_control/",
                         components = { "default", "unique" }
                     }
                 end,
