@@ -30,18 +30,6 @@ return {
                 params = {},
             },
             {
-                name = "Git Commit",
-                builder = function()
-                    return {
-                        name = "Git Commit",
-                        cmd = "git commit",
-                        components = { "default", "unique" },
-                    }
-                end,
-                priority = 2,
-                params = {},
-            },
-            {
                 name = "Pomodoro",
                 builder = function()
                     return {

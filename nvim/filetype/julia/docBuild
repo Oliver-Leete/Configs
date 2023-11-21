@@ -17,6 +17,4 @@ mktempdir() do p
 
     include("'"$docsBuild"'")
 end
-
-Sys.isapple() ? run(`open $("'"$docsFile"'")`) : Sys.iswindows() ? run(`cmd /c start $("'"$docsFile"'")`) : Sys.islinux() ? run(`xdg-open $("'"$docsFile"'")`) : nothing
 '

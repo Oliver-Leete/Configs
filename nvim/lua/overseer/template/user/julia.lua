@@ -50,99 +50,101 @@ return {
             juliaCommand = juliaCommand .. "--sysimage JuliaSysimage.so "
         end
 
-        table.insert(
-            ret,
-            {
-                name = "Open Julia Repl",
-                builder = function()
-                    julReplNum = julReplNum + 1
-                    return {
-                        name = "Julia Repl " .. julReplNum,
-                        cmd = juliaCommand,
-                        components = { "default",
-                        },
-                    }
-                end,
-                priority = pr(),
-            }
+        table.insert(ret, {
+            name = "Open Julia Repl",
+            builder = function()
+                julReplNum = julReplNum + 1
+                return {
+                    name = "Julia Repl " .. julReplNum,
+                    cmd = juliaCommand,
+                    components = { "default",
+                    },
+                }
+            end,
+            priority = pr(),
+        }
         )
-        table.insert(
-            ret,
-            {
-                name = "Open Julia Repl in Project",
-                builder = function()
-                    julReplNum = julReplNum + 1
-                    return {
-                        name = vim.g.project .. " Project Repl " .. julReplNum,
-                        cmd = juliaCommand .. "--project",
-                        components = { "default",
-                        },
-                    }
-                end,
-                condition = isProject,
-                priority = pr(),
-            }
+        table.insert(ret, {
+            name = "Open Julia Repl in Project",
+            builder = function()
+                julReplNum = julReplNum + 1
+                return {
+                    name = vim.g.project .. " Project Repl " .. julReplNum,
+                    cmd = juliaCommand .. "--project",
+                    components = { "default",
+                    },
+                }
+            end,
+            condition = isProject,
+            priority = pr(),
+        }
         )
-        table.insert(
-            ret,
-            {
-                name = "Open Julia Repl in " .. otherProjectName .. " Project",
-                builder = function()
-                    julReplNum = julReplNum + 1
-                    return {
-                        name = otherProjectName .. " Project Repl " .. julReplNum,
-                        cmd = "julia --threads=auto --project=" .. otherProject,
-                        components = { "default",
-                        },
-                    }
+        table.insert(ret, {
+            name = "Open Julia Repl in " .. otherProjectName .. " Project",
+            builder = function()
+                julReplNum = julReplNum + 1
+                return {
+                    name = otherProjectName .. " Project Repl " .. julReplNum,
+                    cmd = "julia --threads=auto --project=" .. otherProject,
+                    components = { "default",
+                    },
+                }
+            end,
+            condition = {
+                callback = function()
+                    return otherProjectName ~= vim.g.project and
+                        otherProjectName ~= "."
                 end,
-                condition = {
-                    callback = function()
-                        return otherProjectName ~= vim.g.project and
-                            otherProjectName ~= "."
-                    end,
-                },
-                priority = pr(),
-            }
+            },
+            priority = pr(),
+        }
         )
-        table.insert(
-            ret,
-            {
-                name = "Start Test Server",
-                builder = function()
-                    return {
-                        name = vim.g.project .. " Test Server",
-                        cmd = juliaCommand ..
-                            [[--project -e 'using Revise, DaemonMode; print("Running test server"); serve(print_stack=true)']],
-                        components = { "default", "unique", "always_restart" },
-                        metadata = { run_on_open = true },
-                    }
-                end,
-                condition = isProject,
-                priority = pr(),
-            }
+        table.insert(ret, {
+            name = "Start Test Server",
+            builder = function()
+                return {
+                    name = vim.g.project .. " Test Server",
+                    cmd = juliaCommand ..
+                        [[--project -e 'using Revise, DaemonMode; print("Running test server"); serve(print_stack=true)']],
+                    components = { "default", "unique", "always_restart" },
+                    metadata = { run_on_open = true },
+                }
+            end,
+            condition = isProject,
+            priority = pr(),
+        }
         )
-        table.insert(
-            ret,
-            {
-                name = "Start documentation Server",
-                builder = function()
-                    return {
-                        name = vim.g.project .. " Doc Server",
-                        cmd = juliaCommand .. [[--project=docs -E 'using Revise, ]] ..
-                            vim.g.project .. [[, LiveServer; servedocs(
+        table.insert(ret, {
+            name = "Start documentation Server",
+            builder = function()
+                return {
+                    name = vim.g.project .. " Doc Server",
+                    cmd = juliaCommand .. [[--project=docs -E 'using Revise, ]] ..
+                        vim.g.project .. [[, LiveServer; servedocs(
                             launch_browser=true;
                             literate=joinpath("docs","lit"),
                             include_dirs = ["src", "data"],
                         )']],
-                        components = { "default", "unique", "always_restart" },
-                        metadata = { run_on_open = true },
-                    }
-                end,
-                condition = hasDocs,
-                priority = pr(),
-            }
+                    components = { "default", "unique", "always_restart" },
+                    metadata = { run_on_open = true },
+                }
+            end,
+            condition = hasDocs,
+            priority = pr(),
+        }
         )
+        table.insert(ret, {
+            name = "Build PDF Documentation",
+            builder = function()
+                return {
+                    name = vim.g.project .. " Doc Build",
+                    cmd = "~/.config/nvim/filetype/julia/docBuild",
+                    components = { "default", "unique" },
+                    env = { LATEX_DOCS = "true" },
+                }
+            end,
+            condition = { callback = isInProject },
+        })
 
         local commands = {
             {
