@@ -113,7 +113,7 @@ local custom_attach = function(client, bufnr)
     bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action)
 
     if client.server_capabilities.inlayHintProvider then
-        vim.lsp.inlay_hint(bufnr, true)
+        vim.lsp.inlay_hint.enable(bufnr, true)
     end
 end
 
