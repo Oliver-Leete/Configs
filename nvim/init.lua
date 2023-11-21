@@ -228,6 +228,12 @@ require("lazy").setup(
             "chrisgrieser/nvim-puppeteer",
             dependencies = "nvim-treesitter/nvim-treesitter",
         },
+        {
+            "carbon-steel/detour.nvim",
+            config = function()
+                vim.keymap.set("n", "<c-p>", require("detour").Detour)
+            end
+        },
     },
     {
         install = {
