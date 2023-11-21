@@ -375,7 +375,7 @@ Map({ "n", "x" }, ",ff", function()
     vim.lsp.buf.format()
 end)
 Map("n", ",fw", function()
-    local num = vim.b.textwidth and vim.b.textwidth > 0 or vim.g.textwidth
+    local num = (vim.b.textwidth and vim.b.textwidth > 0) and vim.b.textwidth or vim.g.textwidth
     return "m1!ippar w" .. num .. "<cr>`1"
 end, { expr = true, silent = true })
 Map("n", ",fW", [["<cmd>%!par w" . &textwidth . "<cr>"]], { expr = true })
