@@ -142,8 +142,10 @@ glance.setup({
             ['<CR>'] = actions.jump,
             ['o'] = actions.enter_win('preview'),
             ['p'] = actions.enter_win('preview'),
-            ["<C-q>"] = actions.quickfix,
-            ["<C-l>"] = actions.quickfix,
+            ["<C-l>"] = function()
+                actions.quickfix()
+                vim.cmd.cclose()
+            end,
             ['<Esc>'] = actions.close,
         },
         preview = {
