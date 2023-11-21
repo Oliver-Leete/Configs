@@ -32,10 +32,15 @@ Map({ "n", "x" }, "H", "<nop>")
 Map({ "n", "x", "o" }, "$", "<nop>")
 Map({ "n", "x", "o" }, "^", "<nop>")
 
+Map({ "n", "x", "o" }, "q:", "<nop>")
+Map({ "n", "x", "o" }, "q/", "<nop>")
+Map({ "n", "x", "o" }, "q?", "<nop>")
+Map("c", "<c-f>", "<nop>")
+
 Map({ "n", "x", "o" }, "(", "<nop>")
-Map({ "n", "x", "o" }, ")", "<nop>, test")
+Map({ "n", "x", "o" }, ")", "<nop>")
 -- NOTE: D, Y, H, L, £, _, =, |, ;, ^, <BS>, <CR> are free to map
--- NOTE: H and L are taken in op mode
+-- NOTE: H and L are free except op mode
 -- NOTE: y, d, c are free in op mode
 
 -- Mappings
