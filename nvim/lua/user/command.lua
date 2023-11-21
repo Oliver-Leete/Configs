@@ -49,11 +49,11 @@ commander.add({
                 .edit_snippet_files({ edit = function(file) vim.cmd("vsplit " .. file) end })
         end
     },
-    { cat = "session", desc = "Add Session",       cmd = function() require("user.projects").load_session() end },
-    { cat = "session", desc = "Load Session", cmd = function() require("user.projects").load_session_reset() end },
-    { cat = "session", desc = "Make Session",      cmd = function() require("user.projects").save_session() end },
-    { cat = "session", desc = "Delete Session",    cmd = function() require("user.projects").delete_session() end },
-    { cat = "buffer",  desc = "Delete buffer",     cmd = require("mini.bufremove").delete },
+    { cat = "session", desc = "Add Session",    cmd = function() require("user.projects").load_session() end },
+    { cat = "session", desc = "Load Session",   cmd = function() require("user.projects").load_session_reset() end },
+    { cat = "session", desc = "Make Session",   cmd = function() require("user.projects").save_session() end },
+    { cat = "session", desc = "Delete Session", cmd = function() require("user.projects").delete_session() end },
+    { cat = "buffer",  desc = "Delete buffer",  cmd = require("mini.bufremove").delete },
     {
         cat = "buffers",
         desc = "Clean Up Buffers",
@@ -136,6 +136,7 @@ commander.add({
     { cat = "tasks",     desc = "Terminals",                         cmd = "<cmd>Telescope termfinder theme=get_ivy<cr>" },
     { cat = "tasks",     desc = "Clear Task Cache",                  cmd = "<cmd>OverseerClearCache<cr>" },
     { cat = "settings",  desc = "Toggle code lens",                  cmd = func.codelens_toggle },
+    { cat = "settings",  desc = "Toggle inlay hints",                cmd = function() vim.lsp.inlay_hint.enable(0) end },
     { cat = "settings",  desc = "Toggle text wraping",               cmd = "<cmd>set wrap!<cr>" },
     { cat = "settings",  desc = "Toggle autowrapping",               cmd = func.toggle_autowrap },
 })

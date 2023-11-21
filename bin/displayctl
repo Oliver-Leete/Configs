@@ -102,16 +102,16 @@ main () {
 
     # execute function based on command line arguments
     case ${1:-menu} in
-        menu)        menu                     ;;
-        in*)         internal                 ;;
-        ex*)         external                 ;;
-        span)        span                     ;;
-        spanAbove)   spanAbove                ;;
-        spanex)      spanex                   ;;
-        mirror)      mirror                   ;;
-        auto)        auto                     ;;
-        fing*)       report_fingerprint       ;;
-        *)           usage                    ;;
+        menu)              menu                     ;;
+        in*)               internal                 ;;
+        ex*)               external                 ;;
+        span)              span                     ;;
+        spanAbove)         spanAbove                ;;
+        spanex)            spanex                   ;;
+        mirror)            mirror                   ;;
+        auto)              auto                     ;;
+        fing*)             report_fingerprint       ;;
+        *)                 usage                    ;;
     esac
 
 }
@@ -125,14 +125,14 @@ menu () {
     default_mode=$((for item in $items; do echo $item; done) | grep -n -e "^$fingerprint_mode\$" | cut -d : -f 1)
     result=$((for item in $items; do echo $item; done) | rofi -matching fuzzy -window-title "Display Mode" -dmenu -a $(($default_mode - 1)) -p "Display Mode")
     case ${result:-} in
-        in*)         internal  ;;
-        ex*)         external  ;;
-        span)        span      ;;
-        spanAbove)   spanAbove ;;
-        spanex)      spanex    ;;
-        mirror)      mirror    ;;
-        auto)        auto      ;;
-        *)           :         ;;
+        in*)               internal        ;;
+        ex*)               external        ;;
+        span)              span            ;;
+        spanAbove)         spanAbove       ;;
+        spanex)            spanex          ;;
+        mirror)            mirror          ;;
+        auto)              auto            ;;
+        *)                 :               ;;
     esac
 }
 

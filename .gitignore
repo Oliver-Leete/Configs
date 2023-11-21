@@ -53,3 +53,4 @@ zsh/
 /nvim/neovim
 /kak/kakoune
 /nvim/lua/user/secrets.lua
+/fish/conf.d/done.fish
