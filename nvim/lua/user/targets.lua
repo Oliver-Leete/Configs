@@ -1,21 +1,5 @@
 local gen_spec = require("mini.ai").gen_spec
 
-local miniAiDiagnostics = function()
-    local diagnostics = vim.diagnostic.get(0)
-    diagnostics = vim.tbl_map(function(diagnostic)
-        local from_line = diagnostic.lnum + 1
-        local from_col = diagnostic.col + 1
-        local to_line = diagnostic.end_lnum + 1
-        local to_col = diagnostic.end_col + 1
-        return {
-            from = { line = from_line, col = from_col },
-            to = { line = to_line, col = to_col }
-        }
-    end, diagnostics)
-
-    return diagnostics
-end
-
 local miniAiGitsigns = function()
     local bufnr = vim.api.nvim_get_current_buf()
     local hunks = require("gitsigns.cache").cache[bufnr].hunks
@@ -33,6 +17,7 @@ local miniAiGitsigns = function()
     return hunks
 end
 
+local gen_ai_spec = require('mini.extra').gen_ai_spec
 local custom_objects = {
     -- argument
     a = gen_spec.argument({ separator = "[,;]" }),
@@ -40,9 +25,9 @@ local custom_objects = {
     b = { { "%b()", "%b[]", "%b{}" }, "^.().*().$" },
     -- Comments
     -- digits
-    d = { "%f[%d%._][%d%._]+" },
+    d = gen_ai_spec.number(),
     -- diagnostics
-    e = miniAiDiagnostics,
+    e = gen_ai_spec.diagnostic(),
     -- Function call
     f = gen_spec.function_call(),
     -- grammer (sentence)
@@ -63,6 +48,7 @@ local custom_objects = {
     -- git hunks
     h = miniAiGitsigns,
     -- Indents
+    i = gen_ai_spec.indent(),
     -- Jumps
     -- key (from key value pair)
     k = gen_spec.treesitter({
@@ -112,10 +98,7 @@ local custom_objects = {
     -- word
     w = { "()()%f[%w_][%w_]+()[ \t]*()" },
     -- line (same key as visual line in my mappings)
-    x = { {
-        "\n()%s*().-()\n()",
-        "^()%s*().-()\n()"
-    } },
+    x = gen_ai_spec.line(),
     -- chunk (as in from vim-textobj-chunk)
     z = {
         "\n.-%b{}.-\n",
@@ -261,9 +244,6 @@ local bracketed = require("mini.bracketed")
 
 Map({ "n", "x", "o" }, "[c", function() magmini(bracketed.comment, "c", "backward") end)
 Map({ "n", "x", "o" }, "]c", function() magmini(bracketed.comment, "c", "forward") end)
-
-Map({ "n", "x", "o" }, "[i", function() magmini(bracketed.indent, "i", "backward", { change_type = "diff" }) end)
-Map({ "n", "x", "o" }, "]i", function() magmini(bracketed.indent, "i", "forward", { change_type = "diff" }) end)
 
 Map({ "n", "x", "o" }, "[j", function() magmini(bracketed.jump, "j", "backward") end)
 Map({ "n", "x", "o" }, "]j", function() magmini(bracketed.jump, "j", "forward") end)

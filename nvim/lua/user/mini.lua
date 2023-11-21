@@ -2,10 +2,11 @@ vim.g.miniindentscope_disable = true
 
 require("mini.indentscope").setup({
     mappings = {
-        object_scope = "ii",
-        object_scope_with_border = "ai",
-        goto_top = "{i",
-        goto_bottom = "}i",
+      object_scope = "",
+      object_scope_with_border = "",
+      goto_top = "",
+      goto_bottom = "",
+
     },
     symbol = '▎"',
 })
@@ -105,9 +106,7 @@ hipatterns.setup({
     },
 })
 
-require("mini.files").setup({
-
-})
+require("mini.files").setup({ })
 
 require("mini.operators").setup({
     evaluate = { prefix = ",="},
