@@ -430,6 +430,7 @@ myStartupHook :: X ()
 myStartupHook = do
     killAllStatusBars
     setDefaultCursor xC_left_ptr
+    spawnOnce "variety -n"
     spawnOnce "picom -b --config ~/.config/picom/picom.conf"
     spawnOnce "insync start; insync hide"
     spawnOnce "/home/oleete/.config/bin/startupScript"
