@@ -72,7 +72,6 @@ local get_signs = function()
     local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
     return vim.tbl_map(function(sign)
         local ret = vim.fn.sign_getdefined(sign.name)[1]
-        ret.priority = sign.priority
         return ret
     end, vim.fn.sign_getplaced(buf, { group = "*", lnum = vim.v.lnum })[1].signs)
 end
@@ -82,9 +81,6 @@ StatusCol = function()
     local hl_prefix = cursorline and "%#Cursor" or "%#"
 
     local signs = vim.tbl_filter(function(s) return not s.name:find("GitSign") end, get_signs("*"))
-    table.sort(signs, function(a, b)
-        return a.priority > b.priority
-    end)
 
 
     local num = vim.v.lnum
