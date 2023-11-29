@@ -1,4 +1,3 @@
-Map = vim.keymap.set
 local Hydra = require('hydra')
 
 -- Leader Mapping
@@ -564,3 +563,261 @@ end)
 -- Terminal Bindings
 
 Map("t", "<c-]>", "<c-\\><c-n>")
+
+-- Git
+local Hydra = require("hydra")
+local gitsigns = require("gitsigns")
+
+local on = false
+local toggle_show = function()
+    if on then
+        on = false
+        gitsigns.toggle_linehl(false)
+        gitsigns.toggle_deleted(false)
+        gitsigns.toggle_word_diff(false)
+    else
+        on = true
+        gitsigns.toggle_linehl(true)
+        gitsigns.toggle_deleted(true)
+        gitsigns.toggle_word_diff(true)
+    end
+end
+
+Old_dir_jump = "search"
+local hint = [[
+┏^━━━━━━━━┳━━━━━┳━━━━━━━^┓
+┃^        ┃ GIT ┃       ^┃
+┃^        ┗━━━━━┛       ^┃
+┃^         Hunks        ^┃
+┣^━━━━━━━━━━━━━━━━━━━━━━^┫
+┃^ n: next hunk         ^┃
+┃^ N: prev hunk         ^┃
+┃^                      ^┃
+┃ _,s_: stage hunk       ┃
+┃ _,r_: reset hunk       ┃
+┃ _,u_: undo last stage  ┃
+┃ _,S_: stage buffer     ┃
+┃^                      ^┃
+┃^          View        ^┃
+┣^━━━━━━━━━━━━━━━━━━━━━━^┫
+┃ _,K_: blame line       ┃
+┃ _,p_: preview hunk     ┃
+┃ _,d_: show diff        ┃
+┣^━━━━━━━━━━━━━━━━━━━━━━^┫
+┃ _,f_: file finder      ┃
+┃ _,<esc>_: exit         ┃
+┗^━━━━━━━━━━━━━━━━━━━━━━^┛
+]]
+Hydra({
+    name = "Git",
+    hint = hint,
+    config = {
+        color = "pink",
+        invoke_on_body = true,
+        hint = {
+            position = "top-right",
+            border = nil
+        },
+        on_enter = function()
+            Old_dir_jump = vim.g.dirJumps
+            vim.g.dirJumps = "h"
+        end,
+        on_exit = function()
+            if vim.g.dirJumps == "h" then
+                vim.g.dirJumps = Old_dir_jump
+            end
+            on = false
+            gitsigns.toggle_linehl(false)
+            gitsigns.toggle_deleted(false)
+            gitsigns.toggle_word_diff(false)
+        end,
+    },
+    mode = { "n", "x" },
+    body = "<leader>g",
+    heads = {
+        { ",s",        gitsigns.stage_hunk,                          { silent = true, desc = "stage hunk" } },
+        { ",r",        gitsigns.reset_hunk,                          { silent = true, desc = "stage hunk" } },
+        { ",u",        gitsigns.undo_stage_hunk,                     { desc = "undo last stage" } },
+        { ",S",        gitsigns.stage_buffer,                        { desc = "stage buffer" } },
+        { ",p",        gitsigns.preview_hunk,                        { desc = "preview hunk" } },
+        { ",d",        toggle_show,                                  { nowait = true, desc = "toggle diff" } },
+        { ",K",        gitsigns.blame_line,                          { desc = "blame" } },
+        { ",f",        "<cmd>Telescope git_status theme=get_ivy<cr>" },
+        { ",<esc>",    nil,                                          { exit = true, nowait = true, desc = "exit" } },
+        { "<leader>g", nil,                                          { exit = true, nowait = true, desc = false } },
+    }
+})
+
+
+-- treesitter
+
+local tc_settings = {
+    highlight = true,
+    higroup = "Search",
+}
+local tc = require('tree-climber')
+local no_exit = false
+
+local tc_ex = function()
+    tc.select_node(tc_settings)
+    require("mini.operators").exchange("visual")
+end
+
+local tc_mul = function()
+    tc.select_node(tc_settings)
+    require("mini.operators").multipy("visual")
+end
+
+local tc_goto_first = function()
+    repeat
+        local old_pos = vim.api.nvim_win_get_cursor(0)
+        tc.goto_prev(tc_settings)
+        local new_pos = vim.api.nvim_win_get_cursor(0)
+    until old_pos[1] == new_pos[1] and old_pos[2] == new_pos[2]
+end
+
+local tc_goto_last = function()
+    repeat
+        local old_pos = vim.api.nvim_win_get_cursor(0)
+        tc.goto_next(tc_settings)
+        local new_pos = vim.api.nvim_win_get_cursor(0)
+    until old_pos[1] == new_pos[1] and old_pos[2] == new_pos[2]
+end
+
+local ts_surf_hint = [[
+┏^^^^━━━━━┳━━━━━━┳━━━━━^^^^┓
+┃^^^^     ┃ Tree ┃     ^^^^┃
+┃^^^^     ┗━━━━━━┛     ^^^^┃
+┃^^^^       Move       ^^^^┃
+┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
+┃ _h_/_j_/_k_/_l_: ←/↓/↑/→ ┃
+┃^^     _[_/_]_: ⇚/⇛     ^^┃
+┃^^^^                  ^^^^┃
+┃^^   _H_/_L_: swap      ^^┃
+┃^^^^                  ^^^^┃
+┃^^   _R_: raise       ^^^^┃
+┃^^   _m_: select node ^^^^┃
+┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
+┃^^    _<esc>_: exit   ^^^^┃
+┗^^^^━━━━━━━━━━━━━━━━━━^^^^┛
+]]
+TreeHydra = require('hydra')({
+    name = "Treesitter",
+    mode = { "n", "x" },
+    body = "Z",
+    config = {
+        color = "red",
+        invoke_on_body = true,
+        hint = {
+            position = "top-right",
+            border = nil
+        },
+        on_enter = function() tc.highlight_node(tc_settings) end,
+        on_exit = function()
+            if no_exit == true then
+                no_exit = false
+            else
+                tc.select_node(tc_settings)
+            end
+        end,
+    },
+    hint = ts_surf_hint,
+    heads = {
+        { '[',     tc_goto_first,                              { nowait = true } },
+        { ']',     tc_goto_last,                               { nowait = true } },
+        { 'h',     function() tc.goto_prev(tc_settings) end,   { nowait = true } },
+        { 'j',     function() tc.goto_child(tc_settings) end,  { nowait = true } },
+        { 'k',     function() tc.goto_parent(tc_settings) end, { nowait = true } },
+        { 'l',     function() tc.goto_next(tc_settings) end,   { nowait = true } },
+        { 'H',     function() tc.swap_prev(tc_settings) end,   { nowait = true } },
+        { 'L',     function() tc.swap_next(tc_settings) end,   { nowait = true } },
+        { 'R',     function() tc.raise(tc_settings) end,       { nowait = true } },
+        { '$',     tc_ex,                                      { nowait = true, desc = false } },
+        { '+',     tc_mul,                                     { nowait = true, desc = false } },
+        { 'm',     function() tc.select_node(tc_settings) end, { exit = true } },
+        { 'Z',     function() no_exit = true end,              { exit = true, nowait = true, desc = false } },
+        { '<esc>', function() no_exit = true end,              { exit = true, nowait = true } },
+    }
+})
+
+-- debuggin
+
+local dapui = require("dapui")
+local dap = require("dap")
+
+local hint = [[
+┏^^^━━━━━━━━┳━━━━━━┳━━━━━━━━^^^┓
+┃^^^        ┃  DAP ┃        ^^^┃
+┃^^^        ┗━━━━━━┛        ^^^┃
+┃^^^          Step          ^^^┃
+┣^^^━━━━━━━━━━━━━━━━━━━━━━━━^^^┫
+┃^^^                        ^^^┃
+┃^^^          back          ^^^┃
+┃^^           _,k_           ^^┃
+┃     out _,h_ ^^ _,l_ into    ┃
+┃^^           _,j_           ^^┃
+┃^^^          over          ^^^┃
+┃^  ns-out _,<_  _,>_ ns-in   ^┃
+┃^^^                        ^^^┃
+┃^^^          Jump          ^^^┃
+┣^^^━━━━━━━━━━━━━━━━━━━━━━━━^^^┫
+┃ _,t_: toggle breakpoint  ^^^^┃
+┃ _,T_: special breakpoint ^^^^┃
+┃ _,r_: continue           ^^^^┃
+┃ _,R_: continue to cursor ^^^^┃
+┃ _,p_: pause              ^^^^┃
+┃ _,X_: terminate          ^^^^┃
+┣^^^━━━━━━━━━━━━━━━━━━━━━━━━^^^┫
+┃ _<leader>j_: scopes      ^^^^┃
+┃ _<leader>h_: breakpoints ^^^^┃
+┃ _<leader>k_: stacks      ^^^^┃
+┃ _<leader>m_: watches     ^^^^┃
+┃ _<leader>,_: repl        ^^^^┃
+┃ _<leader>._: consol      ^^^^┃
+┣^^━━━━━━━━━━━━━━━━━━━━━━━━^^^^┫
+┃ _,f_: breakpoint finder  ^^^^┃
+┃ _,<esc>_: exit           ^^^^┃
+┗^^━━━━━━━━━━━━━━━━━━━━━━━━^^^^┛
+]]
+DapHydra = require("hydra")({
+    name = "Debug",
+    hint = hint,
+    config = {
+        color = "pink",
+        invoke_on_body = true,
+        hint = {
+            border = nil,
+            position = "top-right"
+        },
+    },
+    mode = { "n" },
+    body = "<leader>d",
+    heads = {
+        { ",h", dap.step_out, { desc = "step out" } },
+        { ",j", dap.step_over, { desc = "step over" } },
+        { ",k", dap.step_back, { desc = "step back" } },
+        { ",l", dap.step_into, { desc = "step into" } },
+        { ",t", dap.toggle_breakpoint, { desc = "toggle breakpoint" } },
+        { ",T", function()
+            local cond = vim.fn.input("Breakpoint condition: ")
+            local hit = vim.fn.input("Hit condition: ")
+            local log = vim.fn.input("Log message: ")
+            dap.set_breakpoint(cond, hit, log)
+        end },
+        { ",<", dap.up },
+        { ",>", dap.down },
+        { ",r", dap.continue, { desc = "continue" } },
+        { ",R", dap.run_to_cursor },
+        { ",X", dap.terminate, { desc = "terminate" } },
+        { ",p", dap.pause },
+        { "<leader>j", function() dapui.toggle({layout=6}) end },
+        { "<leader>h", function() dapui.toggle({layout=4}) end },
+        { "<leader>k", function() dapui.toggle({layout=5}) end },
+        { "<leader>m", function() dapui.toggle({layout=3}) end },
+        { "<leader>,", function() dapui.toggle({layout=2}) end },
+        { "<leader>.", function() dapui.toggle({layout=1}) end },
+        { ",<esc>", nil, { exit = true, nowait = true, desc = "exit" } },
+        { ",f", "<cmd>Telescope dap list_breakpoints theme=get_ivy<cr>" },
+        { "<leader>d", nil, { exit = true, nowait = true, desc = false } },
+    }
+})

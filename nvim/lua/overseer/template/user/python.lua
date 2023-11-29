@@ -32,6 +32,26 @@ return {
         table.insert(
             ret,
             {
+                name = "Run main.pyw",
+                builder = function()
+                    return {
+                        name = "Running main.pyw",
+                        cmd = "python main.pyw",
+                        components = { "default", "unique" }
+                    }
+                end,
+                condition = {
+                    callback = function()
+                        return files.exists("main.pyw")
+                    end
+
+                },
+                priority = 1,
+            }
+        )
+        table.insert(
+            ret,
+            {
                 name = "Profile main.py",
                 builder = function()
                     return {
@@ -173,6 +193,21 @@ return {
                     return {
                         name = "Lint all files",
                         cmd = "ruff --preview --watch scintilla_control/",
+                        components = { "default", "unique" }
+                    }
+                end,
+                conditon = {},
+                priority = pr(),
+            }
+        )
+        table.insert(
+            ret,
+            {
+                name = "Type check all",
+                builder = function()
+                    return {
+                        name = "Type check all files",
+                        cmd = "pyright --watch scintilla_control/",
                         components = { "default", "unique" }
                     }
                 end,

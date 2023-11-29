@@ -49,7 +49,7 @@ M.sources = {
 Map("c", "<C-CR>", "<nop>")
 
 local cmp = require("cmp")
-require("cmp").setup({
+cmp.setup({
     snippet = {
         expand = function(args)
             require("luasnip").lsp_expand(args.body)
@@ -146,7 +146,7 @@ require('cmp_luasnip_choice').setup({
     auto_open = true,
 })
 
-require("cmp").setup.filetype("DressingInput", {
+cmp.setup.filetype("DressingInput", {
     sources = cmp.config.sources {
         { name = "nvim_lsp" },
         { name = "omni" },
@@ -196,7 +196,7 @@ cmp.setup.cmdline(":", {
         { name = "latex_symbols" },
     }),
 })
-require("cmp").setup.filetype("tex", {
+cmp.setup.filetype("tex", {
     sources = {
         { name = "luasnip" },
         { name = "omni" },
@@ -235,14 +235,14 @@ require("cmp_dictionary").setup({
     },
 })
 
-require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
     sources = {
         { name = "dap" },
     },
 })
 
 
-require("cmp").setup.filetype("DressingInput", {
+cmp.setup.filetype("DressingInput", {
     sources = cmp.config.sources { { name = "omni" } },
 })
 
@@ -252,7 +252,7 @@ vim.api.nvim_create_autocmd(
     {
         pattern = "toml",
         callback = function()
-            require('cmp').setup.buffer({ sources = { { name = 'crates' } } })
+            cmp.setup.buffer({ sources = { { name = 'crates' } } })
         end,
         group = crates_augroup
     }
@@ -264,10 +264,10 @@ vim.g.diagnostic_enable_underline = 0
 vim.g.completion_timer_cycle = 200
 
 _G.cmp_toggle = function()
-    if require("cmp").visible() then
-        require("cmp").close()
+    if cmp.visible() then
+        cmp.close()
     else
-        require("cmp").complete()
+        cmp.complete()
     end
 end
 

@@ -75,7 +75,6 @@ for i, id in pairs(type_hl) do
         hl = vim.api.nvim_get_hl_by_name("Normal", true)
     end
     local name = "NavicIcons" .. i
-    Data = hl
     hl.background = Ct.diff.change
     vim.api.nvim_set_hl(0, name, hl)
     type_hl[i] = name

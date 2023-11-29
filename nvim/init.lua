@@ -1,6 +1,8 @@
 vim.api.nvim_set_var("$SHELL", "/bin/zsh")
 vim.opt.shell = "/bin/zsh"
 
+Map = vim.keymap.set
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not vim.loop.fs_stat(lazypath) then
@@ -15,21 +17,15 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-pcall(require("user.settings"))
+require("user.settings")
 
 require("lazy").setup(
     {
         -- Misc
-        { "907th/vim-auto-save" },
-        {
-            "anuvyklack/hydra.nvim",
-            dependencies = { "anuvyklack/keymap-layer.nvim" }
-        },
-        {
-            "chrisgrieser/nvim-genghis",
-            dependencies = { "stevearc/dressing.nvim" }
-        },
-        { "stevearc/resession.nvim" },
+        { "pocco81/auto-save.nvim",    opts = { execution_message = { message = function() return "" end } } },
+        { "anuvyklack/hydra.nvim",     dependencies = { "anuvyklack/keymap-layer.nvim" } },
+        { "chrisgrieser/nvim-genghis", dependencies = { "stevearc/dressing.nvim" } },
+        { "stevearc/resession.nvim",   config = function() require("user.projects") end },
         { "cbochs/grapple.nvim" },
         { "kazhala/close-buffers.nvim" },
 
@@ -37,125 +33,175 @@ require("lazy").setup(
         {
             "echasnovski/mini.nvim",
             dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
+            config = function()
+                require("user.mini"); require("user.targets")
+            end
         },
         { "ap/vim-you-keep-using-that-word" },
-        {
-            "ralismark/opsort.vim",
-            dependencies = { "tpope/vim-repeat" }
-        },
-        {
-            "Konfekt/vim-CtrlXA",
-            dependencies = { "tpope/vim-repeat" }
-        },
+        { "ralismark/opsort.vim",           dependencies = { "tpope/vim-repeat" } },
+        { "Konfekt/vim-CtrlXA",             dependencies = { "tpope/vim-repeat" } },
         { "andymass/vim-matchup" },
-        { "numToStr/Comment.nvim" },
+        {
+            "numToStr/Comment.nvim",
+            opts = {
+                toggler = { line = ',cc', block = nil },
+                opleader = { line = ',c', block = ',b' },
+                extra = { above = ',cO', below = ',co', eol = ',cA' },
+                mappings = { basic = true, extra = true },
+            }
+        },
         { "kana/vim-niceblock" },
 
         -- Search/Replace
         { "junegunn/vim-slash" },
-        { "folke/flash.nvim" },
-        { "cshuaimin/ssr.nvim" },
-        { "AckslD/muren.nvim" },
+        {
+            "folke/flash.nvim",
+            opts = {
+                labels = "tnseriaodhgjplfuwybkvmcxzq",
+                jump = { nohlsearch = true },
+                modes = { search = { enabled = false }, char = { enabled = true, keys = { "f", "F", "t", "T" } } },
+            }
+        },
+        { "AckslD/muren.nvim",           opts = {} },
 
         -- Git
         {
             "NeogitOrg/neogit",
             dependencies = {
-                "nvim-lua/plenary.nvim",         -- required
-                "nvim-telescope/telescope.nvim", -- optional
-                "sindrets/diffview.nvim",        -- optional
+                "nvim-lua/plenary.nvim",
+                "nvim-telescope/telescope.nvim",
+                "sindrets/diffview.nvim",
+                { "lewis6991/gitsigns.nvim", dependencies = { "tpope/vim-repeat" } },
+                { "sindrets/diffview.nvim",  dependencies = { "kyazdani42/nvim-web-devicons" } },
             },
-        },
-        {
-            "lewis6991/gitsigns.nvim",
-            dependencies = { "tpope/vim-repeat" }
-        },
-        {
-            "sindrets/diffview.nvim",
-            dependencies = { "kyazdani42/nvim-web-devicons" }
+            config = function()
+                require("user.git")
+            end
         },
 
         -- UI
         { "rebelot/kanagawa.nvim" },
         { "stevearc/dressing.nvim" },
-        {
-            "nvim-lualine/lualine.nvim",
-            dependencies = { "kyazdani42/nvim-web-devicons" }
-        },
+        { "nvim-lualine/lualine.nvim",   dependencies = { "kyazdani42/nvim-web-devicons" } },
         { "nvim-zh/colorful-winsep.nvim" },
         {
             "folke/noice.nvim",
-            dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" }
+            dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
+            config = function() require("user.noice") end,
         },
-        { "folke/edgy.nvim" },
+        {
+            "folke/edgy.nvim",
+            dependencies = { { "folke/trouble.nvim", dependencies = { "kyazdani42/nvim-web-devicons" } } },
+            config = function() require("user.panels") end
+        },
         {
             "folke/todo-comments.nvim",
-            dependencies = { "nvim-lua/plenary.nvim" }
-        },
-        {
-            "folke/trouble.nvim",
-            dependencies = { "kyazdani42/nvim-web-devicons" }
+            dependencies = { "nvim-lua/plenary.nvim" },
+            opts = {
+                signs = true,
+                sign_priority = 2,
+                keywords = {
+                    FIX = { icon = " ", color = "error", alt = { "FIXME", "BUG", "FIXIT", "FIX", "ISSUE" } },
+                    TODO = { icon = " ", color = "info" },
+                    HACK = { icon = " ", color = "warning", alt = { "JANK", "WORKAROUND" } },
+                    WARN = { icon = " ", color = "warning", alt = { "WARNING" } },
+                    PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+                    NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+                },
+                highlight = { before = "", keyword = "bg", after = "bg" },
+                colors = {
+                    error = { "LspDiagnosticsDefaultError", "ErrorMsg", "#DC2626" },
+                    warning = { "LspDiagnosticsDefaultWarning", "WarningMsg", "#FBBF24" },
+                    info = { "LspDiagnosticsDefaultInformation", "#2563EB" },
+                    hint = { "LspDiagnosticsDefaultHint", "#10B981" },
+                    default = { "Identifier", "#7C3AED" },
+                },
+
+            }
         },
 
         --
         {
-            "williamboman/mason.nvim",
+            "neovim/nvim-lspconfig",
             dependencies = {
-                "williamboman/mason-lspconfig.nvim",
-                "jayp0521/mason-nvim-dap.nvim",
-                "WhoIsSethDaniel/mason-tool-installer.nvim",
-            }
-        },
-        {
-            "jose-elias-alvarez/null-ls.nvim",
-            dependencies = { "nvim-lua/plenary.nvim" }
-        },
-        { "neovim/nvim-lspconfig" },
+                { "simrat39/rust-tools.nvim" },
+                { "SmiteshP/nvim-navic" },
+                { "DNLHC/glance.nvim" },
+                { "yioneko/nvim-type-fmt" },
+                { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
+                { "johmsalas/text-case.nvim" },
+                { "folke/neodev.nvim" },
+                { "hrsh7th/cmp-nvim-lsp" },
+                {
+                    "williamboman/mason.nvim",
+                    dependencies = {
+                        "williamboman/mason-lspconfig.nvim",
+                        "jayp0521/mason-nvim-dap.nvim",
+                        "WhoIsSethDaniel/mason-tool-installer.nvim",
+                    }
+                },
+                {
+                    "jose-elias-alvarez/null-ls.nvim",
+                    dependencies = { "nvim-lua/plenary.nvim" },
+                },
 
-        -- extra lsp
-        { "SmiteshP/nvim-navic" },
-        { "DNLHC/glance.nvim" },
-        { "yioneko/nvim-type-fmt" },
-        { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
-        { "johmsalas/text-case.nvim" },
+            },
+            config = function() require("user.lsp") end
+        },
 
         -- run and test
-        { "stevearc/overseer.nvim" },
+        {
+            "stevearc/overseer.nvim",
+            config = function() require("user.overseer") end
+        },
         {
             "nvim-neotest/neotest",
-            dependencies = {
-                { "rouge8/neotest-rust" },
-                { "nvim-neotest/neotest-python" },
-                { "mrcjkb/neotest-haskell" },
+            dependencies = { { "rouge8/neotest-rust" }, { "nvim-neotest/neotest-python" } },
+            config = function() require("user.testing") end
+        },
+        {
+            "andythigpen/nvim-coverage",
+            opts = {
+                signs = {
+                    covered = { hl = "CoverageCovered", text = "▉" },
+                    uncovered = { hl = "CoverageUncovered", text = "▉" },
+                },
             },
         },
-        { "andythigpen/nvim-coverage" },
-        { "t-troebst/perfanno.nvim" },
+        {
+            "t-troebst/perfanno.nvim",
+            config = function()
+                local util = require("perfanno.util")
+                require("perfanno").setup({
+                    line_highlights = util.make_bg_highlights("#1F1F28", "#C34043", 10),
+                    vt_highlight = util.make_fg_highlights("#1F1F28", "#C34043", 10),
+                    formats = {
+                        { percent = true,  format = "%.2f%%", minimum = 0.0 },
+                        { percent = false, format = "%d",     minimum = 0.0001 },
+                    },
+                })
+            end
+        },
 
         -- debug
-        { "mfussenegger/nvim-dap" },
-        { "rcarriga/nvim-dap-ui" },
-        { "theHamsta/nvim-dap-virtual-text" },
-        { "nvim-telescope/telescope-dap.nvim" },
+        {
+            "mfussenegger/nvim-dap",
+            config = function() require("user.dap") end,
+            dependencies = {
+                { "rcarriga/nvim-dap-ui" },
+                { "theHamsta/nvim-dap-virtual-text" },
+                { "nvim-telescope/telescope-dap.nvim" },
+                { "mfussenegger/nvim-dap-python" },
+            }
+        },
 
         -- lang specific
-        {
-            "lervag/vimtex",
-            dependencies = { "tpope/vim-repeat" }
-        },
-        { "iurimateus/luasnip-latex-snippets.nvim" },
+        { "lervag/vimtex",              dependencies = { "tpope/vim-repeat" } },
         { "barreiroleo/ltex_extra.nvim" },
-        {
-            "toppair/peek.nvim",
-            build = "deno task --quiet build:fast"
-        },
+        { "toppair/peek.nvim",          build = "deno task --quiet build:fast" },
         { "fladson/vim-kitty" },
         { "wilriker/gcode.vim" },
         { "LhKipp/nvim-nu" },
-        { "simrat39/rust-tools.nvim" },
-        { "mfussenegger/nvim-dap-python" },
-        -- { "MrcJkb/haskell-tools.nvim" },
-        { "folke/neodev.nvim" },
 
         -- compleation
         {
@@ -175,13 +221,12 @@ require("lazy").setup(
                 { "L3MON4D3/cmp-luasnip-choice" },
                 { "kdheepak/cmp-latex-symbols" },
                 { "rcarriga/cmp-dap" },
-            }
+                { "windwp/nvim-autopairs" },
+                { "L3MON4D3/LuaSnip" },
+                { "iurimateus/luasnip-latex-snippets.nvim" },
+            },
+            config = function() require("user.compleation") end,
         },
-        {
-            "L3MON4D3/LuaSnip",
-            dependencies = { "tpope/vim-repeat" }
-        },
-        { "windwp/nvim-autopairs" },
 
         -- telescope
         {
@@ -202,37 +247,26 @@ require("lazy").setup(
                 { "FeiyouG/command_center.nvim" },
                 { "Marskey/telescope-sg" },
             },
+            config = function() require("user.telescope") end
         },
-
-        {},
-        {},
 
         -- treesitter
         {
             "nvim-treesitter/nvim-treesitter",
-            build = {
-                ":TSInstall all",
-                ":TSUpdate all",
-                ":TSUninstall comment"
+            build = { ":TSInstall all", ":TSUpdate all", ":TSUninstall comment" },
+            dependencies = {
+                { "cshuaimin/ssr.nvim" },
+                { "ThePrimeagen/refactoring.nvim" },
+                { "CKolkey/ts-node-action",          dependencies = { "tpope/vim-repeat" } },
+                { "drybalka/tree-climber.nvim" },
+                { "Wansmer/treesj" },
+                { "Wansmer/binary-Swap.nvim" },
+                { "jose-elias-alvarez/null-ls.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
+                { "anuvyklack/hydra.nvim",           dependencies = { "anuvyklack/keymap-layer.nvim" } },
             },
-        },
-        { "ThePrimeagen/refactoring.nvim" },
-        {
-            "CKolkey/ts-node-action",
-            dependencies = { "tpope/vim-repeat" }
-        },
-        { "drybalka/tree-climber.nvim" },
-        { "Wansmer/treesj" },
-        { "Wansmer/binary-Swap.nvim" },
-        {
-            "chrisgrieser/nvim-puppeteer",
-            dependencies = "nvim-treesitter/nvim-treesitter",
-        },
-        {
-            "carbon-steel/detour.nvim",
             config = function()
-                vim.keymap.set("n", "<c-p>", require("detour").Detour)
-            end
+                require("user.treesitter")
+            end,
         },
     },
     {
@@ -249,33 +283,13 @@ require("lazy").setup(
     }
 )
 
-SendID = nil
+require("user.mappings")
+require("user.myfuncs")
 
-pcall(require("user.misc"))
-pcall(require("user.mappings"))
-pcall(require("user.targets"))
-pcall(require("user.telescope"))
-pcall(require("user.compleation"))
-pcall(require("user.myfuncs"))
-pcall(require("user.lsp"))
-pcall(require("user.treesitter"))
-pcall(require("user.dap"))
-pcall(require("user.panels"))
+require("user.filmpicker")
+require("user.ui")
+require("user.statusline")
+require("user.tabline")
+require("user.statuscol")
 
-pcall(require("user.filmpicker"))
-pcall(require("user.ui"))
-pcall(require("user.statusline"))
-pcall(require("user.tabline"))
-pcall(require("user.statuscol"))
-
-pcall(require("user.projects"))
-pcall(require("user.overseer"))
-pcall(require("user.testing"))
-
-pcall(require("user.git"))
-pcall(require("user.mini"))
-pcall(require("user.noice"))
-
-pcall(require("user.command"))
-
--- require("user.projects").load_session()
+require("user.command")

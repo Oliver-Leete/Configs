@@ -94,7 +94,7 @@ commander.add({
     {
         cat = "finders",
         desc = "Workspace symbols",
-        cmd = "<cmd>Telescope lsp_workspace_symbols theme=get_ivy<cr>"
+        cmd = "<cmd>Telescope lsp_dynamic_workspace_symbols theme=get_ivy<cr>"
     },
     { cat = "settings", desc = "Options",    cmd = "<cmd>Telescope vim_options theme=get_ivy<cr>" },
     { cat = "settings", desc = "Keymaps",    cmd = "<cmd>Telescope keymaps theme=get_ivy<cr>" },
@@ -139,6 +139,7 @@ commander.add({
     { cat = "settings",  desc = "Toggle inlay hints",                cmd = function() vim.lsp.inlay_hint.enable(0) end },
     { cat = "settings",  desc = "Toggle text wraping",               cmd = "<cmd>set wrap!<cr>" },
     { cat = "settings",  desc = "Toggle autowrapping",               cmd = func.toggle_autowrap },
+    { cat = "settings",  desc = "Toggle autosave",                   cmd = "<cmd>ASToggle<cr>" },
 })
 
 Map("n", "<leader>p", "<cmd>Telescope commander<cr>")

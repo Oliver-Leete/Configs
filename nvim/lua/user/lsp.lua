@@ -165,6 +165,15 @@ lspconfig.pyright.setup({
                 useLibraryCodeForTypes = true,
                 diagnosticSeverityOverrides = {
                     reportUnusedVariable = "warning",
+                    reportDeprecated = "warning",
+                    reportImplicitOverride = "warning",
+                    reportMatchNotExhaustive = "warning",
+                    reportUnnecessaryTypeIgnoreComment = "warning",
+                    reportUnusedExpression = "warning",
+                    reportUnusedCoroutine = "warning",
+                    reportUnusedClass = "warning",
+                    reportUnusedFunction = "warning",
+                    diagnosticMode = "workspace",
                 },
                 typeCheckingMode = "basic",
             },
@@ -282,14 +291,6 @@ lspconfig.texlab.setup({
         },
     },
 })
-
--- local ht = require('haskell-tools')
--- ht.setup({
---     hls = {
---         flags = { debounce_text_changes = 1000 },
---         root_dir = lspconfig.util.root_pattern("*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"),
---     }
--- })
 
 require("rust-tools").setup({
     server = {

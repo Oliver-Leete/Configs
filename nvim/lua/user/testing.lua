@@ -15,7 +15,6 @@ require("neotest").setup({
                 return file_path:sub(- #ending) == ending
             end
         }),
-        require("neotest-haskell"),
         require("neotest.adapters.neotest-julia-testitem"),
         require("neotest.adapters.neotest-julia-benchmarktools")
     },
