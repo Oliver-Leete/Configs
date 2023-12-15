@@ -449,7 +449,7 @@ Map("n", "<leader>k", function()
     end
 end)
 
-Map("n", "<leader>m", function() require("trouble").toggle({ mode = "quickfix" }) end)
+Map("n", "<leader>m", require("user.myfuncs").toggle_quickfix)
 Map("n", "<leader>,", "<cmd>OverseerQuickAction open<cr>")
 Map("n", "<leader><", "<cmd>OverseerQuickAction open here<cr>")
 Map("n", "<leader>.", function()
@@ -793,10 +793,10 @@ DapHydra = require("hydra")({
     mode = { "n" },
     body = "<leader>d",
     heads = {
-        { ",h", dap.step_out, { desc = "step out" } },
-        { ",j", dap.step_over, { desc = "step over" } },
-        { ",k", dap.step_back, { desc = "step back" } },
-        { ",l", dap.step_into, { desc = "step into" } },
+        { ",h", dap.step_out,          { desc = "step out" } },
+        { ",j", dap.step_over,         { desc = "step over" } },
+        { ",k", dap.step_back,         { desc = "step back" } },
+        { ",l", dap.step_into,         { desc = "step into" } },
         { ",t", dap.toggle_breakpoint, { desc = "toggle breakpoint" } },
         { ",T", function()
             local cond = vim.fn.input("Breakpoint condition: ")
@@ -804,20 +804,20 @@ DapHydra = require("hydra")({
             local log = vim.fn.input("Log message: ")
             dap.set_breakpoint(cond, hit, log)
         end },
-        { ",<", dap.up },
-        { ",>", dap.down },
-        { ",r", dap.continue, { desc = "continue" } },
-        { ",R", dap.run_to_cursor },
-        { ",X", dap.terminate, { desc = "terminate" } },
-        { ",p", dap.pause },
-        { "<leader>j", function() dapui.toggle({layout=6}) end },
-        { "<leader>h", function() dapui.toggle({layout=4}) end },
-        { "<leader>k", function() dapui.toggle({layout=5}) end },
-        { "<leader>m", function() dapui.toggle({layout=3}) end },
-        { "<leader>,", function() dapui.toggle({layout=2}) end },
-        { "<leader>.", function() dapui.toggle({layout=1}) end },
-        { ",<esc>", nil, { exit = true, nowait = true, desc = "exit" } },
-        { ",f", "<cmd>Telescope dap list_breakpoints theme=get_ivy<cr>" },
-        { "<leader>d", nil, { exit = true, nowait = true, desc = false } },
+        { ",<",        dap.up },
+        { ",>",        dap.down },
+        { ",r",        dap.continue,                                           { desc = "continue" } },
+        { ",R",        dap.run_to_cursor },
+        { ",X",        dap.terminate,                                          { desc = "terminate" } },
+        { ",p",        dap.pause },
+        { "<leader>j", function() dapui.toggle({ layout = 6 }) end },
+        { "<leader>h", function() dapui.toggle({ layout = 4 }) end },
+        { "<leader>k", function() dapui.toggle({ layout = 5 }) end },
+        { "<leader>m", function() dapui.toggle({ layout = 3 }) end },
+        { "<leader>,", function() dapui.toggle({ layout = 2 }) end },
+        { "<leader>.", function() dapui.toggle({ layout = 1 }) end },
+        { ",<esc>",    nil,                                                    { exit = true, nowait = true, desc = "exit" } },
+        { ",f",        "<cmd>Telescope dap list_breakpoints theme=get_ivy<cr>" },
+        { "<leader>d", nil,                                                    { exit = true, nowait = true, desc = false } },
     }
 })

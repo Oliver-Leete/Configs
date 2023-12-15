@@ -22,22 +22,15 @@ resession.setup({
         grapple = {
             enable_in_tab = true,
         },
+        quickfix = {
+            enable_in_tab = true,
+        },
     },
     tab_buf_filter = function(tabpage, bufnr)
         local dir = vim.fn.getcwd(-1, vim.api.nvim_tabpage_get_number(tabpage))
         return vim.startswith(vim.api.nvim_buf_get_name(bufnr), dir)
     end,
 })
-
--- vim.api.nvim_create_autocmd("VimEnter", {
---     callback = function()
---         -- Only load the session if nvim was started with no args
---         if vim.fn.argc(-1) == 0 then
---             -- Save these to a different directory, so our manual sessions don't get polluted
---             resession.load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
---         end
---     end,
--- })
 
 local projects = vim.api.nvim_create_augroup("projects", {})
 local workspace_dir = "session/" .. vim.fn.system("wmctrl -d | grep '*' | awk '{print $NF}'"):gsub("\n", "")

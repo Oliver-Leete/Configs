@@ -17,7 +17,6 @@ M.special_types = {
     OverseerPanelTask = { exit_func = edgy_bot },
     edgy = { exit_func = require("edgy").close },
     OverseerForm = { exit_func = winclose },
-    Trouble = { exit_func = edgy_bot },
     ["dap-float"] = { exit_func = winclose },
     ["dapui_scopes"] = { exit_func = winclose },
     ["dapui_breakpoints"] = { exit_func = winclose },
@@ -280,6 +279,20 @@ M.codelens_toggle = function()
         vim.lsp.codelens.refresh()
     else
         vim.lsp.codelens.clear()
+    end
+end
+
+M.toggle_quickfix = function()
+    local qf_exists = false
+    for _, win in pairs(vim.fn.getwininfo()) do
+        if win["quickfix"] == 1 then
+            qf_exists = true
+        end
+    end
+    if qf_exists == true then
+        vim.cmd.cclose()
+    else
+        vim.cmd.copen()
     end
 end
 

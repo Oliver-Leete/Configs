@@ -302,183 +302,183 @@ return {
         end
 
         -- Add neotest tests
-        local test_results = vim.fn.systemlist([[rg --json -o --pcre2 '(?<=@testitem )".*"' $(pwd)]])
-        for _, result in pairs(test_results) do
-            result = vim.fn.json_decode(result)
-            if result and result.type == "match" then
-                local name = result.data.submatches[1].match.text
-                local path = result.data.path.text
-                local location = path .. "::" .. name
-                local san_name = name:sub(2, -2)
-                table.insert(
-                    ret,
-                    {
-                        name = "Test " .. san_name,
-                        builder = function()
-                            require("neotest").run.run(location)
-                            return { cmd = "", name = "", components = { "user.dispose_now" }, }
-                        end,
-                        priority = pr(),
-                        params = {},
-                    }
-                )
-            end
-        end
-
-        for _, result in pairs(test_results) do
-            result = vim.fn.json_decode(result)
-            if result and result.type == "match" then
-                local name = result.data.submatches[1].match.text
-                local san_name = name:sub(2, -2)
-                table.insert(
-                    ret,
-                    {
-                        name = "Infiltrate " .. san_name,
-                        builder = function()
-                            local cond = vim.fn.input({ prompt = "Break condition: " })
-                            return {
-                                name = san_name .. " Infiltration",
-                                cmd = [[julia --threads=auto --project -i -e "
-                                using Revise, TestItemRunner, Infiltrator, ]] .. vim.g.project .. [[;
-                                run(\`/home/oleete/.config/bin/nvrWS 'lua No_Using_Toggle(\"Main.@infiltrate cond = ]] ..
-                                    cond .. [[\")'\`)
-                                "]],
-                                components = { "default", "unique",
-                                    {
-                                        "user.send_on_open",
-                                        send_on_open = [[@run_package_tests filter=ti->(ti.name == ]] .. name .. [[)]],
-                                    }
-                                },
-                            }
-                        end,
-                        priority = pr(),
-                        params = {},
-                    }
-                )
-            end
-        end
-
-        -- Add neotest benchmarks
-        local benchmark_results = vim.fn.systemlist([[rg -o --json --pcre2 '".*"(?=] = @benchmarkable)' $(pwd)]])
-        for _, result in pairs(benchmark_results) do
-            result = vim.fn.json_decode(result)
-            if result and result.type == "match" then
-                local name = result.data.submatches[1].match.text
-                local path = result.data.path.text
-                local location = path .. "::" .. name
-                local san_name = name:sub(2, -2)
-                table.insert(
-                    ret,
-                    {
-                        name = "Benchmark " .. san_name,
-                        builder = function()
-                            require("neotest").run.run(location)
-                            return { cmd = "", name = "", components = { "user.dispose_now" }, }
-                        end,
-                        priority = pr(),
-                        params = {},
-                    }
-                )
-            end
-        end
-
-        local profilable = vim.fn.systemlist(
-            [[rg --no-filename --no-heading --no-line-number -e ".*\[\"(.*?)\"\].*@benchmarkable(.*?)(setup\s*=\s*\((.*)\))?\$" -r "\$1║\$2║\$4"]])
-        for _, s in pairs(profilable) do
-            local name, command, setup = s:match("(.+)║(.+)║(.*)")
-            TEST = { name, command, setup }
-            table.insert(
-                ret,
-                {
-                    name = "Profile " .. name,
-                    builder = function()
-                        return {
-                            name = name .. " profiling",
-                            cmd = juliaCommand .. "/home/oleete/.config/nvim/filetype/julia/profBench.jl '" ..
-                                vim.fn.getcwd() .. "' '" .. command .. "' '" .. setup .. "'",
-                            components = { "default", "unique", "load_prof" },
-                        }
-                    end,
-                    priority = pr(),
-                    params = {},
-                }
-            )
-            table.insert(
-                ret,
-                {
-                    name = "Alloc Profile " .. name,
-                    builder = function()
-                        return {
-                            name = name .. " profiling allocs",
-                            cmd = juliaCommand .. "/home/oleete/.config/nvim/filetype/julia/profAllocBench.jl '" ..
-                                vim.fn.getcwd() .. "' '" .. command .. "' '" .. setup .. "'",
-                            components = { "default", "unique", "load_prof" },
-                        }
-                    end,
-                    priority = pr(),
-                    params = {},
-                }
-            )
-        end
-
-        table.insert(
-            ret,
-            {
-                name = "Load profile data",
-                builder = function()
-                    Jul_perf_flat()
-                    return { cmd = "", name = "", components = { "user.dispose_now" }, }
-                end,
-                priority = pr(),
-                condition = {
-                    callback = function()
-                        return files.exists("/tmp/jlprof.json")
-                    end
-                },
-                params = {},
-            }
-        )
-
-        table.insert(
-            ret,
-            {
-                name = "Benchmark against commit",
-                builder = function()
-                    local open_dif = function()
-                        local action_state = require("telescope.actions.state")
-                        local selected_entry = action_state.get_selected_entry()
-                        local value = selected_entry["value"]
-                        -- close Telescope window properly prior to switching windows
-                        vim.api.nvim_win_close(0, true)
-                        local task = require("overseer").new_task({
-                            name = "Benchmark against " .. value,
-                            cmd = [[julia -E 'using PkgBenchmark; res = judge("]] ..
-                                vim.g.project .. '", "' .. value .. [[")
-                                export_markdown("judgement.md", res)
-                                ']],
-                            components = { "default", "unique" }
-                        })
-                        task:start()
-                    end
-
-                    local function git_commits_againsthead()
-                        require("telescope.builtin").git_commits({
-                            attach_mappings = function(_, map)
-                                map("n", "<cr>", open_dif)
-                                map("i", "<cr>", open_dif)
-                                return true
-                            end,
-                        })
-                    end
-
-                    git_commits_againsthead()
-
-                    return { cmd = "", name = "", components = { "user.dispose_now" }, }
-                end,
-                priority = pr(),
-                condition = hasBenchmark,
-            }
-        )
+        -- local test_results = vim.fn.systemlist([[rg --json -o --pcre2 '(?<=@testitem )".*"' $(pwd)]])
+        -- for _, result in pairs(test_results) do
+        --     result = vim.fn.json_decode(result)
+        --     if result and result.type == "match" then
+        --         local name = result.data.submatches[1].match.text
+        --         local path = result.data.path.text
+        --         local location = path .. "::" .. name
+        --         local san_name = name:sub(2, -2)
+        --         table.insert(
+        --             ret,
+        --             {
+        --                 name = "Test " .. san_name,
+        --                 builder = function()
+        --                     require("neotest").run.run(location)
+        --                     return { cmd = "", name = "", components = { "user.dispose_now" }, }
+        --                 end,
+        --                 priority = pr(),
+        --                 params = {},
+        --             }
+        --         )
+        --     end
+        -- end
+        --
+        -- for _, result in pairs(test_results) do
+        --     result = vim.fn.json_decode(result)
+        --     if result and result.type == "match" then
+        --         local name = result.data.submatches[1].match.text
+        --         local san_name = name:sub(2, -2)
+        --         table.insert(
+        --             ret,
+        --             {
+        --                 name = "Infiltrate " .. san_name,
+        --                 builder = function()
+        --                     local cond = vim.fn.input({ prompt = "Break condition: " })
+        --                     return {
+        --                         name = san_name .. " Infiltration",
+        --                         cmd = [[julia --threads=auto --project -i -e "
+        --                         using Revise, TestItemRunner, Infiltrator, ]] .. vim.g.project .. [[;
+        --                         run(\`/home/oleete/.config/bin/nvrWS 'lua No_Using_Toggle(\"Main.@infiltrate cond = ]] ..
+        --                             cond .. [[\")'\`)
+        --                         "]],
+        --                         components = { "default", "unique",
+        --                             {
+        --                                 "user.send_on_open",
+        --                                 send_on_open = [[@run_package_tests filter=ti->(ti.name == ]] .. name .. [[)]],
+        --                             }
+        --                         },
+        --                     }
+        --                 end,
+        --                 priority = pr(),
+        --                 params = {},
+        --             }
+        --         )
+        --     end
+        -- end
+        --
+        -- -- Add neotest benchmarks
+        -- local benchmark_results = vim.fn.systemlist([[rg -o --json --pcre2 '".*"(?=] = @benchmarkable)' $(pwd)]])
+        -- for _, result in pairs(benchmark_results) do
+        --     result = vim.fn.json_decode(result)
+        --     if result and result.type == "match" then
+        --         local name = result.data.submatches[1].match.text
+        --         local path = result.data.path.text
+        --         local location = path .. "::" .. name
+        --         local san_name = name:sub(2, -2)
+        --         table.insert(
+        --             ret,
+        --             {
+        --                 name = "Benchmark " .. san_name,
+        --                 builder = function()
+        --                     require("neotest").run.run(location)
+        --                     return { cmd = "", name = "", components = { "user.dispose_now" }, }
+        --                 end,
+        --                 priority = pr(),
+        --                 params = {},
+        --             }
+        --         )
+        --     end
+        -- end
+        --
+        -- local profilable = vim.fn.systemlist(
+        --     [[rg --no-filename --no-heading --no-line-number -e ".*\[\"(.*?)\"\].*@benchmarkable(.*?)(setup\s*=\s*\((.*)\))?\$" -r "\$1║\$2║\$4"]])
+        -- for _, s in pairs(profilable) do
+        --     local name, command, setup = s:match("(.+)║(.+)║(.*)")
+        --     TEST = { name, command, setup }
+        --     table.insert(
+        --         ret,
+        --         {
+        --             name = "Profile " .. name,
+        --             builder = function()
+        --                 return {
+        --                     name = name .. " profiling",
+        --                     cmd = juliaCommand .. "/home/oleete/.config/nvim/filetype/julia/profBench.jl '" ..
+        --                         vim.fn.getcwd() .. "' '" .. command .. "' '" .. setup .. "'",
+        --                     components = { "default", "unique", "load_prof" },
+        --                 }
+        --             end,
+        --             priority = pr(),
+        --             params = {},
+        --         }
+        --     )
+        --     table.insert(
+        --         ret,
+        --         {
+        --             name = "Alloc Profile " .. name,
+        --             builder = function()
+        --                 return {
+        --                     name = name .. " profiling allocs",
+        --                     cmd = juliaCommand .. "/home/oleete/.config/nvim/filetype/julia/profAllocBench.jl '" ..
+        --                         vim.fn.getcwd() .. "' '" .. command .. "' '" .. setup .. "'",
+        --                     components = { "default", "unique", "load_prof" },
+        --                 }
+        --             end,
+        --             priority = pr(),
+        --             params = {},
+        --         }
+        --     )
+        -- end
+        --
+        -- table.insert(
+        --     ret,
+        --     {
+        --         name = "Load profile data",
+        --         builder = function()
+        --             Jul_perf_flat()
+        --             return { cmd = "", name = "", components = { "user.dispose_now" }, }
+        --         end,
+        --         priority = pr(),
+        --         condition = {
+        --             callback = function()
+        --                 return files.exists("/tmp/jlprof.json")
+        --             end
+        --         },
+        --         params = {},
+        --     }
+        -- )
+        --
+        -- table.insert(
+        --     ret,
+        --     {
+        --         name = "Benchmark against commit",
+        --         builder = function()
+        --             local open_dif = function()
+        --                 local action_state = require("telescope.actions.state")
+        --                 local selected_entry = action_state.get_selected_entry()
+        --                 local value = selected_entry["value"]
+        --                 -- close Telescope window properly prior to switching windows
+        --                 vim.api.nvim_win_close(0, true)
+        --                 local task = require("overseer").new_task({
+        --                     name = "Benchmark against " .. value,
+        --                     cmd = [[julia -E 'using PkgBenchmark; res = judge("]] ..
+        --                         vim.g.project .. '", "' .. value .. [[")
+        --                         export_markdown("judgement.md", res)
+        --                         ']],
+        --                     components = { "default", "unique" }
+        --                 })
+        --                 task:start()
+        --             end
+        --
+        --             local function git_commits_againsthead()
+        --                 require("telescope.builtin").git_commits({
+        --                     attach_mappings = function(_, map)
+        --                         map("n", "<cr>", open_dif)
+        --                         map("i", "<cr>", open_dif)
+        --                         return true
+        --                     end,
+        --                 })
+        --             end
+        --
+        --             git_commits_againsthead()
+        --
+        --             return { cmd = "", name = "", components = { "user.dispose_now" }, }
+        --         end,
+        --         priority = pr(),
+        --         condition = hasBenchmark,
+        --     }
+        -- )
 
         cb(ret)
     end,

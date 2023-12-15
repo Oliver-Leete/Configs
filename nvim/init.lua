@@ -23,7 +23,7 @@ require("lazy").setup(
     {
         -- Misc
         { "pocco81/auto-save.nvim",    opts = { execution_message = { message = function() return "" end } } },
-        { "anuvyklack/hydra.nvim",     dependencies = { "anuvyklack/keymap-layer.nvim" } },
+        { "nvim-island/hydra.nvim",     dependencies = { "anuvyklack/keymap-layer.nvim" } },
         { "chrisgrieser/nvim-genghis", dependencies = { "stevearc/dressing.nvim" } },
         { "stevearc/resession.nvim",   config = function() require("user.projects") end },
         { "cbochs/grapple.nvim" },
@@ -90,8 +90,11 @@ require("lazy").setup(
             config = function() require("user.noice") end,
         },
         {
+            "https://gitlab.com/yorickpeterse/nvim-pqf",
+            config = function() require('pqf').setup() end,
+        },
+        {
             "folke/edgy.nvim",
-            dependencies = { { "folke/trouble.nvim", dependencies = { "kyazdani42/nvim-web-devicons" } } },
             config = function() require("user.panels") end
         },
         {
@@ -262,7 +265,6 @@ require("lazy").setup(
                 { "Wansmer/treesj" },
                 { "Wansmer/binary-Swap.nvim" },
                 { "jose-elias-alvarez/null-ls.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
-                { "anuvyklack/hydra.nvim",           dependencies = { "anuvyklack/keymap-layer.nvim" } },
             },
             config = function()
                 require("user.treesitter")
