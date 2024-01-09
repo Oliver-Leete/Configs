@@ -2,6 +2,8 @@ vim.api.nvim_set_var("$SHELL", "/bin/zsh")
 vim.opt.shell = "/bin/zsh"
 
 Map = vim.keymap.set
+vim.api.nvim_set_var("mapleader", " ")
+vim.api.nvim_set_var("maplocalleader", "\\")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
@@ -23,10 +25,10 @@ require("lazy").setup(
     {
         -- Misc
         { "pocco81/auto-save.nvim",    opts = { execution_message = { message = function() return "" end } } },
-        { "nvim-island/hydra.nvim",     dependencies = { "anuvyklack/keymap-layer.nvim" } },
+        { "nvimtools/hydra.nvim",      dependencies = { "anuvyklack/keymap-layer.nvim" } },
         { "chrisgrieser/nvim-genghis", dependencies = { "stevearc/dressing.nvim" } },
         { "stevearc/resession.nvim",   config = function() require("user.projects") end },
-        { "cbochs/grapple.nvim" },
+        { "cbochs/grapple.nvim",       dependencies = { "nvim-lua/plenary.nvim" } },
         { "kazhala/close-buffers.nvim" },
 
         -- Editing
@@ -34,7 +36,6 @@ require("lazy").setup(
             "echasnovski/mini.nvim",
             dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
             config = function()
-                require("user.mini"); require("user.targets")
             end
         },
         { "ap/vim-you-keep-using-that-word" },
@@ -59,7 +60,7 @@ require("lazy").setup(
             opts = {
                 labels = "tnseriaodhgjplfuwybkvmcxzq",
                 jump = { nohlsearch = true },
-                modes = { search = { enabled = false }, char = { enabled = true, keys = { "f", "F", "t", "T" } } },
+                modes = { search = { enabled = false }, char = { enabled = false } },
             }
         },
         { "AckslD/muren.nvim",           opts = {} },
@@ -84,11 +85,6 @@ require("lazy").setup(
         { "stevearc/dressing.nvim" },
         { "nvim-lualine/lualine.nvim",   dependencies = { "kyazdani42/nvim-web-devicons" } },
         { "nvim-zh/colorful-winsep.nvim" },
-        {
-            "folke/noice.nvim",
-            dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
-            config = function() require("user.noice") end,
-        },
         {
             "https://gitlab.com/yorickpeterse/nvim-pqf",
             config = function() require('pqf').setup() end,
@@ -193,7 +189,6 @@ require("lazy").setup(
             dependencies = {
                 { "rcarriga/nvim-dap-ui" },
                 { "theHamsta/nvim-dap-virtual-text" },
-                { "nvim-telescope/telescope-dap.nvim" },
                 { "mfussenegger/nvim-dap-python" },
             }
         },
@@ -247,10 +242,14 @@ require("lazy").setup(
                 },
                 { "prochri/telescope-all-recent.nvim", dependencies = { "kkharji/sqlite.lua" } },
                 { "debugloop/telescope-undo.nvim" },
-                { "FeiyouG/command_center.nvim" },
                 { "Marskey/telescope-sg" },
             },
             config = function() require("user.telescope") end
+        },
+        {
+            "FeiyouG/commander.nvim",
+            config = function() require("user.command") end,
+            keys = { { "<leader>p", function() require("commander").show() end } }
         },
 
         -- treesitter
@@ -287,11 +286,11 @@ require("lazy").setup(
 
 require("user.mappings")
 require("user.myfuncs")
+require("user.mini")
+require("user.targets")
 
 require("user.filmpicker")
 require("user.ui")
 require("user.statusline")
 require("user.tabline")
 require("user.statuscol")
-
-require("user.command")

@@ -15,12 +15,6 @@ commander.setup({
         "CMD",
         "KEYS",
     },
-    integration = {
-        telescope = {
-            enable = true,
-            -- theme = require("telescope.themes").get_dropdown
-        },
-    }
 })
 
 commander.add({
@@ -30,7 +24,6 @@ commander.add({
     { cat = "coverage", desc = "Load coverage",          cmd = "<cmd>Coverage<cr>" },
     { cat = "coverage", desc = "Toggle coverage",        cmd = "<cmd>CoverageToggle<cr>" },
     { cat = "default",  desc = "Message",                cmd = "<cmd>message<cr>" },
-    { cat = "default",  desc = "History",                cmd = "<cmd>Noice<cr>" },
     { cat = "default",  desc = "Clear search",           cmd = "<cmd>let @/=''<cr>" },
     {
         cat = "tab",
@@ -80,7 +73,6 @@ commander.add({
     },
     { cat = "finders", desc = "Files",               cmd = "<cmd>Telescope git_files theme=get_ivy<cr>" },
     { cat = "finders", desc = "Grep",                cmd = "<cmd>Telescope live_grep theme=get_ivy<cr>" },
-    { cat = "finders", desc = "History (telescope)", cmd = "<cmd>Telescope noice theme=get_ivy<cr>" },
     { cat = "finders", desc = "Old files finder",    cmd = "<cmd>Telescope oldfiles theme=get_ivy<cr>" },
     { cat = "finders", desc = "Quickfix",            cmd = "<cmd>Telescope quickfix theme=get_ivy<cr>" },
     {
@@ -142,5 +134,3 @@ commander.add({
     { cat = "settings",  desc = "Toggle autosave",                   cmd = "<cmd>ASToggle<cr>" },
 })
 
-Map("n", "<leader>p", "<cmd>Telescope commander<cr>")
--- Map("n", "<leader>p", commander.show)

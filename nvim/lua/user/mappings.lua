@@ -2,8 +2,6 @@ local Hydra = require('hydra')
 
 -- Leader Mapping
 vim.opt.timeoutlen = 500
-vim.api.nvim_set_var("mapleader", " ")
-vim.api.nvim_set_var("maplocalleader", "\\")
 
 -- Un-Mappings
 Map({ "n", "x", "o" }, "<BackSPACE>", "<Nop>")
@@ -11,6 +9,8 @@ Map({ "n", "x", "o" }, "<SPACE>", "<Nop>")
 
 Map({ "n", "x", "o" }, ",", "<Nop>")
 Map({ "n", "x", "o" }, ";", "<Nop>")
+Map({ "n", "x", "o" }, "<M-n>", ";")
+Map({ "n", "x", "o" }, "<M-N>", ",")
 
 Map({ "n", "x", "o" }, "v", "<nop>")
 Map({ "n", "x", "o" }, "V", "<nop>")
@@ -44,7 +44,6 @@ Map({ "n", "x", "o" }, ")", "<nop>")
 
 -- Mappings
 Map("n", "<esc>", function()
-    vim.cmd("Noice dismiss")
     require("edgy").close()
 end)
 
@@ -258,7 +257,7 @@ Hydra({
     heads = vim.list_extend({ { "V", nil, { exit = true, nowait = true, desc = false } } }, view_heads)
 })
 
--- Map({ "n", "x" }, "m", "v")
+Map({ "n", "x" }, "m", "v")
 
 local mini_move_hint = [[
 ┏^^^^━━━━━┳━━━━━━┳━━━━━^^^^┓
@@ -335,8 +334,8 @@ MoveLine = require('hydra')({
         { '<esc>', nil,                                                    { exit = true, nowait = true } },
     }
 })
--- Text leader mappings: ,
--- text leader mappings
+-- NOTE: Text leader mappings: ,
+-- NOTE: text leader mappings
 
 Map("n", ",,", require("binary-swap").swap_operands)
 
@@ -452,9 +451,6 @@ end)
 Map("n", "<leader>m", require("user.myfuncs").toggle_quickfix)
 Map("n", "<leader>,", "<cmd>OverseerQuickAction open<cr>")
 Map("n", "<leader><", "<cmd>OverseerQuickAction open here<cr>")
-Map("n", "<leader>.", function()
-    require("user.myfuncs").toggle_noice()
-end)
 Map("n", "<leader>/", function()
     vim.cmd.vsplit(); require("neotest").output_panel.toggle()
 end)
@@ -565,7 +561,7 @@ end)
 Map("t", "<c-]>", "<c-\\><c-n>")
 
 -- Git
-local Hydra = require("hydra")
+
 local gitsigns = require("gitsigns")
 
 local on = false

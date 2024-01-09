@@ -1,6 +1,5 @@
 M = {}
 
-require('vim.lsp._watchfiles')._watchfunc = function(_, _, _) return function() return true end end
 vim.g.lsp_lens_on = true
 
 require("mason-tool-installer").setup({

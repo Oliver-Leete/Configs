@@ -1,9 +1,7 @@
 local action_state = require("telescope.actions.state")
 local actions = require("telescope.actions")
 
-require("telescope").load_extension("dap")
 require("telescope").load_extension("refactoring")
-require("telescope").load_extension("noice")
 
 local open_dif = function()
     local selected_entry = action_state.get_selected_entry()
@@ -169,7 +167,7 @@ require("telescope").setup({
 })
 
 require("telescope").load_extension("undo")
-require("telescope").load_extension("command_center")
+-- require("telescope").load_extension("command_center")
 require("telescope").load_extension("fzf")
 require("telescope").load_extension("ast_grep")
 
@@ -194,16 +192,6 @@ require('telescope-all-recent').setup({
         sorting = 'frecent'
     },
     pickers = {
-        command_center = {
-            disable = false,
-            use_cwd = false,
-            sorting = 'frecent',
-        },
-        ["dap#configurations"] = {
-            disable = false,
-            use_cwd = true,
-            sorting = 'frecent',
-        },
         vim_ui_select = {
             kinds = {
                 codeaction = {
@@ -223,6 +211,13 @@ require('telescope-all-recent').setup({
                 },
                 dap_run = {
                     use_cwd = true,
+                    sorting = 'frecent',
+                },
+            },
+            prompts = {
+                ["Commander"] = {
+                    disable = false,
+                    use_cwd = false,
                     sorting = 'frecent',
                 },
             }

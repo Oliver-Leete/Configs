@@ -119,11 +119,6 @@ local ov_list = {
     [st.PENDING] = " ",
 }
 
-local noice_wrapper = function()
-    local message = require("noice").api.status.message.get()
-    return message:sub(1, 80)
-end
-
 local recession_wrapper = function()
     local message = require("resession").get_current()
     if message:len() <= 20 then
@@ -217,21 +212,11 @@ require("lualine").setup({
         },
         lualine_c = {
             {
-                noice_wrapper,
-                cond = require("noice").api.status.message.has,
-                on_click = function() vim.defer_fn(function() vim.cmd("Noice") end, 100) end,
-            },
-            {
                 require("dap").status,
                 on_click = function() vim.defer_fn(require("dap").continue, 100) end,
             }
         },
         lualine_x = {
-            {
-                require("noice").api.status.mode.get,
-                cond = require("noice").api.status.mode.has,
-                color = { fg = "#ff9e64" },
-            },
         },
         lualine_y = {
             {

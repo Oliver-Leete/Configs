@@ -56,13 +56,11 @@ cmp.setup({
         end,
     },
     window = {
-        completion = cmp.config.window.bordered({
+        completion = {
             winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
             col_offset = -3,
             side_padding = 0,
-        }),
-        documentation = cmp.config.window.bordered(),
-
+        },
     },
     mapping = {
         ["<C-k>"] = cmp.mapping(cmp.mapping.scroll_docs(-5), { "i", "c" }),
@@ -126,13 +124,16 @@ cmp.setup({
     formatting = {
         fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
-            vim_item.menu = M.sources[entry.source.name]
-            vim_item.kind = M.icons[vim_item.kind]
-            return vim_item
+            local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
+            local strings = vim.split(kind.kind, "%s", { trimempty = true })
+            kind.kind = " " .. (strings[1] or "") .. " "
+            kind.menu = "    (" .. (strings[2] or "") .. ")"
+
+            return kind
         end,
     },
     enabled = function()
-        return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
+        return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt"
             or require("cmp_dap").is_dap_buffer()
     end,
     sorting = {

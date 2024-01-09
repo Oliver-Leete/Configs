@@ -5,7 +5,6 @@ require("edgy").setup({
     },
     animate = {
         enabled = false,
-        spinner = require("noice.util.spinners").spinners.circleFull,
     },
     options = {
         left = {
@@ -29,11 +28,6 @@ require("edgy").setup({
             ft = "OverseerPanelTask",
             title = "%{%v:lua.OverseerTask()%}",
             open = "OverseerQuickAction open",
-        },
-        {
-            ft = "NoiceHistory",
-            title = " Log",
-            open = function() require("user.myfuncs").toggle_noice() end,
         },
         {
             ft = "neotest-output-panel",

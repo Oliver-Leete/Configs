@@ -123,3 +123,15 @@ require("mini.operators").setup({
     },
     sort = {},
 })
+
+require("mini.notify").setup({
+    content = {
+        format = function(notif) return notif.msg end,
+    },
+    window = {
+        config = {
+            border = Border,
+        }
+    }
+})
+vim.notify = require("mini.notify").make_notify()

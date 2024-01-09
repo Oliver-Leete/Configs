@@ -167,7 +167,7 @@ projects n =
         browserForce na = upPointer $ spawn (myBrowserClass ++ " --class=" ++ na ++ " --user-data-dir=/home/oleete/.config/browser/" ++ na)
 
         sl i = "sleep .1; " ++ i
-        termBrowSpawn ws na = Just $ do spawnOn ws $ sl myTerminal; browserSpawn na
+        termBrowSpawn ws na = Just $ do spawnOn ws $ myTerminal; browserSpawn na
         browSpawn na = Just $ do browserSpawn na
         oneSpawn ws app = Just $ do spawnOn ws $ sl app
         commentSpawn ws = if n > 1
