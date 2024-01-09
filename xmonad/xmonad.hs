@@ -26,7 +26,6 @@ import           XMonad.Actions.SpawnOn
 import           XMonad.Actions.SwapPromote
 import           XMonad.Actions.UpdateFocus
 import           XMonad.Actions.UpdatePointer
-import           XMonad.Actions.WindowGo                as Wg
 import           XMonad.Actions.WindowGoLocal           as Wgl
 import           XMonad.Actions.WithAll                 (sinkAll)
 
@@ -430,7 +429,7 @@ myStartupHook :: X ()
 myStartupHook = do
     killAllStatusBars
     setDefaultCursor xC_left_ptr
-    spawnOnce "variety -n"
+    spawn "variety -n"
     spawnOnce "picom -b --config ~/.config/picom/picom.conf"
     spawnOnce "insync start; insync hide"
     spawnOnce "/home/oleete/.config/bin/startupScript"
