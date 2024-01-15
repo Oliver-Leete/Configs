@@ -1,7 +1,9 @@
-local left = ""
-local right = ""
-local leftc = ""
-local rightc = ""
+local left = ""
+local right = ""
+local leftc = ""
+local rightc = ""
+local leftend = ""
+local rightend = ""
 
 require("nvim-navic").setup({
     icons = {
@@ -176,7 +178,7 @@ require("lualine").setup({
             {
                 function() return "" end,
                 draw_empty = true,
-                separator = { left = "", right = left },
+                separator = { left = leftend, right = left },
             },
             {
                 "mode",
@@ -207,7 +209,7 @@ require("lualine").setup({
             {
                 function() return "" end,
                 draw_empty = true,
-                separator = { left = "", right = "" },
+                separator = { left = "", right = rightend },
             },
         },
         lualine_c = {
@@ -222,7 +224,7 @@ require("lualine").setup({
             {
                 function() return "" end,
                 draw_empty = true,
-                separator = { left = "", right = "" },
+                separator = { left = leftend, right = "" },
             },
             {
                 "encoding",
@@ -248,7 +250,7 @@ require("lualine").setup({
             {
                 function() return "" end,
                 draw_empty = true,
-                separator = { left = right, right = "" },
+                separator = { left = right, right = rightend },
             },
         }
     },
@@ -257,7 +259,7 @@ require("lualine").setup({
             {
                 function() return "" end,
                 draw_empty = true,
-                separator = { left = "", right = left },
+                separator = { left = leftend, right = left },
             },
             {
                 grapple,
@@ -284,7 +286,7 @@ require("lualine").setup({
             {
                 "navic",
                 color_correction = "dynamic",
-                navic_opts = { separator = "  ", highlight = true, click = true },
+                navic_opts = { separator = ">", highlight = true, click = true },
                 separator = { left = left, right = "" },
                 padding = { left = 1, right = 0 },
                 cond = not_overseer,
@@ -304,7 +306,7 @@ require("lualine").setup({
             {
                 function() return "" end,
                 draw_empty = true,
-                separator = { left = left, right = "" },
+                separator = { left = left, right = rightend },
             },
         },
         lualine_c = {},
@@ -312,7 +314,7 @@ require("lualine").setup({
             {
                 function() return "" end,
                 draw_empty = true,
-                separator = { left = "", right = "" },
+                separator = { left = leftend, right = "" },
                 padding = { left = 0, right = 0 },
             },
             {
@@ -335,17 +337,17 @@ require("lualine").setup({
                 "filetype",
                 colored = false,
                 icon_only = true,
-                separator = { left = right, right = "" },
+                separator = { left = right, right = rightend },
                 cond = not_overseer,
             },
             {
                 Filmpicker_winbar,
-                separator = { left = "", right = "" },
+                separator = { left = leftend, right = rightend },
                 cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end,
             },
             {
                 overseericon,
-                separator = { left = right, right = "" },
+                separator = { left = right, right = rightend },
                 cond = is_overseer,
             },
         },
@@ -355,7 +357,7 @@ require("lualine").setup({
             {
                 function() return "" end,
                 draw_empty = true,
-                separator = { left = "", right = left },
+                separator = { left = leftend, right = left },
             },
             {
                 grapple,
@@ -371,12 +373,12 @@ require("lualine").setup({
                     unnamed = "",
                     newfile = "󰎔 ",
                 },
-                separator = { left = "", right = "" },
+                separator = { left = leftend, right = rightend },
                 cond = function() return vim.bo.filetype ~= "OverseerTask" end,
             },
             {
                 OverseerTask,
-                separator = { left = "", right = "" },
+                separator = { left = leftend, right = rightend },
                 cond = is_overseer,
             },
         },
@@ -387,12 +389,12 @@ require("lualine").setup({
                 "filetype",
                 colored = false,
                 icon_only = true,
-                separator = { left = "", right = "" },
+                separator = { left = leftend, right = rightend },
                 cond = not_overseer,
             },
             {
                 overseericon,
-                separator = { left = "", right = "" },
+                separator = { left = leftend, right = rightend },
                 cond = is_overseer,
             },
         },

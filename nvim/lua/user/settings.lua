@@ -1,7 +1,7 @@
 --Settings
 vim.opt.nrformats = vim.opt.nrformats - "octal"
-vim.opt.clipboard = vim.opt.clipboard + "unnamedplus"
 vim.opt.viminfo = "'100,f1"
+vim.opt.clipboard = vim.opt.clipboard + "unnamedplus"
 vim.opt.mouse = "a"
 vim.opt.encoding = "UTF-8"
 vim.opt.scrolloff = 0
@@ -26,15 +26,13 @@ vim.opt.fillchars:append({
     verthoriz = '╋',
     diff      = "╱",
 })
-Border = "rounded"
+Border = "none"
 
 -- Saving
 vim.opt.confirm = true
 vim.opt.swapfile = false
 vim.opt.undodir = "/home/oleete/.vim/undo//"
 vim.opt.undofile = true
-vim.g.auto_save = 1
-vim.g.auto_save_silent = 1
 
 -- Title
 vim.opt.title = true

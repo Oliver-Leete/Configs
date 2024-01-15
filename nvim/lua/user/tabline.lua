@@ -2,6 +2,8 @@ local left = ""
 local right = ""
 local leftc = ""
 local rightc = ""
+local leftend = "▐"
+local rightend = "▌"
 
 Tabline = function()
     local tabline = ""
@@ -19,18 +21,18 @@ Tabline = function()
         local rs = ""
 
         if is_active then
-            ls = i == 1 and "" or right
-            rs = i == count and "" or left
+            ls = i == 1 and leftend or right
+            rs = i == count and rightend or left
             hlle = i == 1 and "%#TabLineActiveEnds#" or "%#TabLineActiveMids#"
             hlre = i == count and "%#TabLineActiveEnds#" or "%#TabLineActiveMids#"
         else
             if i == 1 then
-                ls = ""
+                ls = leftend
             elseif i < current_tab_num then
                 ls = rightc
             end
             if i == count then
-                rs = ""
+                rs = rightend
             elseif i > current_tab_num then
                 rs = leftc
             end

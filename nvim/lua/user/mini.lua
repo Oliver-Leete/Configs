@@ -2,10 +2,10 @@ vim.g.miniindentscope_disable = true
 
 require("mini.indentscope").setup({
     mappings = {
-      object_scope = "",
-      object_scope_with_border = "",
-      goto_top = "",
-      goto_bottom = "",
+        object_scope = "",
+        object_scope_with_border = "",
+        goto_top = "",
+        goto_bottom = "",
 
     },
     symbol = '▎"',
@@ -106,10 +106,11 @@ hipatterns.setup({
     },
 })
 
-require("mini.files").setup({ })
+require("mini.files").setup({})
+
 
 require("mini.operators").setup({
-    evaluate = { prefix = ",="},
+    evaluate = { prefix = ",=" },
     exchange = {
         prefix = "$",
         reindent_linewise = false,
@@ -129,9 +130,19 @@ require("mini.notify").setup({
         format = function(notif) return notif.msg end,
     },
     window = {
-        config = {
-            border = Border,
-        }
+        config = function()
+            local has_tabline = vim.o.showtabline == 2 or (vim.o.showtabline == 1 and #vim.api.nvim_list_tabpages() > 1)
+            local has_statusline = vim.o.laststatus > 0
+            local max_height = vim.o.lines - vim.o.cmdheight - (has_tabline and 1 or 0) - (has_statusline and 1 or 0)
+            local max_width = vim.o.columns
+            return {
+                border = Border,
+                relative = "editor",
+                anchor = "SE",
+                col = max_width,
+                row = max_height,
+            }
+        end
     }
 })
 vim.notify = require("mini.notify").make_notify()

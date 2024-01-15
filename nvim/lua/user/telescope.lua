@@ -49,6 +49,10 @@ require("telescope").setup({
             "--multiline",
             "--vimgrep",
         },
+        prompt_prefix = " ",
+        selection_caret = " ",
+        entry_prefix = "  ",
+        multi_icon = "",
         path_display = { shorten = 3 },
         pickers = {
             buffers = {

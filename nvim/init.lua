@@ -91,7 +91,8 @@ require("lazy").setup(
         },
         {
             "folke/edgy.nvim",
-            config = function() require("user.panels") end
+            config = function() require("user.panels") end,
+            dependencies = {"ariel-frischer/bmessages.nvim"},
         },
         {
             "folke/todo-comments.nvim",
@@ -140,7 +141,7 @@ require("lazy").setup(
                     }
                 },
                 {
-                    "jose-elias-alvarez/null-ls.nvim",
+                    "nvimtools/none-ls.nvim",
                     dependencies = { "nvim-lua/plenary.nvim" },
                 },
 
@@ -263,7 +264,6 @@ require("lazy").setup(
                 { "drybalka/tree-climber.nvim" },
                 { "Wansmer/treesj" },
                 { "Wansmer/binary-Swap.nvim" },
-                { "jose-elias-alvarez/null-ls.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
             },
             config = function()
                 require("user.treesitter")
@@ -271,6 +271,9 @@ require("lazy").setup(
         },
     },
     {
+        checker = {
+            enabled = true,
+        },
         install = {
             missing = true,
         },

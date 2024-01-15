@@ -83,7 +83,7 @@ myConfig n = def
         , normalBorderColor  = background
         , focusedBorderColor = active
         , manageHook         = myManageHook n
-        , handleEventHook    = myHandleEventHook n
+        , handleEventHook    = myHandleEventHook
         , layoutHook         = myLayoutHook
         , logHook            = myLogHook
         , modMask            = myModMask
@@ -166,7 +166,7 @@ projects n =
         browserForce na = upPointer $ spawn (myBrowserClass ++ " --class=" ++ na ++ " --user-data-dir=/home/oleete/.config/browser/" ++ na)
 
         sl i = "sleep .1; " ++ i
-        termBrowSpawn ws na = Just $ do spawnOn ws $ myTerminal; browserSpawn na
+        termBrowSpawn ws na = Just $ do spawnOn ws myTerminal; browserSpawn na
         browSpawn na = Just $ do browserSpawn na
         oneSpawn ws app = Just $ do spawnOn ws $ sl app
         commentSpawn ws = if n > 1
@@ -519,10 +519,10 @@ myManageHook n =
 -- HangleEventHook                                                                                --
 ----------------------------------------------------------------------------------------------------
 
-myHandleEventHook :: Int -> Event -> X All
-myHandleEventHook n = handleEventHook def
+myHandleEventHook :: Event -> X All
+myHandleEventHook = handleEventHook def
                 <+> XMonad.Util.Hacks.windowedFullscreenFixEventHook
-                <+> myServerModeEventHook n
+                <+> myServerModeEventHook
 
 ----------------------------------------------------------------------------------------------------
 -- Helper Functions                                                                               --
@@ -558,19 +558,19 @@ bringWindow w ws = W.focusWindow w $ W.shiftWinDown (W.currentTag ws) w ws
 -- Server Commands                                                                                --
 ----------------------------------------------------------------------------------------------------
 
-myServerModeEventHook :: Int -> Event -> X All
-myServerModeEventHook n = serverModeEventHookCmd' $ return (myCommands' n)
+myServerModeEventHook :: Event -> X All
+myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
 
-myCommands' :: Int -> [(String, X ())]
-myCommands' n = myCommands n ++ sendTo ++ swapTo ++ copyTo
+myCommands' :: [(String, X ())]
+myCommands' = myCommands ++ sendTo ++ swapTo ++ copyTo
     where sendTo = zipM "move-to-" nums (withNthWorkspace W.shift)
           swapTo = zipM "jump-to-" nums (withNthWorkspace W.greedyView)
           copyTo = zipM "copy-to-" nums (withNthWorkspace copy)
           nums = [0..(length myWorkspaces)]
           zipM  m ks f = zipWith (\k d -> (m ++ show k, upFocus $ f d)) ks ks
 
-myCommands :: Int -> [(String, X ())]
-myCommands _ =
+myCommands :: [(String, X ())]
+myCommands =
     [ ("togglework"          , toggleWS' ["NSP"])
     , ("winGo-h"             , upPointer $ windowGo L True)
     , ("winGo-j"             , upPointer $ windowGo D True)

@@ -10,6 +10,7 @@ require("mason-tool-installer").setup({
         "codelldb",
         "cpptools",
         "debugpy",
+        "esbonio",
         "fortls",
         "gitlint",
         "jq",
@@ -21,7 +22,6 @@ require("mason-tool-installer").setup({
         "markdownlint",
         "marksman",
         "pyright",
-        "python-lsp-server",
         "ruff-lsp",
         "rust-analyzer",
         "shellharden",
@@ -64,12 +64,7 @@ local custom_attach = function(client, bufnr)
     local sc = client.server_capabilities
     local bmap = function(mode, key, action) Map(mode, key, action, { buffer = bufnr }) end
 
-    if client.name == "pylsp" then
-        sc.renameProvider = false
-        sc.definitionProvider = false
-        sc.referencesProvider = false
-        sc.documentSymbolProvider = false
-    elseif client.name == "ruff" then
+    if client.name == "ruff" then
         sc.renameProvider = false
         sc.definitionProvider = false
         sc.referencesProvider = false
@@ -93,7 +88,7 @@ local custom_attach = function(client, bufnr)
         bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls theme=get_ivy<cr>")
         bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>")
     end
-    if sc.codeLensProvider ~= nil then
+    if sc.codeLensProvider ~= nil and sc.codeLensProvider == true then
         bmap("n", "<C-,>", vim.lsp.codelens.run)
         vim.lsp.codelens.refresh()
         vim.api.nvim_create_autocmd(
@@ -144,6 +139,7 @@ lspconfig.asm_lsp.setup(default)
 lspconfig.arduino_language_server.setup(default)
 lspconfig.teal_ls.setup(default)
 lspconfig.clangd.setup(default)
+lspconfig.esbonio.setup(default)
 lspconfig.hls.setup({
     flags = { debounce_text_changes = 1000 },
     settings = {
@@ -180,25 +176,6 @@ lspconfig.pyright.setup({
     },
     capabilities = pyrightcapabilities,
     flags = { debounce_text_changes = 1000 },
-})
-lspconfig.pylsp.setup({
-    -- on_attach = custom_attach,
-    capabilities = capabilities,
-    flags = { debounce_text_changes = 1000 },
-    settings = {
-        pylsp = {
-            plugins = {
-                pydocstyle = { enabled = false },
-                pycodestyle = { enabled = false },
-                pyflakes = { enabled = false },
-                rope_completion = { enabled = false },
-                jedi_completion = { enabled = false },
-                ruff = { enabled = false },
-                isort = { enabled = false },
-                black = { enabled = false },
-            },
-        },
-    },
 })
 lspconfig.ruff_lsp.setup(
     {
@@ -386,29 +363,29 @@ require("ltex_extra").setup({
     },
 })
 
-local null_ls = require("null-ls")
--- Null LS
-require("null-ls").setup({
+local none_ls = require("null-ls")
+-- None LS
+none_ls.setup({
     diagnostics_format = "[#{c}] #{m} (#{s})",
     sources = {
-        null_ls.builtins.code_actions.gitrebase,
-        null_ls.builtins.diagnostics.fish,
-        null_ls.builtins.diagnostics.gitlint,
-        null_ls.builtins.diagnostics.jsonlint,
-        null_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013", "MD046", "MD009" } }),
-        null_ls.builtins.formatting.bibclean,
-        null_ls.builtins.formatting.fish_indent,
-        null_ls.builtins.formatting.jq.with({ extra_args = { "--indent", "4" } }),
-        null_ls.builtins.formatting.latexindent.with({ extra_args = { "-l=.latexindent.yaml" } }),
-        null_ls.builtins.formatting.markdownlint,
-        null_ls.builtins.formatting.shellharden,
-        null_ls.builtins.formatting.shfmt,
-        null_ls.builtins.formatting.trim_newlines,
-        null_ls.builtins.formatting.trim_whitespace,
-        null_ls.builtins.formatting.ruff.with({
+        none_ls.builtins.code_actions.gitrebase,
+        none_ls.builtins.diagnostics.fish,
+        none_ls.builtins.diagnostics.gitlint,
+        none_ls.builtins.diagnostics.jsonlint,
+        none_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013", "MD046", "MD009" } }),
+        none_ls.builtins.formatting.bibclean,
+        none_ls.builtins.formatting.fish_indent,
+        none_ls.builtins.formatting.jq.with({ extra_args = { "--indent", "4" } }),
+        none_ls.builtins.formatting.latexindent.with({ extra_args = { "-l=.latexindent.yaml" } }),
+        none_ls.builtins.formatting.markdownlint,
+        none_ls.builtins.formatting.shellharden,
+        none_ls.builtins.formatting.shfmt,
+        none_ls.builtins.formatting.trim_newlines,
+        none_ls.builtins.formatting.trim_whitespace,
+        none_ls.builtins.formatting.ruff.with({
             args = { "--fix", "-e", "-n", "--fixable", "I001", "--stdin-filename", "$FILENAME", "-" } }), -- only format import block
-        null_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
-        null_ls.builtins.hover.printenv,
+        none_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
+        none_ls.builtins.hover.printenv,
     },
 })
 

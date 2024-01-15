@@ -443,7 +443,7 @@ Map("n", "<leader>h", "<cmd>OverseerToggle<cr>")
 Map("n", "<leader>k", function()
     require("neotest").summary.toggle()
     local win = vim.fn.bufwinid("Neotest Summary")
-    if win > -1 then
+    if win ~= nil and win > -1 then
         vim.api.nvim_set_current_win(win)
     end
 end)

@@ -180,11 +180,6 @@ M.paste_special = function(reg, type, put)
     vim.fn.feedkeys(vim.api.nvim_replace_termcodes('"' .. reg .. put, true, true, true))
 end
 
-M.trash_put = function()
-    vim.cmd("!trash-put %")
-    vim.cmd.bdelete()
-end
-
 local overseer = require("overseer")
 local openterm = function()
     local task = vim.tbl_filter(function(t) return (t.name:find("^Fish") ~= nil) end, overseer.list_tasks())[1]

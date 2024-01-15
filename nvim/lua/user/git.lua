@@ -20,6 +20,9 @@ require("neogit").setup({
 require("gitsigns").setup({
     sign_priority = 6,
     _signs_staged_enable = true,
+    preview_config = {
+        border = Border,
+    }
 })
 
 local gitstuff = vim.api.nvim_create_augroup("GitStuff", { clear = true })

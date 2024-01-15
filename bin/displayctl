@@ -185,7 +185,9 @@ execute () {
 
     newcount=$(xrandr --listactivemonitors | rg -e "Monitors: (\d*)" -r '$1')
 
-    if [ "$newcount" == "$count" ]; then
+    # Only restart xmonad if the display count has changed, reset the bars
+    # only if not
+    if [[ "$newcount" -eq "$count" || ( "$count" -ge 2 || "$newcount" -ge 2 ) ]]; then
         /home/oleete/.cabal/bin/xmonadctl-exe restart-bars
     else
         xmonad --restart
