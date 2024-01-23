@@ -475,7 +475,6 @@ myManageHook n =
         manageSpecific = composeOne
             [ resource  =? "desktop_window"           -?> doIgnore
             , resource  =? "prusa-slicer"             -?> doSink <+> insertPosition End Newer
-            , resource  =? "stalonetray"              -?> doIgnore
 
             , title =? "Scintilla Control"            -?> scinTestShift
             , title =? "Scintilla Option Editor"      -?> doCenterFloat
@@ -491,11 +490,11 @@ myManageHook n =
             , resource  =? "gnome-calculator"         -?> doCenterFloat
             , className =? "GCal"                     -?> doRectFloat bigFloat
             , className =? "WrkGCal"                  -?> doRectFloat bigFloat
-            , className =? "Toggl Desktop"            -?> doRectFloat (W.RationalRect (3 / 8) (1 / 8) (1 / 4) (3 / 4))
-            , resource  =? "sysMon"                   -?> doRectFloat (W.RationalRect (1 / 8) (1 / 8) (3 / 4) (3 / 4))
-            , resource  =? "wsHarpoon"                -?> doRectFloat (W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4))
-            , resource  =? "console"                  -?> doRectFloat (W.RationalRect (4 / 7) (4 / 7) (2 / 5) (2 / 5))
-            , resource  =? "youtubemusic"             -?> doRectFloat halfNhalf
+            , className =? "Toggl Desktop"            -?> doRectFloat (W.RationalRect (3/8) (1/8) (1/4) (3/4))
+            , resource  =? "sysMon"                   -?> doRectFloat (W.RationalRect (1/8) (1/8) (3/4) (3/4))
+            , resource  =? "wsHarpoon"                -?> doRectFloat (W.RationalRect (1/4) (1/4) (2/4) (2/4))
+            , resource  =? "console"                  -?> doRectFloat (W.RationalRect (4/7) (4/7) (2/5) (2/5))
+            , className =? "youtubemusic"             -?> doRectFloat halfNhalf
             , className =? "discord"                  -?> doRectFloat halfNhalf
             , resource  =? "kruler"                   -?> doFloat
 

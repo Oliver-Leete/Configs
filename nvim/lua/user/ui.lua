@@ -66,14 +66,6 @@ Ct = require("kanagawa.colors").setup({ colors = kcolors }).theme
 
 vim.api.nvim_set_hl(0, "SubstituteExchange", { link = "MatchParen" })
 
-local background = vim.api.nvim_get_hl_by_name("CursorLine", true).background
-
-local sign_colours = { Add = "Added", Change = "Changed", Delete = "Deleted" }
-for sign, colour in pairs(sign_colours) do
-    local highlight = vim.api.nvim_get_hl_by_name("diff" .. colour, true)
-    highlight.background = background
-    vim.api.nvim_set_hl(0, "GitSigns" .. sign .. "Cul", highlight)
-end
 
 vim.api.nvim_set_hl(0, "LineNr", { fg = Ct.ui.bg_p2, bg = Ct.ui.bg, bold = false })
 vim.api.nvim_set_hl(0, "LineSep", { fg = Ct.ui.bg_p2, bg = Ct.ui.bg, bold = false })
@@ -84,10 +76,6 @@ vim.api.nvim_set_hl(0, "StatusLineNC", { fg = Ct.ui.bg_p2, bg = Ct.ui.bg })
 
 vim.g.matchup_matchparen_deferred = true
 vim.g.matchup_matchparen_hi_surround_always = true
-
-local CursorMatchParen = vim.api.nvim_get_hl_by_name("MatchParen", true)
-CursorMatchParen.background = background
-vim.api.nvim_set_hl(0, "CursorMatchParen", CursorMatchParen)
 
 vim.api.nvim_set_hl(0, "TabLine", { fg = Ct.ui.bg, bg = Ct.syn.comment })
 vim.api.nvim_set_hl(0, "TabLineMids", { fg = Ct.ui.bg, bg = Ct.syn.comment })
@@ -125,7 +113,7 @@ vim.api.nvim_set_hl(0, "GlancePreviewBorderBottom", { fg = Ct.syn.fun, bg = "#2a
 glance.setup({
     height = 20,
     border = {
-        enable = true,
+        enable = false,
         top_char = '━',
         bottom_char = '━',
     },
