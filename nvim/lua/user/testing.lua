@@ -7,7 +7,7 @@ require("neotest").setup({
         force_default = true,
     },
     adapters = {
-        require("neotest-rust"),
+        require('rustaceanvim.neotest'),
         require("neotest-python")({
             python = "venv/bin/python",
             is_test_file = function(file_path)

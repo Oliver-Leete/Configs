@@ -124,7 +124,7 @@ require("lazy").setup(
         {
             "neovim/nvim-lspconfig",
             dependencies = {
-                { "simrat39/rust-tools.nvim" },
+                { "mrcjkb/rustaceanvim" },
                 { "SmiteshP/nvim-navic" },
                 { "DNLHC/glance.nvim" },
                 { "yioneko/nvim-type-fmt" },
@@ -156,7 +156,10 @@ require("lazy").setup(
         },
         {
             "nvim-neotest/neotest",
-            dependencies = { { "rouge8/neotest-rust" }, { "nvim-neotest/neotest-python" } },
+            dependencies = {
+                { "mrcjkb/rustaceanvim" },
+                { "nvim-neotest/neotest-python" },
+            },
             config = function() require("user.testing") end
         },
         {

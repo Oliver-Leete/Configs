@@ -4,7 +4,7 @@ return {
     "user.run_bins",
     "user.runners",
     "user.misc",
-    "user.rustables",
+    -- "user.rustables",
     "user.platformio",
     "user.julia",
     "user.python",

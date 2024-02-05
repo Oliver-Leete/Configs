@@ -4,9 +4,9 @@ vim.g.lsp_lens_on = true
 
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-  opts = opts or {}
-  opts.border = opts.border or Border
-  return orig_util_open_floating_preview(contents, syntax, opts, ...)
+    opts = opts or {}
+    opts.border = opts.border or Border
+    return orig_util_open_floating_preview(contents, syntax, opts, ...)
 end
 
 require("mason-tool-installer").setup({
@@ -272,33 +272,6 @@ lspconfig.texlab.setup({
                 modifyLineBreaks = true,
             }
         },
-    },
-})
-
-require("rust-tools").setup({
-    server = {
-        capabilities = capabilities,
-        flags = { debounce_text_changes = 1000 },
-        standalone = true,
-        settings = {
-            ["rust-analyzer"] = {
-                checkOnSave = {
-                    command = { "cargo", "clippy" },
-                },
-            },
-        }
-    },
-    tools = {
-        executor = require("rust-tools/executors").overseer,
-        inlay_hints = {
-            auto = false
-        },
-    },
-    dap = {
-        adapter = require("rust-tools.dap").get_codelldb_adapter(
-            "/home/oleete/.local/share/nvim/mason/bin/codelldb",
-            "/home/oleete/.local/share/nvim/mason/packages/codelldb/extension/lldb/lib/liblldb.so"
-        ),
     },
 })
 

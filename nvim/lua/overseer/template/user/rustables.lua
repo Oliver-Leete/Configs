@@ -1,5 +1,6 @@
-local rt = require("rust-tools")
-
+-- FIX: This should be updated to work with rustables
+-- local rt = require("rust-tools")
+--
 local function getCommand(result)
     local ret = {}
     local args = result.args
@@ -51,3 +52,4 @@ return {
         end
     }
 }
+

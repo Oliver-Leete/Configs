@@ -418,7 +418,11 @@ local overseer = require("overseer")
 Map("n", "<leader>n", "<cmd>OverseerRun<cr>")
 Map("n", "<leader>N", function()
     local tasks = overseer.list_tasks({ recent_first = true })
-    if vim.tbl_isempty(tasks) then
+    local bufnr = vim.api.nvim_get_current_buf()
+    local task = vim.tbl_filter(function(t) return (t.strategy.bufnr == bufnr) end, tasks)[1]
+    if task then
+        overseer.run_action(task, "restart")
+    elseif vim.tbl_isempty(tasks) then
         vim.notify("No tasks found", vim.log.levels.WARN)
     else
         overseer.run_action(tasks[1], "restart")
@@ -529,6 +533,7 @@ vim.cmd([[snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virt
 
 Map({ "i", "s", "c" }, "<c-a>", "<HOME>")
 Map({ "i", "s", "c" }, "<c-e>", "<END>")
+Map({ "i", "s" }, "<c-k>", "<c-o>d$")
 
 Map({ "i", "s" }, "<c-]>", "<plug>luasnip-next-choice")
 Map({ "i", "s", "c" }, "<c-space>", function() _G.cmp_toggle() end)

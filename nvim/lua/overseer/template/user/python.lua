@@ -237,7 +237,7 @@ return {
                 builder = function()
                     return {
                         name = "Make dependency graph",
-                        cmd = "pydeps scintilla_control/scintilla_control.py",
+                        cmd = "pydeps scintilla_control/__init__.py",
                         components = { "default", "unique" }
                     }
                 end,

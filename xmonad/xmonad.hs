@@ -490,7 +490,6 @@ myManageHook n =
             , resource  =? "gnome-calculator"         -?> doCenterFloat
             , className =? "GCal"                     -?> doRectFloat bigFloat
             , className =? "WrkGCal"                  -?> doRectFloat bigFloat
-            , className =? "Toggl Desktop"            -?> doRectFloat (W.RationalRect (3/8) (1/8) (1/4) (3/4))
             , resource  =? "sysMon"                   -?> doRectFloat (W.RationalRect (1/8) (1/8) (3/4) (3/4))
             , resource  =? "wsHarpoon"                -?> doRectFloat (W.RationalRect (1/4) (1/4) (2/4) (2/4))
             , resource  =? "console"                  -?> doRectFloat (W.RationalRect (4/7) (4/7) (2/5) (2/5))
