@@ -30,6 +30,11 @@ require("edgy").setup({
             open = "OverseerQuickAction open",
         },
         {
+            ft = "NoiceHistory",
+            title = " Log",
+            open = function() require("user.myfuncs").toggle_noice() end,
+        },
+        {
             ft = "neotest-output-panel",
             title = " Test Output",
             open = function()

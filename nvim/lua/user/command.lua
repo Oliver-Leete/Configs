@@ -63,7 +63,9 @@ commander.add({
     { cat = "file",    desc = "File explorer",        cmd = function() require("mini.files").open() end },
     { cat = "file",    desc = "New file",             cmd = genghis.createNewFile },
     { cat = "file",    desc = "Rename file",          cmd = genghis.renameFile },
+    { cat = "file",    desc = "Move file",            cmd = genghis.moveAndRenameFile },
     { cat = "file",    desc = "Copy file",            cmd = genghis.duplicateFile },
+    { cat = "file",    desc = "Move file to subdir",  cmd = genghis.moveToFolderInCwd },
     { cat = "file",    desc = "Make file executable", cmd = genghis.chmodx },
     { cat = "file",    desc = "Trash file",           cmd = function() genghis.trashFile({trashCmd = "trash-put"}) end},
     {

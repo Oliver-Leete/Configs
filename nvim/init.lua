@@ -35,8 +35,6 @@ require("lazy").setup(
         {
             "echasnovski/mini.nvim",
             dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
-            config = function()
-            end
         },
         { "ap/vim-you-keep-using-that-word" },
         { "ralismark/opsort.vim",           dependencies = { "tpope/vim-repeat" } },
@@ -92,8 +90,14 @@ require("lazy").setup(
         {
             "folke/edgy.nvim",
             config = function() require("user.panels") end,
-            dependencies = {"ariel-frischer/bmessages.nvim"},
+            dependencies = { "ariel-frischer/bmessages.nvim" },
         },
+        {
+            "folke/noice.nvim",
+            dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
+            config = function() require("user.noice") end,
+        },
+
         {
             "folke/todo-comments.nvim",
             dependencies = { "nvim-lua/plenary.nvim" },
@@ -263,7 +267,7 @@ require("lazy").setup(
             dependencies = {
                 { "cshuaimin/ssr.nvim" },
                 { "ThePrimeagen/refactoring.nvim" },
-                { "CKolkey/ts-node-action",          dependencies = { "tpope/vim-repeat" } },
+                { "CKolkey/ts-node-action",       dependencies = { "tpope/vim-repeat" } },
                 { "drybalka/tree-climber.nvim" },
                 { "Wansmer/treesj" },
                 { "Wansmer/binary-Swap.nvim" },

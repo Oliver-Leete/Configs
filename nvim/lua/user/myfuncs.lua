@@ -28,6 +28,7 @@ M.special_types = {
     ["neotest-output-panel"] = { exit_func = edgy_bot },
     ["neotest-output"] = { exit_func = winclose },
     ["gitcommit"] = { exit_func = winclose },
+    ["NoiceHistory"] = { exit_func = edgy_bot },
     ["mason"] = { exit_func = winclose },
     ["null-ls-info"] = { exit_func = winclose },
     ["Glance"] = { exit_func = require('glance').actions.close },
@@ -226,6 +227,22 @@ vim.api.nvim_create_user_command("Navigateleft", function() M.nav_dir("h") end, 
 vim.api.nvim_create_user_command("Navigatebottom", function() M.nav_dir("j") end, { nargs = 0 })
 vim.api.nvim_create_user_command("Navigatetop", function() M.nav_dir("k") end, { nargs = 0 })
 vim.api.nvim_create_user_command("Navigateright", function() M.nav_dir("l") end, { nargs = 0 })
+
+M.toggle_noice = function()
+    local oldbufnr = vim.api.nvim_get_current_buf()
+    for _, winnr in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if vim.api.nvim_win_is_valid(winnr) then
+            local bufnr = vim.api.nvim_win_get_buf(winnr)
+            if vim.bo[bufnr].filetype == "NoiceHistory" then
+                vim.api.nvim_win_close(winnr, true)
+            end
+        end
+    end
+    require("noice").cmd("history")
+    if oldbufnr ~= vim.api.nvim_get_current_buf() then
+        vim.bo.filetype = "NoiceHistory"
+    end
+end
 
 
 TabNext = function()

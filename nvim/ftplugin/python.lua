@@ -10,7 +10,6 @@ Map({"n"}, "gz", function()
     path = vim.fs.dirname(path)
     for name, type in vim.fs.dir(path) do
         if vim.fs.basename(name) == "__init__.py" then
-            vim.notify(name)
             vim.cmd.edit({ args = { path .. "/" ..name } })
             return
         end

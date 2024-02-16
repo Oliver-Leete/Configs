@@ -130,6 +130,12 @@ local recession_wrapper = function()
     end
 end
 
+local noice_wrapper = function()
+    local message = require("noice").api.status.message.get()
+    return message:sub(1, 80)
+end
+
+
 local grapple = function()
     return "󱡅 "
 end
@@ -214,11 +220,21 @@ require("lualine").setup({
         },
         lualine_c = {
             {
+                noice_wrapper,
+                cond = require("noice").api.status.message.has,
+                on_click = function() vim.defer_fn(function() vim.cmd("Noice") end, 100) end,
+            },
+            {
                 require("dap").status,
                 on_click = function() vim.defer_fn(require("dap").continue, 100) end,
             }
         },
         lualine_x = {
+            {
+                require("noice").api.status.mode.get,
+                cond = require("noice").api.status.mode.has,
+                color = { fg = "#ff9e64" },
+            },
         },
         lualine_y = {
             {

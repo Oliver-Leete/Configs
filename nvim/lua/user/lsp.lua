@@ -77,8 +77,6 @@ local custom_attach = function(client, bufnr)
         sc.referencesProvider = false
     elseif client.name == "texlab" then
         sc.documentFormattingProvider = false
-    elseif client.name == "sourcery" then
-        sc.codeLensProvider = false
     end
 
     if sc.documentSymbolProvider then
@@ -197,16 +195,6 @@ lspconfig.ruff_lsp.setup(
         }
     }
 )
-lspconfig.sourcery.setup({
-    -- on_attach = custom_attach,
-    capabilities = capabilities,
-    flags = { debounce_text_changes = 1000 },
-    init_options = {
-        -- token = require("user.secrets").sourcery,
-        extension_version = "vim.lsp",
-        editor_version = "vim",
-    },
-})
 
 
 lspconfig.jsonls.setup({
