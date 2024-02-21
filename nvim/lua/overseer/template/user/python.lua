@@ -52,6 +52,26 @@ return {
         table.insert(
             ret,
             {
+                name = "Run debug_full.py",
+                builder = function()
+                    return {
+                        name = "Running debug_full.py",
+                        cmd = "python debug_full.py",
+                        components = { "default", "unique" }
+                    }
+                end,
+                condition = {
+                    callback = function()
+                        return files.exists("debug_full.py")
+                    end
+
+                },
+                priority = 1,
+            }
+        )
+        table.insert(
+            ret,
+            {
                 name = "Profile main.py",
                 builder = function()
                     return {

@@ -1,0 +1,6 @@
+quitOnTopLevelReturn: true
+gui:
+  sidePanelWidth: 0.2
+git:
+  paging:
+    externalDiffCommand: difft --color=always --display=side-by-side-show-both

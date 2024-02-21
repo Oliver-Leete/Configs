@@ -6,8 +6,10 @@
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# OPTIONS_GHC -Wno-missing-fields #-}
+import           Control.Monad                          ((<=<))
 import qualified Data.Map                               as M
 import           Data.Monoid
+import           Data.List                              (sortBy)
 import           Graphics.X11.Types
 import qualified Graphics.X11.Xinerama                  as X11
 import qualified Graphics.X11.Xlib                      as X11
@@ -19,9 +21,9 @@ import           XMonad.Actions.CycleWS                 (nextScreen,
                                                          shiftNextScreen)
 import           XMonad.Actions.CycleWSLocal
 import           XMonad.Actions.DynamicProjectsLocal
-import           XMonad.Actions.DynamicWorkspaces
 import           XMonad.Actions.Navigation2D
 import           XMonad.Actions.PerWindowKeys
+import           XMonad.Actions.ProfilesLocal
 import           XMonad.Actions.SpawnOn
 import           XMonad.Actions.SwapPromote
 import           XMonad.Actions.UpdateFocus
@@ -41,20 +43,25 @@ import           XMonad.Hooks.StatusBar
 import           XMonad.Hooks.StatusBar.PP
 import           XMonad.Hooks.WorkspaceHistory          (workspaceHistoryHookExclude)
 
+import           XMonad.Layout.Decoration
 import           XMonad.Layout.DraggingVisualizer
+import           XMonad.Layout.FocusTracking
 import           XMonad.Layout.MultiToggle
 import           XMonad.Layout.MultiToggle.Instances
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Notebook
 import           XMonad.Layout.PerScreen
 import           XMonad.Layout.PerWorkspace
-import           XMonad.Layout.SimpleDecoration
 import           XMonad.Layout.SimpleFocus
 import           XMonad.Layout.Spacing
 import           XMonad.Layout.TwoPanePersistentLocal
 import           XMonad.Layout.WindowSwitcherDecoration
 
-import           XMonad.Layout.Decoration
+
+import           XMonad.Prompt
+import           XMonad.Prompt.FuzzyMatch
+import           XMonad.Prompt.XMonad
+
 import           XMonad.Util.ClickableWorkspaces
 import           XMonad.Util.Cursor
 import           XMonad.Util.EZConfig
@@ -62,6 +69,7 @@ import           XMonad.Util.Hacks
 import           XMonad.Util.NamedScratchpadLocal
 import           XMonad.Util.Paste                      as P
 import           XMonad.Util.SpawnOnce
+import           XMonad.Util.WorkspaceCompare
 
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
@@ -70,10 +78,11 @@ main :: IO ()
 main = do
     numberOfScreens <- getScreens
     xmonad
-        $ dynamicProjects (projects numberOfScreens)
+        $ dynamicProjects projects
         $ withNavigation2DConfig myNav2DConf
         $ dynamicSBs barSpawner
         $ ewmh
+        $ addProfilesWithHistory myProfileConfig
         $ docks (myConfig numberOfScreens)
 
 myConfig n = def
@@ -82,7 +91,7 @@ myConfig n = def
         , focusFollowsMouse  = True
         , normalBorderColor  = background
         , focusedBorderColor = active
-        , manageHook         = myManageHook n
+        , manageHook         = myManageHook
         , handleEventHook    = myHandleEventHook
         , layoutHook         = myLayoutHook
         , logHook            = myLogHook
@@ -107,37 +116,27 @@ getScreens = do
 -- Workspaces                                                                                     --
 ----------------------------------------------------------------------------------------------------
 
-projects :: Int -> [Project]
-projects n =
-    [ Project { pName = "Tmp",        pDir = "/tmp",                                pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = Just $ return () }
-    , Project { pName = "Tmp2",       pDir = "/tmp",                                pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = Just $ return () }
+projects :: [Project]
+projects =
+    [ Project { pName = "M",       pDir = "~/.config",                           pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = tBSpawn "M" persB}
 
-    , Project { pName = "Home",       pDir = "~/PersonalDrive",                     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = browSpawn persBrowser}
-    , Project { pName = "CodeTuts",   pDir = "~/Projects/rustBook",                 pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = termBrowSpawn "CodeTuts" persBrowser}
-    , Project { pName = "Print",      pDir = "~/Projects/Printing",                 pApp1 = prusa,    pApp1F = prusaF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = oneSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer" }
-    , Project { pName = "Games",      pDir = "~/Documents",                         pApp1 = steam,    pApp1F = steamF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = oneSpawn "Games" "steam" }
-    , Project { pName = "Films",      pDir = "~/Videos/films",                      pApp1 = kitty,    pApp1F = kittyF,    pApp2 = mpv,       pApp2F = mpvF,      pApp3 = deluge,    pApp3F = delugeF,   pApp4 = browser filmBrowser, pApp4F = browserForce filmBrowser, pStart = filmSpawn "Films" }
-    , Project { pName = "Dnd",        pDir = "~/Projects/Rpgs",                     pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pApp4 = browser rpgsBrowser, pApp4F = browserForce rpgsBrowser, pStart = browSpawn rpgsBrowser}
+    , Project { pName = "Tmp",        pDir = "/tmp",                                pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return () }
+    , Project { pName = "Print",      pDir = "~/Projects/Printing",                 pApp1 = prusa, pApp1F = prusaF, pApp4 = br persB, pApp4F = brF persB, pStart = oSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer" }
+    , Project { pName = "Games",      pDir = "~/Documents",                         pApp1 = steam, pApp1F = steamF, pApp4 = br persB, pApp4F = brF persB, pStart = oSpawn "Games" "steam" }
+    , Project { pName = "Films",      pDir = "~/Videos/films",                      pApp1 = kitty, pApp1F = kittyF, pApp2 = mpv,       pApp2F = mpvF,      pApp3 = deluge,    pApp3F = delugeF,   pApp4 = br filmB, pApp4F = brF filmB, pStart = fSpawn "Films" }
+    , Project { pName = "Dnd",        pDir = "~/Projects/Rpgs",                     pApp1 = kitty, pApp1F = kittyF, pApp2 = zathura,   pApp2F = zathuraF,  pApp4 = br rpgsB, pApp4F = brF rpgsB, pStart = bSpawn rpgsB}
 
-    , Project { pName = "Configs",    pDir = "~/.config",                           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = termBrowSpawn "Configs" persBrowser}
-    , Project { pName = "QMK",        pDir = "~/Projects/qmk_firmware",             pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = termBrowSpawn "QMK" persBrowser}
-    , Project { pName = "ZMK",        pDir = "~/Projects/zmk-config",               pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser persBrowser, pApp4F = browserForce persBrowser, pStart = termBrowSpawn "ZMK" persBrowser}
+    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",            pApp1 = kitty, pApp1F = kittyF, pApp2 = zathura,   pApp2F = zathuraF,  pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Thesis" workB}
+    , Project { pName = "Sim",        pDir = "~/Projects/HSSSimulations",           pApp1 = kitty, pApp1F = kittyF, pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Sim" workB}
+    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",            pApp1 = kitty, pApp1F = kittyF, pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Exp" workB}
+    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",           pApp1 = kitty, pApp1F = kittyF, pApp2 = zathura,   pApp2F = zathuraF,  pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Scripts" workB}
 
-    , Project { pName = "Wrk",        pDir = "~/UniDrive",                          pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = browSpawn workBrowser}
-    , Project { pName = "WrkNotes",   pDir = "~/Projects/Thesis/Notes",             pApp1 = obsidian, pApp1F = obsidianF, pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = return (), pApp3F = return (), pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = oneSpawn "WrkNotes" "flatpak run md.obsidian.Obsidian" }
-    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",            pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = termBrowSpawn "Thesis" workBrowser}
-    , Project { pName = "Sim",        pDir = "~/Projects/HSSSimulations",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = termBrowSpawn "Sim" workBrowser}
-    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",            pApp1 = kitty,    pApp1F = kittyF,    pApp2 = return (), pApp2F = return (), pApp3 = return (), pApp3F = return (), pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = termBrowSpawn "Exp" workBrowser}
-    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = hdfview,   pApp3F = hdfviewF,  pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = termBrowSpawn "Scripts" workBrowser}
-    , Project { pName = "Comments",   pDir = "~/Projects/Thesis/thesis",            pApp1 = kitty,    pApp1F = kittyF,    pApp2 = zathura,   pApp2F = zathuraF,  pApp3 = foxit,     pApp3F = foxitF,    pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = commentSpawn "Comments" }
-    , Project { pName = "ANSYS",      pDir = "~/Projects/ANSYSpowderModel",         pApp1 = kitty,    pApp1F = kittyF,    pApp2 = paraview,  pApp2F = paraviewF, pApp3 = return (), pApp3F = return (), pApp4 = browser workBrowser, pApp4F = browserForce workBrowser, pStart = termBrowSpawn "ANSYS" workBrowser}
-
-    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura,   pApp3F = zathuraF,  pApp4 = browser scinBrowser, pApp4F = browserForce scinBrowser, pStart = termBrowSpawn "Scin-Main" scinBrowser}
-    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys",       pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura,   pApp3F = zathuraF,  pApp4 = browser scinBrowser, pApp4F = browserForce scinBrowser, pStart = termBrowSpawn "Scin-Print" scinBrowser}
-    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware",       pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura,   pApp3F = zathuraF,  pApp4 = browser scinBrowser, pApp4F = browserForce scinBrowser, pStart = termBrowSpawn "Scin-Firm" scinBrowser}
-    , Project { pName = "Scin-Heat",  pDir = "~/Projects/Scintilla/HCPCB/firmware", pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura,   pApp3F = zathuraF,  pApp4 = browser scinBrowser, pApp4F = browserForce scinBrowser, pStart = termBrowSpawn "Scin-Heat" scinBrowser}
-    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura,   pApp3F = zathuraF,  pApp4 = browser scinBrowser, pApp4F = browserForce scinBrowser, pStart = termBrowSpawn "Scin-Docs" scinBrowser}
-    , Project { pName = "Scin-Test",  pDir = "~/Projects/Scintilla/Main",           pApp1 = kitty,    pApp1F = kittyF,    pApp2 = scinCont,  pApp2F = sintContF, pApp3 = zathura,   pApp3F = zathuraF,  pApp4 = browser scinBrowser, pApp4F = browserForce scinBrowser, pStart = Just $ return () }
+    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",           pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br scinB, pApp4F = brF scinB, pStart = tBSpawn "Scin-Main" scinB}
+    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys",       pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br scinB, pApp4F = brF scinB, pStart = tBSpawn "Scin-Print" scinB}
+    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware",       pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br scinB, pApp4F = brF scinB, pStart = tBSpawn "Scin-Firm" scinB}
+    , Project { pName = "Scin-Heat",  pDir = "~/Projects/Scintilla/HCPCB/firmware", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br scinB, pApp4F = brF scinB, pStart = tBSpawn "Scin-Heat" scinB}
+    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",           pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br scinB, pApp4F = brF scinB, pStart = tBSpawn "Scin-Docs" scinB}
+    , Project { pName = "Scin-Test",  pDir = "~/Projects/Scintilla/Main",           pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br scinB, pApp4F = brF scinB, pStart = Just $ return () }
     ]
     where
         kitty  = upPointer $ Wgl.runOrRaiseNext "kitty" (className =? "kitty")
@@ -145,37 +144,64 @@ projects n =
 
         sameForce r c = (upPointer $ Wgl.runOrRaiseNext r (className =? c), upPointer $ spawn r)
         (zathura, zathuraF)   = sameForce "zathura" "Zathura"
-        (foxit, foxitF)       = sameForce "foxitreader" "Foxit Reader"
-        (obsidian, obsidianF) = sameForce "flatpak run org.paraview.Paraview" "ParaView"
         (prusa, prusaF)       = sameForce "flatpak run com.prusa3d.PrusaSlicer" "PrusaSlicer"
-        (paraview, paraviewF) = sameForce "flatpak run org.paraview.Paraview" "ParaView"
         (mpv, mpvF)           = sameForce "mpv /home/oleete/Videos/films/*" "mpv"
         (deluge, delugeF)     = sameForce "deluge" "Deluge-gtk"
         (steam, steamF)       = sameForce "steam" "Steam"
-        (hdfview, hdfviewF)   = sameForce "hdfview" "SWT"
         scinStart             = "cd /home/oleete/Projects/Scintilla/Main; .venv/bin/python main.py"
-        (scinCont, sintContF) = (upPointer $ Wgl.runOrRaiseNext scinStart (title =? "Scintilla Control"), upPointer $ spawn scinStart)
+        (scinCont, scinContF) = (upPointer $ Wgl.runOrRaiseNext scinStart (title =? "Scintilla Control"), upPointer $ spawn scinStart)
 
-        persBrowser  = "google-chrome-stable-Configs"
-        workBrowser  = "google-chrome-stable-Thesis"
-        scinBrowser  = "google-chrome-stable-Scin-Main"
-        rpgsBrowser  = "google-chrome-stable-Dnd"
-        filmBrowser  = "google-chrome-stable-Films"
-        browser na   = bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ browserSpawn na)
-        browserSpawn na = Wgl.raiseNextMaybeCustomFocus2 bringWindow (browserForce na) (className =? na)
-        browserForce na = upPointer $ spawn (myBrowserClass ++ " --class=" ++ na ++ " --user-data-dir=/home/oleete/.config/browser/" ++ na)
+        persB  = "google-chrome-stable-Configs"
+        workB  = "google-chrome-stable-Thesis"
+        scinB  = "google-chrome-stable-Scin-Main"
+        rpgsB  = "google-chrome-stable-Dnd"
+        filmB  = "google-chrome-stable-Films"
+        br na   = bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ brS na)
+        brS na = Wgl.raiseNextMaybeCustomFocus2 bringWindow (brF na) (className =? na)
+        brL na = Wgl.raiseNextMaybeCustomFocus3 (brF na) (className =? na)
+        brF na = upPointer $ spawn (myBrowserClass ++ " --class=" ++ na ++ " --user-data-dir=/home/oleete/.config/browser/" ++ na)
 
         sl i = "sleep .1; " ++ i
-        termBrowSpawn ws na = Just $ do spawnOn ws myTerminal; browserSpawn na
-        browSpawn na = Just $ do browserSpawn na
-        oneSpawn ws app = Just $ do spawnOn ws $ sl app
-        commentSpawn ws = if n > 1
-            then Just $ spawnOn ws $ sl "sleep .4; foxitreader"
-            else Just $ do spawnOn ws $ sl myTerminal; spawnOn ws ("sleep .2; " ++ myBrowser); spawnOn ws $ sl "sleep .4; foxitreader"
-        filmSpawn ws = Just $ do spawnOn ws $ sl myBrowser; spawnOn ws ("sleep .2; " ++ myTerminal); spawnOn ws $ sl "deluge"
+        tBSpawn ws na = Just $ do spawnOn ws myTerminal; brL na
+        bSpawn na = Just $ do brL na
+        oSpawn ws app = Just $ do spawnOn ws $ sl app
+        fSpawn ws = Just $ do spawnOn ws $ sl myBrowser; spawnOn ws ("sleep .2; " ++ myTerminal); spawnOn ws $ sl "deluge"
 
 myWorkspaces :: [[Char]]
-myWorkspaces = map pName (projects 1)
+myWorkspaces = map pName projects
+
+myProfileConfig :: ProfileConfig
+myProfileConfig = def
+    { profiles = myProfiles
+    , startingProfile = "M"
+    , workspaceExcludes = ["NSP"]
+    }
+
+myProfiles :: [Profile]
+myProfiles =
+    [ Profile { profileId = "Home"
+              , profileWS = [ "M"
+                            , "Tmp"
+                            , "Films"
+                            , "Games"
+                            ]
+              }
+    , Profile { profileId = "Scintilla"
+              , profileWS = [ "M"
+                            , "Scin-Main"
+                            , "Scin-Test"
+                            ]
+              }
+    , Profile { profileId = "Thesis"
+              , profileWS = [ "M"
+                            , "Thesis"
+                            , "Sim"
+                            , "Scripts"
+                            , "Exp"
+                            ]
+              }
+    ]
+
 
 ----------------------------------------------------------------------------------------------------
 -- Applications                                                                                   --
@@ -203,11 +229,12 @@ scratchpads =
 -- Theme                                                                                          --
 ----------------------------------------------------------------------------------------------------
 background, foreground, dull, active, yellow :: [Char]
-background = "#0F0F15"
+background = "#1a1a22"
 foreground = "#C8C093"
 dull       = "#54546D"
 active     = "#7E9CD8"
 yellow     = "#DCA561"
+green      = "#76946A"
 
 -- sizes
 gap    = 3
@@ -235,6 +262,25 @@ myDecoTheme = def
     , activeBorderColor = active
     , activeTextColor = active
     , decoHeight = 6
+    }
+
+myPromptConfig = def
+    { font                  = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true"
+    , bgColor               = background
+    , fgColor               = foreground
+    , bgHLight              = background
+    , fgHLight              = active
+    , borderColor           = active
+    , promptBorderWidth     = 3
+    , alwaysHighlight       = True
+    , maxComplColumns       = Just 1
+    , maxComplRows          = Just 15
+    , height                = 35
+    , position              = CenteredAt (1 / 2) (1 / 8)
+    , searchPredicate       = fuzzyMatch
+    , autoComplete          = Nothing
+    , prevCompletionKey     = (shiftMask, xK_Tab)
+    , complCaseSensitivity  = CaseInSensitive
     }
 
 ----------------------------------------------------------------------------------------------------
@@ -265,6 +311,8 @@ twoPane :: ModifiedLayout Spacing TwoPanePersistent a
 twoPane = mySpacing $ TwoPanePersistent Nothing reSize (1/2)
 
 myLayoutHook = smartBorders
+             $ refocusLastLayoutHook
+             $ focusTracking
              $ mkToggle (single MIRROR)
              $ mkToggle (single FULL)
              $ mkToggle (single FULLBAR)
@@ -273,21 +321,19 @@ myLayoutHook = smartBorders
              $ draggingVisualizer
              $ mkToggle (single TWOPANE)
              $ mySpacing
-               notebookLayout
+              notebookLayout
     where
     myDeco = windowSwitcherDecoration shrinkText myDecoTheme
 
-    notebookMulti   = Notebook True False True 1 2 moreReSize reSize 3 (2/3) 1
-    notebookThesis  = Notebook True False True 1 3 moreReSize reSize 2 (2/3) 1
-    notebookTwoMain = Notebook False False True 2 3 moreReSize reSize 3 (2/3) 1
-    notebookColumns = Notebook False False True 4 4 moreReSize reSize 2 (2/3) 1
+    oneCol   = Notebook True False True 1 2 moreReSize reSize 3 (2/3) 1
+    twoCol  = Notebook True False True 1 3 moreReSize reSize 2 (2/3) 1
 
     notebookDND = Notebook False False True 4 4 moreReSize reSize 2 (2/3) 0.5
 
-    notebookDifferent = onWorkspaces ["Dnd"] notebookDND $ onWorkspaces ["Thesis", "Print"] notebookThesis $ onWorkspaces ["Comments"] notebookTwoMain notebookMulti
+    notebookDifferent = onWorkspaces ["Dnd"] notebookDND $ onWorkspaces ["Thesis", "Print"] twoCol oneCol
 
     notebookLaptop = Notebook False False False 1 2 moreReSize reSize 2 (2/3) 1
-    notebookLayout = ifWider 1920 (onWorkspaces ["Tmp", "Tmp2", "Home", "Wrk"] notebookColumns notebookDifferent) notebookLaptop
+    notebookLayout = ifWider 1920 notebookDifferent notebookLaptop
 
 ----------------------------------------------------------------------------------------------------
 -- Keybindings                                                                                    --
@@ -301,7 +347,7 @@ myModMask = mod4Mask
 -- ┏━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┓                                   ┏━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┓
 -- ┃   -   ┃fullWin┃proFind┃cmdPale┃   -   ┃                                   ┃winDown┃winRght┃clseCpy┃ float ┃   -   ┃
 -- ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫                                   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
--- ┃  ws1  ┃  ws2  ┃  ws3  ┃  ws4  ┃ wsCONF┃                                   ┃winLeft┃  app1 ┃  app2 ┃  app3 ┃  app4 ┃
+-- ┃  pws1 ┃  pws2 ┃  pws3 ┃  pws4 ┃  pws0 ┃                                   ┃winLeft┃  app1 ┃  app2 ┃  app3 ┃  app4 ┃
 -- ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┳━━━━━━━┓   ┏━━━━━━━┳━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
 -- ┃fullScr┃fullBar┃fullCen┃twoPane┃   -   ┃nspAway┃nextScr┃   ┃   -   ┃  kill ┃ winUp ┃ Master┃ decCol┃ incCol┃   -   ┃
 -- ┗━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┛
@@ -323,12 +369,12 @@ myKeys n =
     , ("<Print>"                 , spawn "/home/oleete/.config/bin/screencapt area")
 
     , ("M-p"             , spawn "/home/oleete/.config/bin/rofiScript")
-    , ("M-f"             , spawn "/home/oleete/.config/bin/wsHarpoon mainMenu")
+    , ("M-f"             , mySwitchProfilePrompt myPromptConfig)
 
     , ("M-<Esc>"         , upPointer $ sequence_ $ hideAllNamedScratchPads scratchpads)
 
 
-    , ("M-<Return>"      , bF $ nv "OpenTerm" $ l (upPointer $ spawn myTerminal))
+    , ("M-<Return>"      , upPointer $ spawn myTerminal)
     , ("M-S-<Return>"    , upPointer $ spawn myTerminal)
 
     , ("M-<Backspace>"   , bF $ nv "DeleteBuffer" $ crm (P.sendKey controlMask xK_w) $ l kill)
@@ -381,17 +427,17 @@ myKeys n =
     , ("M-S-9"           , sendMessage SShrink)
     , ("M-S-0"           , sendMessage SExpand)
 
-    , ("M-a"             , spawn "/home/oleete/.config/bin/wsHarpoon jump 1")
-    , ("M-r"             , spawn "/home/oleete/.config/bin/wsHarpoon jump 2")
-    , ("M-s"             , spawn "/home/oleete/.config/bin/wsHarpoon jump 3")
-    , ("M-t"             , spawn "/home/oleete/.config/bin/wsHarpoon jump 4")
-    , ("M-S-a"           , spawn "/home/oleete/.config/bin/wsHarpoon move 1")
-    , ("M-S-r"           , spawn "/home/oleete/.config/bin/wsHarpoon move 2")
-    , ("M-S-s"           , spawn "/home/oleete/.config/bin/wsHarpoon move 3")
-    , ("M-S-t"           , spawn "/home/oleete/.config/bin/wsHarpoon move 4")
+    , ("M-d"             , withNthProfileWorkspace 0 W.greedyView)
+    , ("M-a"             , withNthProfileWorkspace 1 W.greedyView)
+    , ("M-r"             , withNthProfileWorkspace 2 W.greedyView)
+    , ("M-s"             , withNthProfileWorkspace 3 W.greedyView)
+    , ("M-t"             , withNthProfileWorkspace 4 W.greedyView)
+    , ("M-S-d"           , withNthProfileWorkspace 0 W.shift)
+    , ("M-S-a"           , withNthProfileWorkspace 1 W.shift)
+    , ("M-S-r"           , withNthProfileWorkspace 2 W.shift)
+    , ("M-S-s"           , withNthProfileWorkspace 3 W.shift)
+    , ("M-S-t"           , withNthProfileWorkspace 4 W.shift)
 
-    , ("M-d"             , spawn "/home/oleete/.config/bin/wsHarpoon jumpName Configs")
-    , ("M-S-d"           , spawn "/home/oleete/.config/bin/wsHarpoon moveName Configs")
 
     , ("M-<Tab>"         , tabCommand)
     , ("M-S-<Tab>"       , shiftTabCommand)
@@ -410,6 +456,15 @@ myKeys n =
             then upPointer shiftNextScreen
             else upFocus $ shiftToggleWS' ["NSP"]
 
+mySwitchProfilePrompt :: XPConfig -> X()
+mySwitchProfilePrompt c = do ps <- profileIds
+                             xmonadPromptCT "Profile" (map (\p -> (p, switchToProfile p)) ps ++
+                                                          [ ("Add", addWSToProfilePrompt c)
+                                                          , ("Remove", removeWSFromProfilePrompt c)
+                                                          , ("Switch", switchProfileWSPrompt c)
+                                                          , ("Send", shiftProfileWSPrompt c)
+                                                          ]
+                                                      ) c
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {} = M.fromList
@@ -443,29 +498,36 @@ barSpawner :: ScreenId -> IO StatusBarConfig
 barSpawner (S sid) = pure $
   statusBarPropTo ("_XMONAD_LOG_" ++ show sid) ( "/home/oleete/.config/xmobar/xmobarLaunch " ++ show sid) myPP
 
-myPP = clickablePP $ filterOutWsPP ["NSP"] $ def
-    { ppCurrent = xmobarColor active "" . wrap ("<box type=Bottom width=2 mt=2 color=" ++ active ++ ">") "</box>"
-    , ppVisible = xmobarColor active ""
-    , ppHidden  = xmobarColor dull  ""
-    , ppTitle   = xmobarColor foreground "" . wrap ("<box type=Bottom width=2 mt=2 color=" ++ yellow ++ "><fc=" ++ yellow ++ ">") "</fc></box>" . shorten 30
-    , ppLayout  = const ""
-    , ppSep = xmobarColor foreground "" " | "
-    , ppOrder = reverse
-    }
+myPP :: X PP
+myPP = do clickablePP
+          <=< excludeWSPP $ def
+            { ppCurrent = underlineMod active
+            , ppVisible = xmobarColor active ""
+            , ppHidden  = xmobarColor dull ""
+            , ppTitle   = underlineMod yellow . shorten 30
+            , ppLayout  = const ""
+            , ppSep     = xmobarColor foreground "" " | "
+            , ppExtras  = [profileLogger (clickableProf $ underlineMod green) (clickableProf $xmobarColor dull "")]
+            , ppOrder   = \(ws:_:t:p) -> t:ws:p
+            , ppSort    = do cmp <- getWsCompare
+                             return $ sortBy (\a b -> cmp (W.tag b) (W.tag a))
+            }
+    where underlineMod c = xmobarColor c "" . wrap ("<box type=Bottom width=2 mt=2 color=" ++ c ++ ">") "</box>"
+          clickableProf :: (String -> String) -> String -> String
+          clickableProf f p = xmobarAction ("/home/oleete/.cabal/bin/xmonadctl-exe profile-" ++ p) "1" $ f p
 
 myLogHook :: X ()
 myLogHook = do
     masterHistoryHook
     workspaceHistoryHookExclude ["NSP"]
-    refocusLastLogHook
     showWNameLogHook myShowWNameTheme
 
 ----------------------------------------------------------------------------------------------------
 -- New Window Actions                                                                             --
 ----------------------------------------------------------------------------------------------------
 
-myManageHook :: Int -> ManageHook
-myManageHook n =
+myManageHook :: ManageHook
+myManageHook =
         manageSpecific
     <+> manageDocks
     <+> insertPosition Master Newer
@@ -476,10 +538,10 @@ myManageHook n =
             [ resource  =? "desktop_window"           -?> doIgnore
             , resource  =? "prusa-slicer"             -?> doSink <+> insertPosition End Newer
 
-            , title =? "Scintilla Control"            -?> scinTestShift
-            , title =? "Scintilla Option Editor"      -?> doCenterFloat
-            , title =? "Scintilla Strategy Editor"    -?> doCenterFloat
-            , title =? "Scintilla Connection Manager" -?> doCenterFloat
+            , title =? "Scintilla Control"            -?> scinTestShift $ doSink <+> insertPosition End Newer
+            , title =? "Scintilla Option Editor"      -?> scinTestShift doCenterFloat
+            , title =? "Scintilla Strategy Editor"    -?> scinTestShift doCenterFloat
+            , title =? "Scintilla Connection Manager" -?> scinTestShift doCenterFloat
 
             , resource  =? "pavucontrol"              -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
             , className =? "Nm-connection-editor"     -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
@@ -491,7 +553,6 @@ myManageHook n =
             , className =? "GCal"                     -?> doRectFloat bigFloat
             , className =? "WrkGCal"                  -?> doRectFloat bigFloat
             , resource  =? "sysMon"                   -?> doRectFloat (W.RationalRect (1/8) (1/8) (3/4) (3/4))
-            , resource  =? "wsHarpoon"                -?> doRectFloat (W.RationalRect (1/4) (1/4) (2/4) (2/4))
             , resource  =? "console"                  -?> doRectFloat (W.RationalRect (4/7) (4/7) (2/5) (2/5))
             , className =? "youtubemusic"             -?> doRectFloat halfNhalf
             , className =? "discord"                  -?> doRectFloat halfNhalf
@@ -509,9 +570,7 @@ myManageHook n =
         isBrowserDialog = isDialog <&&> className =? myBrowserClass
         halfNhalf = W.RationalRect (1/4) (1/4) (1/2) (1/2)
         bigFloat = W.RationalRect (1/8) (1/8) (3/4) (3/4)
-        scinTestShift = if n >= 2
-            then doShift "Scin-Test"
-            else doSink <+> insertPosition End Newer
+        scinTestShift pos = doShift "Scin-Test" <+> pos
 
 ----------------------------------------------------------------------------------------------------
 -- HangleEventHook                                                                                --
@@ -521,6 +580,7 @@ myHandleEventHook :: Event -> X All
 myHandleEventHook = handleEventHook def
                 <+> XMonad.Util.Hacks.windowedFullscreenFixEventHook
                 <+> myServerModeEventHook
+                <+> refocusLastWhen isFloat
 
 ----------------------------------------------------------------------------------------------------
 -- Helper Functions                                                                               --
@@ -535,7 +595,7 @@ upFocus a = sequence_ [a, focusUnderPointer]
 upPointer :: X () -> X ()
 upPointer a = sequence_ [a, updatePointer (0.5, 0.5) (0.25, 0.25)]
 toggleLayout :: (Transformer t a, Typeable a) => t -> X ()
-toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle layout, focusUnderPointer ]
+toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle layout, updatePointer (0.5, 0.5) (0.25, 0.25) ]
 
 -- app bindings
 l :: Applicative f => b -> [(f Bool, b)]
@@ -560,12 +620,8 @@ myServerModeEventHook :: Event -> X All
 myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
 
 myCommands' :: [(String, X ())]
-myCommands' = myCommands ++ sendTo ++ swapTo ++ copyTo
-    where sendTo = zipM "move-to-" nums (withNthWorkspace W.shift)
-          swapTo = zipM "jump-to-" nums (withNthWorkspace W.greedyView)
-          copyTo = zipM "copy-to-" nums (withNthWorkspace copy)
-          nums = [0..(length myWorkspaces)]
-          zipM  m ks f = zipWith (\k d -> (m ++ show k, upFocus $ f d)) ks ks
+myCommands' = myCommands ++ sendTo
+    where sendTo = map (\p -> ("profile-" ++ profileId p, switchToProfile $ profileId p)) myProfiles
 
 myCommands :: [(String, X ())]
 myCommands =

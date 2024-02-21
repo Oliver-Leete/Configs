@@ -156,6 +156,7 @@ Map("x", "/", "<esc>/\\%V")
 
 Map("n", "<c-v>", "<cmd>silent vsplit<cr>")
 Map("n", "<c-x>", "<cmd>silent split<cr>")
+Map("n", "<c-t>", "<cmd>silent tabedit %<cr>")
 
 -- GOTO
 Map({ "n", "x", "o" }, "gj", "G")

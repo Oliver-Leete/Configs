@@ -19,7 +19,7 @@ require("mini.comment").setup({
     },
 })
 
-local ts_input = require('mini.surround').gen_spec.input.treesitter
+local ts_input = require("mini.surround").gen_spec.input.treesitter
 require("mini.surround").setup({
     mappings = {
         add = "yp",
@@ -28,13 +28,14 @@ require("mini.surround").setup({
         find = "gp",
         find_left = "gP",
         replace = "cp",
-        update_n_lines = '',
+        update_n_lines = "",
+        highlight = "",
     },
     n_lines = 200,
     search_method = "cover_or_nearest",
     custom_surroundings = {
         f = {
-            input = ts_input({ outer = '@call.outer', inner = '@call.inner' })
+            input = ts_input({ outer = "@call.outer", inner = "@call.inner" })
         },
         o = {
             input = ts_input({
@@ -82,10 +83,10 @@ require("mini.align").setup({
 local splitjoin = require("mini.splitjoin")
 splitjoin.setup({
     mappings = {
-        toggle = ',j',
+        toggle = ",j",
     },
     detect = {
-        separator = '[,;]',
+        separator = "[,;]",
     },
     split = {
         hooks_pre = {},
@@ -99,7 +100,7 @@ splitjoin.setup({
 })
 
 
-local hipatterns = require('mini.hipatterns')
+local hipatterns = require("mini.hipatterns")
 hipatterns.setup({
     highlighters = {
         hex_color = hipatterns.gen_highlighter.hex_color(),

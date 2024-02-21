@@ -19,6 +19,7 @@ module XMonad.Actions.WindowGoLocal (
                  raiseNextMaybe,
                  raiseNextMaybeCustomFocus,
                  raiseNextMaybeCustomFocus2,
+                 raiseNextMaybeCustomFocus3,
 
                  raiseBrowser,
                  raiseEditor,
@@ -159,8 +160,13 @@ raiseNextMaybe = raiseNextMaybeCustomFocus W.focusWindow
 raiseNextMaybeCustomFocus :: (Window -> WindowSet -> WindowSet) -> X() -> Query Bool -> X()
 raiseNextMaybeCustomFocus focusFn f qry = ifWindows qry (focusFoundWin focusFn) f
 
+-- | same as above, but just focuses the window if it is on a visible workspace
 raiseNextMaybeCustomFocus2 :: (Window -> WindowSet -> WindowSet) -> X() -> Query Bool -> X()
 raiseNextMaybeCustomFocus2 focusFn f qry = ifWindowsOld qry (focusFoundWin W.focusWindow) (focusFoundWin focusFn) f
+
+-- | If the window exists, do nothing
+raiseNextMaybeCustomFocus3 :: X() -> Query Bool -> X()
+raiseNextMaybeCustomFocus3 f qry = ifWindowsOld3 qry f
 
 focusFoundWin :: (Window -> WindowSet -> WindowSet) -> [Window] -> X ()
 focusFoundWin focusFn ws = do
@@ -222,3 +228,13 @@ ifWindowsOld qry f1 f2 el = withWindowSet $ \wins -> do
     ws -> case matches2 of
         []  -> f2 ws
         ws2 -> f1 ws2
+
+-- | If windows that satisfy the query exist, apply the supplied
+-- function to them, otherwise run the action given as
+-- second parameter.
+ifWindowsOld3 :: Query Bool -> X () -> X ()
+ifWindowsOld3 qry el = withWindowSet $ \wins -> do
+  matches <- filterM (runQuery qry) $ allWindowsSortedOld wins
+  case matches of
+    [] -> el
+    _ -> return ()

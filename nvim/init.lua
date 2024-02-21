@@ -50,6 +50,7 @@ require("lazy").setup(
             }
         },
         { "kana/vim-niceblock" },
+        { "gabrielpoca/replacer.nvim" },
 
         -- Search/Replace
         { "junegunn/vim-slash" },

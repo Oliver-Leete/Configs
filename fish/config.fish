@@ -27,15 +27,15 @@ set WORKSPACE (wmctrl -d | grep '*' | awk "{print $NF}")
 alias neovim nvim
 alias n nvrStart
 alias ne "n +LoadSession"
-alias k kak
-alias h hx
 
 alias exa "exa --colour=always --group-directories-first --icons"
 
+abbr cd z
 abbr vidir "echo 'use edir'"
 abbr rm "echo use trm"
 abbr trm "trash-put -i"
 abbr redir "fd -HLI | edir"
+abbr dust "dua i"
 
 
 abbr mv "mv -iv"
@@ -133,4 +133,6 @@ set -g fish_pager_color_prefix $cyan
 set -g fish_pager_color_completion $foreground
 set -g fish_pager_color_description $comment
 set fish_greeting
+
+zoxide init fish | source
 # clear

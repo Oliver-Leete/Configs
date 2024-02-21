@@ -29,7 +29,8 @@ commander.add({
         cat = "tab",
         desc = "Rename Tab",
         cmd = function()
-            vim.ui.input({ prompt = "Tab Name: " }, function(i) vim.t[vim.api.nvim_get_current_tabpage()].tabname = i end)
+            vim.ui.input({ prompt = "Tab Name: " },
+                function(i) vim.t[vim.api.nvim_get_current_tabpage()].tabname = i end)
         end
     },
     { cat = "tab",     desc = "Close tab", cmd = "<cmd>tabclose<cr>" },
@@ -38,8 +39,12 @@ commander.add({
         cat = "default",
         desc = "Edit Snippets",
         cmd = function()
-            require("luasnip.loaders")
-                .edit_snippet_files({ edit = function(file) vim.cmd("vsplit " .. file) end })
+            require("luasnip.loaders").edit_snippet_files({
+                edit = function(
+                    file)
+                    vim.cmd("vsplit " .. file)
+                end
+            })
         end
     },
     { cat = "session", desc = "Add Session",    cmd = function() require("user.projects").load_session() end },
@@ -51,7 +56,11 @@ commander.add({
         cat = "buffers",
         desc = "Clean Up Buffers",
         cmd = function()
-            require('close_buffers').delete({ type = 'hidden', force = true })
+            require('close_buffers').delete({
+                type =
+                'hidden',
+                force = true
+            })
         end
     },
     { cat = "buffers", desc = "Buffers",              cmd = "<cmd>Telescope buffers theme=get_ivy<cr>" },
@@ -67,37 +76,33 @@ commander.add({
     { cat = "file",    desc = "Copy file",            cmd = genghis.duplicateFile },
     { cat = "file",    desc = "Move file to subdir",  cmd = genghis.moveToFolderInCwd },
     { cat = "file",    desc = "Make file executable", cmd = genghis.chmodx },
-    { cat = "file",    desc = "Trash file",           cmd = function() genghis.trashFile({trashCmd = "trash-put"}) end},
     {
-        cat = "finders",
-        desc = "Diagnostics",
-        cmd = "<cmd>Telescope diagnostics bufnr=0 theme=get_ivy<cr>"
+        cat = "file",
+        desc = "Trash file",
+        cmd = function()
+            genghis.trashFile({
+                trashCmd =
+                "trash-put"
+            })
+        end
     },
-    { cat = "finders", desc = "Files",               cmd = "<cmd>Telescope git_files theme=get_ivy<cr>" },
-    { cat = "finders", desc = "Grep",                cmd = "<cmd>Telescope live_grep theme=get_ivy<cr>" },
-    { cat = "finders", desc = "Old files finder",    cmd = "<cmd>Telescope oldfiles theme=get_ivy<cr>" },
-    { cat = "finders", desc = "Quickfix",            cmd = "<cmd>Telescope quickfix theme=get_ivy<cr>" },
-    {
-        cat = "finders",
-        desc = "Symbols",
-        cmd = "<cmd>Telescope lsp_document_symbols theme=get_ivy<cr>"
-    },
-    { cat = "finders", desc = "AST",                   cmd = "<cmd>Telescope ast_grep theme=get_ivy<cr>" },
-    { cat = "finders", desc = "Todo list",             cmd = "<cmd>TodoTelescope theme=get_ivy<cr>" },
-    { cat = "finders", desc = "Workspace diagnostics", cmd = "<cmd>Telescope diagnostics theme=get_ivy<cr>" },
-    {
-        cat = "finders",
-        desc = "Workspace symbols",
-        cmd = "<cmd>Telescope lsp_dynamic_workspace_symbols theme=get_ivy<cr>"
-    },
-    { cat = "settings", desc = "Options",    cmd = "<cmd>Telescope vim_options theme=get_ivy<cr>" },
-    { cat = "settings", desc = "Keymaps",    cmd = "<cmd>Telescope keymaps theme=get_ivy<cr>" },
-    { cat = "settings", desc = "Highlights", cmd = "<cmd>Telescope highlights theme=get_ivy<cr>" },
-    {
-        cat = "settings",
-        desc = "Autocommands",
-        cmd = "<cmd>Telescope autocommands theme=get_ivy<cr>"
-    },
+    { cat = "finders",   desc = "Diagnostics",                       cmd = "<cmd>Telescope diagnostics bufnr=0 theme=get_ivy<cr>" },
+    { cat = "finders",   desc = "Files",                             cmd = "<cmd>Telescope git_files theme=get_ivy<cr>" },
+    { cat = "finders",   desc = "Grep",                              cmd = "<cmd>Telescope live_grep theme=get_ivy<cr>" },
+    { cat = "finders",   desc = "Old files finder",                  cmd = "<cmd>Telescope oldfiles theme=get_ivy<cr>" },
+    { cat = "finders",   desc = "Quickfix",                          cmd = "<cmd>Telescope quickfix theme=get_ivy<cr>" },
+    { cat = "finders",   desc = "Symbols",                           cmd = "<cmd>Telescope lsp_document_symbols theme=get_ivy<cr>" },
+    { cat = "finders",   desc = "AST",                               cmd = "<cmd>Telescope ast_grep theme=get_ivy<cr>" },
+    { cat = "finders",   desc = "Todo list",                         cmd = "<cmd>TodoTelescope theme=get_ivy<cr>" },
+    { cat = "finders",   desc = "Workspace diagnostics",             cmd = "<cmd>Telescope diagnostics theme=get_ivy<cr>" },
+    { cat = "finders",   desc = "Workspace symbols",                 cmd = "<cmd>Telescope lsp_dynamic_workspace_symbols theme=get_ivy<cr>" },
+    { cat = "settings",  desc = "Options",                           cmd = "<cmd>Telescope vim_options theme=get_ivy<cr>" },
+    { cat = "settings",  desc = "Keymaps",                           cmd = "<cmd>Telescope keymaps theme=get_ivy<cr>" },
+    { cat = "settings",  desc = "Highlights",                        cmd = "<cmd>Telescope highlights theme=get_ivy<cr>" },
+    { cat = "settings",  desc = "Autocommands",                      cmd = "<cmd>Telescope autocommands theme=get_ivy<cr>" },
+    { cat = "quickfix",  desc = "Edit Quickfix",                     cmd = function() require("replacer").run({ rename_files = false, save_on_write = false }) end },
+    { cat = "quickfix",  desc = "Edit Quickfix Files",               cmd = function() require("replacer").run({ rename_files = true, save_on_write = false }) end },
+    { cat = "quickfix",  desc = "Save Quickfix Edits",               cmd = function() require("replacer").save({ save_on_write = false }) end },
     { cat = "settings",  desc = "Help",                              cmd = "<cmd>Telescope help_tags theme=get_ivy<cr>" },
     { cat = "settings",  desc = "Man pages",                         cmd = "<cmd>Telescope man_pages theme=get_ivy<cr>" },
     { cat = "settings",  desc = "Reload Module",                     cmd = "<cmd>Telescope reloader theme=get_ivy<cr>" },
@@ -135,4 +140,3 @@ commander.add({
     { cat = "settings",  desc = "Toggle autowrapping",               cmd = func.toggle_autowrap },
     { cat = "settings",  desc = "Toggle autosave",                   cmd = "<cmd>ASToggle<cr>" },
 })
-
