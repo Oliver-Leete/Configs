@@ -130,5 +130,3 @@ vim.g.project = vim.fs.basename(vim.fn.getcwd())
 vim.g.matchup_matchparen_offscreen = { method = false }
 vim.g.matchup_text_obj_enabled = false
 vim.g.matchup_mouse_enabled = false
-
-SendID = nil

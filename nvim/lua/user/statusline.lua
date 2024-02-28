@@ -154,11 +154,17 @@ local overseericon = function()
 end
 
 local is_overseer = function()
-    return vim.bo.filetype == "OverseerTask"
+    return vim.bo.buftype == "terminal" and
+        0 < #vim.tbl_filter(
+            function(t)
+                return (vim.api.nvim_get_current_buf() == vim.api.nvim_get_current_buf())
+            end,
+            overseer.list_tasks()
+        )
 end
 
 local not_overseer = function()
-    return vim.bo.filetype ~= "OverseerTask"
+    return not is_overseer()
 end
 
 require("lualine").setup({

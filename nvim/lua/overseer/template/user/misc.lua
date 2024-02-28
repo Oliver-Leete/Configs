@@ -1,72 +1,6 @@
-OvTermNum = 0
 return {
     generator = function(_, cb)
         ret = {
-            {
-                name = "Fish",
-                builder = function()
-                    OvTermNum = OvTermNum + 1
-                    return {
-                        name = "Fish " .. OvTermNum,
-                        cmd = "fish",
-                        components = { "default",
-                        },
-                    }
-                end,
-                priority = 1,
-                params = {},
-            },
-            {
-                name = "Lazygit",
-                builder = function()
-                    return {
-                        name = "lazygit",
-                        cmd = "lazygit",
-                        components = { "default", "unique",
-                        },
-                    }
-                end,
-                priority = 2,
-                params = {},
-            },
-            {
-                name = "Pomodoro",
-                builder = function()
-                    return {
-                        name = "Pomodoro",
-                        cmd = "porsmo",
-                        components = { "default", "unique" },
-                    }
-                end,
-                priority = 3,
-                params = {},
-            },
-            {
-                name = "Lazydocker",
-                builder = function()
-                    return {
-                        name = "lazydocker",
-                        cmd = "lazydocker",
-                        components = { "default", "unique",
-                        },
-                    }
-                end,
-                priority = 3,
-                params = {},
-            },
-            {
-                name = "System Info (btop)",
-                builder = function()
-                    return {
-                        name = "btop",
-                        cmd = "btop",
-                        components = { "default", "unique",
-                        },
-                    }
-                end,
-                priority = 3,
-                params = {},
-            },
             {
                 name = "Edit Directory",
                 builder = function()
@@ -141,16 +75,6 @@ return {
                         return vim.go.makeprg ~= "make"
                     end
                 }
-            },
-            {
-                name = "Open Test Outputs",
-                builder = function()
-                    require("neotest").output_panel.open()
-                    vim.cmd("edit")
-                    return { cmd = "", name = "", components = { "user.dispose_now" }, }
-                end,
-                priority = 6,
-                params = {},
             },
         }
         cb(ret)

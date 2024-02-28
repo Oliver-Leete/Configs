@@ -181,18 +181,6 @@ M.paste_special = function(reg, type, put)
     vim.fn.feedkeys(vim.api.nvim_replace_termcodes('"' .. reg .. put, true, true, true))
 end
 
-local overseer = require("overseer")
-local openterm = function()
-    local task = vim.tbl_filter(function(t) return (t.name:find("^Fish") ~= nil) end, overseer.list_tasks())[1]
-    if task then
-        overseer.run_action(task, "open")
-    else
-        vim.cmd("OverseerRun Fish")
-        vim.cmd("OverseerQuickAction open")
-    end
-end
-vim.api.nvim_create_user_command("OpenTerm", openterm, { nargs = 0 })
-
 M.toggle_autowrap = function()
     if vim.b[0].to_wrap == nil or vim.b[0].to_wrap == true then
         vim.b[0].to_wrap = false

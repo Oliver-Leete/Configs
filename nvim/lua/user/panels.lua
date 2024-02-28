@@ -16,19 +16,15 @@ require("edgy").setup({
             size = function()
                 return math.max(math.min(math.ceil(vim.api.nvim_list_uis()[1].height / 5), 40), 20)
             end
-        }
-
-    },
-    bottom = {
-        { ft = "dapui_watches", title = "Watches" },
-        { ft = "dap-repl", title = "Debug REPL" },
-        { ft = "dapui_console", title = "Debug Console" },
-        { ft = "qf", title = " QuickFix" },
-        {
-            ft = "OverseerPanelTask",
-            title = "%{%v:lua.OverseerTask()%}",
-            open = "OverseerQuickAction open",
         },
+        top = {
+            size = function()
+                return math.max(math.min(math.ceil(vim.api.nvim_list_uis()[1].height / 5), 40), 20)
+            end
+        }
+    },
+    top = {
+        { ft = "qf", title = " QuickFix" },
         {
             ft = "NoiceHistory",
             title = " Log",
@@ -41,10 +37,12 @@ require("edgy").setup({
                 vim.cmd.vsplit(); require("neotest").output_panel.toggle()
             end,
         },
-        {
-            ft = "DiffviewFileHistory",
-            title = " Diffs",
-        },
+    },
+    bottom = {
+        { ft = "dapui_watches", title = "Watches" },
+        { ft = "dap-repl", title = "Debug REPL" },
+        { ft = "dapui_console", title = "Debug Console" },
+        { ft = "DiffviewFileHistory", title = " Diffs" },
     },
     left = {
         {
@@ -55,18 +53,10 @@ require("edgy").setup({
                 return vim.bo[buf].buftype == "help"
             end,
         },
-        { ft = "dapui_scopes",      title = "Scopes" },
+        { ft = "dapui_scopes", title = "Scopes" },
         { ft = "dapui_breakpoints", title = "Breakpoints" },
-        { ft = "dapui_stacks",      title = "Stacks" },
-        {
-            ft = "DiffviewFiles",
-            title = " Diffs",
-        },
-        {
-            ft = "OverseerList",
-            title = "  Tasks",
-            open = "OverseerOpen",
-        },
+        { ft = "dapui_stacks", title = "Stacks" },
+        { ft = "DiffviewFiles", title = " Diffs" },
         {
             ft = "neotest-summary",
             title = "  Tests",

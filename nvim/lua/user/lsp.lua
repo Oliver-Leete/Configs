@@ -31,7 +31,6 @@ require("mason-tool-installer").setup({
         "rust-analyzer",
         "shellharden",
         "shfmt",
-        "sourcery",
         "taplo",
         "teal-language-server",
         "texlab",
@@ -44,25 +43,30 @@ local lspconfig = require("lspconfig")
 
 require("lspconfig.ui.windows").default_options.border = Border
 
-local default_diagnostic_config = {
-    underline = { severity = { min = "Warn", }, },
-    virtual_text = { severity = { min = "Warn", }, source = "if_many", prefix = " ", },
+vim.api.nvim_set_hl(0, "LspInlayHint", { link = "NvimDapVirtualText" })
+
+vim.diagnostic.config({
+    underline = { severity = { min = "Info", }, },
+    virtual_text = false,
     update_in_insert = false,
     severity_sort = true,
     virtual_lines = false,
-    signs = {
-        text = {
-            [vim.diagnostic.severity.ERROR] = ' ',
-            [vim.diagnostic.severity.WARN] = ' ',
-            [vim.diagnostic.severity.INFO] = ' ',
-            [vim.diagnostic.severity.HINT] = '󰅽 ',
-        },
-    }
-}
+    signs = false,
+})
 
-vim.api.nvim_set_hl(0, "LspInlayHint", { link = "NvimDapVirtualText" })
-
-vim.diagnostic.config(default_diagnostic_config)
+require("corn").setup({
+    icons = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
+    border_style = "none",
+    item_preprocess_func = function(item)
+        return item
+    end,
+    highlights = {
+        error = "DiagnosticError",
+        warn = "DiagnosticWarn",
+        info = "DiagnosticInfo",
+        hint = "DiagnosticHint",
+    },
+})
 
 local lsp_auto = vim.api.nvim_create_augroup("lsp_autocmd", { clear = true })
 
@@ -350,34 +354,6 @@ none_ls.setup({
     },
 })
 
-local toggled_diagnostic_config = {
-    underline = true,
-    virtual_text = false,
-    signs = { priority = 6 },
-    update_in_insert = false,
-    severity_sort = true,
-    virtual_lines = { only_current_line = true },
-}
-
 require("lsp_lines").setup()
-
-local clear_preview_inline = function()
-    vim.diagnostic.config(default_diagnostic_config)
-end
-
-M.preview_diagnostics_inline = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-
-    vim.diagnostic.config(toggled_diagnostic_config)
-
-    vim.api.nvim_create_autocmd({ 'CursorMoved', 'InsertEnter' }, {
-        buffer = bufnr,
-        desc = 'Clear diagnostics inline preview',
-        callback = function()
-            clear_preview_inline()
-        end,
-        once = true,
-    })
-end
 
 return M

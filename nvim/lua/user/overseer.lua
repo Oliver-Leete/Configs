@@ -3,12 +3,11 @@ local STATUS = require("overseer.constants").STATUS
 local util = require("overseer.util")
 
 local function close_task(bufnr)
+    local oldwin = vim.tbl_filter(function(t) return (t.strategy.bufnr == bufnr) end, overseer.list_tasks())[1]
     for _, winnr in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
         if vim.api.nvim_win_is_valid(winnr) then
             local winbufnr = vim.api.nvim_win_get_buf(winnr)
             if vim.bo[winbufnr].filetype == "OverseerPanelTask" then
-                local oldwin = vim.tbl_filter(function(t) return (t.strategy.bufnr == bufnr) end,
-                    overseer.list_tasks())[1]
                 if oldwin then
                     vim.api.nvim_win_close(winnr, true)
                 end
@@ -24,32 +23,28 @@ overseer.setup({
     task_win = { border = Border, win_opts = { winblend = 0, }, },
     confirm = { border = Border, win_opts = { winblend = 0, }, },
     task_list = {
-        separator = "────────────────────────────────────────────────────────────────────────────────",
+        separator = "",
         bindings = {
             ["?"] = "ShowHelp",
             ["<CR>"] = "RunAction",
             ["<C-e>"] = "Edit",
-            ["o"] = "oven vsplit",
-            ["O"] = "Open",
+            ["o"] = function() vim.cmd.wincmd({ args = { "l" } }) end,
             ["p"] = "TogglePreview",
             ["<C-l>"] = "IncreaseDetail",
             ["<C-h>"] = "DecreaseDetail",
             ["L"] = "IncreaseAllDetail",
             ["H"] = "DecreaseAllDetail",
-            ["("] = "PrevTask",
-            [")"] = "NextTask",
-            ["["] = "",
-            ["]"] = "",
+            ["["] = "PrevTask",
+            ["]"] = "NextTask",
             ["{"] = "",
             ["}"] = "",
             ["<C-v>"] = "",
             ["<C-f>"] = "OpenFloat",
             ["<esc>"] = function() overseer.close() end,
         },
-        direction = "left",
+        direction = "bottom",
+        max_height = { 40, 0.2 },
         min_height = 20,
-        height = math.floor(vim.o.lines * 0.3),
-        max_height = 40,
     },
     component_aliases = {
         default_neotest = {
@@ -72,15 +67,8 @@ overseer.setup({
     template_timeout = 5000,
     template_cache_threshold = 0,
     actions = {
-        ["open vsplit"] = false,
         ["open hsplit"] = false,
         ["set loclist diagnostics"] = false,
-        ["set as recive terminal"] = {
-            desc = "set this task as the terminal to recive sent text and commands",
-            run = function(task)
-                SendID = task.strategy.chan_id
-            end,
-        },
         ["keep runnning"] = {
             desc = "restart the task even if it succeeds",
             run = function(task)
@@ -102,42 +90,6 @@ overseer.setup({
             condition = function(task)
                 return task:has_component("on_complete_restart") or task:has_component("restart_on_save")
             end
-        },
-        ["dump task"] = {
-            desc = "save task table to DumpTask (for debugging)",
-            run = function(task)
-                DumpTask = task
-            end,
-        },
-        ["open here"] = {
-            desc = "open as bottom pannel",
-            condition = function(task)
-                local bufnr = task:get_bufnr()
-                return bufnr and vim.api.nvim_buf_is_valid(bufnr)
-            end,
-            run = function(task)
-                vim.cmd([[normal! m']])
-                close_task(task.strategy.bufnr)
-                vim.bo[task.strategy.bufnr].filetype = "OverseerTask"
-                vim.api.nvim_win_set_buf(0, task:get_bufnr())
-                vim.wo.statuscolumn = "%s"
-                util.scroll_to_end(0)
-            end,
-        },
-        ["open"] = {
-            desc = "open as bottom pannel",
-            condition = function(task)
-                local bufnr = task:get_bufnr()
-                return bufnr and vim.api.nvim_buf_is_valid(bufnr)
-            end,
-            run = function(task)
-                vim.cmd([[normal! m']])
-                close_task(task.strategy.bufnr)
-                vim.bo[task.strategy.bufnr].filetype = "OverseerPanelTask"
-                vim.cmd.vsplit()
-                vim.api.nvim_win_set_buf(0, task:get_bufnr())
-                util.scroll_to_end(0)
-            end,
         },
     },
     templates = { "cargo", "just", "make", "npm", "shell", "tox", "vscode", "mix", "rake", "task", "user" }

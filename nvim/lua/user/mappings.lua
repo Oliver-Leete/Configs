@@ -356,7 +356,7 @@ Map("x", ",rF", require("genghis").moveSelectionToNewFile)
 Map("n", ",re", "mia:lua require('refactoring').refactor('Extract Variable')<cr>", { remap = true })
 Map("x", ",re", function() require("refactoring").refactor("Extract Variable") end)
 Map({ "n", "x" }, ",ri", function() require("refactoring").refactor("Inline Variable") end)
-Map( "n" , ",rI", function() require("refactoring").refactor("Inline Function") end)
+Map("n", ",rI", function() require("refactoring").refactor("Inline Function") end)
 
 Map({ "n", "x" }, ",s", "<Plug>Opsort", { remap = true })
 
@@ -437,7 +437,6 @@ Map("n", "<leader>I", function() require("neotest").run.run_last() end)
 Map("n", "<leader>o", function() require("neotest").run.run({ strategy = "dap" }) end)
 Map("n", "<leader>O", function() require("neotest").run.run_last({ strategy = "dap" }) end)
 
-Map("n", "<leader>h", "<cmd>OverseerToggle<cr>")
 Map("n", "<leader>k", function()
     require("neotest").summary.toggle()
     local win = vim.fn.bufwinid("Neotest Summary")
@@ -446,64 +445,14 @@ Map("n", "<leader>k", function()
     end
 end)
 
-Map("n", "<leader>m", require("user.myfuncs").toggle_quickfix)
-Map("n", "<leader>.", function()
-    require("user.myfuncs").toggle_noice()
-end)
-Map("n", "<leader>,", "<cmd>OverseerQuickAction open<cr>")
-Map("n", "<leader><", "<cmd>OverseerQuickAction open here<cr>")
-Map("n", "<leader>/", function()
+Map("n", "<leader>l", require("user.myfuncs").toggle_quickfix)
+Map("n", "<leader>u", require("user.myfuncs").toggle_noice)
+Map("n", "<leader>y", function()
     vim.cmd.vsplit(); require("neotest").output_panel.toggle()
 end)
 
-Map("n", "<s-cr>", function()
-    if SendID then
-        vim.fn.chansend(SendID, vim.api.nvim_get_current_line() .. "\n")
-    else
-        vim.notify("No Term set as send term", vim.log.levels.WARN)
-    end
-end)
-
-local send_code = function(start_mark, end_mark)
-    local s_start = vim.fn.getpos(start_mark)
-    local s_end = vim.fn.getpos(end_mark)
-    local n_lines = math.abs(s_end[2] - s_start[2]) + 1
-    local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false)
-    lines[1] = string.sub(lines[1], s_start[3], -1)
-    if n_lines == 1 then
-        lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3] - s_start[3] + 1)
-    else
-        lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3])
-    end
-    local selection = table.concat(lines, '\n')
-    vim.fn.chansend(SendID, selection .. "\n")
-end
-
-Map("x", "<s-cr>", function()
-    if SendID then
-        vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<esc>", true, true, true))
-        send_code("'<", "'>")
-    else
-        vim.notify("No Term set as send term", vim.log.levels.WARN)
-    end
-end)
-
-Send_motion_internal = function(motion)
-    if SendID then
-        if motion == nil then
-            vim.go.operatorfunc = [[v:lua.Send_motion_internal]]
-            vim.api.nvim_feedkeys('g@', 'ni', false)
-        end
-        send_code("'[", "']")
-    else
-        vim.notify("No Term set as send term", vim.log.levels.WARN)
-    end
-end
-
-Map("n", "<c-cr>", function()
-    vim.go.operatorfunc = [[v:lua.Send_motion_internal]]
-    vim.api.nvim_feedkeys('g@', 'ni', false)
-end)
+Map("n", "<leader>m", "<cmd>OverseerToggle<cr>")
+Map("n", "<leader>M", "<cmd>OverseerQuickAction open vsplit<cr>")
 
 Map("n", "<leader>w",
     function() require("telescope.builtin").lsp_dynamic_workspace_symbols(require("telescope.themes").get_ivy()) end)

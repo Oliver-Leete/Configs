@@ -91,7 +91,7 @@ require("statuscol").setup({
                 },
                 fillchar = " ",
                 colwidth = 2,
-                maxwidth = 2,
+                maxwidth = 1,
             },
             click = "v:lua.ScSa",
         },
@@ -108,49 +108,3 @@ require("statuscol").setup({
     },
     clickmod = "c",
 })
-
--- local get_signs = function()
---     local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
---     return vim.tbl_map(function(sign)
---         local ret = vim.fn.sign_getdefined(sign.name)[1]
---         return ret
---     end, vim.fn.sign_getplaced(buf, { group = "*", lnum = vim.v.lnum })[1].signs)
--- end
--- StatusCol = function()
---     local cursorline = is_cursorline()
---     local hl_prefix = cursorline and "%#Cursor" or "%#"
---
---     -- local signs = vim.tbl_filter(function(s) return not s.name:find("GitSign") end, get_signs("*"))
---     local signs = get_signs2()
---
---
---     local num = vim.v.lnum
---     local num_len = string.len(num)
---     local total_len = num_len < 4 and 6 or num_len + 2
---
---     local num_out = ""
---     local sign_limit
---     if cursorline or (#signs * 2) <= (total_len - num_len) then
---         local hlnum = hl_prefix .. "LineNr#"
---         num_out = hlnum .. num
---         sign_limit = math.floor((total_len - num_len) / 2)
---     else
---         sign_limit = math.floor(total_len / 2)
---         num_len = 0
---     end
---
---     local sign_out = ""
---     for i = 1, sign_limit do
---         if signs[i] and signs[i].text then
---             local sign_hl = signs[i].texthl and hl_prefix .. signs[i].texthl .. "#" or ""
---             sign_out = sign_out .. sign_hl .. signs[i].text
---         end
---     end
---
---     local odd_space = total_len % 2 == 1 and 1 or 0
---     local sign_len = math.min(sign_limit, #signs) * 2
---     local spacing = odd_space + total_len - (num_len + sign_len)
---     local spacing_out = string.rep(" ", spacing)
---
---     return sign_out .. spacing_out .. num_out .. make_sep(hl_prefix)
--- end

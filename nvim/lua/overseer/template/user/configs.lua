@@ -7,33 +7,6 @@ return {
     generator = function(_, cb)
         cb({
             {
-                name = "Source File",
-                builder = function()
-                    vim.cmd.source(vim.fn.expand("%"))
-                    return {
-                        cmd = "",
-                        name = "",
-                        components = { "user.dispose_now" },
-                    }
-                end,
-                priority = 59,
-                params = {},
-                conditions = { filetype = "lua" }
-            },
-            {
-                name = "Source NVim Init",
-                builder = function()
-                    vim.cmd.source("/home/oleete/.config/nvim/init.lua")
-                    return {
-                        cmd = "",
-                        name = "",
-                        components = { "user.dispose_now" },
-                    }
-                end,
-                priority = 59,
-                params = {},
-            },
-            {
                 name = "Build and Reload XMonad",
                 builder = function()
                     return {

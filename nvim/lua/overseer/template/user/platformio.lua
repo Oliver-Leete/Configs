@@ -1,9 +1,8 @@
 local files = require("overseer.files")
-local TAG = require("overseer.constants").TAG
 
 return {
     condition = {
-        callback = function(opts)
+        callback = function()
             if files.exists(files.join(vim.fn.getcwd(), "platformio.ini")) then
                 return true
             end

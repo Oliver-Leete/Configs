@@ -135,6 +135,8 @@ require("lazy").setup(
                 { "DNLHC/glance.nvim" },
                 { "yioneko/nvim-type-fmt" },
                 { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
+                { "RaafatTurki/corn.nvim" },
+                { "dgagn/diagflow.nvim" },
                 { "johmsalas/text-case.nvim" },
                 { "folke/neodev.nvim" },
                 { "hrsh7th/cmp-nvim-lsp" },

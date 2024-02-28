@@ -139,4 +139,5 @@ commander.add({
     { cat = "settings",  desc = "Toggle text wraping",               cmd = "<cmd>set wrap!<cr>" },
     { cat = "settings",  desc = "Toggle autowrapping",               cmd = func.toggle_autowrap },
     { cat = "settings",  desc = "Toggle autosave",                   cmd = "<cmd>ASToggle<cr>" },
+    { cat = "settings",  desc = "Source file",                       cmd = "<cmd>source %<cr>" },
 })
