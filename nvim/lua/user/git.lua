@@ -60,9 +60,9 @@ require("diffview").setup({
         end,
         view_opened = function(view)
             if view.panel and view.panel.bufname == "DiffviewFileHistoryPanel" then
-                vim.t[vim.api.nvim_get_current_tabpage()].tabname = "Git History"
+                vim.cmd.LualineRenameTab({args = {"Git History"}})
             elseif view.panel and view.panel.bufname == "DiffviewFilePanel" then
-                vim.t[vim.api.nvim_get_current_tabpage()].tabname = "Git Changes"
+                vim.cmd.LualineRenameTab({args = {"Git Changes"}})
             end
         end
     },

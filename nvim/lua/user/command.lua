@@ -30,7 +30,7 @@ commander.add({
         desc = "Rename Tab",
         cmd = function()
             vim.ui.input({ prompt = "Tab Name: " },
-                function(i) vim.t[vim.api.nvim_get_current_tabpage()].tabname = i end)
+                function(i) vim.cmd.LualineRenameTab({ args = { i } }) end)
         end
     },
     { cat = "tab",     desc = "Close tab", cmd = "<cmd>tabclose<cr>" },

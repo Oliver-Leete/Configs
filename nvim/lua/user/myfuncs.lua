@@ -265,7 +265,7 @@ vim.api.nvim_create_user_command("TabPrev", TabPrev, { nargs = 0 })
 
 M.neogit = function()
     require("neogit").open()
-    vim.t[vim.api.nvim_get_current_tabpage()].tabname = "Neogit"
+    vim.cmd.LualineRenameTab({args = {"Neogit"}})
 end
 
 M.codelens_toggle = function()

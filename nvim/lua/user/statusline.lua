@@ -266,12 +266,36 @@ require("lualine").setup({
             },
         }
     },
-    winbar = {
+    tabline = {
         lualine_a = {
             {
                 function() return "" end,
                 draw_empty = true,
                 separator = { left = leftend, right = left },
+            },
+            {
+                "tabs",
+                mode = 1,
+                use_mode_colors = true,
+                show_modified_status = false,
+                cond = function()
+                    return #vim.api.nvim_list_tabpages() > 1
+                end,
+                fmt = function(_, context)
+                    local ok, tabname = pcall(vim.api.nvim_tabpage_get_var, context.tabId, 'tabname')
+                    if ok and tabname and tabname ~= "" then
+                        return tabname
+                    end
+                    return vim.fn.getcwd(-1, context.tabnr):match(".*/(.-)$")
+                end,
+            },
+            {
+                function() return "" end,
+                draw_empty = true,
+                cond = function()
+                    return #vim.api.nvim_list_tabpages() > 1
+                end,
+                separator = "|",
             },
             {
                 "filename",
@@ -355,48 +379,6 @@ require("lualine").setup({
             {
                 overseericon,
                 separator = { left = right, right = rightend },
-                cond = is_overseer,
-            },
-        },
-    },
-    inactive_winbar = {
-        lualine_a = {
-            {
-                function() return "" end,
-                draw_empty = true,
-                separator = { left = leftend, right = left },
-            },
-            {
-                "filename",
-                path = 1,
-                symbols = {
-                    modified = "󰷫 ",
-                    readonly = "󰏯 ",
-                    unnamed = "",
-                    newfile = "󰎔 ",
-                },
-                separator = { left = leftend, right = rightend },
-                cond = function() return vim.bo.filetype ~= "OverseerTask" end,
-            },
-            {
-                OverseerTask,
-                separator = { left = leftend, right = rightend },
-                cond = is_overseer,
-            },
-        },
-        lualine_x = {},
-        lualine_y = {},
-        lualine_z = {
-            {
-                "filetype",
-                colored = false,
-                icon_only = true,
-                separator = { left = leftend, right = rightend },
-                cond = not_overseer,
-            },
-            {
-                overseericon,
-                separator = { left = leftend, right = rightend },
                 cond = is_overseer,
             },
         },
