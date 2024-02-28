@@ -19,18 +19,18 @@ end
 
 local gen_ai_spec = require('mini.extra').gen_ai_spec
 local custom_objects = {
-    -- argument
+    -- Argument
     a = gen_spec.argument({ separator = "[,;]" }),
     -- Brackets
     b = { { "%b()", "%b[]", "%b{}" }, "^.().*().$" },
     -- Comments
-    -- digits
+    -- Digits
     d = gen_ai_spec.number(),
     -- diagnostics
     e = gen_ai_spec.diagnostic(),
     -- Function call
     f = gen_spec.function_call(),
-    -- grammer (sentence)
+    -- Grammer (sentence)
     g = {
         {
             "%b{}",
@@ -45,15 +45,15 @@ local custom_objects = {
             "^[%s]*()().-[^%s].-()()[%s]+$",            -- sentence at that fills paragraph (no final punctuation)
         }
     },
-    -- git hunks
+    -- git Hunks
     h = miniAiGitsigns,
     -- Indents
     i = gen_ai_spec.indent(),
     -- Jumps
     -- key (from key value pair)
     k = gen_spec.treesitter({
-        i = { "@key.inner", "@assignment.lhs" },
-        a = { "@key.inner", "@assignment.lhs" },
+        i = { "@assignment.lhs", "@key.inner" },
+        a = { "@assignment.outer", "@key.inner" },
     }),
     -- List (quickfix)
     -- blOck
@@ -61,7 +61,7 @@ local custom_objects = {
         a = { "@block.outer", "@conditional.outer", "@loop.outer" },
         i = { "@block.inner", "@conditional.inner", "@loop.inner" },
     }),
-    -- paragraph
+    -- Paragraph
     p = { {
         "\n%s*\n()().-()\n%s*\n()[%s]*", -- normal paragraphs
         "^()().-()\n%s*\n[%s]*()",       -- paragraph at start of file
@@ -69,7 +69,7 @@ local custom_objects = {
     } },
     -- Quotes
     q = { { "%b''", '%b""', "%b``" }, "^.().*().$" },
-    -- sub-word (below w on my keyboard)
+    -- sub-woRd (below w on my keyboard)
     r = {
         {
             "%u[%l%d]+%f[^%l%d]",
@@ -79,17 +79,17 @@ local custom_objects = {
         },
         "^().*()$"
     },
-    -- scope
+    -- Scope
     s = gen_spec.treesitter({
         a = { "@function.outer", "@class.outer", "@testitem.outer" },
         i = { "@function.inner", "@class.inner", "@testitem.inner" },
     }),
     -- Tag
     t = { "<(%w-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" },
-    -- value (from key value pair)
+    -- Value (from key value pair)
     v = gen_spec.treesitter({
-        i = { "@value.inner", "@assignment.rhs" },
-        a = { "@value.inner", "@assignment.rhs" },
+        i = { "@assignment.rhs", "@value.inner", "@return.inner" },
+        a = { "@assignment.outer", "@value.inner", "@return.outer" },
     }),
     -- WORD
     W = { {
@@ -101,7 +101,7 @@ local custom_objects = {
     x = gen_ai_spec.line(),
     -- chunk (as in from vim-textobj-chunk)
     z = {
-        "\n.-%b{}.-\n",
+            "\n.-%b{}.-\n",
         "\n().-()%{\n.*\n.*%}().-\n()"
     },
     ["$"] = gen_spec.pair("$", "$", { type = "balanced" }),

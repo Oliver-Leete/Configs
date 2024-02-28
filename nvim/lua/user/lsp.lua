@@ -20,9 +20,7 @@ require("mason-tool-installer").setup({
         "esbonio",
         "fortls",
         "gitlint",
-        "jq",
         "json-lsp",
-        "jsonlint",
         "julia-lsp",
         "ltex-ls",
         "lua-language-server",
@@ -46,19 +44,20 @@ local lspconfig = require("lspconfig")
 
 require("lspconfig.ui.windows").default_options.border = Border
 
-vim.fn.sign_define("DiagnosticSignError",
-    { text = " ", texthl = "DiagnosticSignError", culhl = "DiagnosticSignErrorCur" })
-vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn", culhl = "DiagnosticSignWarnCur" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo", culhl = "DiagnosticSignInfoCur" })
-vim.fn.sign_define("DiagnosticSignHint", { text = "󰅽 ", texthl = "DiagnosticSignHint", culhl = "DiagnosticSignHintCur" })
-
 local default_diagnostic_config = {
     underline = { severity = { min = "Warn", }, },
     virtual_text = { severity = { min = "Warn", }, source = "if_many", prefix = " ", },
-    signs = { priority = 6 },
     update_in_insert = false,
     severity_sort = true,
     virtual_lines = false,
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = ' ',
+            [vim.diagnostic.severity.WARN] = ' ',
+            [vim.diagnostic.severity.INFO] = ' ',
+            [vim.diagnostic.severity.HINT] = '󰅽 ',
+        },
+    }
 }
 
 vim.api.nvim_set_hl(0, "LspInlayHint", { link = "NvimDapVirtualText" })
@@ -338,20 +337,14 @@ none_ls.setup({
     sources = {
         none_ls.builtins.code_actions.gitrebase,
         none_ls.builtins.diagnostics.fish,
+        none_ls.builtins.diagnostics.editorconfig_checker,
         none_ls.builtins.diagnostics.gitlint,
-        none_ls.builtins.diagnostics.jsonlint,
         none_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013", "MD046", "MD009" } }),
         none_ls.builtins.formatting.bibclean,
         none_ls.builtins.formatting.fish_indent,
-        none_ls.builtins.formatting.jq.with({ extra_args = { "--indent", "4" } }),
-        none_ls.builtins.formatting.latexindent.with({ extra_args = { "-l=.latexindent.yaml" } }),
         none_ls.builtins.formatting.markdownlint,
         none_ls.builtins.formatting.shellharden,
         none_ls.builtins.formatting.shfmt,
-        none_ls.builtins.formatting.trim_newlines,
-        none_ls.builtins.formatting.trim_whitespace,
-        none_ls.builtins.formatting.ruff.with({
-            args = { "--fix", "-e", "-n", "--fixable", "I001", "--stdin-filename", "$FILENAME", "-" } }), -- only format import block
         none_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
         none_ls.builtins.hover.printenv,
     },

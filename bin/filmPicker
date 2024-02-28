@@ -2,7 +2,7 @@
 
 [ "$folder" = "" ] && folder="."
 
-lsv "$folder" | sort >/tmp/film_list.films
+lsv "$folder" | pv -c | sort >/tmp/film_list.films
 
 nvrStart /tmp/film_list.films
 

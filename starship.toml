@@ -8,7 +8,7 @@ fish_indicator = "fish"
 bash_indicator = "bash"
 zsh_indicator = "zsh"
 xonsh_indicator = "xonsh"
-nu_indicator = "nu-shell"
+nu_indicator = "nu"
 
 [aws]
 symbol = "  "

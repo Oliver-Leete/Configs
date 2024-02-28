@@ -18,6 +18,21 @@ require("neogit").setup({
     }
 })
 require("gitsigns").setup({
+    signs = {
+        add          = { text = "┃" },
+        change       = { text = "┃" },
+        delete       = { text = "╽" },
+        topdelete    = { text = "╿" },
+        changedelete = { text = "┃" },
+        untracked    = { text = "┋" },
+    },
+    _signs_staged = {
+        add          = { text = '│' },
+        change       = { text = '│' },
+        delete       = { text = '│' },
+        topdelete    = { text = '│' },
+        changedelete = { text = '│' },
+    },
     sign_priority = 6,
     _signs_staged_enable = true,
     preview_config = {
@@ -27,9 +42,9 @@ require("gitsigns").setup({
 
 local gitstuff = vim.api.nvim_create_augroup("GitStuff", { clear = true })
 vim.api.nvim_create_autocmd('User', {
-  pattern = "NeogitCommitComplete",
-  group = gitstuff,
-  callback = require("gitsigns").refresh,
+    pattern = "NeogitCommitComplete",
+    group = gitstuff,
+    callback = require("gitsigns").refresh,
 })
 
 -- DiffView.nvim
@@ -37,6 +52,7 @@ local actions = require("diffview.config").actions
 
 require("diffview").setup({
     diff_binaries = false,
+    enhanced_diff_hl = true,
     use_icons = true,
     hooks = {
         diff_buf_read = function(bufnr)

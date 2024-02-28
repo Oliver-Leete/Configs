@@ -40,20 +40,21 @@ vim.api.nvim_set_hl(0, "CursorNeotestPassed", { fg = "#96F291", bg = Ct.ui.bg_p2
 vim.api.nvim_set_hl(0, "CursorNeotestFailed", { fg = "#F70067", bg = Ct.ui.bg_p2 })
 vim.api.nvim_set_hl(0, "CursorNeotestRunning", { fg = "#FFEC63", bg = Ct.ui.bg_p2 })
 vim.api.nvim_set_hl(0, "CursorNeotestSkipped", { fg = "#00f1f5", bg = Ct.ui.bg_p2 })
+vim.api.nvim_set_hl(0, "CursorLineSign", { bg = Ct.ui.bg_p2 })
 
-local make_sep = function(hl_prefix)
-    local bufnr = vim.api.nvim_get_current_buf()
+local make_sep = function(args)
+    local hl_prefix = args.lnum == vim.fn.line(".", args.win) and "%#Cursor" or "%#"
     local gitsigns_unstaged = vim.api.nvim_get_namespaces().gitsigns_extmark_signs_
     local sign
     if gitsigns_unstaged then
-        sign = vim.api.nvim_buf_get_extmarks(bufnr, gitsigns_unstaged, { vim.v.lnum - 1, 0 }, { vim.v.lnum - 1, -1 },
+        sign = vim.api.nvim_buf_get_extmarks(args.buf, gitsigns_unstaged, { args.lnum - 1, 0 }, { args.lnum - 1, -1 },
             { details = true })
     end
     local gitsigns_staged = vim.api.nvim_get_namespaces().gitsigns_extmark_signs_staged
     local signstaged
     if gitsigns_staged then
-        signstaged = vim.api.nvim_buf_get_extmarks(bufnr, gitsigns_staged, { vim.v.lnum - 1, 0 },
-            { vim.v.lnum - 1, -1 }, { details = true })
+        signstaged = vim.api.nvim_buf_get_extmarks(args.buf, gitsigns_staged, { args.lnum - 1, 0 },
+            { args.lnum - 1, -1 }, { details = true })
     end
     local text = "│"
     local name = "LineSep"
@@ -68,48 +69,88 @@ local make_sep = function(hl_prefix)
     return hl .. text
 end
 
-local get_signs = function()
-    local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
-    return vim.tbl_map(function(sign)
-        local ret = vim.fn.sign_getdefined(sign.name)[1]
-        return ret
-    end, vim.fn.sign_getplaced(buf, { group = "*", lnum = vim.v.lnum })[1].signs)
-end
+ -- TODO : fix this
+local builtin = require("statuscol.builtin")
+require("statuscol").setup({
+    setopt = true,
+    thousands = false,
+    relculright = false,
+    ft_ignore = nil,
+    bt_ignore = { "terminal" },
+    segments = {
+        {
+            sign = {
+                namespace = {
+                    "dap_breakpoints",
+                    "neotest.*",
+                    "vim.lsp.*",
+                },
+                name = {
+                    ".*",
+                    "todo.*",
+                },
+                fillchar = " ",
+                colwidth = 2,
+                maxwidth = 2,
+            },
+            click = "v:lua.ScSa",
+        },
+        {
+            text = { builtin.lnumfunc },
+            click = "v:lua.ScLa",
+        },
+        {
+            text = {
+                function(args) return make_sep(args) end,
+            },
+            click = "v:lua.ScSa",
+        },
+    },
+    clickmod = "c",
+})
 
-StatusCol = function()
-    local cursorline = is_cursorline()
-    local hl_prefix = cursorline and "%#Cursor" or "%#"
-
-    local signs = vim.tbl_filter(function(s) return not s.name:find("GitSign") end, get_signs("*"))
-
-
-    local num = vim.v.lnum
-    local num_len = string.len(num)
-    local total_len = num_len < 4 and 6 or num_len + 2
-
-    local num_out = ""
-    local sign_limit
-    if cursorline or (#signs * 2) <= (total_len - num_len) then
-        local hlnum = hl_prefix .. "LineNr#"
-        num_out = hlnum .. num
-        sign_limit = math.floor((total_len - num_len) / 2)
-    else
-        sign_limit = math.floor(total_len / 2)
-        num_len = 0
-    end
-
-    local sign_out = ""
-    for i = 1, sign_limit do
-        if signs[i] and signs[i].text then
-            local sign_hl = signs[i].texthl and hl_prefix .. signs[i].texthl .. "#" or ""
-            sign_out = sign_out .. sign_hl .. signs[i].text
-        end
-    end
-
-    local odd_space = total_len % 2 == 1 and 1 or 0
-    local sign_len = math.min(sign_limit, #signs) * 2
-    local spacing = odd_space + total_len - (num_len + sign_len)
-    local spacing_out = string.rep(" ", spacing)
-
-    return sign_out .. spacing_out .. num_out .. make_sep(hl_prefix)
-end
+-- local get_signs = function()
+--     local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
+--     return vim.tbl_map(function(sign)
+--         local ret = vim.fn.sign_getdefined(sign.name)[1]
+--         return ret
+--     end, vim.fn.sign_getplaced(buf, { group = "*", lnum = vim.v.lnum })[1].signs)
+-- end
+-- StatusCol = function()
+--     local cursorline = is_cursorline()
+--     local hl_prefix = cursorline and "%#Cursor" or "%#"
+--
+--     -- local signs = vim.tbl_filter(function(s) return not s.name:find("GitSign") end, get_signs("*"))
+--     local signs = get_signs2()
+--
+--
+--     local num = vim.v.lnum
+--     local num_len = string.len(num)
+--     local total_len = num_len < 4 and 6 or num_len + 2
+--
+--     local num_out = ""
+--     local sign_limit
+--     if cursorline or (#signs * 2) <= (total_len - num_len) then
+--         local hlnum = hl_prefix .. "LineNr#"
+--         num_out = hlnum .. num
+--         sign_limit = math.floor((total_len - num_len) / 2)
+--     else
+--         sign_limit = math.floor(total_len / 2)
+--         num_len = 0
+--     end
+--
+--     local sign_out = ""
+--     for i = 1, sign_limit do
+--         if signs[i] and signs[i].text then
+--             local sign_hl = signs[i].texthl and hl_prefix .. signs[i].texthl .. "#" or ""
+--             sign_out = sign_out .. sign_hl .. signs[i].text
+--         end
+--     end
+--
+--     local odd_space = total_len % 2 == 1 and 1 or 0
+--     local sign_len = math.min(sign_limit, #signs) * 2
+--     local spacing = odd_space + total_len - (num_len + sign_len)
+--     local spacing_out = string.rep(" ", spacing)
+--
+--     return sign_out .. spacing_out .. num_out .. make_sep(hl_prefix)
+-- end

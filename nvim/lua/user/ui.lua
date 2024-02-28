@@ -152,10 +152,10 @@ glance.setup({
     },
 })
 
-vim.go.statuscolumn = "%{%v:lua.StatusCol()%}"
-vim.wo.statuscolumn = "%{%v:lua.StatusCol()%}"
+-- vim.go.statuscolumn = "%{%v:lua.StatusCol()%}"
+-- vim.wo.statuscolumn = "%{%v:lua.StatusCol()%}"
 
-local statcol = vim.api.nvim_create_augroup("StatusCol", {})
+-- local statcol = vim.api.nvim_create_augroup("StatusCol", {})
 
 vim.api.nvim_set_hl(0, "PmenuSel", { bg = Ct.ui.bg, fg = "NONE" })
 vim.api.nvim_set_hl(0, "Pmenu", { fg = "#C5CDD9", bg = Ct.ui.bg })

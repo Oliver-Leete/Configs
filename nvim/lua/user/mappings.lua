@@ -146,7 +146,8 @@ Map("n", "Q", "@q")
 Map("x", "Q", ":norm! @q<cr>")
 
 Map({ "n", "x", "o" }, "s", require("flash").jump)
-Map({ "n", "o" }, "z", require("flash").treesitter)
+Map({ "n" }, "z", require("flash").treesitter)
+Map({ "o" }, "z", require("flash").treesitter)
 Map({ "o" }, "S", require("flash").remote)
 
 Map("x", "<", "<gv")
@@ -355,10 +356,7 @@ Map("x", ",rF", require("genghis").moveSelectionToNewFile)
 Map("n", ",re", "mia:lua require('refactoring').refactor('Extract Variable')<cr>", { remap = true })
 Map("x", ",re", function() require("refactoring").refactor("Extract Variable") end)
 Map({ "n", "x" }, ",ri", function() require("refactoring").refactor("Inline Variable") end)
-
-Map("n", ",dd", function() require("refactoring").debug.printf({}) end)
-Map({ "n", "x" }, ",dv", function() require("refactoring").debug.print_var({}) end, { remap = false })
-Map("n", ",dq", function() require("refactoring").debug.cleanup({}) end)
+Map( "n" , ",rI", function() require("refactoring").refactor("Inline Function") end)
 
 Map({ "n", "x" }, ",s", "<Plug>Opsort", { remap = true })
 
@@ -407,13 +405,6 @@ Map("n", ",f>", function() require('textcase').lsp_rename('to_dot_case') end)
 Map("n", ",f?", function() require('textcase').lsp_rename('to_path_case') end)
 
 Map("n", "<leader><leader>", "<cmd>silent e #<cr>")
-
-Map("n", "<leader>c", require("grapple").toggle)
-Map("n", "<leader>v", require("grapple").popup_tags)
-local grapple_keys = { "a", "r", "s", "t" }
-for i, key in pairs(grapple_keys) do
-    Map("n", "<leader>" .. key, function() require("grapple").select({ key = i }) end)
-end
 
 local action_util = require("overseer.action_util")
 local overseer = require("overseer")
@@ -519,11 +510,6 @@ Map("n", "<leader>w",
 Map("n", "<leader>W", function() require("telescope.builtin").live_grep(require("telescope.themes").get_ivy()) end)
 Map("n", "<leader>f", function() ProjectFiles() end)
 Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
-
-local projects = require("user.projects")
-
-Map("n", "<leader>b", projects.load_session)
-Map("n", "<leader>B", projects.save_session)
 
 -- Mouse Bindings
 
@@ -658,10 +644,7 @@ Hydra({
 
 -- treesitter
 
-local tc_settings = {
-    highlight = true,
-    higroup = "Search",
-}
+local tc_settings = { highlight = true, higroup = "Search", }
 local tc = require('tree-climber')
 local no_exit = false
 
@@ -673,6 +656,14 @@ end
 local tc_mul = function()
     tc.select_node(tc_settings)
     require("mini.operators").multipy("visual")
+end
+
+local tc_raise = function()
+    tc.select_node(tc_settings)
+    vim.api.nvim_feedkeys("y", "n", true)
+    tc.goto_parent()
+    tc.select_node(tc_settings)
+    vim.api.nvim_feedkeys("p", "n", true)
 end
 
 local tc_goto_first = function()

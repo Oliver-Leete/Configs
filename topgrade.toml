@@ -67,6 +67,7 @@ repos = [
 "Xmobar" = "cd ~/.config/xmobar/xmobar-git; stack install; xmonad --recompile; xmonad --restart"
 "TLDR" = "tldr -u"
 "Locate DB" = "sudo updatedb"
+"Pipx" = "pipx upgrade-all"
 
 [brew]
 #greedy_cask = true

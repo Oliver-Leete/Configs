@@ -136,10 +136,6 @@ local noice_wrapper = function()
 end
 
 
-local grapple = function()
-    return "󱡅 "
-end
-
 local is_wide = function()
     return vim.go.columns >= 200
 end
@@ -278,11 +274,6 @@ require("lualine").setup({
                 separator = { left = leftend, right = left },
             },
             {
-                grapple,
-                cond = require("grapple").exists,
-                on_click = function() vim.defer_fn(require("grapple").popup_tags, 100) end,
-            },
-            {
                 "filename",
                 path = 1,
                 symbols = {
@@ -302,7 +293,7 @@ require("lualine").setup({
             {
                 "navic",
                 color_correction = "dynamic",
-                navic_opts = { separator = ">", highlight = true, click = true },
+                navic_opts = { separator = "|", highlight = true, click = true },
                 separator = { left = left, right = "" },
                 padding = { left = 1, right = 0 },
                 cond = not_overseer,
@@ -374,11 +365,6 @@ require("lualine").setup({
                 function() return "" end,
                 draw_empty = true,
                 separator = { left = leftend, right = left },
-            },
-            {
-                grapple,
-                cond = require("grapple").exists,
-                on_click = function() vim.defer_fn(require("grapple").popup_tags, 100) end,
             },
             {
                 "filename",

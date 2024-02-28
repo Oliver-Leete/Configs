@@ -77,7 +77,7 @@ vim.o.foldenable = true
 -- Numbering
 vim.opt.signcolumn = "no"
 vim.opt.numberwidth = 1
-vim.opt.number = false
+vim.opt.number = true
 vim.opt.cursorline = true
 vim.cmd([[call matchadd('TabLineSel', '\%101v', 203)]])
 

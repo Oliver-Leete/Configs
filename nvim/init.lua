@@ -28,7 +28,6 @@ require("lazy").setup(
         { "nvimtools/hydra.nvim",      dependencies = { "anuvyklack/keymap-layer.nvim" } },
         { "chrisgrieser/nvim-genghis", dependencies = { "stevearc/dressing.nvim" } },
         { "stevearc/resession.nvim",   config = function() require("user.projects") end },
-        { "cbochs/grapple.nvim",       dependencies = { "nvim-lua/plenary.nvim" } },
         { "kazhala/close-buffers.nvim" },
 
         -- Editing
@@ -58,6 +57,7 @@ require("lazy").setup(
             "folke/flash.nvim",
             opts = {
                 labels = "tnseriaodhgjplfuwybkvmcxzq",
+                label = { uppercase = false, rainbow = { enabled = true } },
                 jump = { nohlsearch = true },
                 modes = { search = { enabled = false }, char = { enabled = false } },
             }
@@ -83,6 +83,7 @@ require("lazy").setup(
         { "rebelot/kanagawa.nvim" },
         { "stevearc/dressing.nvim" },
         { "nvim-lualine/lualine.nvim",   dependencies = { "kyazdani42/nvim-web-devicons" } },
+        { "luukvbaal/statuscol.nvim",    branch = "0.10" },
         { "nvim-zh/colorful-winsep.nvim" },
         {
             "https://gitlab.com/yorickpeterse/nvim-pqf",
@@ -209,6 +210,7 @@ require("lazy").setup(
         { "fladson/vim-kitty" },
         { "wilriker/gcode.vim" },
         { "LhKipp/nvim-nu" },
+        { "stsewd/sphinx.nvim", build = ":UpdateRemotePlugins" },
 
         -- compleation
         {

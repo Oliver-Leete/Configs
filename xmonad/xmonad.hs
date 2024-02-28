@@ -7,9 +7,9 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# OPTIONS_GHC -Wno-missing-fields #-}
 import           Control.Monad                          ((<=<))
+import           Data.List                              (sortBy)
 import qualified Data.Map                               as M
 import           Data.Monoid
-import           Data.List                              (sortBy)
 import           Graphics.X11.Types
 import qualified Graphics.X11.Xinerama                  as X11
 import qualified Graphics.X11.Xlib                      as X11
@@ -118,9 +118,9 @@ getScreens = do
 
 projects :: [Project]
 projects =
-    [ Project { pName = "M",       pDir = "~/.config",                           pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = tBSpawn "M" persB}
+    [ Project { pName = "Tmp",        pDir = "/tmp",                                pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return () }
+    , Project { pName = "M",          pDir = "~/.config",                           pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = tBSpawn "M" persB}
 
-    , Project { pName = "Tmp",        pDir = "/tmp",                                pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return () }
     , Project { pName = "Print",      pDir = "~/Projects/Printing",                 pApp1 = prusa, pApp1F = prusaF, pApp4 = br persB, pApp4F = brF persB, pStart = oSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer" }
     , Project { pName = "Games",      pDir = "~/Documents",                         pApp1 = steam, pApp1F = steamF, pApp4 = br persB, pApp4F = brF persB, pStart = oSpawn "Games" "steam" }
     , Project { pName = "Films",      pDir = "~/Videos/films",                      pApp1 = kitty, pApp1F = kittyF, pApp2 = mpv,       pApp2F = mpvF,      pApp3 = deluge,    pApp3F = delugeF,   pApp4 = br filmB, pApp4F = brF filmB, pStart = fSpawn "Films" }
@@ -173,7 +173,7 @@ myWorkspaces = map pName projects
 myProfileConfig :: ProfileConfig
 myProfileConfig = def
     { profiles = myProfiles
-    , startingProfile = "M"
+    , startingProfile = "Home"
     , workspaceExcludes = ["NSP"]
     }
 
@@ -200,6 +200,7 @@ myProfiles =
                             , "Exp"
                             ]
               }
+    , Profile { profileId = "All" , profileWS = myWorkspaces }
     ]
 
 
@@ -265,7 +266,7 @@ myDecoTheme = def
     }
 
 myPromptConfig = def
-    { font                  = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true"
+    { font                  = "xft:Eurostar Black Extended:weight=bold:pixelsize=16:antialias=true:hinting=true"
     , bgColor               = background
     , fgColor               = foreground
     , bgHLight              = background
@@ -542,6 +543,8 @@ myManageHook =
             , title =? "Scintilla Option Editor"      -?> scinTestShift doCenterFloat
             , title =? "Scintilla Strategy Editor"    -?> scinTestShift doCenterFloat
             , title =? "Scintilla Connection Manager" -?> scinTestShift doCenterFloat
+            , title =? "Scintilla Position Override"  -?> scinTestShift doCenterFloat
+            , title =? "Scintilla File List"          -?> scinTestShift doCenterFloat
 
             , resource  =? "pavucontrol"              -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
             , className =? "Nm-connection-editor"     -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))

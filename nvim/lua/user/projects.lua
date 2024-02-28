@@ -1,11 +1,5 @@
 M = {}
 
-require("grapple").setup({
-    integrations = {
-        resession = true
-    }
-})
-
 local resession = require("resession")
 resession.setup({
     autosave = {
@@ -18,9 +12,6 @@ resession.setup({
             filter = function(task)
                 return task.metadata.run_on_open
             end
-        },
-        grapple = {
-            enable_in_tab = true,
         },
         quickfix = {
             enable_in_tab = true,
