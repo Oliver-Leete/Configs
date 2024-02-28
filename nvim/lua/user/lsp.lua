@@ -60,6 +60,7 @@ require("corn").setup({
     item_preprocess_func = function(item)
         return item
     end,
+    blacklisted_modes = { "i" },
     highlights = {
         error = "DiagnosticError",
         warn = "DiagnosticWarn",
@@ -346,6 +347,7 @@ none_ls.setup({
         none_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013", "MD046", "MD009" } }),
         none_ls.builtins.formatting.bibclean,
         none_ls.builtins.formatting.fish_indent,
+        none_ls.builtins.formatting.just,
         none_ls.builtins.formatting.markdownlint,
         none_ls.builtins.formatting.shellharden,
         none_ls.builtins.formatting.shfmt,

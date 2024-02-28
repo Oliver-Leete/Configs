@@ -1,0 +1,28 @@
+theme = "kanagawa"
+
+[editor]
+cursorline = true
+color-modes = true
+gutters = ["diagnostics", "line-numbers", "spacer", "diff"]
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.lsp]
+display-inlay-hints = true
+
+[keys.normal]
+X = "extend_line_above"
+"}" = [
+    "save_selection",
+    "keep_primary_selection",
+    "yank",
+    "jump_backward",
+    "rotate_selections_forward",
+    "save_selection",
+    "keep_primary_selection",
+    "replace_with_yanked",
+    "jump_backward",
+]

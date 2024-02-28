@@ -61,6 +61,7 @@ overseer.setup({
             "on_exit_set_status",
             { "on_complete_notify", system = "unfocused" },
             "on_complete_dispose",
+            "unique",
         },
         always_restart = { "on_complete_restart", statuses = { STATUS.FAILURE, STATUS.SUCCESS } },
     },

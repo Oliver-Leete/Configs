@@ -136,7 +136,6 @@ require("lazy").setup(
                 { "yioneko/nvim-type-fmt" },
                 { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
                 { "RaafatTurki/corn.nvim" },
-                { "dgagn/diagflow.nvim" },
                 { "johmsalas/text-case.nvim" },
                 { "folke/neodev.nvim" },
                 { "hrsh7th/cmp-nvim-lsp" },
@@ -206,13 +205,14 @@ require("lazy").setup(
         },
 
         -- lang specific
-        { "lervag/vimtex",              dependencies = { "tpope/vim-repeat" } },
+        { "lervag/vimtex",                dependencies = { "tpope/vim-repeat" } },
         { "barreiroleo/ltex_extra.nvim" },
-        { "toppair/peek.nvim",          build = "deno task --quiet build:fast" },
+        { "toppair/peek.nvim",            build = "deno task --quiet build:fast" },
         { "fladson/vim-kitty" },
         { "wilriker/gcode.vim" },
         { "LhKipp/nvim-nu" },
-        { "stsewd/sphinx.nvim", build = ":UpdateRemotePlugins" },
+        { "stsewd/sphinx.nvim",           build = ":UpdateRemotePlugins" },
+        { "IndianBoy42/tree-sitter-just", config = function() require("tree-sitter-just").setup({}) end },
 
         -- compleation
         {
