@@ -19,6 +19,8 @@ require("mini.comment").setup({
     },
 })
 
+require("mini.pairs").setup()
+
 local ts_input = require("mini.surround").gen_spec.input.treesitter
 require("mini.surround").setup({
     mappings = {

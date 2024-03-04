@@ -16,7 +16,6 @@ import qualified Graphics.X11.Xlib                      as X11
 import           XMonad                                 hiding ((|||))
 import qualified XMonad.StackSet                        as W
 
-import           XMonad.Actions.CopyWindow
 import           XMonad.Actions.CycleWS                 (nextScreen,
                                                          shiftNextScreen)
 import           XMonad.Actions.CycleWSLocal
@@ -29,7 +28,7 @@ import           XMonad.Actions.SwapPromote
 import           XMonad.Actions.UpdateFocus
 import           XMonad.Actions.UpdatePointer
 import           XMonad.Actions.WindowGoLocal           as Wgl
-import           XMonad.Actions.WithAll                 (sinkAll)
+import           XMonad.Actions.WithAll                 (killAll, sinkAll)
 
 import           XMonad.Hooks.DebugStack
 import           XMonad.Hooks.EwmhDesktops              (ewmh)
@@ -60,6 +59,7 @@ import           XMonad.Layout.WindowSwitcherDecoration
 
 import           XMonad.Prompt
 import           XMonad.Prompt.FuzzyMatch
+import           XMonad.Prompt.Input
 import           XMonad.Prompt.XMonad
 
 import           XMonad.Util.ClickableWorkspaces
@@ -148,7 +148,7 @@ projects =
         (mpv, mpvF)           = sameForce "mpv /home/oleete/Videos/films/*" "mpv"
         (deluge, delugeF)     = sameForce "deluge" "Deluge-gtk"
         (steam, steamF)       = sameForce "steam" "Steam"
-        scinStart             = "cd /home/oleete/Projects/Scintilla/Main; .venv/bin/python main.py"
+        scinStart             = "cd /home/oleete/Projects/Scintilla/Main; .venv/bin/python main.pyw"
         (scinCont, scinContF) = (upPointer $ Wgl.runOrRaiseNext scinStart (title =? "Scintilla Control"), upPointer $ spawn scinStart)
 
         persB  = "google-chrome-stable-Configs"
@@ -214,14 +214,8 @@ myBrowserClass = "google-chrome-stable"
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
-    [   NS "gcal" (myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcal     --class=GCal") (className =? "GCal") nonFloating
-    ,   NS "gcalWork" (myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/gcalWrk  --class=WrkGCal") (className =? "WrkGCal") nonFloating
-    ,   NS "discord"  (myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/discord  --class=discord  --app=https://discord.com/channels/@me") (className =? "discord") defaultFloating
-
-    ,   NS "toggl" "flatpak run com.toggl.TogglDesktop" (className =? "Toggl Desktop") nonFloating
+    [   NS "discord"  (myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/discord  --class=discord  --app=https://discord.com/channels/@me") (className =? "discord") defaultFloating
     ,   NS "youtubeMusic"  (myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/youtubeMusic  --class=youtubemusic  --app=https://music.youtube.com/") (className =? "youtubemusic") defaultFloating
-    ,   NS "calc"  "gnome-calculator" (className =? "gnome-calculator") nonFloating
-    ,   NS "console"  "kitty --class=console" (resource =? "console") nonFloating
     ,   NS "ruler"  "kruler" (resource =? "kruler") nonFloating
     ,   NS "sysMon"  "kitty --class=sysMon btop" (resource =? "sysMon") nonFloating
     ]
@@ -277,7 +271,7 @@ myPromptConfig = def
     , maxComplColumns       = Just 1
     , maxComplRows          = Just 15
     , height                = 35
-    , position              = CenteredAt (1 / 2) (1 / 8)
+    , position              = CenteredAt (1 / 3) (1 / 8)
     , searchPredicate       = fuzzyMatch
     , autoComplete          = Nothing
     , prevCompletionKey     = (shiftMask, xK_Tab)
@@ -369,7 +363,7 @@ myKeys n =
     , ("<XF86AudioNext>"         , spawn "playerctl next")
     , ("<Print>"                 , spawn "/home/oleete/.config/bin/screencapt area")
 
-    , ("M-p"             , spawn "/home/oleete/.config/bin/rofiScript")
+    , ("M-p"             , myFuncPrompt myPromptConfig)
     , ("M-f"             , mySwitchProfilePrompt myPromptConfig)
 
     , ("M-<Esc>"         , upPointer $ sequence_ $ hideAllNamedScratchPads scratchpads)
@@ -412,8 +406,6 @@ myKeys n =
 
     , ("M-m"             , upPointer $ swapPromote' False)
 
-    , ("M-u"             , killAllOtherCopies)
-    , ("M-S-u"           , kill1)
     , ("M-y"             , upPointer $ withFocused toggleFloat)
     , ("M-S-y"           , upFocus sinkAll)
 
@@ -464,8 +456,62 @@ mySwitchProfilePrompt c = do ps <- profileIds
                                                           , ("Remove", removeWSFromProfilePrompt c)
                                                           , ("Switch", switchProfileWSPrompt c)
                                                           , ("Send", shiftProfileWSPrompt c)
+                                                          , ("Clear", killAll)
                                                           ]
                                                       ) c
+myFuncPrompt c = xmonadPromptC
+    [ ("Lock"               , spawn "slock")
+    , ("Play"               , spawn "playerctl play")
+    , ("Pause"              , spawn "playerctl pause")
+    , ("DND"                , spawn "/home/oleete/.config/bin/toggle DND_menu")
+    , ("Discord"            , upPointer $ namedScratchpadAction scratchpads "discord")
+    , ("Apps"               , spawn "rofi -matching fuzzy -show drun -show-icons")
+
+    , ("Skip"               , spawn "playerctl next")
+    , ("Previous"           , spawn "playerctl previous")
+    , ("Music"              , upPointer $ namedScratchpadAction scratchpads "youtubeMusic")
+
+    , ("Sound"              , spawn "/home/oleete/.config/bin/soundctl sink-menu")
+    , ("SoundInput"         , spawn "/home/oleete/.config/bin/soundctl source-menu")
+    , ("Display"            , spawn "/home/oleete/.config/bin/displayctl")
+    , ("Network"            , spawn "networkmanager_dmenu")
+    , ("Bluetooth"          , spawn "/home/oleete/.config/bin/rofi-bluetooth")
+    , ("Volume"             , inputPrompt c "Volume" ?+ (\v -> spawn ("/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ " ++ v ++ "%")))
+    , ("Brightness"         , inputPrompt c "Brightness" ?+ (\b -> spawn ("/home/oleete/.config/bin/brightness -set " ++ b)))
+
+    , ("SysMon"             , upPointer $ namedScratchpadAction scratchpads "sysMon")
+
+    , ("Ruler"              , upPointer $ namedScratchpadAction scratchpads "ruler")
+    , ("ColorPicker"        , spawn "/home/oleete/.config/bin/colorPicker")
+
+    , ("Screenshot"         , spawn "/home/oleete/.config/bin/screencapt")
+    , ("ScreenshotArea"     , spawn "/home/oleete/.config/bin/screencapt area")
+    , ("Screencap"          , spawn "/home/oleete/.config/bin/screencast")
+    , ("ScreencapArea"      , spawn "/home/oleete/.config/bin/screencast area")
+    , ("ScreencapGif"       , spawn "/home/oleete/.config/bin/screencast gif-last")
+    , ("Screenkey"          , spawn "killall screenkey || screenkey")
+    , ("ScreenkeySettings"  , spawn "screenkey --show-settings")
+
+
+    , ("FullScreen"         , toggleLayout FULL)
+    , ("FullBar"            , toggleLayout FULLBAR)
+    , ("Centre"             , toggleLayout FULLCENTER)
+    , ("TwoPane"            , toggleLayout TWOPANE)
+
+    , ("Rotate"             , toggleLayout MIRROR)
+    , ("Mirror"             , upFocus $ sendMessage ToggleSide)
+    , ("MirrorStack"        , upFocus $ sendMessage ToggleStackDir)
+    , ("CenterMain"         , upFocus $ sendMessage ToggleMiddle)
+    , ("ShrinkStack"        , sendMessage SShrink)
+    , ("ExpandStack"        , sendMessage SExpand)
+
+    , ("Status"             , spawn "/home/oleete/.config/bin/statusNotify")
+    , ("Logout"             , spawn "pkill xmonad")
+    , ("Suspend"            , spawn "systemctl suspend")
+    , ("Hibernate"          , spawn "systemctl hibernate")
+    , ("shutdown"           , spawn "systemctl poweroff")
+    , ("Reboot"             , spawn "systemctl reboot")
+    ] c
 
 myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {} = M.fromList
@@ -541,7 +587,7 @@ myManageHook =
 
             , title =? "Scintilla Control"            -?> scinTestShift $ doSink <+> insertPosition End Newer
             , title =? "Scintilla Option Editor"      -?> scinTestShift doCenterFloat
-            , title =? "Scintilla Strategy Editor"    -?> scinTestShift doCenterFloat
+            , title =? "Scintilla Build Editor"       -?> scinTestShift doCenterFloat
             , title =? "Scintilla Connection Manager" -?> scinTestShift doCenterFloat
             , title =? "Scintilla Position Override"  -?> scinTestShift doCenterFloat
             , title =? "Scintilla File List"          -?> scinTestShift doCenterFloat
@@ -552,7 +598,6 @@ myManageHook =
             , className =? "Tlp-UI"                   -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
             , className =? "Blueberry.py"             -?> doRectFloat (W.RationalRect (8/1920) (31/1080) (600/1920) (800/1080))
 
-            , resource  =? "gnome-calculator"         -?> doCenterFloat
             , className =? "GCal"                     -?> doRectFloat bigFloat
             , className =? "WrkGCal"                  -?> doRectFloat bigFloat
             , resource  =? "sysMon"                   -?> doRectFloat (W.RationalRect (1/8) (1/8) (3/4) (3/4))
@@ -628,34 +673,10 @@ myCommands' = myCommands ++ sendTo
 
 myCommands :: [(String, X ())]
 myCommands =
-    [ ("togglework"          , toggleWS' ["NSP"])
-    , ("winGo-h"             , upPointer $ windowGo L True)
+    [ ("winGo-h"             , upPointer $ windowGo L True)
     , ("winGo-j"             , upPointer $ windowGo D True)
     , ("winGo-k"             , upPointer $ windowGo U True)
     , ("winGo-l"             , upPointer $ windowGo R True)
-    , ("winGo-main"          , upPointer $ swapPromote' False)
-
-    , ("nsp-calc"            , upPointer $ namedScratchpadAction scratchpads "calc")
-    , ("nsp-cons"            , upPointer $ namedScratchpadAction scratchpads "console")
-    , ("nsp-rulr"            , upPointer $ namedScratchpadAction scratchpads "ruler")
-    , ("nsp-disc"            , upPointer $ namedScratchpadAction scratchpads "discord")
-    , ("nsp-musc"            , upPointer $ namedScratchpadAction scratchpads "youtubeMusic")
-    , ("nsp-sysm"            , upPointer $ namedScratchpadAction scratchpads "sysMon")
-    , ("nsp-time"            , upPointer $ namedScratchpadAction scratchpads "toggl")
-
-    , ("nsp-gcal"            , upPointer $ namedScratchpadAction scratchpads "gcal")
-    , ("nsp-gcal-wrk"        , upPointer $ namedScratchpadAction scratchpads "gcalWork")
-
-    , ("layout-full"         , toggleLayout FULL)
-    , ("layout-fullbar"      , toggleLayout FULLBAR)
-    , ("layout-fullcentre"   , toggleLayout FULLCENTER)
-    , ("layout-twopane"      , toggleLayout TWOPANE)
-    , ("layout-rotate"       , toggleLayout MIRROR)
-    , ("layout-dir"          , upFocus $ sendMessage ToggleSide)
-    , ("layout-stack-dir"    , upFocus $ sendMessage ToggleStackDir)
-    , ("layout-style"        , upFocus $ sendMessage ToggleMiddle)
-    , ("layout-stack-shrink" , sendMessage SShrink)
-    , ("layout-stack-expand" , sendMessage SExpand)
 
     , ("project-browser"     , runProjectApp4)
 
@@ -665,8 +686,6 @@ myCommands =
     , ("dump-stack"          , debugStack)
     , ("dump-full-stack"     , debugStackFull)
 
-    , ("kill-others"         , killAllOtherCopies)
-    , ("kill-self"           , kill1)
     , ("restart-bars"        , do
         killAllStatusBars
         startAllStatusBars

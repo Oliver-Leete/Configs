@@ -221,22 +221,32 @@ require("lazy").setup(
                 { "onsails/lspkind.nvim" },
                 { "hrsh7th/cmp-buffer" },
                 { "hrsh7th/cmp-path" },
-                { "hrsh7th/cmp-nvim-lua" },
                 { "hrsh7th/cmp-nvim-lsp" },
-                { "hrsh7th/cmp-omni" },
-                { "petertriho/cmp-git" },
                 { "hrsh7th/cmp-cmdline" },
                 { "dmitmel/cmp-cmdline-history" },
-                { "uga-rosa/cmp-dictionary" },
+                { "micangl/cmp-vimtex" },
                 { "saadparwaiz1/cmp_luasnip" },
                 { "L3MON4D3/cmp-luasnip-choice" },
                 { "kdheepak/cmp-latex-symbols" },
                 { "rcarriga/cmp-dap" },
-                { "windwp/nvim-autopairs" },
-                { "L3MON4D3/LuaSnip" },
-                { "iurimateus/luasnip-latex-snippets.nvim" },
             },
             config = function() require("user.compleation") end,
+        },
+        {
+            "L3MON4D3/LuaSnip",
+            dependencies = {
+                { "iurimateus/luasnip-latex-snippets.nvim" },
+            },
+            config = function()
+                require("luasnip").config.set_config({
+                    history = false,
+                    update_events = "TextChanged,TextChangedI",
+                    delete_check_events = "TextChanged",
+                })
+                require("luasnip.loaders.from_lua").load({ paths = "/home/oleete/.config/nvim/snippets" })
+                require("luasnip-latex-snippets").setup()
+            end
+
         },
 
         -- telescope

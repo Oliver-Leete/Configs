@@ -476,8 +476,9 @@ Map({ "i", "s", "c" }, "<c-a>", "<HOME>")
 Map({ "i", "s", "c" }, "<c-e>", "<END>")
 Map({ "i", "s" }, "<c-k>", "<c-o>d$")
 
+local cmp = require("cmp")
 Map({ "i", "s" }, "<c-]>", "<plug>luasnip-next-choice")
-Map({ "i", "s", "c" }, "<c-space>", function() _G.cmp_toggle() end)
+Map({ "i", "s", "c" }, "<c-space>", function() if cmp.visible() then cmp.close() else cmp.complete() end end)
 
 Ls = require("luasnip")
 Map({ "i", "s" }, "<tab>", function()

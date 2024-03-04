@@ -1,7 +1,5 @@
 require("nvim-treesitter.configs").setup({
-    -- autopairs = { enable = true },
     indent = { enable = false },
-    -- matchup = { enable = false },
     highlight = {
         enable = true,
         addditional_vim_regex_highlighting = false,
