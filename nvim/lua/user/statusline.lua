@@ -272,7 +272,7 @@ require("lualine").setup({
             },
         }
     },
-    tabline = {
+    winbar = {
         lualine_a = {
             {
                 function() return "" end,
@@ -280,28 +280,97 @@ require("lualine").setup({
                 separator = { left = leftend, right = left },
             },
             {
-                "tabs",
-                mode = 1,
-                use_mode_colors = true,
-                show_modified_status = false,
-                cond = function()
-                    return #vim.api.nvim_list_tabpages() > 1
-                end,
-                fmt = function(_, context)
-                    local ok, tabname = pcall(vim.api.nvim_tabpage_get_var, context.tabId, 'tabname')
-                    if ok and tabname and tabname ~= "" then
-                        return tabname
-                    end
-                    return vim.fn.getcwd(-1, context.tabnr):match(".*/(.-)$")
-                end,
+                "filename",
+                path = 1,
+                symbols = {
+                    modified = "󰷫 ",
+                    readonly = "󰏯 ",
+                    unnamed = "",
+                    newfile = "󰎔 ",
+                },
+                cond = not_overseer,
+            },
+            {
+                OverseerTask,
+                cond = is_overseer,
+            }
+        },
+        lualine_b = {
+            {
+                "navic",
+                color_correction = "dynamic",
+                navic_opts = { separator = "|", highlight = true, click = true },
+                separator = { left = left, right = "" },
+                padding = { left = 1, right = 0 },
+                cond = not_overseer,
+            },
+            {
+                Filmpicker_endtime,
+                separator = { left = left, right = "" },
+                padding = { left = 1, right = 0 },
+                cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end,
+            },
+            {
+                function() return " " end,
+                cond = not_overseer,
+                draw_empty = true,
+                padding = { left = 0, right = 0 }
             },
             {
                 function() return "" end,
                 draw_empty = true,
-                cond = function()
-                    return #vim.api.nvim_list_tabpages() > 1
+                separator = { left = left, right = rightend },
+            },
+        },
+        lualine_c = {},
+        lualine_y = {
+            {
+                function() return "" end,
+                draw_empty = true,
+                separator = { left = leftend, right = "" },
+                padding = { left = 0, right = 0 },
+            },
+            {
+                "diff",
+                source = diff_source,
+                symbols = { added = " ", modified = " ", removed = " " },
+                on_click = function() vim.defer_fn(function() vim.cmd("DiffviewOpen") end, 100) end,
+            },
+            {
+                "diagnostics",
+                symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
+                on_click = function()
+                    vim.defer_fn(function() vim.cmd("Telescope diagnostics bufnr=0 theme=get_ivy") end,
+                        100)
                 end,
-                separator = "|",
+            },
+        },
+        lualine_z = {
+            {
+                "filetype",
+                colored = false,
+                icon_only = true,
+                separator = { left = right, right = rightend },
+                cond = not_overseer,
+            },
+            {
+                Filmpicker_winbar,
+                separator = { left = leftend, right = rightend },
+                cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end,
+            },
+            {
+                overseericon,
+                separator = { left = right, right = rightend },
+                cond = is_overseer,
+            },
+        },
+    },
+    inactive_winbar = {
+        lualine_a = {
+            {
+                function() return "" end,
+                draw_empty = true,
+                separator = { left = leftend, right = left },
             },
             {
                 "filename",

@@ -18,7 +18,7 @@ xmonad-view-log:
 
 # Reload kitty with the new settings
 reload-kitty:
-    pkill -10 kitty
+    kitty @ load-config
 
 # Evaluate the current status of xmopanel and print it to console
 print-xmopanel:

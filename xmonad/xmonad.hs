@@ -340,7 +340,7 @@ myModMask :: KeyMask
 myModMask = mod4Mask
 
 -- ┏━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┓                                   ┏━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┓
--- ┃   -   ┃fullWin┃proFind┃cmdPale┃   -   ┃                                   ┃winDown┃winRght┃clseCpy┃ float ┃   -   ┃
+-- ┃   -   ┃fullWin┃proFind┃cmdPale┃   -   ┃                                   ┃winDown┃winRght┃ detach┃ float ┃   -   ┃
 -- ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫                                   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
 -- ┃  pws1 ┃  pws2 ┃  pws3 ┃  pws4 ┃  pws0 ┃                                   ┃winLeft┃  app1 ┃  app2 ┃  app3 ┃  app4 ┃
 -- ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┳━━━━━━━┓   ┏━━━━━━━┳━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
@@ -369,11 +369,13 @@ myKeys n =
     , ("M-<Esc>"         , upPointer $ sequence_ $ hideAllNamedScratchPads scratchpads)
 
 
-    , ("M-<Return>"      , upPointer $ spawn myTerminal)
+    , ("M-<Return>"      , bF $ kt "action new_tab" $ l (upPointer $ spawn myTerminal))
     , ("M-S-<Return>"    , upPointer $ spawn myTerminal)
 
-    , ("M-<Backspace>"   , bF $ nv "DeleteBuffer" $ crm (P.sendKey controlMask xK_w) $ l kill)
-    , ("M-S-<Backspace>" , kill)
+    , ("M-<Backspace>"   , bF $ nv "DeleteBuffer" $ kt "action close_window" $ crm (P.sendKey controlMask xK_w) $ l kill)
+    , ("M-S-<Backspace>" , bF $ kt "action close_window" $ l kill)
+
+    , ("M-u"             , bF $ kt "action detach_window" $ crm (P.sendKey shiftMask xK_w) $ l (return ()))
 
     , ("M-n"             , runProjectApp1)
     , ("M-e"             , runProjectApp2)
@@ -384,8 +386,8 @@ myKeys n =
     , ("M-S-i"           , runProjectApp3Force)
     , ("M-S-o"           , runProjectApp4Force)
 
-    , ("M-<Left>"        , bF $ nv "TabPrev" $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
-    , ("M-<Right>"       , bF $ nv "TabNext" $ l (P.sendKey controlMask xK_Tab))
+    , ("M-<Left>"        , bF $ kt "action previous_tab" $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
+    , ("M-<Right>"       , bF $ kt "action next_tab" $ l (P.sendKey controlMask xK_Tab))
     , ("M-<Down>"        , windows W.focusDown)
     , ("M-<Up>"          , windows W.focusUp)
 
@@ -513,7 +515,7 @@ myFuncPrompt c = xmonadPromptC
     , ("Reboot"             , spawn "systemctl reboot")
     ] c
 
-myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
+-- myMouseBindings :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig {} = M.fromList
     [ ((myModMask,               button1) ,\w -> focus w
       >> mouseMoveWindow w
@@ -646,13 +648,16 @@ toggleLayout :: (Transformer t a, Typeable a) => t -> X ()
 toggleLayout layout = sequence_ [ withFocused $ windows . W.sink, sendMessage $ XMonad.Layout.MultiToggle.Toggle layout, updatePointer (0.5, 0.5) (0.25, 0.25) ]
 
 -- app bindings
-l :: Applicative f => b -> [(f Bool, b)]
+l :: Applicative f => X () -> [(f Bool, X ())]
 l raw = [(pure True, raw)] -- leftover
 
 nv :: MonadIO m => [Char] -> [(Query Bool, m ())] -> [(Query Bool, m ())]
 nv command list = (title ~? "Neovim_", spawn ("/home/oleete/.config/bin/nvrWS " ++ command)) : list -- neovim
 
-crm :: b -> [(Query Bool, b)] -> [(Query Bool, b)]
+kt :: [Char] -> [(Query Bool, X ())] -> [(Query Bool, X ())]
+kt remote list = (className =? "kitty", spawn ("kitty @ --to unix:/tmp/mykitty-$(xdotool getactivewindow getwindowpid) " ++ remote)) : list
+
+crm :: X () -> [(Query Bool, X ())] -> [(Query Bool, X ())]
 crm raw list = (isRole =? "browser", raw) : list -- chrome
 
 bF :: [(Query Bool, X ())] -> X ()

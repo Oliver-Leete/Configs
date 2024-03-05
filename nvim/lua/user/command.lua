@@ -17,7 +17,13 @@ commander.setup({
     },
 })
 
+local kitty_new_tab = function(command)
+    return "<cmd>!kitty @ --to unix:/tmp/mykitty-$(xdotool getactivewindow getwindowpid) launch --hold --type=tab " .. command .. "<cr>"
+end
 commander.add({
+    { cat = "kitty",    desc = "Lazygit",                cmd = kitty_new_tab("lazygit")},
+    { cat = "kitty",    desc = "Just",                   cmd = kitty_new_tab("just --choose") },
+    { cat = "kitty",    desc = "Neogit",                 cmd = kitty_new_tab("nvrStart +'Neogit kind=replace'") },
     { cat = "compiler", desc = "Compiler explorer",      cmd = "<cmd>CECompile<cr>" },
     { cat = "compiler", desc = "Live compiler explorer", cmd = "<cmd>CECompileLive<cr>" },
     { cat = "coverage", desc = "Coverage summary",       cmd = "<cmd>CoverageSummary<cr>" },
@@ -107,7 +113,6 @@ commander.add({
     { cat = "settings",  desc = "Man pages",                         cmd = "<cmd>Telescope man_pages theme=get_ivy<cr>" },
     { cat = "settings",  desc = "Reload Module",                     cmd = "<cmd>Telescope reloader theme=get_ivy<cr>" },
     { cat = "settings",  desc = "File types",                        cmd = "<cmd>Telescope filetypes theme=get_ivy<cr>" },
-    { cat = "git",       desc = "Neogit",                            cmd = func.neogit },
     { cat = "git",       desc = "Commits",                           cmd = "<cmd>Telescope git_commits<cr>" },
     { cat = "git",       desc = "Branches",                          cmd = "<cmd>Telescope git_branches<cr>", },
     { cat = "git",       desc = "Stashes",                           cmd = "<cmd>Telescope git_stash<cr>", },
