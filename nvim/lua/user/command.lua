@@ -18,11 +18,16 @@ commander.setup({
 })
 
 local kitty_new_tab = function(command)
-    return "<cmd>!kitty @ --to unix:/tmp/mykitty-$(xdotool getactivewindow getwindowpid) launch --hold --type=tab " .. command .. "<cr>"
+    return "<cmd>!kitty @ --to unix:/tmp/mykitty-$(xdotool getactivewindow getwindowpid) launch --type=tab " ..
+    command .. "<cr>"
+end
+local kitty_hold_tab = function(command)
+    return "<cmd>!kitty @ --to unix:/tmp/mykitty-$(xdotool getactivewindow getwindowpid) launch --hold --type=tab " ..
+    command .. "<cr>"
 end
 commander.add({
-    { cat = "kitty",    desc = "Lazygit",                cmd = kitty_new_tab("lazygit")},
-    { cat = "kitty",    desc = "Just",                   cmd = kitty_new_tab("just --choose") },
+    { cat = "kitty",    desc = "Lazygit",                cmd = kitty_new_tab("lazygit") },
+    { cat = "kitty",    desc = "Just",                   cmd = kitty_hold_tab("just --choose") },
     { cat = "kitty",    desc = "Neogit",                 cmd = kitty_new_tab("nvrStart +'Neogit kind=replace'") },
     { cat = "compiler", desc = "Compiler explorer",      cmd = "<cmd>CECompile<cr>" },
     { cat = "compiler", desc = "Live compiler explorer", cmd = "<cmd>CECompileLive<cr>" },

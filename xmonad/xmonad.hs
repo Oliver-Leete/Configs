@@ -274,7 +274,8 @@ myPromptConfig = def
     , position              = CenteredAt (1 / 3) (1 / 8)
     , searchPredicate       = fuzzyMatch
     , autoComplete          = Nothing
-    , prevCompletionKey     = (shiftMask, xK_Tab)
+    , completionKey         = (noModMask, xK_Down)
+    , prevCompletionKey     = (noModMask, xK_Up)
     , complCaseSensitivity  = CaseInSensitive
     }
 

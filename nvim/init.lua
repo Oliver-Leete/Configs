@@ -114,7 +114,12 @@ require("lazy").setup(
                     PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
                     NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
                 },
-                highlight = { before = "", keyword = "bg", after = "bg" },
+                highlight = {
+                    before = "",
+                    keyword = "bg",
+                    after = "bg",
+                    pattern = [[.*<(KEYWORDS)(\(.{-}\))?\s*:]]
+                },
                 colors = {
                     error = { "LspDiagnosticsDefaultError", "ErrorMsg", "#DC2626" },
                     warning = { "LspDiagnosticsDefaultWarning", "WarningMsg", "#FBBF24" },

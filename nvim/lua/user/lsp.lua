@@ -26,8 +26,6 @@ require("mason-tool-installer").setup({
         "lua-language-server",
         "markdownlint",
         "marksman",
-        "pyright",
-        "ruff-lsp",
         "rust-analyzer",
         "shellharden",
         "shfmt",

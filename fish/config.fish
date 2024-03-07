@@ -21,8 +21,6 @@ fish_add_path --path /home/oleete/.ghcup/bin
 
 pyenv init - | source
 
-set WORKSPACE (wmctrl -d | grep '*' | awk "{print $NF}")
-
 # aliases
 alias neovim nvim
 alias n nvrStart
