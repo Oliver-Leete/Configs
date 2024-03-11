@@ -1,7 +1,6 @@
 theme = "kanagawa"
 
 [editor]
-cursorline = true
 color-modes = true
 gutters = ["diagnostics", "line-numbers", "spacer", "diff"]
 

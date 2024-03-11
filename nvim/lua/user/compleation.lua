@@ -23,6 +23,8 @@ cmp.setup({
         ["<down>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert })),
         ["<up>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert })),
         ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "i" }),
+        ["<tab>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }, { "c" })),
+        ["<s-tab>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }), { "c" }),
     },
     sources = {
         { name = "luasnip_choice" },

@@ -38,7 +38,6 @@ require("lazy").setup(
         { "ap/vim-you-keep-using-that-word" },
         { "ralismark/opsort.vim",           dependencies = { "tpope/vim-repeat" } },
         { "Konfekt/vim-CtrlXA",             dependencies = { "tpope/vim-repeat" } },
-        { "andymass/vim-matchup" },
         {
             "numToStr/Comment.nvim",
             opts = {
@@ -99,6 +98,8 @@ require("lazy").setup(
             dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
             config = function() require("user.noice") end,
         },
+        { "lukas-reineke/indent-blankline.nvim" },
+        { "HiPhish/rainbow-delimiters.nvim" },
 
         {
             "folke/todo-comments.nvim",
@@ -140,7 +141,7 @@ require("lazy").setup(
                 { "DNLHC/glance.nvim" },
                 { "yioneko/nvim-type-fmt" },
                 { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
-                { "RaafatTurki/corn.nvim" },
+                { "artemave/workspace-diagnostics.nvim" },
                 { "johmsalas/text-case.nvim" },
                 { "folke/neodev.nvim" },
                 { "hrsh7th/cmp-nvim-lsp" },
@@ -269,8 +270,6 @@ require("lazy").setup(
                     ]],
                 },
                 { "prochri/telescope-all-recent.nvim", dependencies = { "kkharji/sqlite.lua" } },
-                { "debugloop/telescope-undo.nvim" },
-                { "Marskey/telescope-sg" },
             },
             config = function() require("user.telescope") end
         },

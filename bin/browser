@@ -33,11 +33,11 @@ CACHEDIR=${XDG_CACHE_HOME:-${HOME}/.cache/browser}
 function exists_in_list() {
     LIST=$1
     DELIMITER=" "
-    VALUE=$3
+    VALUE=$2
     echo $LIST | tr "$DELIMITER" '\n' | grep -F -q -x "$VALUE"
 }
 
-if exists_in_list "Tmp Tmp2 Home CodeTuts Print Games Configs QMK ZMK" "$WSTAG"; then
+if exists_in_list "Tmp M Tmp2 Home CodeTuts Print Games Configs QMK ZMK" "$WSTAG"; then
     SUFFIX="-Configs"
 elif exists_in_list "Films" "$WSTAG"; then
     SUFFIX="-Films"

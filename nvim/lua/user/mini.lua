@@ -128,6 +128,46 @@ require("mini.operators").setup({
     sort = {},
 })
 
+local miniclue = require('mini.clue')
+miniclue.setup({
+    triggers = {
+        { mode = 'n', keys = '<Leader>' },
+        { mode = 'x', keys = '<Leader>' },
+
+        { mode = 'n', keys = 'g' },
+        { mode = 'x', keys = 'g' },
+
+        { mode = 'n', keys = 'K' },
+        { mode = 'x', keys = 'K' },
+
+        { mode = 'n', keys = ']' },
+        { mode = 'x', keys = ']' },
+        { mode = 'n', keys = '[' },
+        { mode = 'x', keys = '[' },
+
+        { mode = 'n', keys = ')' },
+        { mode = 'x', keys = ')' },
+        { mode = 'n', keys = '(' },
+        { mode = 'x', keys = '(' },
+
+        { mode = 'n', keys = '<c-w>' },
+
+        { mode = 'n', keys = '"' },
+        { mode = 'x', keys = '"' },
+        { mode = 'i', keys = '<C-r>' },
+        { mode = 'c', keys = '<C-r>' },
+    },
+    clues = {
+        miniclue.gen_clues.windows(),
+        miniclue.gen_clues.registers({ show_contents = true}),
+    },
+    window = {
+        delay = 250,
+        config = { anchor = "NE", row = 1, col = "auto" },
+    },
+})
+
+
 -- require("mini.notify").setup({
 --     content = {
 --         format = function(notif) return notif.msg end,

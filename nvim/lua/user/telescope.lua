@@ -106,23 +106,6 @@ require("telescope").setup({
         lsp_handlers = {
             require("telescope.themes").get_dropdown(),
         },
-        undo = {
-            side_by_side = true,
-            layout_strategy = "vertical",
-            diff_context_lines = 3,
-            layout_config = {
-                preview_height = 0.8,
-            },
-        },
-        ast_grep = {
-            command = {
-                "sg",
-                "--json=stream",
-                "-p",
-            },
-            grep_open_files = false,
-            lang = nil,
-        },
     },
     pickers = {
         git_commits = {
@@ -170,10 +153,7 @@ require("telescope").setup({
     },
 })
 
-require("telescope").load_extension("undo")
--- require("telescope").load_extension("command_center")
 require("telescope").load_extension("fzf")
-require("telescope").load_extension("ast_grep")
 
 function ProjectFiles()
     local results = require("telescope.utils").get_os_command_output({ "git", "rev-parse", "--git-dir" })

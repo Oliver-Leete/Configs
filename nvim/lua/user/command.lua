@@ -45,7 +45,6 @@ commander.add({
         end
     },
     { cat = "tab",     desc = "Close tab", cmd = "<cmd>tabclose<cr>" },
-    { cat = "default", desc = "Undo list", cmd = "<cmd>Telescope undo undo<cr>" },
     {
         cat = "default",
         desc = "Edit Snippets",

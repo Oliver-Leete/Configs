@@ -44,26 +44,27 @@ require("kanagawa").setup({
     overrides = function(colors)
         local theme = colors.theme
         return {
-            Pmenu                    = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
-            PmenuSel                 = { fg = "NONE", bg = theme.ui.bg_p2 },
-            PmenuSbar                = { bg = theme.ui.bg_m1 },
-            PmenuThumb               = { bg = theme.ui.bg_p2 },
-            WinSeparator             = { bg = theme.ui.bg, fg = theme.ui.bg_m2 },
-            TelescopeTitle           = { fg = theme.ui.special, bold = true },
-            TelescopePromptNormal    = { bg = theme.ui.bg_m1 },
-            TelescopePromptBorder    = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
-            TelescopePromptPrefix    = { fg = theme.ui.special, bg = theme.ui.bg_p1 },
-            TelescopePromptCounter   = { fg = theme.ui.special, bg = theme.ui.bg_p1 },
-            TelescopeResultsNormal   = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
-            TelescopeResultsBorder   = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
-            TelescopePreviewNormal   = { bg = theme.ui.bg_dim },
-            TelescopePreviewBorder   = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
+            Pmenu                  = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+            PmenuSel               = { fg = "NONE", bg = theme.ui.bg_p2 },
+            PmenuSbar              = { bg = theme.ui.bg_m1 },
+            PmenuThumb             = { bg = theme.ui.bg_p2 },
+            WinSeparator           = { bg = theme.ui.bg, fg = theme.ui.bg_m2 },
+            TelescopeTitle         = { fg = theme.ui.special, bold = true },
+            TelescopePromptNormal  = { bg = theme.ui.bg_m1 },
+            TelescopePromptBorder  = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
+            TelescopePromptPrefix  = { fg = theme.ui.special, bg = theme.ui.bg_p1 },
+            TelescopePromptCounter = { fg = theme.ui.special, bg = theme.ui.bg_p1 },
+            TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
+            TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+            TelescopePreviewNormal = { bg = theme.ui.bg_dim },
+            TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
         }
     end,
 })
 
 vim.cmd("colorscheme kanagawa")
 Ct = require("kanagawa.colors").setup({ colors = kcolors }).theme
+Pt = require("kanagawa.colors").setup({ colors = kcolors }).palette
 
 vim.api.nvim_set_hl(0, "SubstituteExchange", { link = "MatchParen" })
 
@@ -74,9 +75,6 @@ vim.api.nvim_set_hl(0, "CursorLineNr", { fg = Ct.ui.fg, bg = Ct.ui.bg_p2, bold =
 vim.api.nvim_set_hl(0, "CursorLineSep", { fg = Ct.ui.bg_p2, bg = Ct.ui.bg_p2, bold = true })
 
 vim.api.nvim_set_hl(0, "StatusLineNC", { fg = Ct.ui.bg_p2, bg = Ct.ui.bg })
-
-vim.g.matchup_matchparen_deferred = true
-vim.g.matchup_matchparen_hi_surround_always = true
 
 vim.api.nvim_set_hl(0, "TabLine", { fg = Ct.ui.bg, bg = Ct.syn.comment })
 vim.api.nvim_set_hl(0, "TabLineMids", { fg = Ct.ui.bg, bg = Ct.syn.comment })
@@ -152,3 +150,41 @@ glance.setup({
         folded = true,
     },
 })
+
+local highlight = {
+    "Rainbow1",
+    "Rainbow2",
+    "Rainbow3",
+    "Rainbow4",
+    "Rainbow5",
+    "Rainbow6",
+}
+
+local hooks = require("ibl.hooks")
+
+hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+    vim.api.nvim_set_hl(0, "Rainbow1", { fg = Pt.dragonBlue })
+    vim.api.nvim_set_hl(0, "Rainbow2", { fg = Pt.carpYellow })
+    vim.api.nvim_set_hl(0, "Rainbow3", { fg = Pt.oniViolet })
+    vim.api.nvim_set_hl(0, "Rainbow4", { fg = Pt.surimiOrange })
+    vim.api.nvim_set_hl(0, "Rainbow5", { fg = Pt.autumnRed })
+    vim.api.nvim_set_hl(0, "Rainbow6", { fg = Pt.waveAqua1 })
+end)
+
+local rainbow_delimiters = require("rainbow-delimiters")
+vim.g.rainbow_delimiters = {
+    highlight = highlight,
+    query = {
+        [''] = 'rainbow-delimiters',
+        lua = 'rainbow-blocks',
+        latex = 'rainbow-blocks',
+    },
+}
+require("ibl").setup({
+    indent = { char = " " },
+    scope = {
+        char = "▎",
+        highlight = highlight,
+    },
+})
+hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)

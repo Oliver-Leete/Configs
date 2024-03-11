@@ -76,9 +76,9 @@ vim.o.foldenable = true
 
 -- Numbering
 vim.opt.signcolumn = "no"
-vim.opt.numberwidth = 1
+vim.opt.numberwidth = 3
 vim.opt.number = true
-vim.opt.cursorline = true
+vim.opt.cursorline = false
 vim.cmd([[call matchadd('TabLineSel', '\%101v', 203)]])
 
 -- Splitting
@@ -127,6 +127,3 @@ for _, plugin in pairs(disabled_built_ins) do
 end
 
 vim.g.project = vim.fs.basename(vim.fn.getcwd())
-vim.g.matchup_matchparen_offscreen = { method = false }
-vim.g.matchup_text_obj_enabled = false
-vim.g.matchup_mouse_enabled = false

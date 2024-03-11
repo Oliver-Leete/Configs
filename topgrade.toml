@@ -68,8 +68,6 @@ repos = [
 "TLDR" = "tldr -u"
 "Locate DB" = "sudo updatedb"
 "Pipx" = "pipx upgrade-all"
-"Rye" = "rye self update"
-"Rye Tools" = "rye tools list | xargs -I _ rye tools install --force _"
 
 [brew]
 #greedy_cask = true

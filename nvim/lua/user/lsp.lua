@@ -44,26 +44,18 @@ require("lspconfig.ui.windows").default_options.border = Border
 vim.api.nvim_set_hl(0, "LspInlayHint", { link = "NvimDapVirtualText" })
 
 vim.diagnostic.config({
-    underline = { severity = { min = "Info", }, },
-    virtual_text = false,
+    underline = false,
+    virtual_text = { severity = { min = "Warn", }, },
     update_in_insert = false,
     severity_sort = true,
     virtual_lines = false,
-    signs = false,
-})
-
-require("corn").setup({
-    icons = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
-    border_style = "none",
-    item_preprocess_func = function(item)
-        return item
-    end,
-    blacklisted_modes = { "i" },
-    highlights = {
-        error = "DiagnosticError",
-        warn = "DiagnosticWarn",
-        info = "DiagnosticInfo",
-        hint = "DiagnosticHint",
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = " ",
+            [vim.diagnostic.severity.WARN] = " ",
+            [vim.diagnostic.severity.INFO] = " ",
+            [vim.diagnostic.severity.HINT] = "󰅽 ",
+        },
     },
 })
 
@@ -77,8 +69,6 @@ local custom_attach = function(client, bufnr)
         sc.renameProvider = false
         sc.definitionProvider = false
         sc.referencesProvider = false
-    elseif client.name == "texlab" then
-        sc.documentFormattingProvider = false
     end
 
     if sc.documentSymbolProvider then
@@ -87,13 +77,13 @@ local custom_attach = function(client, bufnr)
 
     -- LSP Binding Override
     if client.name ~= "null-ls" then
-        bmap("n", "gd", "<cmd>Glance definitions<cr>")
-        bmap("n", "gr", "<cmd>Glance references<cr>")
-        bmap("n", "gD", "<cmd>Glance type_definitions<cr>")
-        bmap("n", "gI", "<cmd>Glance implementations<cr>")
+        bmap("n", "gd", "<cmd>Glance definitions<cr>", { desc = "Peek Definition" })
+        bmap("n", "gr", "<cmd>Glance references<cr>", { desc = "Peek References" })
+        bmap("n", "gD", "<cmd>Glance type_definitions<cr>", { desc = "Peek Type Deffinition" })
+        bmap("n", "gI", "<cmd>Glance implementations<cr>", { desc = "Peek implementations" })
 
-        bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls theme=get_ivy<cr>")
-        bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>")
+        bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls theme=get_ivy<cr>", { desc = "Outgoing Calls" })
+        bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>", { desc = "Incoming Calls" })
     end
     if sc.codeLensProvider ~= nil and sc.codeLensProvider == true then
         bmap("n", "<C-,>", vim.lsp.codelens.run)
@@ -116,6 +106,7 @@ local custom_attach = function(client, bufnr)
     if client.server_capabilities.inlayHintProvider then
         vim.lsp.inlay_hint.enable(bufnr, true)
     end
+    require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
 end
 
 require("mason").setup({ ui = { border = Border } })
@@ -145,6 +136,7 @@ lspconfig.taplo.setup(default)
 lspconfig.asm_lsp.setup(default)
 lspconfig.arduino_language_server.setup(default)
 lspconfig.teal_ls.setup(default)
+lspconfig.nushell.setup(default)
 lspconfig.clangd.setup(default)
 lspconfig.esbonio.setup(default)
 lspconfig.hls.setup({
@@ -353,7 +345,5 @@ none_ls.setup({
         none_ls.builtins.hover.printenv,
     },
 })
-
-require("lsp_lines").setup()
 
 return M

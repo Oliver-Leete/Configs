@@ -95,52 +95,12 @@ Map({ "n", "x" }, "u", function()
 end)
 Map({ "n", "x" }, "U", "<c-r>")
 
-local help_hint = [[
-┏^^^^━━━━━┳━━━━━━┳━━━━━^^^^┓
-┃^^^^     ┃ Help ┃     ^^^^┃
-┃^^^^     ┗━━━━━━┛     ^^^^┃
-┃^^^^      Inline      ^^^^┃
-┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
-┃^^    _E_: errors     ^^^^┃
-┃^^    _G_: git diff   ^^^^┃
-┃^^^^                  ^^^^┃
-┃^^^^      Pop-up      ^^^^┃
-┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
-┃^^    _K_: info       ^^^^┃
-┃^^    _g_: git diff   ^^^^┃
-┃^^    _b_: gid blame  ^^^^┃
-┃^^    _e_: errors     ^^^^┃
-┃^^    _t_: test out   ^^^^┃
-┃^^    _d_: debug out  ^^^^┃
-┣^^^^━━━━━━━━━━━━━━━━━━^^^^┫
-┃^^    _<esc>_: exit   ^^^^┃
-┗^^^^━━━━━━━━━━━━━━━━━━^^^^┛
-]]
-Hydra({
-    name = "Help",
-    mode = { "n", "x" },
-    body = "K",
-    config = {
-        color = "teal",
-        invoke_on_body = true,
-        hint = {
-            position = "top-right",
-            border = nil
-        }
-    },
-    hint = help_hint,
-    heads = {
-        { "K",     vim.lsp.buf.hover },
-        { "G",     require("gitsigns").preview_hunk_inline },
-        { "E",     require("user.lsp").preview_diagnostics_inline },
-        { "g",     require("gitsigns").preview_hunk },
-        { "b",     function() require("gitsigns").blame_line({ full = true }) end },
-        { "e",     function() vim.diagnostic.open_float({ border = Border, scope = "line", source = "always" }) end },
-        { "t",     function() require("neotest").output.open() end },
-        { "d",     function() require("dap.ui.widgets").hover() end,                                                { silent = true } },
-        { "<esc>", nil,                                                                                             { nowait = true } },
-    }
-})
+Map({"n", "x"}, "KK", vim.lsp.buf.hover, { desc = "Info" })
+Map({"n", "x"}, "KE", function() vim.diagnostic.open_float({ border = Border, scope = "line", source = "always" }) end, { desc = "Errors" })
+Map({"n", "x"}, "KG", require("gitsigns").preview_hunk, { desc = "Git Hunk" })
+Map({"n", "x"}, "KB", function() require("gitsigns").blame_line({ full = true }) end, { desc = "Git Blame" })
+Map({"n", "x"}, "KT", function() require("neotest").output.open() end, { desc = "Test Results" })
+Map({"n", "x"}, "KD", require("dap.ui.widgets").hover, { desc = "Test Results" })
 
 Map("n", "Q", "@q")
 Map("x", "Q", ":norm! @q<cr>")
@@ -160,14 +120,14 @@ Map("n", "<c-x>", "<cmd>silent split<cr>")
 Map("n", "<c-t>", "<cmd>silent tabedit %<cr>")
 
 -- GOTO
-Map({ "n", "x", "o" }, "gj", "G")
-Map({ "n", "x", "o" }, "gk", "gg")
-Map({ "n", "x", "o" }, "gh", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true })
-Map({ "n", "x", "o" }, "gl", "$")
+Map({ "n", "x", "o" }, "gk", "gg", { desc = "Top of File" })
+Map({ "n", "x", "o" }, "gj", "G", { desc = "Bottom of File" })
+Map({ "n", "x", "o" }, "gh", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true }, { desc = "Left of Line" })
+Map({ "n", "x", "o" }, "gl", "$", { desc = "Right of Line" })
 
-Map({ "n", "x", "o" }, "gt", "H")
-Map({ "n", "x", "o" }, "gm", "M")
-Map({ "n", "x", "o" }, "gb", "L")
+Map({ "n", "x", "o" }, "gt", "H", { desc = "Top of Screen" })
+Map({ "n", "x", "o" }, "gm", "M", { desc = "Middle of Screen" })
+Map({ "n", "x", "o" }, "gb", "L", { desc = "Bottom of Screen" })
 
 Map({ "n", "x", "o" }, "gV", "`[v`]")
 Map("n", "gF", ":edit <cfile><cr>")

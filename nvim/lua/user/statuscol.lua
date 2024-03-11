@@ -43,7 +43,7 @@ vim.api.nvim_set_hl(0, "CursorNeotestSkipped", { fg = "#00f1f5", bg = Ct.ui.bg_p
 vim.api.nvim_set_hl(0, "CursorLineSign", { bg = Ct.ui.bg_p2 })
 
 local make_sep = function(args)
-    local hl_prefix = args.lnum == vim.fn.line(".", args.win) and "%#Cursor" or "%#"
+    local hl_prefix = "%#"
     local gitsigns_unstaged = vim.api.nvim_get_namespaces().gitsigns_extmark_signs_
     local sign
     if gitsigns_unstaged then
@@ -69,7 +69,7 @@ local make_sep = function(args)
     return hl .. text
 end
 
- -- TODO : fix this
+-- TODO : fix this
 local builtin = require("statuscol.builtin")
 require("statuscol").setup({
     setopt = true,

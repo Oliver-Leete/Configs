@@ -26,8 +26,6 @@ alias neovim nvim
 alias n nvrStart
 alias ne "n +LoadSession"
 
-alias exa "exa --colour=always --group-directories-first --icons"
-
 abbr cd z
 abbr vidir "echo 'use edir'"
 abbr rm "echo use trm"
@@ -41,11 +39,11 @@ abbr cp "cp -riv"
 
 abbr  fd "fd -HLI"
 
-abbr  ls "exa -1 --icons --group-directories-first"
-abbr  ll "exa -a -l --icons --group-directories-first"
-abbr  lt "exa -a -l -T --level=2 --icons --group-directories-first"
-abbr  lg "exa -l -T --git --git-ignore --icons --group-directories-first"
-abbr  lga "exa -a -l -T --level=2 --git --git-ignore --icons --group-directories-first"
+abbr  ls "eza -1 --icons --group-directories-first"
+abbr  lr "eza -1 --group-directories-first"
+abbr  ll "eza -aal --icons --group-directories-first --time-style relative"
+abbr  lt "eza -aalT --level=2 --icons --group-directories-first --time-style relative"
+abbr  lg "eza -aalT --git-ignore --icons --group-directories-first --time-style relative"
 
 abbr -a bk backup
 abbr -a re restore

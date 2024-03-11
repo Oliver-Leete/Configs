@@ -45,14 +45,6 @@ require("edgy").setup({
         { ft = "DiffviewFileHistory", title = " Diffs" },
     },
     left = {
-        {
-            ft = "help",
-            size = { width = 80 },
-            -- only show help buffers
-            filter = function(buf)
-                return vim.bo[buf].buftype == "help"
-            end,
-        },
         { ft = "dapui_scopes", title = "Scopes" },
         { ft = "dapui_breakpoints", title = "Breakpoints" },
         { ft = "dapui_stacks", title = "Stacks" },
