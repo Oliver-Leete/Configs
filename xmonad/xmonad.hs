@@ -21,6 +21,7 @@ import           XMonad.Actions.CycleWS                 (nextScreen,
 import           XMonad.Actions.CycleWSLocal
 import           XMonad.Actions.DynamicProjectsLocal
 import           XMonad.Actions.Navigation2D
+import           XMonad.Actions.PerLayoutKeys
 import           XMonad.Actions.PerWindowKeys
 import           XMonad.Actions.ProfilesLocal
 import           XMonad.Actions.SpawnOn
@@ -49,8 +50,10 @@ import           XMonad.Layout.MultiToggle
 import           XMonad.Layout.MultiToggle.Instances
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Notebook
+import           XMonad.Layout.PaperPersistent
 import           XMonad.Layout.PerScreen
 import           XMonad.Layout.PerWorkspace
+import           XMonad.Layout.Renamed
 import           XMonad.Layout.SimpleFocus
 import           XMonad.Layout.Spacing
 import           XMonad.Layout.TwoPanePersistentLocal
@@ -306,7 +309,15 @@ instance Transformer TWOPANE Window where
 twoPane :: ModifiedLayout Spacing TwoPanePersistent a
 twoPane = mySpacing $ TwoPanePersistent Nothing reSize (1/2)
 
-myLayoutHook = smartBorders
+data PAPER = PAPER deriving (Read, Show, Eq, Typeable)
+instance Transformer PAPER Window where
+    transform PAPER x k = k paper (const x)
+
+paper :: ModifiedLayout Spacing PaperPersistent a
+paper = mySpacing $ PaperPersistent (-1)
+
+myLayoutHook = renamed [KeepWordsRight 1]
+             $ smartBorders
              $ refocusLastLayoutHook
              $ focusTracking
              $ mkToggle (single MIRROR)
@@ -316,6 +327,7 @@ myLayoutHook = smartBorders
              $ myDeco
              $ draggingVisualizer
              $ mkToggle (single TWOPANE)
+             $ mkToggle (single PAPER)
              $ mySpacing
               notebookLayout
     where
@@ -345,7 +357,7 @@ myModMask = mod4Mask
 -- ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫                                   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
 -- ┃  pws1 ┃  pws2 ┃  pws3 ┃  pws4 ┃  pws0 ┃                                   ┃winLeft┃  app1 ┃  app2 ┃  app3 ┃  app4 ┃
 -- ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┳━━━━━━━┓   ┏━━━━━━━┳━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
--- ┃fullScr┃fullBar┃fullCen┃twoPane┃   -   ┃nspAway┃nextScr┃   ┃   -   ┃  kill ┃ winUp ┃ Master┃ decCol┃ incCol┃   -   ┃
+-- ┃fullScr┃fullBar┃fullCen┃twoPane┃ paper ┃nspAway┃nextScr┃   ┃   -   ┃  kill ┃ winUp ┃ Master┃ decCol┃ incCol┃   -   ┃
 -- ┗━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┛
 --         ┃   -   ┃   -   ┃       ┃tabPrev┃ wsLast┃winPrev┃   ┃winNext┃  term ┃tabNext┃       ┃   -   ┃   -   ┃
 --         ┗━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━━━━━━━━━┛   ┗━━━━━━━┻━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━┛
@@ -397,15 +409,16 @@ myKeys n =
     , ("M-x"             , toggleLayout FULLBAR)
     , ("M-c"             , toggleLayout FULLCENTER)
     , ("M-v"             , toggleLayout TWOPANE)
+    , ("M-b"             , toggleLayout PAPER)
 
-    , ("M-h"             , bF $ nv "Navigateleft"   $ l (upPointer (windowGo L True) >> bF (nv "PostNavLeft" $ l $ return ())))
-    , ("M-j"             , bF $ nv "Navigatebottom" $ l (upPointer (windowGo D True) >> bF (nv "PostNavBottom" $ l $ return ())))
-    , ("M-k"             , bF $ nv "Navigatetop"    $ l (upPointer (windowGo U True) >> bF (nv "PostNavTop" $ l $ return ())))
-    , ("M-l"             , bF $ nv "Navigateright"  $ l (upPointer (windowGo R True) >> bF (nv "PostNavRight" $ l $ return ())))
-    , ("M-S-h"           , upPointer $ windowSwap L True)
-    , ("M-S-j"           , upPointer $ windowSwap D True)
-    , ("M-S-k"           , upPointer $ windowSwap U True)
-    , ("M-S-l"           , upPointer $ windowSwap R True)
+    , ("M-h"             , bF $ nv "Navigateleft"   $ l (moveLeft >> bF (nv "PostNavLeft" $ l $ return ())))
+    , ("M-j"             , bF $ nv "Navigatebottom" $ l (upPointer (windowGo D False) >> bF (nv "PostNavBottom" $ l $ return ())))
+    , ("M-k"             , bF $ nv "Navigatetop"    $ l (upPointer (windowGo U False) >> bF (nv "PostNavTop" $ l $ return ())))
+    , ("M-l"             , bF $ nv "Navigateright"  $ l (moveRight >> bF (nv "PostNavRight" $ l $ return ())))
+    , ("M-S-h"           , upPointer $ bindByLayout [("PaperPersistent", windows W.swapUp), ("", windowSwap L False)])
+    , ("M-S-j"           , upPointer $  windowSwap D False)
+    , ("M-S-k"           , upPointer $  windowSwap U False)
+    , ("M-S-l"           , upPointer $ bindByLayout [("PaperPersistent", windows W.swapDown), ("", windowSwap R False)])
 
     , ("M-m"             , upPointer $ swapPromote' False)
 
@@ -451,7 +464,8 @@ myKeys n =
         shiftTabCommand = if n > 1
             then upPointer shiftNextScreen
             else upFocus $ shiftToggleWS' ["NSP"]
-
+moveLeft = bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex (-1))), ("", upPointer (windowGo L False))]
+moveRight = bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex 1)), ("", upPointer (windowGo R False))]
 mySwitchProfilePrompt :: XPConfig -> X()
 mySwitchProfilePrompt c = do ps <- profileIds
                              xmonadPromptCT "Profile" (map (\p -> (p, switchToProfile p)) ps ++
@@ -459,7 +473,7 @@ mySwitchProfilePrompt c = do ps <- profileIds
                                                           , ("Remove", removeWSFromProfilePrompt c)
                                                           , ("Switch", switchProfileWSPrompt c)
                                                           , ("Send", shiftProfileWSPrompt c)
-                                                          , ("Clear", killAll)
+                                                         , ("Clear", killAll)
                                                           ]
                                                       ) c
 myFuncPrompt c = xmonadPromptC
@@ -500,6 +514,7 @@ myFuncPrompt c = xmonadPromptC
     , ("FullBar"            , toggleLayout FULLBAR)
     , ("Centre"             , toggleLayout FULLCENTER)
     , ("TwoPane"            , toggleLayout TWOPANE)
+    , ("PaperLayout"        , toggleLayout PAPER)
 
     , ("Rotate"             , toggleLayout MIRROR)
     , ("Mirror"             , upFocus $ sendMessage ToggleSide)
@@ -679,10 +694,10 @@ myCommands' = myCommands ++ sendTo
 
 myCommands :: [(String, X ())]
 myCommands =
-    [ ("winGo-h"             , upPointer $ windowGo L True)
-    , ("winGo-j"             , upPointer $ windowGo D True)
-    , ("winGo-k"             , upPointer $ windowGo U True)
-    , ("winGo-l"             , upPointer $ windowGo R True)
+    [ ("winGo-h"             , moveLeft)
+    , ("winGo-j"             , upPointer $ windowGo D False)
+    , ("winGo-k"             , upPointer $ windowGo U False)
+    , ("winGo-l"             , moveRight)
 
     , ("project-browser"     , runProjectApp4)
 

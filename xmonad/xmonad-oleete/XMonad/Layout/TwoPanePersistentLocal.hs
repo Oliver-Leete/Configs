@@ -97,17 +97,19 @@ focusedSlave (TwoPanePersistent _ delta split) s r m =
   , Just $ TwoPanePersistent (Just $ focus s) delta split )
   where (left, right) = modYsplitHorisontallyBy split r
 
+modYsplitHorisontallyBy ::  Rational -> Rectangle -> (Rectangle, Rectangle)
 modYsplitHorisontallyBy split r =
     (le, ri)
     where (left, right) = splitHorizontallyBy split r
-          le = modY left r
-          ri = modY right r
+          le = modY r left
+          ri = modY r right
 
 modY :: Rectangle -> Rectangle -> Rectangle
-modY (Rectangle sx sy sw sh) (Rectangle bx _ bw _) =
-    Rectangle sx y sw h
-    where   ymoddifier= if toInteger (8 + sx) < toInteger bx + 1200
+modY (Rectangle bx _ bw _) (Rectangle sx sy sw sh) =
+    Rectangle sx (sy + ymoddifier) sw (sh - fromIntegral ymoddifier)
+    where   ymoddifier= if toInteger (8 + sx) < toInteger bx + xmobarWidth
                         then 31
                         else 0
-            y = sy + ymoddifier
-            h = sh - fromIntegral ymoddifier
+            xmobarWidth = if bw > 1920
+                            then 960
+                            else 1280
