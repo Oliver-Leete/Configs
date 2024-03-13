@@ -126,17 +126,17 @@ projects =
     , Project { pName = "Films",      pDir = "~/Videos/films",                      pApp1 = kitty, pApp1F = kittyF, pApp2 = mpv,       pApp2F = mpvF,      pApp3 = deluge,    pApp3F = delugeF,   pApp4 = br filmB, pApp4F = brF filmB, pStart = fSpawn "Films" }
     , Project { pName = "Dnd",        pDir = "~/Projects/Rpgs",                     pApp1 = kitty, pApp1F = kittyF, pApp2 = zathura,   pApp2F = zathuraF,  pApp4 = br rpgsB, pApp4F = brF rpgsB, pStart = bSpawn rpgsB}
 
-    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",            pApp1 = kitty, pApp1F = kittyF, pApp2 = zathura,   pApp2F = zathuraF,  pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Thesis" workB}
-    , Project { pName = "Sim",        pDir = "~/Projects/HSSSimulations",           pApp1 = kitty, pApp1F = kittyF, pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Sim" workB}
-    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",            pApp1 = kitty, pApp1F = kittyF, pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Exp" workB}
-    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",           pApp1 = kitty, pApp1F = kittyF, pApp2 = zathura,   pApp2F = zathuraF,  pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Scripts" workB}
+    , Project { pName = "Thesis",     pDir = "~/Projects/Thesis/thesis",            pApp1 = kitty, pApp1F = kittyF, pApp2 = zathura,   pApp2F = zathuraF,  pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Thesis" univB}
+    , Project { pName = "Sim",        pDir = "~/Projects/HSSSimulations",           pApp1 = kitty, pApp1F = kittyF, pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Sim" univB}
+    , Project { pName = "Exp",        pDir = "~/Projects/JuliaPlotting",            pApp1 = kitty, pApp1F = kittyF, pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Exp" univB}
+    , Project { pName = "Scripts",    pDir = "~/Projects/Thesis/scripts",           pApp1 = kitty, pApp1F = kittyF, pApp2 = zathura,   pApp2F = zathuraF,  pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Scripts" univB}
 
-    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",           pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br scinB, pApp4F = brF scinB, pStart = tBSpawn "Scin-Main" scinB}
-    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys",       pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br scinB, pApp4F = brF scinB, pStart = tBSpawn "Scin-Print" scinB}
-    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware",       pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br scinB, pApp4F = brF scinB, pStart = tBSpawn "Scin-Firm" scinB}
-    , Project { pName = "Scin-Heat",  pDir = "~/Projects/Scintilla/HCPCB/firmware", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br scinB, pApp4F = brF scinB, pStart = tBSpawn "Scin-Heat" scinB}
-    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",           pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br scinB, pApp4F = brF scinB, pStart = tBSpawn "Scin-Docs" scinB}
-    , Project { pName = "Scin-Test",  pDir = "~/Projects/Scintilla/Main",           pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br scinB, pApp4F = brF scinB, pStart = Just $ return () }
+    , Project { pName = "Scin-Main",  pDir = "~/Projects/Scintilla/Main",           pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Scin-Main" workB}
+    , Project { pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys",       pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Scin-Print" workB}
+    , Project { pName = "Scin-Firm",  pDir = "~/Projects/Scintilla/Firmware",       pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Scin-Firm" workB}
+    , Project { pName = "Scin-Heat",  pDir = "~/Projects/Scintilla/HCPCB/firmware", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Scin-Heat" workB}
+    , Project { pName = "Scin-Docs",  pDir = "~/Projects/Scintilla/docs",           pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Scin-Docs" workB}
+    , Project { pName = "Scin-Test",  pDir = "~/Projects/Scintilla/Main",           pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF,  pApp4 = br workB, pApp4F = brF workB, pStart = Just $ return () }
     ]
     where
         kitty  = upPointer $ Wgl.runOrRaiseNext "kitty" (className =? "kitty")
@@ -151,9 +151,9 @@ projects =
         scinStart             = "cd /home/oleete/Projects/Scintilla/Main; .venv/bin/python main.pyw"
         (scinCont, scinContF) = (upPointer $ Wgl.runOrRaiseNext scinStart (title =? "Scintilla Control"), upPointer $ spawn scinStart)
 
-        persB  = "google-chrome-stable-Configs"
-        workB  = "google-chrome-stable-Thesis"
-        scinB  = "google-chrome-stable-Scin-Main"
+        persB  = "google-chrome-stable-personal"
+        univB  = "google-chrome-stable-uni"
+        workB  = "google-chrome-stable-work"
         rpgsB  = "google-chrome-stable-Dnd"
         filmB  = "google-chrome-stable-Films"
         br na   = bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ brS na)
@@ -544,7 +544,7 @@ myStartupHook = do
 -- Log                                                                                            --
 ----------------------------------------------------------------------------------------------------
 
-barSpawner :: ScreenId -> IO StatusBarConfig
+barSpawner :: ScreenId -> X StatusBarConfig
 barSpawner (S sid) = pure $
   statusBarPropTo ("_XMONAD_LOG_" ++ show sid) ( "/home/oleete/.config/xmobar/xmobarLaunch " ++ show sid) myPP
 

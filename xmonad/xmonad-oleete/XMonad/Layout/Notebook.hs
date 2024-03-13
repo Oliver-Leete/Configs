@@ -37,14 +37,14 @@ import           XMonad                      (IncMasterN (IncMasterN),
                                               fromMessage, splitHorizontally,
                                               splitVerticallyBy)
 import           XMonad.Layout.ResizableTile (MirrorResize (..))
-import           XMonad.Prelude              (fi)
+import           XMonad.Prelude              (fi, mapAccumL)
 import qualified XMonad.StackSet             as W
 
 import           Data.Ratio                  ((%))
 
 import           Control.Monad               (msum)
-import           Data.List                   (sortOn)
-import           Graphics.X11.Xlib           (Dimension, Rectangle (..))
+import           Data.List
+import           Graphics.X11.Xlib           (Rectangle (..))
 -- import qualified Basement.Compat.Base as GHC.Int
 import qualified Data.Ord
 import           XMonad.Core                 (Message)
@@ -143,7 +143,7 @@ doL m s dir n c f mf sf r st = zip sti (newWide m s dir n c nwin f mf sf r)
                 nwin = length sti
 
 newWide ::Bool -> Bool -> Bool -> Int -> Int -> Int -> Rational -> Rational -> Rational -> Rectangle -> [Rectangle]
-newWide m s d nMainLimit nTotColLimit nwin f mf sf r
+newWide m s stackMirrored nMainLimit nTotColLimit nwin f mf sf r
     | nTotColLimit == 0 = map colModifier (splitHorizontally nwin r)
     | nwin <= ncol + nmain = map (colModifier . fst) listCols
     | otherwise = listWithStack
@@ -173,20 +173,17 @@ newWide m s d nMainLimit nTotColLimit nwin f mf sf r
 
             listCols = colLister m (fromIntegral width) colWidth 1 nmain ncol f r
 
-            listAll = splitColumns (sortByXLocation d listCols) (fromIntegral minWidth - 10) initStackRect mf d s r
+            (stackRect, colTops) = splitColumns (sortByXLocation stackMirrored listCols) r (fromIntegral minWidth - 10) mf stackMirrored
 
-            splitStack True False = splitHorizontally nstack (fst $ last listAll)
+            splitStack True False = splitHorizontally nstack stackRect
             splitStack False False = reverse $ splitStack True False
             splitStack x True = map (reflectRect r) (splitStack x False)
 
             colModifier
-                | s = (`modY` r) . reflectRect r
-                | otherwise = (`modY` r)
+                | s = modY r . reflectRect r
+                | otherwise = modY r
 
-            listWithStack = map (colModifier . fst) (sortByIndex $ init listAll) ++ splitStack d s
-
-            initYPos = floor $ fromIntegral (rect_height r) * mf
-            initStackRect = Rectangle (rect_x r) (initYPos + rect_y r) 0 (rect_height r - fromIntegral initYPos)
+            listWithStack = map (colModifier . fst) (sortByIndex colTops) ++ splitStack stackMirrored s
 
 splitLeftMaster :: Int -> Int -> Int -> Int -> Int -> Int -> Rational -> Rectangle -> [(Rectangle, Int)]
 splitLeftMaster xpos width colWidth count main colu f rect
@@ -211,21 +208,25 @@ splitMiddleMaster sign xpos width colWidth count main colu f rect
             xposNN True =  xpos + (sign * ((colWidth * (count - main)) + (width * main)))
             xposNN False =  xpos + (sign * ((colWidth * ((1+count) - main)) + (width * (main-1))))
 
-splitColumns :: [(Rectangle, Int)] -> Int -> Rectangle -> Rational -> Bool -> Bool -> Rectangle -> [(Rectangle, Int)]
-splitColumns list minWidth stackRect mf d s bigRect
-    | null list = [(stackRect, 0)]
-    | rect_width stackRect <= fromIntegral minWidth = lister rectN (stackRectFunc d stackRect stackRectAdd)
-    | otherwise = lister rect stackRect
-    where   lister r sr = (r, index) : splitColumns listNew minWidth sr mf d s bigRect
-            rect = fst $ head list
-            index = snd $ head list
-            listNew = tail list
-            (rectN, stackRectAdd) = splitVerticallyBy mf rect
-            stackRectFunc True  = rectangleDiff
-            stackRectFunc False =  flip rectangleDiff
+splitColumns :: [(Rectangle, Int)] -> Rectangle -> Int -> Rational -> Bool -> (Rectangle, [(Rectangle, Int)])
+splitColumns columns screenRect minWidth stackFrac stackMirrored = mapAccumL splitColumn initStackRect columns
+        where   initYPos = floor $ fromIntegral (rect_height screenRect) * stackFrac
+                initStackRect = Rectangle (rect_x screenRect) (initYPos + rect_y screenRect) 0 (rect_height screenRect - fromIntegral initYPos)
+
+                splitColumn :: Rectangle -> (Rectangle, Int) -> (Rectangle, (Rectangle, Int))
+                splitColumn accum column
+                    | rect_width accum <= fromIntegral minWidth = (newStackRect, (columnTop, snd column))
+                    | otherwise = (accum, column)
+                    where   (columnTop, columnBase) = splitVerticallyBy stackFrac $ fst column
+                            newStackRect = stackRectFunc stackMirrored accum columnBase
+
+                stackRectFunc :: Bool -> Rectangle -> Rectangle -> Rectangle
+                stackRectFunc True  = rectangleDiff
+                stackRectFunc False =  flip rectangleDiff
+
 
 modY :: Rectangle -> Rectangle -> Rectangle
-modY (Rectangle sx sy sw sh) (Rectangle bx _ bw _)=
+modY (Rectangle bx _ bw _) (Rectangle sx sy sw sh) =
     Rectangle sx (sy + ymoddifier) sw (sh - fromIntegral ymoddifier)
     where   ymoddifier= if toInteger (8 + sx) < toInteger bx + xmobarWidth
                         then 31
