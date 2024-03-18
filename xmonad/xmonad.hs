@@ -314,7 +314,7 @@ instance Transformer PAPER Window where
     transform PAPER x k = k paper (const x)
 
 paper :: ModifiedLayout Spacing PaperPersistent a
-paper = mySpacing $ PaperPersistent (-1)
+paper = mySpacing $ PaperPersistent (-1) (1/2) (1/20)
 
 myLayoutHook = renamed [KeepWordsRight 1]
              $ smartBorders
@@ -401,8 +401,8 @@ myKeys n =
 
     , ("M-<Left>"        , bF $ kt "action previous_tab" $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
     , ("M-<Right>"       , bF $ kt "action next_tab" $ l (P.sendKey controlMask xK_Tab))
-    , ("M-<Down>"        , windows W.focusDown)
-    , ("M-<Up>"          , windows W.focusUp)
+    , ("M-<Down>"        , upPointer $ windows W.focusDown)
+    , ("M-<Up>"          , upPointer $ windows W.focusUp)
 
     , ("M-w"             , bF $ nv "ZenOrFull" $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
     , ("M-z"             , toggleLayout FULL)

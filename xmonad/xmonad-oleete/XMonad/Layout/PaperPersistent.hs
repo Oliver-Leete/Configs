@@ -23,13 +23,12 @@ module XMonad.Layout.PaperPersistent (
     IncWindowIndex(..),
     ) where
 
-import           Control.Monad      (msum)
+import           Control.Monad   (msum)
 import           Data.List
 import           Data.Maybe
-import           Data.Ratio
 import           XMonad
-import           XMonad.Prelude     ((!?))
-import qualified XMonad.StackSet    as W
+import           XMonad.Prelude  ((!?))
+import qualified XMonad.StackSet as W
 
 -- $usage
 -- You can use this module with the following in your @xmonad.hs@:
@@ -48,27 +47,36 @@ import qualified XMonad.StackSet    as W
 newtype IncWindowIndex = IncWindowIndex Int deriving Typeable
 instance Message IncWindowIndex
 
-data PaperPersistent a = PaperPersistent { leftIndex :: !Int }
+data PaperPersistent a = PaperPersistent {
+    leftIndex :: !Int,
+    frac      :: !Rational,
+    fracDelta :: !Rational
+}
     deriving ( Read, Show )
 
 
 instance (Show a, Eq a) => LayoutClass PaperPersistent a where
     handleMessage l m = do
                             modifyWindowSet $ W.modify' (noWrapFocus' (maybe 0 toIndexMod (fromMessage m)))
-                            return $ msum [fmap incWindowIndex (fromMessage m)]
+                            return $ msum [ fmap incWindowIndex (fromMessage m)
+                                          , fmap resize (fromMessage m)]
             where
                 incWindowIndex (IncWindowIndex x) = l { leftIndex = leftIndex l + x}
                 toIndexMod (IncWindowIndex x) = x
+                resize Shrink = l { frac = max 0.33 $ f-d }
+                resize Expand = l { frac = min 1 $ f+d }
+                f = frac l
+                d = fracDelta l
 
-    doLayout (PaperPersistent oldLeftInd) sc ws =
-        return (mapMaybe dropEmpty $ zip wins (split3 sc), Just $ PaperPersistent newLeftInd)
+    doLayout (PaperPersistent oldLeftInd f d) sc ws =
+        return (mapMaybe dropEmpty $ zip wins (split3 sc f), Just $ PaperPersistent newLeftInd f d)
         where
             fullStack = W.integrate ws
             focWinInd = fromMaybe 0 $ elemIndex (W.focus ws) fullStack
             boundOldLeftInd = min (max oldLeftInd (-1)) (length fullStack - 2)
             newLeftInd
                 | focWinInd > boundOldLeftInd + 2 = focWinInd - 1
-                | focWinInd < boundOldLeftInd = focWinInd
+                | focWinInd < boundOldLeftInd = focWinInd - 1
                 | otherwise = boundOldLeftInd
             inds = [newLeftInd..(newLeftInd+2)]
             wins = map (fullStack !?) inds
@@ -79,15 +87,15 @@ dropEmpty :: (Maybe a, b) -> Maybe (a, b)
 dropEmpty (Just a, b)  = Just (a, b)
 dropEmpty (Nothing, _) = Nothing
 
-split3 :: Rectangle -> [Rectangle]
-split3 sc =
-       [ modY sc $ Rectangle sx sy r3w sh
-       , modY sc $ Rectangle (sx + fromIntegral r3w) sy r1w sh
-       , modY sc $ Rectangle (sx + fromIntegral r3w + fromIntegral r1w) sy r2w sh ]
+split3 :: Rectangle -> Rational -> [Rectangle]
+split3 sc f =
+       [ modY sc $ Rectangle (midPos - offset - fromIntegral width) sy width sh
+       , modY sc $ Rectangle (midPos - offset) sy width sh
+       , modY sc $ Rectangle (midPos + offset) sy width sh ]
         where (Rectangle sx sy sw sh) = sc
-              r1w = ceiling $ fromIntegral sw * (1/2)
-              r2w = ceiling ( (sw - r1w) % 2 )
-              r3w = sw - r1w - r2w
+              width = ceiling $ fromIntegral sw * f
+              offset = ceiling $ fromIntegral width * (1/2)
+              midPos = sx + (ceiling $ fromIntegral sw * (1/2))
 
 
 modY :: Rectangle -> Rectangle -> Rectangle
