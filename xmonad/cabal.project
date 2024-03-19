@@ -1,0 +1,1 @@
+packages: ./ xmonad-git/*.cabal xmonad-contrib-git/*.cabal xmonad-oleete/*.cabal

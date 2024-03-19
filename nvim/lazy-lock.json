@@ -24,6 +24,7 @@
   "gcode.vim": { "branch": "master", "commit": "a3bbe029cac56684866246b821a0c87b23bb35bb" },
   "gitsigns.nvim": { "branch": "main", "commit": "078041e9d060a386b0c9d3a8c7a7b019a35d3fb0" },
   "glance.nvim": { "branch": "master", "commit": "8ed5cf3b3b1231ea696d88c9efd977027429d869" },
+  "haskell-tools.nvim": { "branch": "master", "commit": "d8b57f073d844380a7f18c65227e5ce7cb6bc325" },
   "hydra.nvim": { "branch": "main", "commit": "8578056a2226ed49fc608167edc143a87f75d809" },
   "indent-blankline.nvim": { "branch": "master", "commit": "3d08501caef2329aba5121b753e903904088f7e6" },
   "kanagawa.nvim": { "branch": "master", "commit": "bfa818c7bf6259152f1d89cf9fbfba3554c93695" },

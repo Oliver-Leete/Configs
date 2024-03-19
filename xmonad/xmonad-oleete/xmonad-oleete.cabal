@@ -44,7 +44,7 @@ library
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
-    build-depends:    base ^>=4.14.1.0,
+    build-depends:    base,
                       xmonad >= 0.15,
                       xmonad-contrib >= 0.15,
                       X11>=1.6.1 && < 1.11,

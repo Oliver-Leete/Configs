@@ -85,8 +85,8 @@ local custom_attach = function(client, bufnr)
         bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls theme=get_ivy<cr>", { desc = "Outgoing Calls" })
         bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>", { desc = "Incoming Calls" })
     end
+    bmap("n", "<C-,>", vim.lsp.codelens.run, { desc = "Run code lens" })
     if sc.codeLensProvider ~= nil and sc.codeLensProvider == true then
-        bmap("n", "<C-,>", vim.lsp.codelens.run)
         vim.lsp.codelens.refresh()
         vim.api.nvim_create_autocmd(
             "TextChanged",
@@ -106,7 +106,6 @@ local custom_attach = function(client, bufnr)
     if client.server_capabilities.inlayHintProvider then
         vim.lsp.inlay_hint.enable(bufnr, true)
     end
-    require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
 end
 
 require("mason").setup({ ui = { border = Border } })
@@ -139,20 +138,12 @@ lspconfig.teal_ls.setup(default)
 lspconfig.nushell.setup(default)
 lspconfig.clangd.setup(default)
 lspconfig.esbonio.setup(default)
-lspconfig.hls.setup({
-    flags = { debounce_text_changes = 1000 },
-    settings = {
-        haskell = {
-            formattingProvider = "stylish-haskell",
-            checkProject = true,
-        }
-    }
-})
+
 
 local pyrightcapabilities = vim.lsp.protocol.make_client_capabilities()
 pyrightcapabilities.textDocument.publishDiagnostics.tagSupport.valueSet = { 2 }
 
-lspconfig.pyright.setup({
+lspconfig.basedpyright.setup({
     settings = {
         python = {
             analysis = {

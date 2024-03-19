@@ -144,6 +144,7 @@ require("lazy").setup(
                 { "artemave/workspace-diagnostics.nvim" },
                 { "johmsalas/text-case.nvim" },
                 { "folke/neodev.nvim" },
+                { "MrcJkb/haskell-tools.nvim" },
                 { "hrsh7th/cmp-nvim-lsp" },
                 {
                     "williamboman/mason.nvim",

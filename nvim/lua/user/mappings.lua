@@ -95,12 +95,13 @@ Map({ "n", "x" }, "u", function()
 end)
 Map({ "n", "x" }, "U", "<c-r>")
 
-Map({"n", "x"}, "KK", vim.lsp.buf.hover, { desc = "Info" })
-Map({"n", "x"}, "KE", function() vim.diagnostic.open_float({ border = Border, scope = "line", source = "always" }) end, { desc = "Errors" })
-Map({"n", "x"}, "KG", require("gitsigns").preview_hunk, { desc = "Git Hunk" })
-Map({"n", "x"}, "KB", function() require("gitsigns").blame_line({ full = true }) end, { desc = "Git Blame" })
-Map({"n", "x"}, "KT", function() require("neotest").output.open() end, { desc = "Test Results" })
-Map({"n", "x"}, "KD", require("dap.ui.widgets").hover, { desc = "Test Results" })
+Map({ "n", "x" }, "KK", vim.lsp.buf.hover, { desc = "Info" })
+Map({ "n", "x" }, "KE", function() vim.diagnostic.open_float({ border = Border, scope = "line", source = "always" }) end,
+    { desc = "Errors" })
+Map({ "n", "x" }, "KG", require("gitsigns").preview_hunk, { desc = "Git Hunk" })
+Map({ "n", "x" }, "KB", function() require("gitsigns").blame_line({ full = true }) end, { desc = "Git Blame" })
+Map({ "n", "x" }, "KT", function() require("neotest").output.open() end, { desc = "Test Results" })
+Map({ "n", "x" }, "KD", require("dap.ui.widgets").hover, { desc = "Test Results" })
 
 Map("n", "Q", "@q")
 Map("x", "Q", ":norm! @q<cr>")
@@ -122,7 +123,8 @@ Map("n", "<c-t>", "<cmd>silent tabedit %<cr>")
 -- GOTO
 Map({ "n", "x", "o" }, "gk", "gg", { desc = "Top of File" })
 Map({ "n", "x", "o" }, "gj", "G", { desc = "Bottom of File" })
-Map({ "n", "x", "o" }, "gh", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true }, { desc = "Left of Line" })
+Map({ "n", "x", "o" }, "gh", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true },
+    { desc = "Left of Line" })
 Map({ "n", "x", "o" }, "gl", "$", { desc = "Right of Line" })
 
 Map({ "n", "x", "o" }, "gt", "H", { desc = "Top of Screen" })
