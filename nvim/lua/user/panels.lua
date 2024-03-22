@@ -28,18 +28,6 @@ require("edgy").setup({
             open = function() require("user.myfuncs").toggle_noice() end,
         },
     },
-    bottom = {
-        { ft = "dapui_watches", title = "Watches" },
-        { ft = "dap-repl", title = "Debug REPL" },
-        { ft = "dapui_console", title = "Debug Console" },
-        { ft = "DiffviewFileHistory", title = " Diffs" },
-    },
-    left = {
-        { ft = "dapui_scopes", title = "Scopes" },
-        { ft = "dapui_breakpoints", title = "Breakpoints" },
-        { ft = "dapui_stacks", title = "Stacks" },
-        { ft = "DiffviewFiles", title = " Diffs" },
-    },
     keys = {
         ["<esc>"] = function(win)
             win.view.edgebar:close()

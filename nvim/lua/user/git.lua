@@ -1,22 +1,3 @@
-require("neogit").setup({
-    log_view = {
-        kind = "vsplit",
-    },
-    reflog_view = {
-        kind = "vsplit",
-    },
-
-    signs = {
-        hunk = { "", "" },
-        item = { "", "" },
-        section = { "", "" },
-    },
-    mappings = {
-        status = {
-            ["<space>"] = "Toggle",
-        }
-    }
-})
 require("gitsigns").setup({
     signs = {
         add          = { text = "┃" },
@@ -38,13 +19,6 @@ require("gitsigns").setup({
     preview_config = {
         border = Border,
     }
-})
-
-local gitstuff = vim.api.nvim_create_augroup("GitStuff", { clear = true })
-vim.api.nvim_create_autocmd('User', {
-    pattern = "NeogitCommitComplete",
-    group = gitstuff,
-    callback = require("gitsigns").refresh,
 })
 
 -- DiffView.nvim

@@ -100,7 +100,6 @@ Map({ "n", "x" }, "KE", function() vim.diagnostic.open_float({ border = Border, 
     { desc = "Errors" })
 Map({ "n", "x" }, "KG", require("gitsigns").preview_hunk, { desc = "Git Hunk" })
 Map({ "n", "x" }, "KB", function() require("gitsigns").blame_line({ full = true }) end, { desc = "Git Blame" })
-Map({ "n", "x" }, "KT", function() require("neotest").output.open() end, { desc = "Test Results" })
 Map({ "n", "x" }, "KD", require("dap.ui.widgets").hover, { desc = "Test Results" })
 
 Map("n", "Q", "@q")
@@ -303,14 +302,7 @@ MoveLine = require('hydra')({
 -- NOTE: Text leader mappings: ,
 -- NOTE: text leader mappings
 
-Map("n", ",,", require("binary-swap").swap_operands)
-
 Map("n", ",rr", vim.lsp.buf.rename)
-
-Map({ "n", "x" }, ",rt", require("ssr").open)
-Map({ "n", "x" }, ",rs", ":MurenFresh<cr>")
-Map({ "n", "x" }, ",rS", ":MurenOpen<cr>")
-Map({ "n", "x" }, ",r/", ":MurenUnique<cr>")
 
 Map("n", ",rf", function() require("refactoring").refactor("Extract Block") end)
 Map("x", ",rf", function() require("refactoring").refactor("Extract Function") end)
@@ -319,8 +311,6 @@ Map("n", ",re", "mia:lua require('refactoring').refactor('Extract Variable')<cr>
 Map("x", ",re", function() require("refactoring").refactor("Extract Variable") end)
 Map({ "n", "x" }, ",ri", function() require("refactoring").refactor("Inline Variable") end)
 Map("n", ",rI", function() require("refactoring").refactor("Inline Function") end)
-
-Map({ "n", "x" }, ",s", "<Plug>Opsort", { remap = true })
 
 Map("n", ",n", require("ts-node-action").node_action)
 
@@ -354,38 +344,10 @@ Map("n", ",f:", function() require('textcase').operator('to_constant_case') end)
 Map("n", ",f.", function() require('textcase').operator('to_dot_case') end)
 Map("n", ",f/", function() require('textcase').operator('to_path_case') end)
 
-Map("n", ",fP", function() require('textcase').lsp_rename('to_pascal_case') end)
-Map("n", ",fC", function() require('textcase').lsp_rename('to_camel_case') end)
-Map("n", ",fS", function() require('textcase').lsp_rename('to_snake_case') end)
-Map("n", ",fU", function() require('textcase').lsp_rename('to_upper_case') end)
-Map("n", ",fT", function() require('textcase').lsp_rename('to_title_case') end)
-Map("n", ",fA", function() require('textcase').lsp_rename('to_phrase_case') end)
-Map("n", ",fL", function() require('textcase').lsp_rename('to_lower_case') end)
-Map("n", ",fK", function() require('textcase').lsp_rename('to_dash_case') end)
-Map("n", ",f;", function() require('textcase').lsp_rename('to_constant_case') end)
-Map("n", ",f>", function() require('textcase').lsp_rename('to_dot_case') end)
-Map("n", ",f?", function() require('textcase').lsp_rename('to_path_case') end)
-
 Map("n", "<leader><leader>", "<cmd>silent e #<cr>")
-
-Map("n", "<leader>i", function() require("neotest").run.run() end)
-Map("n", "<leader>I", function() require("neotest").run.run_last() end)
-Map("n", "<leader>o", function() require("neotest").run.run({ strategy = "dap" }) end)
-Map("n", "<leader>O", function() require("neotest").run.run_last({ strategy = "dap" }) end)
-
-Map("n", "<leader>k", function()
-    require("neotest").summary.toggle()
-    local win = vim.fn.bufwinid("Neotest Summary")
-    if win ~= nil and win > -1 then
-        vim.api.nvim_set_current_win(win)
-    end
-end)
 
 Map("n", "<leader>l", require("user.myfuncs").toggle_quickfix)
 Map("n", "<leader>u", require("user.myfuncs").toggle_noice)
-Map("n", "<leader>y", function()
-    vim.cmd.vsplit(); require("neotest").output_panel.toggle()
-end)
 
 Map("n", "<leader>w",
     function() require("telescope.builtin").lsp_dynamic_workspace_symbols(require("telescope.themes").get_ivy()) end)
@@ -444,21 +406,6 @@ Map("t", "<c-]>", "<c-\\><c-n>")
 
 local gitsigns = require("gitsigns")
 
-local on = false
-local toggle_show = function()
-    if on then
-        on = false
-        gitsigns.toggle_linehl(false)
-        gitsigns.toggle_deleted(false)
-        gitsigns.toggle_word_diff(false)
-    else
-        on = true
-        gitsigns.toggle_linehl(true)
-        gitsigns.toggle_deleted(true)
-        gitsigns.toggle_word_diff(true)
-    end
-end
-
 Old_dir_jump = "search"
 local hint = [[
 ┏^━━━━━━━━┳━━━━━┳━━━━━━━^┓
@@ -478,7 +425,6 @@ local hint = [[
 ┣^━━━━━━━━━━━━━━━━━━━━━━^┫
 ┃ _,K_: blame line       ┃
 ┃ _,p_: preview hunk     ┃
-┃ _,d_: show diff        ┃
 ┣^━━━━━━━━━━━━━━━━━━━━━━^┫
 ┃ _,f_: file finder      ┃
 ┃ _,<esc>_: exit         ┃
@@ -502,10 +448,6 @@ Hydra({
             if vim.g.dirJumps == "h" then
                 vim.g.dirJumps = Old_dir_jump
             end
-            on = false
-            gitsigns.toggle_linehl(false)
-            gitsigns.toggle_deleted(false)
-            gitsigns.toggle_word_diff(false)
         end,
     },
     mode = { "n", "x" },
@@ -516,7 +458,6 @@ Hydra({
         { ",u",        gitsigns.undo_stage_hunk,                     { desc = "undo last stage" } },
         { ",S",        gitsigns.stage_buffer,                        { desc = "stage buffer" } },
         { ",p",        gitsigns.preview_hunk,                        { desc = "preview hunk" } },
-        { ",d",        toggle_show,                                  { nowait = true, desc = "toggle diff" } },
         { ",K",        gitsigns.blame_line,                          { desc = "blame" } },
         { ",f",        "<cmd>Telescope git_status theme=get_ivy<cr>" },
         { ",<esc>",    nil,                                          { exit = true, nowait = true, desc = "exit" } },

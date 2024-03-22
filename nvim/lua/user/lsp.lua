@@ -1,5 +1,3 @@
-M = {}
-
 vim.g.lsp_lens_on = true
 
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
@@ -11,9 +9,6 @@ end
 
 require("mason-tool-installer").setup({
     ensure_installed = {
-        "arduino-language-server",
-        "bash-debug-adapter",
-        "bash-language-server",
         "codelldb",
         "cpptools",
         "debugpy",
@@ -30,7 +25,6 @@ require("mason-tool-installer").setup({
         "shellharden",
         "shfmt",
         "taplo",
-        "teal-language-server",
         "texlab",
         "yaml-language-server",
     },
@@ -139,21 +133,16 @@ local default = {
     flags = { debounce_text_changes = 1000 },
 }
 
-lspconfig.julials.setup(default)
-lspconfig.bashls.setup(default)
-lspconfig.fortls.setup(default)
-lspconfig.marksman.setup(default)
-lspconfig.taplo.setup(default)
-lspconfig.asm_lsp.setup(default)
-lspconfig.arduino_language_server.setup(default)
-lspconfig.teal_ls.setup(default)
-lspconfig.nushell.setup(default)
 lspconfig.clangd.setup(default)
 lspconfig.esbonio.setup(default)
-
-
-local pyrightcapabilities = vim.lsp.protocol.make_client_capabilities()
-pyrightcapabilities.textDocument.publishDiagnostics.tagSupport.valueSet = { 2 }
+lspconfig.fortls.setup(default)
+lspconfig.jsonls.setup(default)
+lspconfig.julials.setup(default)
+lspconfig.marksman.setup(default)
+lspconfig.nushell.setup(default)
+lspconfig.ruff_lsp.setup(default)
+lspconfig.taplo.setup(default)
+lspconfig.yamlls.setup(default)
 
 lspconfig.basedpyright.setup({
     settings = {
@@ -161,48 +150,18 @@ lspconfig.basedpyright.setup({
             analysis = {
                 useLibraryCodeForTypes = true,
                 diagnosticSeverityOverrides = {
-                    reportUnusedVariable = "warning",
-                    reportDeprecated = "warning",
-                    reportImplicitOverride = "warning",
-                    reportMatchNotExhaustive = "warning",
-                    reportUnnecessaryTypeIgnoreComment = "warning",
-                    reportUnusedExpression = "warning",
-                    reportUnusedCoroutine = "warning",
-                    reportUnusedClass = "warning",
-                    reportUnusedFunction = "warning",
                     diagnosticMode = "workspace",
                 },
+                diagnosticMode = "workspace",
                 typeCheckingMode = "basic",
             },
         },
     },
-    capabilities = pyrightcapabilities,
-    flags = { debounce_text_changes = 1000 },
-})
-lspconfig.ruff_lsp.setup(
-    {
-        capabilities = capabilities,
-        flags = { debounce_text_changes = 1000 },
-        init_options = {
-            settings = {
-                args = {
-                    "--preview",
-                }
-            }
-        }
-    }
-)
-
-
-lspconfig.jsonls.setup({
     capabilities = capabilities,
     flags = { debounce_text_changes = 1000 },
 })
 
-lspconfig.yamlls.setup({
-    capabilities = capabilities,
-    flags = { debounce_text_changes = 1000 },
-})
+
 
 lspconfig.lua_ls.setup({
     capabilities = capabilities,
@@ -284,44 +243,6 @@ require("ltex_extra").setup({
                 hiddenFalsePositives = {},
                 latex = {
                     environments = { Fortran = "ignore", jllisting = "ignore", algorithmic = "ignore" },
-                    commands = {
-                        ["\\twosubfigures{}{}{}{}{}{}"] = "ignore",
-                        ["\\twosubfiguresuncorrected{}{}{}{}{}{}"] = "ignore",
-                        ["\\threesubfigures{}{}{}{}{}{}{}{}{}"] = "ignore",
-                        ["\\threesubfiguresuncorrected{}{}{}{}{}{}{}{}{}"] = "ignore",
-                        ["\\notationnote{}"] = "ignore",
-                        ["\\subfile{}"] = "ignore",
-                        ["\\Call{}"] = "dummy",
-                        ["\\CallText{}"] = "dummy",
-                        ["\\glsname{}"] = "dummy",
-                        ["\\gls{}"] = "dummy",
-                        ["\\glsfirst{}"] = "dummy",
-                        ["\\pgls{}"] = "dummy",
-                        ["\\ac{}"] = "dummy",
-                        ["\\acl{}"] = "dummy",
-                        ["\\acs{}"] = "dummy",
-                        ["\\acf{}"] = "dummy",
-                        ["\\pac{}"] = "dummy",
-                        ["\\Pac{}"] = "dummy",
-                        ["\\subref{}"] = "dummy",
-                        ["\\fullref{}"] = "dummy",
-                        ["\\qty{}{}"] = "dummy",
-                        ["\\qtyproduct{}{}"] = "dummy",
-                        ["\\qtyrange{}{}{}"] = "dummy",
-                        ["\\qtylist{}{}"] = "dummy",
-                        ["\\unit{}"] = "dummy",
-                        ["\\num{}"] = "dummy",
-                        ["\\numproduct{}"] = "dummy",
-                        ["\\numrange{}{}"] = "dummy",
-                        ["\\numlist{}"] = "dummy",
-                        ["\\coord{}"] = "dummy",
-                        ["\\cmidrule(){}"] = "ignore",
-                        ["\\cmidrule[]{}"] = "ignore",
-                        ["\\CatchFileDef{}{}{}"] = "ignore",
-                        ["\\labelcref{}"] = "dummy",
-                        ["\\eqlabel{}"] = "ingore",
-                        ["\\fileInput{}"] = "ignore",
-                    },
                 },
             },
         },
@@ -345,8 +266,5 @@ none_ls.setup({
         none_ls.builtins.formatting.shellharden,
         none_ls.builtins.formatting.shfmt,
         none_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
-        none_ls.builtins.hover.printenv,
     },
 })
-
-return M

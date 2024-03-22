@@ -25,50 +25,6 @@ require("dapui").setup({
             terminate = " ",
         },
     },
-    layouts = {
-        {
-            elements = {
-                "repl",
-            },
-            size = 0.3,
-            position = "bottom",
-        },
-        {
-            elements = {
-                "console",
-            },
-            size = 0.3,
-            position = "bottom",
-        },
-        {
-            elements = {
-                "watches",
-            },
-            size = 0.3,
-            position = "bottom",
-        },
-        {
-            elements = {
-                "breakpoints",
-            },
-            size = 0.2,
-            position = "left",
-        },
-        {
-            elements = {
-                "stacks",
-            },
-            size = 0.2,
-            position = "left",
-        },
-        {
-            elements = {
-                "scopes",
-            },
-            size = 0.2,
-            position = "left",
-        },
-    },
 })
 require("dap-python").setup("/home/oleete/.local/share/nvim/mason/packages/debugpy/venv/bin/python")
 require("mason-nvim-dap").setup()
@@ -81,38 +37,6 @@ dap.adapters.codelldb = {
         args = { "--port", "${port}" },
     }
 }
-
--- FIX : well, this never worked, so not fix but more 'make work in the first place'
--- dap.adapters.juliadb = {
---     type = "executable",
---     command = "/usr/bin/julia",
---     args = {
---         "--color=yes",
---         "--startup-file=no",
---         "--history-file=no",
---         "--project",
---         "/home/oleete/Projects/julia-vscode/scripts/debugger/run_debugger.jl",
---     },
--- }
---
--- dap.configurations.julia = {
---     {
---         name = "Run active Julia file (stop on enter)",
---         type = "juliadb",
---         request = "attach",
---         program = "${file}",
---         cwd = "${workspaceFolder}",
---         stopOnEntry = true,
---     },
---     {
---         name = "Run active Julia file",
---         type = "juliadb",
---         request = "attach",
---         program = "${file}",
---         cwd = "${workspaceFolder}",
---         stopOnEntry = false,
---     },
--- }
 
 dap.configurations.cpp = {
     {
@@ -127,34 +51,6 @@ dap.configurations.cpp = {
     },
 }
 dap.configurations.c = dap.configurations.cpp
-
-dap.adapters.bashdb = {
-    type = "executable";
-    command = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/bash-debug-adapter";
-    name = "bashdb";
-}
-
-dap.configurations.sh = {
-    {
-        type = "bashdb";
-        request = "launch";
-        name = "Launch file";
-        showDebugOutput = true;
-        pathBashdb = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb";
-        pathBashdbLib = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir";
-        trace = true;
-        file = "${file}";
-        program = "${file}";
-        cwd = "${workspaceFolder}";
-        pathCat = "cat";
-        pathBash = "/bin/bash";
-        pathMkfifo = "mkfifo";
-        pathPkill = "pkill";
-        args = {};
-        env = {};
-        terminalKind = "integrated";
-    }
-}
 
 local dapui = require("dapui")
 
@@ -173,8 +69,6 @@ local open_in_tab = function()
     debug_tab = vim.api.nvim_win_get_tabpage(debug_win)
     debug_tabnr = vim.api.nvim_tabpage_get_number(debug_tab)
 
-    vim.cmd.LualineRenameTab({ args = { "Debugging" } })
-
     dapui.open()
 end
 
@@ -184,7 +78,6 @@ local close_tab = function()
     if debug_tab and vim.api.nvim_tabpage_is_valid(debug_tab) then
         vim.api.nvim_exec("tabclose " .. debug_tabnr, false)
     end
-    -- DapHydra:exit()
 
     debug_win = nil
     debug_tab = nil

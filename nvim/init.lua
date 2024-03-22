@@ -27,7 +27,6 @@ require("lazy").setup(
         { "pocco81/auto-save.nvim",    opts = { execution_message = { message = function() return "" end } } },
         { "nvimtools/hydra.nvim",      dependencies = { "anuvyklack/keymap-layer.nvim" } },
         { "chrisgrieser/nvim-genghis", dependencies = { "stevearc/dressing.nvim" } },
-        { "kazhala/close-buffers.nvim" },
 
         -- Editing
         {
@@ -35,7 +34,6 @@ require("lazy").setup(
             dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
         },
         { "ap/vim-you-keep-using-that-word" },
-        { "ralismark/opsort.vim",           dependencies = { "tpope/vim-repeat" } },
         { "Konfekt/vim-CtrlXA",             dependencies = { "tpope/vim-repeat" } },
         {
             "numToStr/Comment.nvim",
@@ -47,7 +45,6 @@ require("lazy").setup(
             }
         },
         { "kana/vim-niceblock" },
-        { "gabrielpoca/replacer.nvim" },
 
         -- Search/Replace
         { "junegunn/vim-slash" },
@@ -60,21 +57,15 @@ require("lazy").setup(
                 modes = { search = { enabled = false }, char = { enabled = false } },
             }
         },
-        { "AckslD/muren.nvim",           opts = {} },
 
         -- Git
         {
-            "NeogitOrg/neogit",
+            "lewis6991/gitsigns.nvim",
             dependencies = {
-                "nvim-lua/plenary.nvim",
-                "nvim-telescope/telescope.nvim",
-                "sindrets/diffview.nvim",
-                { "lewis6991/gitsigns.nvim", dependencies = { "tpope/vim-repeat" } },
-                { "sindrets/diffview.nvim",  dependencies = { "kyazdani42/nvim-web-devicons" } },
+                { "sindrets/diffview.nvim", dependencies = { "kyazdani42/nvim-web-devicons" } },
+                "tpope/vim-repeat",
             },
-            config = function()
-                require("user.git")
-            end
+            config = function() require("user.git") end
         },
 
         -- UI
@@ -90,7 +81,6 @@ require("lazy").setup(
         {
             "folke/edgy.nvim",
             config = function() require("user.panels") end,
-            dependencies = { "ariel-frischer/bmessages.nvim" },
         },
         {
             "folke/noice.nvim",
@@ -131,15 +121,13 @@ require("lazy").setup(
             }
         },
 
-        --
+        -- lsp
         {
             "neovim/nvim-lspconfig",
             dependencies = {
                 { "mrcjkb/rustaceanvim" },
                 { "yioneko/nvim-type-fmt" },
                 { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
-                { "artemave/workspace-diagnostics.nvim" },
-                { "johmsalas/text-case.nvim" },
                 { "folke/neodev.nvim" },
                 { "MrcJkb/haskell-tools.nvim" },
                 { "hrsh7th/cmp-nvim-lsp" },
@@ -160,22 +148,6 @@ require("lazy").setup(
             config = function() require("user.lsp") end
         },
 
-        -- run and test
-        {
-            "t-troebst/perfanno.nvim",
-            config = function()
-                local util = require("perfanno.util")
-                require("perfanno").setup({
-                    line_highlights = util.make_bg_highlights("#1F1F28", "#C34043", 10),
-                    vt_highlight = util.make_fg_highlights("#1F1F28", "#C34043", 10),
-                    formats = {
-                        { percent = true,  format = "%.2f%%", minimum = 0.0 },
-                        { percent = false, format = "%d",     minimum = 0.0001 },
-                    },
-                })
-            end
-        },
-
         -- debug
         {
             "mfussenegger/nvim-dap",
@@ -193,13 +165,12 @@ require("lazy").setup(
         },
 
         -- lang specific
-        { "lervag/vimtex",                dependencies = { "tpope/vim-repeat" } },
+        { "lervag/vimtex",              dependencies = { "tpope/vim-repeat" } },
         { "barreiroleo/ltex_extra.nvim" },
-        { "toppair/peek.nvim",            build = "deno task --quiet build:fast" },
         { "fladson/vim-kitty" },
         { "wilriker/gcode.vim" },
         { "LhKipp/nvim-nu" },
-        { "stsewd/sphinx.nvim",           build = ":UpdateRemotePlugins" },
+        { "stsewd/sphinx.nvim",         build = ":UpdateRemotePlugins" },
 
         -- compleation
         {
@@ -265,12 +236,9 @@ require("lazy").setup(
             "nvim-treesitter/nvim-treesitter",
             build = { ":TSInstall all", ":TSUpdate all", ":TSUninstall comment" },
             dependencies = {
-                { "cshuaimin/ssr.nvim" },
                 { "ThePrimeagen/refactoring.nvim" },
                 { "CKolkey/ts-node-action",       dependencies = { "tpope/vim-repeat" } },
                 { "drybalka/tree-climber.nvim" },
-                { "Wansmer/treesj" },
-                { "Wansmer/binary-Swap.nvim" },
             },
             config = function()
                 require("user.treesitter")

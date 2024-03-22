@@ -7,8 +7,6 @@ vim.cmd([[set errorformat+=%-G%.%#]])
 
 vim.bo.commentstring = [[#%s]]
 
-Jul_perf_flat = function() require("perfanno").load_traces(vim.json.decode(io.open("/tmp/jlprof.json", "rb"):read("*all"))) end
-
 local bp_remover = function(imp_line, bp_pattern, mod_pat)
     vim.cmd("delete")
 

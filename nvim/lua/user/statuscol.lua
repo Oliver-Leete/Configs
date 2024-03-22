@@ -1,6 +1,3 @@
-local is_cursorline = function()
-    return vim.v.lnum == vim.fn.line(".")
-end
 local gitsigns = {
     GitSignsAdd          = "┃",
     GitSignsChange       = "┃",
@@ -9,38 +6,6 @@ local gitsigns = {
     GitSignsChangedelete = "┃",
     GitSignsUntracked    = "┋",
 }
-
-vim.api.nvim_set_hl(0, "CursorGitSignsAdd", { fg = Ct.vcs.added, bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorGitSignsChange", { fg = Ct.vcs.changed, bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorGitSignsChangedelete", { fg = Ct.vcs.changed, bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorGitSignsDelete", { fg = Ct.vcs.removed, bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorGitSignsTopdelete", { fg = Ct.vcs.removed, bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorGitSignsUntracked", { fg = Ct.vcs.added, bg = Ct.ui.bg_p2 })
-
-vim.api.nvim_set_hl(0, "CursorGitSignsStagedAdd", { fg = "#3b4a35", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorGitSignsStagedChange", { fg = "#6e5230", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorGitSignsStagedChangedelete", { fg = "#6e5230", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorGitSignsStagedDelete", { fg = "#612021", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorGitSignsStagedTopdelete", { fg = "#612021", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorGitSignsStagedUntracked", { fg = "#3b4a35", bg = Ct.ui.bg_p2 })
-
-vim.api.nvim_set_hl(0, "CursorTodoSignFIX", { fg = "#DC2626", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorTodoSignTODO", { fg = "#2563EB", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorTodoSignHACK", { fg = "#FBBF24", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorTodoSignWARN", { fg = "#FBBF24", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorTodoSignPERF", { fg = "#7C3AED", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorTodoSignNOTE", { fg = "#10B981", bg = Ct.ui.bg_p2 })
-
-vim.api.nvim_set_hl(0, "CursorDiagnosticSignError", { fg = "#E82424", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorDiagnosticSignWarn", { fg = "#FF9E3B", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorDiagnosticSignInfo", { fg = "#658494", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorDiagnosticSignHint", { fg = "#6A9589", bg = Ct.ui.bg_p2 })
-
-vim.api.nvim_set_hl(0, "CursorNeotestPassed", { fg = "#96F291", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorNeotestFailed", { fg = "#F70067", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorNeotestRunning", { fg = "#FFEC63", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorNeotestSkipped", { fg = "#00f1f5", bg = Ct.ui.bg_p2 })
-vim.api.nvim_set_hl(0, "CursorLineSign", { bg = Ct.ui.bg_p2 })
 
 local make_sep = function(args)
     local hl_prefix = "%#"
@@ -82,7 +47,6 @@ require("statuscol").setup({
             sign = {
                 namespace = {
                     "dap_breakpoints",
-                    "neotest.*",
                     "vim.lsp.*",
                 },
                 name = {

@@ -21,9 +21,6 @@ M.special_types = {
     ["dapui_watches"] = { exit_func = winclose },
     ["dap-repl"] = { exit_func = winclose },
     ["dapui_console"] = { exit_func = winclose },
-    ["neotest-summary"] = { exit_func = edgy_left },
-    ["neotest-output-panel"] = { exit_func = edgy_bot },
-    ["neotest-output"] = { exit_func = winclose },
     ["gitcommit"] = { exit_func = winclose },
     ["NoiceHistory"] = { exit_func = edgy_bot },
     ["mason"] = { exit_func = winclose },
@@ -34,8 +31,7 @@ M.special_types = {
 M.is_special = function(bufnr)
     local filetype = vim.bo[bufnr].filetype
     local buftype = vim.bo[bufnr].buftype
-    if buftype == "terminal" and filetype ~= "neotest-output-panel" and filetype ~= "neotest-output" then return false end
-    return vim.tbl_contains(vim.tbl_keys(M.special_types), filetype)
+    return buftype ~= "terminal" or vim.tbl_contains(vim.tbl_keys(M.special_types), filetype)
 end
 
 ---Count normal windows on current tab page

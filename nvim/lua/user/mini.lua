@@ -125,7 +125,9 @@ require("mini.operators").setup({
         prefix = "R",
         reindent_linewise = false,
     },
-    sort = {},
+    sort = {
+        prefix = ",s",
+    },
 })
 
 local miniclue = require('mini.clue')
