@@ -102,55 +102,6 @@ colorful_winsep.setup({
     },
 })
 
-local glance = require('glance')
-local actions = glance.actions
-
-vim.api.nvim_set_hl(0, "GlanceBorderTop", { fg = Ct.syn.fun, bg = "#2f2f39" })
-vim.api.nvim_set_hl(0, "GlanceListBorderBottom", { fg = Ct.syn.fun, bg = "#2f2f39" })
-vim.api.nvim_set_hl(0, "GlancePreviewBorderBottom", { fg = Ct.syn.fun, bg = "#2a2933" })
-
-glance.setup({
-    height = 20,
-    border = {
-        enable = false,
-        top_char = '━',
-        bottom_char = '━',
-    },
-    mappings = {
-        list = {
-            ['j'] = actions.next,
-            ['k'] = actions.previous,
-            ['<Down>'] = actions.next,
-            ['<Up>'] = actions.previous,
-            ['n'] = actions.next_location,
-            ['N'] = actions.previous_location,
-            ['<C-k>'] = actions.preview_scroll_win(5),
-            ['<C-j>'] = actions.preview_scroll_win(-5),
-            ['<c-v>'] = actions.jump_vsplit,
-            ['<c-x>'] = actions.jump_split,
-            ['<CR>'] = actions.jump,
-            ['o'] = actions.enter_win('preview'),
-            ['p'] = actions.enter_win('preview'),
-            ["<C-l>"] = function()
-                actions.quickfix()
-                vim.cmd.cclose()
-            end,
-            ['<Esc>'] = actions.close,
-        },
-        preview = {
-            ['n'] = actions.next_location,
-            ['N'] = actions.previous_location,
-            ['<esc>'] = actions.enter_win('list'),
-            ['<leader><cr>'] = actions.enter_win('list'),
-        },
-    },
-    folds = {
-        fold_closed = "",
-        fold_open = "",
-        folded = true,
-    },
-})
-
 local highlight = {
     "Rainbow1",
     "Rainbow2",

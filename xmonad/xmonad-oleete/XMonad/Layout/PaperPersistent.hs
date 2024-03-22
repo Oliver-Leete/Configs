@@ -27,18 +27,17 @@ module XMonad.Layout.PaperPersistent (
 ) where
 
 import Control.Monad (msum)
-import Data.List (elemIndex)
-import Data.Maybe (fromMaybe, mapMaybe)
+import Data.List ( elemIndex )
+import Data.Maybe ( fromMaybe, mapMaybe )
 import Data.Ord (clamp)
-import XMonad (
-    LayoutClass (description, doLayout, handleMessage),
-    Message,
-    Rectangle (Rectangle),
-    Resize (Expand, Shrink),
-    Typeable,
-    fromMessage,
-    modifyWindowSet,
- )
+import XMonad
+    ( Typeable,
+      fromMessage,
+      LayoutClass(handleMessage, description, doLayout),
+      Message,
+      Rectangle(Rectangle),
+      Resize(Expand, Shrink),
+      modifyWindowSet )
 import XMonad.Prelude ((!?))
 import qualified XMonad.StackSet as W
 

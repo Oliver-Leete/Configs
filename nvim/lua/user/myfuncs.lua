@@ -13,10 +13,7 @@ M.special_types = {
     notify = { exit_func = winclose },
     DiffviewFileHistory = { exit_func = diffclose },
     DiffviewFiles = { exit_func = diffclose },
-    OverseerList = { exit_func = edgy_left },
-    OverseerPanelTask = { exit_func = edgy_bot },
     edgy = { exit_func = require("edgy").close },
-    OverseerForm = { exit_func = winclose },
     ["dap-float"] = { exit_func = winclose },
     ["dapui_scopes"] = { exit_func = winclose },
     ["dapui_breakpoints"] = { exit_func = winclose },
@@ -31,7 +28,6 @@ M.special_types = {
     ["NoiceHistory"] = { exit_func = edgy_bot },
     ["mason"] = { exit_func = winclose },
     ["null-ls-info"] = { exit_func = winclose },
-    ["Glance"] = { exit_func = require('glance').actions.close },
     asm = { exit_func = winclose },
 }
 

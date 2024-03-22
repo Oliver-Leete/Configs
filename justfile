@@ -1,8 +1,9 @@
+xmonad-dir :=  config_local_directory() / "xmonad"
 # Build and reload xmonad
 xmonad-build-reload:
-    cd {{ config_local_directory() }}/xmonad && cabal install --overwrite-policy=always
-    cd {{ config_local_directory() }}/xmonad && xmonad --recompile
-    cd {{ config_local_directory() }}/xmonad && xmonad --restart
+    cd {{ xmonad-dir }} && cabal install --overwrite-policy=always --verbose=3
+    xmonad --recompile
+    xmonad --restart
 
 xmonad-ctl := home_directory() + "/.cabal/bin/xmonadctl-exe"
 

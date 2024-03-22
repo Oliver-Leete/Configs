@@ -71,16 +71,12 @@ local custom_attach = function(client, bufnr)
         sc.referencesProvider = false
     end
 
-    if sc.documentSymbolProvider then
-        require("nvim-navic").attach(client, bufnr)
-    end
-
     -- LSP Binding Override
     if client.name ~= "null-ls" then
-        bmap("n", "gd", "<cmd>Glance definitions<cr>", { desc = "Peek Definition" })
-        bmap("n", "gr", "<cmd>Glance references<cr>", { desc = "Peek References" })
-        bmap("n", "gD", "<cmd>Glance type_definitions<cr>", { desc = "Peek Type Deffinition" })
-        bmap("n", "gI", "<cmd>Glance implementations<cr>", { desc = "Peek implementations" })
+        bmap("n", "gd", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>", { desc = "Definition" })
+        bmap("n", "gr", "<cmd>Telescope lsp_references theme=get_ivy<cr>", { desc = "References" })
+        bmap("n", "gD", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>", { desc = "Type Deffinition" })
+        bmap("n", "gI", "<cmd>Telescope lsp_implementations theme=get_ivy<cr>", { desc = "Implementations" })
 
         bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls theme=get_ivy<cr>", { desc = "Outgoing Calls" })
         bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>", { desc = "Incoming Calls" })
@@ -100,8 +96,24 @@ local custom_attach = function(client, bufnr)
                 group = lsp_auto,
             }
         )
+        bmap({ "n" }, "<leader>a", function()
+            local cursor_pos = vim.api.nvim_win_get_cursor(0)
+            local cursor_col = cursor_pos[2]
+            local cursor_line = cursor_pos[1]
+            local hints = vim.lsp.inlay_hint.get({ bufnr = 0 })
+            local hint = vim.tbl_filter(function(h)
+                return (
+                    h.inlay_hint.position.line == cursor_line - 1 and
+                    h.inlay_hint.position.character == cursor_col + 1
+                )
+            end, hints)[1]
+            if hint then
+                local text = (hint.inlay_hint.paddingLeft and " " or "") .. hint.inlay_hint.label[1].value
+                vim.api.nvim_put({ text }, "c", true, true)
+            end
+        end)
     end
-    bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action)
+    bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action, { desc = "Run code actions" })
 
     if client.server_capabilities.inlayHintProvider then
         vim.lsp.inlay_hint.enable(bufnr, true)

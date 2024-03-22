@@ -5,85 +5,6 @@ local rightc = ""
 local leftend = ""
 local rightend = ""
 
-require("nvim-navic").setup({
-    icons = {
-        File = " ",
-        Module = " ",
-        Namespace = " ",
-        Package = " ",
-        Class = " ",
-        Method = " ",
-        Property = " ",
-        Field = " ",
-        Constructor = " ",
-        Enum = " ",
-        Interface = " ",
-        Function = " ",
-        Variable = " ",
-        Constant = " ",
-        String = " ",
-        Number = " ",
-        Boolean = " ",
-        Array = " ",
-        Object = " ",
-        Key = " ",
-        Null = " ",
-        EnumMember = " ",
-        Struct = " ",
-        Event = " ",
-        Operator = " ",
-        TypeParameter = " "
-    },
-})
-local type_hl = {
-    File = "Directory",
-    Module = "@include",
-    Namespace = "@namespace",
-    Package = "@include",
-    Class = "@structure",
-    Method = "@method",
-    Property = "@property",
-    Field = "@field",
-    Constructor = "@constructor",
-    Enum = "@field",
-    Interface = "@type",
-    Function = "@function",
-    Variable = "@variable",
-    Constant = "@constant",
-    String = "@string",
-    Number = "@number",
-    Boolean = "@boolean",
-    Array = "@field",
-    Object = "@type",
-    Key = "@keyword",
-    Null = "@comment",
-    EnumMember = "@field",
-    Struct = "@struct",
-    Event = "@keyword",
-    Operator = "@operator",
-    TypeParameter = "@type",
-}
-for i, id in pairs(type_hl) do
-    local is_hl_set = function(hl_name)
-        local exists, hl = pcall(vim.api.nvim_get_hl_by_name, hl_name, true)
-        local color = hl.foreground or hl.background or hl.reverse
-        return exists and color ~= nil
-    end
-
-    local hl
-    if is_hl_set(id) then
-        hl = vim.api.nvim_get_hl_by_name(id, true)
-    else
-        hl = vim.api.nvim_get_hl_by_name("Normal", true)
-    end
-    local name = "NavicIcons" .. i
-    hl.background = Ct.diff.change
-    vim.api.nvim_set_hl(0, name, hl)
-    type_hl[i] = name
-end
-vim.api.nvim_set_hl(0, "NavicSeparator", { fg = Ct.ui.fg, bg = Ct.syn.fun })
-vim.api.nvim_set_hl(0, "NavicText", { fg = Ct.ui.fg, bg = Ct.syn.fun })
-
 local lsp_status = function()
     local ret = ""
     local bufnr = vim.api.nvim_get_current_buf()
@@ -112,24 +33,6 @@ local diff_source = function()
     end
 end
 
-local st = require("overseer").STATUS
-local ov_list = {
-    [st.FAILURE] = " ",
-    [st.CANCELED] = " ",
-    [st.SUCCESS] = " ",
-    [st.RUNNING] = " ",
-    [st.PENDING] = " ",
-}
-
-local recession_wrapper = function()
-    local message = require("resession").get_current()
-    if message:len() <= 20 then
-        return message
-    else
-        return "..." .. message:sub((message:len() - 17))
-    end
-end
-
 local noice_wrapper = function()
     local message = require("noice").api.status.message.get()
     return message:sub(1, 80)
@@ -138,33 +41,6 @@ end
 
 local is_wide = function()
     return vim.go.columns >= 200
-end
-
-local overseer = require("overseer")
-OverseerTask = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local task = vim.tbl_filter(function(t) return (t.strategy.bufnr == bufnr) end, overseer.list_tasks())[1]
-    return ov_list[task.status] .. task.name
-end
-
-local overseericon = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local task = vim.tbl_filter(function(t) return (t.strategy.bufnr == bufnr) end, overseer.list_tasks())[1]
-    return ov_list[task.status]
-end
-
-local is_overseer = function()
-    return vim.bo.buftype == "terminal" and
-        0 < #vim.tbl_filter(
-            function(t)
-                return (vim.api.nvim_get_current_buf() == vim.api.nvim_get_current_buf())
-            end,
-            overseer.list_tasks()
-        )
-end
-
-local not_overseer = function()
-    return not is_overseer()
 end
 
 require("lualine").setup({
@@ -197,17 +73,6 @@ require("lualine").setup({
             },
         },
         lualine_b = {
-            {
-                "overseer",
-                symbols = ov_list,
-                on_click = function() vim.defer_fn(require("overseer").toggle, 100) end,
-            },
-            {
-                recession_wrapper,
-                cond = function() return require("resession").get_current() ~= nil end,
-                on_click = function() vim.defer_fn(function() require("resession").load() end, 100) end
-
-            },
             {
                 "b:gitsigns_head",
                 icon = "",
@@ -288,22 +153,9 @@ require("lualine").setup({
                     unnamed = "",
                     newfile = "󰎔 ",
                 },
-                cond = not_overseer,
             },
-            {
-                OverseerTask,
-                cond = is_overseer,
-            }
         },
         lualine_b = {
-            {
-                "navic",
-                color_correction = "dynamic",
-                navic_opts = { separator = "|", highlight = true, click = true },
-                separator = { left = left, right = "" },
-                padding = { left = 1, right = 0 },
-                cond = not_overseer,
-            },
             {
                 Filmpicker_endtime,
                 separator = { left = left, right = "" },
@@ -312,7 +164,6 @@ require("lualine").setup({
             },
             {
                 function() return " " end,
-                cond = not_overseer,
                 draw_empty = true,
                 padding = { left = 0, right = 0 }
             },
@@ -351,17 +202,11 @@ require("lualine").setup({
                 colored = false,
                 icon_only = true,
                 separator = { left = right, right = rightend },
-                cond = not_overseer,
             },
             {
                 Filmpicker_winbar,
                 separator = { left = leftend, right = rightend },
                 cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end,
-            },
-            {
-                overseericon,
-                separator = { left = right, right = rightend },
-                cond = is_overseer,
             },
         },
     },
@@ -381,22 +226,9 @@ require("lualine").setup({
                     unnamed = "",
                     newfile = "󰎔 ",
                 },
-                cond = not_overseer,
             },
-            {
-                OverseerTask,
-                cond = is_overseer,
-            }
         },
         lualine_b = {
-            {
-                "navic",
-                color_correction = "dynamic",
-                navic_opts = { separator = "|", highlight = true, click = true },
-                separator = { left = left, right = "" },
-                padding = { left = 1, right = 0 },
-                cond = not_overseer,
-            },
             {
                 Filmpicker_endtime,
                 separator = { left = left, right = "" },
@@ -405,7 +237,6 @@ require("lualine").setup({
             },
             {
                 function() return " " end,
-                cond = not_overseer,
                 draw_empty = true,
                 padding = { left = 0, right = 0 }
             },
@@ -444,17 +275,11 @@ require("lualine").setup({
                 colored = false,
                 icon_only = true,
                 separator = { left = right, right = rightend },
-                cond = not_overseer,
             },
             {
                 Filmpicker_winbar,
                 separator = { left = leftend, right = rightend },
                 cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end,
-            },
-            {
-                overseericon,
-                separator = { left = right, right = rightend },
-                cond = is_overseer,
             },
         },
     },

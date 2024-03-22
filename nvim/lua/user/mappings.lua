@@ -368,32 +368,6 @@ Map("n", ",f?", function() require('textcase').lsp_rename('to_path_case') end)
 
 Map("n", "<leader><leader>", "<cmd>silent e #<cr>")
 
-local action_util = require("overseer.action_util")
-local overseer = require("overseer")
-
-Map("n", "<leader>n", "<cmd>OverseerRun<cr>")
-Map("n", "<leader>N", function()
-    local tasks = overseer.list_tasks({ recent_first = true })
-    local bufnr = vim.api.nvim_get_current_buf()
-    local task = vim.tbl_filter(function(t) return (t.strategy.bufnr == bufnr) end, tasks)[1]
-    if task then
-        overseer.run_action(task, "restart")
-    elseif vim.tbl_isempty(tasks) then
-        vim.notify("No tasks found", vim.log.levels.WARN)
-    else
-        overseer.run_action(tasks[1], "restart")
-    end
-end)
-Map("n", "<leader>e", function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local task = vim.tbl_filter(function(t) return (t.strategy.bufnr == bufnr) end, overseer.list_tasks())[1]
-    if task then
-        action_util.run_task_action(task)
-    else
-        vim.cmd("OverseerTaskAction")
-    end
-end)
-Map("n", "<leader>E", "<cmd>OverseerTaskAction<cr>")
 Map("n", "<leader>i", function() require("neotest").run.run() end)
 Map("n", "<leader>I", function() require("neotest").run.run_last() end)
 Map("n", "<leader>o", function() require("neotest").run.run({ strategy = "dap" }) end)
@@ -412,9 +386,6 @@ Map("n", "<leader>u", require("user.myfuncs").toggle_noice)
 Map("n", "<leader>y", function()
     vim.cmd.vsplit(); require("neotest").output_panel.toggle()
 end)
-
-Map("n", "<leader>m", "<cmd>OverseerToggle<cr>")
-Map("n", "<leader>M", "<cmd>OverseerQuickAction open vsplit<cr>")
 
 Map("n", "<leader>w",
     function() require("telescope.builtin").lsp_dynamic_workspace_symbols(require("telescope.themes").get_ivy()) end)

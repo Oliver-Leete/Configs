@@ -181,18 +181,6 @@ require('telescope-all-recent').setup({
                 codeaction = {
                     disable = true,
                 },
-                resession_load = {
-                    use_cwd = false,
-                    sorting = 'frecent',
-                },
-                overseer_template = {
-                    use_cwd = true,
-                    sorting = 'frecent',
-                },
-                overseer_task_options = {
-                    use_cwd = true,
-                    sorting = 'frecent',
-                },
                 dap_run = {
                     use_cwd = true,
                     sorting = 'frecent',

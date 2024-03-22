@@ -27,7 +27,6 @@ require("lazy").setup(
         { "pocco81/auto-save.nvim",    opts = { execution_message = { message = function() return "" end } } },
         { "nvimtools/hydra.nvim",      dependencies = { "anuvyklack/keymap-layer.nvim" } },
         { "chrisgrieser/nvim-genghis", dependencies = { "stevearc/dressing.nvim" } },
-        { "stevearc/resession.nvim",   config = function() require("user.projects") end },
         { "kazhala/close-buffers.nvim" },
 
         -- Editing
@@ -137,8 +136,6 @@ require("lazy").setup(
             "neovim/nvim-lspconfig",
             dependencies = {
                 { "mrcjkb/rustaceanvim" },
-                { "SmiteshP/nvim-navic" },
-                { "DNLHC/glance.nvim" },
                 { "yioneko/nvim-type-fmt" },
                 { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
                 { "artemave/workspace-diagnostics.nvim" },
@@ -165,27 +162,6 @@ require("lazy").setup(
 
         -- run and test
         {
-            "stevearc/overseer.nvim",
-            config = function() require("user.overseer") end
-        },
-        {
-            "nvim-neotest/neotest",
-            dependencies = {
-                { "mrcjkb/rustaceanvim" },
-                { "nvim-neotest/neotest-python" },
-            },
-            config = function() require("user.testing") end
-        },
-        {
-            "andythigpen/nvim-coverage",
-            opts = {
-                signs = {
-                    covered = { hl = "CoverageCovered", text = "▉" },
-                    uncovered = { hl = "CoverageUncovered", text = "▉" },
-                },
-            },
-        },
-        {
             "t-troebst/perfanno.nvim",
             config = function()
                 local util = require("perfanno.util")
@@ -205,7 +181,12 @@ require("lazy").setup(
             "mfussenegger/nvim-dap",
             config = function() require("user.dap") end,
             dependencies = {
-                { "rcarriga/nvim-dap-ui" },
+                {
+                    "rcarriga/nvim-dap-ui",
+                    dependencies = {
+                        { "nvim-neotest/nvim-nio" },
+                    },
+                },
                 { "theHamsta/nvim-dap-virtual-text" },
                 { "mfussenegger/nvim-dap-python" },
             }
@@ -219,7 +200,6 @@ require("lazy").setup(
         { "wilriker/gcode.vim" },
         { "LhKipp/nvim-nu" },
         { "stsewd/sphinx.nvim",           build = ":UpdateRemotePlugins" },
-        { "IndianBoy42/tree-sitter-just", config = function() require("tree-sitter-just").setup({}) end },
 
         -- compleation
         {
