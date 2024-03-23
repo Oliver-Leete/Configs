@@ -370,6 +370,8 @@ vim.cmd([[snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virt
 Map({ "i", "s", "c" }, "<c-a>", "<HOME>")
 Map({ "i", "s", "c" }, "<c-e>", "<END>")
 Map({ "i", "s" }, "<c-k>", "<c-o>d$")
+Map("c", "<c-p>", "<up>")
+Map("c", "<c-n>", "<down>")
 
 local cmp = require("cmp")
 Map({ "i", "s" }, "<c-]>", "<plug>luasnip-next-choice")

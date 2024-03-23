@@ -143,7 +143,7 @@ projects =
     , Project{pName = "Scin-Test", pDir = "~/Projects/Scintilla/Main", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br workB, pApp4F = brF workB, pStart = Just $ return ()}
     ]
   where
-    kitty = upPointer $ Wgl.runOrRaiseNext "kitty" (className =? "kitty")
+    kitty = bF $ kt "action launch_tab" $ l (upPointer $ Wgl.runOrRaiseNext "kitty" (className =? "kitty"))
     kittyF = upPointer $ spawn "kitty"
 
     sameForce r c = (upPointer $ Wgl.runOrRaiseNext r (className =? c), upPointer $ spawn r)
@@ -368,15 +368,17 @@ myNav2DConf = def
 myModMask :: KeyMask
 myModMask = mod4Mask
 
--- | ┏━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┓                                   ┏━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┓
--- | ┃   -   ┃fullWin┃proFind┃cmdPale┃   -   ┃                                   ┃winDown┃winRght┃ detach┃ float ┃   -   ┃
--- | ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫                                   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
--- | ┃  pws1 ┃  pws2 ┃  pws3 ┃  pws4 ┃  pws0 ┃                                   ┃winLeft┃  app1 ┃  app2 ┃  app3 ┃  app4 ┃
--- | ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┳━━━━━━━┓   ┏━━━━━━━┳━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
--- | ┃fullScr┃fullBar┃fullCen┃twoPane┃ paper ┃nspAway┃nextScr┃   ┃   -   ┃  kill ┃ winUp ┃ Master┃ decCol┃ incCol┃   -   ┃
--- | ┗━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┛
--- |         ┃   -   ┃   -   ┃       ┃tabPrev┃ wsLast┃winPrev┃   ┃winNext┃  term ┃tabNext┃       ┃   -   ┃   -   ┃
--- |         ┗━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━━━━━━━━━┛   ┗━━━━━━━┻━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━┛
+{-
+\| ┏━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┓                                   ┏━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┓
+\| ┃   -   ┃fullWin┃proFind┃cmdPale┃   -   ┃                                   ┃winDown┃winRght┃ detach┃ float ┃   -   ┃
+\| ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫                                   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
+\| ┃  pws1 ┃  pws2 ┃  pws3 ┃  pws4 ┃  pws0 ┃                                   ┃winLeft┃  app1 ┃  app2 ┃  app3 ┃  app4 ┃
+\| ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┳━━━━━━━┓   ┏━━━━━━━┳━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
+\| ┃fullScr┃fullBar┃fullCen┃twoPane┃ paper ┃nspAway┃nextScr┃   ┃   -   ┃  kill ┃ winUp ┃ Master┃ decCol┃ incCol┃   -   ┃
+\| ┗━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┛
+\|         ┃   -   ┃   -   ┃       ┃tabPrev┃ wsLast┃winPrev┃   ┃winNext┃  term ┃tabNext┃       ┃   -   ┃   -   ┃
+\|         ┗━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━┻━━━━━━━┛   ┗━━━━━━━┻━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━┛
+-}
 myKeys :: Int -> [(String, X ())]
 myKeys n =
     [ ("<XF86MonBrightnessDown>", spawn "/home/oleete/.config/bin/brightness -dec 5")
@@ -394,10 +396,10 @@ myKeys n =
     , ("M-p", myFuncPrompt myPromptConfig)
     , ("M-f", mySwitchProfilePrompt myPromptConfig)
     , ("M-<Esc>", upPointer $ sequence_ $ hideAllNamedScratchPads scratchpads)
-    , ("M-<Return>", bF $ kt "action new_tab" $ l (upPointer $ spawn myTerminal))
+    , ("M-<Return>", bF $ kt "action launch_window" $ l (upPointer $ spawn myTerminal))
     , ("M-S-<Return>", upPointer $ spawn myTerminal)
-    , ("M-<Backspace>", bF $ nv "DeleteBuffer" $ kt "action close_window" $ crm (P.sendKey controlMask xK_w) $ l kill)
-    , ("M-S-<Backspace>", bF $ kt "action close_window" $ l kill)
+    , ("M-<Backspace>", bF $ nv "DeleteBuffer" $ kt "action close_window_c" $ crm (P.sendKey controlMask xK_w) $ l kill)
+    , ("M-S-<Backspace>", bF $ kt "action close_window_c" $ l kill)
     , ("M-u", bF $ kt "action detach_window" $ crm (P.sendKey shiftMask xK_w) $ l (return ()))
     , ("M-n", runProjectApp1)
     , ("M-e", runProjectApp2)
@@ -411,16 +413,16 @@ myKeys n =
     , ("M-<Right>", bF $ kt "action next_tab" $ l (P.sendKey controlMask xK_Tab))
     , ("M-<Down>", upPointer $ windows W.focusDown)
     , ("M-<Up>", upPointer $ windows W.focusUp)
-    , ("M-w", bF $ nv "ZenOrFull" $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
+    , ("M-w", bF $ kt "action toggle_stack" $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
     , ("M-z", toggleLayout FULL)
     , ("M-x", toggleLayout FULLBAR)
     , ("M-c", toggleLayout FULLCENTER)
     , ("M-v", toggleLayout TWOPANE)
     , ("M-b", toggleLayout PAPER)
-    , ("M-h", bF $ nv "Navigateleft" $ l (moveLeft >> bF (nv "PostNavLeft" $ l $ return ())))
-    , ("M-j", bF $ nv "Navigatebottom" $ l (upPointer (windowGo D False) >> bF (nv "PostNavBottom" $ l $ return ())))
-    , ("M-k", bF $ nv "Navigatetop" $ l (upPointer (windowGo U False) >> bF (nv "PostNavTop" $ l $ return ())))
-    , ("M-l", bF $ nv "Navigateright" $ l (moveRight >> bF (nv "PostNavRight" $ l $ return ())))
+    , ("M-h", bF $ nv "Navigateleft" moveLeft)
+    , ("M-j", bF $ nv "Navigatebottom" moveDown)
+    , ("M-k", bF $ nv "Navigatetop" moveUp)
+    , ("M-l", bF $ nv "Navigateright" moveRight)
     , ("M-S-h", upPointer $ bindByLayout [("PaperPersistent", windows W.swapUp), ("", windowSwap L False)])
     , ("M-S-j", upPointer $ windowSwap D False)
     , ("M-S-k", upPointer $ windowSwap U False)
@@ -471,10 +473,6 @@ myKeys n =
             then upPointer shiftNextScreen
             else upFocus $ shiftToggleWS' ["NSP"]
 
-moveLeft :: X ()
-moveLeft = bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex (-1))), ("", upPointer (windowGo L False))]
-moveRight :: X ()
-moveRight = bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex 1)), ("", upPointer (windowGo R False))]
 mySwitchProfilePrompt :: XPConfig -> X ()
 mySwitchProfilePrompt c = do
     ps <- profileIds
@@ -693,9 +691,12 @@ l raw = [(pure True, raw)]
 nv :: (MonadIO m) => [Char] -> [(Query Bool, m ())] -> [(Query Bool, m ())]
 nv command list = (title ~? "Neovim_", spawn ("/home/oleete/.config/bin/nvrWS " ++ command)) : list -- neovim
 
+kittyRemote :: String
+kittyRemote = "kitty @ --to unix:/tmp/mykitty-$(xdotool getactivewindow getwindowpid) "
+
 -- | Bind key on kitty
 kt :: [Char] -> [(Query Bool, X ())] -> [(Query Bool, X ())]
-kt remote list = (className =? "kitty", spawn ("kitty @ --to unix:/tmp/mykitty-$(xdotool getactivewindow getwindowpid) " ++ remote)) : list
+kt remote list = (className =? "kitty", spawn (kittyRemote ++ remote)) : list
 
 -- | Bind key on chrome
 crm :: X () -> [(Query Bool, X ())] -> [(Query Bool, X ())]
@@ -705,9 +706,22 @@ crm raw list = (isRole =? "browser", raw) : list -- chrome
 bF :: [(Query Bool, X ())] -> X ()
 bF = bindFirst
 
--- | Bring the window 
+-- | Bring the window
 bringWindow :: (Eq s, Eq i, Ord a) => a -> W.StackSet i l a s sd -> W.StackSet i l a s sd
 bringWindow w ws = W.focusWindow w $ W.shiftWinDown (W.currentTag ws) w ws
+
+-- | Movement
+moveLeft, moveDown, moveUp, moveRight :: [(Query Bool, X ())]
+moveLeft = kt "focus-window --match neighbor:left || /home/oleete/.cabal/bin/xmonadctl-exe winGo-H" $ l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex (-1))), ("", upPointer (windowGo L False))])
+moveDown = kt "focus-window --match neighbor:bottom || /home/oleete/.cabal/bin/xmonadctl-exe winGo-J" $ l (upPointer (windowGo L False))
+moveUp = kt "focus-window --match neighbor:top || /home/oleete/.cabal/bin/xmonadctl-exe winGo-K" $ l (upPointer (windowGo L False))
+moveRight = kt "focus-window --match neighbor:right || /home/oleete/.cabal/bin/xmonadctl-exe winGo-L" $ l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex 1)), ("", upPointer (windowGo R False))])
+
+moveLeft', moveDown', moveUp', moveRight' :: [(Query Bool, X ())]
+moveLeft' = l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex (-1))), ("", upPointer (windowGo L False))])
+moveDown' = l (upPointer (windowGo L False))
+moveUp' = l (upPointer (windowGo L False))
+moveRight' = l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex 1)), ("", upPointer (windowGo R False))])
 
 ----------------------------------------------------------------------------------------------------
 -- Server Commands                                                                                --
@@ -723,10 +737,14 @@ myCommands' = myCommands ++ sendTo
 
 myCommands :: [(String, X ())]
 myCommands =
-    [ ("winGo-h", moveLeft)
-    , ("winGo-j", upPointer $ windowGo D False)
-    , ("winGo-k", upPointer $ windowGo U False)
-    , ("winGo-l", moveRight)
+    [ ("winGo-h", bF moveLeft)
+    , ("winGo-j", bF moveDown)
+    , ("winGo-k", bF moveUp)
+    , ("winGo-l", bF moveRight)
+    , ("winGo-H", bF moveLeft')
+    , ("winGo-J", bF moveDown')
+    , ("winGo-K", bF moveUp')
+    , ("winGo-L", bF moveRight')
     , ("project-browser", runProjectApp4)
     , ("sendF", P.sendKey noModMask xK_f)
     , ("sendF11", P.sendKey noModMask xK_F11)

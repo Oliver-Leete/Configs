@@ -33,7 +33,6 @@ abbr trm "trash-put -i"
 abbr redir "fd -HLI | edir"
 abbr dust "dua i"
 
-
 abbr mv "mv -iv"
 abbr cp "cp -riv"
 
@@ -90,6 +89,10 @@ end
 
 function isodate
     date +%Y-%m-%d
+end
+
+function manpdf --argument program
+    man -Tpdf $program | zathura -
 end
 
 # ghcup-env

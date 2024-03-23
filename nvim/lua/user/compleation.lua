@@ -18,13 +18,12 @@ local cmp = require("cmp")
 cmp.setup({
     snippet = { expand = function(args) require("luasnip").lsp_expand(args.body) end, },
     mapping = {
-        ["<C-k>"] = cmp.mapping(cmp.mapping.scroll_docs(-5), { "i", "c" }),
-        ["<C-j>"] = cmp.mapping(cmp.mapping.scroll_docs(5), { "i", "c" }),
-        ["<down>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert })),
-        ["<up>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert })),
+        ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
+        ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
+        ["<down>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }), { "i", "s", "c" }),
+        ["<up>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }), { "i", "s", "c" }),
         ["<CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "i" }),
-        ["<tab>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }, { "c" })),
-        ["<s-tab>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }), { "c" }),
+        ["<C-CR>"] = cmp.mapping(cmp.mapping.confirm({ select = false }), { "c" }),
     },
     sources = {
         { name = "luasnip_choice" },
