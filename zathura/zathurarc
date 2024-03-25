@@ -1,2 +1,1 @@
 set synctex true
-set synctex-editor-command "nvrWS +%{line} %{input}"

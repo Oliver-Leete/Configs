@@ -7,4 +7,3 @@ else
     serverID=$(nvrGetName)
     nvr -s --servername "/tmp/$serverID" "$@"
 fi
-

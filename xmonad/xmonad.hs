@@ -713,14 +713,14 @@ bringWindow w ws = W.focusWindow w $ W.shiftWinDown (W.currentTag ws) w ws
 -- | Movement
 moveLeft, moveDown, moveUp, moveRight :: [(Query Bool, X ())]
 moveLeft = kt "focus-window --match neighbor:left || /home/oleete/.cabal/bin/xmonadctl-exe winGo-H" $ l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex (-1))), ("", upPointer (windowGo L False))])
-moveDown = kt "focus-window --match neighbor:bottom || /home/oleete/.cabal/bin/xmonadctl-exe winGo-J" $ l (upPointer (windowGo L False))
-moveUp = kt "focus-window --match neighbor:top || /home/oleete/.cabal/bin/xmonadctl-exe winGo-K" $ l (upPointer (windowGo L False))
+moveDown = kt "focus-window --match neighbor:bottom || /home/oleete/.cabal/bin/xmonadctl-exe winGo-J" $ l (upPointer (windowGo D False))
+moveUp = kt "focus-window --match neighbor:top || /home/oleete/.cabal/bin/xmonadctl-exe winGo-K" $ l (upPointer (windowGo U False))
 moveRight = kt "focus-window --match neighbor:right || /home/oleete/.cabal/bin/xmonadctl-exe winGo-L" $ l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex 1)), ("", upPointer (windowGo R False))])
 
 moveLeft', moveDown', moveUp', moveRight' :: [(Query Bool, X ())]
 moveLeft' = l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex (-1))), ("", upPointer (windowGo L False))])
-moveDown' = l (upPointer (windowGo L False))
-moveUp' = l (upPointer (windowGo L False))
+moveDown' = l (upPointer (windowGo D False))
+moveUp' = l (upPointer (windowGo U False))
 moveRight' = l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex 1)), ("", upPointer (windowGo R False))])
 
 ----------------------------------------------------------------------------------------------------

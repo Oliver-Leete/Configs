@@ -4,10 +4,10 @@ starship init fish | source
 
 set -Ux BROWSER "/home/oleete/.config/bin/browser"
 set -gx BROWSER "/home/oleete/.config/bin/browser"
-set -Ux EDITOR "/home/oleete/.config/bin/nvrStart --remote-wait"
-set -gx EDITOR "/home/oleete/.config/bin/nvrStart --remote-wait"
-set -Ux VISUAL "/home/oleete/.config/bin/nvrStart --remote-wait"
-set -gx VISUAL "/home/oleete/.config/bin/nvrStart --remote-wait"
+set -Ux EDITOR "/home/oleete/.config/bin/nvrStart"
+set -gx EDITOR "/home/oleete/.config/bin/nvrStart"
+set -Ux VISUAL "/home/oleete/.config/bin/nvrStart"
+set -gx VISUAL "/home/oleete/.config/bin/nvrStart"
 set -Ux PYENV_ROOT "/home/oleete/.pyenv"
 fish_add_path --path $PYENV_ROOT/bin
 fish_add_path --path /home/oleete/.cargo/bin
@@ -38,11 +38,11 @@ abbr cp "cp -riv"
 
 abbr  fd "fd -HLI"
 
-abbr  ls "eza -1 --icons --group-directories-first"
-abbr  lr "eza -1 --group-directories-first"
-abbr  ll "eza -aal --icons --group-directories-first --time-style relative"
-abbr  lt "eza -aalT --level=2 --icons --group-directories-first --time-style relative"
-abbr  lg "eza -aalT --git-ignore --icons --group-directories-first --time-style relative"
+abbr  ls "eza -1 --hyperlink --icons --group-directories-first"
+abbr  lr "eza -1 --hyperlink --group-directories-first"
+abbr  ll "eza -aal --hyperlink --icons --group-directories-first --time-style relative"
+abbr  lt "eza -alT --hyperlink --level=2 --icons --group-directories-first --time-style relative"
+abbr  lg "eza -alT --hyperlink --git-ignore --icons --group-directories-first --time-style relative"
 
 abbr -a bk backup
 abbr -a re restore

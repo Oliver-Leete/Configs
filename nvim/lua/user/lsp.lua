@@ -57,7 +57,10 @@ local lsp_auto = vim.api.nvim_create_augroup("lsp_autocmd", { clear = true })
 
 local custom_attach = function(client, bufnr)
     local sc = client.server_capabilities
-    local bmap = function(mode, key, action) Map(mode, key, action, { buffer = bufnr }) end
+    local bmap = function(mode, key, action, opts)
+        Map(mode, key, action,
+            vim.tbl_extend("force", { buffer = bufnr }, opts))
+    end
 
     if client.name == "ruff" then
         sc.renameProvider = false
@@ -76,7 +79,7 @@ local custom_attach = function(client, bufnr)
         bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>", { desc = "Incoming Calls" })
     end
     bmap("n", "<C-,>", vim.lsp.codelens.run, { desc = "Run code lens" })
-    if sc.codeLensProvider ~= nil and sc.codeLensProvider == true then
+    if sc.codeLensProvider and sc.codeLensProvider == true then
         vim.lsp.codelens.refresh()
         vim.api.nvim_create_autocmd(
             "TextChanged",
@@ -90,23 +93,23 @@ local custom_attach = function(client, bufnr)
                 group = lsp_auto,
             }
         )
-        bmap({ "n" }, "<leader>a", function()
-            local cursor_pos = vim.api.nvim_win_get_cursor(0)
-            local cursor_col = cursor_pos[2]
-            local cursor_line = cursor_pos[1]
-            local hints = vim.lsp.inlay_hint.get({ bufnr = 0 })
-            local hint = vim.tbl_filter(function(h)
-                return (
-                    h.inlay_hint.position.line == cursor_line - 1 and
-                    h.inlay_hint.position.character == cursor_col + 1
-                )
-            end, hints)[1]
-            if hint then
-                local text = (hint.inlay_hint.paddingLeft and " " or "") .. hint.inlay_hint.label[1].value
-                vim.api.nvim_put({ text }, "c", true, true)
-            end
-        end)
     end
+    bmap("n" , "<leader>a", function()
+        local cursor_pos = vim.api.nvim_win_get_cursor(0)
+        local cursor_col = cursor_pos[2]
+        local cursor_line = cursor_pos[1]
+        local hints = vim.lsp.inlay_hint.get({ bufnr = 0 })
+        local hint = vim.tbl_filter(function(h)
+            return (
+                h.inlay_hint.position.line == cursor_line - 1 and
+                h.inlay_hint.position.character == cursor_col + 1
+            )
+        end, hints)[1]
+        if hint then
+            local text = (hint.inlay_hint.paddingLeft and " " or "") .. hint.inlay_hint.label[1].value
+            vim.api.nvim_put({ text }, "c", true, true)
+        end
+    end, { desc = "Insert inlay hint" })
     bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action, { desc = "Run code actions" })
 
     if client.server_capabilities.inlayHintProvider then
