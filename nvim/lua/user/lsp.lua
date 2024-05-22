@@ -70,13 +70,13 @@ local custom_attach = function(client, bufnr)
 
     -- LSP Binding Override
     if client.name ~= "null-ls" then
-        bmap("n", "gd", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>", { desc = "Definition" })
-        bmap("n", "gr", "<cmd>Telescope lsp_references theme=get_ivy<cr>", { desc = "References" })
-        bmap("n", "gD", "<cmd>Telescope lsp_type_definitions theme=get_ivy<cr>", { desc = "Type Deffinition" })
-        bmap("n", "gI", "<cmd>Telescope lsp_implementations theme=get_ivy<cr>", { desc = "Implementations" })
+        bmap("n", "gd", "<cmd>Telescope lsp_definitions jump_type=never theme=get_ivy<cr>", { desc = "Definition" })
+        bmap("n", "gr", "<cmd>Telescope lsp_references jump_type=never theme=get_ivy<cr>", { desc = "References" })
+        bmap("n", "gD", "<cmd>Telescope lsp_type_definitions jump_type=never theme=get_ivy<cr>", { desc = "Type Deffinition" })
+        bmap("n", "gI", "<cmd>Telescope lsp_implementations jump_type=never theme=get_ivy<cr>", { desc = "Implementations" })
 
-        bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls theme=get_ivy<cr>", { desc = "Outgoing Calls" })
-        bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls theme=get_ivy<cr>", { desc = "Incoming Calls" })
+        bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls jump_type=never theme=get_ivy<cr>", { desc = "Outgoing Calls" })
+        bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls jump_type=never theme=get_ivy<cr>", { desc = "Incoming Calls" })
     end
     bmap("n", "<C-,>", vim.lsp.codelens.run, { desc = "Run code lens" })
     if sc.codeLensProvider and sc.codeLensProvider == true then
@@ -113,7 +113,7 @@ local custom_attach = function(client, bufnr)
     bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action, { desc = "Run code actions" })
 
     if client.server_capabilities.inlayHintProvider then
-        vim.lsp.inlay_hint.enable(bufnr, true)
+        -- vim.lsp.inlay_hint.enable(bufnr, true)
     end
 end
 
@@ -268,6 +268,5 @@ none_ls.setup({
         none_ls.builtins.formatting.markdownlint,
         none_ls.builtins.formatting.shellharden,
         none_ls.builtins.formatting.shfmt,
-        none_ls.builtins.hover.dictionary.with({ filetypes = { "tex", "markdown" } }),
     },
 })

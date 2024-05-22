@@ -114,17 +114,10 @@ split3 sc f =
     midPos = sx + ceiling ((0.5 :: Double) * fromIntegral sw)
 
 modY :: Rectangle -> Rectangle -> Rectangle
-modY (Rectangle bx _ bw _) (Rectangle sx sy sw sh) =
-    Rectangle sx (sy + ymoddifier) sw (sh - fromIntegral ymoddifier)
+modY (Rectangle bx _ bw _) (Rectangle sx sy sw sh) = Rectangle sx (sy + ymod) sw (sh - fromIntegral ymod)
   where
-    ymoddifier =
-        if toInteger (8 + sx) < toInteger bx + xmobarWidth
-            then 31
-            else 0
-    xmobarWidth =
-        if bw > 1920
-            then 960
-            else 1280
+    ymod = if toInteger (8 + sx) < toInteger bx + xmobarWidth then 31 else 0
+    xmobarWidth = if bw > 1920 then 960 else 1280
 
 -- | A variant of focusDown that doesn't wrap at the end of the stack
 noWrapFocus' :: Int -> W.Stack a -> W.Stack a

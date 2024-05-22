@@ -8,9 +8,10 @@ local rightend = ""
 local lsp_status = function()
     local ret = ""
     local bufnr = vim.api.nvim_get_current_buf()
-    if vim.lsp.get_active_clients({ bufnr = bufnr }) then
+    local ac_clients = vim.lsp.get_clients({ bufnr = bufnr })
+    if ac_clients then
         local clients = {}
-        for _, client in pairs(vim.lsp.get_active_clients({ bufnr = bufnr or vim.api.nvim_get_current_buf() })) do
+        for _, client in pairs(ac_clients) do
             if client.name ~= "null-ls" then
                 clients[#clients + 1] = client.name
             end
@@ -54,7 +55,7 @@ require("lualine").setup({
         },
         disabled_filetypes = {
             statusline = {},
-            winbar = vim.tbl_keys(require("user.myfuncs").special_types),
+            winbar = vim.list_extend(vim.tbl_keys(require("user.myfuncs").special_types), { "man" }),
         },
     },
     sections = {

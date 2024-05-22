@@ -8,6 +8,7 @@ local diffclose = function() vim.cmd.DiffviewClose() end
 M.special_types = {
     lazy = { exit_func = winclose },
     qf = { exit_func = winclose },
+    trouble = { exit_func = require("trouble").close },
     help = { exit_func = edgy_left },
     lspinfo = { exit_func = winclose },
     notify = { exit_func = winclose },

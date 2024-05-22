@@ -1,4 +1,29 @@
-local size = function(dir, min, max)
+require("trouble").setup({
+    modes = {
+        quickprev = {
+            mode = "qflist",
+            focus = "true",
+            preview = {
+                type = "split",
+                relative = "win",
+                position = "right",
+                size = 0.5,
+            },
+        },
+        lspprev = {
+            mode = "lsp",
+            focus = "true",
+            preview = {
+                type = "split",
+                relative = "win",
+                position = "right",
+                size = 0.5,
+            },
+        },
+    },
+})
+
+local size = function(_, min, max)
     return math.max(
         math.min(
             math.ceil(
@@ -17,16 +42,16 @@ require("edgy").setup({
     },
     options = {
         left = { size = function() return size("width", 30, 50) end },
-        bottom = { size = function() return size("height", 20, 40) end },
-        top = { size = function() return size("height", 20, 40) end }
+        bottom = { size = function() return size("height", 20, 30) end },
     },
-    top = {
+    bottom = {
         { ft = "qf", title = " QuickFix" },
         {
             ft = "NoiceHistory",
             title = " Log",
             open = function() require("user.myfuncs").toggle_noice() end,
         },
+
     },
     keys = {
         ["<esc>"] = function(win)

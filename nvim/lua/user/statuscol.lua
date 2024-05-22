@@ -40,7 +40,7 @@ require("statuscol").setup({
     setopt = true,
     thousands = false,
     relculright = false,
-    ft_ignore = nil,
+    ft_ignore = { "man" },
     bt_ignore = { "terminal" },
     segments = {
         {

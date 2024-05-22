@@ -36,20 +36,20 @@ abbr dust "dua i"
 abbr mv "mv -iv"
 abbr cp "cp -riv"
 
-abbr  fd "fd -HLI"
+abbr fd "fd -HLI"
 
-abbr  ls "eza -1 --hyperlink --icons --group-directories-first"
-abbr  lr "eza -1 --hyperlink --group-directories-first"
-abbr  ll "eza -aal --hyperlink --icons --group-directories-first --time-style relative"
-abbr  lt "eza -alT --hyperlink --level=2 --icons --group-directories-first --time-style relative"
-abbr  lg "eza -alT --hyperlink --git-ignore --icons --group-directories-first --time-style relative"
+abbr ls "eza -1 --hyperlink --icons --group-directories-first"
+abbr lr "eza -1 --hyperlink --group-directories-first"
+abbr ll "eza -aal --hyperlink --icons --group-directories-first --time-style relative"
+abbr lt "eza -alT --hyperlink --level=2 --icons --group-directories-first --time-style relative"
+abbr lg "eza -alT --hyperlink --git-ignore --icons --group-directories-first --time-style relative"
 
 abbr -a bk backup
 abbr -a re restore
 
 alias edrive "cd /run/media/oleete"
 
-abbr  htop 'htop -t'
+abbr htop 'htop -t'
 alias lzg lazygit
 alias lzd lazydocker
 alias zathura "zathura --fork"
@@ -93,6 +93,10 @@ end
 
 function manpdf --argument program
     man -Tpdf $program | zathura -
+end
+
+function help
+    $argv --help 2>&1 | bat --language=help -pp
 end
 
 # ghcup-env

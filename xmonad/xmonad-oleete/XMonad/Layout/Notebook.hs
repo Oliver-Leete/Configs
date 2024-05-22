@@ -54,6 +54,8 @@ import Data.List
 import Graphics.X11.Xlib (Dimension, Rectangle (..))
 
 -- import qualified Basement.Compat.Base as GHC.Int
+
+import Data.Ord (Down (Down))
 import qualified Data.Ord
 import XMonad.Core (Message)
 
@@ -106,7 +108,18 @@ data ToggleStackDir = ToggleStackDir deriving (Read, Show, Typeable)
 instance Message ToggleStackDir
 
 -- | Arguments are nmaster, delta, fraction, mirror fraction
-data Notebook a = Notebook {notebookMiddle :: !Bool, notebookSide :: !Bool, stackDirection :: !Bool, notebookMaster :: !Int, notebookColumn :: !Int, notebookDelta :: !Rational, notebookMirrorDelta :: !Rational, notebookFrac :: !Rational, notebookMirrorFrac :: !Rational, notebookStackFrac :: !Rational}
+data Notebook a = Notebook
+    { notebookMiddle :: !Bool
+    , notebookSide :: !Bool
+    , stackDirection :: !Bool
+    , notebookMaster :: !Int
+    , notebookColumn :: !Int
+    , notebookDelta :: !Rational
+    , notebookMirrorDelta :: !Rational
+    , notebookFrac :: !Rational
+    , notebookMirrorFrac :: !Rational
+    , notebookStackFrac :: !Rational
+    }
     deriving (Show, Read)
 
 data SResize = SShrink | SExpand
@@ -135,10 +148,9 @@ instance LayoutClass Notebook a where
         sresize SExpand = l{notebookStackFrac = min 10 $ sf + d}
         incmastern (IncColumnN x) = l{notebookMaster = max 0 $ min c (n + x)}
         inccolumnn (IncMasterN x) = l{notebookColumn = max n (c + x)}
-        togglemiddle ToggleMiddle = l{notebookMiddle = not mid}
+        togglemiddle ToggleMiddle = l{notebookMiddle = not $ notebookMiddle l}
         toggleside ToggleSide = l{notebookSide = not s}
         togglestackdir ToggleStackDir = l{stackDirection = not dir}
-        mid = notebookMiddle l
         s = notebookSide l
         n = notebookMaster l
         c = notebookColumn l
@@ -182,10 +194,11 @@ newWide m s stackMirrored nMainLimit nTotColLimit nwin f mf sf r
         | even (nmain + ncol) = ceiling (ncol % 2) * colWidth
         | otherwise = floor (ncol % 2) * colWidth
 
-    colLister True = splitMiddleMaster (-1) (fromIntegral r.rect_x + floor (nmain % 2) * width + startOffset)
-    colLister False = splitLeftMaster (fromIntegral r.rect_x)
+    colLister
+        | m = splitMiddleMaster (-1) (fromIntegral r.rect_x + floor (nmain % 2) * width + startOffset)
+        | otherwise = splitLeftMaster (fromIntegral r.rect_x)
 
-    listCols = colLister m (fromIntegral width) colWidth 1 nmain ncol f r
+    listCols = colLister (fromIntegral width) colWidth 1 nmain ncol f r
 
     (stackRect, colTops) = splitColumns (sortByXLocation stackMirrored listCols) r (minWidth - 10) mf stackMirrored
 
@@ -236,36 +249,27 @@ splitColumns columns screenRect minWidth stackFrac stackMirrored = mapAccumL spl
         | otherwise = (accum, column)
       where
         (columnTop, columnBase) = splitVerticallyBy stackFrac $ fst column
-        newStackRect = stackRectFunc stackMirrored accum columnBase
+        newStackRect = stackRectFunc accum columnBase
 
-    stackRectFunc :: Bool -> Rectangle -> Rectangle -> Rectangle
-    stackRectFunc True = rectangleDiff
-    stackRectFunc False = flip rectangleDiff
+    stackRectFunc
+        | stackMirrored = rectangleDiff
+        | otherwise = flip rectangleDiff
 
 modY :: Rectangle -> Rectangle -> Rectangle
-modY (Rectangle bx _ bw _) (Rectangle sx sy sw sh) =
-    Rectangle sx (sy + ymoddifier) sw (sh - fromIntegral ymoddifier)
+modY (Rectangle bx _ bw _) (Rectangle sx sy sw sh) = Rectangle sx (sy + ymod) sw (sh - fromIntegral ymod)
   where
-    ymoddifier =
-        if toInteger (8 + sx) < toInteger bx + xmobarWidth
-            then 31
-            else 0
-    xmobarWidth =
-        if bw > 1920
-            then 960
-            else 1280
+    ymod = if toInteger (8 + sx) < toInteger bx + xmobarWidth then 31 else 0
+    xmobarWidth = if bw > 1920 then 960 else 1280
 
 sortByXLocation :: Bool -> [(Rectangle, b)] -> [(Rectangle, b)]
 sortByXLocation True = sortOn (rect_x . fst)
-sortByXLocation False = sortOn (Data.Ord.Down . (rect_x . fst))
+sortByXLocation False = sortOn (Down . (rect_x . fst))
 
 sortByIndex :: [(Rectangle, Int)] -> [(Rectangle, Int)]
 sortByIndex = sortOn snd
 
 rectangleDiff :: Rectangle -> Rectangle -> Rectangle
-rectangleDiff firstRect secondRect =
-    Rectangle firstRect.rect_x firstRect.rect_y (firstRect.rect_width + secondRect.rect_width) firstRect.rect_height
+rectangleDiff (Rectangle sx sy sw sh) (Rectangle _ _ bw _) = Rectangle sx sy (sw + bw) sh
 
 reflectRect :: Rectangle -> Rectangle -> Rectangle
-reflectRect (Rectangle sx _ sw _) (Rectangle bx by bw bh) =
-    Rectangle (2 * sx + fi sw - bx - fi bw) by bw bh
+reflectRect (Rectangle sx _ sw _) (Rectangle bx by bw bh) = Rectangle (2 * sx + fi sw - bx - fi bw) by bw bh

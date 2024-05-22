@@ -69,12 +69,13 @@ import XMonad.Prompt.XMonad (xmonadPromptC, xmonadPromptCT)
 
 import XMonad.Util.ClickableWorkspaces (clickablePP)
 import XMonad.Util.Cursor (setDefaultCursor)
-import XMonad.Util.EZConfig (additionalKeysP)
+import XMonad.Util.EZConfig (additionalKeysP, removeKeysP)
 import XMonad.Util.Hacks (windowedFullscreenFixEventHook)
 import XMonad.Util.NamedScratchpadLocal
 import XMonad.Util.Paste as P (sendKey)
-import XMonad.Util.SpawnOnce (spawnOnce)
+import XMonad.Util.SpawnOnce (spawnOnOnce, spawnOnce)
 import XMonad.Util.WorkspaceCompare (getWsCompare)
+import Data.Function (on)
 
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
@@ -108,6 +109,7 @@ myConfig n =
         , workspaces = myWorkspaces
         }
         `additionalKeysP` myKeys n
+        `removeKeysP` ["M-" ++ m ++ [n] | n <- ['1' .. '9'], m <- ["S-", ""]]
 
 -- | Get number of screens
 getScreens :: IO Int
@@ -126,6 +128,7 @@ getScreens = do
 projects :: [Project]
 projects =
     [ Project{pName = "Tmp", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
+    , Project{pName = "Tmp2", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
     , Project{pName = "M", pDir = "~/.config", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = tBSpawn "M" persB}
     , Project{pName = "Print", pDir = "~/Projects/Printing", pApp1 = prusa, pApp1F = prusaF, pApp4 = br persB, pApp4F = brF persB, pStart = oSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer"}
     , Project{pName = "Games", pDir = "~/Documents", pApp1 = steam, pApp1F = steamF, pApp4 = br persB, pApp4F = brF persB, pStart = oSpawn "Games" "steam"}
@@ -178,33 +181,39 @@ myProfileConfig :: ProfileConfig
 myProfileConfig =
     def
         { profiles = myProfiles
-        , startingProfile = "Home"
+        , startingProfile = "Scintilla"
         , workspaceExcludes = ["NSP"]
         }
 
 myProfiles :: [Profile]
 myProfiles =
     [ Profile
-        { profileId = "Home"
-        , profileWS =
-            [ "M"
-            , "Tmp"
-            , "Films"
-            , "Games"
-            ]
-        }
-    , Profile
         { profileId = "Scintilla"
         , profileWS =
-            [ "M"
+            [ "Tmp"
+            , "Tmp2"
+            , "M"
             , "Scin-Main"
             , "Scin-Test"
             ]
         }
     , Profile
+        { profileId = "Home"
+        , profileWS =
+            [ "Tmp"
+            , "Tmp2"
+            , "M"
+            , "Print"
+            , "Films"
+            , "Games"
+            ]
+        }
+    , Profile
         { profileId = "Thesis"
         , profileWS =
-            [ "M"
+            [ "Tmp"
+            , "Tmp2"
+            , "M"
             , "Thesis"
             , "Sim"
             , "Scripts"
@@ -440,16 +449,16 @@ myKeys n =
     , ("M-S-]", sendMessage MirrorExpand)
     , ("M-S-9", sendMessage SShrink)
     , ("M-S-0", sendMessage SExpand)
-    , ("M-d", withNthProfileWorkspace 0 W.greedyView)
-    , ("M-a", withNthProfileWorkspace 1 W.greedyView)
-    , ("M-r", withNthProfileWorkspace 2 W.greedyView)
-    , ("M-s", withNthProfileWorkspace 3 W.greedyView)
-    , ("M-t", withNthProfileWorkspace 4 W.greedyView)
-    , ("M-S-d", withNthProfileWorkspace 0 W.shift)
-    , ("M-S-a", withNthProfileWorkspace 1 W.shift)
-    , ("M-S-r", withNthProfileWorkspace 2 W.shift)
-    , ("M-S-s", withNthProfileWorkspace 3 W.shift)
-    , ("M-S-t", withNthProfileWorkspace 4 W.shift)
+    , ("M-d", withNthProfileWorkspace 2 W.greedyView)
+    , ("M-a", withNthProfileWorkspace 3 W.greedyView)
+    , ("M-r", withNthProfileWorkspace 4 W.greedyView)
+    , ("M-s", withNthProfileWorkspace 5 W.greedyView)
+    , ("M-t", withNthProfileWorkspace 6 W.greedyView)
+    , ("M-S-d", withNthProfileWorkspace 2 W.shift)
+    , ("M-S-a", withNthProfileWorkspace 3 W.shift)
+    , ("M-S-r", withNthProfileWorkspace 4 W.shift)
+    , ("M-S-s", withNthProfileWorkspace 5 W.shift)
+    , ("M-S-t", withNthProfileWorkspace 6 W.shift)
     , ("M-<Tab>", tabCommand)
     , ("M-S-<Tab>", shiftTabCommand)
     , ("M-<Space>", upFocus $ toggleWS' ["NSP"])
@@ -506,7 +515,7 @@ myFuncPrompt c =
         , ("Network", spawn "networkmanager_dmenu")
         , ("Bluetooth", spawn "/home/oleete/.config/bin/rofi-bluetooth")
         , ("Volume", inputPrompt c "Volume" ?+ (\v -> spawn ("/home/oleete/.config/bin/volume set-sink-volume @DEFAULT_SINK@ " ++ v ++ "%")))
-        , ("Brightness", inputPrompt c "Brightness" ?+ (\b -> spawn ("/home/oleete/.config/bin/brightness -set " ++ b)))
+        , ("Brightness", inputPrompt c "Brightness" ?+ (spawn . (++) "/home/oleete/.config/bin/brightness -set "))
         , ("SysMon", upPointer $ namedScratchpadAction scratchpads "sysMon")
         , ("Ruler", upPointer $ namedScratchpadAction scratchpads "ruler")
         , ("ColorPicker", spawn "/home/oleete/.config/bin/colorPicker")
@@ -569,6 +578,7 @@ myStartupHook = do
     spawnOnce "insync start; insync hide"
     spawnOnce "/home/oleete/.config/bin/startupScript"
     spawnOnce "/home/oleete/.config/bin/connect_screen.py"
+    spawnOnOnce "NSP" "kitty --class=sysMon btop"
 
 ----------------------------------------------------------------------------------------------------
 -- Log                                                                                            --
@@ -594,7 +604,7 @@ myPP =
             , ppOrder = \(ws : _ : t : p) -> t : ws : p
             , ppSort = do
                 cmp <- getWsCompare
-                return $ sortBy (\a b -> cmp (W.tag b) (W.tag a))
+                return $ sortBy (flip cmp `on` W.tag)
             }
   where
     underlineMod c = xmobarColor c "" . wrap ("<box type=Bottom width=2 mt=2 color=" ++ c ++ ">") "</box>"

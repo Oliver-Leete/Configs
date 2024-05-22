@@ -82,6 +82,7 @@ require("lazy").setup(
             "folke/edgy.nvim",
             config = function() require("user.panels") end,
         },
+        { "folke/trouble.nvim",                 branch = "dev" },
         {
             "folke/noice.nvim",
             dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },

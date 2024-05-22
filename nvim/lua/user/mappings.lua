@@ -47,6 +47,7 @@ Map({ "n", "x", "o" }, ")", "<nop>")
 Map("n", "<esc>", function()
     require("edgy").close()
     vim.cmd("Noice dismiss")
+    require("trouble").close()
 end)
 
 Map({ "n", "x" }, "<c-r>", "<c-x>")
@@ -315,39 +316,22 @@ Map("n", ",rI", function() require("refactoring").refactor("Inline Function") en
 Map("n", ",n", require("ts-node-action").node_action)
 
 Map({ "n", "x" }, ",pl", function() require("user.myfuncs").paste_special(vim.v.register, "l", "p") end)
-Map({ "n", "x" }, ",Pl", function() require("user.myfuncs").paste_special(vim.v.register, "l", "P") end)
 Map({ "n", "x" }, ",pi", function() require("user.myfuncs").paste_special(vim.v.register, "c", "p") end)
-Map({ "n", "x" }, ",Pi", function() require("user.myfuncs").paste_special(vim.v.register, "c", "P") end)
-Map({ "n", "x" }, ",pb", function() require("user.myfuncs").paste_special(vim.v.register, "b", "p") end)
-Map({ "n", "x" }, ",Pb", function() require("user.myfuncs").paste_special(vim.v.register, "b", "P") end)
 
 Map({ "n", "x" }, ",ff", function()
     pcall(Ls.unlink_current)
     vim.lsp.buf.format()
 end)
-Map("n", ",fw", function()
-    local num = (vim.b.textwidth and vim.b.textwidth > 0) and vim.b.textwidth or vim.g.textwidth
-    return "m1!ippar w" .. num .. "<cr>`1"
-end, { expr = true, silent = true })
-Map("n", ",fW", [["<cmd>%!par w" . &textwidth . "<cr>"]], { expr = true })
-Map("x", ",fw", [["!par w" . &textwidth . "<cr>"]], { expr = true })
 
-Map("n", ",fp", function() require('textcase').operator('to_pascal_case') end)
-Map("n", ",fc", function() require('textcase').operator('to_camel_case') end)
-Map("n", ",fs", function() require('textcase').operator('to_snake_case') end)
-Map("n", ",fu", function() require('textcase').operator('to_upper_case') end)
-Map("n", ",ft", function() require('textcase').operator('to_title_case') end)
-Map("n", ",fa", function() require('textcase').operator('to_phrase_case') end)
-Map("n", ",fl", function() require('textcase').operator('to_lower_case') end)
-Map("n", ",fk", function() require('textcase').operator('to_dash_case') end)
-Map("n", ",f:", function() require('textcase').operator('to_constant_case') end)
-Map("n", ",f.", function() require('textcase').operator('to_dot_case') end)
-Map("n", ",f/", function() require('textcase').operator('to_path_case') end)
+local num = function() return (vim.b.textwidth and vim.b.textwidth > 0) and vim.b.textwidth or vim.g.textwidth end
+Map("n", ",fw", function() return "m1!ippar w" .. num() .. "<cr>`1" end, { expr = true, silent = true })
+Map("x", ",fw", function() return "!par w" .. num() .. "<cr>" end, { expr = true, silent = true })
 
 Map("n", "<leader><leader>", "<cmd>silent e #<cr>")
 
-Map("n", "<leader>l", require("user.myfuncs").toggle_quickfix)
-Map("n", "<leader>u", require("user.myfuncs").toggle_noice)
+Map("n", "<leader>m", function() require("trouble").toggle({ mode = "quickprev" }) end)
+Map("n", "<leader>,", function() require("trouble").toggle({ mode = "lspprev" }) end)
+Map("n", "<leader>.", require("user.myfuncs").toggle_noice)
 
 Map("n", "<leader>w",
     function() require("telescope.builtin").lsp_dynamic_workspace_symbols(require("telescope.themes").get_ivy()) end)
