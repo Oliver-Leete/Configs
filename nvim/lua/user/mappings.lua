@@ -44,11 +44,6 @@ Map({ "n", "x", "o" }, ")", "<nop>")
 -- NOTE: y, d, c are free in op mode
 
 -- Mappings
-Map("n", "<esc>", function()
-    require("edgy").close()
-    vim.cmd("Noice dismiss")
-    require("trouble").close()
-end)
 
 Map({ "n", "x" }, "<c-r>", "<c-x>")
 Map({ "n", "x" }, "g<c-r>", "g<c-x>")

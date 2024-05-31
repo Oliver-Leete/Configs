@@ -4,17 +4,18 @@ local winclose = function() vim.cmd.wincmd({ args = { "c" } }) end
 local edgy_left = function() require("edgy").close("left") end
 local edgy_bot = function() require("edgy").close("bottom") end
 local diffclose = function() vim.cmd.DiffviewClose() end
-
+local troubleclose = function() require("trouble").close() end
+local edgyclose = function() require("edgy").close() end
 M.special_types = {
     lazy = { exit_func = winclose },
     qf = { exit_func = winclose },
-    trouble = { exit_func = require("trouble").close },
+    trouble = { exit_func = troubleclose },
     help = { exit_func = edgy_left },
     lspinfo = { exit_func = winclose },
     notify = { exit_func = winclose },
     DiffviewFileHistory = { exit_func = diffclose },
     DiffviewFiles = { exit_func = diffclose },
-    edgy = { exit_func = require("edgy").close },
+    edgy = { exit_func = edgyclose },
     ["dap-float"] = { exit_func = winclose },
     ["dapui_scopes"] = { exit_func = winclose },
     ["dapui_breakpoints"] = { exit_func = winclose },

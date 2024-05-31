@@ -1,4 +1,4 @@
---Settings
+-- --Settings
 vim.opt.nrformats = vim.opt.nrformats - "octal"
 vim.opt.viminfo = "'100,f1"
 vim.opt.clipboard = vim.opt.clipboard + "unnamedplus"
@@ -15,7 +15,7 @@ vim.opt.hidden = true
 vim.opt.shortmess = "TWAcIFs"
 vim.opt.showmode = false
 vim.opt.laststatus = 3
-vim.opt.cmdheight = 0
+vim.opt.cmdheight = 1
 vim.opt.fillchars:append({
     horiz     = '━',
     horizup   = '┻',
@@ -75,7 +75,7 @@ vim.o.foldlevelstart = 99
 vim.o.foldenable = true
 
 -- Numbering
-vim.opt.signcolumn = "no"
+vim.opt.signcolumn = "yes:1"
 vim.opt.numberwidth = 3
 vim.opt.number = true
 vim.opt.cursorline = false

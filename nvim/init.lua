@@ -71,23 +71,23 @@ require("lazy").setup(
         -- UI
         { "rebelot/kanagawa.nvim" },
         { "stevearc/dressing.nvim" },
-        { "nvim-lualine/lualine.nvim",   dependencies = { "kyazdani42/nvim-web-devicons" } },
-        { "luukvbaal/statuscol.nvim",    branch = "0.10" },
+        { "nvim-lualine/lualine.nvim",          dependencies = { "kyazdani42/nvim-web-devicons" } },
+        --         { "luukvbaal/statuscol.nvim",    branch = "0.10" },
         { "nvim-zh/colorful-winsep.nvim" },
-        {
-            "https://gitlab.com/yorickpeterse/nvim-pqf",
-            config = function() require('pqf').setup() end,
-        },
-        {
-            "folke/edgy.nvim",
-            config = function() require("user.panels") end,
-        },
-        { "folke/trouble.nvim",                 branch = "dev" },
-        {
-            "folke/noice.nvim",
-            dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
-            config = function() require("user.noice") end,
-        },
+        --         {
+        --             "https://gitlab.com/yorickpeterse/nvim-pqf",
+        --             config = function() require('pqf').setup() end,
+        --         },
+        --         {
+        --             "folke/edgy.nvim",
+        --             config = function() require("user.panels") end,
+        --         },
+        --         { "folke/trouble.nvim",                 branch = "dev" },
+        --         {
+        --             "folke/noice.nvim",
+        --             dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
+        --             config = function() require("user.noice") end,
+        --         },
         { "lukas-reineke/indent-blankline.nvim" },
         { "HiPhish/rainbow-delimiters.nvim" },
 
@@ -271,4 +271,4 @@ require("user.targets")
 require("user.filmpicker")
 require("user.ui")
 require("user.statusline")
-require("user.statuscol")
+-- require("user.statuscol")

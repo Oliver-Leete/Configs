@@ -103,15 +103,17 @@ dropEmpty (Nothing, _) = Nothing
 
 split3 :: Rectangle -> Rational -> [Rectangle]
 split3 sc f =
-    [ modY sc $ Rectangle (midPos - offset - fromIntegral width) sy width sh
-    , modY sc $ Rectangle (midPos - offset) sy width sh
-    , modY sc $ Rectangle (midPos + offset) sy width sh
-    ]
+    map
+        (modY sc . (\x -> Rectangle x sy width sh))
+        [ midPos - offset - fromIntegral width
+        , midPos - offset
+        , midPos + offset
+        ]
   where
     (Rectangle sx sy sw sh) = sc
     width = ceiling $ fromIntegral sw * f
-    offset = ceiling $ (0.5 :: Double) * fromIntegral width
-    midPos = sx + ceiling ((0.5 :: Double) * fromIntegral sw)
+    offset = ceiling $ 0.5 * fromIntegral width
+    midPos = sx + ceiling (0.5 * fromIntegral sw)
 
 modY :: Rectangle -> Rectangle -> Rectangle
 modY (Rectangle bx _ bw _) (Rectangle sx sy sw sh) = Rectangle sx (sy + ymod) sw (sh - fromIntegral ymod)
