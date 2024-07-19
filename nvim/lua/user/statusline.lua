@@ -1,3 +1,35 @@
+require("incline").setup {
+    render = function(props)
+        local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+        if filename == "" then
+            filename = "[No Name]"
+        end
+        local ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)
+
+        local function get_diagnostic_label()
+            local icons = { error = " ", warn = " ", info = " ", hint = "󰅽 " }
+            local label = {}
+
+            for severity, icon in pairs(icons) do
+                local n = #vim.diagnostic.get(props.buf, { severity = vim.diagnostic.severity[string.upper(severity)] })
+                if n > 0 then
+                    table.insert(label, { icon .. n .. " ", group = "DiagnosticSign" .. severity })
+                end
+            end
+            if #label > 0 then
+                table.insert(label, { "┊ " })
+            end
+            return label
+        end
+
+        return {
+            { get_diagnostic_label() },
+            { (ft_icon or "") .. " ", guifg = ft_color,                                            guibg = "none" },
+            { filename .. " ",        gui = vim.bo[props.buf].modified and "bold,italic" or "bold" },
+        }
+    end,
+}
+
 local left = ""
 local right = ""
 local leftc = ""
@@ -17,7 +49,7 @@ local lsp_status = function()
             end
         end
         if next(clients) then
-            ret = ret .. table.concat(clients, " " .. rightc .. " ")
+            ret = ret .. table.concat(clients, " | ")
         end
     end
     return ret
@@ -34,16 +66,6 @@ local diff_source = function()
     end
 end
 
--- local noice_wrapper = function()
---     local message = require("noice").api.status.message.get()
---     return message:sub(1, 80)
--- end
-
-
-local is_wide = function()
-    return vim.go.columns >= 200
-end
-
 require("lualine").setup({
     options = {
         component_separators = { left = leftc, right = rightc },
@@ -53,235 +75,29 @@ require("lualine").setup({
         refresh = {
             statusline = 1000,
         },
-        disabled_filetypes = {
-            statusline = {},
-            winbar = vim.list_extend(vim.tbl_keys(require("user.myfuncs").special_types), { "man" }),
-        },
+        disabled_filetypes = { statusline = {}, },
     },
     sections = {
-        lualine_a = {
-            {
-                function() return "" end,
-                draw_empty = true,
-                separator = { left = leftend, right = left },
-            },
-            {
-                "mode",
-            },
-            {
-                require("hydra.statusline").get_name,
-                cond = require("hydra.statusline").is_active,
-            },
-        },
+        lualine_a = { { "mode", }, },
         lualine_b = {
-            {
-                "b:gitsigns_head",
-                icon = "",
-                on_click = function() vim.defer_fn(function() vim.cmd("Telescope git_branches") end, 100) end,
-                separator = { left = "", right = "" },
-            },
-            {
-                function() return "" end,
-                draw_empty = true,
-                separator = { left = "", right = rightend },
-            },
+            { "b:gitsigns_head", icon = "", separator = { left = "", right = "" }, },
+            { "diff", source = diff_source, symbols = { added = " ", modified = " ", removed = " " }, },
+            { Filmpicker_endtime, cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end, },
+            { Filmpicker_winbar, cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end, },
         },
         lualine_c = {
-            -- {
-            --     noice_wrapper,
-            --     cond = require("noice").api.status.message.has,
-            --     on_click = function() vim.defer_fn(function() vim.cmd("Noice") end, 100) end,
-            -- },
-            {
-                require("dap").status,
-                on_click = function() vim.defer_fn(require("dap").continue, 100) end,
-            }
+            { require("dap").status, },
         },
-        lualine_x = {
-            -- {
-            --     require("noice").api.status.mode.get,
-            --     cond = require("noice").api.status.mode.has,
-            --     color = { fg = "#ff9e64" },
-            -- },
-        },
+        lualine_x = { },
         lualine_y = {
-            {
-                function() return "" end,
-                draw_empty = true,
-                separator = { left = leftend, right = "" },
-            },
-            {
-                "encoding",
-                cond = function() return vim.bo.fenc ~= "utf-8" and vim.go.enc ~= "utf-8" end,
-            },
-            {
-                "filetype",
-            },
-            {
-                "fileformat",
-                cond = function() return vim.bo.fileformat ~= "unix" end,
-            }
+            { "encoding",   cond = function() return vim.bo.fenc ~= "utf-8" and vim.go.enc ~= "utf-8" end, },
+            { "filetype", },
+            { "fileformat", cond = function() return vim.bo.fileformat ~= "unix" end, }
         },
         lualine_z = {
-            {
-                lsp_status,
-                on_click = function() vim.defer_fn(function() vim.cmd("LspInfo") end, 100) end,
-            },
-            {
-                "location",
-            },
-            {
-                function() return "" end,
-                draw_empty = true,
-                separator = { left = right, right = rightend },
-            },
+            { lsp_status, },
+            { "location", },
         }
-    },
-    winbar = {
-        lualine_a = {
-            {
-                function() return "" end,
-                draw_empty = true,
-                separator = { left = leftend, right = left },
-            },
-            {
-                "filename",
-                path = 1,
-                symbols = {
-                    modified = "󰷫 ",
-                    readonly = "󰏯 ",
-                    unnamed = "",
-                    newfile = "󰎔 ",
-                },
-            },
-        },
-        lualine_b = {
-            {
-                Filmpicker_endtime,
-                separator = { left = left, right = "" },
-                padding = { left = 1, right = 0 },
-                cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end,
-            },
-            {
-                function() return " " end,
-                draw_empty = true,
-                padding = { left = 0, right = 0 }
-            },
-            {
-                function() return "" end,
-                draw_empty = true,
-                separator = { left = left, right = rightend },
-            },
-        },
-        lualine_c = {},
-        lualine_y = {
-            {
-                function() return "" end,
-                draw_empty = true,
-                separator = { left = leftend, right = "" },
-                padding = { left = 0, right = 0 },
-            },
-            {
-                "diff",
-                source = diff_source,
-                symbols = { added = " ", modified = " ", removed = " " },
-                on_click = function() vim.defer_fn(function() vim.cmd("DiffviewOpen") end, 100) end,
-            },
-            {
-                "diagnostics",
-                symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
-                on_click = function()
-                    vim.defer_fn(function() vim.cmd("Telescope diagnostics bufnr=0 theme=get_ivy") end,
-                        100)
-                end,
-            },
-        },
-        lualine_z = {
-            {
-                "filetype",
-                colored = false,
-                icon_only = true,
-                separator = { left = right, right = rightend },
-            },
-            {
-                Filmpicker_winbar,
-                separator = { left = leftend, right = rightend },
-                cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end,
-            },
-        },
-    },
-    inactive_winbar = {
-        lualine_a = {
-            {
-                function() return "" end,
-                draw_empty = true,
-                separator = { left = leftend, right = left },
-            },
-            {
-                "filename",
-                path = 1,
-                symbols = {
-                    modified = "󰷫 ",
-                    readonly = "󰏯 ",
-                    unnamed = "",
-                    newfile = "󰎔 ",
-                },
-            },
-        },
-        lualine_b = {
-            {
-                Filmpicker_endtime,
-                separator = { left = left, right = "" },
-                padding = { left = 1, right = 0 },
-                cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end,
-            },
-            {
-                function() return " " end,
-                draw_empty = true,
-                padding = { left = 0, right = 0 }
-            },
-            {
-                function() return "" end,
-                draw_empty = true,
-                separator = { left = left, right = rightend },
-            },
-        },
-        lualine_c = {},
-        lualine_y = {
-            {
-                function() return "" end,
-                draw_empty = true,
-                separator = { left = leftend, right = "" },
-                padding = { left = 0, right = 0 },
-            },
-            {
-                "diff",
-                source = diff_source,
-                symbols = { added = " ", modified = " ", removed = " " },
-                on_click = function() vim.defer_fn(function() vim.cmd("DiffviewOpen") end, 100) end,
-            },
-            {
-                "diagnostics",
-                symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
-                on_click = function()
-                    vim.defer_fn(function() vim.cmd("Telescope diagnostics bufnr=0 theme=get_ivy") end,
-                        100)
-                end,
-            },
-        },
-        lualine_z = {
-            {
-                "filetype",
-                colored = false,
-                icon_only = true,
-                separator = { left = right, right = rightend },
-            },
-            {
-                Filmpicker_winbar,
-                separator = { left = leftend, right = rightend },
-                cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end,
-            },
-        },
     },
 })
 vim.api.nvim_set_hl(0, "StatusLineNC", { fg = Ct.ui.bg_p2, bg = Ct.ui.bg })

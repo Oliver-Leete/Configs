@@ -39,10 +39,10 @@ vim.api.nvim_set_hl(0, "LspInlayHint", { link = "NvimDapVirtualText" })
 
 vim.diagnostic.config({
     underline = false,
-    virtual_text = { severity = { min = "Warn", }, },
     update_in_insert = false,
     severity_sort = true,
-    virtual_lines = false,
+    virtual_lines = true,
+    virtual_text = false,
     signs = {
         text = {
             [vim.diagnostic.severity.ERROR] = " ",
@@ -72,11 +72,15 @@ local custom_attach = function(client, bufnr)
     if client.name ~= "null-ls" then
         bmap("n", "gd", "<cmd>Telescope lsp_definitions jump_type=never theme=get_ivy<cr>", { desc = "Definition" })
         bmap("n", "gr", "<cmd>Telescope lsp_references jump_type=never theme=get_ivy<cr>", { desc = "References" })
-        bmap("n", "gD", "<cmd>Telescope lsp_type_definitions jump_type=never theme=get_ivy<cr>", { desc = "Type Deffinition" })
-        bmap("n", "gI", "<cmd>Telescope lsp_implementations jump_type=never theme=get_ivy<cr>", { desc = "Implementations" })
+        bmap("n", "gD", "<cmd>Telescope lsp_type_definitions jump_type=never theme=get_ivy<cr>",
+            { desc = "Type Deffinition" })
+        bmap("n", "gI", "<cmd>Telescope lsp_implementations jump_type=never theme=get_ivy<cr>",
+            { desc = "Implementations" })
 
-        bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls jump_type=never theme=get_ivy<cr>", { desc = "Outgoing Calls" })
-        bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls jump_type=never theme=get_ivy<cr>", { desc = "Incoming Calls" })
+        bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls jump_type=never theme=get_ivy<cr>",
+            { desc = "Outgoing Calls" })
+        bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls jump_type=never theme=get_ivy<cr>",
+            { desc = "Incoming Calls" })
     end
     bmap("n", "<C-,>", vim.lsp.codelens.run, { desc = "Run code lens" })
     if sc.codeLensProvider and sc.codeLensProvider == true then
@@ -94,7 +98,7 @@ local custom_attach = function(client, bufnr)
             }
         )
     end
-    bmap("n" , "<leader>a", function()
+    bmap("n", "<leader>a", function()
         local cursor_pos = vim.api.nvim_win_get_cursor(0)
         local cursor_col = cursor_pos[2]
         local cursor_line = cursor_pos[1]

@@ -24,9 +24,24 @@ require("user.settings")
 require("lazy").setup(
     {
         -- Misc
-        { "pocco81/auto-save.nvim",    opts = { execution_message = { message = function() return "" end } } },
-        { "nvimtools/hydra.nvim",      dependencies = { "anuvyklack/keymap-layer.nvim" } },
-        { "chrisgrieser/nvim-genghis", dependencies = { "stevearc/dressing.nvim" } },
+        { "pocco81/auto-save.nvim", opts = { execution_message = { message = function() return "" end } } },
+        { "nvimtools/hydra.nvim",   dependencies = { "anuvyklack/keymap-layer.nvim" } },
+        {
+            "chrisgrieser/nvim-genghis",
+            dependencies = { "stevearc/dressing.nvim" },
+            opts = { trashCmd = "trash-put" }
+        },
+        {
+            "stevearc/oil.nvim",
+            opts = {
+                keymaps = {
+                    ["<esc>"] = "actions.close",
+                },
+                delete_to_trash = true,
+            },
+            keys = { { "-", "<CMD>Oil<CR>", desc = "Open parent directory" } },
+            lazy = false,
+        },
 
         -- Editing
         {
@@ -62,10 +77,52 @@ require("lazy").setup(
         {
             "lewis6991/gitsigns.nvim",
             dependencies = {
-                { "sindrets/diffview.nvim", dependencies = { "kyazdani42/nvim-web-devicons" } },
                 "tpope/vim-repeat",
             },
-            config = function() require("user.git") end
+            opts = {
+                signcolumn = false,
+            },
+        },
+        {
+            "sindrets/diffview.nvim",
+            dependencies = { "kyazdani42/nvim-web-devicons" },
+            config = function()
+                local actions = require("diffview.config").actions
+
+                require("diffview").setup({
+                    diff_binaries = false,
+                    enhanced_diff_hl = true,
+                    use_icons = true,
+                    hooks = {
+                        diff_buf_read = function(bufnr)
+                            vim.b[bufnr].is_diffview_file = true
+                        end,
+                    },
+                    key_bindings = {
+                        view = {
+                            ["<esc>"] = actions.focus_files,
+                            [",xo"] = actions.conflict_choose("ours"),
+                            [",xt"] = actions.conflict_choose("theirs"),
+                            [",xb"] = actions.conflict_choose("base"),
+                            [",xa"] = actions.conflict_choose("all"),
+                            [",xn"] = actions.conflict_choose("none"),
+                        },
+                        file_panel = {
+                            ["<c-j>"] = actions.scroll_view(5),
+                            ["<c-k>"] = actions.scroll_view(-5),
+                            ["<esc>"] = function()
+                                vim.b[vim.api.nvim_get_current_buf()].is_diffview_file = false
+                                vim.cmd("DiffviewClose")
+                            end,
+                        },
+                        file_history_panel = {
+                            ["<c-j>"] = actions.scroll_view(5),
+                            ["<c-k>"] = actions.scroll_view(-5),
+                            ["<esc>"] = function() vim.cmd("DiffviewClose") end,
+                        },
+                    },
+                })
+            end
         },
 
         -- UI
@@ -74,6 +131,7 @@ require("lazy").setup(
         { "nvim-lualine/lualine.nvim",          dependencies = { "kyazdani42/nvim-web-devicons" } },
         --         { "luukvbaal/statuscol.nvim",    branch = "0.10" },
         { "nvim-zh/colorful-winsep.nvim" },
+        { "b0o/incline.nvim" },
         --         {
         --             "https://gitlab.com/yorickpeterse/nvim-pqf",
         --             config = function() require('pqf').setup() end,
@@ -128,7 +186,10 @@ require("lazy").setup(
             dependencies = {
                 { "mrcjkb/rustaceanvim" },
                 { "yioneko/nvim-type-fmt" },
-                { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
+                {
+                    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+                    opts = {},
+                },
                 { "folke/neodev.nvim" },
                 { "MrcJkb/haskell-tools.nvim" },
                 { "hrsh7th/cmp-nvim-lsp" },
@@ -248,7 +309,7 @@ require("lazy").setup(
     },
     {
         checker = {
-            enabled = true,
+            enabled = false,
         },
         install = {
             missing = true,

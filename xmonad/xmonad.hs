@@ -160,7 +160,7 @@ projects =
 
     persB = "google-chrome-stable-personal"
     univB = "google-chrome-stable-uni"
-    workB = "google-chrome-stable-work"
+    workB = "google-chrome-stable-uni"
     rpgsB = "google-chrome-stable-Dnd"
     filmB = "google-chrome-stable-Films"
     br na = bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ brS na)

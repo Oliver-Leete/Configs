@@ -109,9 +109,6 @@ hipatterns.setup({
     },
 })
 
-require("mini.files").setup({})
-
-
 require("mini.operators").setup({
     evaluate = { prefix = ",=" },
     exchange = {
@@ -161,7 +158,7 @@ miniclue.setup({
     },
     clues = {
         miniclue.gen_clues.windows(),
-        miniclue.gen_clues.registers({ show_contents = true}),
+        miniclue.gen_clues.registers({ show_contents = true }),
     },
     window = {
         delay = 250,
@@ -170,24 +167,37 @@ miniclue.setup({
 })
 
 
--- require("mini.notify").setup({
---     content = {
---         format = function(notif) return notif.msg end,
---     },
---     window = {
---         config = function()
---             local has_tabline = vim.o.showtabline == 2 or (vim.o.showtabline == 1 and #vim.api.nvim_list_tabpages() > 1)
---             local has_statusline = vim.o.laststatus > 0
---             local max_height = vim.o.lines - vim.o.cmdheight - (has_tabline and 1 or 0) - (has_statusline and 1 or 0)
---             local max_width = vim.o.columns
---             return {
---                 border = Border,
---                 relative = "editor",
---                 anchor = "SE",
---                 col = max_width,
---                 row = max_height,
---             }
---         end
---     }
--- })
--- vim.notify = require("mini.notify").make_notify()
+require("mini.diff").setup({
+    view = { style = "number" },
+    mappings = {
+      apply = '',
+      reset = '',
+      textobject = '',
+      goto_first = '',
+      goto_prev = '',
+      goto_next = '',
+      goto_last = '',
+    },
+})
+
+require("mini.notify").setup({
+    content = {
+        format = function(notif) return notif.msg end,
+    },
+    window = {
+        config = function()
+            local has_tabline = vim.o.showtabline == 2 or (vim.o.showtabline == 1 and #vim.api.nvim_list_tabpages() > 1)
+            local has_statusline = vim.o.laststatus > 0
+            local max_height = vim.o.lines - vim.o.cmdheight - (has_tabline and 1 or 0) - (has_statusline and 1 or 0)
+            local max_width = vim.o.columns
+            return {
+                border = Border,
+                relative = "editor",
+                anchor = "SE",
+                col = max_width,
+                row = max_height,
+            }
+        end
+    }
+})
+vim.notify = require("mini.notify").make_notify()
