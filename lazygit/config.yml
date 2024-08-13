@@ -4,3 +4,9 @@ gui:
 git:
   paging:
     externalDiffCommand: difft --color=always --display=side-by-side-show-both
+os:
+  edit: '/home/oleete/.config/bin/nvrStart {{filename}}'
+  editAtLine: '/home/oleete/.config/bin/nvrStart {{filename}} +{{line}}'
+  editAtLineAndWait: '/home/oleete/.config/bin/nvrStart {{filename}} +{{line}}'
+  editInTerminal: true
+  openDirInEditor: '/home/oleete/.config/bin/nvrStart {{dir}}'
