@@ -10,7 +10,7 @@ vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "Diagnostic
 require("nvim-dap-virtual-text").setup()
 require("dapui").setup({
     floating = {
-        border = Border,
+        border = require("user.settings").border,
     },
     controls = {
         enabled = false,

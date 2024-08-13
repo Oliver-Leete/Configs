@@ -191,7 +191,7 @@ require("mini.notify").setup({
             local max_height = vim.o.lines - vim.o.cmdheight - (has_tabline and 1 or 0) - (has_statusline and 1 or 0)
             local max_width = vim.o.columns
             return {
-                border = Border,
+                border = require("user.settings").border,
                 relative = "editor",
                 anchor = "SE",
                 col = max_width,

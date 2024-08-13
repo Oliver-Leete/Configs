@@ -1,3 +1,4 @@
+m = {}
 -- --Settings
 vim.opt.nrformats = vim.opt.nrformats - "octal"
 vim.opt.viminfo = "'100,f1"
@@ -26,7 +27,7 @@ vim.opt.fillchars:append({
     verthoriz = '╋',
     diff      = "╱",
 })
-Border = "none"
+m.border = "none"
 
 -- Saving
 vim.opt.confirm = true
@@ -127,3 +128,4 @@ for _, plugin in pairs(disabled_built_ins) do
 end
 
 vim.g.project = vim.fs.basename(vim.fn.getcwd())
+return m

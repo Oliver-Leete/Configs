@@ -92,7 +92,8 @@ end)
 Map({ "n", "x" }, "U", "<c-r>")
 
 Map({ "n", "x" }, "KK", vim.lsp.buf.hover, { desc = "Info" })
-Map({ "n", "x" }, "KE", function() vim.diagnostic.open_float({ border = Border, scope = "line", source = "always" }) end,
+Map({ "n", "x" }, "KE",
+    function() vim.diagnostic.open_float({ border = require("user.settings").border, scope = "line", source = "always" }) end,
     { desc = "Errors" })
 Map({ "n", "x" }, "KG", require("gitsigns").preview_hunk, { desc = "Git Hunk" })
 Map({ "n", "x" }, "KB", function() require("gitsigns").blame_line({ full = true }) end, { desc = "Git Blame" })

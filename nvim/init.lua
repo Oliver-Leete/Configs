@@ -18,14 +18,34 @@ if not vim.loop.fs_stat(lazypath) then
     })
 end
 vim.opt.rtp:prepend(lazypath)
+local size = function(min, max)
+    return math.max(math.min(math.ceil(vim.api.nvim_list_uis()[1].height / 5), max), min)
+end
 
 require("user.settings")
 
 require("lazy").setup(
     {
         -- Misc
-        { "pocco81/auto-save.nvim", opts = { execution_message = { message = function() return "" end } } },
-        { "nvimtools/hydra.nvim",   dependencies = { "anuvyklack/keymap-layer.nvim" } },
+        {
+            "pocco81/auto-save.nvim",
+            opts = {
+                execution_message = { message = function() return "" end },
+                condition = function(buf)
+                    local fn = vim.fn
+                    local utils = require("auto-save.utils.data")
+
+                    if fn.getbufvar(buf, "&modifiable") == 1
+                        and
+                        utils.not_in(fn.getbufvar(buf, "&filetype"), { "oil", "qf" })
+                    then
+                        return true -- met condition(s), can save
+                    end
+                    return false    -- can't save
+                end,
+            }
+        },
+        { "nvimtools/hydra.nvim",           dependencies = { "anuvyklack/keymap-layer.nvim" } },
         {
             "chrisgrieser/nvim-genghis",
             dependencies = { "stevearc/dressing.nvim" },
@@ -38,6 +58,9 @@ require("lazy").setup(
                     ["<esc>"] = "actions.close",
                 },
                 delete_to_trash = true,
+                lsp_file_methods = {
+                    timeout_ms = 2500,
+                },
             },
             keys = { { "-", "<CMD>Oil<CR>", desc = "Open parent directory" } },
             lazy = false,
@@ -72,6 +95,33 @@ require("lazy").setup(
                 modes = { search = { enabled = false }, char = { enabled = false } },
             }
         },
+        {
+            "stevearc/quicker.nvim",
+            event = "FileType qf",
+            ---@module "quicker"
+            ---@type quicker.SetupOptions
+            opts = {
+                keys = {
+                    { ">",     function() require("quicker").expand({ before = 1, after = 1, add_to_existing = true }) end, desc = "Expand quickfix context", },
+                    { "<",     function() require("quicker").collapse() end,                                                desc = "Collapse quickfix context", },
+                    { "<esc>", function() require("quicker").close() end,                                                   desc = "Close quickfix list", },
+                },
+                type_icons = { E = " ", W = " ", I = " ", H = "󰅽 ", },
+            },
+            keys = {
+                {
+                    "<leader>l",
+                    function()
+                        require("quicker").toggle({
+                            focus = true,
+                            min_height = size(20, 30),
+                            max_height = size(20, 30)
+                        })
+                    end,
+                    { desc = "Toggle quickfix", }
+                },
+            }
+        },
 
         -- Git
         {
@@ -83,71 +133,13 @@ require("lazy").setup(
                 signcolumn = false,
             },
         },
-        {
-            "sindrets/diffview.nvim",
-            dependencies = { "kyazdani42/nvim-web-devicons" },
-            config = function()
-                local actions = require("diffview.config").actions
-
-                require("diffview").setup({
-                    diff_binaries = false,
-                    enhanced_diff_hl = true,
-                    use_icons = true,
-                    hooks = {
-                        diff_buf_read = function(bufnr)
-                            vim.b[bufnr].is_diffview_file = true
-                        end,
-                    },
-                    key_bindings = {
-                        view = {
-                            ["<esc>"] = actions.focus_files,
-                            [",xo"] = actions.conflict_choose("ours"),
-                            [",xt"] = actions.conflict_choose("theirs"),
-                            [",xb"] = actions.conflict_choose("base"),
-                            [",xa"] = actions.conflict_choose("all"),
-                            [",xn"] = actions.conflict_choose("none"),
-                        },
-                        file_panel = {
-                            ["<c-j>"] = actions.scroll_view(5),
-                            ["<c-k>"] = actions.scroll_view(-5),
-                            ["<esc>"] = function()
-                                vim.b[vim.api.nvim_get_current_buf()].is_diffview_file = false
-                                vim.cmd("DiffviewClose")
-                            end,
-                        },
-                        file_history_panel = {
-                            ["<c-j>"] = actions.scroll_view(5),
-                            ["<c-k>"] = actions.scroll_view(-5),
-                            ["<esc>"] = function() vim.cmd("DiffviewClose") end,
-                        },
-                    },
-                })
-            end
-        },
 
         -- UI
         { "rebelot/kanagawa.nvim" },
         { "stevearc/dressing.nvim" },
         { "nvim-lualine/lualine.nvim",          dependencies = { "kyazdani42/nvim-web-devicons" } },
-        --         { "luukvbaal/statuscol.nvim",    branch = "0.10" },
         { "nvim-zh/colorful-winsep.nvim" },
         { "b0o/incline.nvim" },
-        --         {
-        --             "https://gitlab.com/yorickpeterse/nvim-pqf",
-        --             config = function() require('pqf').setup() end,
-        --         },
-        --         {
-        --             "folke/edgy.nvim",
-        --             config = function() require("user.panels") end,
-        --         },
-        --         { "folke/trouble.nvim",                 branch = "dev" },
-        --         {
-        --             "folke/noice.nvim",
-        --             dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
-        --             config = function() require("user.noice") end,
-        --         },
-        { "lukas-reineke/indent-blankline.nvim" },
-        { "HiPhish/rainbow-delimiters.nvim" },
 
         {
             "folke/todo-comments.nvim",
@@ -315,7 +307,7 @@ require("lazy").setup(
             missing = true,
         },
         ui = {
-            border = Border,
+            border = require("user.settings").border,
             title = " Lazy ",
         },
         dev = {

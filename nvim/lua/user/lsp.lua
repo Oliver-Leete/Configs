@@ -3,7 +3,7 @@ vim.g.lsp_lens_on = true
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
     opts = opts or {}
-    opts.border = opts.border or Border
+    opts.border = opts.border or require("user.settings").border
     return orig_util_open_floating_preview(contents, syntax, opts, ...)
 end
 
@@ -33,7 +33,7 @@ require("mason-tool-installer").setup({
 require("neodev").setup({})
 local lspconfig = require("lspconfig")
 
-require("lspconfig.ui.windows").default_options.border = Border
+require("lspconfig.ui.windows").default_options.border = require("user.settings").border
 
 vim.api.nvim_set_hl(0, "LspInlayHint", { link = "NvimDapVirtualText" })
 
@@ -41,7 +41,7 @@ vim.diagnostic.config({
     underline = false,
     update_in_insert = false,
     severity_sort = true,
-    virtual_lines = true,
+    virtual_lines = false,
     virtual_text = false,
     signs = {
         text = {
@@ -121,7 +121,7 @@ local custom_attach = function(client, bufnr)
     end
 end
 
-require("mason").setup({ ui = { border = Border } })
+require("mason").setup({ ui = { border = require("user.settings").border } })
 require("mason-lspconfig").setup({})
 
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -150,6 +150,7 @@ lspconfig.nushell.setup(default)
 lspconfig.ruff_lsp.setup(default)
 lspconfig.taplo.setup(default)
 lspconfig.yamlls.setup(default)
+lspconfig.contextive.setup(default)
 
 lspconfig.basedpyright.setup({
     settings = {
