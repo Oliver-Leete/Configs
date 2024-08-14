@@ -350,6 +350,12 @@ myPromptConfig =
 
 mySpacing = spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
 
+data FULLNB = FULLNB deriving (Read, Show, Eq, Typeable)
+instance MT.Transformer FULLNB Window where
+    transform FULLNB x k = k fullNb (const x)
+
+fullNb = smartBorders Full
+
 data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
@@ -390,19 +396,17 @@ paper = mySpacing $ PaperPersistent (-1) (1 / 2) (1 / 20)
 
 myLayoutHook =
     renamed [KeepWordsRight 1] $
-        smartBorders $
-            refocusLastLayoutHook $
-                focusTracking $
-                    MT.mkToggle (MT.single MIRROR) $
-                        MT.mkToggle (MT.single FULL) $
-                            MT.mkToggle (MT.single FULLBAR) $
-                                MT.mkToggle (MT.single FULLCENTER) $
-                                    myDeco $
-                                        draggingVisualizer $
-                                            MT.mkToggle (MT.single TWOPANE) $
-                                                MT.mkToggle (MT.single PAPER) $
-                                                    mySpacing
-                                                        notebookLayout
+        refocusLastLayoutHook $
+            focusTracking $
+                MT.mkToggle (MT.single MIRROR) $
+                    MT.mkToggle (MT.single FULLNB) $
+                        MT.mkToggle (MT.single FULLBAR) $
+                            myDeco $
+                                draggingVisualizer $
+                                    MT.mkToggle (MT.single TWOPANE) $
+                                        MT.mkToggle (MT.single PAPER) $
+                                            mySpacing
+                                                notebookLayout
   where
     myDeco = windowSwitcherDecoration shrinkText myDecoTheme
 
@@ -471,11 +475,10 @@ myKeys n =
     , ("M-<Down>", upPointer $ windows W.focusDown)
     , ("M-<Up>", upPointer $ windows W.focusUp)
     , ("M-w", bF $ kt "action toggle_stack" $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
-    , ("M-z", toggleLayout FULL)
+    , ("M-z", toggleLayout FULLNB)
     , ("M-x", toggleLayout FULLBAR)
-    , ("M-c", toggleLayout FULLCENTER)
-    , ("M-v", toggleLayout TWOPANE)
-    , ("M-b", toggleLayout PAPER)
+    , ("M-c", toggleLayout TWOPANE)
+    , ("M-v", toggleLayout PAPER)
     , ("M-h", bF $ nv "Navigateleft" moveLeft)
     , ("M-j", bF $ nv "Navigatebottom" moveDown)
     , ("M-k", bF $ nv "Navigatetop" moveUp)
@@ -574,9 +577,8 @@ myFuncPrompt c =
         , ("ScreencapGif", spawn "/home/oleete/.config/bin/screencast gif-last")
         , ("Screenkey", spawn "killall screenkey || screenkey")
         , ("ScreenkeySettings", spawn "screenkey --show-settings")
-        , ("FullScreen", toggleLayout FULL)
+        , ("FullScreen", toggleLayout FULLNB)
         , ("FullBar", toggleLayout FULLBAR)
-        , ("Centre", toggleLayout FULLCENTER)
         , ("TwoPane", toggleLayout TWOPANE)
         , ("PaperLayout", toggleLayout PAPER)
         , ("Rotate", toggleLayout MIRROR)
