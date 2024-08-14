@@ -64,7 +64,7 @@ import XMonad.Layout.Simplest (Simplest (Simplest))
 import XMonad.Layout.Spacing
 import XMonad.Layout.TabbedGeometryLocal (
     HorizontalTabPlacement (Top),
-    HorizontalTabWidth (AutoWidth, FixedWidth),
+    HorizontalTabWidth (AutoBarWidth),
     HorizontalTabsAlignment (AlignTabsRight),
     SingleTabMode (ShowTab),
     TabbedGeometry (HorizontalTabs, hTabAlignment, hTabPlacement, showIfSingleWindow),
@@ -367,12 +367,9 @@ instance MT.Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
 
 myTabGeom :: TabbedGeometry a
-myTabGeom = HorizontalTabs ShowTab Top AlignTabsRight (FixedWidth 75) 30
+myTabGeom = HorizontalTabs ShowTab Top AlignTabsRight AutoBarWidth 30
 
-myTabDecTheme =
-    (themeEx myTabTheme)
-        { exWidgetsCenter = [TitleWidget]
-        }
+myTabDecTheme = (themeEx myTabTheme) { exWidgetsCenter = [TitleWidget] }
 
 myTab :: l Window -> ModifiedLayout (DecorationEx TextDecoration StandardWidget TabbedGeometry DefaultShrinker) l Window
 myTab = decorationEx shrinkText myTabDecTheme TextDecoration myTabGeom

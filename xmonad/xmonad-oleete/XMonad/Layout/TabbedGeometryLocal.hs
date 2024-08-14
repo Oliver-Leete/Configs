@@ -56,6 +56,7 @@ data VerticalTabPlacement = TabsAtLeft | TabsAtRight
 -- | Width of tabs when they go horizontally.
 data HorizontalTabWidth =
       AutoWidth             -- ^ Define the width automatically by evenly dividing windows' width
+    | AutoBarWidth          -- ^ Like AutoWidth, but avoides the bar
     | FixedWidth !Dimension -- ^ Use fixed width of the tab
   deriving (Eq, Read, Show)
 
@@ -105,6 +106,11 @@ instance DecorationGeometry TabbedGeometry Window where
                             Top    -> Rectangle decoX windowY effectiveTabWidth hTabHeight
                             Bottom -> Rectangle decoX (windowY + fi (windowHeight - hTabHeight)) effectiveTabWidth hTabHeight
                 where
+                  winWidth =
+                      case hTabWidth of
+                        AutoWidth -> windowWidth
+                        AutoBarWidth -> modYWidth windowWidth
+                        FixedWidth _ -> windowWidth
                   decoX = maybe windowX tabX mbWindowIndex
 
                   -- If there are too many windows or configured tab width
@@ -112,6 +118,7 @@ instance DecorationGeometry TabbedGeometry Window where
                   hTabWidth' =
                     case hTabWidth of
                       AutoWidth -> AutoWidth
+                      AutoBarWidth -> AutoWidth
                       FixedWidth tabWidth
                         | tabWidth * fi numWindows > windowWidth -> AutoWidth
                         | otherwise -> FixedWidth tabWidth
@@ -123,8 +130,8 @@ instance DecorationGeometry TabbedGeometry Window where
 
                   allTabsWidth =
                     case hTabWidth' of
-                      AutoWidth -> fi windowWidth
-                      FixedWidth _ -> fi $ min windowWidth $ effectiveTabWidth * max 1 (fi numWindows)
+                      AutoWidth -> fi winWidth
+                      FixedWidth _ -> fi $ min winWidth $ effectiveTabWidth * max 1 (fi numWindows)
 
                   tabsStartX =
                     case hTabAlignment of
@@ -135,7 +142,7 @@ instance DecorationGeometry TabbedGeometry Window where
                   -- X coordinate of i'th window in horizontal tabs layout
                   tabX i = tabsStartX +
                         case hTabWidth' of
-                          AutoWidth -> fi ((windowWidth * fi i) `div` max 1 (fi numWindows))
+                          AutoWidth -> fi ((winWidth * fi i) `div` max 1 (fi numWindows))
                           FixedWidth _ -> fi effectiveTabWidth * fi i
 
               VerticalTabs {..} ->
@@ -167,3 +174,9 @@ textTabbed :: (Shrinker shrinker)
            -> ModifiedLayout (DecorationEx TextDecoration StandardWidget TabbedGeometry shrinker) l Window
 textTabbed shrinker theme = decorationEx shrinker theme TextDecoration def
 
+
+modYWidth :: Dimension -> Dimension
+modYWidth width = width - xmobarWidth
+    where   xmobarWidth = if width > 1920
+                            then 960
+                            else 1280
