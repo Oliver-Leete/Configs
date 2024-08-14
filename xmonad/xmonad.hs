@@ -76,6 +76,7 @@ import XMonad.Util.Paste as P (sendKey)
 import XMonad.Util.SpawnOnce (spawnOnOnce, spawnOnce)
 import XMonad.Util.WorkspaceCompare (getWsCompare)
 import Data.Function (on)
+import XMonad.Layout.Tabbed (addTabsAlways)
 
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
@@ -284,6 +285,19 @@ myDecoTheme =
         , decoHeight = 6
         }
 
+myTabTheme :: Theme
+myTabTheme =
+    def
+        { inactiveColor = background
+        , inactiveBorderColor = background
+        , inactiveTextColor = foreground
+        , activeColor = active
+        , activeBorderColor = active
+        , activeTextColor = background
+        , decoHeight = 18
+        , fontName = "xft:Eurostar Black Extended:weight=bold:pixelsize=12:antialias=true:hinting=true"
+        }
+
 myPromptConfig :: XPConfig
 myPromptConfig =
     def
@@ -316,8 +330,7 @@ data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
 
-barFull :: ModifiedLayout Spacing SimpleFocus a
-barFull = mySpacing $ SimpleFocus 1 (reSize / 2) 0
+barFull = addTabsAlways shrinkText myTabTheme $ mySpacing $ SimpleFocus 1 (reSize / 2) 0
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer FULLCENTER Window where
