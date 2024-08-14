@@ -8,6 +8,7 @@
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 
 import Control.Monad ((<=<))
+import Data.Function (on)
 import Data.List (sortBy)
 import qualified Data.Map as M
 import Data.Monoid
@@ -47,6 +48,8 @@ import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.WorkspaceHistory (workspaceHistoryHookExclude)
 
 import XMonad.Layout.Decoration
+import XMonad.Layout.DecorationEx (DecorationEx, GenericTheme (exWidgetsCenter), GenericWidget (TitleWidget), SimpleStyle, StandardWidget, TabbedGeometry (HorizontalTabs, hTabAlignment, hTabPlacement, showIfSingleWindow), TextDecoration (TextDecoration), decorationEx, themeEx, titleW)
+import XMonad.Layout.DecorationEx.TabbedGeometry (HorizontalTabPlacement (Top), HorizontalTabWidth (AutoWidth, FixedWidth), HorizontalTabsAlignment (AlignTabsRight), SingleTabMode (ShowTab))
 import XMonad.Layout.DraggingVisualizer
 import XMonad.Layout.FocusTracking
 import qualified XMonad.Layout.MultiToggle as MT
@@ -58,11 +61,34 @@ import XMonad.Layout.PerScreen
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Renamed
 import XMonad.Layout.SimpleFocus
+import XMonad.Layout.Simplest (Simplest (Simplest))
 import XMonad.Layout.Spacing
 import XMonad.Layout.TwoPanePersistentLocal (TwoPanePersistent (TwoPanePersistent))
 import XMonad.Layout.WindowSwitcherDecoration (windowSwitcherDecoration)
 
-import XMonad.Prompt
+import XMonad.Prompt (
+    ComplCaseSensitivity (CaseInSensitive),
+    XPConfig (
+        alwaysHighlight,
+        autoComplete,
+        bgColor,
+        bgHLight,
+        borderColor,
+        complCaseSensitivity,
+        completionKey,
+        fgColor,
+        fgHLight,
+        font,
+        height,
+        maxComplColumns,
+        maxComplRows,
+        position,
+        prevCompletionKey,
+        promptBorderWidth,
+        searchPredicate
+    ),
+    XPPosition (CenteredAt),
+ )
 import XMonad.Prompt.FuzzyMatch (fuzzyMatch)
 import XMonad.Prompt.Input (inputPrompt, (?+))
 import XMonad.Prompt.XMonad (xmonadPromptC, xmonadPromptCT)
@@ -75,8 +101,6 @@ import XMonad.Util.NamedScratchpadLocal
 import XMonad.Util.Paste as P (sendKey)
 import XMonad.Util.SpawnOnce (spawnOnOnce, spawnOnce)
 import XMonad.Util.WorkspaceCompare (getWsCompare)
-import Data.Function (on)
-import XMonad.Layout.Tabbed (addTabsAlways)
 
 ----------------------------------------------------------------------------------------------------
 -- Main                                                                                           --
@@ -330,7 +354,18 @@ data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer FULLBAR Window where
     transform FULLBAR x k = k barFull (const x)
 
-barFull = addTabsAlways shrinkText myTabTheme $ mySpacing $ SimpleFocus 1 (reSize / 2) 0
+myTabGeom :: TabbedGeometry a
+myTabGeom = HorizontalTabs ShowTab Top AlignTabsRight (FixedWidth 75) 30
+
+myTabDecTheme =
+    (themeEx myTabTheme)
+        { exWidgetsCenter = [TitleWidget]
+        }
+
+myTab :: l Window -> ModifiedLayout (DecorationEx TextDecoration StandardWidget TabbedGeometry DefaultShrinker) l Window
+myTab = decorationEx shrinkText myTabDecTheme TextDecoration myTabGeom
+
+barFull = myTab $ mySpacing Simplest
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer FULLCENTER Window where
