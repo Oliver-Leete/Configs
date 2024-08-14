@@ -33,6 +33,7 @@ library
                       XMonad.Layout.PaperPersistent
                       XMonad.Layout.SimpleFocus
                       XMonad.Layout.TwoPanePersistentLocal
+                      XMonad.Layout.TabbedGeometryLocal
                       XMonad.Actions.WindowGoLocal
                       XMonad.Actions.CycleWSLocal
                       XMonad.Actions.DynamicProjectsLocal

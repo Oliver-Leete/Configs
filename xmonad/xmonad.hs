@@ -48,8 +48,7 @@ import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.WorkspaceHistory (workspaceHistoryHookExclude)
 
 import XMonad.Layout.Decoration
-import XMonad.Layout.DecorationEx (DecorationEx, GenericTheme (exWidgetsCenter), GenericWidget (TitleWidget), SimpleStyle, StandardWidget, TabbedGeometry (HorizontalTabs, hTabAlignment, hTabPlacement, showIfSingleWindow), TextDecoration (TextDecoration), decorationEx, themeEx, titleW)
-import XMonad.Layout.DecorationEx.TabbedGeometry (HorizontalTabPlacement (Top), HorizontalTabWidth (AutoWidth, FixedWidth), HorizontalTabsAlignment (AlignTabsRight), SingleTabMode (ShowTab))
+import XMonad.Layout.DecorationEx (DecorationEx, GenericTheme (exWidgetsCenter), GenericWidget (TitleWidget), SimpleStyle, StandardWidget, TextDecoration (TextDecoration), decorationEx, themeEx, titleW)
 import XMonad.Layout.DraggingVisualizer
 import XMonad.Layout.FocusTracking
 import qualified XMonad.Layout.MultiToggle as MT
@@ -63,6 +62,13 @@ import XMonad.Layout.Renamed
 import XMonad.Layout.SimpleFocus
 import XMonad.Layout.Simplest (Simplest (Simplest))
 import XMonad.Layout.Spacing
+import XMonad.Layout.TabbedGeometryLocal (
+    HorizontalTabPlacement (Top),
+    HorizontalTabWidth (AutoWidth, FixedWidth),
+    HorizontalTabsAlignment (AlignTabsRight),
+    SingleTabMode (ShowTab),
+    TabbedGeometry (HorizontalTabs, hTabAlignment, hTabPlacement, showIfSingleWindow),
+ )
 import XMonad.Layout.TwoPanePersistentLocal (TwoPanePersistent (TwoPanePersistent))
 import XMonad.Layout.WindowSwitcherDecoration (windowSwitcherDecoration)
 
