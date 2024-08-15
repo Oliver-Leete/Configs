@@ -358,9 +358,7 @@ mySpacing = spacingRaw False (Border gap gap gap gap) True (Border gap gap gap g
 
 data FULLNB = FULLNB deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer FULLNB Window where
-    transform FULLNB x k = k fullNb (const x)
-      where
-        fullNb = smartBorders Full
+    transform FULLNB x k = k (smartBorders Full) (const x)
 
 data FULLTAB = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer FULLTAB Window where
@@ -373,21 +371,15 @@ instance MT.Transformer FULLTAB Window where
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer FULLCENTER Window where
-    transform FULLCENTER x k = k centerFull (const x)
-      where
-        centerFull = mySpacing $ SimpleFocus (1 / 2) (reSize / 2) 600
+    transform FULLCENTER x k = k (mySpacing $ SimpleFocus (1 / 2) (reSize / 2) 600) (const x)
 
 data TWOPANE = TWOPANE deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer TWOPANE Window where
-    transform TWOPANE x k = k twoPane (const x)
-      where
-        twoPane = mySpacing $ TwoPanePersistent Nothing reSize (1 / 2)
+    transform TWOPANE x k = k (mySpacing $ TwoPanePersistent Nothing reSize (1 / 2)) (const x)
 
 data PAPER = PAPER deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer PAPER Window where
-    transform PAPER x k = k paper (const x)
-      where
-        paper = mySpacing $ PaperPersistent (-1) (1 / 2) (1 / 20)
+    transform PAPER x k = k (mySpacing $ PaperPersistent (-1) (1 / 2) (1 / 20)) (const x)
 
 myLayoutHook =
     renamed [KeepWordsRight 1] $
