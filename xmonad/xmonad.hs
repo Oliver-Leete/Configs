@@ -135,7 +135,7 @@ projects =
     , Project{pName = "Scin-Test", pDir = "~/Projects/Scintilla/Main", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br univB, pApp4F = brF univB, pStart = Just $ return ()}
     ]
   where
-    kitty = bindFirst [kt "action launch_tab", l (upPointer $ Wgl.runOrRaiseNext "kitty" (className =? "kitty"))]
+    kitty = bindFirst [kt "action launch_os_window", l (upPointer $ Wgl.runOrRaiseNext "kitty" (className =? "kitty"))]
     kittyF = upPointer $ spawn "kitty"
 
     sameForce r c = (upPointer $ Wgl.runOrRaiseNext r (className =? c), upPointer $ spawn r)
