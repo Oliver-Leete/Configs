@@ -337,12 +337,9 @@ myLayoutHook =
                                                 notebookLayout
   where
     myDeco = windowSwitcherDecoration shrinkText myDecoTheme
-
-    oneCol = Notebook True False True 1 2 moreReSize reSize 3 (2 / 3) 1
-    twoCol = Notebook True False True 1 3 moreReSize reSize 2 (2 / 3) 1
-    notebookDND = Notebook False False True 4 4 moreReSize reSize 2 (2 / 3) 0.5
+    notebookBigScreen = Notebook True False True 1 2 moreReSize reSize 3 (2 / 3) 1
     notebookLaptop = Notebook False False False 1 2 moreReSize reSize 2 (2 / 3) 1
-    notebookLayout = ifWider 1920 (onWorkspaces ["Dnd"] notebookDND $ onWorkspaces ["Thesis", "Print"] twoCol oneCol) notebookLaptop
+    notebookLayout = ifWider 1920 notebookBigScreen notebookLaptop
 
 ----------------------------------------------------------------------------------------------------
 -- Keybindings                                                                                    --
