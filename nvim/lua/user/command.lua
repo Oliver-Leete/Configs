@@ -53,7 +53,6 @@ commander.add({
         end
     },
     { cat = "settings", desc = "Toggle text wraping", cmd = "<cmd>set wrap!<cr>" },
-    { cat = "settings", desc = "Toggle autowrapping", cmd = func.toggle_autowrap },
     { cat = "settings", desc = "Source file",         cmd = "<cmd>source %<cr>" },
     { cat = "settings", desc = "Toggle Diagnostics",  cmd = function() require("lsp_lines").toggle() end },
 })

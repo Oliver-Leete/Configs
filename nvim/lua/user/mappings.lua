@@ -327,7 +327,6 @@ Map("n", "<leader><leader>", "<cmd>silent e #<cr>")
 
 Map("n", "<leader>m", function() require("trouble").toggle({ mode = "quickprev" }) end)
 Map("n", "<leader>,", function() require("trouble").toggle({ mode = "lspprev" }) end)
-Map("n", "<leader>.", require("user.myfuncs").toggle_noice)
 
 Map("n", "<leader>w",
     function() require("telescope.builtin").lsp_dynamic_workspace_symbols(require("telescope.themes").get_ivy()) end)

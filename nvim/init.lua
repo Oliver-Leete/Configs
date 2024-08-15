@@ -137,7 +137,7 @@ require("lazy").setup(
         -- UI
         { "rebelot/kanagawa.nvim" },
         { "stevearc/dressing.nvim" },
-        { "nvim-lualine/lualine.nvim",          dependencies = { "kyazdani42/nvim-web-devicons" } },
+        { "nvim-lualine/lualine.nvim",   dependencies = { "kyazdani42/nvim-web-devicons" } },
         { "nvim-zh/colorful-winsep.nvim" },
         { "b0o/incline.nvim" },
 
