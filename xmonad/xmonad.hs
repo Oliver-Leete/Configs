@@ -519,20 +519,19 @@ myKeys n =
             then upPointer shiftNextScreen
             else upFocus $ shiftToggleWS' ["NSP"]
 
-mySwitchProfilePrompt :: XPConfig -> X ()
-mySwitchProfilePrompt c = do
-    ps <- profileIds
-    xmonadPromptCT
-        "Profile"
-        ( map (\p -> (p, switchToProfile p)) ps
-            ++ [ ("Add", addWSToProfilePrompt c)
-               , ("Remove", removeWSFromProfilePrompt c)
-               , ("Switch", switchProfileWSPrompt c)
-               , ("Send", shiftProfileWSPrompt c)
-               , ("Clear", killAll)
-               ]
-        )
-        c
+    mySwitchProfilePrompt c = do
+        ps <- profileIds
+        xmonadPromptCT
+            "Profile"
+            ( map (\p -> (p, switchToProfile p)) ps
+                ++ [ ("Add", addWSToProfilePrompt c)
+                   , ("Remove", removeWSFromProfilePrompt c)
+                   , ("Switch", switchProfileWSPrompt c)
+                   , ("Send", shiftProfileWSPrompt c)
+                   , ("Clear", killAll)
+                   ]
+            )
+            c
 
 myFuncPrompt :: XPConfig -> X ()
 myFuncPrompt c =
