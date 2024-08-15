@@ -331,7 +331,7 @@ Map("n", "<leader>,", function() require("trouble").toggle({ mode = "lspprev" })
 Map("n", "<leader>w",
     function() require("telescope.builtin").lsp_dynamic_workspace_symbols(require("telescope.themes").get_ivy()) end)
 Map("n", "<leader>W", function() require("telescope.builtin").live_grep(require("telescope.themes").get_ivy()) end)
-Map("n", "<leader>f", function() ProjectFiles() end)
+Map("n", "<leader>f", function() require("user.telescope").project_files() end)
 Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
 
 -- Mouse Bindings

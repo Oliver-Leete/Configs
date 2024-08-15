@@ -1,3 +1,4 @@
+M = {}
 local action_state = require("telescope.actions.state")
 local actions = require("telescope.actions")
 
@@ -155,7 +156,7 @@ require("telescope").setup({
 
 require("telescope").load_extension("fzf")
 
-function ProjectFiles()
+M.project_files = function()
     local results = require("telescope.utils").get_os_command_output({ "git", "rev-parse", "--git-dir" })
 
     if results == nil then
@@ -196,3 +197,4 @@ require('telescope-all-recent').setup({
         },
     },
 })
+return M

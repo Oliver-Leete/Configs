@@ -39,7 +39,7 @@ Map("n", ",nd", "<plug>(vimtex-delim-toggle-modifier)", { buffer = 0, remap = tr
 
 vim.api.nvim_buf_set_option(0, "textwidth", 100)
 
-vim.b.upafunc = function()
+Map({ "n" }, "gz", function()
     local test_results = vim.fn.systemlist([[rg --json '\\input\{]] .. vim.fn.expand("%:r") .. [[(\.tex)?}']])
     for _, result in pairs(test_results) do
         result = vim.json.decode(result)
@@ -52,11 +52,11 @@ vim.b.upafunc = function()
             else
                 colnr = 0
             end
-            vim.cmd.edit({ args = {file} })
-            vim.api.nvim_win_set_cursor(0, { linenr, colnr + 7})
+            vim.cmd.edit({ args = { file } })
+            vim.api.nvim_win_set_cursor(0, { linenr, colnr + 7 })
         end
     end
-end
+end)
 
 vim.g.tex_flavor = "latex"
 vim.g.vimtex_quickfix_mode = 0
