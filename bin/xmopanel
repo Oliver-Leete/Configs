@@ -1,9 +1,9 @@
 #!/bin/bash
 
-left="<box type=Left width=2 mt=2 color=#76946A><fc=#76946A>"
-good="<box type=Bottom width=2 mt=2 color=#76946A><fc=#76946A>"
-bad="<box type=Bottom width=2 mt=2 color=#DCA561><fc=#DCA561>"
-ugly="<box type=Bottom width=2 mt=2 color=#C34043><fc=#C34043> "
+left="<box type=Left width=3 mt=2 color=#76946A><fc=#76946A>"
+good="<box type=Bottom width=3 mt=2 color=#76946A><fc=#76946A>"
+bad="<box type=Bottom width=3 mt=2 color=#DCA561><fc=#DCA561>"
+ugly="<box type=Bottom width=3 mt=2 color=#C34043><fc=#C34043> "
 end=" </fc></box>"
 
 # Battery

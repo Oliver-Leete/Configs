@@ -292,7 +292,7 @@ myBorder :: Dimension
 myBorder = 3
 
 myWideFont :: [Char]
-myWideFont = "xft:Eurostar Black Extended:" ++ "style=Regular:pixelsize=180:hinting=true"
+myWideFont = "xft:Ubuntu Nerd Font:" ++ "style=Regular:pixelsize=180:hinting=true"
 
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme =
@@ -325,13 +325,13 @@ myTabTheme =
         , activeBorderColor = active
         , activeTextColor = background
         , decoHeight = 18
-        , fontName = "xft:Eurostar Black Extended:weight=bold:pixelsize=12:antialias=true:hinting=true"
+        , fontName = "xft:Ubuntu Nerd Font:weight=bold:pixelsize=12:antialias=true:hinting=true"
         }
 
 myPromptConfig :: XPConfig
 myPromptConfig =
     def
-        { font = "xft:Eurostar Black Extended:weight=bold:pixelsize=16:antialias=true:hinting=true"
+        { font = "xft:Ubuntu Nerd Font:weight=bold:pixelsize=16:antialias=true:hinting=true"
         , bgColor = background
         , fgColor = foreground
         , bgHLight = background
@@ -660,7 +660,7 @@ myPP =
                 return $ sortBy (flip cmp `on` W.tag)
             }
   where
-    underlineMod c = xmobarColor c "" . wrap ("<box type=Bottom width=2 mt=2 color=" ++ c ++ ">") "</box>"
+    underlineMod c = xmobarColor c "" . wrap ("<box type=Bottom width=3 mt=2 color=" ++ c ++ ">") "</box>"
     clickableProf :: (String -> String) -> String -> String
     clickableProf f p = xmobarAction ("/home/oleete/.cabal/bin/xmonadctl-exe profile-" ++ p) "1" $ f p
 

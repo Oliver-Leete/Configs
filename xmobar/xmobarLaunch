@@ -14,7 +14,7 @@ else
 fi
 
 COMMANDS='[Run UnsafeXPropertyLog "_XMONAD_LOG_'$1'"]'
-TEMPLATE="%panel%%playing%}{ %_XMONAD_LOG_$1% | <box type=Bottom width=2 mt=2 color=#DCA561><fc=#DCA561> %date%  </fc><box type=Right width=2 mt=2 color=#DCA561> </box></box> "
+TEMPLATE="%panel%%playing%}{ %_XMONAD_LOG_$1% | <box type=Bottom width=3 mt=2 color=#DCA561><fc=#DCA561> %date%  </fc><box type=Right width=3 mt=2 color=#DCA561> </box></box> "
 POSITION="Static { xpos = $X , ypos = $Y, width = $W, height = 30 }"
 
 xmobar -p "$POSITION" --screen "$1" -C "$COMMANDS" -t "$TEMPLATE" ~/.config/xmobar/xmobar.conf
