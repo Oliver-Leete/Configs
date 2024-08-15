@@ -11,7 +11,7 @@ import Control.Monad ((<=<))
 import Data.Function (on)
 import Data.List (sortBy)
 import qualified Data.Map as M
-import Data.Monoid
+import Data.Monoid (All)
 import Graphics.X11.Types
 import qualified Graphics.X11.Xinerama as X11
 import qualified Graphics.X11.Xlib as X11
@@ -20,44 +20,43 @@ import qualified XMonad.StackSet as W
 
 import XMonad.Actions.CycleWS (nextScreen, shiftNextScreen)
 import XMonad.Actions.CycleWSLocal (shiftToggleWS', toggleWS')
-import XMonad.Actions.DynamicProjectsLocal
-import XMonad.Actions.Navigation2D
+import XMonad.Actions.DynamicProjectsLocal (Project (..), dynamicProjects, runProjectApp1, runProjectApp1Force, runProjectApp2, runProjectApp2Force, runProjectApp3, runProjectApp3Force, runProjectApp4, runProjectApp4Force)
+import XMonad.Actions.Navigation2D (Direction2D (D, L, R, U), Navigation2DConfig, windowGo, windowSwap, withNavigation2DConfig)
 import XMonad.Actions.PerLayoutKeys (bindByLayout)
 import XMonad.Actions.PerWindowKeys (bindFirst)
-import XMonad.Actions.ProfilesLocal
-import XMonad.Actions.SpawnOn
-import XMonad.Actions.SwapPromote
-import XMonad.Actions.UpdateFocus
-import XMonad.Actions.UpdatePointer
-import XMonad.Actions.WindowGoLocal as Wgl
+import XMonad.Actions.ProfilesLocal (Profile (..), ProfileConfig (..), addProfilesWithHistory, addWSToProfilePrompt, excludeWSPP, profileIds, profileLogger, removeWSFromProfilePrompt, shiftProfileWSPrompt, switchProfileWSPrompt, switchToProfile, withNthProfileWorkspace)
+import XMonad.Actions.SpawnOn (manageSpawn, spawnOn)
+import XMonad.Actions.SwapPromote (masterHistoryHook, swapPromote')
+import XMonad.Actions.UpdateFocus (focusUnderPointer)
+import XMonad.Actions.UpdatePointer (updatePointer)
+import XMonad.Actions.WindowGoLocal as Wgl (raiseNextMaybeCustomFocus2, raiseNextMaybeCustomFocus3, runOrRaiseNext)
 import XMonad.Actions.WithAll (killAll, sinkAll)
 
-import XMonad.Hooks.DebugStack
+import XMonad.Hooks.DebugStack (debugStack, debugStackFull)
 import XMonad.Hooks.EwmhDesktops (ewmh)
-import XMonad.Hooks.InsertPosition
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.ManageHelpers
-import XMonad.Hooks.RefocusLast
-import XMonad.Hooks.ServerMode
-import XMonad.Hooks.ShowWName
-import XMonad.Hooks.StatusBar
-import XMonad.Hooks.StatusBar.PP
+import XMonad.Hooks.InsertPosition (Focus (Newer), Position (End, Master), insertPosition)
+import XMonad.Hooks.ManageDocks (docks, manageDocks)
+import XMonad.Hooks.ManageHelpers (composeOne, doCenterFloat, doFullFloat, doRectFloat, doSink, isDialog, isFullscreen, isInProperty, transience, (-?>), (~?))
+import XMonad.Hooks.RefocusLast (isFloat, refocusLastLayoutHook, refocusLastWhen)
+import XMonad.Hooks.ServerMode (serverModeEventHookCmd')
+import XMonad.Hooks.ShowWName (SWNConfig (..), showWNameLogHook)
+import XMonad.Hooks.StatusBar (StatusBarConfig, dynamicSBs, killAllStatusBars, startAllStatusBars, statusBarPropTo)
+import XMonad.Hooks.StatusBar.PP (PP (..), shorten, wrap, xmobarAction, xmobarColor)
 import XMonad.Hooks.WorkspaceHistory (workspaceHistoryHookExclude)
 
-import XMonad.Layout.Decoration
-import XMonad.Layout.DecorationEx (DecorationEx, GenericTheme (exWidgetsCenter), GenericWidget (TitleWidget), SimpleStyle, StandardWidget, TextDecoration (TextDecoration), decorationEx, themeEx, titleW)
-import XMonad.Layout.DraggingVisualizer
-import XMonad.Layout.FocusTracking
+import XMonad.Layout.Decoration (DefaultShrinker, ModifiedLayout, Theme (..), shrinkText)
+import XMonad.Layout.DecorationEx (DecorationEx, GenericTheme (..), GenericWidget (TitleWidget), SimpleStyle, StandardWidget, TextDecoration (TextDecoration), decorationEx, themeEx, titleW)
+import XMonad.Layout.DraggingVisualizer (draggingVisualizer)
+import XMonad.Layout.FocusTracking (focusTracking)
 import qualified XMonad.Layout.MultiToggle as MT
-import XMonad.Layout.MultiToggle.Instances
-import XMonad.Layout.NoBorders
-import XMonad.Layout.Notebook
-import XMonad.Layout.PaperPersistent
-import XMonad.Layout.PerScreen
-import XMonad.Layout.PerWorkspace
-import XMonad.Layout.Renamed
+import XMonad.Layout.MultiToggle.Instances (StdTransformers (MIRROR))
+import XMonad.Layout.NoBorders (smartBorders)
+import XMonad.Layout.Notebook (IncColumnN (IncColumnN), MirrorResize (MirrorExpand, MirrorShrink), Notebook (Notebook), SResize (SExpand, SShrink), ToggleMiddle (ToggleMiddle), ToggleSide (ToggleSide), ToggleStackDir (ToggleStackDir))
+import XMonad.Layout.PaperPersistent (IncWindowIndex (IncWindowIndex), PaperPersistent (PaperPersistent))
+import XMonad.Layout.PerScreen (ifWider)
+import XMonad.Layout.Renamed (Rename (KeepWordsRight), renamed)
 import XMonad.Layout.Simplest (Simplest (Simplest))
-import XMonad.Layout.Spacing
+import XMonad.Layout.Spacing (Border (Border), Spacing, spacingRaw)
 import XMonad.Layout.TabbedGeometryLocal (HorizontalTabPlacement (Top), HorizontalTabWidth (AutoBarWidth), HorizontalTabsAlignment (AlignTabsRight), SingleTabMode (ShowTab), TabbedGeometry (HorizontalTabs))
 import XMonad.Layout.TwoPanePersistentLocal (TwoPanePersistent (TwoPanePersistent))
 import XMonad.Layout.WindowSwitcherDecoration (windowSwitcherDecoration)
@@ -71,7 +70,7 @@ import XMonad.Util.ClickableWorkspaces (clickablePP)
 import XMonad.Util.Cursor (setDefaultCursor)
 import XMonad.Util.EZConfig (additionalKeysP, removeKeysP)
 import XMonad.Util.Hacks (windowedFullscreenFixEventHook)
-import XMonad.Util.NamedScratchpadLocal
+import XMonad.Util.NamedScratchpadLocal (NamedScratchpad (NS), defaultFloating, hideAllNamedScratchPads, namedScratchpadAction, namedScratchpadManageHook, nonFloating)
 import XMonad.Util.Paste as P (sendKey)
 import XMonad.Util.SpawnOnce (spawnOnOnce, spawnOnce)
 import XMonad.Util.WorkspaceCompare (getWsCompare)
