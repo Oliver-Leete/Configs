@@ -26,19 +26,15 @@ version:            0.1.0.0
 extra-source-files: CHANGELOG.md
 
 library
-    exposed-modules:  XMonad.Actions.ConditionalKeys
-                      XMonad.Layout.FourColumns
-                      XMonad.Layout.Notebook
-                      XMonad.Layout.Paper
+    exposed-modules:  XMonad.Layout.Notebook
                       XMonad.Layout.PaperPersistent
-                      XMonad.Layout.SimpleFocus
                       XMonad.Layout.TwoPanePersistentLocal
                       XMonad.Layout.TabbedGeometryLocal
                       XMonad.Actions.WindowGoLocal
                       XMonad.Actions.CycleWSLocal
                       XMonad.Actions.DynamicProjectsLocal
-                      XMonad.Util.NamedScratchpadLocal
                       XMonad.Actions.ProfilesLocal
+                      XMonad.Util.NamedScratchpadLocal
 
     -- Modules included in this library but not exported.
     -- other-modules:

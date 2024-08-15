@@ -59,7 +59,6 @@ import XMonad.Layout.PaperPersistent
 import XMonad.Layout.PerScreen
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Renamed
-import XMonad.Layout.SimpleFocus
 import XMonad.Layout.Simplest (Simplest (Simplest))
 import XMonad.Layout.Spacing
 import XMonad.Layout.TabbedGeometryLocal (
@@ -373,10 +372,6 @@ instance MT.Transformer FULLTAB Window where
                 ((themeEx myTabTheme){exWidgetsCenter = [TitleWidget]})
                 TextDecoration
                 (HorizontalTabs ShowTab Top AlignTabsRight AutoBarWidth 30)
-
-data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
-instance MT.Transformer FULLCENTER Window where
-    transform FULLCENTER x k = k (mySpacing $ SimpleFocus (1 / 2) (reSize / 2) 600) (const x)
 
 data TWOPANE = TWOPANE deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer TWOPANE Window where
