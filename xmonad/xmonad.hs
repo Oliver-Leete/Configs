@@ -364,10 +364,13 @@ data FULLTAB = FULLBAR deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer FULLTAB Window where
     transform FULLBAR x k = k (fullTab $ mySpacing Simplest) (const x)
       where
-        geom = HorizontalTabs ShowTab Top AlignTabsRight AutoBarWidth 30
-        theme = (themeEx myTabTheme){exWidgetsCenter = [TitleWidget]}
         fullTab :: l Window -> ModifiedLayout (DecorationEx TextDecoration StandardWidget TabbedGeometry DefaultShrinker) l Window
-        fullTab = decorationEx shrinkText theme TextDecoration geom
+        fullTab =
+            decorationEx
+                shrinkText
+                ((themeEx myTabTheme){exWidgetsCenter = [TitleWidget]})
+                TextDecoration
+                (HorizontalTabs ShowTab Top AlignTabsRight AutoBarWidth 30)
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer FULLCENTER Window where
