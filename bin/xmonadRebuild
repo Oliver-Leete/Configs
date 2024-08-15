@@ -1,5 +1,0 @@
-#!/bin/sh
-
-stack install
-xmonad --recompile
-xmonad --restart

@@ -6,13 +6,9 @@
 # with my "personal" browser profiles, but specific other workspaces
 # get browser instances of their own based on name (e.g. my "wrk:1
 # and "wrk:2" workspaces each get the "wrk" browser instance)
-#
-# this script also initializes control ports for each browser instance
 
 BROWSER="google-chrome-stable"
-# WSTAG=$(/home/oleete/.config/bin/ws)
 WSTAG=$(wmctrl -d | grep '*' | awk '{print $NF}')
-WSPORT=$(/home/oleete/.config/bin/ws port)
 
 CONFIGDIR=${XDG_CONFIG_HOME:-${HOME}/.config/browser}
 CACHEDIR=${XDG_CACHE_HOME:-${HOME}/.cache/browser}
@@ -34,14 +30,12 @@ function exists_in_list() {
     LIST=$1
     DELIMITER=" "
     VALUE=$2
-    echo $LIST | tr "$DELIMITER" '\n' | grep -F -q -x "$VALUE"
+    echo "$LIST" | tr "$DELIMITER" '\n' | grep -F -q -x "$VALUE"
 }
 
 if exists_in_list "Films" "$WSTAG"; then
     SUFFIX="-Films"
-elif exists_in_list "Dnd" "$WSTAG"; then
-    SUFFIX="-Dnd"
-elif exists_in_list "Wrk WrkNotes Thesis Sim Exp Scripts Comments ANSYS Scin-Main Scin-Print Scin-Firm Scin-Heat Scin-Docs Scin-Test" "$WSTAG"; then
+elif exists_in_list "Thesis Sim Scin-Main Scin-Test" "$WSTAG"; then
     SUFFIX="-uni"
 else
     SUFFIX="-personal"
