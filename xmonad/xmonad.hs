@@ -468,8 +468,8 @@ myKeys n =
     , ("M-c", toggleLayout TWOPANE)
     , ("M-v", toggleLayout PAPER)
     , ("M-h", bindFirst [nMoveLeft, kMoveLeft, moveLeft])
-    , ("M-j", bindFirst [nMoveDown, kMoveDown, moveDown])
-    , ("M-k", bindFirst [nMoveUp, kMoveUp, moveUp])
+    , ("M-j", bindFirst [nMoveBottom, kMoveBottom, moveBottom])
+    , ("M-k", bindFirst [nMoveTop, kMoveTop, moveTop])
     , ("M-l", bindFirst [nMoveRight, kMoveRight, moveRight])
     , ("M-S-h", upPointer $ bindByLayout [("PaperPersistent", windows W.swapUp), ("", windowSwap L False)])
     , ("M-S-j", upPointer $ windowSwap D False)
@@ -749,22 +749,22 @@ bringWindow :: (Eq s, Eq i, Ord a) => a -> W.StackSet i l a s sd -> W.StackSet i
 bringWindow w ws = W.focusWindow w $ W.shiftWinDown (W.currentTag ws) w ws
 
 -- | Movement
-nMoveLeft, nMoveDown, nMoveUp, nMoveRight :: (Query Bool, X ())
-nMoveLeft = nv "Navigateleft"
-nMoveDown = nv "Navigatebottom"
-nMoveUp = nv "Navigatetop"
-nMoveRight = nv "Navigateright"
+nMoveLeft, nMoveBottom, nMoveTop, nMoveRight :: (Query Bool, X ())
+nMoveLeft = nv "NavigateLeft"
+nMoveBottom = nv "NavigateBottom"
+nMoveTop = nv "NavigateTop"
+nMoveRight = nv "NavigateRight"
 
-kMoveLeft, kMoveDown, kMoveUp, kMoveRight :: (Query Bool, X ())
+kMoveLeft, kMoveBottom, kMoveTop, kMoveRight :: (Query Bool, X ())
 kMoveLeft = kt "focus-window --match neighbor:left || /home/oleete/.cabal/bin/xmonadctl-exe winGo-H"
-kMoveDown = kt "focus-window --match neighbor:bottom || /home/oleete/.cabal/bin/xmonadctl-exe winGo-J"
-kMoveUp = kt "focus-window --match neighbor:top || /home/oleete/.cabal/bin/xmonadctl-exe winGo-K"
+kMoveBottom = kt "focus-window --match neighbor:bottom || /home/oleete/.cabal/bin/xmonadctl-exe winGo-J"
+kMoveTop = kt "focus-window --match neighbor:top || /home/oleete/.cabal/bin/xmonadctl-exe winGo-K"
 kMoveRight = kt "focus-window --match neighbor:right || /home/oleete/.cabal/bin/xmonadctl-exe winGo-L"
 
-moveLeft, moveDown, moveUp, moveRight :: (Query Bool, X ())
+moveLeft, moveBottom, moveTop, moveRight :: (Query Bool, X ())
 moveLeft = l $ bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex (-1))), ("", upPointer (windowGo L False))]
-moveDown = l $ upPointer (windowGo D False)
-moveUp = l $ upPointer (windowGo U False)
+moveBottom = l $ upPointer (windowGo D False)
+moveTop = l $ upPointer (windowGo U False)
 moveRight = l $ bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex 1)), ("", upPointer (windowGo R False))]
 
 ----------------------------------------------------------------------------------------------------
@@ -777,12 +777,12 @@ myServerModeEventHook = serverModeEventHookCmd' $ return $ myCommands ++ sendTo
     sendTo = map (\p -> ("profile-" ++ p.profileId, switchToProfile p.profileId)) myProfiles
     myCommands =
         [ ("winGo-h", bindFirst [kMoveLeft, moveLeft])
-        , ("winGo-j", bindFirst [kMoveDown, moveDown])
-        , ("winGo-k", bindFirst [kMoveUp, moveUp])
+        , ("winGo-j", bindFirst [kMoveBottom, moveBottom])
+        , ("winGo-k", bindFirst [kMoveTop, moveTop])
         , ("winGo-l", bindFirst [kMoveRight, moveRight])
         , ("winGo-H", bindFirst [moveLeft])
-        , ("winGo-J", bindFirst [moveDown])
-        , ("winGo-K", bindFirst [moveUp])
+        , ("winGo-J", bindFirst [moveBottom])
+        , ("winGo-K", bindFirst [moveTop])
         , ("winGo-L", bindFirst [moveRight])
         , ("project-browser", runProjectApp4)
         , ("sendF", P.sendKey noModMask xK_f)

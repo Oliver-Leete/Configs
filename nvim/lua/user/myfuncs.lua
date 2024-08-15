@@ -84,10 +84,6 @@ local delete_buffer = function()
             M.special_types[filetype].exit_func()
         end
         return
-    elseif vim.b[bufnr].is_diffview_file then
-        vim.b.is_diffview_file = false
-        vim.cmd("DiffviewFocusFiles")
-        return
     elseif vim.bo[bufnr].buftype == "terminal" then
         winclose()
         return
@@ -117,8 +113,6 @@ local delete_buffer = function()
 end
 
 vim.api.nvim_create_user_command("DeleteBuffer", delete_buffer, { nargs = 0 })
-
-vim.api.nvim_create_user_command("ZenOrFull", require("mini.misc").zoom, { nargs = 0 })
 
 local mode_map = {
     ['n'] = { 'NORMAL', 'Normal' },
@@ -200,15 +194,10 @@ M.nav_dir = function(direction)
 end
 
 
-vim.api.nvim_create_user_command("PostNavLeft", function() vim.cmd("wincmd 100 l") end, { nargs = 0 })
-vim.api.nvim_create_user_command("PostNavBottom", function() vim.cmd("wincmd 100 k") end, { nargs = 0 })
-vim.api.nvim_create_user_command("PostNavTop", function() vim.cmd("wincmd 100 j") end, { nargs = 0 })
-vim.api.nvim_create_user_command("PostNavRight", function() vim.cmd("wincmd 100 h") end, { nargs = 0 })
-
-vim.api.nvim_create_user_command("Navigateleft", function() M.nav_dir("h") end, { nargs = 0 })
-vim.api.nvim_create_user_command("Navigatebottom", function() M.nav_dir("j") end, { nargs = 0 })
-vim.api.nvim_create_user_command("Navigatetop", function() M.nav_dir("k") end, { nargs = 0 })
-vim.api.nvim_create_user_command("Navigateright", function() M.nav_dir("l") end, { nargs = 0 })
+vim.api.nvim_create_user_command("NavigateLeft", function() M.nav_dir("h") end, { nargs = 0 })
+vim.api.nvim_create_user_command("NavigateBottom", function() M.nav_dir("j") end, { nargs = 0 })
+vim.api.nvim_create_user_command("NavigateTop", function() M.nav_dir("k") end, { nargs = 0 })
+vim.api.nvim_create_user_command("NavigateRight", function() M.nav_dir("l") end, { nargs = 0 })
 
 M.toggle_noice = function()
     local oldbufnr = vim.api.nvim_get_current_buf()
@@ -247,7 +236,7 @@ vim.api.nvim_create_user_command("TabPrev", TabPrev, { nargs = 0 })
 
 M.neogit = function()
     require("neogit").open()
-    vim.cmd.LualineRenameTab({args = {"Neogit"}})
+    vim.cmd.LualineRenameTab({ args = { "Neogit" } })
 end
 
 M.codelens_toggle = function()
