@@ -359,43 +359,35 @@ mySpacing = spacingRaw False (Border gap gap gap gap) True (Border gap gap gap g
 data FULLNB = FULLNB deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer FULLNB Window where
     transform FULLNB x k = k fullNb (const x)
+      where
+        fullNb = smartBorders Full
 
-fullNb = smartBorders Full
-
-data FULLBAR = FULLBAR deriving (Read, Show, Eq, Typeable)
-instance MT.Transformer FULLBAR Window where
-    transform FULLBAR x k = k barFull (const x)
-
-myTabGeom :: TabbedGeometry a
-myTabGeom = HorizontalTabs ShowTab Top AlignTabsRight AutoBarWidth 30
-
-myTabDecTheme = (themeEx myTabTheme) { exWidgetsCenter = [TitleWidget] }
-
-myTab :: l Window -> ModifiedLayout (DecorationEx TextDecoration StandardWidget TabbedGeometry DefaultShrinker) l Window
-myTab = decorationEx shrinkText myTabDecTheme TextDecoration myTabGeom
-
-barFull = myTab $ mySpacing Simplest
+data FULLTAB = FULLBAR deriving (Read, Show, Eq, Typeable)
+instance MT.Transformer FULLTAB Window where
+    transform FULLBAR x k = k (fullTab $ mySpacing Simplest) (const x)
+      where
+        geom = HorizontalTabs ShowTab Top AlignTabsRight AutoBarWidth 30
+        theme = (themeEx myTabTheme){exWidgetsCenter = [TitleWidget]}
+        fullTab :: l Window -> ModifiedLayout (DecorationEx TextDecoration StandardWidget TabbedGeometry DefaultShrinker) l Window
+        fullTab = decorationEx shrinkText theme TextDecoration geom
 
 data FULLCENTER = FULLCENTER deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer FULLCENTER Window where
     transform FULLCENTER x k = k centerFull (const x)
-
-centerFull :: ModifiedLayout Spacing SimpleFocus a
-centerFull = mySpacing $ SimpleFocus (1 / 2) (reSize / 2) 600
+      where
+        centerFull = mySpacing $ SimpleFocus (1 / 2) (reSize / 2) 600
 
 data TWOPANE = TWOPANE deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer TWOPANE Window where
     transform TWOPANE x k = k twoPane (const x)
-
-twoPane :: ModifiedLayout Spacing TwoPanePersistent a
-twoPane = mySpacing $ TwoPanePersistent Nothing reSize (1 / 2)
+      where
+        twoPane = mySpacing $ TwoPanePersistent Nothing reSize (1 / 2)
 
 data PAPER = PAPER deriving (Read, Show, Eq, Typeable)
 instance MT.Transformer PAPER Window where
     transform PAPER x k = k paper (const x)
-
-paper :: ModifiedLayout Spacing PaperPersistent a
-paper = mySpacing $ PaperPersistent (-1) (1 / 2) (1 / 20)
+      where
+        paper = mySpacing $ PaperPersistent (-1) (1 / 2) (1 / 20)
 
 myLayoutHook =
     renamed [KeepWordsRight 1] $
