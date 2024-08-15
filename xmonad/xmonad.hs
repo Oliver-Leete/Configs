@@ -177,7 +177,7 @@ projects =
     , Project{pName = "Scin-Test", pDir = "~/Projects/Scintilla/Main", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br workB, pApp4F = brF workB, pStart = Just $ return ()}
     ]
   where
-    kitty = bF $ kt "action launch_tab" $ l (upPointer $ Wgl.runOrRaiseNext "kitty" (className =? "kitty"))
+    kitty = bindFirst $ kt "action launch_tab" $ l (upPointer $ Wgl.runOrRaiseNext "kitty" (className =? "kitty"))
     kittyF = upPointer $ spawn "kitty"
 
     sameForce r c = (upPointer $ Wgl.runOrRaiseNext r (className =? c), upPointer $ spawn r)
@@ -194,7 +194,7 @@ projects =
     workB = "google-chrome-stable-uni"
     rpgsB = "google-chrome-stable-Dnd"
     filmB = "google-chrome-stable-Films"
-    br na = bF $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ brS na)
+    br na = bindFirst $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ brS na)
     brS na = Wgl.raiseNextMaybeCustomFocus2 bringWindow (brF na) (className =? na)
     brL na = Wgl.raiseNextMaybeCustomFocus3 (brF na) (className =? na)
     brF na = upPointer $ spawn (myBrowserClass ++ " --class=" ++ na ++ " --user-data-dir=/home/oleete/.config/browser/" ++ na)
@@ -257,10 +257,11 @@ myProfiles =
 ----------------------------------------------------------------------------------------------------
 -- Applications                                                                                   --
 ----------------------------------------------------------------------------------------------------
-myTerminal, myBrowser, myBrowserClass :: [Char]
+myTerminal, myBrowser, myBrowserClass, kittyRemote :: [Char]
 myTerminal = "kitty"
 myBrowser = "/home/oleete/.config/bin/browser"
 myBrowserClass = "google-chrome-stable"
+kittyRemote = "kitty @ --to unix:/tmp/mykitty-$(xdotool getactivewindow getwindowpid) "
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
@@ -443,11 +444,11 @@ myKeys n =
     , ("M-p", myFuncPrompt myPromptConfig)
     , ("M-f", mySwitchProfilePrompt myPromptConfig)
     , ("M-<Esc>", upPointer $ sequence_ $ hideAllNamedScratchPads scratchpads)
-    , ("M-<Return>", bF $ kt "action launch_window" $ l (upPointer $ spawn myTerminal))
+    , ("M-<Return>", bindFirst $ kt "action launch_window" $ l (upPointer $ spawn myTerminal))
     , ("M-S-<Return>", upPointer $ spawn myTerminal)
-    , ("M-<Backspace>", bF $ nv "DeleteBuffer" $ kt "action close_window_c" $ crm (P.sendKey controlMask xK_w) $ l kill)
-    , ("M-S-<Backspace>", bF $ kt "action close_window_c" $ l kill)
-    , ("M-u", bF $ kt "action detach_window" $ crm (P.sendKey shiftMask xK_w) $ l (return ()))
+    , ("M-<Backspace>", bindFirst $ nv "DeleteBuffer" $ kt "action close_window_c" $ crm (P.sendKey controlMask xK_w) $ l kill)
+    , ("M-S-<Backspace>", bindFirst $ kt "action close_window_c" $ l kill)
+    , ("M-u", bindFirst $ kt "action detach_window" $ crm (P.sendKey shiftMask xK_w) $ l (return ()))
     , ("M-n", runProjectApp1)
     , ("M-e", runProjectApp2)
     , ("M-i", runProjectApp3)
@@ -456,19 +457,19 @@ myKeys n =
     , ("M-S-e", runProjectApp2Force)
     , ("M-S-i", runProjectApp3Force)
     , ("M-S-o", runProjectApp4Force)
-    , ("M-<Left>", bF $ kt "action previous_tab" $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
-    , ("M-<Right>", bF $ kt "action next_tab" $ l (P.sendKey controlMask xK_Tab))
+    , ("M-<Left>", bindFirst $ kt "action previous_tab" $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
+    , ("M-<Right>", bindFirst $ kt "action next_tab" $ l (P.sendKey controlMask xK_Tab))
     , ("M-<Down>", upPointer $ windows W.focusDown)
     , ("M-<Up>", upPointer $ windows W.focusUp)
-    , ("M-w", bF $ kt "action toggle_stack" $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
+    , ("M-w", bindFirst $ kt "action toggle_stack" $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
     , ("M-z", toggleLayout FULLNB)
     , ("M-x", toggleLayout FULLBAR)
     , ("M-c", toggleLayout TWOPANE)
     , ("M-v", toggleLayout PAPER)
-    , ("M-h", bF $ nv "Navigateleft" moveLeft)
-    , ("M-j", bF $ nv "Navigatebottom" moveDown)
-    , ("M-k", bF $ nv "Navigatetop" moveUp)
-    , ("M-l", bF $ nv "Navigateright" moveRight)
+    , ("M-h", bindFirst $ nv "Navigateleft" moveLeft)
+    , ("M-j", bindFirst $ nv "Navigatebottom" moveDown)
+    , ("M-k", bindFirst $ nv "Navigatetop" moveUp)
+    , ("M-l", bindFirst $ nv "Navigateright" moveRight)
     , ("M-S-h", upPointer $ bindByLayout [("PaperPersistent", windows W.swapUp), ("", windowSwap L False)])
     , ("M-S-j", upPointer $ windowSwap D False)
     , ("M-S-k", upPointer $ windowSwap U False)
@@ -616,7 +617,7 @@ myStartupHook = do
     spawnOnOnce "NSP" "kitty --class=sysMon btop"
 
 ----------------------------------------------------------------------------------------------------
--- Log                                                                                            --
+-- Bar/PP                                                                                         --
 ----------------------------------------------------------------------------------------------------
 
 barSpawner :: ScreenId -> X StatusBarConfig
@@ -645,6 +646,10 @@ myPP =
     underlineMod c = xmobarColor c "" . wrap ("<box type=Bottom width=3 mt=2 color=" ++ c ++ ">") "</box>"
     clickableProf :: (String -> String) -> String -> String
     clickableProf f p = xmobarAction ("/home/oleete/.cabal/bin/xmonadctl-exe profile-" ++ p) "1" $ f p
+
+----------------------------------------------------------------------------------------------------
+-- Log                                                                                            --
+----------------------------------------------------------------------------------------------------
 
 myLogHook :: X ()
 myLogHook = do
@@ -729,15 +734,12 @@ toggleLayout :: (MT.Transformer t a, Typeable a) => t -> X ()
 toggleLayout layout = sequence_ [withFocused $ windows . W.sink, sendMessage $ MT.Toggle layout, updatePointer (0.5, 0.5) (0.25, 0.25)]
 
 -- | Bind key on any leftover app
-l :: (Applicative f) => X () -> [(f Bool, X ())]
+l :: X () -> [(Query Bool, X ())]
 l raw = [(pure True, raw)]
 
 -- | Bind key on neovim
-nv :: (MonadIO m) => [Char] -> [(Query Bool, m ())] -> [(Query Bool, m ())]
+nv :: [Char] -> [(Query Bool, X ())] -> [(Query Bool, X ())]
 nv command list = (title ~? "Neovim_", spawn ("/home/oleete/.config/bin/nvrWS " ++ command)) : list -- neovim
-
-kittyRemote :: String
-kittyRemote = "kitty @ --to unix:/tmp/mykitty-$(xdotool getactivewindow getwindowpid) "
 
 -- | Bind key on kitty
 kt :: [Char] -> [(Query Bool, X ())] -> [(Query Bool, X ())]
@@ -746,10 +748,6 @@ kt remote list = (className =? "kitty", spawn (kittyRemote ++ remote)) : list
 -- | Bind key on chrome
 crm :: X () -> [(Query Bool, X ())] -> [(Query Bool, X ())]
 crm raw list = (isRole =? "browser", raw) : list -- chrome
-
--- | Bind keys on specific apps
-bF :: [(Query Bool, X ())] -> X ()
-bF = bindFirst
 
 -- | Bring the window
 bringWindow :: (Eq s, Eq i, Ord a) => a -> W.StackSet i l a s sd -> W.StackSet i l a s sd
@@ -773,33 +771,28 @@ moveRight' = l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex 1)
 ----------------------------------------------------------------------------------------------------
 
 myServerModeEventHook :: Event -> X All
-myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
-
-myCommands' :: [(String, X ())]
-myCommands' = myCommands ++ sendTo
+myServerModeEventHook = serverModeEventHookCmd' $ return $ myCommands ++ sendTo
   where
     sendTo = map (\p -> ("profile-" ++ p.profileId, switchToProfile p.profileId)) myProfiles
-
-myCommands :: [(String, X ())]
-myCommands =
-    [ ("winGo-h", bF moveLeft)
-    , ("winGo-j", bF moveDown)
-    , ("winGo-k", bF moveUp)
-    , ("winGo-l", bF moveRight)
-    , ("winGo-H", bF moveLeft')
-    , ("winGo-J", bF moveDown')
-    , ("winGo-K", bF moveUp')
-    , ("winGo-L", bF moveRight')
-    , ("project-browser", runProjectApp4)
-    , ("sendF", P.sendKey noModMask xK_f)
-    , ("sendF11", P.sendKey noModMask xK_F11)
-    , ("dump-stack", debugStack)
-    , ("dump-full-stack", debugStackFull)
-    ,
-        ( "restart-bars"
-        , do
-            killAllStatusBars
-            startAllStatusBars
-            spawn "variety -n"
-        )
-    ]
+    myCommands =
+        [ ("winGo-h", bindFirst moveLeft)
+        , ("winGo-j", bindFirst moveDown)
+        , ("winGo-k", bindFirst moveUp)
+        , ("winGo-l", bindFirst moveRight)
+        , ("winGo-H", bindFirst moveLeft')
+        , ("winGo-J", bindFirst moveDown')
+        , ("winGo-K", bindFirst moveUp')
+        , ("winGo-L", bindFirst moveRight')
+        , ("project-browser", runProjectApp4)
+        , ("sendF", P.sendKey noModMask xK_f)
+        , ("sendF11", P.sendKey noModMask xK_F11)
+        , ("dump-stack", debugStack)
+        , ("dump-full-stack", debugStackFull)
+        ,
+            ( "restart-bars"
+            , do
+                killAllStatusBars
+                startAllStatusBars
+                spawn "variety -n"
+            )
+        ]
