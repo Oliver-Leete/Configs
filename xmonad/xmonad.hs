@@ -18,10 +18,7 @@ import qualified Graphics.X11.Xlib as X11
 import XMonad hiding ((|||))
 import qualified XMonad.StackSet as W
 
-import XMonad.Actions.CycleWS (
-    nextScreen,
-    shiftNextScreen,
- )
+import XMonad.Actions.CycleWS (nextScreen, shiftNextScreen)
 import XMonad.Actions.CycleWSLocal (shiftToggleWS', toggleWS')
 import XMonad.Actions.DynamicProjectsLocal
 import XMonad.Actions.Navigation2D
@@ -61,39 +58,11 @@ import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Renamed
 import XMonad.Layout.Simplest (Simplest (Simplest))
 import XMonad.Layout.Spacing
-import XMonad.Layout.TabbedGeometryLocal (
-    HorizontalTabPlacement (Top),
-    HorizontalTabWidth (AutoBarWidth),
-    HorizontalTabsAlignment (AlignTabsRight),
-    SingleTabMode (ShowTab),
-    TabbedGeometry (HorizontalTabs, hTabAlignment, hTabPlacement, showIfSingleWindow),
- )
+import XMonad.Layout.TabbedGeometryLocal (HorizontalTabPlacement (Top), HorizontalTabWidth (AutoBarWidth), HorizontalTabsAlignment (AlignTabsRight), SingleTabMode (ShowTab), TabbedGeometry (HorizontalTabs))
 import XMonad.Layout.TwoPanePersistentLocal (TwoPanePersistent (TwoPanePersistent))
 import XMonad.Layout.WindowSwitcherDecoration (windowSwitcherDecoration)
 
-import XMonad.Prompt (
-    ComplCaseSensitivity (CaseInSensitive),
-    XPConfig (
-        alwaysHighlight,
-        autoComplete,
-        bgColor,
-        bgHLight,
-        borderColor,
-        complCaseSensitivity,
-        completionKey,
-        fgColor,
-        fgHLight,
-        font,
-        height,
-        maxComplColumns,
-        maxComplRows,
-        position,
-        prevCompletionKey,
-        promptBorderWidth,
-        searchPredicate
-    ),
-    XPPosition (CenteredAt),
- )
+import XMonad.Prompt (ComplCaseSensitivity (CaseInSensitive), XPConfig (..), XPPosition (CenteredAt))
 import XMonad.Prompt.FuzzyMatch (fuzzyMatch)
 import XMonad.Prompt.Input (inputPrompt, (?+))
 import XMonad.Prompt.XMonad (xmonadPromptC, xmonadPromptCT)
