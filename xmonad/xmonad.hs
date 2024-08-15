@@ -129,20 +129,11 @@ projects =
     [ Project{pName = "Tmp", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
     , Project{pName = "Tmp2", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
     , Project{pName = "M", pDir = "~/.config", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = tBSpawn "M" persB}
-    , Project{pName = "Print", pDir = "~/Projects/Printing", pApp1 = prusa, pApp1F = prusaF, pApp4 = br persB, pApp4F = brF persB, pStart = oSpawn "Print" "flatpak run com.prusa3d.PrusaSlicer"}
-    , Project{pName = "Games", pDir = "~/Documents", pApp1 = steam, pApp1F = steamF, pApp4 = br persB, pApp4F = brF persB, pStart = oSpawn "Games" "steam"}
-    , Project{pName = "Films", pDir = "~/Videos/films", pApp1 = kitty, pApp1F = kittyF, pApp2 = mpv, pApp2F = mpvF, pApp3 = deluge, pApp3F = delugeF, pApp4 = br filmB, pApp4F = brF filmB, pStart = fSpawn "Films"}
-    , Project{pName = "Dnd", pDir = "~/Projects/Rpgs", pApp1 = kitty, pApp1F = kittyF, pApp2 = zathura, pApp2F = zathuraF, pApp4 = br rpgsB, pApp4F = brF rpgsB, pStart = bSpawn rpgsB}
+    , Project{pName = "Films", pDir = "~/Videos/films", pApp1 = kitty, pApp1F = kittyF, pApp2 = deluge, pApp2F = delugeF, pApp4 = br filmB, pApp4F = brF filmB, pStart = fSpawn "Films"}
     , Project{pName = "Thesis", pDir = "~/Projects/Thesis/thesis", pApp1 = kitty, pApp1F = kittyF, pApp2 = zathura, pApp2F = zathuraF, pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Thesis" univB}
     , Project{pName = "Sim", pDir = "~/Projects/HSSSimulations", pApp1 = kitty, pApp1F = kittyF, pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Sim" univB}
-    , Project{pName = "Exp", pDir = "~/Projects/JuliaPlotting", pApp1 = kitty, pApp1F = kittyF, pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Exp" univB}
-    , Project{pName = "Scripts", pDir = "~/Projects/Thesis/scripts", pApp1 = kitty, pApp1F = kittyF, pApp2 = zathura, pApp2F = zathuraF, pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Scripts" univB}
-    , Project{pName = "Scin-Main", pDir = "~/Projects/Scintilla/Main", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Scin-Main" workB}
-    , Project{pName = "Scin-Print", pDir = "~/Projects/Scintilla/PrintSys", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Scin-Print" workB}
-    , Project{pName = "Scin-Firm", pDir = "~/Projects/Scintilla/Firmware", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Scin-Firm" workB}
-    , Project{pName = "Scin-Heat", pDir = "~/Projects/Scintilla/HCPCB/firmware", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Scin-Heat" workB}
-    , Project{pName = "Scin-Docs", pDir = "~/Projects/Scintilla/docs", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br workB, pApp4F = brF workB, pStart = tBSpawn "Scin-Docs" workB}
-    , Project{pName = "Scin-Test", pDir = "~/Projects/Scintilla/Main", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br workB, pApp4F = brF workB, pStart = Just $ return ()}
+    , Project{pName = "Scin-Main", pDir = "~/Projects/Scintilla/Main", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Scin-Main" univB}
+    , Project{pName = "Scin-Test", pDir = "~/Projects/Scintilla/Main", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br univB, pApp4F = brF univB, pStart = Just $ return ()}
     ]
   where
     kitty = bindFirst [kt "action launch_tab", l (upPointer $ Wgl.runOrRaiseNext "kitty" (className =? "kitty"))]
@@ -150,17 +141,12 @@ projects =
 
     sameForce r c = (upPointer $ Wgl.runOrRaiseNext r (className =? c), upPointer $ spawn r)
     (zathura, zathuraF) = sameForce "zathura" "Zathura"
-    (prusa, prusaF) = sameForce "flatpak run com.prusa3d.PrusaSlicer" "PrusaSlicer"
-    (mpv, mpvF) = sameForce "mpv /home/oleete/Videos/films/*" "mpv"
     (deluge, delugeF) = sameForce "deluge" "Deluge-gtk"
-    (steam, steamF) = sameForce "steam" "Steam"
     scinStart = "cd /home/oleete/Projects/Scintilla/Main; .venv/bin/python main.pyw"
     (scinCont, scinContF) = (upPointer $ Wgl.runOrRaiseNext scinStart (title =? "Scintilla Control"), upPointer $ spawn scinStart)
 
     persB = "google-chrome-stable-personal"
     univB = "google-chrome-stable-uni"
-    workB = "google-chrome-stable-uni"
-    rpgsB = "google-chrome-stable-Dnd"
     filmB = "google-chrome-stable-Films"
     br na = bindFirst [crm (P.sendKey controlMask xK_t), l (upPointer $ brS na)]
     brS na = Wgl.raiseNextMaybeCustomFocus2 bringWindow (brF na) (className =? na)
@@ -202,21 +188,7 @@ myProfiles =
             [ "Tmp"
             , "Tmp2"
             , "M"
-            , "Print"
             , "Films"
-            , "Games"
-            ]
-        }
-    , Profile
-        { profileId = "Thesis"
-        , profileWS =
-            [ "Tmp"
-            , "Tmp2"
-            , "M"
-            , "Thesis"
-            , "Sim"
-            , "Scripts"
-            , "Exp"
             ]
         }
     , Profile{profileId = "All", profileWS = myWorkspaces}
