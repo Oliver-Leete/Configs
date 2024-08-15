@@ -33,7 +33,7 @@ M.special_types = {
 M.is_special = function(bufnr)
     local filetype = vim.bo[bufnr].filetype
     local buftype = vim.bo[bufnr].buftype
-    return buftype ~= "terminal" or vim.tbl_contains(vim.tbl_keys(M.special_types), filetype)
+    return buftype == "terminal" or vim.tbl_contains(vim.tbl_keys(M.special_types), filetype)
 end
 
 ---Count normal windows on current tab page
