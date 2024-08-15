@@ -55,3 +55,4 @@ zsh/
 /nvim/lua/user/secrets.lua
 /fish/conf.d/done.fish
 lnav
+helix/runtime/grammars/sources
