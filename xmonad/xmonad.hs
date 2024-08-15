@@ -177,7 +177,7 @@ projects =
     , Project{pName = "Scin-Test", pDir = "~/Projects/Scintilla/Main", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br workB, pApp4F = brF workB, pStart = Just $ return ()}
     ]
   where
-    kitty = bindFirst $ kt "action launch_tab" $ l (upPointer $ Wgl.runOrRaiseNext "kitty" (className =? "kitty"))
+    kitty = bindFirst [kt "action launch_tab", l (upPointer $ Wgl.runOrRaiseNext "kitty" (className =? "kitty"))]
     kittyF = upPointer $ spawn "kitty"
 
     sameForce r c = (upPointer $ Wgl.runOrRaiseNext r (className =? c), upPointer $ spawn r)
@@ -194,7 +194,7 @@ projects =
     workB = "google-chrome-stable-uni"
     rpgsB = "google-chrome-stable-Dnd"
     filmB = "google-chrome-stable-Films"
-    br na = bindFirst $ crm (P.sendKey controlMask xK_t) $ l (upPointer $ brS na)
+    br na = bindFirst [crm (P.sendKey controlMask xK_t), l (upPointer $ brS na)]
     brS na = Wgl.raiseNextMaybeCustomFocus2 bringWindow (brF na) (className =? na)
     brL na = Wgl.raiseNextMaybeCustomFocus3 (brF na) (className =? na)
     brF na = upPointer $ spawn (myBrowserClass ++ " --class=" ++ na ++ " --user-data-dir=/home/oleete/.config/browser/" ++ na)
@@ -444,11 +444,11 @@ myKeys n =
     , ("M-p", myFuncPrompt myPromptConfig)
     , ("M-f", mySwitchProfilePrompt myPromptConfig)
     , ("M-<Esc>", upPointer $ sequence_ $ hideAllNamedScratchPads scratchpads)
-    , ("M-<Return>", bindFirst $ kt "action launch_window" $ l (upPointer $ spawn myTerminal))
+    , ("M-<Return>", bindFirst [kt "action launch_window", l (upPointer $ spawn myTerminal)])
     , ("M-S-<Return>", upPointer $ spawn myTerminal)
-    , ("M-<Backspace>", bindFirst $ nv "DeleteBuffer" $ kt "action close_window_c" $ crm (P.sendKey controlMask xK_w) $ l kill)
-    , ("M-S-<Backspace>", bindFirst $ kt "action close_window_c" $ l kill)
-    , ("M-u", bindFirst $ kt "action detach_window" $ crm (P.sendKey shiftMask xK_w) $ l (return ()))
+    , ("M-<Backspace>", bindFirst [nv "DeleteBuffer", kt "action close_window_c", crm (P.sendKey controlMask xK_w), l kill])
+    , ("M-S-<Backspace>", bindFirst [kt "action close_window_c", l kill])
+    , ("M-u", bindFirst [kt "action detach_window", crm (P.sendKey shiftMask xK_w), l (return ())])
     , ("M-n", runProjectApp1)
     , ("M-e", runProjectApp2)
     , ("M-i", runProjectApp3)
@@ -457,19 +457,19 @@ myKeys n =
     , ("M-S-e", runProjectApp2Force)
     , ("M-S-i", runProjectApp3Force)
     , ("M-S-o", runProjectApp4Force)
-    , ("M-<Left>", bindFirst $ kt "action previous_tab" $ l (P.sendKey (controlMask .|. shiftMask) xK_Tab))
-    , ("M-<Right>", bindFirst $ kt "action next_tab" $ l (P.sendKey controlMask xK_Tab))
+    , ("M-<Left>", bindFirst [kt "action previous_tab", l (P.sendKey (controlMask .|. shiftMask) xK_Tab)])
+    , ("M-<Right>", bindFirst [kt "action next_tab", l (P.sendKey controlMask xK_Tab)])
     , ("M-<Down>", upPointer $ windows W.focusDown)
     , ("M-<Up>", upPointer $ windows W.focusUp)
-    , ("M-w", bindFirst $ kt "action toggle_stack" $ crm (spawn "/home/oleete/.config/bin/chromeFull") $ l (P.sendKey noModMask xK_F11))
+    , ("M-w", bindFirst [kt "action toggle_stack", crm (spawn "/home/oleete/.config/bin/chromeFull"), l (P.sendKey noModMask xK_F11)])
     , ("M-z", toggleLayout FULLNB)
     , ("M-x", toggleLayout FULLBAR)
     , ("M-c", toggleLayout TWOPANE)
     , ("M-v", toggleLayout PAPER)
-    , ("M-h", bindFirst $ nv "Navigateleft" moveLeft)
-    , ("M-j", bindFirst $ nv "Navigatebottom" moveDown)
-    , ("M-k", bindFirst $ nv "Navigatetop" moveUp)
-    , ("M-l", bindFirst $ nv "Navigateright" moveRight)
+    , ("M-h", bindFirst $ nv "Navigateleft" : moveLeft)
+    , ("M-j", bindFirst $ nv "Navigatebottom" : moveDown)
+    , ("M-k", bindFirst $ nv "Navigatetop" : moveUp)
+    , ("M-l", bindFirst $ nv "Navigateright" : moveRight)
     , ("M-S-h", upPointer $ bindByLayout [("PaperPersistent", windows W.swapUp), ("", windowSwap L False)])
     , ("M-S-j", upPointer $ windowSwap D False)
     , ("M-S-k", upPointer $ windowSwap U False)
@@ -734,20 +734,20 @@ toggleLayout :: (MT.Transformer t a, Typeable a) => t -> X ()
 toggleLayout layout = sequence_ [withFocused $ windows . W.sink, sendMessage $ MT.Toggle layout, updatePointer (0.5, 0.5) (0.25, 0.25)]
 
 -- | Bind key on any leftover app
-l :: X () -> [(Query Bool, X ())]
-l raw = [(pure True, raw)]
+l :: X () -> (Query Bool, X ())
+l raw = (pure True, raw)
 
 -- | Bind key on neovim
-nv :: [Char] -> [(Query Bool, X ())] -> [(Query Bool, X ())]
-nv command list = (title ~? "Neovim_", spawn ("/home/oleete/.config/bin/nvrWS " ++ command)) : list -- neovim
+nv :: [Char] -> (Query Bool, X ())
+nv command = (title ~? "Neovim_", spawn ("/home/oleete/.config/bin/nvrWS " ++ command))
 
 -- | Bind key on kitty
-kt :: [Char] -> [(Query Bool, X ())] -> [(Query Bool, X ())]
-kt remote list = (className =? "kitty", spawn (kittyRemote ++ remote)) : list
+kt :: [Char] -> (Query Bool, X ())
+kt remote = (className =? "kitty", spawn (kittyRemote ++ remote))
 
 -- | Bind key on chrome
-crm :: X () -> [(Query Bool, X ())] -> [(Query Bool, X ())]
-crm raw list = (isRole =? "browser", raw) : list -- chrome
+crm :: X () -> (Query Bool, X ())
+crm raw = (isRole =? "browser", raw)
 
 -- | Bring the window
 bringWindow :: (Eq s, Eq i, Ord a) => a -> W.StackSet i l a s sd -> W.StackSet i l a s sd
@@ -755,16 +755,36 @@ bringWindow w ws = W.focusWindow w $ W.shiftWinDown (W.currentTag ws) w ws
 
 -- | Movement
 moveLeft, moveDown, moveUp, moveRight :: [(Query Bool, X ())]
-moveLeft = kt "focus-window --match neighbor:left || /home/oleete/.cabal/bin/xmonadctl-exe winGo-H" $ l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex (-1))), ("", upPointer (windowGo L False))])
-moveDown = kt "focus-window --match neighbor:bottom || /home/oleete/.cabal/bin/xmonadctl-exe winGo-J" $ l (upPointer (windowGo D False))
-moveUp = kt "focus-window --match neighbor:top || /home/oleete/.cabal/bin/xmonadctl-exe winGo-K" $ l (upPointer (windowGo U False))
-moveRight = kt "focus-window --match neighbor:right || /home/oleete/.cabal/bin/xmonadctl-exe winGo-L" $ l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex 1)), ("", upPointer (windowGo R False))])
+moveLeft =
+    [ kt "focus-window --match neighbor:left || /home/oleete/.cabal/bin/xmonadctl-exe winGo-H"
+    , l $
+        bindByLayout
+            [ ("PaperPersistent", sendMessage (IncWindowIndex (-1)))
+            , ("", upPointer (windowGo L False))
+            ]
+    ]
+moveDown =
+    [ kt "focus-window --match neighbor:bottom || /home/oleete/.cabal/bin/xmonadctl-exe winGo-J"
+    , l (upPointer (windowGo D False))
+    ]
+moveUp =
+    [ kt "focus-window --match neighbor:top || /home/oleete/.cabal/bin/xmonadctl-exe winGo-K"
+    , l (upPointer (windowGo U False))
+    ]
+moveRight =
+    [ kt "focus-window --match neighbor:right || /home/oleete/.cabal/bin/xmonadctl-exe winGo-L"
+    , l $
+        bindByLayout
+            [ ("PaperPersistent", sendMessage (IncWindowIndex 1))
+            , ("", upPointer (windowGo R False))
+            ]
+    ]
 
 moveLeft', moveDown', moveUp', moveRight' :: [(Query Bool, X ())]
-moveLeft' = l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex (-1))), ("", upPointer (windowGo L False))])
-moveDown' = l (upPointer (windowGo D False))
-moveUp' = l (upPointer (windowGo U False))
-moveRight' = l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex 1)), ("", upPointer (windowGo R False))])
+moveLeft' = [l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex (-1))), ("", upPointer (windowGo L False))])]
+moveDown' = [l (upPointer (windowGo D False))]
+moveUp' = [l (upPointer (windowGo U False))]
+moveRight' = [l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex 1)), ("", upPointer (windowGo R False))])]
 
 ----------------------------------------------------------------------------------------------------
 -- Server Commands                                                                                --
