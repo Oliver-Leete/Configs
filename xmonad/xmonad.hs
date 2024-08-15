@@ -201,11 +201,11 @@ projects =
 
     sl i = "sleep .1; " ++ i
     tBSpawn ws na = Just $ do spawnOn ws myTerminal; brL na
-    bSpawn na = Just $ do brL na
-    oSpawn ws app = Just $ do spawnOn ws $ sl app
+    bSpawn na = Just $ brL na
+    oSpawn ws app = Just $ spawnOn ws $ sl app
     fSpawn ws = Just $ do spawnOn ws $ sl myBrowser; spawnOn ws ("sleep .2; " ++ myTerminal); spawnOn ws $ sl "deluge"
 
-myWorkspaces :: [[Char]]
+myWorkspaces :: [String]
 myWorkspaces = map pName projects
 
 myProfileConfig :: ProfileConfig
@@ -257,7 +257,7 @@ myProfiles =
 ----------------------------------------------------------------------------------------------------
 -- Applications                                                                                   --
 ----------------------------------------------------------------------------------------------------
-myTerminal, myBrowser, myBrowserClass, kittyRemote :: [Char]
+myTerminal, myBrowser, myBrowserClass, kittyRemote :: String
 myTerminal = "kitty"
 myBrowser = "/home/oleete/.config/bin/browser"
 myBrowserClass = "google-chrome-stable"
@@ -274,7 +274,7 @@ scratchpads =
 ----------------------------------------------------------------------------------------------------
 -- Theme                                                                                          --
 ----------------------------------------------------------------------------------------------------
-background, foreground, dull, active, yellow, green :: [Char]
+background, foreground, dull, active, yellow, green :: String
 background = "#1a1a22"
 foreground = "#C8C093"
 dull = "#54546D"
@@ -292,7 +292,7 @@ moreReSize = 1 / 4
 myBorder :: Dimension
 myBorder = 3
 
-myWideFont :: [Char]
+myWideFont :: String
 myWideFont = "xft:Ubuntu Nerd Font:" ++ "style=Regular:pixelsize=180:hinting=true"
 
 myShowWNameTheme :: SWNConfig
@@ -355,6 +355,7 @@ myPromptConfig =
 -- Layouts                                                                                        --
 ----------------------------------------------------------------------------------------------------
 
+mySpacing :: l a -> ModifiedLayout Spacing l a
 mySpacing = spacingRaw False (Border gap gap gap gap) True (Border gap gap gap gap) True
 
 data FULLNB = FULLNB deriving (Read, Show, Eq, Typeable)
@@ -466,10 +467,10 @@ myKeys n =
     , ("M-x", toggleLayout FULLBAR)
     , ("M-c", toggleLayout TWOPANE)
     , ("M-v", toggleLayout PAPER)
-    , ("M-h", bindFirst $ nv "Navigateleft" : moveLeft)
-    , ("M-j", bindFirst $ nv "Navigatebottom" : moveDown)
-    , ("M-k", bindFirst $ nv "Navigatetop" : moveUp)
-    , ("M-l", bindFirst $ nv "Navigateright" : moveRight)
+    , ("M-h", bindFirst [nMoveLeft, kMoveLeft, moveLeft])
+    , ("M-j", bindFirst [nMoveDown, kMoveDown, moveDown])
+    , ("M-k", bindFirst [nMoveUp, kMoveUp, moveUp])
+    , ("M-l", bindFirst [nMoveRight, kMoveRight, moveRight])
     , ("M-S-h", upPointer $ bindByLayout [("PaperPersistent", windows W.swapUp), ("", windowSwap L False)])
     , ("M-S-j", upPointer $ windowSwap D False)
     , ("M-S-k", upPointer $ windowSwap U False)
@@ -627,8 +628,8 @@ barSpawner (S sid) =
 
 myPP :: X PP
 myPP =
-    do clickablePP
-    <=< excludeWSPP
+    clickablePP
+        <=< excludeWSPP
         $ def
             { ppCurrent = underlineMod active
             , ppVisible = xmobarColor active ""
@@ -733,58 +734,38 @@ upPointer a = sequence_ [a, updatePointer (0.5, 0.5) (0.25, 0.25)]
 toggleLayout :: (MT.Transformer t a, Typeable a) => t -> X ()
 toggleLayout layout = sequence_ [withFocused $ windows . W.sink, sendMessage $ MT.Toggle layout, updatePointer (0.5, 0.5) (0.25, 0.25)]
 
--- | Bind key on any leftover app
-l :: X () -> (Query Bool, X ())
+-- | Bind key on chrome or any leftover app
+l, crm :: X () -> (Query Bool, X ())
 l raw = (pure True, raw)
-
--- | Bind key on neovim
-nv :: [Char] -> (Query Bool, X ())
-nv command = (title ~? "Neovim_", spawn ("/home/oleete/.config/bin/nvrWS " ++ command))
-
--- | Bind key on kitty
-kt :: [Char] -> (Query Bool, X ())
-kt remote = (className =? "kitty", spawn (kittyRemote ++ remote))
-
--- | Bind key on chrome
-crm :: X () -> (Query Bool, X ())
 crm raw = (isRole =? "browser", raw)
+
+-- | Bind key on neovim or kitty
+nv, kt :: String -> (Query Bool, X ())
+nv command = (title ~? "Neovim_", spawn ("/home/oleete/.config/bin/nvrWS " ++ command))
+kt remote = (className =? "kitty", spawn (kittyRemote ++ remote))
 
 -- | Bring the window
 bringWindow :: (Eq s, Eq i, Ord a) => a -> W.StackSet i l a s sd -> W.StackSet i l a s sd
 bringWindow w ws = W.focusWindow w $ W.shiftWinDown (W.currentTag ws) w ws
 
 -- | Movement
-moveLeft, moveDown, moveUp, moveRight :: [(Query Bool, X ())]
-moveLeft =
-    [ kt "focus-window --match neighbor:left || /home/oleete/.cabal/bin/xmonadctl-exe winGo-H"
-    , l $
-        bindByLayout
-            [ ("PaperPersistent", sendMessage (IncWindowIndex (-1)))
-            , ("", upPointer (windowGo L False))
-            ]
-    ]
-moveDown =
-    [ kt "focus-window --match neighbor:bottom || /home/oleete/.cabal/bin/xmonadctl-exe winGo-J"
-    , l (upPointer (windowGo D False))
-    ]
-moveUp =
-    [ kt "focus-window --match neighbor:top || /home/oleete/.cabal/bin/xmonadctl-exe winGo-K"
-    , l (upPointer (windowGo U False))
-    ]
-moveRight =
-    [ kt "focus-window --match neighbor:right || /home/oleete/.cabal/bin/xmonadctl-exe winGo-L"
-    , l $
-        bindByLayout
-            [ ("PaperPersistent", sendMessage (IncWindowIndex 1))
-            , ("", upPointer (windowGo R False))
-            ]
-    ]
+nMoveLeft, nMoveDown, nMoveUp, nMoveRight :: (Query Bool, X ())
+nMoveLeft = nv "Navigateleft"
+nMoveDown = nv "Navigatebottom"
+nMoveUp = nv "Navigatetop"
+nMoveRight = nv "Navigateright"
 
-moveLeft', moveDown', moveUp', moveRight' :: [(Query Bool, X ())]
-moveLeft' = [l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex (-1))), ("", upPointer (windowGo L False))])]
-moveDown' = [l (upPointer (windowGo D False))]
-moveUp' = [l (upPointer (windowGo U False))]
-moveRight' = [l (bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex 1)), ("", upPointer (windowGo R False))])]
+kMoveLeft, kMoveDown, kMoveUp, kMoveRight :: (Query Bool, X ())
+kMoveLeft = kt "focus-window --match neighbor:left || /home/oleete/.cabal/bin/xmonadctl-exe winGo-H"
+kMoveDown = kt "focus-window --match neighbor:bottom || /home/oleete/.cabal/bin/xmonadctl-exe winGo-J"
+kMoveUp = kt "focus-window --match neighbor:top || /home/oleete/.cabal/bin/xmonadctl-exe winGo-K"
+kMoveRight = kt "focus-window --match neighbor:right || /home/oleete/.cabal/bin/xmonadctl-exe winGo-L"
+
+moveLeft, moveDown, moveUp, moveRight :: (Query Bool, X ())
+moveLeft = l $ bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex (-1))), ("", upPointer (windowGo L False))]
+moveDown = l $ upPointer (windowGo D False)
+moveUp = l $ upPointer (windowGo U False)
+moveRight = l $ bindByLayout [("PaperPersistent", sendMessage (IncWindowIndex 1)), ("", upPointer (windowGo R False))]
 
 ----------------------------------------------------------------------------------------------------
 -- Server Commands                                                                                --
@@ -795,14 +776,14 @@ myServerModeEventHook = serverModeEventHookCmd' $ return $ myCommands ++ sendTo
   where
     sendTo = map (\p -> ("profile-" ++ p.profileId, switchToProfile p.profileId)) myProfiles
     myCommands =
-        [ ("winGo-h", bindFirst moveLeft)
-        , ("winGo-j", bindFirst moveDown)
-        , ("winGo-k", bindFirst moveUp)
-        , ("winGo-l", bindFirst moveRight)
-        , ("winGo-H", bindFirst moveLeft')
-        , ("winGo-J", bindFirst moveDown')
-        , ("winGo-K", bindFirst moveUp')
-        , ("winGo-L", bindFirst moveRight')
+        [ ("winGo-h", bindFirst [kMoveLeft, moveLeft])
+        , ("winGo-j", bindFirst [kMoveDown, moveDown])
+        , ("winGo-k", bindFirst [kMoveUp, moveUp])
+        , ("winGo-l", bindFirst [kMoveRight, moveRight])
+        , ("winGo-H", bindFirst [moveLeft])
+        , ("winGo-J", bindFirst [moveDown])
+        , ("winGo-K", bindFirst [moveUp])
+        , ("winGo-L", bindFirst [moveRight])
         , ("project-browser", runProjectApp4)
         , ("sendF", P.sendKey noModMask xK_f)
         , ("sendF11", P.sendKey noModMask xK_F11)
