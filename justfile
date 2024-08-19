@@ -1,7 +1,13 @@
 xmonad-dir :=  config_local_directory() / "xmonad"
+xmobar-dir :=  config_local_directory() / "xmobar" / "xmobar-git"
 # Build and reload xmonad
 xmonad-build-reload:
     cd {{ xmonad-dir }} && stack install
+    xmonad --recompile
+    xmonad --restart
+
+xmobar-build-reload:
+    cd {{ xmobar-dir }} && stack install
     xmonad --recompile
     xmonad --restart
 
