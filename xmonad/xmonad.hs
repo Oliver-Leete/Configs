@@ -127,6 +127,10 @@ projects :: [Project]
 projects =
     [ Project{pName = "Tmp", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
     , Project{pName = "Tmp2", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
+    , Project{pName = "Blank1", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
+    , Project{pName = "Blank2", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
+    , Project{pName = "Blank3", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
+    , Project{pName = "Blank4", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
     , Project{pName = "M", pDir = "~/.config", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = tBSpawn "M" persB}
     , Project{pName = "Films", pDir = "~/Videos/films", pApp1 = kitty, pApp1F = kittyF, pApp2 = deluge, pApp2F = delugeF, pApp4 = br filmB, pApp4F = brF filmB, pStart = fSpawn "Films"}
     , Project{pName = "Thesis", pDir = "~/Projects/Thesis/thesis", pApp1 = kitty, pApp1F = kittyF, pApp2 = zathura, pApp2F = zathuraF, pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Thesis" univB}
@@ -165,13 +169,25 @@ myProfileConfig :: ProfileConfig
 myProfileConfig =
     def
         { profiles = myProfiles
-        , startingProfile = "Scintilla"
+        , startingProfile = "Blank"
         , workspaceExcludes = ["NSP"]
         }
 
 myProfiles :: [Profile]
 myProfiles =
     [ Profile
+        { profileId = "Blank"
+        , profileWS =
+            [ "Tmp"
+            , "Tmp2"
+            , "M"
+            , "Blank1"
+            , "Blank2"
+            , "Blank3"
+            , "Blank4"
+            ]
+        }
+    , Profile
         { profileId = "Scintilla"
         , profileWS =
             [ "Tmp"
