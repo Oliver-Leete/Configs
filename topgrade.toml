@@ -60,8 +60,10 @@ repos = [
 
 # Custom commands
 [commands]
-"XMonad" = "cd ~/.config/xmonad; stack install; xmonad --recompile; xmonad --restart"
-"Xmobar" = "cd ~/.config/xmobar/xmobar-git; stack install; xmonad --recompile; xmonad --restart"
+"XMonad" = "cd ~/.config; just xmonad-build-reload"
+"Xmobar" = "cd ~/.config; just xmobar-build-reload"
+# "XMonad" = "cd ~/.config/xmonad; stack install; xmonad --recompile; xmonad --restart"
+# "Xmobar" = "cd ~/.config/xmobar/xmobar-git; stack install; xmonad --recompile; xmonad --restart"
 "Locate DB" = "sudo updatedb"
 
 [brew]
