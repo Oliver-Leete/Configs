@@ -139,6 +139,8 @@ miniclue.setup({
         { mode = 'n', keys = 'K' },
         { mode = 'x', keys = 'K' },
 
+        { mode = 'n', keys = 'v' },
+
         { mode = 'n', keys = ']' },
         { mode = 'x', keys = ']' },
         { mode = 'n', keys = '[' },

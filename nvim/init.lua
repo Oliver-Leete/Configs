@@ -45,7 +45,6 @@ require("lazy").setup(
                 end,
             }
         },
-        { "nvimtools/hydra.nvim",           dependencies = { "anuvyklack/keymap-layer.nvim" } },
         {
             "chrisgrieser/nvim-genghis",
             dependencies = { "stevearc/dressing.nvim" },
