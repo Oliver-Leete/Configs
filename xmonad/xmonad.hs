@@ -127,10 +127,12 @@ projects :: [Project]
 projects =
     [ Project{pName = "Tmp", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
     , Project{pName = "Tmp2", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
-    , Project{pName = "Blank1", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
-    , Project{pName = "Blank2", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
-    , Project{pName = "Blank3", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
-    , Project{pName = "Blank4", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
+    , Project{pName = "Blank1", pDir = "~/Documents", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
+    , Project{pName = "Blank2", pDir = "~/Documents", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
+    , Project{pName = "Blank3", pDir = "~/Documents", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
+    , Project{pName = "Blank4", pDir = "~/Documents", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
+    , Project{pName = "Work1", pDir = "~/Documents", pApp1 = kitty, pApp1F = kittyF, pApp4 = br workB, pApp4F = brF workB, pStart = Just $ return ()}
+    , Project{pName = "Work2", pDir = "~/Documents", pApp1 = kitty, pApp1F = kittyF, pApp4 = br workB, pApp4F = brF workB, pStart = Just $ return ()}
     , Project{pName = "M", pDir = "~/.config", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = tBSpawn "M" persB}
     , Project{pName = "Films", pDir = "~/Videos/films", pApp1 = kitty, pApp1F = kittyF, pApp2 = deluge, pApp2F = delugeF, pApp4 = br filmB, pApp4F = brF filmB, pStart = fSpawn "Films"}
     , Project{pName = "Thesis", pDir = "~/Projects/Thesis/thesis", pApp1 = kitty, pApp1F = kittyF, pApp2 = zathura, pApp2F = zathuraF, pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Thesis" univB}
@@ -150,6 +152,7 @@ projects =
 
     persB = "google-chrome-stable-personal"
     univB = "google-chrome-stable-uni"
+    workB = "google-chrome-stable-work"
     filmB = "google-chrome-stable-Films"
     br na = bindFirst [crm (P.sendKey controlMask xK_t), l (upPointer $ brS na)]
     brS na = Wgl.raiseNextMaybeCustomFocus2 bringWindow (brF na) (className =? na)
@@ -183,8 +186,8 @@ myProfiles =
             , "M"
             , "Blank1"
             , "Blank2"
-            , "Blank3"
-            , "Blank4"
+            , "Work1"
+            , "Work2"
             ]
         }
     , Profile
@@ -212,11 +215,12 @@ myProfiles =
 ----------------------------------------------------------------------------------------------------
 -- Applications                                                                                   --
 ----------------------------------------------------------------------------------------------------
-myTerminal, myBrowser, myBrowserClass, kittyRemote :: String
+myTerminal, myBrowser, myBrowserClass, kittyRemote, myTasks :: String
 myTerminal = "kitty"
 myBrowser = "/home/oleete/.config/bin/browser"
 myBrowserClass = "google-chrome-stable"
 kittyRemote = "kitty @ --to unix:/tmp/mykitty-$(xdotool getactivewindow getwindowpid) "
+myTasks = myBrowserClass ++ " --user-data-dir=/home/oleete/.config/browser/ticktick  --class=ticktick  --app=https://ticktick.com/webapp"
 
 scratchpads :: [NamedScratchpad]
 scratchpads =
@@ -393,7 +397,7 @@ myKeys n =
     , ("M-p", myFuncPrompt myPromptConfig)
     , ("M-f", mySwitchProfilePrompt myPromptConfig)
     , ("M-<Esc>", upPointer $ sequence_ $ hideAllNamedScratchPads scratchpads)
-    , ("M-<Return>", bindFirst [kt "action launch_window", l (upPointer $ spawn myTerminal)])
+    , ("M-<Return>", upPointer $ spawn myTerminal)
     , ("M-S-<Return>", upPointer $ spawn myTerminal)
     , ("M-<Backspace>", bindFirst [nv "DeleteBuffer", kt "action close_window_c", crm (P.sendKey controlMask xK_w), l kill])
     , ("M-S-<Backspace>", bindFirst [kt "action close_window_c", l kill])
@@ -406,6 +410,7 @@ myKeys n =
     , ("M-S-e", runProjectApp2Force)
     , ("M-S-i", runProjectApp3Force)
     , ("M-S-o", runProjectApp4Force)
+    , ("M-/", upPointer $ Wgl.raiseNextMaybeCustomFocus2 bringWindow (spawn myTasks) (className =? "ticktick"))
     , ("M-<Left>", bindFirst [kt "action previous_tab", l (P.sendKey (controlMask .|. shiftMask) xK_Tab)])
     , ("M-<Right>", bindFirst [kt "action next_tab", l (P.sendKey controlMask xK_Tab)])
     , ("M-<Down>", upPointer $ windows W.focusDown)
@@ -639,6 +644,7 @@ myManageHook =
             , resource =? "console" -?> doRectFloat (W.RationalRect (4 / 7) (4 / 7) (2 / 5) (2 / 5))
             , className =? "youtubemusic" -?> doRectFloat halfNhalf
             , className =? "discord" -?> doRectFloat halfNhalf
+            , className =? "ticktick" -?> insertPosition End Newer
             , resource =? "kruler" -?> doFloat
             , transience
             , isBrowserDialog -?> doCenterFloat

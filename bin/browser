@@ -35,6 +35,8 @@ function exists_in_list() {
 
 if exists_in_list "Films" "$WSTAG"; then
     SUFFIX="-Films"
+elif exists_in_list "Work1 Work2" "$WSTAG"; then
+    SUFFIX="-work"
 elif exists_in_list "Thesis Sim Scin-Main Scin-Test" "$WSTAG"; then
     SUFFIX="-uni"
 else
