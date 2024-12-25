@@ -46,6 +46,6 @@ end
 local filmPicker = vim.api.nvim_create_augroup("filmPicker", { clear = true })
 vim.api.nvim_create_autocmd("BufRead", { pattern = "/tmp/film_list.films", callback = function()
     Map("n", "<leader>a", "vip:!sort -k1<cr><cr>")
-    Map("n", "<leader>r", "vip:!sort -k3<cr><cr>")
+    Map("n", "<leader>r", "vip:!sort -k3 -h<cr><cr>")
     Map("n", "<leader>s", "vip:!sort -k5<cr><cr>")
 end, group = filmPicker })
