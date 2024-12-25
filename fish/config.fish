@@ -36,7 +36,7 @@ abbr dust "dua i"
 abbr mv "mv -iv"
 abbr cp "cp -riv"
 
-abbr fd "fd -HLI"
+abbr fd "fd -HLI --hyperlink"
 
 abbr ls "eza -1 --hyperlink --icons --group-directories-first"
 abbr lr "eza -1 --hyperlink --group-directories-first"
