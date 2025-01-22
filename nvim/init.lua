@@ -122,17 +122,6 @@ require("lazy").setup(
             }
         },
 
-        -- Git
-        {
-            "lewis6991/gitsigns.nvim",
-            dependencies = {
-                "tpope/vim-repeat",
-            },
-            opts = {
-                signcolumn = false,
-            },
-        },
-
         -- UI
         { "rebelot/kanagawa.nvim" },
         { "stevearc/dressing.nvim" },
@@ -291,7 +280,6 @@ require("lazy").setup(
             dependencies = {
                 { "ThePrimeagen/refactoring.nvim" },
                 { "CKolkey/ts-node-action",       dependencies = { "tpope/vim-repeat" } },
-                { "drybalka/tree-climber.nvim" },
             },
             config = function()
                 require("user.treesitter")

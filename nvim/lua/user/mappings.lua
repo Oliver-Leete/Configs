@@ -93,8 +93,8 @@ Map({ "n", "x" }, "KK", vim.lsp.buf.hover, { desc = "Info" })
 Map({ "n", "x" }, "KE",
     function() vim.diagnostic.open_float({ border = require("user.settings").border, scope = "line", source = "always" }) end,
     { desc = "Errors" })
-Map({ "n", "x" }, "KG", require("gitsigns").preview_hunk, { desc = "Git Hunk" })
-Map({ "n", "x" }, "KB", function() require("gitsigns").blame_line({ full = true }) end, { desc = "Git Blame" })
+Map({ "n", "x" }, "KG", function() require("mini.diff").toggle_overlay() end, { desc = "Git Hunk" })
+Map({ "n", "x" }, "KB", function() require("mini.git").show_at_cursor({ split = "vertical" }) end)
 Map({ "n", "x" }, "KD", require("dap.ui.widgets").hover, { desc = "Test Results" })
 
 Map("n", "Q", "@q")
@@ -251,16 +251,7 @@ end)
 Map("t", "<c-]>", "<c-\\><c-n>")
 
 -- Git
-
-local gitsigns = require("gitsigns")
-
-Map("n", "<leader>gs", gitsigns.stage_hunk, { silent = true, desc = "stage hunk" })
-Map("n", "<leader>gr", gitsigns.reset_hunk, { silent = true, desc = "stage hunk" })
-Map("n", "<leader>gu", gitsigns.undo_stage_hunk, { desc = "undo last stage" })
-Map("n", "<leader>gS", gitsigns.stage_buffer, { desc = "stage buffer" })
-Map("n", "<leader>gp", gitsigns.preview_hunk, { desc = "preview hunk" })
-Map("n", "<leader>gK", gitsigns.blame_line, { desc = "blame" })
-Map("n", "<leader>gf", "<cmd>Telescope git_status theme=get_ivy<cr>")
+Map("n", "<leader>gf", "<cmd>Telescope git_status theme=get_ivy<cr>", { desc = "Find git hunks" })
 
 
 -- debuggin

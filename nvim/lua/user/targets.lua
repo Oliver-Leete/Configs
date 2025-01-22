@@ -1,22 +1,5 @@
 local gen_spec = require("mini.ai").gen_spec
 
-local miniAiGitsigns = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local hunks = require("gitsigns.cache").cache[bufnr].hunks
-    hunks = vim.tbl_map(function(hunk)
-        local from_line = hunk.added.start
-        local from_col = 1
-        local to_line = hunk.vend
-        local to_col = #vim.api.nvim_buf_get_lines(bufnr, to_line - 1, to_line, false)[1] + 1
-        return {
-            from = { line = from_line, col = from_col },
-            to = { line = to_line, col = to_col },
-        }
-    end, hunks)
-
-    return hunks
-end
-
 local gen_ai_spec = require('mini.extra').gen_ai_spec
 local custom_objects = {
     -- Argument
@@ -45,8 +28,6 @@ local custom_objects = {
             "^[%s]*()().-[^%s].-()()[%s]+$",            -- sentence at that fills paragraph (no final punctuation)
         }
     },
-    -- git Hunks
-    h = miniAiGitsigns,
     -- Indents
     i = gen_ai_spec.indent(),
     -- Jumps
@@ -250,6 +231,11 @@ Map({ "n", "x", "o" }, "]j", function() magmini(bracketed.jump, "j", "forward") 
 
 Map({ "n", "x", "o" }, "[l", function() magmini(bracketed.quickfix, "l", "backward") end)
 Map({ "n", "x", "o" }, "]l", function() magmini(bracketed.quickfix, "l", "forward") end)
+
+local diff = require("mini.diff")
+
+Map({ "n", "x", "o" }, "[h", function() magmini(diff.goto_hunk, "h", "prev") end)
+Map({ "n", "x", "o" }, "]h", function() magmini(diff.goto_hunk, "h", "next") end)
 
 require('mini.bracketed').setup({
     buffer     = { suffix = "", options = {} },

@@ -55,15 +55,21 @@ local lsp_status = function()
     return ret
 end
 
-local diff_source = function()
-    local gitsigns = vim.b.gitsigns_status_dict
-    if gitsigns then
+local mini_diff = function()
+    local summary = vim.b.minidiff_summary
+    if summary then
         return {
-            added = gitsigns.added,
-            modified = gitsigns.changed,
-            removed = gitsigns.removed
+            added = summary.add,
+            modified = summary.change,
+            removed = summary.delete
         }
     end
+end
+
+local mini_git = function()
+    local summary = vim.b.minigit_summary
+    if not summary.head_name then return "" end
+    return " " .. summary.head_name
 end
 
 require("lualine").setup({
@@ -80,15 +86,15 @@ require("lualine").setup({
     sections = {
         lualine_a = { { "mode", }, },
         lualine_b = {
-            { "b:gitsigns_head", icon = "", separator = { left = "", right = "" }, },
-            { "diff", source = diff_source, symbols = { added = " ", modified = " ", removed = " " }, },
+            { mini_git, separator = { left = "", right = "" }, },
+            { "diff", source = mini_diff, symbols = { added = " ", modified = " ", removed = " " }, },
             { Filmpicker_endtime, cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end, },
             { Filmpicker_winbar, cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end, },
         },
         lualine_c = {
             { require("dap").status, },
         },
-        lualine_x = { },
+        lualine_x = {},
         lualine_y = {
             { "encoding",   cond = function() return vim.bo.fenc ~= "utf-8" and vim.go.enc ~= "utf-8" end, },
             { "filetype", },

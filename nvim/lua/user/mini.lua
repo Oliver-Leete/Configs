@@ -127,36 +127,36 @@ require("mini.operators").setup({
     },
 })
 
-local miniclue = require('mini.clue')
+local miniclue = require("mini.clue")
 miniclue.setup({
     triggers = {
-        { mode = 'n', keys = '<Leader>' },
-        { mode = 'x', keys = '<Leader>' },
+        { mode = "n", keys = "<Leader>" },
+        { mode = "x", keys = "<Leader>" },
 
-        { mode = 'n', keys = 'g' },
-        { mode = 'x', keys = 'g' },
+        { mode = "n", keys = "g" },
+        { mode = "x", keys = "g" },
 
-        { mode = 'n', keys = 'K' },
-        { mode = 'x', keys = 'K' },
+        { mode = "n", keys = "K" },
+        { mode = "x", keys = "K" },
 
-        { mode = 'n', keys = 'v' },
+        { mode = "n", keys = "v" },
 
-        { mode = 'n', keys = ']' },
-        { mode = 'x', keys = ']' },
-        { mode = 'n', keys = '[' },
-        { mode = 'x', keys = '[' },
+        { mode = "n", keys = "]" },
+        { mode = "x", keys = "]" },
+        { mode = "n", keys = "[" },
+        { mode = "x", keys = "[" },
 
-        { mode = 'n', keys = ')' },
-        { mode = 'x', keys = ')' },
-        { mode = 'n', keys = '(' },
-        { mode = 'x', keys = '(' },
+        { mode = "n", keys = ")" },
+        { mode = "x", keys = ")" },
+        { mode = "n", keys = "(" },
+        { mode = "x", keys = "(" },
 
-        { mode = 'n', keys = '<c-w>' },
+        { mode = "n", keys = "<c-w>" },
 
-        { mode = 'n', keys = '"' },
-        { mode = 'x', keys = '"' },
-        { mode = 'i', keys = '<C-r>' },
-        { mode = 'c', keys = '<C-r>' },
+        { mode = "n", keys = '"' },
+        { mode = "x", keys = '"' },
+        { mode = "i", keys = "<C-r>" },
+        { mode = "c", keys = "<C-r>" },
     },
     clues = {
         miniclue.gen_clues.windows(),
@@ -168,18 +168,26 @@ miniclue.setup({
     },
 })
 
-
-require("mini.diff").setup({
+local diff = require("mini.diff")
+diff.setup({
     view = { style = "number" },
     mappings = {
-      apply = '',
-      reset = '',
-      textobject = '',
-      goto_first = '',
-      goto_prev = '',
-      goto_next = '',
-      goto_last = '',
+        apply = "<leader>gs",
+        reset = "<leader>gr",
+        textobject = "",
+        goto_first = "",
+        goto_prev = "",
+        goto_next = "",
+        goto_last = "",
     },
+})
+Map("n", "<leader>gS", function() diff.do_hunks(0, "apply") end, { desc = "Apply all hunks" })
+Map("n", "<leader>gR", function() diff.do_hunks(0, "reset") end, { desc = "Reset all hunks" })
+
+require("mini.git").setup({
+    command = {
+        split = "vertical",
+    }
 })
 
 require("mini.notify").setup({
