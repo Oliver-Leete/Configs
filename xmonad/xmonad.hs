@@ -185,9 +185,9 @@ myProfiles =
             , "Tmp2"
             , "M"
             , "Blank1"
-            , "Blank2"
             , "Work1"
             , "Work2"
+            , "Films"
             ]
         }
     , Profile

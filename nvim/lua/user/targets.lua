@@ -28,6 +28,7 @@ local custom_objects = {
             "^[%s]*()().-[^%s].-()()[%s]+$",            -- sentence at that fills paragraph (no final punctuation)
         }
     },
+    -- Hunks
     -- Indents
     i = gen_ai_spec.indent(),
     -- Jumps

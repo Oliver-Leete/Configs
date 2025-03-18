@@ -70,6 +70,11 @@ require("lazy").setup(
             "echasnovski/mini.nvim",
             dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
         },
+        {
+            "folke/snacks.nvim",
+            config = function() require("user.snacks") end
+
+        },
         { "ap/vim-you-keep-using-that-word" },
         { "Konfekt/vim-CtrlXA",             dependencies = { "tpope/vim-repeat" } },
         {
@@ -188,6 +193,23 @@ require("lazy").setup(
 
             },
             config = function() require("user.lsp") end
+        },
+
+        { "bassamsdata/namu.nvim" },
+
+        {
+            "quarto-dev/quarto-nvim",
+            dependencies = {
+                { "jmbuhr/otter.nvim" },
+                {
+                    "benlubas/molten-nvim",
+                    dependencies = {
+                        { "3rd/image.nvim" },
+                    },
+                    build = ":UpdateRemotePlugins",
+                },
+            },
+            config = function() require("user.quarto") end
         },
 
         -- debug

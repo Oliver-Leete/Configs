@@ -70,12 +70,10 @@ local custom_attach = function(client, bufnr)
 
     -- LSP Binding Override
     if client.name ~= "null-ls" then
-        bmap("n", "gd", "<cmd>Telescope lsp_definitions jump_type=never theme=get_ivy<cr>", { desc = "Definition" })
-        bmap("n", "gr", "<cmd>Telescope lsp_references jump_type=never theme=get_ivy<cr>", { desc = "References" })
-        bmap("n", "gD", "<cmd>Telescope lsp_type_definitions jump_type=never theme=get_ivy<cr>",
-            { desc = "Type Deffinition" })
-        bmap("n", "gI", "<cmd>Telescope lsp_implementations jump_type=never theme=get_ivy<cr>",
-            { desc = "Implementations" })
+        bmap("n", "gd", function() Snacks.picker.lsp_definitions() end, { desc = "Deffinition" })
+        bmap("n", "gr", function() Snacks.picker.lsp_references() end, { desc = "References" })
+        bmap("n", "gD", function() Snacks.picker.lsp_type_definitions() end, { desc = "Type Deffinition" })
+        bmap("n", "gI", function() Snacks.picker.lsp_implementations() end, { desc = "Implementations" })
 
         bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls jump_type=never theme=get_ivy<cr>",
             { desc = "Outgoing Calls" })
@@ -115,10 +113,6 @@ local custom_attach = function(client, bufnr)
         end
     end, { desc = "Insert inlay hint" })
     bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action, { desc = "Run code actions" })
-
-    if client.server_capabilities.inlayHintProvider then
-        -- vim.lsp.inlay_hint.enable(bufnr, true)
-    end
 end
 
 require("mason").setup({ ui = { border = require("user.settings").border } })

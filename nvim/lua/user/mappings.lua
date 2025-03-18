@@ -195,11 +195,7 @@ Map("n", "<leader><leader>", "<cmd>silent e #<cr>")
 Map("n", "<leader>m", function() require("trouble").toggle({ mode = "quickprev" }) end)
 Map("n", "<leader>,", function() require("trouble").toggle({ mode = "lspprev" }) end)
 
-Map("n", "<leader>w",
-    function() require("telescope.builtin").lsp_dynamic_workspace_symbols(require("telescope.themes").get_ivy()) end)
-Map("n", "<leader>W", function() require("telescope.builtin").live_grep(require("telescope.themes").get_ivy()) end)
-Map("n", "<leader>f", function() require("user.telescope").project_files() end)
-Map("n", "<leader>F", "<cmd>Telescope resume<cr>")
+Map("n", "<leader>s", function () require("namu.namu_symbols").show() end)
 
 -- Mouse Bindings
 
