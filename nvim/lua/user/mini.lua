@@ -133,6 +133,9 @@ miniclue.setup({
         { mode = "n", keys = "<Leader>" },
         { mode = "x", keys = "<Leader>" },
 
+        { mode = "n", keys = "<cr>" },
+        { mode = "x", keys = "<cr>" },
+
         { mode = "n", keys = "g" },
         { mode = "x", keys = "g" },
 

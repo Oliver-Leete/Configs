@@ -17,7 +17,6 @@ require("mason-tool-installer").setup({
         "gitlint",
         "json-lsp",
         "julia-lsp",
-        "ltex-ls",
         "lua-language-server",
         "markdownlint",
         "marksman",
@@ -114,9 +113,6 @@ local custom_attach = function(client, bufnr)
     end, { desc = "Insert inlay hint" })
     bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action, { desc = "Run code actions" })
 end
-
-require("mason").setup({ ui = { border = require("user.settings").border } })
-require("mason-lspconfig").setup({})
 
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('UserLspConfig', {}),
@@ -230,8 +226,8 @@ require("ltex_extra").setup({
         capabilities = capabilities,
         flags = { debounce_text_changes = 1000 },
         settings = {
-            ltex = {
-                enabled = { "latex", "tex", "bib", "markdown", "rst" },
+            ltex_plus = {
+                enabled = { "bib", "context", "gitcommit", "html", "markdown", "org", "pandoc", "plaintex", "quarto", "mail", "mdx", "rmd", "rnoweb", "rst", "tex", "text", "typst", "xhtml" },
                 checkFrequency = "save",
                 language = "en-GB",
                 setenceCacheSize = 2000,

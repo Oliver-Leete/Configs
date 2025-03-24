@@ -180,8 +180,9 @@ require("lazy").setup(
                 { "hrsh7th/cmp-nvim-lsp" },
                 {
                     "williamboman/mason.nvim",
+                    opts = {},
                     dependencies = {
-                        "williamboman/mason-lspconfig.nvim",
+                        {"williamboman/mason-lspconfig.nvim", opts = {}},
                         "jayp0521/mason-nvim-dap.nvim",
                         "WhoIsSethDaniel/mason-tool-installer.nvim",
                     }
@@ -210,6 +211,37 @@ require("lazy").setup(
                 },
             },
             config = function() require("user.quarto") end
+        },
+        { -- Autoformat
+            'stevearc/conform.nvim',
+            config = function()
+                require('conform').setup {
+                    formatters_by_ft = {
+                        quarto = { "injected" },
+                        julia = { "runic" },
+                    },
+                }
+                require('conform').formatters.injected = {
+                    options = {
+                        lang_to_ext = {
+                            bash = 'sh',
+                            c_sharp = 'cs',
+                            elixir = 'exs',
+                            javascript = 'js',
+                            julia = 'jl',
+                            latex = 'tex',
+                            markdown = 'md',
+                            python = 'py',
+                            ruby = 'rb',
+                            rust = 'rs',
+                            teal = 'tl',
+                            r = 'r',
+                            typescript = 'ts',
+                        },
+                        lang_to_formatters = {},
+                    },
+                }
+            end,
         },
 
         -- debug
@@ -326,9 +358,9 @@ require("lazy").setup(
 )
 
 require("user.mappings")
-require("user.myfuncs")
 require("user.mini")
 require("user.targets")
+
 
 require("user.filmpicker")
 require("user.ui")

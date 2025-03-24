@@ -1,4 +1,4 @@
-M = {}
+local M = {}
 
 local winclose = function() vim.cmd.wincmd({ args = { "c" } }) end
 
@@ -83,6 +83,7 @@ vim.api.nvim_create_user_command("NavigateLeft", function() M.nav_dir("h") end, 
 vim.api.nvim_create_user_command("NavigateBottom", function() M.nav_dir("j") end, { nargs = 0 })
 vim.api.nvim_create_user_command("NavigateTop", function() M.nav_dir("k") end, { nargs = 0 })
 vim.api.nvim_create_user_command("NavigateRight", function() M.nav_dir("l") end, { nargs = 0 })
+
 
 M.codelens_toggle = function()
     vim.g.lsp_lens_on = not vim.g.lsp_lens_on

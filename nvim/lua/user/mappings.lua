@@ -183,7 +183,7 @@ Map({ "n", "x" }, ",pi", function() require("user.myfuncs").paste_special(vim.v.
 
 Map({ "n", "x" }, ",ff", function()
     pcall(Ls.unlink_current)
-    vim.lsp.buf.format()
+    require("conform").format()
 end)
 
 local num = function() return (vim.b.textwidth and vim.b.textwidth > 0) and vim.b.textwidth or vim.g.textwidth end
