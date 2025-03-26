@@ -2,11 +2,11 @@
 vim.opt.timeoutlen = 500
 
 -- Un-Mappings
-Map({ "n", "x", "o" }, "<BackSPACE>", "<Nop>")
-Map({ "n", "x", "o" }, "<SPACE>", "<Nop>")
+Map({ "n", "x", "o" }, "<backspace>", "<nop>")
+Map({ "n", "x", "o" }, "<space>", "<nop>")
 
-Map({ "n", "x", "o" }, ",", "<Nop>")
-Map({ "n", "x", "o" }, ";", "<Nop>")
+Map({ "n", "x", "o" }, ",", "<nop>")
+Map({ "n", "x", "o" }, ";", "<nop>")
 Map({ "n", "x", "o" }, "<M-n>", ";")
 Map({ "n", "x", "o" }, "<M-N>", ",")
 
@@ -187,8 +187,6 @@ Map("n", "<leader><leader>", "<cmd>silent e #<cr>")
 
 Map("n", "<leader>m", function() require("trouble").toggle({ mode = "quickprev" }) end)
 Map("n", "<leader>,", function() require("trouble").toggle({ mode = "lspprev" }) end)
-
-Map("n", "<leader>s", function () require("namu.namu_symbols").show() end)
 
 -- Mouse Bindings
 
