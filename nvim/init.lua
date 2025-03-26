@@ -332,7 +332,6 @@ require("lazy").setup(
             "nvim-treesitter/nvim-treesitter",
             build = { ":TSInstall all", ":TSUpdate all", ":TSUninstall comment" },
             dependencies = {
-                { "ThePrimeagen/refactoring.nvim" },
                 { "CKolkey/ts-node-action",       dependencies = { "tpope/vim-repeat" } },
             },
             config = function()

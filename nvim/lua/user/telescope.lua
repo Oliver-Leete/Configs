@@ -2,8 +2,6 @@ local M = {}
 local action_state = require("telescope.actions.state")
 local actions = require("telescope.actions")
 
-require("telescope").load_extension("refactoring")
-
 local open_dif = function()
     local selected_entry = action_state.get_selected_entry()
     S = selected_entry

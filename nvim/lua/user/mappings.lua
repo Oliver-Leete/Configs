@@ -167,14 +167,7 @@ Map("n", ',ml', function() require('mini.move').move_line("right") end, { nowait
 -- NOTE: text leader mappings
 
 Map("n", ",rr", vim.lsp.buf.rename)
-
-Map("n", ",rf", function() require("refactoring").refactor("Extract Block") end)
-Map("x", ",rf", function() require("refactoring").refactor("Extract Function") end)
-Map("x", ",rF", require("genghis").moveSelectionToNewFile)
-Map("n", ",re", "mia:lua require('refactoring').refactor('Extract Variable')<cr>", { remap = true })
-Map("x", ",re", function() require("refactoring").refactor("Extract Variable") end)
-Map({ "n", "x" }, ",ri", function() require("refactoring").refactor("Inline Variable") end)
-Map("n", ",rI", function() require("refactoring").refactor("Inline Function") end)
+Map("x", ",rf", require("genghis").moveSelectionToNewFile)
 
 Map("n", ",n", require("ts-node-action").node_action)
 

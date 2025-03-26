@@ -127,16 +127,11 @@ projects :: [Project]
 projects =
     [ Project{pName = "Tmp", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
     , Project{pName = "Tmp2", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
-    , Project{pName = "Blank1", pDir = "~/Documents", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
-    , Project{pName = "Blank2", pDir = "~/Documents", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
-    , Project{pName = "Blank3", pDir = "~/Documents", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
-    , Project{pName = "Blank4", pDir = "~/Documents", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
-    , Project{pName = "Work1", pDir = "~/Documents", pApp1 = kitty, pApp1F = kittyF, pApp4 = br workB, pApp4F = brF workB, pStart = Just $ return ()}
-    , Project{pName = "Work2", pDir = "~/Documents", pApp1 = kitty, pApp1F = kittyF, pApp4 = br workB, pApp4F = brF workB, pStart = Just $ return ()}
     , Project{pName = "M", pDir = "~/.config", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = tBSpawn "M" persB}
+    , Project{pName = "Blank1", pDir = "~/Documents", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()}
+    , Project{pName = "Work1", pDir = "~/Projects/DECSAM", pApp1 = kitty, pApp1F = kittyF, pApp4 = br workB, pApp4F = brF workB, pStart = Just $ return ()}
+    , Project{pName = "Work2", pDir = "~/Projects/DECSAM", pApp1 = kitty, pApp1F = kittyF, pApp4 = br workB, pApp4F = brF workB, pStart = Just $ return ()}
     , Project{pName = "Films", pDir = "~/Videos/films", pApp1 = kitty, pApp1F = kittyF, pApp2 = deluge, pApp2F = delugeF, pApp4 = br filmB, pApp4F = brF filmB, pStart = fSpawn "Films"}
-    , Project{pName = "Thesis", pDir = "~/Projects/Thesis/thesis", pApp1 = kitty, pApp1F = kittyF, pApp2 = zathura, pApp2F = zathuraF, pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Thesis" univB}
-    , Project{pName = "Sim", pDir = "~/Projects/HSSSimulations", pApp1 = kitty, pApp1F = kittyF, pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Sim" univB}
     , Project{pName = "Scin-Main", pDir = "~/Projects/Scintilla/Main", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Scin-Main" univB}
     , Project{pName = "Scin-Test", pDir = "~/Projects/Scintilla/Main", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br univB, pApp4F = brF univB, pStart = Just $ return ()}
     ]
@@ -190,26 +185,6 @@ myProfiles =
             , "Films"
             ]
         }
-    , Profile
-        { profileId = "Scintilla"
-        , profileWS =
-            [ "Tmp"
-            , "Tmp2"
-            , "M"
-            , "Scin-Main"
-            , "Scin-Test"
-            ]
-        }
-    , Profile
-        { profileId = "Home"
-        , profileWS =
-            [ "Tmp"
-            , "Tmp2"
-            , "M"
-            , "Films"
-            ]
-        }
-    , Profile{profileId = "All", profileWS = myWorkspaces}
     ]
 
 ----------------------------------------------------------------------------------------------------
@@ -370,15 +345,15 @@ myModMask :: KeyMask
 myModMask = mod4Mask
 
 {-
-\| ┏━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┓                                   ┏━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┓
-\| ┃   -   ┃fullWin┃proFind┃cmdPale┃   -   ┃                                   ┃winDown┃winRght┃ detach┃ float ┃   -   ┃
-\| ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫                                   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
-\| ┃  pws1 ┃  pws2 ┃  pws3 ┃  pws4 ┃  pws0 ┃                                   ┃winLeft┃  app1 ┃  app2 ┃  app3 ┃  app4 ┃
-\| ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┳━━━━━━━┓   ┏━━━━━━━┳━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
-\| ┃fullScr┃fullBar┃fullCen┃twoPane┃ paper ┃nspAway┃nextScr┃   ┃   -   ┃  kill ┃ winUp ┃ Master┃ decCol┃ incCol┃   -   ┃
-\| ┗━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┛
-\|         ┃   -   ┃   -   ┃       ┃tabPrev┃ wsLast┃winPrev┃   ┃winNext┃  term ┃tabNext┃       ┃   -   ┃   -   ┃
-\|         ┗━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━┻━━━━━━━┛   ┗━━━━━━━┻━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━┛
+ ┏━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┓                                   ┏━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┓
+ ┃   -   ┃fullWin┃proFind┃cmdPale┃   -   ┃                                   ┃winDown┃winRght┃ detach┃ float ┃   -   ┃
+ ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫                                   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
+ ┃  pws1 ┃  pws2 ┃  pws3 ┃  pws4 ┃  pws0 ┃                                   ┃winLeft┃  app1 ┃  app2 ┃  app3 ┃  app4 ┃
+ ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┳━━━━━━━┓   ┏━━━━━━━┳━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫
+ ┃fullScr┃fullBar┃fullCen┃twoPane┃ paper ┃nspAway┃nextScr┃   ┃   -   ┃  kill ┃ winUp ┃ Master┃ decCol┃ incCol┃   -   ┃
+ ┗━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┫   ┣━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━╋━━━━━━━┛
+         ┃   -   ┃   -   ┃       ┃tabPrev┃ wsLast┃winPrev┃   ┃winNext┃  term ┃tabNext┃       ┃   -   ┃   -   ┃
+         ┗━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━┻━━━━━━━┛   ┗━━━━━━━┻━━━━━━━┻━━━━━━━┛       ┗━━━━━━━┻━━━━━━━┛
 -}
 myKeys :: Int -> [(String, X ())]
 myKeys n =

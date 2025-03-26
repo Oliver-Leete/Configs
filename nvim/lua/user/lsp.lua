@@ -159,6 +159,25 @@ lspconfig.basedpyright.setup({
     flags = { debounce_text_changes = 1000 },
 })
 
+vim.g.haskell_tools = {
+    hls = {
+        settings = {
+            haskell = {
+                plugin = {
+                    rename = {
+                        config = {
+                            crossModule = true
+                        },
+                    },
+                    semanticTokens = {
+                        globalOn = true
+                    },
+                }
+            }
+        }
+    }
+}
+
 
 
 lspconfig.lua_ls.setup({
@@ -226,7 +245,7 @@ require("ltex_extra").setup({
         capabilities = capabilities,
         flags = { debounce_text_changes = 1000 },
         settings = {
-            ltex_plus = {
+            ltex = {
                 enabled = { "bib", "context", "gitcommit", "html", "markdown", "org", "pandoc", "plaintex", "quarto", "mail", "mdx", "rmd", "rnoweb", "rst", "tex", "text", "typst", "xhtml" },
                 checkFrequency = "save",
                 language = "en-GB",
@@ -260,7 +279,6 @@ none_ls.setup({
         none_ls.builtins.formatting.bibclean,
         none_ls.builtins.formatting.fish_indent,
         none_ls.builtins.formatting.just,
-        none_ls.builtins.formatting.markdownlint,
         none_ls.builtins.formatting.shellharden,
         none_ls.builtins.formatting.shfmt,
     },
