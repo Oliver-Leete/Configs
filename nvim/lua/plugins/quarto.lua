@@ -41,21 +41,21 @@ local quarto_setup = function()
         },
     })
 
-    Map({ "n" }, "<leader>qq", quarto.quartoPreview, { silent = true, noremap = true, desc = "Open quarto preview" })
-    Map({ "n" }, "<leader>qc", quarto.quartoClosePreview,
+    vim.keymap.set({ "n" }, "<leader>qq", quarto.quartoPreview, { silent = true, noremap = true, desc = "Open quarto preview" })
+    vim.keymap.set({ "n" }, "<leader>qc", quarto.quartoClosePreview,
         { silent = true, noremap = true, desc = "Close quarto preview" })
-    Map({ "n" }, "<leader>qw", quarto.quartoPreviewNoWatch,
+    vim.keymap.set({ "n" }, "<leader>qw", quarto.quartoPreviewNoWatch,
         { silent = true, noremap = true, desc = "Open quarto preview (no watch)" })
-    Map({ "n" }, "<leader>qu", quarto.quartoUpdatePreview,
+    vim.keymap.set({ "n" }, "<leader>qu", quarto.quartoUpdatePreview,
         { silent = true, noremap = true, desc = "Update quarto preview" })
 
 
     local runner = require("quarto.runner")
-    Map({ "n" }, "<c-cr>", runner.run_cell, { desc = "run cell", silent = true })
-    Map({ "x" }, "<c-cr>", runner.run_range, { desc = "run visual range", silent = true })
-    Map({ "n" }, "<cr>k", runner.run_above, { desc = "run cell and above", silent = true })
-    Map({ "n" }, "<cr>a", runner.run_all, { desc = "run all cells", silent = true })
-    Map({ "n" }, "<cr>A", function() runner.run_all(true) end, { desc = "run all cells of all languages", silent = true })
+    vim.keymap.set({ "n" }, "<c-cr>", runner.run_cell, { desc = "run cell", silent = true })
+    vim.keymap.set({ "x" }, "<c-cr>", runner.run_range, { desc = "run visual range", silent = true })
+    vim.keymap.set({ "n" }, "<cr>k", runner.run_above, { desc = "run cell and above", silent = true })
+    vim.keymap.set({ "n" }, "<cr>a", runner.run_all, { desc = "run all cells", silent = true })
+    vim.keymap.set({ "n" }, "<cr>A", function() runner.run_all(true) end, { desc = "run all cells of all languages", silent = true })
 end
 
 return {

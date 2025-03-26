@@ -96,6 +96,20 @@ local dap_setup = function()
     dap.listeners.before.event_exited["dapui_config"] = function()
         close_tab()
     end
+
+    vim.keymap.set("n", "<leader>d<", dap.up)
+    vim.keymap.set("n", "<leader>d>", dap.down)
+    vim.keymap.set("n", "<leader>dr", dap.continue, { desc = "continue" })
+    vim.keymap.set("n", "<leader>dR", dap.run_to_cursor)
+    vim.keymap.set("n", "<leader>dX", dap.terminate, { desc = "terminate" })
+    vim.keymap.set("n", "<leader>dp", dap.pause)
+    vim.keymap.set("n", "<leader>dj", function() dapui.toggle({ layout = 6 }) end)
+    vim.keymap.set("n", "<leader>dh", function() dapui.toggle({ layout = 4 }) end)
+    vim.keymap.set("n", "<leader>dk", function() dapui.toggle({ layout = 5 }) end)
+    vim.keymap.set("n", "<leader>dm", function() dapui.toggle({ layout = 3 }) end)
+    vim.keymap.set("n", "<leader>d,", function() dapui.toggle({ layout = 2 }) end)
+    vim.keymap.set("n", "<leader>d.", function() dapui.toggle({ layout = 1 }) end)
+    vim.keymap.set("n", "<leader>df", "<cmd>Telescope dap list_breakpoints theme=get_ivy<cr>")
 end
 
 return {

@@ -1,6 +1,6 @@
 vim.bo.commentstring = [[#%s]]
 
-Map({ "n" }, "gz", function()
+vim.keymap.set({ "n" }, "gz", function()
     local path = vim.fn.expand("%")
     if vim.startswith(path, "docs/") then
         vim.cmd.edit({ args = { "docs/make.jl" } })

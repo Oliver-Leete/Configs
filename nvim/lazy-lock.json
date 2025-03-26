@@ -61,6 +61,7 @@
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "1f08ed60cafc8f6168b72b80be2b2ea149813e55" },
   "telescope.nvim": { "branch": "master", "commit": "a4ed82509cecc56df1c7138920a1aeaf246c0ac5" },
   "todo-comments.nvim": { "branch": "main", "commit": "304a8d204ee787d2544d8bc23cd38d2f929e7cc5" },
+  "trouble.nvim": { "branch": "main", "commit": "85bedb7eb7fa331a2ccbecb9202d8abba64d37b3" },
   "ts-node-action": { "branch": "master", "commit": "bfaa787cc85d753af3c19245b4142ed727a534b5" },
   "vim-CtrlXA": { "branch": "master", "commit": "084d00284f532eab511a771f21a184d2024a9e46" },
   "vim-kitty": { "branch": "main", "commit": "cb2ecc9a08638c20f22dade37683a3e8e1ba657b" },
@@ -68,5 +69,6 @@
   "vim-repeat": { "branch": "master", "commit": "65846025c15494983dafe5e3b46c8f88ab2e9635" },
   "vim-slash": { "branch": "master", "commit": "31aee09b7ea8893a18fa34f65e63e364fc998444" },
   "vim-you-keep-using-that-word": { "branch": "master", "commit": "2905ef3cc94ba71be26e0cb358067b5712093238" },
-  "vimtex": { "branch": "master", "commit": "bcb14eb6e3739f0c1902115a710292bc37c62d2e" }
+  "vimtex": { "branch": "master", "commit": "bcb14eb6e3739f0c1902115a710292bc37c62d2e" },
+  "which-key.nvim": { "branch": "main", "commit": "370ec46f710e058c9c1646273e6b225acf47cbed" }
 }

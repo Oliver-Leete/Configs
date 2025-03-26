@@ -1,7 +1,6 @@
 vim.api.nvim_set_var("$SHELL", "/bin/zsh")
 vim.opt.shell = "/bin/zsh"
 
-Map = vim.keymap.set
 vim.api.nvim_set_var("mapleader", " ")
 vim.api.nvim_set_var("maplocalleader", "\\")
 

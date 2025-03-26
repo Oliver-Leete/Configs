@@ -58,7 +58,7 @@ local lsp_setup = function()
     local custom_attach = function(client, bufnr)
         local sc = client.server_capabilities
         local bmap = function(mode, key, action, opts)
-            Map(mode, key, action,
+            vim.keymap.set(mode, key, action,
                 vim.tbl_extend("force", { buffer = bufnr }, opts))
         end
 

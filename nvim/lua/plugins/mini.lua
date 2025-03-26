@@ -1,6 +1,15 @@
 local mini_setup = function()
     vim.g.miniindentscope_disable = true
 
+    vim.keymap.set("x", ',mj', function() require('mini.move').move_selection("down") end, { nowait = true })
+    vim.keymap.set("x", ',mh', function() require('mini.move').move_selection("left") end, { nowait = true })
+    vim.keymap.set("x", ',mk', function() require('mini.move').move_selection("up") end, { nowait = true })
+    vim.keymap.set("x", ',ml', function() require('mini.move').move_selection("right") end, { nowait = true })
+    vim.keymap.set("n", ',mh', function() require('mini.move').move_line("left") end, { nowait = true })
+    vim.keymap.set("n", ',mj', function() require('mini.move').move_line("down") end, { nowait = true })
+    vim.keymap.set("n", ',mk', function() require('mini.move').move_line("up") end, { nowait = true })
+    vim.keymap.set("n", ',ml', function() require('mini.move').move_line("right") end, { nowait = true })
+
     require("mini.indentscope").setup({
         mappings = {
             object_scope = "",
@@ -128,50 +137,6 @@ local mini_setup = function()
         },
     })
 
-    local miniclue = require("mini.clue")
-    miniclue.setup({
-        triggers = {
-            { mode = "n", keys = "<Leader>" },
-            { mode = "x", keys = "<Leader>" },
-
-            { mode = "n", keys = "<cr>" },
-            { mode = "x", keys = "<cr>" },
-
-            { mode = "n", keys = "g" },
-            { mode = "x", keys = "g" },
-
-            { mode = "n", keys = "K" },
-            { mode = "x", keys = "K" },
-
-            { mode = "n", keys = "v" },
-
-            { mode = "n", keys = "]" },
-            { mode = "x", keys = "]" },
-            { mode = "n", keys = "[" },
-            { mode = "x", keys = "[" },
-
-            { mode = "n", keys = ")" },
-            { mode = "x", keys = ")" },
-            { mode = "n", keys = "(" },
-            { mode = "x", keys = "(" },
-
-            { mode = "n", keys = "<c-w>" },
-
-            { mode = "n", keys = '"' },
-            { mode = "x", keys = '"' },
-            { mode = "i", keys = "<C-r>" },
-            { mode = "c", keys = "<C-r>" },
-        },
-        clues = {
-            miniclue.gen_clues.windows(),
-            miniclue.gen_clues.registers({ show_contents = true }),
-        },
-        window = {
-            delay = 250,
-            config = { anchor = "NE", row = 1, col = "auto" },
-        },
-    })
-
     local diff = require("mini.diff")
     diff.setup({
         view = { style = "number" },
@@ -185,8 +150,8 @@ local mini_setup = function()
             goto_last = "",
         },
     })
-    Map("n", "<leader>gS", function() diff.do_hunks(0, "apply") end, { desc = "Apply all hunks" })
-    Map("n", "<leader>gR", function() diff.do_hunks(0, "reset") end, { desc = "Reset all hunks" })
+    vim.keymap.set("n", "<leader>gS", function() diff.do_hunks(0, "apply") end, { desc = "Apply all hunks" })
+    vim.keymap.set("n", "<leader>gR", function() diff.do_hunks(0, "reset") end, { desc = "Reset all hunks" })
 
     require("mini.git").setup({
         command = {
@@ -201,7 +166,7 @@ local mini_setup = function()
         window = {
             config = function()
                 local has_tabline = vim.o.showtabline == 2 or
-                (vim.o.showtabline == 1 and #vim.api.nvim_list_tabpages() > 1)
+                    (vim.o.showtabline == 1 and #vim.api.nvim_list_tabpages() > 1)
                 local has_statusline = vim.o.laststatus > 0
                 local max_height = vim.o.lines - vim.o.cmdheight - (has_tabline and 1 or 0) - (has_statusline and 1 or 0)
                 local max_width = vim.o.columns

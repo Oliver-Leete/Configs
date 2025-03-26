@@ -157,25 +157,25 @@ local command_repeat = function(leader, varName)
 end
 
 vim.g.dirJumps = "search"
-Map({ "n", "x", "o" }, "n", function() return command_repeat("]", "dirJumps") end, { expr = true, remap = true, silent = true })
-Map({ "n", "x", "o" }, "N", function() return command_repeat("[", "dirJumps") end, { expr = true, remap = true, silent = true })
+vim.keymap.set({ "n", "x", "o" }, "n", function() return command_repeat("]", "dirJumps") end, { expr = true, remap = true, silent = true })
+vim.keymap.set({ "n", "x", "o" }, "N", function() return command_repeat("[", "dirJumps") end, { expr = true, remap = true, silent = true })
 
 for _, o in pairs(vim.tbl_keys(custom_objects)) do
-    Map({ "n", "x", "o" }, "[" .. o, function() mark_and_go_mini("prev", o, "left") end)
-    Map({ "n", "x", "o" }, "]" .. o, function() mark_and_go_mini("next", o, "left") end)
-    Map({ "n", "x" }, ")" .. o, function() mark_and_select_mini("i", o, "next") end)
-    Map({ "n", "x" }, "(" .. o, function() mark_and_select_mini("i", o, "prev") end)
+    vim.keymap.set({ "n", "x", "o" }, "[" .. o, function() mark_and_go_mini("prev", o, "left") end)
+    vim.keymap.set({ "n", "x", "o" }, "]" .. o, function() mark_and_go_mini("next", o, "left") end)
+    vim.keymap.set({ "n", "x" }, ")" .. o, function() mark_and_select_mini("i", o, "next") end)
+    vim.keymap.set({ "n", "x" }, "(" .. o, function() mark_and_select_mini("i", o, "prev") end)
 
-    Map({ "n", "x" }, "m" .. o,
+    vim.keymap.set({ "n", "x" }, "m" .. o,
         function() MiniAi.select_textobject("i", o, { search_method = "cover_or_nearest", vis_mode = "v" }) end)
     local O = o:upper()
     if O ~= o then
-        Map({ "n", "x" }, "m" .. O,
+        vim.keymap.set({ "n", "x" }, "m" .. O,
             function() MiniAi.select_textobject("a", o, { search_method = "cover_or_nearest", vis_mode = "v" }) end)
-        Map({ "n", "x", "o" }, "[" .. O, function() mark_and_go_mini("prev", O, "right") end)
-        Map({ "n", "x", "o" }, "]" .. O, function() mark_and_go_mini("next", O, "right") end)
-        Map({ "n", "x" }, ")" .. O, function() mark_and_select_mini("a", O, "next") end)
-        Map({ "n", "x" }, "(" .. O, function() mark_and_select_mini("a", O, "prev") end)
+        vim.keymap.set({ "n", "x", "o" }, "[" .. O, function() mark_and_go_mini("prev", O, "right") end)
+        vim.keymap.set({ "n", "x", "o" }, "]" .. O, function() mark_and_go_mini("next", O, "right") end)
+        vim.keymap.set({ "n", "x" }, ")" .. O, function() mark_and_select_mini("a", O, "next") end)
+        vim.keymap.set({ "n", "x" }, "(" .. O, function() mark_and_select_mini("a", O, "prev") end)
     end
 end
 
@@ -183,7 +183,7 @@ vim.api.nvim_create_autocmd("BufEnter",
     {
         group = vim.api.nvim_create_augroup("diff_mappings", { clear = true }),
         callback = function()
-            local bmap = function(mode, key, action) Map(mode, key, action, { buffer = vim.api.nvim_get_current_buf() }) end
+            local bmap = function(mode, key, action) vim.keymap.set(mode, key, action, { buffer = vim.api.nvim_get_current_buf() }) end
             if vim.wo.diff then
                 bmap({ "n", "x", "o" }, "[h", "<cmd>call v:lua.markAndGo(v:count, 'norm! [c', 'h')<cr>")
                 bmap({ "n", "x", "o" }, "]h", "<cmd>call v:lua.markAndGo(v:count, 'norm! ]c', 'h')<cr>")
@@ -224,19 +224,19 @@ end
 
 local bracketed = require("mini.bracketed")
 
-Map({ "n", "x", "o" }, "[c", function() magmini(bracketed.comment, "c", "backward") end)
-Map({ "n", "x", "o" }, "]c", function() magmini(bracketed.comment, "c", "forward") end)
+vim.keymap.set({ "n", "x", "o" }, "[c", function() magmini(bracketed.comment, "c", "backward") end)
+vim.keymap.set({ "n", "x", "o" }, "]c", function() magmini(bracketed.comment, "c", "forward") end)
 
-Map({ "n", "x", "o" }, "[j", function() magmini(bracketed.jump, "j", "backward") end)
-Map({ "n", "x", "o" }, "]j", function() magmini(bracketed.jump, "j", "forward") end)
+vim.keymap.set({ "n", "x", "o" }, "[j", function() magmini(bracketed.jump, "j", "backward") end)
+vim.keymap.set({ "n", "x", "o" }, "]j", function() magmini(bracketed.jump, "j", "forward") end)
 
-Map({ "n", "x", "o" }, "[l", function() magmini(bracketed.quickfix, "l", "backward") end)
-Map({ "n", "x", "o" }, "]l", function() magmini(bracketed.quickfix, "l", "forward") end)
+vim.keymap.set({ "n", "x", "o" }, "[l", function() magmini(bracketed.quickfix, "l", "backward") end)
+vim.keymap.set({ "n", "x", "o" }, "]l", function() magmini(bracketed.quickfix, "l", "forward") end)
 
 local diff = require("mini.diff")
 
-Map({ "n", "x", "o" }, "[h", function() magmini(diff.goto_hunk, "h", "prev") end)
-Map({ "n", "x", "o" }, "]h", function() magmini(diff.goto_hunk, "h", "next") end)
+vim.keymap.set({ "n", "x", "o" }, "[h", function() magmini(diff.goto_hunk, "h", "prev") end)
+vim.keymap.set({ "n", "x", "o" }, "]h", function() magmini(diff.goto_hunk, "h", "next") end)
 
 require('mini.bracketed').setup({
     buffer     = { suffix = "", options = {} },
@@ -262,5 +262,5 @@ for _, lhs in ipairs(put_keys) do
 end
 
 -- need to put this after targets
-Map("x", "i", "<Plug>(niceblock-I)", { remap = true, nowait = true })
-Map("x", "a", "<Plug>(niceblock-A)", { remap = true, nowait = true })
+vim.keymap.set("x", "i", "<Plug>(niceblock-I)", { remap = true, nowait = true })
+vim.keymap.set("x", "a", "<Plug>(niceblock-A)", { remap = true, nowait = true })
