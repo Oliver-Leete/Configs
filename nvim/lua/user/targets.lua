@@ -230,8 +230,8 @@ vim.keymap.set({ "n", "x", "o" }, "]c", function() magmini(bracketed.comment, "c
 vim.keymap.set({ "n", "x", "o" }, "[j", function() magmini(bracketed.jump, "j", "backward") end)
 vim.keymap.set({ "n", "x", "o" }, "]j", function() magmini(bracketed.jump, "j", "forward") end)
 
-vim.keymap.set({ "n", "x", "o" }, "[l", function() magmini(bracketed.quickfix, "l", "backward") end)
-vim.keymap.set({ "n", "x", "o" }, "]l", function() magmini(bracketed.quickfix, "l", "forward") end)
+vim.keymap.set({ "n" }, "[l", function() magmini(require("trouble").prev, "l", { jump = true, skip_groups = true, }) end, {desc = "trouble item"})
+vim.keymap.set({ "n" }, "]l", function() magmini(require("trouble").next, "l", { jump = true, skip_groups = true, }) end, {desc = "trouble item"})
 
 local diff = require("mini.diff")
 

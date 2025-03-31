@@ -12,7 +12,6 @@ local lsp_setup = function()
         ensure_installed = {
             "codelldb",
             "cpptools",
-            "debugpy",
             "esbonio",
             "fortls",
             "gitlint",
@@ -70,15 +69,13 @@ local lsp_setup = function()
 
         -- LSP Binding Override
         if client.name ~= "null-ls" then
-            bmap("n", "gd", function() Snacks.picker.lsp_definitions() end, { desc = "Deffinition" })
-            bmap("n", "gr", function() Snacks.picker.lsp_references() end, { desc = "References" })
-            bmap("n", "gD", function() Snacks.picker.lsp_type_definitions() end, { desc = "Type Deffinition" })
-            bmap("n", "gI", function() Snacks.picker.lsp_implementations() end, { desc = "Implementations" })
+            bmap("n", "gd", function() require("snacks.picker").lsp_definitions() end, { desc = "Deffinition" })
+            bmap("n", "gr", function() require("snacks.picker").lsp_references() end, { desc = "References" })
+            bmap("n", "gD", function() require("snacks.picker").lsp_type_definitions() end, { desc = "Type Deffinition" })
+            bmap("n", "gI", function() require("snacks.picker").lsp_implementations() end, { desc = "Implementations" })
 
-            bmap("n", "go", "<cmd>Telescope lsp_outgoing_calls jump_type=never theme=get_ivy<cr>",
-                { desc = "Outgoing Calls" })
-            bmap("n", "gi", "<cmd>Telescope lsp_incoming_calls jump_type=never theme=get_ivy<cr>",
-                { desc = "Incoming Calls" })
+            bmap("n", "go", function() require("trouble").toggle("lsp_outgoing_calls") end, { desc = "Outgoing Calls" })
+            bmap("n", "gi", function() require("trouble").toggle("lsp_incoming_calls") end, { desc = "Incoming Calls" })
         end
         bmap("n", "<C-,>", vim.lsp.codelens.run, { desc = "Run code lens" })
         if sc.codeLensProvider and sc.codeLensProvider == true then
@@ -282,10 +279,6 @@ return {
     dependencies = {
         { "mrcjkb/rustaceanvim" },
         { "yioneko/nvim-type-fmt" },
-        {
-            "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-            opts = {},
-        },
         { "folke/neodev.nvim" },
         { "MrcJkb/haskell-tools.nvim" },
         { "hrsh7th/cmp-nvim-lsp" },
@@ -294,7 +287,6 @@ return {
             opts = {},
             dependencies = {
                 { "williamboman/mason-lspconfig.nvim", opts = {} },
-                "jayp0521/mason-nvim-dap.nvim",
                 "WhoIsSethDaniel/mason-tool-installer.nvim",
             }
         },

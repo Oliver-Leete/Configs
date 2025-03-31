@@ -1,43 +1,8 @@
 local line_setup = function()
-    require("incline").setup {
-        render = function(props)
-            local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-            if filename == "" then
-                filename = "[No Name]"
-            end
-            local ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)
-
-            local function get_diagnostic_label()
-                local icons = { error = " ", warn = " ", info = " ", hint = "󰅽 " }
-                local label = {}
-
-                for severity, icon in pairs(icons) do
-                    local n = #vim.diagnostic.get(props.buf,
-                        { severity = vim.diagnostic.severity[string.upper(severity)] })
-                    if n > 0 then
-                        table.insert(label, { icon .. n .. " ", group = "DiagnosticSign" .. severity })
-                    end
-                end
-                if #label > 0 then
-                    table.insert(label, { "┊ " })
-                end
-                return label
-            end
-
-            return {
-                { get_diagnostic_label() },
-                { (ft_icon or "") .. " ", guifg = ft_color,                                            guibg = "none" },
-                { filename .. " ",        gui = vim.bo[props.buf].modified and "bold,italic" or "bold" },
-            }
-        end,
-    }
-
     local left = ""
     local right = ""
     local leftc = ""
     local rightc = ""
-    local leftend = ""
-    local rightend = ""
 
     local lsp_status = function()
         local ret = ""
@@ -90,11 +55,14 @@ local line_setup = function()
             lualine_b = {
                 { mini_git, separator = { left = "", right = "" }, },
                 { "diff", source = mini_diff, symbols = { added = " ", modified = " ", removed = " " }, },
+                { "dignostics", symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " }, },
                 { Filmpicker_endtime, cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end, },
                 { Filmpicker_winbar, cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end, },
             },
             lualine_c = {
-                { require("dap").status, },
+                {
+                    function() if package.loaded.dap then return require("dap").status() else return "" end end,
+                },
             },
             lualine_x = {},
             lualine_y = {
@@ -108,13 +76,8 @@ local line_setup = function()
             }
         },
     })
-    vim.api.nvim_set_hl(0, "StatusLineNC", { fg = Ct.ui.bg_p2, bg = Ct.ui.bg })
 end
 return {
     "nvim-lualine/lualine.nvim",
-    dependencies = {
-        { "kyazdani42/nvim-web-devicons" },
-        { "b0o/incline.nvim" },
-    },
     config = line_setup
 }

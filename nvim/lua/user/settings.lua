@@ -95,11 +95,14 @@ vim.api.nvim_create_autocmd(
 vim.api.nvim_create_autocmd({ "FileType" }, { group = windowPositioning, pattern = "qf", command = "wincmd J" })
 
 -- Yank
-local LuaHighlight = vim.api.nvim_create_augroup("LuaHighlight", { clear = true })
-vim.api.nvim_create_autocmd({ "TextYankPost" }, {
-    group = LuaHighlight,
-    callback = function() require("vim.highlight").on_yank() end,
-})
+local hl_on_yank = vim.api.nvim_create_augroup("LuaHighlight", { clear = true })
+vim.api.nvim_create_autocmd(
+    { "TextYankPost" },
+    {
+        group = hl_on_yank,
+        callback = function() vim.hl.on_yank({ higroup = "Visual", timeout = 200 }) end,
+    }
+)
 
 -- Disable builtins
 local disabled_built_ins = {

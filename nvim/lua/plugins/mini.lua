@@ -29,6 +29,8 @@ local mini_setup = function()
         },
     })
 
+    require("mini.icons").setup()
+
     require("mini.pairs").setup()
 
     local ts_input = require("mini.surround").gen_spec.input.treesitter

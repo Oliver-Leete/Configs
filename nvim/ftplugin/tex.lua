@@ -11,11 +11,15 @@ vim.keymap.set("n", "KK", "<cmd>VimtexDocPackage<cr>", { buffer = 0 })
 vim.keymap.set({ "x", "o" }, "am", "<plug>(vimtex-a$)", { buffer = 0, remap = true })
 vim.keymap.set({ "x", "o" }, "im", "<plug>(vimtex-i$)", { buffer = 0, remap = true })
 vim.keymap.set({ "n", "x", "o" }, "[m", "<cmd>let g:dirJumps='n'<cr>m`<plug>(vimtex-[n)zz", { buffer = 0 })
-vim.keymap.set({ "x", "o" }, "alm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[l)', '(vimtex-a$)')<cr>", { buffer = 0 })
-vim.keymap.set({ "x", "o" }, "ilm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[l)', '(vimtex-i$)')<cr>", { buffer = 0 })
+vim.keymap.set({ "x", "o" }, "alm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[l)', '(vimtex-a$)')<cr>",
+    { buffer = 0 })
+vim.keymap.set({ "x", "o" }, "ilm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-[l)', '(vimtex-i$)')<cr>",
+    { buffer = 0 })
 vim.keymap.set({ "n", "x", "o" }, "]m", "<cmd>let g:dirJumps='n'<cr>m`<plug>(vimtex-]n)zz", { buffer = 0 })
-vim.keymap.set({ "x", "o" }, "anm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-a$)')<cr>", { buffer = 0 })
-vim.keymap.set({ "x", "o" }, "inm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-i$)')<cr>", { buffer = 0 })
+vim.keymap.set({ "x", "o" }, "anm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-a$)')<cr>",
+    { buffer = 0 })
+vim.keymap.set({ "x", "o" }, "inm", ":<c-u>call v:lua.plug_targets(v:count, '(vimtex-]n)', '(vimtex-i$)')<cr>",
+    { buffer = 0 })
 
 vim.keymap.set("n", "<c-leftmouse>", "<cmd>TexlabForward<cr>")
 
@@ -39,7 +43,7 @@ vim.keymap.set("n", ",nd", "<plug>(vimtex-delim-toggle-modifier)", { buffer = 0,
 
 vim.api.nvim_buf_set_option(0, "textwidth", 100)
 
-vim.keymap.set({ "n" }, "gz", function()
+vim.b[0].upafunc = function()
     local test_results = vim.fn.systemlist([[rg --json '\\input\{]] .. vim.fn.expand("%:r") .. [[(\.tex)?}']])
     for _, result in pairs(test_results) do
         result = vim.json.decode(result)
@@ -56,7 +60,7 @@ vim.keymap.set({ "n" }, "gz", function()
             vim.api.nvim_win_set_cursor(0, { linenr, colnr + 7 })
         end
     end
-end)
+end
 
 vim.g.tex_flavor = "latex"
 vim.g.vimtex_quickfix_mode = 0

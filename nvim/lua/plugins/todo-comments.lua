@@ -2,7 +2,7 @@ return {
     "folke/todo-comments.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
-        signs = true,
+        signs = false,
         sign_priority = 2,
         keywords = {
             FIX = { icon = " ", color = "error", alt = { "FIXME", "BUG", "FIXIT", "FIX", "ISSUE" } },
@@ -16,7 +16,10 @@ return {
             before = "",
             keyword = "bg",
             after = "bg",
-            pattern = [[.*<(KEYWORDS)(\(.{-}\))?\s*:]]
+            pattern = [[.*<((KEYWORDS)%(\(.{-1,}\))?):?]],
+        },
+        search = {
+            pattern = [[\b(KEYWORDS)(\(\w*\))*:?]],
         },
         colors = {
             error = { "LspDiagnosticsDefaultError", "ErrorMsg", "#DC2626" },

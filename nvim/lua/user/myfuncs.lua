@@ -60,16 +60,6 @@ end
 
 vim.api.nvim_create_user_command("DeleteBuffer", delete_buffer, { nargs = 0 })
 
----Paste linewise or charwise (or even blockwise)
----@param reg string
----@param type string
----@param put string
-M.paste_special = function(reg, type, put)
-    local val = vim.fn.getreg(reg)
-    vim.fn.setreg(reg, val, type)
-    vim.fn.feedkeys(vim.api.nvim_replace_termcodes('"' .. reg .. put, true, true, true))
-end
-
 M.nav_dir = function(direction)
     local curwin = vim.api.nvim_get_current_win()
     vim.cmd.wincmd({ args = { direction } })

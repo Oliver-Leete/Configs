@@ -1,8 +1,8 @@
 vim.bo.textwidth = 0
-vim.b.textwidth = 0
+vim.b[0].textwidth = 0
 vim.cmd([[call matchadd('TabLineSel', '\%101v', 80)]])
 
-vim.keymap.set({ "n" }, "gz", function()
+vim.b[0].upafunc = function()
     local path = vim.api.nvim_buf_get_name(0)
     if vim.fs.basename(path) == "__init__.py" then
         path = vim.fs.dirname(path)
@@ -14,4 +14,4 @@ vim.keymap.set({ "n" }, "gz", function()
             return
         end
     end
-end)
+end

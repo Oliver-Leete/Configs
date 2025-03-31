@@ -7,8 +7,9 @@ return {
         modes = { search = { enabled = false }, char = { enabled = false } },
     },
     keys = {
-        { "s", function() require("flash").jump() end,       mode = { "n", "x", "o" }, desc = "Jump to a given string" },
-        { "z", function() require("flash").treesitter() end, mode = { "n", "o" }, desc = "Select a treesitter object" },
-        { "S", function() require("flash").remote() end,     mode = { "o" }, desc = "Remote" },
+        { "s", function() require("flash").jump() end,              mode = { "n", "x", "o" }, desc = "Flash" },
+        { "z", function() require("flash").treesitter() end,        mode = { "n", "x", "o" }, desc = "Flash treesitter" },
+        { "Z", function() require("flash").treesitter_search() end, mode = { "n", "x", "o" }, desc = "Treesitter search" },
+        { "S", function() require("flash").remote() end,            mode = { "o" },           desc = "Remote flash" },
     }
 }

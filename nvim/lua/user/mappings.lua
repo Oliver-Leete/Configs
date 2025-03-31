@@ -23,7 +23,6 @@ vim.keymap.set({ "n", "x", "o" }, "C", "<nop>")
 vim.keymap.set({ "n", "x", "o" }, "D", "<nop>")
 vim.keymap.set({ "n", "x", "o" }, "S", "<nop>")
 vim.keymap.set({ "n", "x", "o" }, "G", "<nop>")
-vim.keymap.set({ "n", "x", "o" }, "K", "<nop>")
 vim.keymap.set({ "n", "x" }, "H", "<nop>")
 
 
@@ -89,14 +88,6 @@ vim.keymap.set({ "n", "x" }, "u", function()
 end)
 vim.keymap.set({ "n", "x" }, "U", "<c-r>")
 
-vim.keymap.set({ "n", "x" }, "KK", vim.lsp.buf.hover, { desc = "Info" })
-vim.keymap.set({ "n", "x" }, "KE",
-    function() vim.diagnostic.open_float({ border = require("user.settings").border, scope = "line", source = "always" }) end,
-    { desc = "Errors" })
-vim.keymap.set({ "n", "x" }, "KG", function() require("mini.diff").toggle_overlay() end, { desc = "Git Hunk" })
-vim.keymap.set({ "n", "x" }, "KB", function() require("mini.git").show_at_cursor({ split = "vertical" }) end)
-vim.keymap.set({ "n", "x" }, "KD", require("dap.ui.widgets").hover, { desc = "Test Results" })
-
 vim.keymap.set("n", "Q", "@q")
 vim.keymap.set("x", "Q", ":norm! @q<cr>")
 
@@ -161,12 +152,8 @@ vim.keymap.set({ "n", "x" }, "m", "v")
 -- NOTE: text leader mappings
 
 vim.keymap.set("n", ",rr", vim.lsp.buf.rename)
-vim.keymap.set("x", ",rf", require("genghis").moveSelectionToNewFile)
 
 vim.keymap.set("n", ",n", require("ts-node-action").node_action)
-
-vim.keymap.set({ "n", "x" }, ",pl", function() require("user.myfuncs").paste_special(vim.v.register, "l", "p") end)
-vim.keymap.set({ "n", "x" }, ",pi", function() require("user.myfuncs").paste_special(vim.v.register, "c", "p") end)
 
 vim.keymap.set({ "n", "x" }, ",ff", function()
     pcall(Ls.unlink_current)
@@ -177,14 +164,10 @@ local num = function() return (vim.b.textwidth and vim.b.textwidth > 0) and vim.
 vim.keymap.set("n", ",fw", function() return "m1!ippar w" .. num() .. "<cr>`1" end, { expr = true, silent = true })
 vim.keymap.set("x", ",fw", function() return "!par w" .. num() .. "<cr>" end, { expr = true, silent = true })
 
-vim.keymap.set("n", "<leader><leader>", "<cmd>silent e #<cr>")
-
-vim.keymap.set("n", "<leader>m", function() require("trouble").toggle({ mode = "quickprev" }) end)
-vim.keymap.set("n", "<leader>,", function() require("trouble").toggle({ mode = "lspprev" }) end)
+vim.keymap.set("n", "<leader><leader>", "<cmd>silent e #<cr>", {desc = "Last file"})
 
 -- Mouse Bindings
 
-vim.keymap.set("n", "<c-leftmouse>", "<cmd>Telescope lsp_definitions theme=get_ivy<cr>")
 vim.keymap.set("n", "<c-rightmouse>", "gf")
 
 -- Insert Bindings

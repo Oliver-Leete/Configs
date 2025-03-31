@@ -9,28 +9,6 @@ local dap_setup = function()
     vim.fn.sign_define("DapStopped", { text = "→", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
     vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DiagnosticSignInfo", culhl = "CursorLineInfo" })
 
-    require("nvim-dap-virtual-text").setup()
-    require("dapui").setup({
-        floating = {
-            border = require("user.settings").border,
-        },
-        controls = {
-            enabled = false,
-            icons = {
-                pause = "",
-                play = " ",
-                step_into = "",
-                step_over = " ",
-                step_out = "",
-                step_back = " ",
-                run_last = " ",
-                terminate = " ",
-            },
-        },
-    })
-    require("dap-python").setup("/home/oleete/.local/share/nvim/mason/packages/debugpy/venv/bin/python")
-    require("mason-nvim-dap").setup()
-
     dap.adapters.codelldb = {
         type = "server",
         port = "${port}",
@@ -53,76 +31,71 @@ local dap_setup = function()
         },
     }
     dap.configurations.c = dap.configurations.cpp
-
-    local dapui = require("dapui")
-
-    local debug_win = nil
-    local debug_tab = nil
-    local debug_tabnr = nil
-
-    local open_in_tab = function()
-        if debug_win and vim.api.nvim_win_is_valid(debug_win) then
-            vim.api.nvim_set_current_win(debug_win)
-            return
-        end
-
-        vim.cmd("tabedit %")
-        debug_win = vim.fn.win_getid()
-        debug_tab = vim.api.nvim_win_get_tabpage(debug_win)
-        debug_tabnr = vim.api.nvim_tabpage_get_number(debug_tab)
-
-        dapui.open()
-    end
-
-    local close_tab = function()
-        dapui.close()
-
-        if debug_tab and vim.api.nvim_tabpage_is_valid(debug_tab) then
-            vim.api.nvim_exec("tabclose " .. debug_tabnr, false)
-        end
-
-        debug_win = nil
-        debug_tab = nil
-        debug_tabnr = nil
-    end
-
-    -- Attach DAP UI to DAP events
-    dap.listeners.after.event_initialized["dapui_config"] = function()
-        open_in_tab()
-    end
-    dap.listeners.before.event_terminated["dapui_config"] = function()
-        close_tab()
-    end
-    dap.listeners.before.event_exited["dapui_config"] = function()
-        close_tab()
-    end
-
-    vim.keymap.set("n", "<leader>d<", dap.up)
-    vim.keymap.set("n", "<leader>d>", dap.down)
-    vim.keymap.set("n", "<leader>dr", dap.continue, { desc = "continue" })
-    vim.keymap.set("n", "<leader>dR", dap.run_to_cursor)
-    vim.keymap.set("n", "<leader>dX", dap.terminate, { desc = "terminate" })
-    vim.keymap.set("n", "<leader>dp", dap.pause)
-    vim.keymap.set("n", "<leader>dj", function() dapui.toggle({ layout = 6 }) end)
-    vim.keymap.set("n", "<leader>dh", function() dapui.toggle({ layout = 4 }) end)
-    vim.keymap.set("n", "<leader>dk", function() dapui.toggle({ layout = 5 }) end)
-    vim.keymap.set("n", "<leader>dm", function() dapui.toggle({ layout = 3 }) end)
-    vim.keymap.set("n", "<leader>d,", function() dapui.toggle({ layout = 2 }) end)
-    vim.keymap.set("n", "<leader>d.", function() dapui.toggle({ layout = 1 }) end)
-    vim.keymap.set("n", "<leader>df", "<cmd>Telescope dap list_breakpoints theme=get_ivy<cr>")
 end
 
 return {
     "mfussenegger/nvim-dap",
     config = dap_setup,
     dependencies = {
+        { "theHamsta/nvim-dap-virtual-text", opts = {}, lazy = true },
+        { "liadOz/nvim-dap-repl-highlights", opts = {}, lazy = true },
         {
-            "rcarriga/nvim-dap-ui",
-            dependencies = {
-                { "nvim-neotest/nvim-nio" },
-            },
+            "igorlfs/nvim-dap-view",
+            config = function()
+                local dap, dv = require("dap"), require("dap-view")
+                dap.listeners.before.attach["dap-view-config"] = dv.open
+                dap.listeners.before.launch["dap-view-config"] = dv.open
+                dap.listeners.before.event_terminated["dap-view-config"] = dv.close
+                dap.listeners.before.event_exited["dap-view-config"] = dv.close
+            end
         },
-        { "theHamsta/nvim-dap-virtual-text" },
-        { "mfussenegger/nvim-dap-python" },
+        {
+            "mfussenegger/nvim-dap-python",
+            config = function()
+                require("dap-python").setup("/home/oleete/.local/pipx/venvs/debugpy/bin/python")
+            end,
+            lazy = true,
+        },
+        { "kdheepak/nvim-dap-julia", opts = {}, },
+    },
+    keys = {
+
+        -- Stepping
+        { "<leader>dh", function() require("dap").step_out() end,          desc = "step out" },
+        { "<leader>dj", function() require("dap").step_over() end,         desc = "step over" },
+        { "<leader>dk", function() require("dap").step_back() end,         desc = "step back" },
+        { "<leader>dl", function() require("dap").step_into() end,         desc = "step in" },
+        { "<leader>d<", function() require("dap").up() end,                desc = "step up" },
+        { "<leader>d>", function() require("dap").down() end,              desc = "step down" },
+
+        -- Breakpoints
+        { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "toggle breakpoint" },
+        {
+            "<leader>dB",
+            function()
+                require("dap").set_breakpoint(
+                    vim.fn.input("Breakpoint condition: "),
+                    vim.fn.input("Hit condition: "),
+                    vim.fn.input("Log message: ")
+                )
+            end,
+            desc = "set conditional breakpoint"
+        },
+
+        -- Starting/Stopping
+        { "<leader>dd", function() require("dap").continue() end,      desc = "run" },
+        { "<leader>dD", function() require("dap").run_to_cursor() end, desc = "run to cursor" },
+        { "<leader>dn", function() require("dap").continue() end,      desc = "run" },
+        { "<leader>dN", function() require("dap").continue() end,      desc = "run backwards" },
+        { "<leader>dp", function() require("dap").pause() end,         desc = "pause" },
+        {
+            "<leader>ds",
+            function()
+                local widgets = require("dap.ui.widgets")
+                widgets.centered_float(widgets.scopes, { border = "rounded" })
+            end,
+            desc = "view scopes"
+        },
+        { "<leader>dx", function() require("dap").terminate() end, desc = "terminate" },
     }
 }
