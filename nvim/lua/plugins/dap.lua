@@ -47,6 +47,48 @@ return {
                 dap.listeners.before.launch["dap-view-config"] = dv.open
                 dap.listeners.before.event_terminated["dap-view-config"] = dv.close
                 dap.listeners.before.event_exited["dap-view-config"] = dv.close
+                local dap_view_sections = {
+                    { name = "watches",     desc = "Watches",     keymap = "W", },
+                    { name = "breakpoints", desc = "Breakpoints", keymap = "B", },
+                    { name = "exceptions",  desc = "Exceptions",  keymap = "E", },
+                    { name = "threads",     desc = "Threads",     keymap = "T", },
+                    { name = "repl",        desc = "REPL",        keymap = "R", },
+                }
+                local dap_view_state = require("dap-view.state")
+                local dap_view_renderer = function(props)
+                    local gui = require("user.colors").colors(props)
+                    local ret = {}
+                    for i, section in ipairs(dap_view_sections) do
+                        if dap_view_state.current_section == section.name then
+                            ret[(i * 3) - 2] = { "", guifg = gui.bg, guibg = gui.fg }
+                            ret[(i * 3) - 1] = {
+                                section.desc .. " [" .. section.keymap .. "]",
+                                guifg = gui.fg,
+                                guibg =
+                                    gui.bg
+                            }
+                            ret[(i * 3) - 0] = { "", guifg = gui.bg, guibg = gui.fg }
+                        else
+                            ret[(i * 3) - 2] = { " ", guifg = gui.bg, guibg = "#1F1F28" }
+                            ret[(i * 3) - 1] = {
+                                section.desc .. " [" .. section.keymap .. "]",
+                                guifg = gui.bg,
+                                guibg =
+                                "#1F1F28"
+                            }
+                            ret[(i * 3) - 0] = { " ", guifg = gui.bg, guibg = "#1F1F28" }
+                        end
+                    end
+                    return ret
+                end
+                local dv_group = vim.api.nvim_create_augroup("dap_view", {})
+                vim.api.nvim_create_autocmd({ "Filetype" }, {
+                    pattern = "dap-view",
+                    group = dv_group,
+                    callback = function()
+                        vim.b[0].incline_renderer = dap_view_renderer
+                    end
+                })
             end
         },
         {

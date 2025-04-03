@@ -47,7 +47,16 @@ return {
         notifier = { enabled = true },
         input = { enabled = true },
         image = { enabled = true },
-        lazygit = { win = { position = "float" }, },
+        lazygit = {
+            win = { position = "float" },
+            config = {
+                os = { editPreset = "nvim-remote" },
+                gui = {
+                    -- set to an empty string "" to disable icons
+                    nerdFontsVersion = "3",
+                },
+            },
+        },
         bigfile = { enabled = true },
     },
     keys = {

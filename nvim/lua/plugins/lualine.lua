@@ -55,7 +55,7 @@ local line_setup = function()
             lualine_b = {
                 { mini_git, separator = { left = "", right = "" }, },
                 { "diff", source = mini_diff, symbols = { added = " ", modified = " ", removed = " " }, },
-                { "dignostics", symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " }, },
+                { "diagnostics", symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " }, },
                 { Filmpicker_endtime, cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end, },
                 { Filmpicker_winbar, cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end, },
             },
