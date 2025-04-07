@@ -22,12 +22,14 @@ return {
                 bottom = {
                     { icon = " ", titles = { "dap-view", "dap-repl", "dap-consol" }, pick_key = "d" },
                     { icon = " ", titles = { "terminal" }, pick_key = "t" },
-                    -- { icon = " ", titles = { "overseer" }, pick_key = "r" },
-                    { icon = " ", titles = { "trouble-diagnostics" }, pick_key = "x" },
+                    { icon = " ", titles = { "overseer-list" }, pick_key = "r" },
+                    { icon = "󰙨 ", titles = { "neotest-panel" }, pick_key = "t" },
+                    { icon = " ", titles = { "trouble-diagnostics", "trouble-todo" }, pick_key = "x" },
                     { icon = " ", titles = { "trouble-snacks", "trouble-snacks-files" }, pick_key = "s" },
-                    { icon = " ", titles = { "trouble-todo" }, pick_key = "c" },
-                    { icon = " ", titles = { "notifications" }, pick_key = "n" },
-                    -- { icon = "󰙨 ", titles = { "neotest-panel" }, pick_key = "t" },
+                },
+                left = {
+                    { icon = "󰙨 ", titles = { "neotest-list" }, pick_key = "T" },
+                    { icon = " ", titles = { "trouble-lsp" }, pick_key = "l" },
                 },
             },
             toggle = false,
@@ -111,29 +113,46 @@ return {
                 },
                 {
                     title = "terminal",
-                    ft = "snacks_terminal",
+                    ft = "toggleterm",
                     open = function()
-                        local terminals = require("snacks.terminal").list()
-                        if #terminals > 0 then
-                            for _, term in ipairs(terminals) do
-                                term:show()
-                            end
+                        local last_term = require("toggleterm.terminal").last_opened
+                        if last_term ~= nil then
+                            last_term:open()
                         else
-                            require("snacks.terminal").open()
+                            require("toggleterm").new_command()
                         end
-                    end,
-                    filter = function(_, win)
-                        return vim.w[win].snacks_win
-                            and vim.w[win].snacks_win.position == "bottom"
-                            and vim.w[win].snacks_win.relative == "editor"
-                            and not vim.w[win].trouble_preview
                     end,
                 },
                 {
-                    title = "notifications",
-                    ft = "snacks_notif_history",
-                    open = function() require("snacks.notifier").show_history() end,
-                }
+                    title = 'neotest-panel',
+                    ft = 'neotest-output-panel',
+                    open = 'Neotest output-panel',
+                },
+
+            },
+            left = {
+                {
+                    title = 'neotest-list',
+                    ft = 'neotest-summary',
+                    open = 'Neotest summary',
+                    size = { width = 0.20 },
+                },
+                {
+                    title = "overseer-list",
+                    ft = "OverseerList",
+                    open = function()
+                        require("overseer").open()
+                    end,
+                },
+                {
+                    title = "trouble-lsp",
+                    ft = "trouble",
+                    filter = function(_, win)
+                        local win_trouble = vim.w[win].trouble
+                        return win_trouble and win_trouble.mode == "lsp"
+                    end,
+                    open = "Trouble lsp open",
+                },
             },
         },
     } }

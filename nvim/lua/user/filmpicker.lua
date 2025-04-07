@@ -1,6 +1,7 @@
+local M = {}
 local func = require("user.myfuncs")
 -- Settings for filmpicker script
-Filmpicker_winbar = function()
+M.runtime = function()
     local line1 = vim.fn.search([[\(\%^\|^$\)]], "nbWc") - 1
     local line2 = vim.fn.search([[\(\%$\|^$\)]], "nW")
 
@@ -20,7 +21,7 @@ Filmpicker_winbar = function()
     return string.format("Duration: %02d:%02d:%02d", hours, minutes, seconds)
 end
 
-Filmpicker_endtime = function()
+M.endtime = function()
     local line1 = vim.fn.search([[\(\%^\|^$\)]], "nbWc") - 1
     local line2 = vim.fn.search([[\(\%$\|^$\)]], "nW")
 
@@ -49,3 +50,5 @@ vim.api.nvim_create_autocmd("BufRead", { pattern = "/tmp/film_list.films", callb
     vim.keymap.set("n", "<leader>r", "vip:!sort -k3 -h<cr><cr>")
     vim.keymap.set("n", "<leader>s", "vip:!sort -k5<cr><cr>")
 end, group = filmPicker })
+
+return M

@@ -1,9 +1,7 @@
 return {
     "folke/snacks.nvim",
     opts = {
-        toggle = {
-
-        },
+        toggle = {},
         picker = {
             layout = { preset = "ivy" },
             matcher = {
@@ -49,13 +47,7 @@ return {
         image = { enabled = true },
         lazygit = {
             win = { position = "float" },
-            config = {
-                os = { editPreset = "nvim-remote" },
-                gui = {
-                    -- set to an empty string "" to disable icons
-                    nerdFontsVersion = "3",
-                },
-            },
+            config = { os = { editPreset = "nvim-remote" }, gui = { nerdFontsVersion = "3", }, },
         },
         bigfile = { enabled = true },
     },
@@ -87,22 +79,22 @@ return {
                 _G.bt = function() require("snacks.debug").backtrace() end
                 vim.print = _G.dd
 
-                require("snacks.toggle").inlay_hints():map("<leader>th")
-                require("snacks.toggle").indent():map("<leader>ti")
-                require("snacks.toggle").dim():map("<leader>td")
+                require("snacks.toggle").inlay_hints():map("<leader>zh")
+                require("snacks.toggle").indent():map("<leader>zi")
+                require("snacks.toggle").dim():map("<leader>zd")
 
-                require("snacks.toggle").option("wrap", { name = "Wrap" }):map("<leader>tw")
-                require("snacks.toggle").line_number():map("<leader>tl")
+                require("snacks.toggle").option("wrap", { name = "Wrap" }):map("<leader>zw")
+                require("snacks.toggle").line_number():map("<leader>zl")
                 require("snacks.toggle").option("conceallevel",
-                    { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map("<leader>th")
+                    { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map("<leader>zh")
 
-                require("snacks.toggle").zen():map("<leader>tx")
-                require("snacks.toggle").zoom():map("<leader>tz")
+                require("snacks.toggle").zen():map("<leader>zx")
+                require("snacks.toggle").zoom():map("<leader>zz")
 
-                require("snacks.toggle").diagnostics():map("<leader>tD")
-                require("snacks.toggle").treesitter():map("<leader>tT")
+                require("snacks.toggle").diagnostics():map("<leader>zD")
+                require("snacks.toggle").treesitter():map("<leader>zT")
                 require("snacks.toggle").option("background", { off = "light", on = "dark", name = "Dark Background" })
-                    :map("<leader>tB")
+                    :map("<leader>zB")
             end,
         })
     end,

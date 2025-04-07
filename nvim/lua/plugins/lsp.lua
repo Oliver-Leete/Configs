@@ -29,7 +29,6 @@ local lsp_setup = function()
         },
     })
 
-    require("neodev").setup({})
     local lspconfig = require("lspconfig")
 
     require("lspconfig.ui.windows").default_options.border = require("user.settings").border
@@ -139,6 +138,7 @@ local lsp_setup = function()
     lspconfig.taplo.setup(default)
     lspconfig.yamlls.setup(default)
     lspconfig.contextive.setup(default)
+    lspconfig.just.setup(default)
 
     lspconfig.basedpyright.setup({
         settings = {
@@ -158,6 +158,11 @@ local lsp_setup = function()
     })
 
     vim.g.haskell_tools = {
+        tools = {
+            repl = {
+                handler = "toggleterm",
+            },
+        },
         hls = {
             settings = {
                 haskell = {
@@ -267,7 +272,6 @@ local lsp_setup = function()
             none_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013", "MD046", "MD009" } }),
             none_ls.builtins.formatting.bibclean,
             none_ls.builtins.formatting.fish_indent,
-            none_ls.builtins.formatting.just,
             none_ls.builtins.formatting.shellharden,
             none_ls.builtins.formatting.shfmt,
         },
@@ -275,27 +279,29 @@ local lsp_setup = function()
 end
 
 return {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-        { "mrcjkb/rustaceanvim" },
-        { "yioneko/nvim-type-fmt" },
-        { "folke/neodev.nvim" },
-        { "MrcJkb/haskell-tools.nvim" },
-        { "hrsh7th/cmp-nvim-lsp" },
-        {
-            "williamboman/mason.nvim",
-            opts = {},
-            dependencies = {
-                { "williamboman/mason-lspconfig.nvim", opts = {} },
-                "WhoIsSethDaniel/mason-tool-installer.nvim",
-            }
-        },
-        {
-            "nvimtools/none-ls.nvim",
-            dependencies = { "nvim-lua/plenary.nvim" },
-        },
-        { "barreiroleo/ltex_extra.nvim" },
+    {
+        "neovim/nvim-lspconfig",
+        dependencies = {
+            { "folke/neodev.nvim",        opts = {} },
+            { "mrcjkb/rustaceanvim" },
+            { "yioneko/nvim-type-fmt" },
+            { "MrcJkb/haskell-tools.nvim" },
+            { "hrsh7th/cmp-nvim-lsp" },
+            {
+                "williamboman/mason.nvim",
+                opts = {},
+                dependencies = {
+                    { "williamboman/mason-lspconfig.nvim", opts = {} },
+                    "WhoIsSethDaniel/mason-tool-installer.nvim",
+                }
+            },
+            {
+                "nvimtools/none-ls.nvim",
+                dependencies = { "nvim-lua/plenary.nvim" },
+            },
+            { "barreiroleo/ltex_extra.nvim" },
 
+        },
+        config = lsp_setup
     },
-    config = lsp_setup
 }

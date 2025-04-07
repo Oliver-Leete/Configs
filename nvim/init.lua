@@ -36,7 +36,7 @@ require("lazy").setup(
             title = " Lazy ",
         },
         dev = {
-            path = "~/Projects",
+            path = "~/Projects/nvim",
         },
     }
 )

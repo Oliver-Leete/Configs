@@ -44,11 +44,10 @@ local line_setup = function()
             component_separators = { left = leftc, right = rightc },
             section_separators = { left = left, right = right },
             globalstatus = true,
-            theme = "my_kanagawa",
+            theme = "tokyonight",
             refresh = {
                 statusline = 1000,
             },
-            disabled_filetypes = { statusline = {}, },
         },
         sections = {
             lualine_a = { { "mode", }, },
@@ -56,8 +55,14 @@ local line_setup = function()
                 { mini_git, separator = { left = "", right = "" }, },
                 { "diff", source = mini_diff, symbols = { added = " ", modified = " ", removed = " " }, },
                 { "diagnostics", symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " }, },
-                { Filmpicker_endtime, cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end, },
-                { Filmpicker_winbar, cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end, },
+                {
+                    function() return require("user.filmpicker").endtime() end,
+                    cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end,
+                },
+                {
+                    function() return require("user.filmpicker").runtime() end,
+                    cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end,
+                },
             },
             lualine_c = {
                 {

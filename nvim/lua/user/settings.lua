@@ -4,6 +4,7 @@ vim.opt.nrformats = vim.opt.nrformats - "octal"
 vim.opt.viminfo = "'100,f1"
 vim.opt.clipboard = vim.opt.clipboard + "unnamedplus"
 vim.opt.mouse = "a"
+vim.opt.mousemoveevent = true
 vim.opt.encoding = "UTF-8"
 vim.opt.scrolloff = 0
 vim.opt.updatetime = 100
@@ -80,7 +81,6 @@ vim.opt.signcolumn = "yes:1"
 vim.opt.numberwidth = 3
 vim.opt.number = true
 vim.opt.cursorline = false
-vim.cmd([[call matchadd('TabLineSel', '\%101v', 203)]])
 
 -- Splitting
 vim.opt.splitbelow = true

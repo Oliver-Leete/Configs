@@ -8,7 +8,7 @@ return {
 
             if fn.getbufvar(buf, "&modifiable") == 1
                 and
-                utils.not_in(fn.getbufvar(buf, "&filetype"), { "oil", "qf" })
+                utils.not_in(fn.getbufvar(buf, "&filetype"), { "oil", "qf", "OverseerForm" })
             then
                 return true
             end

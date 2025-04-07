@@ -7,11 +7,13 @@ return {
             { "v",      mode = { "n", "x" } }
         },
     },
-    init = function ()
+    init = function()
         require("which-key").add({
-            {"<leader>d", group = "Debugger"},
-            {"<leader>g", group = "Git"},
-            {"<leader>t", group = "Toggles"},
+            { "<leader>g", group = "Git" },
+            { "<leader>t", group = "Tests", icon = "󰙨 " },
+            { "<leader>z", group = "Toggles" },
+            { "<leader>o", group = "Tasks", icon = " " },
+            { "<leader>d", group = "Debugger", icon = " " },
         })
     end
 }
