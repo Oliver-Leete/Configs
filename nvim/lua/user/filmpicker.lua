@@ -1,5 +1,4 @@
 local M = {}
-local func = require("user.myfuncs")
 -- Settings for filmpicker script
 M.runtime = function()
     local line1 = vim.fn.search([[\(\%^\|^$\)]], "nbWc") - 1
@@ -43,12 +42,5 @@ M.endtime = function()
     end
     return os.date(format_string, os.time() + runtime)
 end
-
-local filmPicker = vim.api.nvim_create_augroup("filmPicker", { clear = true })
-vim.api.nvim_create_autocmd("BufRead", { pattern = "/tmp/film_list.films", callback = function()
-    vim.keymap.set("n", "<leader>a", "vip:!sort -k1<cr><cr>")
-    vim.keymap.set("n", "<leader>r", "vip:!sort -k3 -h<cr><cr>")
-    vim.keymap.set("n", "<leader>s", "vip:!sort -k5<cr><cr>")
-end, group = filmPicker })
 
 return M

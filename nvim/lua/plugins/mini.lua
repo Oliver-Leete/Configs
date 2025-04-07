@@ -174,7 +174,7 @@ local mini_setup = function()
 --                 local max_height = vim.o.lines - vim.o.cmdheight - (has_tabline and 1 or 0) - (has_statusline and 1 or 0)
 --                 local max_width = vim.o.columns
 --                 return {
---                     border = require("user.settings").border,
+--                     border = require("config.options").border,
 --                     relative = "editor",
 --                     anchor = "SE",
 --                     col = max_width,

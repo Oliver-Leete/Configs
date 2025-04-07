@@ -32,7 +32,7 @@ local loaded_bufnrs = function()
     return bufnrs
 end
 
-local delete_buffer = function()
+M.delete_buffer = function()
     local tabnr = vim.api.nvim_get_current_tabpage()
     local bufnr = vim.api.nvim_get_current_buf()
     local num_tabs = #vim.api.nvim_list_tabpages()
@@ -58,7 +58,6 @@ local delete_buffer = function()
     end
 end
 
-vim.api.nvim_create_user_command("DeleteBuffer", delete_buffer, { nargs = 0 })
 
 M.nav_dir = function(direction)
     local curwin = vim.api.nvim_get_current_win()
@@ -68,12 +67,6 @@ M.nav_dir = function(direction)
         vim.fn.system("/home/oleete/.cabal/bin/xmonadctl-exe winGo-" .. direction)
     end
 end
-
-vim.api.nvim_create_user_command("NavigateLeft", function() M.nav_dir("h") end, { nargs = 0 })
-vim.api.nvim_create_user_command("NavigateBottom", function() M.nav_dir("j") end, { nargs = 0 })
-vim.api.nvim_create_user_command("NavigateTop", function() M.nav_dir("k") end, { nargs = 0 })
-vim.api.nvim_create_user_command("NavigateRight", function() M.nav_dir("l") end, { nargs = 0 })
-
 
 M.codelens_toggle = function()
     vim.g.lsp_lens_on = not vim.g.lsp_lens_on

@@ -65,9 +65,6 @@ vim.keymap.set("n", "<m-O>", "m1O<esc>`1")
 vim.keymap.set("x", "<m-o>", "<esc>`>o<esc>gv")
 vim.keymap.set("x", "<m-O>", "<esc>`<O<esc>gv")
 
-vim.keymap.set("x", "I", "<Plug>(niceblock-I)")
-vim.keymap.set("x", "A", "<Plug>(niceblock-A)")
-
 vim.keymap.set("n", "<c-/>", ",cc", { remap = true })
 vim.keymap.set("x", "<c-/>", ",c", { remap = true })
 

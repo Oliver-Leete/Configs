@@ -29,7 +29,7 @@ return {
             strategy = "jobstart",
             dap = true,
             task_list = {
-                direction = "left",
+                direction = "bottom",
             },
         }
     },

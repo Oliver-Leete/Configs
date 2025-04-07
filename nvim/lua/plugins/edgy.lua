@@ -32,7 +32,7 @@ return {
                     { icon = " ", titles = { "trouble-lsp" }, pick_key = "l" },
                 },
             },
-            toggle = false,
+            toggle = true,
         },
     },
 
@@ -45,7 +45,7 @@ return {
                 },
             },
             close_when_all_hidden = false,
-            exit_when_last = false,
+            exit_when_last = true,
             animate = {
                 enabled = false,
             },
@@ -116,6 +116,22 @@ return {
                     ft = 'neotest-output-panel',
                     open = 'Neotest output-panel',
                 },
+                {
+                    title = "overseer-list",
+                    ft = "OverseerList",
+                    size = { width = 0.15 },
+                    open = function()
+                        require("overseer").open()
+                    end,
+                },
+                {
+                    title = "overseer-task",
+                    ft = "",
+                    filter = function(buf)
+                        local task = vim.b[buf].overseer_task
+                        return task and task ~= 0
+                    end
+                },
 
             },
             left = {
@@ -124,13 +140,6 @@ return {
                     ft = 'neotest-summary',
                     open = 'Neotest summary',
                     size = { width = 0.20 },
-                },
-                {
-                    title = "overseer-list",
-                    ft = "OverseerList",
-                    open = function()
-                        require("overseer").open()
-                    end,
                 },
                 {
                     title = "trouble-lsp",

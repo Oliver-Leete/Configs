@@ -4,7 +4,7 @@ local lsp_setup = function()
     local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
     function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
         opts = opts or {}
-        opts.border = opts.border or require("user.settings").border
+        opts.border = opts.border or require("config.options").border
         return orig_util_open_floating_preview(contents, syntax, opts, ...)
     end
 
@@ -31,7 +31,7 @@ local lsp_setup = function()
 
     local lspconfig = require("lspconfig")
 
-    require("lspconfig.ui.windows").default_options.border = require("user.settings").border
+    require("lspconfig.ui.windows").default_options.border = require("config.options").border
 
     vim.api.nvim_set_hl(0, "LspInlayHint", { link = "NvimDapVirtualText" })
 

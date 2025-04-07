@@ -1,4 +1,4 @@
-m = {}
+local M = {}
 -- --Settings
 vim.opt.nrformats = vim.opt.nrformats - "octal"
 vim.opt.viminfo = "'100,f1"
@@ -28,7 +28,7 @@ vim.opt.fillchars:append({
     verthoriz = '╋',
     diff      = "╱",
 })
-m.border = "none"
+M.border = "none"
 
 -- Saving
 vim.opt.confirm = true
@@ -87,23 +87,6 @@ vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.splitkeep = "topline"
 
-local windowPositioning = vim.api.nvim_create_augroup("windowPositioning", { clear = true })
-vim.api.nvim_create_autocmd(
-    { "FileType" },
-    { group = windowPositioning, pattern = "help", command = ":wincmd H | vertical resize 90<cr>" }
-)
-vim.api.nvim_create_autocmd({ "FileType" }, { group = windowPositioning, pattern = "qf", command = "wincmd J" })
-
--- Yank
-local hl_on_yank = vim.api.nvim_create_augroup("LuaHighlight", { clear = true })
-vim.api.nvim_create_autocmd(
-    { "TextYankPost" },
-    {
-        group = hl_on_yank,
-        callback = function() vim.hl.on_yank({ higroup = "Visual", timeout = 200 }) end,
-    }
-)
-
 -- Disable builtins
 local disabled_built_ins = {
     "netrw",
@@ -131,4 +114,4 @@ for _, plugin in pairs(disabled_built_ins) do
 end
 
 vim.g.project = vim.fs.basename(vim.fn.getcwd())
-return m
+return M

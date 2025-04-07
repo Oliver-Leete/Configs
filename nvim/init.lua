@@ -18,7 +18,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("user.settings")
+require("config.options")
 
 require("lazy").setup(
     {
@@ -32,7 +32,7 @@ require("lazy").setup(
             missing = true,
         },
         ui = {
-            border = require("user.settings").border,
+            border = require("config.options").border,
             title = " Lazy ",
         },
         dev = {
@@ -41,6 +41,7 @@ require("lazy").setup(
     }
 )
 
-require("user.mappings")
+require("config.autocmds")
+require("config.commands")
+require("config.keymaps")
 require("user.targets")
-require("user.filmpicker")
