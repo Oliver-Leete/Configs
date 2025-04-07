@@ -34,6 +34,12 @@ vim.keymap.set({ "n", "x", "o" }, "q/", "<nop>")
 vim.keymap.set({ "n", "x", "o" }, "q?", "<nop>")
 vim.keymap.set("c", "<c-f>", "<nop>")
 
+vim.keymap.del({ "n" }, "grn")
+vim.keymap.del({ "n" }, "grr")
+vim.keymap.del({ "n" }, "gri")
+vim.keymap.del({ "n", "x" }, "gra")
+vim.keymap.del({ "n" }, "gO")
+
 vim.keymap.set({ "n", "x", "o" }, "(", "<nop>")
 vim.keymap.set({ "n", "x", "o" }, ")", "<nop>")
 -- NOTE: D, Y, H, L, £, _, =, |, ;, ^, <BS>, <CR> are free to map
@@ -41,9 +47,6 @@ vim.keymap.set({ "n", "x", "o" }, ")", "<nop>")
 -- NOTE: y, d, c are free in op mode
 
 -- Mappings
-
-vim.keymap.set({ "n", "x" }, "<c-r>", "<c-x>")
-vim.keymap.set({ "n", "x" }, "g<c-r>", "g<c-x>")
 
 vim.keymap.set("x", "y", "m1y`1", { nowait = true })
 vim.keymap.set("x", "d", "d", { nowait = true })
@@ -69,10 +72,6 @@ vim.keymap.set("n", "<c-/>", ",cc", { remap = true })
 vim.keymap.set("x", "<c-/>", ",c", { remap = true })
 
 -- UnMap Plugins
-vim.g.vimtex_mappings_enabled = 0
-vim.g.vimtex_text_obj_enabled = 0
-vim.g.vimtex_imaps_enabled = 0
-
 vim.keymap.set({ "n", "x", "o" }, "j", [[v:count?(v:count>5?"m'".v:count:'').'j':'gj']], { expr = true })
 vim.keymap.set({ "n", "x", "o" }, "k", [[v:count?(v:count>5?"m'".v:count:'').'k':'gk']], { expr = true })
 
@@ -101,17 +100,16 @@ vim.keymap.set("n", "<c-t>", "<cmd>silent tabedit %<cr>")
 -- GOTO
 vim.keymap.set({ "n", "x", "o" }, "gk", "gg", { desc = "Top of File" })
 vim.keymap.set({ "n", "x", "o" }, "gj", "G", { desc = "Bottom of File" })
-vim.keymap.set({ "n", "x", "o" }, "gh", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true },
-    { desc = "Left of Line" })
+vim.keymap.set({ "n", "x", "o" }, "gh", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']],
+    { expr = true, desc = "Left of Line" })
 vim.keymap.set({ "n", "x", "o" }, "gl", "$", { desc = "Right of Line" })
 
 vim.keymap.set({ "n", "x", "o" }, "gt", "H", { desc = "Top of Screen" })
 vim.keymap.set({ "n", "x", "o" }, "gm", "M", { desc = "Middle of Screen" })
 vim.keymap.set({ "n", "x", "o" }, "gb", "L", { desc = "Bottom of Screen" })
 
-vim.keymap.set({ "n", "x", "o" }, "gV", "`[v`]")
-vim.keymap.set("n", "gF", ":edit <cfile><cr>")
-vim.keymap.set("n", "gx", function() vim.ui.open(vim.fn.expand("<cfile>")) end)
+vim.keymap.set("n", "gF", ":edit <cfile><cr>", { desc = "Goto or create file under cursor" })
+vim.keymap.set("n", "gx", function() vim.ui.open(vim.fn.expand("<cfile>")) end, { desc = "Open in another program" })
 
 vim.keymap.set(
     { "n", "x" },
@@ -145,21 +143,11 @@ vim.keymap.set("n", "vo", "<c-w>o", { desc = "Only Window" })
 
 vim.keymap.set({ "n", "x" }, "m", "v")
 
--- NOTE: Text leader mappings: ,
--- NOTE: text leader mappings
-
-vim.keymap.set("n", ",rr", vim.lsp.buf.rename)
-
-vim.keymap.set("n", ",n", require("ts-node-action").node_action)
-
-vim.keymap.set({ "n", "x" }, ",ff", function()
-    pcall(Ls.unlink_current)
-    require("conform").format()
-end)
-
 local num = function() return (vim.b.textwidth and vim.b.textwidth > 0) and vim.b.textwidth or vim.g.textwidth end
-vim.keymap.set("n", ",fw", function() return "m1!ippar w" .. num() .. "<cr>`1" end, { expr = true, silent = true })
-vim.keymap.set("x", ",fw", function() return "!par w" .. num() .. "<cr>" end, { expr = true, silent = true })
+vim.keymap.set("n", ",fw", function() return "m1!ippar w" .. num() .. "<cr>`1" end,
+    { expr = true, silent = true, desc = "Wrap using Par" })
+vim.keymap.set("x", ",fw", function() return "!par w" .. num() .. "<cr>" end,
+    { expr = true, silent = true, desc = "Wrap using Par" })
 
 vim.keymap.set("n", "<leader><leader>", "<cmd>silent e #<cr>", { desc = "Last file" })
 
@@ -181,31 +169,31 @@ vim.keymap.set("c", "<c-p>", "<up>")
 vim.keymap.set("c", "<c-n>", "<down>")
 
 local cmp = require("cmp")
-vim.keymap.set({ "i", "s" }, "<c-]>", "<plug>luasnip-next-choice")
-vim.keymap.set({ "i", "s", "c" }, "<c-space>", function() if cmp.visible() then cmp.close() else cmp.complete() end end)
+-- vim.keymap.set({ "i", "s" }, "<c-]>", "<plug>luasnip-next-choice")
+-- vim.keymap.set({ "i", "s", "c" }, "<c-space>", function() if cmp.visible() then cmp.close() else cmp.complete() end end)
 
-Ls = require("luasnip")
-vim.keymap.set({ "i", "s" }, "<tab>", function()
-    if Ls.expand_or_locally_jumpable() then
-        Ls.expand_or_jump()
-    else
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<tab>", true, true, true), "n", false)
-    end
-end, { silent = true })
-
-vim.keymap.set({ "i", "s" }, "<s-tab>", function()
-    if Ls.locally_jumpable(-1) then
-        Ls.jump(-1)
-    else
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<s-tab>", true, true, true), "n", false)
-    end
-end, { silent = true })
-
-vim.keymap.set("i", "<c-n>", function()
-    if Ls.choice_active() then
-        Ls.change_choice(1)
-    end
-end)
+-- Ls = require("luasnip")
+-- vim.keymap.set({ "i", "s" }, "<tab>", function()
+--     if Ls.expand_or_locally_jumpable() then
+--         Ls.expand_or_jump()
+--     else
+--         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<tab>", true, true, true), "n", false)
+--     end
+-- end, { silent = true })
+--
+-- vim.keymap.set({ "i", "s" }, "<s-tab>", function()
+--     if Ls.locally_jumpable(-1) then
+--         Ls.jump(-1)
+--     else
+--         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<s-tab>", true, true, true), "n", false)
+--     end
+-- end, { silent = true })
+--
+-- vim.keymap.set("i", "<c-n>", function()
+--     if Ls.choice_active() then
+--         Ls.change_choice(1)
+--     end
+-- end)
 
 -- Terminal Bindings
 vim.keymap.set("t", "<c-]>", "<c-\\><c-n>")

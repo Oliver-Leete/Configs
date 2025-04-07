@@ -80,7 +80,7 @@ return {
                 require("snacks.toggle").option("wrap", { name = "Wrap" }):map("<leader>zw")
                 require("snacks.toggle").line_number():map("<leader>zl")
                 require("snacks.toggle").option("conceallevel",
-                    { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map("<leader>zh")
+                    { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map("<leader>zH")
 
                 require("snacks.toggle").zen():map("<leader>zx")
                 require("snacks.toggle").zoom():map("<leader>zz")

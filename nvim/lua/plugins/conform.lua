@@ -6,7 +6,11 @@ return {
                 quarto = { "injected" },
                 julia = { "runic" },
                 markdown = { "markdownlint" },
-                lua = { lsp_format = "prefer" },
+                bibtex = { "bibtex-tidy" },
+                sh = { "shellharden", "shfmt" }
+            },
+            default_format_opts = {
+                lsp_format = "fallback",
             },
         }
         require('conform').formatters.injected = {
@@ -30,4 +34,16 @@ return {
             },
         }
     end,
+    keys = {
+        {
+            ",ff",
+            function()
+                pcall(Ls.unlink_current)
+                require("conform").format()
+            end,
+            desc = "Format",
+            mode = { "n", "x" }
+        },
+        { "<leader>?c", "<cmd>ConformInfo<cr>", desc = "Conform info", },
+    },
 }

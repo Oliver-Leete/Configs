@@ -1,13 +1,6 @@
 local lsp_setup = function()
     vim.g.lsp_lens_on = true
 
-    local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-    function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-        opts = opts or {}
-        opts.border = opts.border or require("config.options").border
-        return orig_util_open_floating_preview(contents, syntax, opts, ...)
-    end
-
     require("mason-tool-installer").setup({
         ensure_installed = {
             "codelldb",
@@ -35,24 +28,6 @@ local lsp_setup = function()
 
     vim.api.nvim_set_hl(0, "LspInlayHint", { link = "NvimDapVirtualText" })
 
-    vim.diagnostic.config({
-        underline = false,
-        update_in_insert = false,
-        severity_sort = true,
-        virtual_lines = false,
-        virtual_text = false,
-        signs = {
-            text = {
-                [vim.diagnostic.severity.ERROR] = " ",
-                [vim.diagnostic.severity.WARN] = " ",
-                [vim.diagnostic.severity.INFO] = " ",
-                [vim.diagnostic.severity.HINT] = "󰅽 ",
-            },
-        },
-    })
-
-    local lsp_auto = vim.api.nvim_create_augroup("lsp_autocmd", { clear = true })
-
     local custom_attach = function(client, bufnr)
         local sc = client.server_capabilities
         local bmap = function(mode, key, action, opts)
@@ -76,39 +51,17 @@ local lsp_setup = function()
             bmap("n", "go", function() require("trouble").toggle("lsp_outgoing_calls") end, { desc = "Outgoing Calls" })
             bmap("n", "gi", function() require("trouble").toggle("lsp_incoming_calls") end, { desc = "Incoming Calls" })
         end
+        bmap("n", ",rr", vim.lsp.buf.rename, { desc = "Rename variable" })
         bmap("n", "<C-,>", vim.lsp.codelens.run, { desc = "Run code lens" })
+        bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action, { desc = "Run code actions" })
         if sc.codeLensProvider and sc.codeLensProvider == true then
             vim.lsp.codelens.refresh()
-            vim.api.nvim_create_autocmd(
-                "TextChanged",
-                {
-                    callback = function()
-                        if vim.g.lsp_lens_on then
-                            vim.lsp.codelens.refresh()
-                        end
-                    end,
-                    buffer = bufnr,
-                    group = lsp_auto,
-                }
-            )
+            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+                callback = vim.lsp.codelens.refresh,
+                buffer = bufnr,
+                group = vim.api.nvim_create_augroup("lsp_autocmd", { clear = true }),
+            })
         end
-        bmap("n", "<leader>a", function()
-            local cursor_pos = vim.api.nvim_win_get_cursor(0)
-            local cursor_col = cursor_pos[2]
-            local cursor_line = cursor_pos[1]
-            local hints = vim.lsp.inlay_hint.get({ bufnr = 0 })
-            local hint = vim.tbl_filter(function(h)
-                return (
-                    h.inlay_hint.position.line == cursor_line - 1 and
-                    h.inlay_hint.position.character == cursor_col + 1
-                )
-            end, hints)[1]
-            if hint then
-                local text = (hint.inlay_hint.paddingLeft and " " or "") .. hint.inlay_hint.label[1].value
-                vim.api.nvim_put({ text }, "c", true, true)
-            end
-        end, { desc = "Insert inlay hint" })
-        bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action, { desc = "Run code actions" })
     end
 
     vim.api.nvim_create_autocmd('LspAttach', {
@@ -120,7 +73,7 @@ local lsp_setup = function()
         end,
     })
 
-    local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
     local default = {
         capabilities = capabilities,
@@ -139,6 +92,7 @@ local lsp_setup = function()
     lspconfig.yamlls.setup(default)
     lspconfig.contextive.setup(default)
     lspconfig.just.setup(default)
+    lspconfig.fish_lsp.setup(default)
 
     lspconfig.basedpyright.setup({
         settings = {
@@ -259,23 +213,6 @@ local lsp_setup = function()
             },
         },
     })
-
-    local none_ls = require("null-ls")
-    -- None LS
-    none_ls.setup({
-        diagnostics_format = "[#{c}] #{m} (#{s})",
-        sources = {
-            none_ls.builtins.code_actions.gitrebase,
-            none_ls.builtins.diagnostics.fish,
-            none_ls.builtins.diagnostics.editorconfig_checker,
-            none_ls.builtins.diagnostics.gitlint,
-            none_ls.builtins.diagnostics.markdownlint.with({ extra_args = { "--disable", "MD013", "MD046", "MD009" } }),
-            none_ls.builtins.formatting.bibclean,
-            none_ls.builtins.formatting.fish_indent,
-            none_ls.builtins.formatting.shellharden,
-            none_ls.builtins.formatting.shfmt,
-        },
-    })
 end
 
 return {
@@ -294,10 +231,6 @@ return {
                     { "williamboman/mason-lspconfig.nvim", opts = {} },
                     "WhoIsSethDaniel/mason-tool-installer.nvim",
                 }
-            },
-            {
-                "nvimtools/none-ls.nvim",
-                dependencies = { "nvim-lua/plenary.nvim" },
             },
             { "barreiroleo/ltex_extra.nvim" },
 

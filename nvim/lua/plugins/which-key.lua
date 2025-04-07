@@ -14,6 +14,7 @@ return {
             { "<leader>z", group = "Toggles" },
             { "<leader>o", group = "Tasks", icon = " " },
             { "<leader>d", group = "Debugger", icon = " " },
+            { "<leader>?", group = "Information", icon = " " },
         })
     end
 }

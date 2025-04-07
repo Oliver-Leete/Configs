@@ -114,4 +114,23 @@ for _, plugin in pairs(disabled_built_ins) do
 end
 
 vim.g.project = vim.fs.basename(vim.fn.getcwd())
+
+
+vim.diagnostic.config({
+    underline = false,
+    update_in_insert = false,
+    severity_sort = true,
+    virtual_lines = false,
+    virtual_text = false,
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = " ",
+            [vim.diagnostic.severity.WARN] = " ",
+            [vim.diagnostic.severity.INFO] = " ",
+            [vim.diagnostic.severity.HINT] = "󰅽 ",
+        },
+    },
+})
+
+
 return M

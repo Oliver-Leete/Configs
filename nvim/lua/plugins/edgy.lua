@@ -127,9 +127,11 @@ return {
                 {
                     title = "overseer-task",
                     ft = "",
-                    filter = function(buf)
+                    filter = function(buf, win)
                         local task = vim.b[buf].overseer_task
-                        return task and task ~= 0
+                        return task
+                            and task ~= 0
+                            and vim.api.nvim_win_get_config(win).relative == ""
                     end
                 },
 

@@ -24,6 +24,7 @@ return {
             { "<leader>ob", "<cmd>OverseerBuild<cr>",       desc = "Task builder" },
             { "<leader>ot", "<cmd>OverseerTaskAction<cr>",  desc = "Task action" },
             { "<leader>oc", "<cmd>OverseerClearCache<cr>",  desc = "Clear cache" },
+            { "<leader>?o", "<cmd>OverseerInfo<cr>",        desc = "Overseer info", },
         },
         opts = {
             strategy = "jobstart",
