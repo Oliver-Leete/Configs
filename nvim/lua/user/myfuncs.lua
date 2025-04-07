@@ -84,4 +84,22 @@ M.codelens_toggle = function()
     end
 end
 
+---@param func {type: "open" | "close" | "toggle"}
+M.trouble_snacks = function(func)
+    local mode = require("trouble.sources.snacks").mode()
+    local not_mode = mode == "snacks" and "snacks_files" or "snacks"
+    require("trouble").close(not_mode)
+
+    if func == "toggle" then
+        func = require("trouble").is_open(mode) and "close" or "open"
+    end
+
+    if func == "open" then
+        require("trouble").open(mode)
+        require("trouble").focus(mode)
+    elseif func == "close" then
+        require("trouble").close(mode)
+    end
+end
+
 return M

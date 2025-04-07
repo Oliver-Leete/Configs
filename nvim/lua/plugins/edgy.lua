@@ -25,7 +25,7 @@ return {
                     { icon = " ", titles = { "overseer-list" }, pick_key = "r" },
                     { icon = "󰙨 ", titles = { "neotest-panel" }, pick_key = "t" },
                     { icon = " ", titles = { "trouble-diagnostics", "trouble-todo" }, pick_key = "x" },
-                    { icon = " ", titles = { "trouble-snacks", "trouble-snacks-files" }, pick_key = "s" },
+                    { icon = " ", titles = { "trouble-snacks" }, pick_key = "s" },
                 },
                 left = {
                     { icon = "󰙨 ", titles = { "neotest-list" }, pick_key = "T" },
@@ -50,7 +50,6 @@ return {
                 enabled = false,
             },
             wo = {
-                winbar = false,
                 spell = false,
             },
             keys = {
@@ -80,18 +79,11 @@ return {
                     ft = "trouble",
                     filter = function(_, win)
                         local win_trouble = vim.w[win].trouble
-                        return win_trouble and win_trouble.mode == "snacks"
+                        return win_trouble and (win_trouble.mode == "snacks" or win_trouble.mode == "snacks_files")
                     end,
-                    open = "Trouble snacks open",
-                },
-                {
-                    title = "trouble-snacks-files",
-                    ft = "trouble",
-                    filter = function(_, win)
-                        local win_trouble = vim.w[win].trouble
-                        return win_trouble and win_trouble.mode == "snacks_files"
+                    open = function()
+                        require("user.myfuncs").trouble_snacks(true)
                     end,
-                    open = "Trouble snacks_files open",
                 },
                 {
                     title = "trouble-diagnostics",
@@ -114,14 +106,10 @@ return {
                 {
                     title = "terminal",
                     ft = "toggleterm",
-                    open = function()
-                        local last_term = require("toggleterm.terminal").last_opened
-                        if last_term ~= nil then
-                            last_term:open()
-                        else
-                            require("toggleterm").new_command()
-                        end
-                    end,
+                    open = "ToggleTermLast",
+                    filter = function(_, win)
+                        return vim.api.nvim_win_get_config(win).relative == ""
+                    end
                 },
                 {
                     title = 'neotest-panel',

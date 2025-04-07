@@ -13,7 +13,8 @@ return {
                         ["<c-x>"] = { "edit_split", mode = { "n", "i" }, },
                         ["<c-u>"] = "",
                         ["<c-a>"] = "",
-                        ["<c-space>"] = { "toggle_live", mode = { "n", "i" } }
+                        ["<c-space>"] = { "toggle_live", mode = { "n", "i" } },
+                        ["<c-l>"] = { "qflist", mode = { "i", "n" } },
                     }
                 }
             },
@@ -33,12 +34,6 @@ return {
                 win = {
                     zindex = 51,
                 },
-            },
-        },
-        terminal = {
-            shell = "fish",
-            win = {
-                position = "bottom",
             },
         },
         scroll = { enabled = true },
@@ -65,7 +60,6 @@ return {
 
         { "<leader>R",  function() require("snacks.rename").rename_file() end,            desc = "Rename File" },
 
-        { "<leader>st", function() require("snacks.terminal")() end,                      desc = "Toggle Terminal" },
         { "<leader>sn", function() require("snacks.notifier").show_history() end,         desc = "Notification History" },
 
         { "]]",         function() require("snacks.words").jump(vim.v.count1) end,        desc = "Next Reference",      mode = { "n", "t" } },

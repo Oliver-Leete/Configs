@@ -3,6 +3,13 @@ return {
         "Bekaboo/dropbar.nvim",
         opts = {
             bar = {
+                attach_events =
+                {
+                    "OptionSet",
+                    "BufWinEnter",
+                    "BufWritePost",
+                    "FileType",
+                },
                 enable = function(buf, win, _)
                     if
                         not vim.api.nvim_buf_is_valid(buf)
@@ -21,7 +28,7 @@ return {
 
                     return vim.bo[buf].ft == "markdown"
                         or vim.bo[buf].ft == "oil"
-                        or vim.bo[buf].buftype == "terminal"
+                        or vim.bo[buf].ft == "toggleterm"
                         or pcall(vim.treesitter.get_parser, buf)
                         or not vim.tbl_isempty(vim.lsp.get_clients({
                             bufnr = buf,
@@ -30,10 +37,13 @@ return {
                 end,
             },
             sources = {
+                path = {
+                    preview = false,
+                },
                 terminal = {
                     name = function(buf)
                         local name = vim.api.nvim_buf_get_name(buf)
-                        local term = select(2, require("toggleterm.terminal").indentify(name))
+                        local term = require("toggleterm.terminal").find(function(t) return t.bufnr == buf end)
                         if term then return term.display_name or term.name else return name end
                     end
                 }

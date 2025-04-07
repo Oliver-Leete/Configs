@@ -164,7 +164,7 @@ local num = function() return (vim.b.textwidth and vim.b.textwidth > 0) and vim.
 vim.keymap.set("n", ",fw", function() return "m1!ippar w" .. num() .. "<cr>`1" end, { expr = true, silent = true })
 vim.keymap.set("x", ",fw", function() return "!par w" .. num() .. "<cr>" end, { expr = true, silent = true })
 
-vim.keymap.set("n", "<leader><leader>", "<cmd>silent e #<cr>", {desc = "Last file"})
+vim.keymap.set("n", "<leader><leader>", "<cmd>silent e #<cr>", { desc = "Last file" })
 
 -- Mouse Bindings
 
