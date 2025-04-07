@@ -41,6 +41,7 @@ return {
         local logical_alias = augend.constant.new({ elements = { "&&", "||" }, word = false, cyclic = true })
         local logical_word_alias = augend.constant.new({ elements = { "and", "or" }, word = true, cyclic = true })
         local capitalized_boolean = augend.constant.new({ elements = { "True", "False", }, word = true, cyclic = true })
+        local start_stop = augend.constant.new({ elements = { "start", "stop" }, word = false, cyclic = true })
 
         local rebase_commands = augend.constant.new({
             elements = {
@@ -68,6 +69,7 @@ return {
                     augend.integer.alias.decimal_int,
                     augend.integer.alias.hex,
                     augend.date.alias["%Y/%m/%d"],
+                    start_stop,
                     ordinal_numbers,
                     capitalized_boolean,
                     augend.constant.alias.bool,

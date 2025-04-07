@@ -78,10 +78,6 @@ vim.keymap.set({ "n", "x", "o" }, "k", [[v:count?(v:count>5?"m'".v:count:'').'k'
 vim.keymap.set("o", "H", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']], { expr = true })
 vim.keymap.set("o", "L", "$")
 
-vim.keymap.set({ "n", "x" }, "u", function()
-    pcall(Ls.unlink_current)
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("u", true, true, true), "n", false)
-end)
 vim.keymap.set({ "n", "x" }, "U", "<c-r>")
 
 vim.keymap.set("n", "Q", "@q")
@@ -165,35 +161,8 @@ vim.cmd([[snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virt
 vim.keymap.set({ "i", "s", "c" }, "<c-a>", "<HOME>")
 vim.keymap.set({ "i", "s", "c" }, "<c-e>", "<END>")
 vim.keymap.set({ "i", "s" }, "<c-k>", "<c-o>d$")
-vim.keymap.set("c", "<c-p>", "<up>")
-vim.keymap.set("c", "<c-n>", "<down>")
-
-local cmp = require("cmp")
--- vim.keymap.set({ "i", "s" }, "<c-]>", "<plug>luasnip-next-choice")
--- vim.keymap.set({ "i", "s", "c" }, "<c-space>", function() if cmp.visible() then cmp.close() else cmp.complete() end end)
-
--- Ls = require("luasnip")
--- vim.keymap.set({ "i", "s" }, "<tab>", function()
---     if Ls.expand_or_locally_jumpable() then
---         Ls.expand_or_jump()
---     else
---         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<tab>", true, true, true), "n", false)
---     end
--- end, { silent = true })
---
--- vim.keymap.set({ "i", "s" }, "<s-tab>", function()
---     if Ls.locally_jumpable(-1) then
---         Ls.jump(-1)
---     else
---         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<s-tab>", true, true, true), "n", false)
---     end
--- end, { silent = true })
---
--- vim.keymap.set("i", "<c-n>", function()
---     if Ls.choice_active() then
---         Ls.change_choice(1)
---     end
--- end)
+vim.keymap.set({ "c" }, "<c-p>", "<up>")
+vim.keymap.set({ "c" }, "<c-n>", "<down>")
 
 -- Terminal Bindings
 vim.keymap.set("t", "<c-]>", "<c-\\><c-n>")

@@ -24,6 +24,9 @@ require("lazy").setup(
     {
         spec = {
             { import = "plugins" },
+            { import = "plugins.langs" },
+            { import = "plugins.editor" },
+            { import = "plugins.coding" },
         },
         checker = {
             enabled = false,

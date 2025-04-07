@@ -1,6 +1,4 @@
 local lsp_setup = function()
-    vim.g.lsp_lens_on = true
-
     require("mason-tool-installer").setup({
         ensure_installed = {
             "codelldb",
@@ -73,7 +71,7 @@ local lsp_setup = function()
         end,
     })
 
-    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+    local capabilities = require("blink.cmp").get_lsp_capabilities()
 
     local default = {
         capabilities = capabilities,
@@ -111,29 +109,6 @@ local lsp_setup = function()
         flags = { debounce_text_changes = 1000 },
     })
 
-    vim.g.haskell_tools = {
-        tools = {
-            repl = {
-                handler = "toggleterm",
-            },
-        },
-        hls = {
-            settings = {
-                haskell = {
-                    plugin = {
-                        rename = {
-                            config = {
-                                crossModule = true
-                            },
-                        },
-                        semanticTokens = {
-                            globalOn = true
-                        },
-                    }
-                }
-            }
-        }
-    }
 
 
 
@@ -142,20 +117,25 @@ local lsp_setup = function()
         flags = { debounce_text_changes = 1000 },
         settings = {
             Lua = {
-                hint = {
-                    arrayIndex = "Disable",
-                    enable = true,
-                    paramName = "Disable",
+                workspace = {
+                  checkThirdParty = false,
+                },
+                codeLens = {
+                  enable = true,
                 },
                 completion = {
-                    callSnippet = "Replace",
+                  callSnippet = "Replace",
                 },
-                diagnostics = {
-                    globals = { 'vim' },
+                doc = {
+                  privateName = { "^_" },
                 },
-                workspace = {
-                    library = vim.api.nvim_get_runtime_file('', true),
-                    checkThirdParty = false,
+                hint = {
+                  enable = true,
+                  setType = false,
+                  paramType = true,
+                  paramName = "Disable",
+                  semicolon = "Disable",
+                  arrayIndex = "Disable",
                 },
                 telemetry = {
                     enable = false,
@@ -219,11 +199,8 @@ return {
     {
         "neovim/nvim-lspconfig",
         dependencies = {
-            { "folke/neodev.nvim",        opts = {} },
-            { "mrcjkb/rustaceanvim" },
             { "yioneko/nvim-type-fmt" },
-            { "MrcJkb/haskell-tools.nvim" },
-            { "hrsh7th/cmp-nvim-lsp" },
+            { "saghen/blink.cmp" },
             {
                 "williamboman/mason.nvim",
                 opts = {},

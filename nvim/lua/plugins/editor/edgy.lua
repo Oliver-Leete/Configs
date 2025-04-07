@@ -13,9 +13,8 @@ return {
                 "<leader>sh",
                 function() require("edgy-group").open_group_offset("bottom", -1) end,
                 desc = "Edgy Group Prev bottom",
-            }, {
-            "<leader>ss", "<cmd>EdgyGroupSelect<cr>", desc = "Edgy Group Pick",
-        },
+            },
+            { "<leader>ss", "<cmd>EdgyGroupSelect<cr>", desc = "Edgy Group Pick", },
         },
         opts = {
             groups = {
@@ -50,6 +49,7 @@ return {
                 enabled = false,
             },
             wo = {
+                winbar = false,
                 spell = false,
             },
             keys = {

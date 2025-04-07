@@ -68,29 +68,23 @@ M.nav_dir = function(direction)
     end
 end
 
-M.codelens_toggle = function()
-    vim.g.lsp_lens_on = not vim.g.lsp_lens_on
-    if vim.g.lsp_lens_on then
-        vim.lsp.codelens.refresh()
-    else
-        vim.lsp.codelens.clear()
-    end
-end
-
 ---@param func {type: "open" | "close" | "toggle"}
 M.trouble_snacks = function(func)
     local mode = require("trouble.sources.snacks").mode()
     local not_mode = mode == "snacks" and "snacks_files" or "snacks"
     require("trouble").close(not_mode)
 
+    local o_or_c
     if func == "toggle" then
-        func = require("trouble").is_open(mode) and "close" or "open"
+        o_or_c = require("trouble").is_open(mode) and "close" or "open"
+    else
+        o_or_c = func
     end
 
-    if func == "open" then
+    if o_or_c == "open" then
         require("trouble").open(mode)
         require("trouble").focus(mode)
-    elseif func == "close" then
+    elseif o_or_c == "close" then
         require("trouble").close(mode)
     end
 end

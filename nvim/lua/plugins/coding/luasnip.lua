@@ -12,23 +12,27 @@ return {
             })
             require("luasnip.loaders.from_lua").load({ paths = "/home/oleete/.config/nvim/snippets" })
             require("luasnip-latex-snippets").setup()
-        end
-    },
-    {
-        "hrsh7th/nvim-cmp",
-        optional = true,
-        dependencies = { "saadparwaiz1/cmp_luasnip" },
-        opts = function(_, opts)
-            opts.snippet = {
-                expand = function(args)
-                    require("luasnip").lsp_expand(args.body)
-                end,
-            }
-            table.insert(opts.sources, { name = "luasnip" })
         end,
         keys = {
-            { "<tab>",   function() require("luasnip").jump(1) end,  mode = "s" },
-            { "<s-tab>", function() require("luasnip").jump(-1) end, mode = { "i", "s" } },
+            {
+                "<c-n>",
+                function()
+                    local ls = require("luasnip")
+                    if ls.choice_active() then
+                        ls.change_choice(1)
+                    end
+                end,
+                mode = { "i", "s" }
+            }
+        },
+    },
+    {
+        "saghen/blink.cmp",
+        optional = true,
+        opts = {
+            snippets = {
+                preset = "luasnip",
+            },
         },
     },
 }

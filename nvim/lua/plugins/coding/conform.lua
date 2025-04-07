@@ -35,15 +35,7 @@ return {
         }
     end,
     keys = {
-        {
-            ",ff",
-            function()
-                pcall(Ls.unlink_current)
-                require("conform").format()
-            end,
-            desc = "Format",
-            mode = { "n", "x" }
-        },
-        { "<leader>?c", "<cmd>ConformInfo<cr>", desc = "Conform info", },
+        { ",ff",        function() require("conform").format() end, desc = "Format",       mode = { "n", "x" } },
+        { "<leader>?c", "<cmd>ConformInfo<cr>",                     desc = "Conform info", },
     },
 }
