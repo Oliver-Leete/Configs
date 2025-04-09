@@ -5,9 +5,5 @@ if [[ $NAME =~ Neovim_.* ]]; then
     nvr -s --servername "/tmp/$NAME" "$@"
 else
     serverID=$(nvrGetName)
-    if [ -d ".venv" ]; then
-        poetry run nvr -s --servername "/tmp/$serverID" "$@"
-    else
-        nvr -s --servername "/tmp/$serverID" "$@"
-    fi
+    nvr -s --servername "/tmp/$serverID" "$@"
 fi
