@@ -40,8 +40,8 @@ vim.keymap.del({ "n" }, "gri")
 vim.keymap.del({ "n", "x" }, "gra")
 vim.keymap.del({ "n" }, "gO")
 
-vim.keymap.set({ "n", "x", "o" }, "(", "<nop>")
-vim.keymap.set({ "n", "x", "o" }, ")", "<nop>")
+-- vim.keymap.set({ "n", "x", "o" }, "(", "<nop>")
+-- vim.keymap.set({ "n", "x", "o" }, ")", "<nop>")
 -- NOTE: D, Y, H, L, £, _, =, |, ;, ^, <BS>, <CR> are free to map
 -- NOTE: H and L are free except op mode
 -- NOTE: y, d, c are free in op mode

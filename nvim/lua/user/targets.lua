@@ -98,8 +98,8 @@ require("mini.ai").setup({
         inside_next = "in",
         around_last = "al",
         inside_last = "il",
-        goto_left = "{",
-        goto_right = "}",
+        goto_left = "",
+        goto_right = "",
     },
     n_lines = 500,
     search_method = "cover_or_nearest",
@@ -146,9 +146,9 @@ local command_repeat = function(leader, varName)
         end
     elseif mode == "v" or mode == "V" or mode == "" then
         if leader == "]" then
-            return_map = "<esc>)" .. key
+            return_map = "<esc>}" .. key
         else
-            return_map = "<esc>(" .. key
+            return_map = "<esc>{" .. key
         end
     else
         return_map = leader .. key
@@ -163,8 +163,8 @@ vim.keymap.set({ "n", "x", "o" }, "N", function() return command_repeat("[", "di
 for _, o in pairs(vim.tbl_keys(custom_objects)) do
     vim.keymap.set({ "n", "x", "o" }, "[" .. o, function() mark_and_go_mini("prev", o, "left") end)
     vim.keymap.set({ "n", "x", "o" }, "]" .. o, function() mark_and_go_mini("next", o, "left") end)
-    vim.keymap.set({ "n", "x" }, ")" .. o, function() mark_and_select_mini("i", o, "next") end)
-    vim.keymap.set({ "n", "x" }, "(" .. o, function() mark_and_select_mini("i", o, "prev") end)
+    vim.keymap.set({ "n", "x", "o" }, "}" .. o, function() mark_and_select_mini("i", o, "next") end)
+    vim.keymap.set({ "n", "x", "o" }, "{" .. o, function() mark_and_select_mini("i", o, "prev") end)
 
     vim.keymap.set({ "n", "x" }, "m" .. o,
         function() MiniAi.select_textobject("i", o, { search_method = "cover_or_nearest", vis_mode = "v" }) end)
@@ -174,8 +174,8 @@ for _, o in pairs(vim.tbl_keys(custom_objects)) do
             function() MiniAi.select_textobject("a", o, { search_method = "cover_or_nearest", vis_mode = "v" }) end)
         vim.keymap.set({ "n", "x", "o" }, "[" .. O, function() mark_and_go_mini("prev", O, "right") end)
         vim.keymap.set({ "n", "x", "o" }, "]" .. O, function() mark_and_go_mini("next", O, "right") end)
-        vim.keymap.set({ "n", "x" }, ")" .. O, function() mark_and_select_mini("a", O, "next") end)
-        vim.keymap.set({ "n", "x" }, "(" .. O, function() mark_and_select_mini("a", O, "prev") end)
+        vim.keymap.set({ "n", "x", "o" }, "}" .. O, function() mark_and_select_mini("a", O, "next") end)
+        vim.keymap.set({ "n", "x", "o" }, "{" .. O, function() mark_and_select_mini("a", O, "prev") end)
     end
 end
 

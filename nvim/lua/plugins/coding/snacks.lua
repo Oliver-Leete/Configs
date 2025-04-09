@@ -14,7 +14,6 @@ return {
                         ["<c-u>"] = "",
                         ["<c-a>"] = "",
                         ["<c-space>"] = { "toggle_live", mode = { "n", "i" } },
-                        ["<c-l>"] = { "qflist", mode = { "i", "n" } },
                     }
                 }
             },

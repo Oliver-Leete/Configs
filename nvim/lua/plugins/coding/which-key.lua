@@ -15,6 +15,7 @@ return {
             { "<leader>o", group = "Tasks", icon = " " },
             { "<leader>d", group = "Debugger", icon = " " },
             { "<leader>?", group = "Information", icon = " " },
+            { ",", group = "Editing" },
         })
     end
 }

@@ -1,217 +1,142 @@
-local lsp_setup = function()
-    require("mason-tool-installer").setup({
-        ensure_installed = {
-            "codelldb",
-            "cpptools",
-            "esbonio",
-            "fortls",
-            "gitlint",
-            "json-lsp",
-            "julia-lsp",
-            "lua-language-server",
-            "markdownlint",
-            "marksman",
-            "rust-analyzer",
-            "shellharden",
-            "shfmt",
-            "taplo",
-            "texlab",
-            "yaml-language-server",
-        },
-    })
-
-    local lspconfig = require("lspconfig")
-
-    require("lspconfig.ui.windows").default_options.border = require("config.options").border
-
-    vim.api.nvim_set_hl(0, "LspInlayHint", { link = "NvimDapVirtualText" })
-
-    local custom_attach = function(client, bufnr)
-        local sc = client.server_capabilities
-        local bmap = function(mode, key, action, opts)
-            vim.keymap.set(mode, key, action,
-                vim.tbl_extend("force", { buffer = bufnr }, opts))
-        end
-
-        if client.name == "ruff" then
-            sc.renameProvider = false
-            sc.definitionProvider = false
-            sc.referencesProvider = false
-        end
-
-        -- LSP Binding Override
-        if client.name ~= "null-ls" then
-            bmap("n", "gd", function() require("snacks.picker").lsp_definitions() end, { desc = "Deffinition" })
-            bmap("n", "gr", function() require("snacks.picker").lsp_references() end, { desc = "References" })
-            bmap("n", "gD", function() require("snacks.picker").lsp_type_definitions() end, { desc = "Type Deffinition" })
-            bmap("n", "gI", function() require("snacks.picker").lsp_implementations() end, { desc = "Implementations" })
-
-            bmap("n", "go", function() require("trouble").toggle("lsp_outgoing_calls") end, { desc = "Outgoing Calls" })
-            bmap("n", "gi", function() require("trouble").toggle("lsp_incoming_calls") end, { desc = "Incoming Calls" })
-        end
-        bmap("n", ",rr", vim.lsp.buf.rename, { desc = "Rename variable" })
-        bmap("n", "<C-,>", vim.lsp.codelens.run, { desc = "Run code lens" })
-        bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action, { desc = "Run code actions" })
-        if sc.codeLensProvider and sc.codeLensProvider == true then
-            vim.lsp.codelens.refresh()
-            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-                callback = vim.lsp.codelens.refresh,
-                buffer = bufnr,
-                group = vim.api.nvim_create_augroup("lsp_autocmd", { clear = true }),
-            })
-        end
+local custom_attach = function(client, bufnr)
+    local sc = client.server_capabilities
+    local bmap = function(mode, key, action, opts)
+        vim.keymap.set(mode, key, action,
+            vim.tbl_extend("force", { buffer = bufnr }, opts))
     end
 
-    vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('UserLspConfig', {}),
-        callback = function(ev)
-            local bufnr = ev.buf
-            local client = vim.lsp.get_client_by_id(ev.data.client_id)
-            custom_attach(client, bufnr)
-        end,
-    })
+    if client.name == "ruff" then
+        sc.renameProvider = false
+        sc.definitionProvider = false
+        sc.referencesProvider = false
+    end
 
-    local capabilities = require("blink.cmp").get_lsp_capabilities()
+    -- LSP Binding Override
+    bmap("n", "gd", function() require("snacks.picker").lsp_definitions() end, { desc = "Deffinition" })
+    bmap("n", "gr", function() require("snacks.picker").lsp_references() end, { desc = "References" })
+    bmap("n", "gD", function() require("snacks.picker").lsp_type_definitions() end, { desc = "Type Deffinition" })
+    bmap("n", "gI", function() require("snacks.picker").lsp_implementations() end, { desc = "Implementations" })
 
-    local default = {
-        capabilities = capabilities,
-        flags = { debounce_text_changes = 1000 },
-    }
-
-    lspconfig.clangd.setup(default)
-    lspconfig.esbonio.setup(default)
-    lspconfig.fortls.setup(default)
-    lspconfig.jsonls.setup(default)
-    lspconfig.julials.setup(default)
-    lspconfig.marksman.setup(default)
-    lspconfig.nushell.setup(default)
-    lspconfig.ruff.setup(default)
-    lspconfig.taplo.setup(default)
-    lspconfig.yamlls.setup(default)
-    lspconfig.contextive.setup(default)
-    lspconfig.just.setup(default)
-    lspconfig.fish_lsp.setup(default)
-
-    lspconfig.basedpyright.setup({
-        settings = {
-            python = {
-                analysis = {
-                    useLibraryCodeForTypes = true,
-                    diagnosticSeverityOverrides = {
-                        diagnosticMode = "workspace",
-                    },
-                    diagnosticMode = "workspace",
-                    typeCheckingMode = "basic",
-                },
-            },
-        },
-        capabilities = capabilities,
-        flags = { debounce_text_changes = 1000 },
-    })
-
-
-
-
-    lspconfig.lua_ls.setup({
-        capabilities = capabilities,
-        flags = { debounce_text_changes = 1000 },
-        settings = {
-            Lua = {
-                workspace = {
-                  checkThirdParty = false,
-                },
-                codeLens = {
-                  enable = true,
-                },
-                completion = {
-                  callSnippet = "Replace",
-                },
-                doc = {
-                  privateName = { "^_" },
-                },
-                hint = {
-                  enable = true,
-                  setType = false,
-                  paramType = true,
-                  paramName = "Disable",
-                  semicolon = "Disable",
-                  arrayIndex = "Disable",
-                },
-                telemetry = {
-                    enable = false,
-                },
-            }
-        }
-    })
-
-    lspconfig.texlab.setup({
-        flags = { debounce_text_changes = 1000 },
-        root_dir = lspconfig.util.root_pattern(".git"),
-        settings = {
-            texlab = {
-                build = {
-                    args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
-                    executable = "latexmk",
-                    onSave = false,
-                    forwardSearchAfter = true,
-                },
-                forwardSearch = {
-                    executable = "zathura",
-                    args = { "--synctex-forward", "%l:1:%f", "%p" },
-                    onSave = false,
-                },
-                chktex = {
-                    onEdit = true,
-                    onOpenAndSave = true,
-                },
-                latexFormatter = "latexindent",
-                latexindent = {
-                    ["local"] = ".latexindent.yaml",
-                    modifyLineBreaks = true,
-                }
-            },
-        },
-    })
-
-    require("ltex_extra").setup({
-        load_langs = { "en-GB" },
-        init_check = true,
-        path = ".ltex",
-        log_level = "none",
-        server_opts = {
-            capabilities = capabilities,
-            settings = {
-                ltex = {
-                    language = "en-GB",
-                    diagnosticSeverity = { MORFOLOGIK_RULE_EN_GB = "hint", default = "info" },
-                    additionalRules = {
-                        enablePickyRules = false,
-                        motherTongue = "en-GB",
-                    },
-                    disabledRules = { ["en-GB"] = { "OXFORD_SPELLING_Z_NOT_S" } },
-                },
-            },
-        },
-    })
+    bmap("n", "go", function() require("trouble").toggle("lsp_outgoing_calls") end, { desc = "Outgoing Calls" })
+    bmap("n", "gi", function() require("trouble").toggle("lsp_incoming_calls") end, { desc = "Incoming Calls" })
+    bmap("n", ",rr", vim.lsp.buf.rename, { desc = "Rename variable" })
+    bmap("n", "<C-,>", vim.lsp.codelens.run, { desc = "Run code lens" })
+    bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action, { desc = "Run code actions" })
+    if sc.codeLensProvider and sc.codeLensProvider == true then
+        vim.lsp.codelens.refresh()
+        vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+            callback = vim.lsp.codelens.refresh,
+            buffer = bufnr,
+            group = vim.api.nvim_create_augroup("lsp_autocmd", { clear = true }),
+        })
+    end
 end
 
 return {
     {
         "neovim/nvim-lspconfig",
         dependencies = {
-            { "yioneko/nvim-type-fmt" },
-            { "saghen/blink.cmp" },
-            {
-                "williamboman/mason.nvim",
-                opts = {},
-                dependencies = {
-                    { "williamboman/mason-lspconfig.nvim", opts = {} },
-                    "WhoIsSethDaniel/mason-tool-installer.nvim",
-                }
-            },
-            { "barreiroleo/ltex_extra.nvim" },
-
+            "mason.nvim",
+            { "williamboman/mason-lspconfig.nvim", config = function() end },
         },
-        config = lsp_setup
-    },
+        opts = function()
+            ---@class PluginLspOpts
+            local ret = {
+                -- add any global capabilities here
+                capabilities = {
+                    workspace = {
+                        fileOperations = {
+                            didRename = true,
+                            willRename = true,
+                        },
+                    },
+                },
+                servers = {},
+                setup = {
+                    -- return true if you don't want this server to be setup with lspconfig
+                    -- example to setup with typescript.nvim
+                    -- tsserver = function(_, opts)
+                    --   require("typescript").setup({ server = opts })
+                    --   return true
+                    -- end,
+                    -- Specify * to use this function as a fallback for any server
+                    -- ["*"] = function(server, opts) end,
+                },
+            }
+            return ret
+        end,
+        ---@param opts PluginLspOpts
+        config = function(_, opts)
+            vim.api.nvim_create_autocmd('LspAttach', {
+                group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+                callback = function(ev)
+                    local bufnr = ev.buf
+                    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+                    custom_attach(client, bufnr)
+                end,
+            })
+
+            local servers = opts.servers
+            local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+            local has_blink, blink = pcall(require, "blink.cmp")
+            local capabilities = vim.tbl_deep_extend(
+                "force",
+                {},
+                vim.lsp.protocol.make_client_capabilities(),
+                has_cmp and cmp_nvim_lsp.default_capabilities() or {},
+                has_blink and blink.get_lsp_capabilities() or {},
+                opts.capabilities or {}
+            )
+
+            local function setup(server)
+                local server_opts = vim.tbl_deep_extend("force", {
+                    capabilities = vim.deepcopy(capabilities),
+                }, servers[server] or {})
+                if server_opts.enabled == false then
+                    return
+                end
+
+                if opts.setup[server] then
+                    if opts.setup[server](server, server_opts) then
+                        return
+                    end
+                elseif opts.setup["*"] then
+                    if opts.setup["*"](server, server_opts) then
+                        return
+                    end
+                end
+                require("lspconfig")[server].setup(server_opts)
+            end
+
+            -- get all the servers that are available through mason-lspconfig
+            local have_mason, mlsp = pcall(require, "mason-lspconfig")
+            local all_mslp_servers = {}
+            if have_mason then
+                all_mslp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
+            end
+
+            local ensure_installed = {} ---@type string[]
+            for server, server_opts in pairs(servers) do
+                if server_opts then
+                    server_opts = server_opts == true and {} or server_opts
+                    if server_opts.enabled ~= false then
+                        -- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
+                        if server_opts.mason == false or not vim.tbl_contains(all_mslp_servers, server) then
+                            setup(server)
+                        else
+                            ensure_installed[#ensure_installed + 1] = server
+                        end
+                    end
+                end
+            end
+
+            if have_mason then
+                mlsp.setup({
+                    automatic_installation = false,
+                    ensure_installed = vim.tbl_deep_extend("force", ensure_installed, {}),
+                    handlers = { setup },
+                })
+            end
+        end,
+    }
 }

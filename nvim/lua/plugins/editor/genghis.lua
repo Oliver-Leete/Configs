@@ -7,6 +7,6 @@ return {
         end,
     },
     keys = {
-        { ",rf", function() require("genghis").moveSelectionToNewFile() end, mode = { "x" }, desc = "Move to new file" },
+        { ",rn", function() require("genghis").moveSelectionToNewFile() end, mode = { "x" }, desc = "Extract to a new file" },
     },
 }

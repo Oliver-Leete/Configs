@@ -38,6 +38,7 @@ return {
         "mfussenegger/nvim-dap",
         config = dap_setup,
         dependencies = {
+            { "jay-babu/mason-nvim-dap.nvim", },
             { "theHamsta/nvim-dap-virtual-text", opts = {}, lazy = true },
             { "liadOz/nvim-dap-repl-highlights", opts = {}, lazy = true },
             {
@@ -89,5 +90,27 @@ return {
             },
             { "<leader>dx", function() require("dap").terminate() end, desc = "terminate" },
         }
+    },
+    {
+        "jay-babu/mason-nvim-dap.nvim",
+        dependencies = "mason.nvim",
+        cmd = { "DapInstall", "DapUninstall" },
+        opts = {
+            -- Makes a best effort to setup the various debuggers with
+            -- reasonable debug configurations
+            automatic_installation = true,
+
+            -- You can provide additional configuration to the handlers,
+            -- see mason-nvim-dap README for more information
+            handlers = {},
+
+            -- You'll need to check that you have the required things installed
+            -- online, please don't ask me how to install them :)
+            ensure_installed = {
+                -- Update this to ensure that you have the debuggers for the langs you want
+            },
+        },
+        -- mason-nvim-dap is loaded when nvim-dap loads
+        config = function() end,
     },
 }

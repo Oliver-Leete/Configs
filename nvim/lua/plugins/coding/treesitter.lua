@@ -1,5 +1,7 @@
-local ts_setup = function()
-    require("nvim-treesitter.configs").setup({
+return {
+    "nvim-treesitter/nvim-treesitter",
+    build = { ":TSInstall all", ":TSUpdate all", ":TSUninstall comment" },
+    opts = {
         indent = { enable = false },
         highlight = {
             enable = true,
@@ -13,12 +15,8 @@ local ts_setup = function()
             use_virtual_text = true,
             lint_events = { "BufWrite", "CursorHold" },
         },
-    })
 
-end
-
-return {
-    "nvim-treesitter/nvim-treesitter",
-    build = { ":TSInstall all", ":TSUpdate all", ":TSUninstall comment" },
-    config = ts_setup,
+    },
+    opts_extend = { "ensure_installed" },
+    main = "nvim-treesitter.configs",
 }
