@@ -28,44 +28,34 @@ return {
             augend.date.alias["%Y/%m/%d"],
             augend.date.alias["%Y-%m-%d"],
             augend.semver.alias.semver,
-
         }
         local word_cycles = {
             { "zero",        "one",        "two",       "three",     "four",     "five",    "six",     "seven",  "eight",     "nine",    "ten",      "eleven",  "twelve" },
             { "Zero",        "One",        "Two",       "Three",     "Four",     "Five",    "Six",     "Seven",  "Eight",     "Nine",    "Ten",      "Eleven",  "Twelve" },
             { "first",       "second",     "third",     "fourth",    "fifth",    "sixth",   "seventh", "eighth", "ninth",     "tenth",   "eleventh", "twelfth" },
             { "First",       "Second",     "Third",     "Fourth",    "Fifth",    "Sixth",   "Seventh", "Eighth", "Ninth",     "Tenth",   "Eleventh", "Twelfth" },
-
             { "january",     "february",   "march",     "april",     "may",      "june",    "july",    "august", "september", "october", "november", "december" },
             { "January",     "February",   "March",     "April",     "May",      "June",    "July",    "August", "September", "October", "November", "December" },
             { "jan",         "feb",        "mar",       "apr",       "may",      "jun",     "jul",     "aug",    "sep",       "oct",     "nov",      "dec" },
             { "Jan",         "Feb",        "Mar",       "Apr",       "May",      "Jun",     "Jul",     "Aug",    "Sep",       "Oct",     "Nov",      "Dec" },
-
             { "sunday",      "monday",     "tuesday",   "wednesday", "thursday", "friday",  "saturday" },
             { "Sunday",      "Monday",     "Tuesday",   "Wednesday", "Thursday", "Friday",  "Saturday" },
             { "sun",         "mon",        "tue",       "wed",       "thu",      "fri",     "sat" },
             { "Sun",         "Mon",        "Tue",       "Wed",       "Thu",      "Fri",     "Sat" },
-
             { "today",       "tomorrow",   "yesterday" },
             { "Today",       "Tomorrow",   "Yesterday" },
-
             { "morning",     "noon",       "afternoon", "evening" },
             { "Morning",     "Noon",       "Afternoon", "Evening" },
-
             { "day",         "night" },
             { "Day",         "Night" },
-
             { "am",          "pm" },
             { "AM",          "PM" },
-
             { "true",        "false" },
             { "True",        "False" },
             { "TRUE",        "FALSE" },
-
             { "yes",         "no" },
             { "Yes",         "No" },
             { "YES",         "NO" },
-
             { "on",          "off" },
             { "On",          "Off" },
             { "ON",          "OFF" },
@@ -232,7 +222,6 @@ return {
             { "Strong",      "Weak" },
             { "bit",         "byte",       "kilobyte",  "megabyte",  "gigabyte", "terabyte" },
             { "Bit",         "Byte",       "Kilobyte",  "Megabyte",  "Gigabyte", "Terabyte" },
-            { "GET",         "POST",       "PUT",       "DELETE",    "PATCH",    "OPTIONS", "HEAD" },
             { "north",       "east",       "south",     "west" },
             { "North",       "East",       "South",     "West" },
             { "horizontal",  "vertical" },
