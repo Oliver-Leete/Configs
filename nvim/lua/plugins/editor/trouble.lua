@@ -7,6 +7,7 @@ return {
             type = "main",
         },
     },
+    lazy = false,
     cmd = "Trouble",
     keys = {
         { "<leader>l", function() require("user.myfuncs").trouble_snacks("toggle") end, desc = "Toggle trouble" },
@@ -24,7 +25,7 @@ return {
                         input = {
                             keys = {
                                 ["<c-l>"] = { { "trouble_close", "trouble_open", "trouble_f_open" }, mode = { "n", "i" }, },
-                                ["<c-L>"] = { { "trouble_close", "trouble_add", "trouble_f_open" }, mode = { "n", "i" }, },
+                                ["<m-l>"] = { { "trouble_close", "trouble_add", "trouble_f_open" }, mode = { "n", "i" }, },
                             },
                         },
                     },

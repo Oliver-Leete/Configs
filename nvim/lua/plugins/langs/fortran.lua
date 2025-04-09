@@ -1,6 +1,14 @@
 return {
     {
         "neovim/nvim-lspconfig",
-        opts = { servers = { fortls = {}, }, },
+        ---@module "plugins.lsp"
+        ---@type PluginLspOpts
+        opts = {
+            servers = {
+                fortls = {
+                    mason = true,
+                },
+            },
+        },
     },
 }

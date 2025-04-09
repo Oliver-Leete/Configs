@@ -161,6 +161,9 @@ vim.cmd([[snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virt
 vim.keymap.set({ "i", "s", "c" }, "<c-a>", "<HOME>")
 vim.keymap.set({ "i", "s", "c" }, "<c-e>", "<END>")
 vim.keymap.set({ "i", "s" }, "<c-k>", "<c-o>d$")
+
+-- Command Bindings
+
 vim.keymap.set({ "c" }, "<c-p>", "<up>")
 vim.keymap.set({ "c" }, "<c-n>", "<down>")
 

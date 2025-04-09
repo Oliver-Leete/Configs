@@ -41,8 +41,10 @@ return {
         },
         opts = function()
             ---@class PluginLspOpts
+            ---@field capabilities? lsp.ClientCapabilities
+            ---@field servers? table string lsp.ClientConfig
+            ---@field setup? table string, function(server: string, opts:lsp.ClientConfig):boolean
             local ret = {
-                -- add any global capabilities here
                 capabilities = {
                     workspace = {
                         fileOperations = {
@@ -89,9 +91,11 @@ return {
             )
 
             local function setup(server)
-                local server_opts = vim.tbl_deep_extend("force", {
-                    capabilities = vim.deepcopy(capabilities),
-                }, servers[server] or {})
+                local server_opts = vim.tbl_deep_extend(
+                    "force",
+                    {capabilities = vim.deepcopy(capabilities),},
+                    servers[server] or {}
+                )
                 if server_opts.enabled == false then
                     return
                 end
@@ -121,7 +125,7 @@ return {
                     server_opts = server_opts == true and {} or server_opts
                     if server_opts.enabled ~= false then
                         -- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
-                        if server_opts.mason == false or not vim.tbl_contains(all_mslp_servers, server) then
+                        if server_opts.mason ~= true or not vim.tbl_contains(all_mslp_servers, server) then
                             setup(server)
                         else
                             ensure_installed[#ensure_installed + 1] = server

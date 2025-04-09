@@ -47,6 +47,7 @@ return {
 
             opts.consumers = opts.consumers or {}
             -- Refresh and auto close trouble after running tests
+            ---@module "neotest"
             ---@type neotest.Consumer
             opts.consumers.trouble = function(client)
                 client.listeners.results = function(adapter_id, results, partial)
@@ -70,8 +71,8 @@ return {
                             end
                         end
                     end)
-                    return {}
                 end
+                return {}
             end
 
             if opts.adapters then

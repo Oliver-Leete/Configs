@@ -1,57 +1,22 @@
-local dap_setup = function()
-    local dap = require("dap")
-    require("dap.ext.vscode").load_launchjs()
-
-    vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
-    vim.fn.sign_define("DapBreakpointCondition",
-        { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
-    vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DiagnosticSignWarn", culhl = "CursorLineWarn" })
-    vim.fn.sign_define("DapStopped", { text = "→", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
-    vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DiagnosticSignInfo", culhl = "CursorLineInfo" })
-
-    dap.adapters.codelldb = {
-        type = "server",
-        port = "${port}",
-        executable = {
-            command = "/home/oleete/.local/share/nvim/mason/bin/codelldb",
-            args = { "--port", "${port}" },
-        }
-    }
-
-    dap.configurations.cpp = {
-        {
-            name = "Launch file",
-            type = "codelldb",
-            request = "launch",
-            program = function()
-                return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-            end,
-            cwd = "${workspaceFolder}",
-            stopOnEntry = true,
-        },
-    }
-    dap.configurations.c = dap.configurations.cpp
-end
-
 return {
     {
         "mfussenegger/nvim-dap",
-        config = dap_setup,
+        init = function()
+            vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
+            vim.fn.sign_define("DapBreakpointCondition",
+                { text = "", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
+            vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DiagnosticSignWarn", culhl = "CursorLineWarn" })
+            vim.fn.sign_define("DapStopped", { text = "→", texthl = "DiagnosticSignError", culhl = "CursorLineError" })
+            vim.fn.sign_define("DapBreakpointRejected",
+                { text = "", texthl = "DiagnosticSignInfo", culhl = "CursorLineInfo" })
+        end,
         dependencies = {
             { "jay-babu/mason-nvim-dap.nvim", },
             { "theHamsta/nvim-dap-virtual-text", opts = {}, lazy = true },
             { "liadOz/nvim-dap-repl-highlights", opts = {}, lazy = true },
-            {
-                "mfussenegger/nvim-dap-python",
-                config = function()
-                    require("dap-python").setup("/home/oleete/.local/pipx/venvs/debugpy/bin/python")
-                end,
-                lazy = true,
-            },
-            { "kdheepak/nvim-dap-julia", opts = {}, },
+            { "kdheepak/nvim-dap-julia",         opts = {}, },
         },
         keys = {
-
             -- Stepping
             { "<leader>dh", function() require("dap").step_out() end,          desc = "step out" },
             { "<leader>dj", function() require("dap").step_over() end,         desc = "step over" },
@@ -59,6 +24,7 @@ return {
             { "<leader>dl", function() require("dap").step_into() end,         desc = "step in" },
             { "<leader>d<", function() require("dap").up() end,                desc = "step up" },
             { "<leader>d>", function() require("dap").down() end,              desc = "step down" },
+            { "<leader>dg", function() require("dap").goto_() end,             desc = "Go to Line (No Execute)" },
 
             -- Breakpoints
             { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "toggle breakpoint" },
@@ -84,7 +50,7 @@ return {
                 "<leader>ds",
                 function()
                     local widgets = require("dap.ui.widgets")
-                    widgets.centered_float(widgets.scopes, { border = "rounded" })
+                    widgets.centered_float(widgets.scopes, { border = vim.o.winborder })
                 end,
                 desc = "view scopes"
             },
@@ -96,21 +62,9 @@ return {
         dependencies = "mason.nvim",
         cmd = { "DapInstall", "DapUninstall" },
         opts = {
-            -- Makes a best effort to setup the various debuggers with
-            -- reasonable debug configurations
-            automatic_installation = true,
-
-            -- You can provide additional configuration to the handlers,
-            -- see mason-nvim-dap README for more information
+            automatic_installation = false,
             handlers = {},
-
-            -- You'll need to check that you have the required things installed
-            -- online, please don't ask me how to install them :)
-            ensure_installed = {
-                -- Update this to ensure that you have the debuggers for the langs you want
-            },
+            ensure_installed = {},
         },
-        -- mason-nvim-dap is loaded when nvim-dap loads
-        config = function() end,
     },
 }

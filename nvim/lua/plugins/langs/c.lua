@@ -1,6 +1,14 @@
 return {
     {
         "neovim/nvim-lspconfig",
-        opts = { servers = { clangd = {}, }, },
+        ---@module "plugins.lsp"
+        ---@type PluginLspOpts
+        opts = {
+            servers = {
+                clangd = {
+                    mason = true,
+                },
+            },
+        },
     },
 }

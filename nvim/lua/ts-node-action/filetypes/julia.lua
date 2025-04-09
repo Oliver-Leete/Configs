@@ -221,12 +221,12 @@ local func_exp = function(node)
     return ret_san(ret), { format = true }
 end
 
-local function collapse_child_nodes(padding)
+local function collapse_child_nodes(new_padding)
     return function(node)
         local replacement = {}
 
         for child, _ in node:iter_children() do
-            table.insert(replacement, helpers.padded_node_text(child, padding))
+            table.insert(replacement, helpers.padded_node_text(child, new_padding))
         end
         replacement = vim.tbl_filter(function(x) return x ~= "" end, replacement)
         table.remove(replacement, 1)

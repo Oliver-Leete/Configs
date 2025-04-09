@@ -27,9 +27,12 @@ return {
     },
     {
         "neovim/nvim-lspconfig",
+        ---@module "plugins.lsp"
+        ---@type PluginLspOpts
         opts = {
             servers = {
                 lua_ls = {
+                    mason = true,
                     workspace = {
                         checkThirdParty = false,
                     },

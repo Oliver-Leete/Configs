@@ -1,6 +1,14 @@
 return {
     {
         "neovim/nvim-lspconfig",
-        opts = { servers = { julials = {}, }, },
+        ---@module "plugins.lsp"
+        ---@type PluginLspOpts
+        opts = {
+            servers = {
+                julials = {
+                    mason = true,
+                },
+            },
+        },
     },
 }

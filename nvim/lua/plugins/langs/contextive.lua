@@ -5,7 +5,7 @@ return {
         ---@type PluginLspOpts
         opts = {
             servers = {
-                jsonls = {
+                contextive = {
                     mason = true,
                 },
             },

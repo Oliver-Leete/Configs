@@ -1,6 +1,14 @@
 return {
     {
         "neovim/nvim-lspconfig",
-        opts = { servers = { taplo = {}, }, },
+        ---@module "plugins.lsp"
+        ---@type PluginLspOpts
+        opts = {
+            servers = {
+                taplo = {
+                    mason = true,
+                },
+            },
+        },
     },
 }

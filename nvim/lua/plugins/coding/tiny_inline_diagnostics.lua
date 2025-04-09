@@ -4,6 +4,8 @@ return {
     priority = 1000,
     opts = {
         preset = "powerline",
+        transparent_bg = true,
+        transparent_cursorline = true,
         options = {
             show_source = true,
             use_icons_from_diagnostic = true,

@@ -1,9 +1,10 @@
 return {
     "nvim-zh/colorful-winsep.nvim",
+    dev = true,
+    init = function()
+        vim.api.nvim_set_hl(0, "NvimSeparator", { link = "Function" })
+    end,
     opts = {
-        highlight = { link = "Function" },
-        interval = 30,
-        no_exec_files = { "mason", },
         symbols = { '─', '│', '╭', '╮', '╰', '╯' },
         smooth = false,
     },

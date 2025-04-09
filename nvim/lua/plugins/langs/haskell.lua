@@ -2,6 +2,7 @@ return {
     {
         "MrcJkb/haskell-tools.nvim",
         init = function()
+            ---@module "haskell-tools"
             ---@type haskell-tools.Opts
             local opts = vim.defaulttable()
             opts.tools.repl.handler = "toggleterm"
@@ -56,6 +57,8 @@ return {
     },
     {
         "neovim/nvim-lspconfig",
+        ---@module "plugins.lsp"
+        ---@type PluginLspOpts
         opts = {
             setup = {
                 hls = function()

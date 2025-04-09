@@ -8,6 +8,14 @@ return {
     },
     {
         "neovim/nvim-lspconfig",
-        opts = { servers = { marksman = {}, }, },
+        ---@module "plugins.lsp"
+        ---@type PluginLspOpts
+        opts = {
+            servers = {
+                marksman = {
+                    mason = true,
+                },
+            },
+        },
     },
 }

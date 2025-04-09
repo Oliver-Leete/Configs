@@ -5,6 +5,14 @@ return {
     },
     {
         "neovim/nvim-lspconfig",
-        opts = { servers = { esbonio = {}, }, },
+        ---@module "plugins.lsp"
+        ---@type PluginLspOpts
+        opts = {
+            servers = {
+                esbonio = {
+                    mason = true,
+                },
+            },
+        },
     },
 }
