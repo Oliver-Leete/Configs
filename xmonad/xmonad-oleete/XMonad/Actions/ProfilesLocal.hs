@@ -81,7 +81,7 @@ import XMonad.Actions.WindowBringer (WindowBringerConfig(..))
 import XMonad.Actions.OnScreen (greedyViewOnScreen)
 import XMonad.Hooks.Rescreen (addAfterRescreenHook)
 import XMonad.Hooks.DynamicLog (PP(ppRename))
-import XMonad.Prompt 
+import XMonad.Prompt
 
 --------------------------------------------------------------------------------
 -- $overview
@@ -376,16 +376,16 @@ switchProfilePrompt :: XPConfig -> X()
 switchProfilePrompt c = do
   ps <- profileIds
   mkXPrompt (ProfilePrompt "Profile: ") c (mkComplFunFromList' c ps) switchToProfile
-     
+
 --------------------------------------------------------------------------------
 -- | Prompt for switching workspaces.
 switchProfileWSPrompt :: XPConfig -> X ()
 switchProfileWSPrompt c = mkPrompt =<< currentProfileWorkspaces
   where
-    mkPrompt pws = mkXPrompt (ProfilePrompt "Switch to: ") c (mkComplFunFromList' c pws) mbygoto 
+    mkPrompt pws = mkXPrompt (ProfilePrompt "Switch to: ") c (mkComplFunFromList' c pws) mbygoto
     mbygoto wid = do
       pw <- profileWorkspaces =<< currentProfile
-      unless (wid `notElem` pw) (windows . W.greedyView $ wid)
+      when (wid `elem` pw) (windows . W.greedyView $ wid)
 
 --------------------------------------------------------------------------------
 -- | Prompt for shifting windows to a different workspace.
@@ -395,7 +395,7 @@ shiftProfileWSPrompt c = mkPrompt =<< currentProfileWorkspaces
     mkPrompt pws = mkXPrompt (ProfilePrompt "Send to: ") c (mkComplFunFromList' c pws) mbyshift
     mbyshift wid = do
       pw <- profileWorkspaces =<< currentProfile
-      unless (wid `notElem` pw) (windows . W.shift $ wid)
+      when (wid `elem` pw) (windows . W.shift $ wid)
 
 --------------------------------------------------------------------------------
 addWSToProfile :: WorkspaceId -> ProfileId -> X()
@@ -413,7 +413,7 @@ addWSToProfile wid pid = XS.modify go
    f p = Profile pid (profileWS p ++ [wid])
 
    update' :: Profile -> Maybe Profile
-   update' cp = if profileId cp == pid && wid `notElem` profileWS cp then Just (Profile pid $ (profileWS cp) ++ [wid]) else Just cp
+   update' cp = if profileId cp == pid && wid `notElem` profileWS cp then Just (Profile pid $ profileWS cp ++ [wid]) else Just cp
 
 --------------------------------------------------------------------------------
 -- | Prompt for removing a workspace from a profile, changed to act on current profile only.

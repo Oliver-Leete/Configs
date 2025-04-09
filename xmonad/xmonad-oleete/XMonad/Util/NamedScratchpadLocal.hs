@@ -213,7 +213,7 @@ someNamedScratchpadAction f runApp scratchpadConfig scratchpadName =
         Nothing -> return ()
 
 hideAllNamedScratchPads :: NamedScratchpads -> [X ()]
-hideAllNamedScratchPads nspConfig = map ((hideNamedScratchPads (\f ws -> f $ NE.head ws) nspConfig) . name) nspConfig
+hideAllNamedScratchPads nspConfig = map (hideNamedScratchPads (\f ws -> f $ NE.head ws) nspConfig . name) nspConfig
 
 hideNamedScratchPads :: ((Window -> X ()) -> NE.NonEmpty Window -> X ())
                           -> NamedScratchpads

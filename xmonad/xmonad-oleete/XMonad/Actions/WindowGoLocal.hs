@@ -71,7 +71,7 @@ For detailed instructions on editing your key bindings, see
 
 -- | Get the list of workspaces sorted by their tag
 workspacesSorted :: Ord i => W.StackSet i l a s sd -> [W.Workspace i l a]
-workspacesSorted s = [W.workspace $ W.current s] ++ (map W.workspace . W.visible) s
+workspacesSorted s = W.workspace (W.current s) : (map W.workspace . W.visible) s
 
 -- | Get a list of all windows in the 'StackSet' with an absolute ordering of workspaces
 allWindowsSorted :: Ord i => Eq a => W.StackSet i l a s sd -> [a]
