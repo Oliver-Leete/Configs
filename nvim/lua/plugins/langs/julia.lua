@@ -11,4 +11,9 @@ return {
             },
         },
     },
+    {
+        "kdheepak/nvim-dap-julia",
+        ft = {"julia"},
+        opts = {},
+    },
 }
