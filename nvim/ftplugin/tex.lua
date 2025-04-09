@@ -1,4 +1,4 @@
-vim.api.nvim_buf_set_option(0, "textwidth", 100)
+vim.bo.textwidth = 100
 
 vim.b[0].upafunc = function()
     local test_results = vim.fn.systemlist([[rg --json '\\input\{]] .. vim.fn.expand("%:r") .. [[(\.tex)?}']])
