@@ -44,6 +44,7 @@ return {
             config = { os = { editPreset = "nvim-remote" }, gui = { nerdFontsVersion = "3", }, },
         },
         bigfile = { enabled = true },
+        words = { enabled = true },
     },
     keys = {
         { "<leader>f",  function() require("snacks.picker").files({ hidden = true }) end, desc = "Find files" },
@@ -61,8 +62,18 @@ return {
 
         { "<leader>sn", function() require("snacks.notifier").show_history() end,         desc = "Notification History" },
 
-        { "]]",         function() require("snacks.words").jump(vim.v.count1) end,        desc = "Next Reference",      mode = { "n", "t" } },
-        { "[[",         function() require("snacks.words").jump(-vim.v.count1) end,       desc = "Prev Reference",      mode = { "n", "t" } },
+        {
+            "]}",
+            function() require("user.targets").func(require("snacks.words").jump, "}", vim.v.count1) end,
+            desc = "Reference",
+            mode = { "n", "t" }
+        },
+        {
+            "[{",
+            function() require("user.targets").func(require("snacks.words").jump, "{", -vim.v.count1) end,
+            desc = "Reference",
+            mode = { "n", "t" }
+        },
     },
     init = function()
         vim.api.nvim_create_autocmd("User", {
@@ -76,7 +87,8 @@ return {
                 require("snacks.toggle").indent():map("<leader>zi")
                 require("snacks.toggle").dim():map("<leader>zd")
 
-                require("snacks.toggle").option("wrap", { name = "Wrap" }):map("<leader>zw")
+                require("snacks.toggle").words():map("<leader>zw")
+                require("snacks.toggle").option("wrap", { name = "Wrap" }):map("<leader>zW")
                 require("snacks.toggle").line_number():map("<leader>zl")
                 require("snacks.toggle").option("conceallevel",
                     { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map("<leader>zH")

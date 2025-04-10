@@ -246,7 +246,11 @@ return {
             { "∨", "∧" },
             { "⊂", "⊃", "⊊", "⊋" },
             { "∘", "⨟" },
-            { ".|>", "|>" },
+            { "|>", ".|>" },
+            { "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "⁰" },
+            { "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "₀" },
+            { "ᵢ", "ⱼ", "ₖ" },
+            { "ₙ", "ₘ", "ₗ" },
         }
         for _, symbols in ipairs(symbol_cycles) do
             default[#default + 1] = augend.constant.new({ elements = symbols, word = false, cyclic = true })
@@ -271,6 +275,8 @@ return {
             dials_by_ft = {
                 markdown = "markdown",
                 gitrebase = "gitrebase",
+                python = "python",
+                julia = "julia",
             },
             groups = {
                 default = default,
@@ -280,6 +286,10 @@ return {
                 },
                 gitrebase = {
                     rebase_commands,
+                },
+                python = {
+                },
+                julia = {
                 },
             },
         }

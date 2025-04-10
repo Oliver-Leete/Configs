@@ -7,7 +7,10 @@ return {
         transparent_bg = true,
         transparent_cursorline = true,
         options = {
-            show_source = true,
+            show_source = {
+                enabled = true,
+                if_many = true,
+            },
             use_icons_from_diagnostic = true,
             add_messages = true,
             softwrap = 30,
