@@ -68,21 +68,23 @@ M.nav_dir = function(direction)
     end
 end
 
----@param func {type: "open" | "close" | "toggle"}
-M.trouble_snacks = function(func)
+---Run an action on a snacks picker trouble list, using the most recently set of the two lists.
+---@param action "open" | "close" | "toggle" The action to take with the list
+M.trouble_snacks = function(action)
     local mode = require("trouble.sources.snacks").mode()
     local not_mode = mode == "snacks" and "snacks_files" or "snacks"
     require("trouble").close(not_mode)
 
     local o_or_c
-    if func == "toggle" then
+    if action == "toggle" then
         o_or_c = require("trouble").is_open(mode) and "close" or "open"
     else
-        o_or_c = func
+        o_or_c = action
     end
 
     if o_or_c == "open" then
         require("trouble").open(mode)
+        ---@diagnostic disable-next-line: missing-parameter, param-type-mismatch
         require("trouble").focus(mode)
     elseif o_or_c == "close" then
         require("trouble").close(mode)

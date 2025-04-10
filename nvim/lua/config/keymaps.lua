@@ -147,6 +147,9 @@ vim.keymap.set("x", ",fw", function() return "!par w" .. num() .. "<cr>" end,
 
 vim.keymap.set("n", "<leader><leader>", "<cmd>silent e #<cr>", { desc = "Last file" })
 
+vim.keymap.set({ "n", "x", "o" }, "]]", function() require("user.targets").mapping("]]", "]") end, { desc = "Section" })
+vim.keymap.set({ "n", "x", "o" }, "[[", function() require("user.targets").mapping("[[", "[") end, { desc = "Section" })
+
 -- Mouse Bindings
 
 vim.keymap.set("n", "<c-rightmouse>", "gf")

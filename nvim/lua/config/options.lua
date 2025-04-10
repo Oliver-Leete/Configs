@@ -43,10 +43,6 @@ vim.opt.hlsearch = true
 vim.opt.inccommand = "split"
 vim.opt.gdefault = true
 vim.opt.incsearch = true
-vim.keymap.set({ "n", "x", "o" }, "<plug>(slash-after)", function()
-    vim.g.dirJumps = "search"
-end
-)
 
 -- Indenting
 vim.opt.tabstop = 4

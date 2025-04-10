@@ -42,8 +42,8 @@ return {
         opts = function()
             ---@class PluginLspOpts
             ---@field capabilities? lsp.ClientCapabilities
-            ---@field servers? table string lsp.ClientConfig
-            ---@field setup? table string, function(server: string, opts:lsp.ClientConfig):boolean
+            ---@field servers? table<string, vim.lsp.ClientConfig>
+            ---@field setup? table<string, fun(server: string, opts: vim.lsp.ClientConfig):boolean>
             local ret = {
                 capabilities = {
                     workspace = {
