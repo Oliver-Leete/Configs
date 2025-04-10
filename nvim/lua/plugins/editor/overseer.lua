@@ -1,3 +1,9 @@
+---@module "overseer"
+---@class OverseerUserConfig: overseer.Config
+---@field extra_templates? table<string, (overseer.TemplateProvider|overseer.TemplateDefinition )> Allows to add extra templates or template providers elsewhere in the config
+
+---@module "lazy"
+---@type LazySpec
 return {
     {
         "stevearc/overseer.nvim",
@@ -10,6 +16,7 @@ return {
             "OverseerDeleteBundle",
             "OverseerRunCmd",
             "OverseerRun",
+            "OverseerRestartLast",
             "OverseerInfo",
             "OverseerBuild",
             "OverseerQuickAction",
@@ -17,28 +24,66 @@ return {
             "OverseerClearCache",
         },
         keys = {
-            { "<leader>ow", "<cmd>OverseerToggle<cr>",      desc = "Task list" },
-            { "<leader>oo", "<cmd>OverseerRun<cr>",         desc = "Run task" },
-            { "<leader>oq", "<cmd>OverseerQuickAction<cr>", desc = "Action recent task" },
-            { "<leader>oi", "<cmd>OverseerInfo<cr>",        desc = "Overseer Info" },
-            { "<leader>ob", "<cmd>OverseerBuild<cr>",       desc = "Task builder" },
-            { "<leader>ot", "<cmd>OverseerTaskAction<cr>",  desc = "Task action" },
-            { "<leader>oc", "<cmd>OverseerClearCache<cr>",  desc = "Clear cache" },
-            { "<leader>?o", "<cmd>OverseerInfo<cr>",        desc = "Overseer info", },
+            { "<leader>nn", "<cmd>OverseerRun<cr>",         desc = "Run task" },
+            { "<leader>nr", "<cmd>OverseerRestartLast<cr>", desc = "Restart task" },
+            { "<leader>no", "<cmd>OverseerToggle<cr>",      desc = "Task list" },
+            { "<leader>nb", "<cmd>OverseerBuild<cr>",       desc = "Task builder" },
+            { "<leader>nq", "<cmd>OverseerQuickAction<cr>", desc = "Action recent task" },
+            { "<leader>nt", "<cmd>OverseerTaskAction<cr>",  desc = "Task action" },
+            { "<leader>nc", "<cmd>OverseerClearCache<cr>",  desc = "Clear cache" },
+            { "<leader>nl", "<cmd>OverseerLoadBundle<cr>",  desc = "Load bundle" },
+            { "<leader>ns", "<cmd>OverseerSaveBundle<cr>",  desc = "Save bundle" },
+            { "<leader>?n", "<cmd>OverseerInfo<cr>",        desc = "Overseer info", },
         },
+        ---@type OverseerUserConfig
         opts = {
             strategy = "jobstart",
             dap = true,
             task_list = {
                 direction = "bottom",
             },
-        }
+            component_aliases = {
+                default = {
+                    { "display_duration",    detail_level = 2 },
+                    "open_output",
+                    "on_output_summarize",
+                    "on_exit_set_status",
+                    "on_complete_notify",
+                    { "on_complete_dispose", require_view = { "SUCCESS", "FAILURE" } },
+                }
+            }
+        },
+        opts_extend = { "extra_templates" },
+
+        ---@param opts OverseerUserConfig
+        config = function(_, opts)
+            local extra_templates = opts.extra_templates or {}
+            opts.extra_templates = nil
+
+            local overseer = require("overseer")
+            overseer.setup(opts)
+
+            -- Register extra templates
+            for _, template in pairs(extra_templates) do
+                overseer.register_template(template)
+            end
+
+            -- Add a restart task command
+            vim.api.nvim_create_user_command("OverseerRestartLast", function()
+                local tasks = overseer.list_tasks({ recent_first = true })
+                if vim.tbl_isempty(tasks) then
+                    vim.notify("No tasks found", vim.log.levels.WARN)
+                else
+                    overseer.run_action(tasks[1], "restart")
+                end
+            end, {})
+        end
     },
     {
         "folke/edgy.nvim",
         optional = true,
         opts = function(_, opts)
-            opts.left = opts.bottom or {}
+            opts.bottom = opts.bottom or {}
             table.insert(opts.bottom, {
                 title = "overseer-list",
                 ft = "OverseerList",

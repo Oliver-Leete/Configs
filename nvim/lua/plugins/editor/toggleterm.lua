@@ -1,5 +1,5 @@
 return {
-    'akinsho/toggleterm.nvim',
+    "akinsho/toggleterm.nvim",
     dev = true,
     cmd = {
         "TermSelect",

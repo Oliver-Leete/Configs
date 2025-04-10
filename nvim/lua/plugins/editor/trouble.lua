@@ -11,6 +11,21 @@ return {
     cmd = "Trouble",
     keys = {
         { "<leader>l", function() require("user.myfuncs").trouble_snacks("toggle") end, desc = "Toggle trouble" },
+
+        {
+            "[l",
+            function()
+                require("user.targets").func(require("trouble").prev, "l", { jump = true, skip_groups = true, })
+            end,
+            desc = "Trouble item"
+        },
+        {
+            "]l",
+            function()
+                require("user.targets").func(require("trouble").next, "l", { jump = true, skip_groups = true, })
+            end,
+            desc = "Trouble item"
+        },
     },
     specs = {
         "folke/snacks.nvim",
