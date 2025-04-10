@@ -41,8 +41,7 @@ require("lazy").setup(
             border = vim.o.winborder,
             title = " Lazy ",
         },
-        ---@diagnostic disable-next-line: assign-type-mismatch
-        dev = {
+        dev = { ---@diagnostic disable-line: assign-type-mismatch
             path = "~/Projects/nvim",
         },
         performance = {

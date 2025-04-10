@@ -62,6 +62,7 @@ return {
                         ---@class Params
                         ---@field render_on_save boolean
 
+                        local TAG = require("overseer.constants").TAG
                         local quarto_params = {
                             render_on_save = {
                                 type = "boolean",
@@ -130,12 +131,11 @@ return {
 
                         ---@type fun(search: overseer.SearchParams): boolean, nil|string
                         local is_quarto_file = function(_)
-                            local buffer_path = vim.api.nvim_buf_get_name(0)
-                            local quarto_extensions = { ".qmd", ".Rmd", ".ipynb", ".md" }
-                            local file_extension = buffer_path:match "^.+(%..+)$"
+                            local file_extension = vim.fn.expand("%:e")
                             if not file_extension then
                                 return false, "Not in a file. exiting."
                             end
+                            local quarto_extensions = { "qmd", "Rmd", "ipynb", "md" }
                             if not require("quarto.tools").contains(quarto_extensions, file_extension) then
                                 return false, "Not a quarto file, ends in " .. file_extension .. " exiting."
                             end
@@ -144,8 +144,7 @@ return {
 
                         ---@type fun(search: overseer.SearchParams): boolean, nil|string
                         local is_quarto_project = function(_)
-                            local buffer_path = vim.api.nvim_buf_get_name(0)
-                            local root_dir = require("quarto.util").root_pattern("_quarto.yml")(buffer_path)
+                            local root_dir = require("quarto.util").root_pattern("_quarto.yml")(vim.fn.expand("%:p"))
                             return root_dir ~= nil
                         end
 
@@ -157,6 +156,7 @@ return {
                                 condition = {
                                     callback = is_quarto_file,
                                 },
+                                tags = { TAG.BUILD },
                             },
                             {
                                 name = "Preview project",

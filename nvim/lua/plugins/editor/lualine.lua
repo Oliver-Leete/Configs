@@ -82,6 +82,9 @@ local line_setup = function()
         },
     })
 end
+
+---@module "lazy"
+---@type LazySpec
 return {
     "nvim-lualine/lualine.nvim",
     config = line_setup

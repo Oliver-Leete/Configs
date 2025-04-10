@@ -11,6 +11,8 @@ local set_bp = function()
     )
 end
 
+---@module "lazy"
+---@type LazySpec
 return {
     {
         "mfussenegger/nvim-dap",

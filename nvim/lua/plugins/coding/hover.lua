@@ -1,3 +1,5 @@
+---@module "lazy"
+---@type LazySpec
 return {
     "lewis6991/hover.nvim",
     opts = {
@@ -18,7 +20,6 @@ return {
         mouse_delay = 1000
     },
     keys = {
-        ---@diagnostic disable-next-line: missing-parameter
-        { "K", function() require("hover").hover() end, desc = "hover.nvim" },
+        { "K", function() require("hover").hover() end, desc = "hover.nvim" }, ---@diagnostic disable-line: missing-parameter
     }
 }

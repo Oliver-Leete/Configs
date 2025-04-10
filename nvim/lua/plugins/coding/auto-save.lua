@@ -1,3 +1,5 @@
+---@module "lazy"
+---@type LazySpec
 return {
     "pocco81/auto-save.nvim",
     opts = {

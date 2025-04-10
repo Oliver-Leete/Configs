@@ -32,6 +32,8 @@ local custom_attach = function(client, bufnr)
     end
 end
 
+---@module "lazy"
+---@type LazySpec
 return {
     {
         "neovim/nvim-lspconfig",
@@ -40,9 +42,11 @@ return {
             { "williamboman/mason-lspconfig.nvim", config = function() end },
         },
         opts = function()
+            ---@module "lspconfig"
+
             ---@class PluginLspOpts
             ---@field capabilities? lsp.ClientCapabilities
-            ---@field servers? table<string, vim.lsp.ClientConfig>
+            ---@field servers? table<string, table>
             ---@field setup? table<string, fun(server: string, opts: vim.lsp.ClientConfig):boolean>
             local ret = {
                 capabilities = {
@@ -78,7 +82,7 @@ return {
                 end,
             })
 
-            local servers = opts.servers
+            local servers = opts.servers or {}
             local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
             local has_blink, blink = pcall(require, "blink.cmp")
             local capabilities = vim.tbl_deep_extend(
@@ -93,7 +97,7 @@ return {
             local function setup(server)
                 local server_opts = vim.tbl_deep_extend(
                     "force",
-                    {capabilities = vim.deepcopy(capabilities),},
+                    { capabilities = vim.deepcopy(capabilities), },
                     servers[server] or {}
                 )
                 if server_opts.enabled == false then

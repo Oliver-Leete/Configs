@@ -84,8 +84,7 @@ M.trouble_snacks = function(action)
 
     if o_or_c == "open" then
         require("trouble").open(mode)
-        ---@diagnostic disable-next-line: missing-parameter, param-type-mismatch
-        require("trouble").focus(mode)
+        require("trouble").focus(mode) ---@diagnostic disable-line: missing-parameter, param-type-mismatch
     elseif o_or_c == "close" then
         require("trouble").close(mode)
     end

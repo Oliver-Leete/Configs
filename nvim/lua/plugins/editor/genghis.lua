@@ -1,3 +1,5 @@
+---@module "lazy"
+---@type LazySpec
 return {
     "chrisgrieser/nvim-genghis",
     opts = {

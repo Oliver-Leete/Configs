@@ -1,3 +1,5 @@
+---@module "lazy"
+---@type LazySpec
 return {
     "kana/vim-niceblock",
     keys = {

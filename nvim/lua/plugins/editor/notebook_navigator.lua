@@ -1,3 +1,5 @@
+---@module "lazy"
+---@type LazySpec
 return {
     "GCBallesteros/NotebookNavigator.nvim",
     dependencies = {

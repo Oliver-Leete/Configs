@@ -1,3 +1,5 @@
+---@module "lazy"
+---@type LazySpec
 return {
     "nvim-zh/colorful-winsep.nvim",
     dev = true,

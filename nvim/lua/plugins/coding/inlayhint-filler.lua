@@ -1,3 +1,5 @@
+---@module "lazy"
+---@type LazySpec
 return {
     "Davidyz/inlayhint-filler.nvim",
     keys = {

@@ -1,3 +1,5 @@
+---@module "lazy"
+---@type LazySpec
 return {
     "igorlfs/nvim-dap-view",
     lazy = true,

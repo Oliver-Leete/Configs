@@ -1,4 +1,6 @@
 local ft = { "markdown", "quarto", "typst", "latex", "tex" }
+---@module "lazy"
+---@type LazySpec
 return {
     {
         "OXY2DEV/markview.nvim",

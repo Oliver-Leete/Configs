@@ -72,6 +72,8 @@ local cmd_setup = function()
     })
 end
 
+---@module "lazy"
+---@type LazySpec
 return {
     "FeiyouG/commander.nvim",
     config = cmd_setup,

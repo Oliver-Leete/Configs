@@ -42,6 +42,7 @@ return {
             task_list = {
                 direction = "bottom",
             },
+            default_template_prompt = "avoid",
             component_aliases = {
                 default = {
                     { "display_duration",    detail_level = 2 },

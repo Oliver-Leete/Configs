@@ -1,3 +1,5 @@
+---@module "lazy"
+---@type LazySpec
 return {
     "CKolkey/ts-node-action",
     dependencies = { "tpope/vim-repeat" },

@@ -1,3 +1,5 @@
+---@module "lazy"
+---@type LazySpec
 return {
     "nvim-treesitter/nvim-treesitter",
     build = { ":TSInstall all", ":TSUpdate all", ":TSUninstall comment" },

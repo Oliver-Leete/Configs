@@ -1,3 +1,5 @@
+---@module "lazy"
+---@type LazySpec
 return {
     "Wansmer/sibling-swap.nvim",
     requires = { "nvim-treesitter/nvim-treesitter" },
