@@ -5,7 +5,6 @@ local dir_jumps = "search"
 M.ai = function(direction, id)
     local count = vim.v.count
     dir_jumps = id
-    id = id:lower()
     vim.cmd("norm! m`")
     repeat
         MiniAi.move_cursor("left", "a", id, { search_method = direction })

@@ -31,8 +31,16 @@ return {
                 add_jump = true,
             },
             f = {
-                name = "Function call",
-                spec = gen_spec.function_call(),
+                name = "Function call (no dot)",
+                spec = gen_spec.function_call({name_pattern = "[%w_]"}),
+                add_jump = true,
+            },
+            F = {
+                name = "Function call (full)",
+                spec = gen_spec.treesitter({
+                    i = {"@call.inner"},
+                    a = {"@call.outer"},
+                }),
                 add_jump = true,
             },
             g = {

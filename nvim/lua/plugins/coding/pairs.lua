@@ -25,6 +25,10 @@ return {
                 search_method = "cover_or_nearest",
                 custom_surroundings = {
                     f = {
+                        input = { '%f[%w_][%w_]+%b()', '^.-%(().*()%)$' },
+                        output = func_out,
+                    },
+                    F = {
                         input = ts_input({
                             outer = "@call.outer",
                             inner = "@call.inner",
