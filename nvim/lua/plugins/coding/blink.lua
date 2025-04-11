@@ -6,6 +6,7 @@ return {
         lazy = true,
         opts = {},
     },
+    ---@module "blink-cmp"
     {
         "saghen/blink.cmp",
         build = "cargo build --release",

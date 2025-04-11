@@ -45,7 +45,7 @@ return {
                     size = 20,
                 },
             },
-            close_when_all_hidden = false,
+            close_when_all_hidden = true,
             exit_when_last = true,
             animate = {
                 enabled = false,

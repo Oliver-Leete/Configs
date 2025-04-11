@@ -37,21 +37,21 @@ return {
         },
         ---@type OverseerUserConfig
         opts = {
-            strategy = "jobstart",
+            strategy = { "jobstart", preserve_output = true },
             dap = true,
             task_list = {
                 direction = "bottom",
             },
-            default_template_prompt = "avoid",
+            default_template_prompt = "allow",
             component_aliases = {
                 default = {
                     { "display_duration",    detail_level = 2 },
-                    "open_output",
                     "on_output_summarize",
                     "on_exit_set_status",
-                    "on_complete_notify",
+                    { "on_complete_notify",  system = "unfocused" },
                     { "on_complete_dispose", require_view = { "SUCCESS", "FAILURE" } },
-                }
+                },
+                unique_replace = { "unique", replace = false },
             }
         },
         opts_extend = { "extra_templates" },

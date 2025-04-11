@@ -61,6 +61,7 @@ return {
                     generator = function(_, cb)
                         ---@class Params
                         ---@field render_on_save boolean
+                        ---@field open_output boolean
 
                         local TAG = require("overseer.constants").TAG
                         local quarto_params = {
@@ -69,7 +70,13 @@ return {
                                 name = "Watch for file changes",
                                 desc = "Rerender the notebook every time the file changes",
                                 default = true,
-                            }
+                            },
+                            open_output = {
+                                type = "boolean",
+                                name = "Show on startup",
+                                desc = "Open the task view when it starts",
+                                default = true,
+                            },
                         }
 
                         ---Check for `render-on-save: false` in _quarto.yml or the current qmd file
@@ -108,6 +115,7 @@ return {
                             local root_dir = require("quarto.util").root_pattern("_quarto.yml")(buffer_path)
                             local args = {}
                             local name
+                            local components = { "default", "unique_replace" }
 
                             if mode == "file" then
                                 name = "Render " .. vim.fn.expand("%:t:r")
@@ -122,10 +130,16 @@ return {
                                 args[#args + 1] = "--no-watch-inputs"
                             end
 
+                            if params.open_output then
+                                components[#components + 1] = "open_output"
+                            end
+
+                            ---@type overseer.TaskDefinition
                             return {
                                 name = name,
                                 cmd = { "quarto", "preview" },
                                 args = args,
+                                components = components,
                             }
                         end
 
