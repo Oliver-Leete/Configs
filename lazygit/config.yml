@@ -1,4 +1,6 @@
 quitOnTopLevelReturn: true
+nerdFontsVersion: "3"
+
 gui:
   sidePanelWidth: 0.2
 git:
