@@ -22,6 +22,7 @@ local custom_attach = function(client, bufnr)
     bmap("n", ",rr", vim.lsp.buf.rename, { desc = "Rename variable" })
     bmap("n", "<C-,>", vim.lsp.codelens.run, { desc = "Run code lens" })
     bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action, { desc = "Run code actions" })
+
     if sc.codeLensProvider and sc.codeLensProvider == true then
         vim.lsp.codelens.refresh()
         vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
@@ -132,7 +133,7 @@ return {
                         if server_opts.mason ~= true or not vim.tbl_contains(all_mslp_servers, server) then
                             setup(server)
                         else
-                            ensure_installed[#ensure_installed + 1] = server
+                            vim.list_extend(ensure_installed, { server })
                         end
                     end
                 end

@@ -119,7 +119,7 @@ return {
 
                             if mode == "file" then
                                 name = "Render " .. vim.fn.expand("%:t:r")
-                                args[#args + 1] = buffer_path
+                                vim.list_extend(args, { buffer_path })
                             else
                                 name = "Render project"
                             end
@@ -127,11 +127,11 @@ return {
                             local render_on_save = render_on_save_enabled(params.render_on_save, root_dir)
                             if not render_on_save then
                                 name = name .. " (no watch)"
-                                args[#args + 1] = "--no-watch-inputs"
+                                vim.list_extend(args, { "--no-watch-inputs" })
                             end
 
                             if params.open_output then
-                                components[#components + 1] = "open_output"
+                                vim.list_extend(components, { "open_output" })
                             end
 
                             ---@type overseer.TaskDefinition
@@ -150,7 +150,7 @@ return {
                                 return false, "Not in a file. exiting."
                             end
                             local quarto_extensions = { "qmd", "Rmd", "ipynb", "md" }
-                            if not require("quarto.tools").contains(quarto_extensions, file_extension) then
+                            if not vim.list_contains(quarto_extensions, file_extension) then
                                 return false, "Not a quarto file, ends in " .. file_extension .. " exiting."
                             end
                             return true

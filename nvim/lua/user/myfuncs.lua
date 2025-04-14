@@ -9,7 +9,7 @@ local tab_win_bufnrs = function(tabnr)
     local tab_wins = vim.tbl_filter(function(win)
         local win_buf = vim.api.nvim_win_get_buf(win)
         if 1 ~= vim.fn.buflisted(win_buf) then
-            return false
+            return true
         end
         return true
     end, vim.api.nvim_tabpage_list_wins(tabnr))

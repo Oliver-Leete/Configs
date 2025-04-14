@@ -209,12 +209,12 @@ scratchpads =
 -- Theme                                                                                          --
 ----------------------------------------------------------------------------------------------------
 background, foreground, dull, active, yellow, green :: String
-background = "#1a1a22"
-foreground = "#C8C093"
-dull = "#54546D"
-active = "#7E9CD8"
-yellow = "#DCA561"
-green = "#76946A"
+background = "#222436"
+foreground = "#c8d3f5"
+dull = "#1E2030"
+active = "#82AAFF"
+yellow = "#ffc777"
+green = "#c3e88d"
 
 -- sizes
 gap :: Integer
@@ -386,8 +386,8 @@ myKeys n =
     , ("M-S-i", runProjectApp3Force)
     , ("M-S-o", runProjectApp4Force)
     , ("M-/", upPointer $ Wgl.raiseNextMaybeCustomFocus2 bringWindow (spawn myTasks) (className =? "ticktick"))
-    , ("M-<Left>", bindFirst [kt "action previous_tab", l (P.sendKey (controlMask .|. shiftMask) xK_Tab)])
-    , ("M-<Right>", bindFirst [kt "action next_tab", l (P.sendKey controlMask xK_Tab)])
+    , ("M-<Left>", bindFirst [nv "tabprev", kt "action previous_tab", l (P.sendKey (controlMask .|. shiftMask) xK_Tab)])
+    , ("M-<Right>", bindFirst [nv "tabnext", kt "action next_tab", l (P.sendKey controlMask xK_Tab)])
     , ("M-<Down>", upPointer $ windows W.focusDown)
     , ("M-<Up>", upPointer $ windows W.focusUp)
     , ("M-w", bindFirst [kt "action toggle_stack", crm (spawn "/home/oleete/.config/bin/chromeFull"), l (P.sendKey noModMask xK_F11)])

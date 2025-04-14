@@ -12,7 +12,7 @@ return {
     lazy = false,
     cmd = "Trouble",
     keys = {
-        { "<leader>l", function() require("user.myfuncs").trouble_snacks("toggle") end, desc = "Toggle trouble" },
+        { "<leader>l", function() require("user.myfuncs").trouble_snacks("toggle") end, desc = "Trouble list" },
 
         {
             "[l",
@@ -36,13 +36,12 @@ return {
                 picker = {
                     actions = vim.tbl_extend("force", require("trouble.sources.snacks").actions, {
                         trouble_close = { action = function() require("user.myfuncs").trouble_snacks("close") end },
-                        trouble_f_open = { action = function() require("user.myfuncs").trouble_snacks("open") end }
                     }),
                     win = {
                         input = {
                             keys = {
-                                ["<c-l>"] = { { "trouble_close", "trouble_open", "trouble_f_open" }, mode = { "n", "i" }, },
-                                ["<m-l>"] = { { "trouble_close", "trouble_add", "trouble_f_open" }, mode = { "n", "i" }, },
+                                ["<c-l>"] = { { "trouble_close", "trouble_open" }, mode = { "n", "i" }, },
+                                ["<m-l>"] = { { "trouble_close", "trouble_add" }, mode = { "n", "i" }, },
                             },
                         },
                     },

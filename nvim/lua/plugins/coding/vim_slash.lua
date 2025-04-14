@@ -1,3 +1,6 @@
 ---@module "lazy"
 ---@type LazySpec
-return { "junegunn/vim-slash" }
+return {
+    "junegunn/vim-slash",
+    dev = true,
+}

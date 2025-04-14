@@ -9,6 +9,6 @@ return {
         }
     end,
     keys = {
-        { ",n", function() require("ts-node-action").node_action() end, desc = "Node action" },
+        { ',n', function() require("ts-node-action").node_action() end, desc = "Node action" },
     },
 }

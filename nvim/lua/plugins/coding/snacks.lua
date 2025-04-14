@@ -55,12 +55,9 @@ return {
         { "<leader>W",  function() require("snacks.picker").grep() end,                   desc = "Grep" },
 
 
-        { "<leader>gg", function() require("snacks.lazygit")() end,                       desc = "Lazygit" },
         { "<leader>gl", function() require("snacks.lazygit").log() end,                   desc = "Log" },
         { "<leader>gL", function() require("snacks.lazygit").log_file() end,              desc = "File log" },
         { "<leader>gB", function() require("snacks.gitbrowse")() end,                     desc = "Git Browse",          mode = { "n", "v" } },
-
-        { "<leader>R",  function() require("snacks.rename").rename_file() end,            desc = "Rename File" },
 
         { "<leader>sn", function() require("snacks.notifier").show_history() end,         desc = "Notification History" },
 

@@ -402,7 +402,7 @@ return {
     ternary_expression = {{ julia_tern_if, name = "Change to if expression" }},
     function_definition = {{ julia_func_short, name = "Change to short function definition" }},
     short_function_definition = {{ julia_func_long, name = "Change to long function definition" }},
-    function_expression = {{ func_exp, name = "Toggle anonymous function " }},
+    arrow_function_expression = {{ func_exp, name = "Toggle anonymous function " }},
     compound_statement = {{ begin_to_par, name = "Change to parenthesized expression" }},
     parenthesized_expression = {{ par_to_begin, name = "Change to compound statement" }},
     call_expression = {{ toggle_do, name = "Toggle do block" }},

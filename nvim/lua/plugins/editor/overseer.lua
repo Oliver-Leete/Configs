@@ -25,7 +25,7 @@ return {
         },
         keys = {
             { "<leader>nn", "<cmd>OverseerRun<cr>",         desc = "Run task" },
-            { "<leader>nr", "<cmd>OverseerRestartLast<cr>", desc = "Restart task" },
+            { "<leader>nN", "<cmd>OverseerRestartLast<cr>", desc = "Restart task" },
             { "<leader>no", "<cmd>OverseerToggle<cr>",      desc = "Task list" },
             { "<leader>nb", "<cmd>OverseerBuild<cr>",       desc = "Task builder" },
             { "<leader>nq", "<cmd>OverseerQuickAction<cr>", desc = "Action recent task" },
