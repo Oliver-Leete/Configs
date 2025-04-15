@@ -3,12 +3,12 @@ local user_autocmds = vim.api.nvim_create_augroup("user_autocmds", { clear = tru
 vim.api.nvim_create_autocmd("FileType", {
     group = user_autocmds,
     pattern = "help",
-    command = ":wincmd H | vertical resize 90<cr>"
+    command = ":wincmd H | vertical resize 90<cr>",
 })
 vim.api.nvim_create_autocmd("FileType", {
     group = user_autocmds,
     pattern = "qf",
-    command = "wincmd J"
+    command = "wincmd J",
 })
 
 vim.api.nvim_create_autocmd("TextYankPost", {

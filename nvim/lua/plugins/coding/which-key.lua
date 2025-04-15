@@ -6,13 +6,16 @@ return {
         preset = "helix",
         triggers = {
             { "<auto>", mode = "nxso" },
-            { "v",      mode = { "n", "x" } }
+            { "v", mode = { "n", "x" } },
+        },
+        sort = {
+            "alphanum",
         },
         plugins = {
             presets = {
                 nav = false,
-            }
-        }
+            },
+        },
     },
     init = function()
         require("which-key").add({
@@ -20,8 +23,8 @@ return {
 
             { "<leader>?c", icon = " " },
             { "<leader>?n", icon = " " },
-            { "<leader>?l", "<cmd>LspInfo<cr>", desc = "Lsp info", icon = " " },
-            { "<leader>?p", "<cmd>Lazy<cr>", desc = "Lazy info" },
+            { "<leader>?l", "<cmd>Lazy<cr>", desc = "Lazy info" },
+            { "<leader>?L", "<cmd>LspInfo<cr>", desc = "Lsp info", icon = " " },
             { "<leader>?m", "<cmd>Mason<cr>", desc = "Mason info", icon = " " },
             { "<leader>?t", group = "Treesitter", icon = " " },
             { "<leader>?tm", "<cmd>TSModuleInfo<cr>", desc = "Treesitter module info", icon = "󰕳 " },
@@ -30,6 +33,7 @@ return {
 
             { "<leader>d", group = "Debugger", icon = " " },
             { "<leader>g", group = "Git" },
+            { "<leader>gd", group = "Diffview" },
             { "<leader>n", group = "Tasks", icon = " " },
             { "<leader>r", group = "Repl", icon = " " },
             { "<leader>s", group = "UI" },
@@ -39,11 +43,15 @@ return {
             { "<leader>z", group = "Toggles" },
 
             { "<leader>f", icon = "󰈞 " },
-            { "<leader>F", icon = " " },
-            { "<leader>w", icon = " " },
-            { "<leader>W", icon = "󰑑 " },
 
-            { "<leader>p", icon = " " },
+            { "<leader>P", icon = " " },
+            { "<leader>p", icon = " " },
+            { "<leader>ps", icon = " " },
+            { "<leader>pp", icon = " " },
+            { "<leader>pS", icon = " " },
+            { "<leader>pw", icon = "󰑑 " },
+            { "<leader>pg", group = "Git pickers" },
+            { "<leader>po", group = "Option pickers" },
 
             { "<leader>/", group = "Files" },
             { "<leader>/p", icon = "󰝒 " },
@@ -77,5 +85,5 @@ return {
             { ",b", icon = "󱀢 " },
             { ",a", icon = "󰆆 " },
         })
-    end
+    end,
 }

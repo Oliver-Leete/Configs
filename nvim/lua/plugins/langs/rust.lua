@@ -2,10 +2,10 @@
 ---@type LazySpec
 return {
     {
-        "mrcjkb/rustaceanvim"
+        "mrcjkb/rustaceanvim",
     },
     {
-        'cordx56/rustowl',
+        "cordx56/rustowl",
         lazy = false,
         opts = {},
         keys = {

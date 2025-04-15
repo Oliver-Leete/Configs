@@ -24,16 +24,16 @@ return {
             "OverseerClearCache",
         },
         keys = {
-            { "<leader>nn", "<cmd>OverseerRun<cr>",         desc = "Run task" },
+            { "<leader>nn", "<cmd>OverseerRun<cr>", desc = "Run task" },
             { "<leader>nN", "<cmd>OverseerRestartLast<cr>", desc = "Restart task" },
-            { "<leader>no", "<cmd>OverseerToggle<cr>",      desc = "Task list" },
-            { "<leader>nb", "<cmd>OverseerBuild<cr>",       desc = "Task builder" },
+            { "<leader>no", "<cmd>OverseerToggle<cr>", desc = "Task list" },
+            { "<leader>nb", "<cmd>OverseerBuild<cr>", desc = "Task builder" },
             { "<leader>nq", "<cmd>OverseerQuickAction<cr>", desc = "Action recent task" },
-            { "<leader>nt", "<cmd>OverseerTaskAction<cr>",  desc = "Task action" },
-            { "<leader>nc", "<cmd>OverseerClearCache<cr>",  desc = "Clear cache" },
-            { "<leader>nl", "<cmd>OverseerLoadBundle<cr>",  desc = "Load bundle" },
-            { "<leader>ns", "<cmd>OverseerSaveBundle<cr>",  desc = "Save bundle" },
-            { "<leader>?n", "<cmd>OverseerInfo<cr>",        desc = "Overseer info", },
+            { "<leader>nt", "<cmd>OverseerTaskAction<cr>", desc = "Task action" },
+            { "<leader>nc", "<cmd>OverseerClearCache<cr>", desc = "Clear cache" },
+            { "<leader>nl", "<cmd>OverseerLoadBundle<cr>", desc = "Load bundle" },
+            { "<leader>ns", "<cmd>OverseerSaveBundle<cr>", desc = "Save bundle" },
+            { "<leader>?n", "<cmd>OverseerInfo<cr>", desc = "Overseer info" },
         },
         ---@type OverseerUserConfig
         opts = {
@@ -45,14 +45,14 @@ return {
             default_template_prompt = "allow",
             component_aliases = {
                 default = {
-                    { "display_duration",    detail_level = 2 },
+                    { "display_duration", detail_level = 2 },
                     "on_output_summarize",
                     "on_exit_set_status",
-                    { "on_complete_notify",  system = "unfocused" },
+                    { "on_complete_notify", system = "unfocused" },
                     { "on_complete_dispose", require_view = { "SUCCESS", "FAILURE" } },
                 },
                 unique_replace = { "unique", replace = false },
-            }
+            },
         },
         opts_extend = { "extra_templates" },
 
@@ -78,7 +78,7 @@ return {
                     overseer.run_action(tasks[1], "restart")
                 end
             end, {})
-        end
+        end,
     },
     {
         "folke/edgy.nvim",

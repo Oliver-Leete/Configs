@@ -9,7 +9,7 @@ return {
             reindent_linewise = false,
         },
         multiply = {
-            prefix = "+"
+            prefix = "+",
         },
         replace = {
             prefix = "R",

@@ -8,12 +8,19 @@ return {
             "DiffviewOpen",
             "DiffviewClose",
             "DiffviewFileHistory",
-        }
+        },
+        keys = {
+            { "<leader>gdd", "<cmd>DiffviewFileHistory<cr>", desc = "File Histor" },
+            { "<leader>gdD", ":DiffviewOpen ", desc = "File Histor" },
+        },
     },
     {
         "NeogitOrg/neogit",
         dependencies = {
             "sindrets/diffview.nvim",
+        },
+        cmd = {
+            "Neogit",
         },
         ---@module "neogit"
         ---@type NeogitConfig
@@ -26,5 +33,5 @@ return {
         keys = {
             { "<leader>gg", function() require("neogit").open() end, desc = "Open neogit" },
         },
-    }
+    },
 }

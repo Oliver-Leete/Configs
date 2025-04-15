@@ -11,7 +11,9 @@ return {
             notify = false,
             on_error = function(err_text, level, ...)
                 local msg = require("treesj.notify").msg
-                if err_text and not (
+                if
+                    err_text
+                    and not (
                         err_text == msg.no_ts_parser
                         or err_text == msg.no_configured_lang
                         or err_text == msg.no_configured_node
@@ -30,8 +32,8 @@ return {
                 ",j",
                 function() require("treesj").toggle() end,
                 desc = "Split/join",
-                mode = { "n", "x" }
-            }
+                mode = { "n", "x" },
+            },
         },
     },
     {
@@ -54,8 +56,13 @@ return {
             },
         },
         keys = {
-            { ",J", function() require("mini.splitjoin").toggle() end, desc = "Split/join (force mini)", mode = { "n", "x" } }
-        }
+            {
+                ",J",
+                function() require("mini.splitjoin").toggle() end,
+                desc = "Split/join (force mini)",
+                mode = { "n", "x" },
+            },
+        },
     },
     {
         "wurli/split.nvim",
@@ -63,7 +70,7 @@ return {
         opts = function()
             return {
                 keymaps = {
-                    [",k"]  = {
+                    [",k"] = {
                         pattern = ",",
                         operator_pending = true,
                         interactive = false,
@@ -73,7 +80,7 @@ return {
                         operator_pending = false,
                         interactive = false,
                     },
-                    [",K"]  = {
+                    [",K"] = {
                         pattern = ",",
                         operator_pending = true,
                         interactive = true,
@@ -91,14 +98,14 @@ return {
                     ["+"] = " [+-/%%] ",
                     ["<"] = {
                         pattern = "[<>=]=?",
-                        break_placement = "before_pattern"
+                        break_placement = "before_pattern",
                     },
                     ["."] = {
                         pattern = "[%.?!]%s+",
                         unsplitter = " ",
                         smart_ignore = "code",
                         quote_characters = {},
-                        brace_characters = {}
+                        brace_characters = {},
                     },
                     ["|"] = {
                         pattern = { "|>", "%%>%%" },
@@ -116,18 +123,18 @@ return {
                     transform_separators = require("split.utils").make_transformer({
                         trim_l = { "before_pattern" },
                         trim_r = { "before_pattern", "on_pattern", "after_pattern" },
-                        pad_r = { "before_pattern" }
+                        pad_r = { "before_pattern" },
                     }),
                     indenter = "simple",
                     unsplitter = nil,
                     interactive = false,
                     smart_ignore = "comments",
                     quote_characters = { left = { "'", '"', "`" }, right = { "'", '"', "`" } },
-                    brace_characters = { left = { "(", "{", "[" }, right = { ")", "}", "]" } }
+                    brace_characters = { left = { "(", "{", "[" }, right = { ")", "}", "]" } },
                 },
                 set_default_mappings = false,
             }
-        end
+        end,
     },
 }
 -- (1, 2, 3)

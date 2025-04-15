@@ -40,11 +40,11 @@ return {
                                 condition = {
                                     filetype = "julia",
                                 },
-                            }
+                            },
                         })
                     end,
                 },
-            }
-        }
+            },
+        },
     },
 }

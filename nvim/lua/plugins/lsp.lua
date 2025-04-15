@@ -1,8 +1,7 @@
 local custom_attach = function(client, bufnr)
     local sc = client.server_capabilities
     local bmap = function(mode, key, action, opts)
-        vim.keymap.set(mode, key, action,
-            vim.tbl_extend("force", { buffer = bufnr }, opts))
+        vim.keymap.set(mode, key, action, vim.tbl_extend("force", { buffer = bufnr }, opts))
     end
 
     if client.name == "ruff" then
@@ -74,8 +73,8 @@ return {
         end,
         ---@param opts PluginLspOpts
         config = function(_, opts)
-            vim.api.nvim_create_autocmd('LspAttach', {
-                group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+            vim.api.nvim_create_autocmd("LspAttach", {
+                group = vim.api.nvim_create_augroup("UserLspConfig", {}),
                 callback = function(ev)
                     local bufnr = ev.buf
                     local client = vim.lsp.get_client_by_id(ev.data.client_id)
@@ -96,23 +95,14 @@ return {
             )
 
             local function setup(server)
-                local server_opts = vim.tbl_deep_extend(
-                    "force",
-                    { capabilities = vim.deepcopy(capabilities), },
-                    servers[server] or {}
-                )
-                if server_opts.enabled == false then
-                    return
-                end
+                local server_opts =
+                    vim.tbl_deep_extend("force", { capabilities = vim.deepcopy(capabilities) }, servers[server] or {})
+                if server_opts.enabled == false then return end
 
                 if opts.setup[server] then
-                    if opts.setup[server](server, server_opts) then
-                        return
-                    end
+                    if opts.setup[server](server, server_opts) then return end
                 elseif opts.setup["*"] then
-                    if opts.setup["*"](server, server_opts) then
-                        return
-                    end
+                    if opts.setup["*"](server, server_opts) then return end
                 end
                 require("lspconfig")[server].setup(server_opts)
             end
@@ -147,5 +137,5 @@ return {
                 })
             end
         end,
-    }
+    },
 }

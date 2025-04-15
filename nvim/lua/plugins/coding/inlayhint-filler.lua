@@ -3,6 +3,6 @@
 return {
     "Davidyz/inlayhint-filler.nvim",
     keys = {
-        { "<c-m>", function() require("inlayhint-filler").fill() end, desc = "Insert the current inlay-hint.", mode = { "n", "v" } },
-    }
+        { ",i", function() require("inlayhint-filler").fill() end, desc = "Fill inlay hint.", mode = { "n", "v" } },
+    },
 }

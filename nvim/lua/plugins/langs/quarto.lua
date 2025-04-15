@@ -10,8 +10,7 @@ return {
         opts = {
             codeRunner = {
                 enabled = true,
-                default_method = function()
-                end,
+                default_method = function() end,
             },
         },
         ft = { "quarto" },
@@ -28,13 +27,38 @@ return {
             "QuartoSendLine",
         },
         keys = {
-            { "<leader>qq", function() require("quarto").quartoPreview({}) end,      ft = "quarto", desc = "Open quarto preview" },
-            { "<leader>qc", function() require("quarto").quartoClosePreview() end,   ft = "quarto", desc = "Close quarto preview" },
-            { "<leader>qw", function() require("quarto").quartoPreviewNoWatch() end, ft = "quarto", desc = "Open quarto preview (no watch)" },
-            { "<leader>qu", function() require("quarto").quartoUpdatePreview() end,  ft = "quarto", desc = "Update quarto preview" },
-            { "<c-cr>",     function() require("quarto.runner").run_cell() end,      ft = "quarto", desc = "run cell" },
-            { "<c-cr>",     function() require("quarto.runner").run_range() end,     ft = "quarto", desc = "run visual range" },
-        }
+            {
+                "<leader>qq",
+                function() require("quarto").quartoPreview({}) end,
+                ft = "quarto",
+                desc = "Open quarto preview",
+            },
+            {
+                "<leader>qc",
+                function() require("quarto").quartoClosePreview() end,
+                ft = "quarto",
+                desc = "Close quarto preview",
+            },
+            {
+                "<leader>qw",
+                function() require("quarto").quartoPreviewNoWatch() end,
+                ft = "quarto",
+                desc = "Open quarto preview (no watch)",
+            },
+            {
+                "<leader>qu",
+                function() require("quarto").quartoUpdatePreview() end,
+                ft = "quarto",
+                desc = "Update quarto preview",
+            },
+            { "<c-cr>", function() require("quarto.runner").run_cell() end, ft = "quarto", desc = "run cell" },
+            {
+                "<c-cr>",
+                function() require("quarto.runner").run_range() end,
+                ft = "quarto",
+                desc = "run visual range",
+            },
+        },
     },
     {
         "jmbuhr/otter.nvim",
@@ -95,9 +119,7 @@ return {
                                 end
                                 local query = "render%-on%-save: false"
                                 for _, line in ipairs(lines) do
-                                    if line:find(query) then
-                                        return false
-                                    end
+                                    if line:find(query) then return false end
                                 end
                             end
                             return user_preference
@@ -130,9 +152,7 @@ return {
                                 vim.list_extend(args, { "--no-watch-inputs" })
                             end
 
-                            if params.open_output then
-                                vim.list_extend(components, { "open_output" })
-                            end
+                            if params.open_output then vim.list_extend(components, { "open_output" }) end
 
                             ---@type overseer.TaskDefinition
                             return {
@@ -146,9 +166,7 @@ return {
                         ---@type fun(search: overseer.SearchParams): boolean, nil|string
                         local is_quarto_file = function(_)
                             local file_extension = vim.fn.expand("%:e")
-                            if not file_extension then
-                                return false, "Not in a file. exiting."
-                            end
+                            if not file_extension then return false, "Not in a file. exiting." end
                             local quarto_extensions = { "qmd", "Rmd", "ipynb", "md" }
                             if not vim.list_contains(quarto_extensions, file_extension) then
                                 return false, "Not a quarto file, ends in " .. file_extension .. " exiting."
@@ -183,7 +201,7 @@ return {
                         })
                     end,
                 },
-            }
-        }
+            },
+        },
     },
 }

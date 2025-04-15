@@ -8,9 +8,7 @@ local winclose = function() vim.cmd.wincmd({ args = { "c" } }) end
 local tab_win_bufnrs = function(tabnr)
     local tab_wins = vim.tbl_filter(function(win)
         local win_buf = vim.api.nvim_win_get_buf(win)
-        if 1 ~= vim.fn.buflisted(win_buf) then
-            return true
-        end
+        if 1 ~= vim.fn.buflisted(win_buf) then return true end
         return true
     end, vim.api.nvim_tabpage_list_wins(tabnr))
     return tab_wins
@@ -20,13 +18,9 @@ end
 ---@return number[]
 local loaded_bufnrs = function()
     local bufnrs = vim.tbl_filter(function(b)
-        if 1 ~= vim.fn.buflisted(b) then
-            return false
-        end
+        if 1 ~= vim.fn.buflisted(b) then return false end
         -- only hide unloaded buffers if opts.show_all_buffers is false, keep them listed if true or nil
-        if not vim.api.nvim_buf_is_loaded(b) then
-            return false
-        end
+        if not vim.api.nvim_buf_is_loaded(b) then return false end
         return true
     end, vim.api.nvim_list_bufs())
     return bufnrs
@@ -58,14 +52,10 @@ M.delete_buffer = function()
     end
 end
 
-
 M.nav_dir = function(direction)
     local curwin = vim.api.nvim_get_current_win()
     vim.cmd.wincmd({ args = { direction } })
-    local newwin = vim.api.nvim_get_current_win()
-    if curwin == newwin then
-        vim.fn.system("/home/oleete/.cabal/bin/xmonadctl-exe winGo-" .. direction)
-    end
+    local newwin = vim.api.nvim_get_current_win() if curwin == newwin then vim.fn.system("/home/oleete/.cabal/bin/xmonadctl-exe winGo-" .. direction) end
 end
 
 ---Run an action on a snacks picker trouble list, using the most recently set of the two lists.

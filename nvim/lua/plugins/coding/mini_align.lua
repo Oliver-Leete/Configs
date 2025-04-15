@@ -6,6 +6,6 @@ return {
         mappings = {
             start = "",
             start_with_preview = ",t",
-        }
-    }
+        },
+    },
 }

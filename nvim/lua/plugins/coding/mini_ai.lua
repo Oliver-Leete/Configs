@@ -4,11 +4,11 @@ return {
     "echasnovski/mini.ai",
     dependencies = {
         "echasnovski/mini.extra",
-        'nvim-treesitter/nvim-treesitter-textobjects',
+        "nvim-treesitter/nvim-treesitter-textobjects",
     },
     config = function()
         local gen_spec = require("mini.ai").gen_spec
-        local gen_spec_extra = require('mini.extra').gen_ai_spec
+        local gen_spec_extra = require("mini.extra").gen_ai_spec
 
         local custom_objects = {
             a = {
@@ -23,7 +23,7 @@ return {
             -- Comments
             d = {
                 name = "Digits",
-                spec = gen_spec_extra.number()
+                spec = gen_spec_extra.number(),
             },
             e = {
                 name = "Diagnostic",
@@ -32,14 +32,14 @@ return {
             },
             f = {
                 name = "Function call (no dot)",
-                spec = gen_spec.function_call({name_pattern = "[%w_]"}),
+                spec = gen_spec.function_call({ name_pattern = "[%w_]" }),
                 add_jump = true,
             },
             F = {
                 name = "Function call (full)",
                 spec = gen_spec.treesitter({
-                    i = {"@call.inner"},
-                    a = {"@call.outer"},
+                    i = { "@call.inner" },
+                    a = { "@call.outer" },
                 }),
                 add_jump = true,
             },
@@ -49,15 +49,15 @@ return {
                     {
                         "%b{}",
                         "\n%s*\n()().-()\n%s*\n[%s]*()", -- normal paragraphs
-                        "^()().-()\n%s*\n[%s]*()",       -- paragraph at start of file
-                        "\n%s*\n()().-()()$",            -- paragraph at end of file
+                        "^()().-()\n%s*\n[%s]*()", -- paragraph at start of file
+                        "\n%s*\n()().-()()$", -- paragraph at end of file
                     },
                     {
-                        "[%.?!][%s]+()().-[^%s].-()[%.?!]()[%s]",   -- normal sentence
+                        "[%.?!][%s]+()().-[^%s].-()[%.?!]()[%s]", -- normal sentence
                         "^[%{%[]?[%s]*()().-[^%s].-()[%.?!]()[%s]", -- sentence at start of paragraph
-                        "[%.?!][%s]+()().-[^%s].-()()[\n%}%]]?$",   -- sentence at end of paragraph
-                        "^[%s]*()().-[^%s].-()()[%s]+$",            -- sentence at that fills paragraph (no final punctuation)
-                    }
+                        "[%.?!][%s]+()().-[^%s].-()()[\n%}%]]?$", -- sentence at end of paragraph
+                        "^[%s]*()().-[^%s].-()()[%s]+$", -- sentence at that fills paragraph (no final punctuation)
+                    },
                 },
                 add_jump = true,
             },
@@ -73,7 +73,7 @@ return {
                 spec = gen_spec.treesitter({
                     i = { "@assignment.lhs", "@key.inner" },
                     a = { "@assignment.outer", "@key.inner" },
-                })
+                }),
             },
             -- List (trouble)
             n = {
@@ -97,15 +97,15 @@ return {
                 spec = {
                     {
                         "\n%s*\n()().-()\n%s*\n()[%s]*", -- normal paragraphs
-                        "^()().-()\n%s*\n[%s]*()",       -- paragraph at start of file
-                        "\n%s*\n()().-()()$",            -- paragraph at end of file
-                    }
+                        "^()().-()\n%s*\n[%s]*()", -- paragraph at start of file
+                        "\n%s*\n()().-()()$", -- paragraph at end of file
+                    },
                 },
                 add_jump = true,
             },
             q = {
                 name = "Quotes",
-                spec = { { "%b''", '%b""', "%b``" }, "^.().*().$" }
+                spec = { { "%b''", '%b""', "%b``" }, "^.().*().$" },
             },
             r = {
                 name = "Sub-word",
@@ -116,8 +116,8 @@ return {
                         "%f[%P][%l%d]+%f[^%l%d]",
                         "^[%l%d]+%f[^%l%d]",
                     },
-                    "^().*()$"
-                }
+                    "^().*()$",
+                },
             },
             s = {
                 name = "Scope",
@@ -129,42 +129,42 @@ return {
             },
             t = {
                 name = "Tag",
-                spec = { "<(%w-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" }
+                spec = { "<(%w-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" },
             },
             v = {
                 name = "Value",
                 spec = gen_spec.treesitter({
                     i = { "@assignment.rhs", "@value.inner", "@return.inner" },
                     a = { "@assignment.outer", "@value.inner", "@return.outer" },
-                })
+                }),
             },
             W = {
                 name = "Big word",
                 spec = { {
                     "()()%f[%w%p][%w%p]+()[ \t]*()",
-                } }
+                } },
             },
             -- word
             w = {
                 name = "Word",
-                spec = { "()()%f[%w_][%w_]+()[ \t]*()" }
+                spec = { "()()%f[%w_][%w_]+()[ \t]*()" },
             },
             x = {
                 name = "Line",
-                spec = gen_spec_extra.line()
+                spec = gen_spec_extra.line(),
             },
             z = {
                 name = "Chunk",
                 spec = {
                     "\n.-%b{}.-\n",
-                    "\n().-()%{\n.*\n.*%}().-\n()"
+                    "\n().-()%{\n.*\n.*%}().-\n()",
                 },
             },
             ["$"] = {
                 name = "Maths",
                 spec = gen_spec.pair("$", "$", { type = "balanced" }),
                 add_jump = true,
-            }
+            },
             -- ? user prompt object
         }
 

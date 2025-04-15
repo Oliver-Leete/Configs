@@ -44,10 +44,10 @@ return {
                 ["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
             },
             completion = {
-                keyword = { range = "prefix", },
-                accept = { auto_brackets = { enabled = true, }, },
+                keyword = { range = "prefix" },
+                accept = { auto_brackets = { enabled = true } },
                 list = { selection = { preselect = false, auto_insert = true } },
-                menu = { auto_show = true, },
+                menu = { auto_show = true },
                 documentation = { auto_show = true, auto_show_delay_ms = 125 },
             },
             signature = { enabled = true },
@@ -59,14 +59,12 @@ return {
                 enabled = true,
                 completion = {
                     menu = { auto_show = true },
-                }
+                },
             },
         },
         ---@param opts blink.cmp.Config | { sources: { compat: string[] } }
         config = function(_, opts)
-            local is_dap_buffer = function()
-                return require("cmp_dap").is_dap_buffer()
-            end
+            local is_dap_buffer = function() return require("cmp_dap").is_dap_buffer() end
 
             local enabled = opts.sources.default
             if type(enabled) == "table" then
@@ -84,6 +82,6 @@ return {
             end
 
             require("blink.cmp").setup(opts)
-        end
-    }
+        end,
+    },
 }

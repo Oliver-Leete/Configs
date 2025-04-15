@@ -4,7 +4,7 @@ return {
     "nvim-zh/colorful-winsep.nvim",
     opts = {
         hi = { link = "Function" },
-        symbols = { '─', '│', '╭', '╮', '╰', '╯' },
+        symbols = { "─", "│", "╭", "╮", "╰", "╯" },
         smooth = false,
     },
 }

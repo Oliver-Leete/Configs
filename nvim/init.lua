@@ -8,7 +8,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
     if vim.v.shell_error ~= 0 then
         vim.api.nvim_echo({
             { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-            { out,                            "WarningMsg" },
+            { out, "WarningMsg" },
             { "\nPress any key to exit..." },
         }, true, {})
         vim.fn.getchar()
@@ -22,53 +22,51 @@ require("config.autocmds")
 require("config.commands")
 require("config.keymaps")
 
-require("lazy").setup(
-    {
-        spec = {
-            { import = "plugins" },
-            { import = "plugins.langs" },
-            { import = "plugins.editor" },
-            { import = "plugins.coding" },
+require("lazy").setup({
+    spec = {
+        { import = "plugins" },
+        { import = "plugins.langs" },
+        { import = "plugins.editor" },
+        { import = "plugins.coding" },
+    },
+    checker = {
+        enabled = true,
+        check_pinned = true,
+    },
+    install = {
+        missing = true,
+    },
+    ui = {
+        border = vim.o.winborder,
+        title = " Lazy ",
+    },
+    dev = { ---@diagnostic disable-line: assign-type-mismatch
+        path = "~/Projects/nvim",
+    },
+    performance = {
+        rtp = {
+            disabled_plugins = {
+                "netrw",
+                "netrwPlugin",
+                "netrwSettings",
+                "netrwFileHandlers",
+                "gzip",
+                "zip",
+                "zipPlugin",
+                "tar",
+                "tarPlugin",
+                "getscript",
+                "getscriptPlugin",
+                "vimball",
+                "vimballPlugin",
+                "2html_plugin",
+                "logipat",
+                "rrhelper",
+                "spellfile_plugin",
+                "matchit",
+            },
         },
-        checker = {
-            enabled = true,
-            check_pinned = true,
-        },
-        install = {
-            missing = true,
-        },
-        ui = {
-            border = vim.o.winborder,
-            title = " Lazy ",
-        },
-        dev = { ---@diagnostic disable-line: assign-type-mismatch
-            path = "~/Projects/nvim",
-        },
-        performance = {
-            rtp = {
-                disabled_plugins = {
-                    "netrw",
-                    "netrwPlugin",
-                    "netrwSettings",
-                    "netrwFileHandlers",
-                    "gzip",
-                    "zip",
-                    "zipPlugin",
-                    "tar",
-                    "tarPlugin",
-                    "getscript",
-                    "getscriptPlugin",
-                    "vimball",
-                    "vimballPlugin",
-                    "2html_plugin",
-                    "logipat",
-                    "rrhelper",
-                    "spellfile_plugin",
-                    "matchit",
-                }
-            }
-        }
-    }
-)
+    },
+})
 
 require("user.targets")

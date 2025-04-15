@@ -20,12 +20,10 @@ return {
                 "<c-n>",
                 function()
                     local ls = require("luasnip")
-                    if ls.choice_active() then
-                        ls.change_choice(1)
-                    end
+                    if ls.choice_active() then ls.change_choice(1) end
                 end,
-                mode = { "i", "s" }
-            }
+                mode = { "i", "s" },
+            },
         },
     },
     {

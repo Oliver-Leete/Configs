@@ -16,7 +16,7 @@ return {
                 function() require("edgy-group").open_group_offset("bottom", -1) end,
                 desc = "Edgy Group Prev bottom",
             },
-            { "<leader>ss", "<cmd>EdgyGroupSelect<cr>", desc = "Edgy Group Pick", },
+            { "<leader>ss", "<cmd>EdgyGroupSelect<cr>", desc = "Edgy Group Pick" },
         },
         opts = {
             groups = {
@@ -83,9 +83,7 @@ return {
                         local win_trouble = vim.w[win].trouble
                         return win_trouble and (win_trouble.mode == "snacks" or win_trouble.mode == "snacks_files")
                     end,
-                    open = function()
-                        require("user.myfuncs").trouble_snacks(true)
-                    end,
+                    open = function() require("user.myfuncs").trouble_snacks(true) end,
                 },
                 {
                     title = "trouble-diagnostics",
@@ -109,40 +107,33 @@ return {
                     title = "terminal",
                     ft = "toggleterm",
                     open = "ToggleTermLast",
-                    filter = function(_, win)
-                        return vim.api.nvim_win_get_config(win).relative == ""
-                    end
+                    filter = function(_, win) return vim.api.nvim_win_get_config(win).relative == "" end,
                 },
                 {
-                    title = 'neotest-panel',
-                    ft = 'neotest-output-panel',
-                    open = 'Neotest output-panel',
+                    title = "neotest-panel",
+                    ft = "neotest-output-panel",
+                    open = "Neotest output-panel",
                 },
                 {
                     title = "overseer-list",
                     ft = "OverseerList",
                     size = { width = 0.15 },
-                    open = function()
-                        require("overseer").open()
-                    end,
+                    open = function() require("overseer").open() end,
                 },
                 {
                     title = "overseer-task",
                     ft = "",
                     filter = function(buf, win)
                         local task = vim.b[buf].overseer_task
-                        return task
-                            and task ~= 0
-                            and vim.api.nvim_win_get_config(win).relative == ""
-                    end
+                        return task and task ~= 0 and vim.api.nvim_win_get_config(win).relative == ""
+                    end,
                 },
-
             },
             left = {
                 {
-                    title = 'neotest-list',
-                    ft = 'neotest-summary',
-                    open = 'Neotest summary',
+                    title = "neotest-list",
+                    ft = "neotest-summary",
+                    open = "Neotest summary",
                     size = { width = 0.20 },
                 },
                 {
@@ -156,4 +147,5 @@ return {
                 },
             },
         },
-    } }
+    },
+}

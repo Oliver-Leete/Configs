@@ -10,9 +10,7 @@ M.runtime = function()
     for _, line in pairs(lines) do
         local time_string = line:sub(1, 8)
         local hour, minute, second = time_string:match(pattern)
-        if hour and minute and second then
-            runtime = runtime + hour * 3600 + minute * 60 + second
-        end
+        if hour and minute and second then runtime = runtime + hour * 3600 + minute * 60 + second end
     end
     local hours = math.floor(runtime / 3600)
     local minutes = math.floor(math.fmod(runtime, 3600) / 60)
@@ -30,9 +28,7 @@ M.endtime = function()
     for _, line in pairs(lines) do
         local time_string = line:sub(1, 8)
         local hour, minute, second = time_string:match(pattern)
-        if hour and minute and second then
-            runtime = runtime + hour * 3600 + minute * 60 + second
-        end
+        if hour and minute and second then runtime = runtime + hour * 3600 + minute * 60 + second end
     end
     local format_string
     if runtime >= 86400 then

@@ -11,7 +11,7 @@ return {
                     require("workspace-diagnostics").populate_workspace_diagnostics(client, 0)
                 end
             end,
-            desc = "Populate workspace diagnostics"
+            desc = "Populate workspace diagnostics",
         },
     },
 }

@@ -2,8 +2,7 @@
 ---@type LazySpec
 return {
     "nvim-lualine/lualine.nvim",
-    opts =
-    {
+    opts = {
         options = {
             component_separators = { left = "", right = "" },
             section_separators = { left = "", right = "" },
@@ -35,7 +34,7 @@ return {
                             return {
                                 added = summary.add,
                                 modified = summary.change,
-                                removed = summary.delete
+                                removed = summary.delete,
                             }
                         end
                     end,
@@ -56,11 +55,16 @@ return {
             },
             lualine_c = {
                 {
-                    function() if package.loaded.dap then return require("dap").status() else return "" end end,
+                    function()
+                        if package.loaded.dap then
+                            return require("dap").status()
+                        else
+                            return ""
+                        end
+                    end,
                 },
             },
-            lualine_x = {
-            },
+            lualine_x = {},
             lualine_y = {
                 {
                     "encoding",
@@ -72,7 +76,7 @@ return {
                 {
                     "fileformat",
                     cond = function() return vim.bo.fileformat ~= "unix" end,
-                }
+                },
             },
             lualine_z = {
                 {
@@ -90,7 +94,7 @@ return {
                 {
                     "location",
                 },
-            }
+            },
         },
-    }
+    },
 }

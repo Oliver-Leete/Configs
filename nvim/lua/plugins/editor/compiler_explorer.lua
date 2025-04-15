@@ -21,11 +21,11 @@ return {
         "CEGotoLabel",
     },
     keys = {
-        { "<leader>xx", "<cmd>CECompile<cr>",     desc = "Open compiler explorer" },
+        { "<leader>xx", "<cmd>CECompile<cr>", desc = "Open compiler explorer" },
         { "<leader>xl", "<cmd>CECompileLive<cr>", desc = "Live compiler explorer" },
-        { "<leader>xf", "<cmd>CEFormat<cr>",      desc = "Format" },
+        { "<leader>xf", "<cmd>CEFormat<cr>", desc = "Format" },
         { "<leader>xk", "<cmd>CEShowTooltip<cr>", desc = "Tooltip" },
-        { "<leader>xg", "<cmd>CEGotoLabel<cr>",   desc = "Goto" },
+        { "<leader>xg", "<cmd>CEGotoLabel<cr>", desc = "Goto" },
         { "<leader>xw", "<cmd>CEOpenWebsite<cr>", desc = "Open website" },
     },
 }

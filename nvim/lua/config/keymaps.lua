@@ -25,7 +25,6 @@ vim.keymap.set({ "n", "x", "o" }, "S", "<nop>")
 vim.keymap.set({ "n", "x", "o" }, "G", "<nop>")
 vim.keymap.set({ "n", "x" }, "H", "<nop>")
 
-
 vim.keymap.set({ "n", "x", "o" }, "$", "<nop>")
 vim.keymap.set({ "n", "x", "o" }, "^", "<nop>")
 
@@ -39,6 +38,15 @@ vim.keymap.del({ "n" }, "grr")
 vim.keymap.del({ "n" }, "gri")
 vim.keymap.del({ "n", "x" }, "gra")
 vim.keymap.del({ "n" }, "gO")
+
+vim.keymap.del({ "n" }, "]l")
+vim.keymap.del({ "n" }, "]L")
+vim.keymap.del({ "n" }, "[l")
+vim.keymap.del({ "n" }, "[L")
+vim.keymap.del({ "n" }, "]q")
+vim.keymap.del({ "n" }, "]Q")
+vim.keymap.del({ "n" }, "[q")
+vim.keymap.del({ "n" }, "[Q")
 
 -- NOTE: D, Y, H, L, £, _, =, |, ;, ^, <BS>, <CR> are free to map
 -- NOTE: H and L are free except op mode
@@ -78,7 +86,6 @@ vim.keymap.set({ "n", "x" }, "U", "<c-r>")
 vim.keymap.set("n", "Q", "@q")
 vim.keymap.set("x", "Q", ":norm! @q<cr>")
 
-
 vim.keymap.set("x", "<", "<gv")
 vim.keymap.set("x", ">", ">gv")
 
@@ -91,8 +98,12 @@ vim.keymap.set("n", "<c-t>", "<cmd>silent tabedit %<cr>")
 -- GOTO
 vim.keymap.set({ "n", "x", "o" }, "gk", "gg", { desc = "Top of File" })
 vim.keymap.set({ "n", "x", "o" }, "gj", "G", { desc = "Bottom of File" })
-vim.keymap.set({ "n", "x", "o" }, "gh", [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']],
-    { expr = true, desc = "Left of Line" })
+vim.keymap.set(
+    { "n", "x", "o" },
+    "gh",
+    [[getline('.')[0:col('.')-2]=~#'^\s\+$'?'0':'^']],
+    { expr = true, desc = "Left of Line" }
+)
 vim.keymap.set({ "n", "x", "o" }, "gl", "$", { desc = "Right of Line" })
 
 vim.keymap.set({ "n", "x", "o" }, "gt", "H", { desc = "Top of Screen" })
@@ -102,19 +113,13 @@ vim.keymap.set({ "n", "x", "o" }, "gb", "L", { desc = "Bottom of Screen" })
 vim.keymap.set("n", "gF", ":edit <cfile><cr>", { desc = "Goto or create file under cursor" })
 vim.keymap.set("n", "gx", function() vim.ui.open(vim.fn.expand("<cfile>")) end, { desc = "Open in another program" })
 
-vim.keymap.set(
-    { "n", "x" },
-    "gz",
-    function()
-        if vim.b.upafunc then
-            vim.b.upafunc()
-        else
-            vim.notify("No up function found for this filetype",
-                vim.log.levels.WARN)
-        end
-    end,
-    { desc = "Go to the parent file" }
-)
+vim.keymap.set({ "n", "x" }, "gz", function()
+    if vim.b.upafunc then
+        vim.b.upafunc()
+    else
+        vim.notify("No up function found for this filetype", vim.log.levels.WARN)
+    end
+end, { desc = "Go to the parent file" })
 
 vim.keymap.set("n", "vH", "zH", { desc = "⇚" })
 vim.keymap.set("n", "vJ", "<c-d>", { desc = "⟱" })
@@ -135,10 +140,18 @@ vim.keymap.set("n", "vo", "<c-w>o", { desc = "Only Window" })
 vim.keymap.set({ "n", "x" }, "m", "v")
 
 local num = function() return (vim.b.textwidth and vim.b.textwidth > 0) and vim.b.textwidth or vim.g.textwidth end
-vim.keymap.set("n", ",fw", function() return "m1!ippar w" .. num() .. "<cr>`1" end,
-    { expr = true, silent = true, desc = "Wrap using Par" })
-vim.keymap.set("x", ",fw", function() return "!par w" .. num() .. "<cr>" end,
-    { expr = true, silent = true, desc = "Wrap using Par" })
+vim.keymap.set(
+    "n",
+    ",fw",
+    function() return "m1!ippar w" .. num() .. "<cr>`1" end,
+    { expr = true, silent = true, desc = "Wrap using Par" }
+)
+vim.keymap.set(
+    "x",
+    ",fw",
+    function() return "!par w" .. num() .. "<cr>" end,
+    { expr = true, silent = true, desc = "Wrap using Par" }
+)
 
 vim.keymap.set("n", "<leader><leader>", "<cmd>silent e #<cr>", { desc = "Last file" })
 

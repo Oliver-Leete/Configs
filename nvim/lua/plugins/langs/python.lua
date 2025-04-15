@@ -12,16 +12,19 @@ return {
                 },
                 basedpyright = {
                     mason = false,
-                    analysis = {
-                        useLibraryCodeForTypes = true,
-                        diagnosticSeverityOverrides = {
-                            diagnosticMode = "workspace",
+                    settings = {
+                        basedpyright = {
+                            analysis = {
+                                useLibraryCodeForTypes = true,
+                                diagnosticSeverityOverrides = {
+                                    diagnosticMode = "workspace",
+                                },
+                                diagnosticMode = "workspace",
+                                typeCheckingMode = "basic",
+                            },
                         },
-                        diagnosticMode = "workspace",
-                        typeCheckingMode = "basic",
                     },
                 },
-
             },
         },
     },
@@ -52,9 +55,7 @@ return {
         dependencies = {
             {
                 "mfussenegger/nvim-dap-python",
-                config = function()
-                    require("dap-python").setup("/home/oleete/.local/pipx/venvs/debugpy/bin/python")
-                end,
+                config = function() require("dap-python").setup("/home/oleete/.local/pipx/venvs/debugpy/bin/python") end,
                 lazy = true,
             },
         },
@@ -62,15 +63,13 @@ return {
     {
         "Davidyz/coredumpy.nvim",
         cmd = { "Coredumpy" },
-        opts = function()
-            return { python = require("venv-selector").python, }
-        end,
-        dependencies = { "mfussenegger/nvim-dap" }
+        opts = function() return { python = require("venv-selector").python } end,
+        dependencies = { "mfussenegger/nvim-dap" },
     },
     {
         "jay-babu/mason-nvim-dap.nvim",
         optional = true,
-        ensure_installed = { "debugpy", },
+        ensure_installed = { "debugpy" },
         opts = {
             handlers = {
                 -- Don't mess up DAP adapters provided by nvim-dap-python

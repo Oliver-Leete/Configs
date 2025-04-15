@@ -45,15 +45,13 @@ return {
         {
             "<leader>sR",
             function() require("grug-far").open({ prefills = { paths = vim.fn.expand("%") } }) end,
-            desc = "Search and Replace in file"
+            desc = "Search and Replace in file",
         },
         {
             "<leader>sr",
-            function()
-                require("grug-far").open({ visualSelectionUsage = "operate-within-range" })
-            end,
+            function() require("grug-far").open({ visualSelectionUsage = "operate-within-range" }) end,
             mode = { "x" },
-            desc = "Search within range"
+            desc = "Search within range",
         },
     },
 }

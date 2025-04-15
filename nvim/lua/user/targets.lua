@@ -89,12 +89,7 @@ end
 vim.keymap.set("x", "i", "<Plug>(niceblock-I)", { remap = true, nowait = true })
 vim.keymap.set("x", "a", "<Plug>(niceblock-A)", { remap = true, nowait = true })
 
-vim.keymap.set(
-    { "n", "x", "o" },
-    "<plug>(slash-after)",
-    function() dir_jumps = "search" end,
-    { remap = true }
-)
+vim.keymap.set({ "n", "x", "o" }, "<plug>(slash-after)", function() dir_jumps = "search" end, { remap = true })
 
 vim.keymap.set(
     { "n", "x", "o" },

@@ -62,7 +62,7 @@ vim.g.wrapmargin = 0
 vim.opt.smoothscroll = true
 
 -- Folds
-vim.o.foldcolumn = '0'
+vim.o.foldcolumn = "0"
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true

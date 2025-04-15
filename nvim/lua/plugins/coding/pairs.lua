@@ -1,7 +1,7 @@
 local func_out = function()
-    local fun_name = MiniSurround.user_input('Function name')
+    local fun_name = MiniSurround.user_input("Function name")
     if fun_name == nil then return nil end
-    return { left = ('%s('):format(fun_name), right = ')' }
+    return { left = ("%s("):format(fun_name), right = ")" }
 end
 ---@module "lazy"
 ---@type LazySpec
@@ -25,7 +25,7 @@ return {
                 search_method = "cover_or_nearest",
                 custom_surroundings = {
                     f = {
-                        input = { '%f[%w_][%w_]+%b()', '^.-%(().*()%)$' },
+                        input = { "%f[%w_][%w_]+%b()", "^.-%(().*()%)$" },
                         output = func_out,
                     },
                     F = {
@@ -59,12 +59,24 @@ return {
                             inner = "@value.inner",
                         }),
                     },
-                }
+                },
             })
             vim.keymap.del("x", "yp")
-        end
+        end,
     },
     {
         "RRethy/nvim-treesitter-endwise",
+    },
+    {
+        "echasnovski/mini.pairs",
+        opts = {},
+    },
+    {
+        "andymass/vim-matchup",
+        init = function()
+            vim.g.matchup_matchparen_offscreen = {}
+            vim.g.matchup_surround_enabled = false
+
+        end,
     },
 }

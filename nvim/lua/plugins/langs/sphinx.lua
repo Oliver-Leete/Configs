@@ -3,7 +3,7 @@
 return {
     {
         "stsewd/sphinx.nvim",
-        build = ":UpdateRemotePlugins"
+        build = ":UpdateRemotePlugins",
     },
     {
         "neovim/nvim-lspconfig",

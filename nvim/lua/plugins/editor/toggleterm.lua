@@ -21,7 +21,7 @@ return {
     },
     keys = {
         { "<leader>tt", "<cmd>ToggleTermLast direction=horizontal<cr>", desc = "Toggle Terminal" },
-        { "<leader>ts", "<cmd>TermSelect<cr>",                          desc = "Select Terminal" },
-        { "<leader>tn", "<cmd>TermNew<cr>",                             desc = "New Terminal" },
-    }
+        { "<leader>ts", "<cmd>TermSelect<cr>", desc = "Select Terminal" },
+        { "<leader>tn", "<cmd>TermNew<cr>", desc = "New Terminal" },
+    },
 }

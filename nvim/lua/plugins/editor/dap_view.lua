@@ -12,5 +12,5 @@ return {
         dap.listeners.before.launch["dap-view-config"] = dv.open
         dap.listeners.before.event_terminated["dap-view-config"] = dv.close
         dap.listeners.before.event_exited["dap-view-config"] = dv.close
-    end
+    end,
 }

@@ -2,7 +2,7 @@
 ---@type LazySpec
 return {
     "danymat/neogen",
-    dependencies = { "L3MON4D3/LuaSnip", },
+    dependencies = { "L3MON4D3/LuaSnip" },
     opts = {
         snippet_engine = "luasnip",
         languages = {

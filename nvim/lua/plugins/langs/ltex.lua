@@ -9,13 +9,17 @@ return {
             servers = {
                 ltex_plus = {
                     mason = true,
-                    language = "en-GB",
-                    diagnosticSeverity = { MORFOLOGIK_RULE_EN_GB = "hint", default = "info" },
-                    additionalRules = {
-                        enablePickyRules = false,
-                        motherTongue = "en-GB",
+                    settings = {
+                        ltex = {
+                            language = "en-GB",
+                            diagnosticSeverity = { MORFOLOGIK_RULE_EN_GB = "hint", default = "info" },
+                            additionalRules = {
+                                enablePickyRules = false,
+                                motherTongue = "en-GB",
+                            },
+                            disabledRules = { ["en-GB"] = { "OXFORD_SPELLING_Z_NOT_S" } },
+                        },
                     },
-                    disabledRules = { ["en-GB"] = { "OXFORD_SPELLING_Z_NOT_S" } },
                 },
             },
         },
@@ -23,9 +27,9 @@ return {
     {
         "barreiroleo/ltex_extra.nvim",
         dependencies = { "neovim/nvim-lspconfig" },
-        config = function()
-            vim.api.nvim_create_autocmd('LspAttach', {
-                group = vim.api.nvim_create_augroup('UserLtexConfig', {}),
+        init = function()
+            vim.api.nvim_create_autocmd("LspAttach", {
+                group = vim.api.nvim_create_augroup("UserLtexConfig", {}),
                 callback = function(ev)
                     local client = vim.lsp.get_client_by_id(ev.data.client_id)
                     if client and client.name == "ltex_plus" then
@@ -38,6 +42,6 @@ return {
                     end
                 end,
             })
-        end
-    }
+        end,
+    },
 }

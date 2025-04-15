@@ -3,14 +3,18 @@
 return {
     {
         "chrisgrieser/nvim-rulebook",
-        opts = {
-        },
-        cmd = { "Rulebook", },
+        opts = {},
+        cmd = { "Rulebook" },
         keys = {
-            { ",ii", function() require("rulebook").ignoreRule() end,         desc = "Ignore rule" },
-            { ",iw", function() require("rulebook").lookupRule() end,         desc = "Lookup rule" },
+            { ",ii", function() require("rulebook").ignoreRule() end, desc = "Ignore rule" },
+            { ",iw", function() require("rulebook").lookupRule() end, desc = "Lookup rule" },
             { ",iy", function() require("rulebook").yankDiagnosticCode() end, desc = "Yank rule code" },
-            { ",if", function() require("rulebook").suppressFormatter() end,  desc = "Yank rule code", mode = { "n", "x" } },
+            {
+                ",if",
+                function() require("rulebook").suppressFormatter() end,
+                desc = "Yank rule code",
+                mode = { "n", "x" },
+            },
         },
     },
     {
@@ -37,11 +41,10 @@ return {
                     julia = [[println("{{marker}} ")]],
                 },
                 stacktraceLog = {
-                    julia = [[println("{{marker}} stacktrace: ", stacktrrace())]]
-
+                    julia = [[println("{{marker}} stacktrace: ", stacktrrace())]],
                 },
                 debugLog = {
-                    julia = "@bp"
+                    julia = "@bp",
                 },
                 clearLog = {
                     julia = "Base.run(`clear`)",
@@ -55,16 +58,16 @@ return {
             },
         },
         keys = {
-            { ",ll", function() require("chainsaw").messageLog() end,    desc = "Log message" },
-            { ",lv", function() require("chainsaw").variableLog() end,   desc = "Log variable" },
-            { ",lo", function() require("chainsaw").objectLog() end,     desc = "Log object" },
-            { ",lt", function() require("chainsaw").typeLog() end,       desc = "Log type" },
-            { ",la", function() require("chainsaw").assertLog() end,     desc = "Log assertion" },
-            { ",ld", function() require("chainsaw").timeLog() end,       desc = "Log duration" },
-            { ",lb", function() require("chainsaw").debugLog() end,      desc = "Log breakpoint" },
+            { ",ll", function() require("chainsaw").messageLog() end, desc = "Log message" },
+            { ",lv", function() require("chainsaw").variableLog() end, desc = "Log variable" },
+            { ",lo", function() require("chainsaw").objectLog() end, desc = "Log object" },
+            { ",lt", function() require("chainsaw").typeLog() end, desc = "Log type" },
+            { ",la", function() require("chainsaw").assertLog() end, desc = "Log assertion" },
+            { ",ld", function() require("chainsaw").timeLog() end, desc = "Log duration" },
+            { ",lb", function() require("chainsaw").debugLog() end, desc = "Log breakpoint" },
             { ",ls", function() require("chainsaw").stacktraceLog() end, desc = "Log stack trace" },
-            { ",lc", function() require("chainsaw").clearLog() end,      desc = "Log clear" },
-            { ",lr", function() require("chainsaw").removeLogs() end,    desc = "Remove logs",    mode = { "n", "x" } },
-        }
+            { ",lc", function() require("chainsaw").clearLog() end, desc = "Log clear" },
+            { ",lr", function() require("chainsaw").removeLogs() end, desc = "Remove logs", mode = { "n", "x" } },
+        },
     },
 }

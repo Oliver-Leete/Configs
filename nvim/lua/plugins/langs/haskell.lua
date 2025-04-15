@@ -43,8 +43,8 @@ return {
                     end
                 end,
                 desc = "Toggle Scope Highlights",
-                ft = "haskell"
-            }
+                ft = "haskell",
+            },
         },
         init = function()
             vim.api.nvim_create_autocmd("FileType", {
@@ -55,7 +55,7 @@ return {
                     vim.b[0].haskell_scope_highlighting_on = false
                 end,
             })
-        end
+        end,
     },
     {
         "neovim/nvim-lspconfig",
@@ -63,9 +63,7 @@ return {
         ---@type PluginLspOpts
         opts = {
             setup = {
-                hls = function()
-                    return true
-                end,
+                hls = function() return true end,
             },
         },
     },

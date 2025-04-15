@@ -8,8 +8,8 @@ return {
         opts = {
             library = {
                 { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-                { path = "snacks.nvim",        words = { "Snacks" } },
-                { path = "nvim-chainsaw",      words = { "Chainsaw" } },
+                { path = "snacks.nvim", words = { "Snacks" } },
+                { path = "nvim-chainsaw", words = { "Chainsaw" } },
             },
         },
     },
@@ -36,28 +36,39 @@ return {
             servers = {
                 lua_ls = {
                     mason = true,
-                    workspace = {
-                        checkThirdParty = false,
-                    },
-                    codeLens = {
-                        enable = true,
-                    },
-                    completion = {
-                        callSnippet = "Replace",
-                    },
-                    doc = {
-                        privateName = { "^_" },
-                    },
-                    hint = {
-                        enable = true,
-                        setType = false,
-                        paramType = true,
-                        paramName = "Disable",
-                        semicolon = "Disable",
-                        arrayIndex = "Disable",
-                    },
-                    telemetry = {
-                        enable = false,
+                    settings = {
+                        Lua = {
+                            workspace = {
+                                checkThirdParty = false,
+                            },
+                            codeLens = {
+                                enable = true,
+                            },
+                            completion = {
+                                callSnippet = "Replace",
+                            },
+                            doc = {
+                                privateName = { "^_" },
+                            },
+                            hover = {
+                                enumsLimit = 10,
+                                enable = true,
+                            },
+                            hint = {
+                                enable = true,
+                                setType = true,
+                                paramType = true,
+                                paramName = "All",
+                                semicolon = "SameLine",
+                                arrayIndex = "Auto",
+                            },
+                            telemetry = {
+                                enable = false,
+                            },
+                            format = {
+                                enable = false,
+                            },
+                        },
                     },
                 },
             },

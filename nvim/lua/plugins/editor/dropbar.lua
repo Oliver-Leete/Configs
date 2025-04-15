@@ -5,8 +5,7 @@ return {
         "Bekaboo/dropbar.nvim",
         opts = {
             bar = {
-                attach_events =
-                {
+                attach_events = {
                     "OptionSet",
                     "BufWinEnter",
                     "BufWritePost",
@@ -24,9 +23,7 @@ return {
                     end
 
                     local stat = vim.uv.fs_stat(vim.api.nvim_buf_get_name(buf))
-                    if stat and stat.size > 1024 * 1024 then
-                        return false
-                    end
+                    if stat and stat.size > 1024 * 1024 then return false end
 
                     return vim.bo[buf].ft == "markdown"
                         or vim.bo[buf].ft == "oil"
@@ -46,16 +43,28 @@ return {
                     name = function(buf)
                         local name = vim.api.nvim_buf_get_name(buf)
                         local term = require("toggleterm.terminal").find(function(t) return t.bufnr == buf end)
-                        if term then return term.display_name or term.name else return name end
-                    end
-                }
-            }
+                        if term then
+                            return term.display_name or term.name
+                        else
+                            return name
+                        end
+                    end,
+                },
+            },
         },
         lazy = false,
         keys = {
-            { "<Leader>:", function() require("dropbar.api").pick() end,                desc = "Pick breadcrumb" },
-            { "[:",        function() require("dropbar.api").goto_context_start() end,  desc = "Go to start of breadcrumb" },
-            { "]:",        function() require("dropbar.api").select_next_context() end, desc = "Select next breadcrumb" },
+            { "<Leader>:", function() require("dropbar.api").pick() end, desc = "Pick breadcrumb" },
+            {
+                "[:",
+                function() require("dropbar.api").goto_context_start() end,
+                desc = "Go to start of breadcrumb",
+            },
+            {
+                "]:",
+                function() require("dropbar.api").select_next_context() end,
+                desc = "Select next breadcrumb",
+            },
         },
     },
 }

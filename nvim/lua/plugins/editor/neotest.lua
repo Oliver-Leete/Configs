@@ -12,7 +12,7 @@ return {
             adapters = {
                 "neotest-haskell",
                 "rustaceanvim.neotest",
-                "neotest-python"
+                "neotest-python",
             },
             -- Example for loading neotest-golang with a custom config
             -- adapters = {
@@ -24,9 +24,7 @@ return {
             status = { virtual_text = true },
             output = { open_on_run = true },
             quickfix = {
-                open = function()
-                    require("trouble").open({ mode = "quickfix", focus = false })
-                end,
+                open = function() require("trouble").open({ mode = "quickfix", focus = false }) end,
             },
         },
         dependencies = {
@@ -40,8 +38,8 @@ return {
                 virtual_text = {
                     format = function(diagnostic)
                         -- Replace newline and tab characters with space for more compact diagnostics
-                        local message = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+",
-                            "")
+                        local message =
+                            diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
                         return message
                     end,
                 },
@@ -53,24 +51,18 @@ return {
             ---@type neotest.Consumer
             opts.consumers.trouble = function(client)
                 client.listeners.results = function(adapter_id, results, partial)
-                    if partial then
-                        return
-                    end
+                    if partial then return end
                     local tree = assert(client:get_position(nil, { adapter = adapter_id }))
 
                     local failed = 0
                     for pos_id, result in pairs(results) do
-                        if result.status == "failed" and tree:get_key(pos_id) then
-                            failed = failed + 1
-                        end
+                        if result.status == "failed" and tree:get_key(pos_id) then failed = failed + 1 end
                     end
                     vim.schedule(function()
                         local trouble = require("trouble")
                         if trouble.is_open() then
                             trouble.refresh()
-                            if failed == 0 then
-                                trouble.close()
-                            end
+                            if failed == 0 then trouble.close() end
                         end
                     end)
                 end
@@ -81,9 +73,7 @@ return {
                 local adapters = {}
                 for name, config in pairs(opts.adapters or {}) do
                     if type(name) == "number" then
-                        if type(config) == "string" then
-                            config = require(config)
-                        end
+                        if type(config) == "string" then config = require(config) end
                         vim.list_extend(adapters, { config })
                     elseif config ~= false then
                         local adapter = require(name)

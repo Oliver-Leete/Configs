@@ -1,4 +1,4 @@
-local ft = { "markdown", "quarto", "typst", "latex", "tex" }
+local ft = { "markdown", "quarto", "typst", "latex", "tex", "yaml" }
 ---@module "lazy"
 ---@type LazySpec
 return {
@@ -17,11 +17,11 @@ return {
             },
         },
         keys = {
-            { "<localleader>p", "<cmd>Markview toggle<cr>",       desc = "Toggle preview",        ft = ft },
+            { "<localleader>p", "<cmd>Markview toggle<cr>", desc = "Toggle preview", ft = ft },
             { "<localleader>h", "<cmd>Markview hybridToggle<cr>", desc = "Toggle hybrid preview", ft = ft },
-            { "<localleader>P", "<cmd>Markview Toggle<cr>",       desc = "Toggle all previews",   ft = ft },
-            { "<localleader>o", "<cmd>Markview splitToggle<cr>",  desc = "Toggle split preview",  ft = ft },
-            { "<localleader>O", "<cmd>Markview splitRedraw<cr>",  desc = "Redraw split preview",  ft = ft },
+            { "<localleader>P", "<cmd>Markview Toggle<cr>", desc = "Toggle all previews", ft = ft },
+            { "<localleader>o", "<cmd>Markview splitToggle<cr>", desc = "Toggle split preview", ft = ft },
+            { "<localleader>O", "<cmd>Markview splitRedraw<cr>", desc = "Redraw split preview", ft = ft },
         },
     },
     {

@@ -12,7 +12,7 @@ return {
         },
     },
     keys = {
-        { "-", "<CMD>Oil<CR>", desc = "Open parent directory" }
+        { "-", "<CMD>Oil<CR>", desc = "Open parent directory" },
     },
     init = function()
         vim.api.nvim_create_autocmd("User", {
@@ -23,5 +23,5 @@ return {
                 end
             end,
         })
-    end
+    end,
 }
