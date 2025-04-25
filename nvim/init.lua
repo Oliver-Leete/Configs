@@ -28,6 +28,8 @@ require("lazy").setup({
         { import = "plugins.langs" },
         { import = "plugins.editor" },
         { import = "plugins.coding" },
+        { import = "plugins.inserting" },
+        { import = "plugins.ui" },
     },
     checker = {
         enabled = true,

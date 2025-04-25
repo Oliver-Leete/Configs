@@ -20,7 +20,13 @@ return {
                 name = "Bracket",
                 spec = { { "%b()", "%b[]", "%b{}" }, "^.().*().$" },
             },
-            -- Comments
+            c = {
+                name = "Comment",
+                spec = gen_spec.treesitter({
+                    a = { "@comment.inner" },
+                    i = { "@comment.inner" },
+                }),
+            },
             d = {
                 name = "Digits",
                 spec = gen_spec_extra.number(),
