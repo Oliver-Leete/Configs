@@ -21,7 +21,6 @@ return {
         to_add = {
             defaults = {
                 { "?", group = "Information", icon = " " },
-
                 { "?C", icon = " " },
                 { "?N", icon = " " },
                 { "?L", "<cmd>Lazy<cr>", desc = "Lazy info" },
