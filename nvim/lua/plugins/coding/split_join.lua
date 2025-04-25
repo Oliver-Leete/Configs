@@ -2,6 +2,19 @@
 ---@type LazySpec
 return {
     {
+        "folke/which-key.nvim",
+        optional = true,
+        opts = {
+            to_add = {
+                ["split-joining"] = {
+                    { ",j", icon = "󰤻 " },
+                    { ",J", icon = "󰤻 " },
+                    -- { ",k", icon = "󰡏 " },
+                },
+            },
+        },
+    },
+    {
         "Wansmer/treesj",
         dev = true,
         dependencies = { "echasnovski/mini.splitjoin" },
@@ -137,4 +150,3 @@ return {
         end,
     },
 }
--- (1, 2, 3)

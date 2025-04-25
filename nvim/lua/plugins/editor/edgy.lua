@@ -22,8 +22,8 @@ return {
             groups = {
                 bottom = {
                     { icon = " ", titles = { "dap-view", "dap-repl", "dap-consol" }, pick_key = "d" },
-                    { icon = " ", titles = { "terminal" }, pick_key = "t" },
                     { icon = " ", titles = { "overseer-list" }, pick_key = "r" },
+                    { icon = " ", titles = { "terminal" }, pick_key = "t" },
                     { icon = "󰙨 ", titles = { "neotest-panel" }, pick_key = "t" },
                     { icon = " ", titles = { "trouble-diagnostics", "trouble-todo" }, pick_key = "x" },
                     { icon = " ", titles = { "trouble-snacks" }, pick_key = "s" },
@@ -83,7 +83,7 @@ return {
                         local win_trouble = vim.w[win].trouble
                         return win_trouble and (win_trouble.mode == "snacks" or win_trouble.mode == "snacks_files")
                     end,
-                    open = function() require("user.myfuncs").trouble_snacks(true) end,
+                    open = function() require("user.myfuncs").trouble_snacks("open") end,
                 },
                 {
                     title = "trouble-diagnostics",
@@ -104,12 +104,6 @@ return {
                     open = "Trouble todo open",
                 },
                 {
-                    title = "terminal",
-                    ft = "toggleterm",
-                    open = "ToggleTermLast",
-                    filter = function(_, win) return vim.api.nvim_win_get_config(win).relative == "" end,
-                },
-                {
                     title = "neotest-panel",
                     ft = "neotest-output-panel",
                     open = "Neotest output-panel",
@@ -126,6 +120,17 @@ return {
                     filter = function(buf, win)
                         local task = vim.b[buf].overseer_task
                         return task and task ~= 0 and vim.api.nvim_win_get_config(win).relative == ""
+                    end,
+                },
+                {
+                    title = "terminal",
+                    ft = "toggleterm",
+                    open = "ToggleTermLast",
+                    filter = function(buf, _)
+                        local term = require("toggleterm.terminal").find(function(t) return t.bufnr == buf end)
+                        if term then
+                            return term.direction == "horizontal"
+                        end
                     end,
                 },
             },

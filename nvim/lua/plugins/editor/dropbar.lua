@@ -53,18 +53,6 @@ return {
             },
         },
         lazy = false,
-        keys = {
-            { "<Leader>:", function() require("dropbar.api").pick() end, desc = "Pick breadcrumb" },
-            {
-                "[:",
-                function() require("dropbar.api").goto_context_start() end,
-                desc = "Go to start of breadcrumb",
-            },
-            {
-                "]:",
-                function() require("dropbar.api").select_next_context() end,
-                desc = "Select next breadcrumb",
-            },
-        },
+        keys = {},
     },
 }

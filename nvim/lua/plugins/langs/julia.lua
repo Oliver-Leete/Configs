@@ -20,6 +20,7 @@ return {
     },
     {
         "stevearc/overseer.nvim",
+        ---@module "overseer"
         ---@module "plugins.editor.overseer"
         ---@type OverseerUserConfig
         opts = {
@@ -43,6 +44,17 @@ return {
                             },
                         })
                     end,
+                },
+            },
+        },
+    },
+    {
+        "akinsho/toggleterm.nvim",
+        optional = true,
+        opts = {
+            ft_repls = {
+                julia = {
+                    cmd = { "julia", "--project=@." },
                 },
             },
         },

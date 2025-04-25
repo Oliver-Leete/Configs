@@ -2,6 +2,24 @@
 ---@type LazySpec
 return {
     {
+        "folke/which-key.nvim",
+        optional = true,
+        opts = {
+            to_add = {
+                files = {
+                    { "<leader>/", group = "Files" },
+                    { "<leader>/n", icon = "󰝒 " },
+                    { "<leader>/r", icon = "󱇧 " },
+                    { "<leader>/c", icon = "󰬲 " },
+                    { "<leader>/m", icon = "󰈪 " },
+                    { "<leader>/M", icon = "󰈪 " },
+                    { "<leader>/t", icon = "󰮘 " },
+                    { "<leader>/d", icon = "󰮘 " },
+                },
+            },
+        },
+    },
+    {
         "chrisgrieser/nvim-genghis",
         opts = {
             trashCmd = function()
@@ -19,13 +37,6 @@ return {
 
             { "<leader>/d", function() require("genghis").trashFile() end, desc = "Trash file" },
             { "<leader>/t", function() require("genghis").trashFile() end, desc = "Trash file" },
-
-            {
-                ",rn",
-                function() require("genghis").moveSelectionToNewFile() end,
-                desc = "Extract to a new file",
-                mode = { "x" },
-            },
         },
     },
 }

@@ -73,10 +73,17 @@ return {
     },
     {
         "andymass/vim-matchup",
+        lazy = false,
         init = function()
             vim.g.matchup_matchparen_offscreen = {}
+            vim.g.matchup_mappings_enabled = false
             vim.g.matchup_surround_enabled = false
-
         end,
+        keys = {
+            { "%", "<plug>(matchup-%)", remap = true, desc = "Jump to matching", mode = { "n", "x", "o" } },
+            { "g%", "<plug>(matchup-g%)", remap = true, desc = "Jump back matching", mode = { "n", "x", "o" } },
+            { "a%", "<plug>(matchup-a%)", remap = true, desc = "Around matching", mode = { "x", "o" } },
+            { "i%", "<plug>(matchup-i%)", remap = true, desc = "Inside matching", mode = { "x", "o" } },
+        },
     },
 }

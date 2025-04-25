@@ -13,6 +13,16 @@ return {
         },
     },
     {
+        "neovim/nvim-lspconfig",
+        ---@module "plugins.lsp"
+        ---@type PluginLspOpts
+        opts = {
+            setup = {
+                rust_analyzer = function() return true end,
+            },
+        },
+    },
+    {
         "Saecki/crates.nvim",
         event = { "BufRead Cargo.toml" },
         opts = {

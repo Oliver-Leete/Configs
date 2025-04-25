@@ -1,27 +1,8 @@
 ---@module "lazy"
 ---@type LazySpec
 return {
-    -- TODO: Remove one of these
-    {
-        "aaronik/Treewalker.nvim",
-        enabled = false,
-        opts = {
-            highlight = true,
-            highlight_duration = 250,
-            highlight_group = "CursorLine",
-        },
-        keys = {
-            { "<C-k>", "<cmd>Treewalker Up<cr>", silent = true, mode = { "n", "v" } },
-            { "<C-j>", "<cmd>Treewalker Down<cr>", silent = true, mode = { "n", "v" } },
-            { "<C-h>", "<cmd>Treewalker Left<cr>", silent = true, mode = { "n", "v" } },
-            { "<C-l>", "<cmd>Treewalker Right<cr>", silent = true, mode = { "n", "v" } },
-
-            { "<C-S-k>", "<cmd>Treewalker SwapUp<cr>", silent = true },
-            { "<C-S-j>", "<cmd>Treewalker SwapDown<cr>", silent = true },
-            { "<C-S-h>", "<cmd>Treewalker SwapLeft<cr>", silent = true },
-            { "<C-S-l>", "<cmd>Treewalker SwapRight<cr>", silent = true },
-        },
-    },
+    -- TODO: Add symbol swapping
+    -- TODO: Make JKHL auto enter visual mode
     {
         "gsuuon/tshjkl.nvim",
         opts = {

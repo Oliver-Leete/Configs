@@ -3,7 +3,14 @@ local user_autocmds = vim.api.nvim_create_augroup("user_autocmds", { clear = tru
 vim.api.nvim_create_autocmd("FileType", {
     group = user_autocmds,
     pattern = "help",
-    command = ":wincmd H | vertical resize 90<cr>",
+    callback = function(ev)
+        vim.keymap.set({ "n" }, "<esc>", "<cmd>q<cr>", { desc = "Close help", buffer = ev.buf })
+        vim.api.nvim_create_autocmd("BufWinEnter", {
+            buffer = ev.buf,
+            group = user_autocmds,
+            command = ":wincmd H | vertical resize 90<cr>",
+        })
+    end,
 })
 vim.api.nvim_create_autocmd("FileType", {
     group = user_autocmds,

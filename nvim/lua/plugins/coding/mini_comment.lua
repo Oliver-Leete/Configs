@@ -4,8 +4,9 @@ return {
     "echasnovski/mini.comment",
     opts = {
         mappings = {
-            comment = ",c",
-            comment_line = ",cc",
+            comment = "",
+            comment_line = "",
+            comment_visual = "",
             textobject = "ic",
         },
     },

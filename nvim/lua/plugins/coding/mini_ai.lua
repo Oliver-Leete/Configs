@@ -76,7 +76,7 @@ return {
                 }),
             },
             -- List (trouble)
-            n = {
+            m = {
                 name = "Notebook cell",
                 spec = gen_spec.treesitter({
                     a = { "@block.outer" },

@@ -16,8 +16,10 @@ local custom_attach = function(client, bufnr)
     bmap("n", "gD", function() require("snacks.picker").lsp_type_definitions() end, { desc = "Type Deffinition" })
     bmap("n", "gI", function() require("snacks.picker").lsp_implementations() end, { desc = "Implementations" })
 
-    bmap("n", "go", function() require("trouble").toggle("lsp_outgoing_calls") end, { desc = "Outgoing Calls" })
-    bmap("n", "gi", function() require("trouble").toggle("lsp_incoming_calls") end, { desc = "Incoming Calls" })
+    bmap("n", "go", function() require("namu.namu_callhierarchy").show_outgoing_calls() end, { desc = "Outgoing calls" })
+    bmap("n", "gi", function() require("namu.namu_callhierarchy").show_incoming_calls() end, { desc = "Incoming calls" })
+    bmap("n", "gc", function() require("namu.namu_callhierarchy").show_both_calls() end, { desc = "Calls (in + out)" })
+
     bmap("n", ",rr", vim.lsp.buf.rename, { desc = "Rename variable" })
     bmap("n", "<C-,>", vim.lsp.codelens.run, { desc = "Run code lens" })
     bmap({ "n", "x" }, "<C-.>", vim.lsp.buf.code_action, { desc = "Run code actions" })

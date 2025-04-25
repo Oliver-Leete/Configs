@@ -39,6 +39,9 @@ vim.keymap.del({ "n" }, "gri")
 vim.keymap.del({ "n", "x" }, "gra")
 vim.keymap.del({ "n" }, "gO")
 
+vim.keymap.del({ "n" }, "gcc")
+vim.keymap.del({ "n", "x", "o" }, "gc")
+
 vim.keymap.del({ "n" }, "]l")
 vim.keymap.del({ "n" }, "]L")
 vim.keymap.del({ "n" }, "[l")
@@ -172,6 +175,14 @@ vim.cmd([[snoremap <expr> <nowait> <c-l> matchstr(getline(line('.')+1),'\%'.virt
 vim.keymap.set({ "i", "s", "c" }, "<c-a>", "<HOME>")
 vim.keymap.set({ "i", "s", "c" }, "<c-e>", "<END>")
 vim.keymap.set({ "i", "s" }, "<c-k>", "<c-o>d$")
+
+vim.keymap.set({ "i" }, "<c-j>", function()
+    local node = vim.treesitter.get_node()
+    if node ~= nil then
+        local row, col = node:end_()
+        pcall(vim.api.nvim_win_set_cursor, 0, { row + 1, col })
+    end
+end, { desc = "Jump out of node" })
 
 -- Command Bindings
 

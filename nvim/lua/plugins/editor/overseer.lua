@@ -33,7 +33,7 @@ return {
             { "<leader>nc", "<cmd>OverseerClearCache<cr>", desc = "Clear cache" },
             { "<leader>nl", "<cmd>OverseerLoadBundle<cr>", desc = "Load bundle" },
             { "<leader>ns", "<cmd>OverseerSaveBundle<cr>", desc = "Save bundle" },
-            { "<leader>?n", "<cmd>OverseerInfo<cr>", desc = "Overseer info" },
+            { "?N", "<cmd>OverseerInfo<cr>", desc = "Overseer info" },
         },
         ---@type OverseerUserConfig
         opts = {
