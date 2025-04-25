@@ -53,13 +53,6 @@ return {
                 { "<leader>pw", icon = "󰑑 " },
                 { "<leader>pg", group = "Git pickers" },
                 { "<leader>po", group = "Option pickers" },
-
-                { ",", group = "Editing" },
-
-                { ",t", icon = "󱇂 ", desc = "Alignment" },
-                { ",s", icon = "󰒺 ", desc = "Sort" },
-                { ",=", icon = " ", desc = "Evaluate" },
-                { ",n", icon = "󱘎 " },
             },
         },
     },
