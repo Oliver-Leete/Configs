@@ -38,6 +38,9 @@ return {
 
                 ["<C-y>"] = {},
 
+                ["<C-p>"] = {},
+                ["<C-n>"] = {},
+
                 ["<Tab>"] = { "snippet_forward", "fallback" },
                 ["<S-Tab>"] = { "snippet_backward", "fallback" },
 

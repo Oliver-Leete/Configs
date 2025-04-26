@@ -176,7 +176,7 @@ vim.keymap.set({ "i", "s", "c" }, "<c-a>", "<HOME>")
 vim.keymap.set({ "i", "s", "c" }, "<c-e>", "<END>")
 vim.keymap.set({ "i", "s" }, "<c-k>", "<c-o>d$")
 
-vim.keymap.set({ "i" }, "<c-j>", function()
+vim.keymap.set({ "i" }, "<c-n>", function()
     local node = vim.treesitter.get_node()
     if node ~= nil then
         local row, col = node:end_()

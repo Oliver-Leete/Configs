@@ -6,18 +6,19 @@ return {
         dependencies = {
             { "iurimateus/luasnip-latex-snippets.nvim" },
         },
+        event = { "InsertEnter" },
         config = function()
             require("luasnip").config.set_config({
                 history = false,
                 update_events = "TextChanged,TextChangedI",
                 delete_check_events = "TextChanged",
             })
-            require("luasnip.loaders.from_lua").load({ paths = "/home/oleete/.config/nvim/snippets" })
+            require("luasnip.loaders.from_lua").load({ paths = { "/home/oleete/.config/nvim/snippets" } })
             require("luasnip-latex-snippets").setup()
         end,
         keys = {
             {
-                "<c-n>",
+                "<c-j>",
                 function()
                     local ls = require("luasnip")
                     if ls.choice_active() then ls.change_choice(1) end
