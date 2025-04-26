@@ -68,8 +68,29 @@ return {
         "RRethy/nvim-treesitter-endwise",
     },
     {
-        "echasnovski/mini.pairs",
-        opts = {},
+        "altermo/ultimate-autopair.nvim",
+        event = { "InsertEnter", "CmdlineEnter" },
+        opts = {
+            close = {
+                enable = true,
+                map = "<A-p>",
+                cmap = "<A-p>",
+            },
+            tabout = {
+                enable = true,
+                map = "<A-n>",
+                cmap = "<A-n>",
+                hopout = true,
+            },
+            config_internal_pairs = {
+                { '"""', '"""', ft = { "python", "julia" } },
+            },
+            extensions = {
+                filetype = {
+                    nft = { "snacks_picker_input" },
+                },
+            },
+        },
     },
     {
         "andymass/vim-matchup",
@@ -87,3 +108,4 @@ return {
         },
     },
 }
+-- test ( [ ])
