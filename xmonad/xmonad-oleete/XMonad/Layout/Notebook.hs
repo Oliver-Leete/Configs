@@ -122,7 +122,7 @@ data Notebook a = Notebook
     }
     deriving (Show, Read)
 
-data SResize = SShrink | SExpand
+data SResize = SShrink | SExpand deriving (Read, Show, Typeable)
 instance Message SResize
 
 instance LayoutClass Notebook a where
