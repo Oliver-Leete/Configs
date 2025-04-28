@@ -11,4 +11,21 @@ M.get_pos_lang = function()
     return current_tree:lang()
 end
 
+---Reduce a list like table
+---@generic a
+---@generic A table<string, a>
+---@param func function(left: a, right: a): a
+---@param list A[]
+---@param init A
+---@return A
+M.tbl_lreduce = function(func, list, init)
+    local ret = vim.deepcopy(init)
+    for _, item in ipairs(list) do
+        for k, v in pairs(item) do
+            ret[k] = func(ret[k], v)
+        end
+    end
+    return ret
+end
+
 return M
