@@ -161,6 +161,9 @@ vim.keymap.set("n", "<leader><leader>", "<cmd>silent e #<cr>", { desc = "Last fi
 vim.keymap.set({ "n", "x", "o" }, "]]", function() require("user.targets").mapping("]]", "]") end, { desc = "Section" })
 vim.keymap.set({ "n", "x", "o" }, "[[", function() require("user.targets").mapping("[[", "[") end, { desc = "Section" })
 
+vim.keymap.set({ "n" }, "<m-a>", function() require("user.lsp_dial").forward() end, { desc = "Lsp dial forward" })
+vim.keymap.set({ "n" }, "<m-r>", function() require("user.lsp_dial").reverse() end, { desc = "Lsp dial reverse" })
+
 -- Mouse Bindings
 
 vim.keymap.set("n", "<c-rightmouse>", "gf")
