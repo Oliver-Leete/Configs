@@ -206,7 +206,7 @@ scratchpads =
 background, foreground, dull, active, yellow, green :: String
 background = "#222436"
 foreground = "#c8d3f5"
-dull = "#1E2030"
+dull = "#636da6"
 active = "#82AAFF"
 yellow = "#ffc777"
 green = "#c3e88d"
