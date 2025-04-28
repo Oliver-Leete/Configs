@@ -45,6 +45,10 @@ return {
                     symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
                 },
                 {
+                    "overseer",
+                    icons = true,
+                },
+                {
                     "neotest",
                     global = true,
                 },
