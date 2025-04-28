@@ -45,6 +45,10 @@ return {
                     symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
                 },
                 {
+                    "neotest",
+                    global = true,
+                },
+                {
                     function() return require("user.filmpicker").endtime() end,
                     cond = function() return vim.fn.expand("%") == "/tmp/film_list.films" end,
                 },
