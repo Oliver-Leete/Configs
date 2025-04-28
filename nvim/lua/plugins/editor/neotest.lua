@@ -21,7 +21,7 @@ return {
             --     dap_go_enabled = true,
             --   },
             -- },
-            status = { virtual_text = true },
+            status = { signs = false, virtual_text = true },
             output = { open_on_run = true },
             quickfix = {
                 open = function() require("trouble").open({ mode = "quickfix", focus = false }) end,
