@@ -61,10 +61,10 @@ function M:init(options)
 
     local default_icons = {
         [States.Total] = "󰤑",
-        [States.Passed] = conf_icons.passed,
-        [States.Failed] = conf_icons.failed,
-        [States.Skipped] = conf_icons.skipped,
-        [States.Running] = conf_icons.running,
+        [States.Passed] = conf_icons.passed .. " ",
+        [States.Failed] = conf_icons.failed .. " ",
+        [States.Skipped] = conf_icons.skipped .. " ",
+        [States.Running] = conf_icons.running .. " ",
     }
 
     local hl_groups = {
@@ -108,9 +108,9 @@ function M:update_status()
         if status and status > 0 and self.symbols[state] then
             if self.options.colored then
                 local hl_start = self:format_hl(self.highlight_groups[state])
-                table.insert(pieces, string.format("%s%s %s", hl_start, self.symbols[state], status))
+                table.insert(pieces, string.format("%s%s%s", hl_start, self.symbols[state], status))
             else
-                table.insert(pieces, string.format("%s %s", self.symbols[state], status))
+                table.insert(pieces, string.format("%s%s", self.symbols[state], status))
             end
         end
     end
