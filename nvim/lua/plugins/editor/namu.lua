@@ -56,6 +56,12 @@ return {
             namu_symbols = {
                 options = vim.tbl_deep_extend("force", namu_defaults, {}),
             },
+            watchtower = {
+                options = vim.tbl_deep_extend("force", namu_defaults, {}),
+            },
+            workspace = {
+                options = vim.tbl_deep_extend("force", namu_defaults, {}),
+            },
             diagnostics = {
                 options = vim.tbl_deep_extend("force", namu_defaults, {
                     window = {
@@ -70,9 +76,6 @@ return {
                     },
                 }),
             },
-            workspace = {
-                options = vim.tbl_deep_extend("force", namu_defaults, {}),
-            },
             callhierarchy = {
                 options = vim.tbl_deep_extend("force", namu_defaults, {
                     sort_by_nesting_depth = true,
@@ -86,7 +89,39 @@ return {
         },
         cmd = { "Namu" },
         keys = {
-            { "<leader>:", "<cmd>Namu watchtower<cr>", desc = "Lsp Symbols" },
+            { "<leader>::", function() require("namu.namu_symbols").show() end, desc = "Symbols (buffer)" },
+            { "<leader>:;", function() require("namu.namu_watchtower").show() end, desc = "Symbols (open)" },
+            { "<leader>:<c-s-;>", function() require("namu.namu_workspace").show() end, desc = "Symbols (workspace)" },
+            {
+                "<leader>:d",
+                function() require("namu.namu_diagnostics").show_current_diagnostics() end,
+                desc = "Diagnostics (buffer)",
+            },
+            {
+                "<leader>:D",
+                function() require("namu.namu_diagnostics").show_buffer_diagnostics() end,
+                desc = "Diagnostics (open)",
+            },
+            {
+                "<leader>:<c-d>",
+                function() require("namu.namu_diagnostics").show_workspace_diagnostics() end,
+                desc = "Diagnostics (open)",
+            },
+            {
+                "<leader>:c",
+                function() require("namu.namu_callhierarchy").show_incoming_calls() end,
+                desc = "Calls (incoming)",
+            },
+            {
+                "<leader>:C",
+                function() require("namu.namu_callhierarchy").show_outgoing_calls() end,
+                desc = "Calls (outgoing)",
+            },
+            {
+                "<leader>:<c-C>",
+                function() require("namu.namu_callhierarchy").show_both_calls() end,
+                desc = "Calls (both)",
+            },
         },
     },
 }
