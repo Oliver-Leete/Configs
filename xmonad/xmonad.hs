@@ -47,7 +47,7 @@ import XMonad.Layout.FocusTracking (focusTracking)
 import qualified XMonad.Layout.MultiToggle as MT
 import XMonad.Layout.MultiToggle.Instances (StdTransformers (MIRROR))
 import XMonad.Layout.NoBorders (smartBorders)
-import XMonad.Layout.Notebook (IncColumnN (IncColumnN), MirrorResize (MirrorExpand, MirrorShrink), Notebook (Notebook), SResize (SExpand, SShrink), ToggleMiddle (ToggleMiddle), ToggleSide (ToggleSide), ToggleStackDir (ToggleStackDir))
+import XMonad.Layout.Notebook (IncColumnN (IncColumnN), MirrorResize (MirrorExpand, MirrorShrink), Notebook (..), SResize (SExpand, SShrink), ToggleMiddle (ToggleMiddle), ToggleSide (ToggleSide), ToggleStackDir (ToggleStackDir))
 import XMonad.Layout.PaperPersistent (IncWindowIndex (IncWindowIndex), PaperPersistent (PaperPersistent))
 import XMonad.Layout.PerScreen (ifWider)
 import XMonad.Layout.Renamed (Rename (KeepWordsRight), renamed)
@@ -333,8 +333,32 @@ myLayoutHook =
                         notebookLayout
   where
     myDeco = windowSwitcherDecoration shrinkText myDecoTheme
-    notebookBigScreen = Notebook True False True 1 2 moreReSize reSize 3 (2 / 3) 1
-    notebookLaptop = Notebook False False False 1 2 moreReSize reSize 2 (2 / 3) 1
+    notebookBigScreen =
+      Notebook
+        { notebookMiddle = True,
+          notebookSide = False,
+          stackDirection = True,
+          notebookMaster = 1,
+          notebookColumn = 2,
+          notebookDelta = moreReSize,
+          notebookMirrorDelta = reSize,
+          notebookFrac = 3,
+          notebookMirrorFrac = 2 / 3,
+          notebookStackFrac = 1
+        }
+    notebookLaptop =
+      Notebook
+        { notebookMiddle = False,
+          notebookSide = False,
+          stackDirection = False,
+          notebookMaster = 1,
+          notebookColumn = 2,
+          notebookDelta = moreReSize,
+          notebookMirrorDelta = reSize,
+          notebookFrac = 2,
+          notebookMirrorFrac = 2 / 3,
+          notebookStackFrac = 1
+        }
     notebookLayout = ifWider 1920 notebookBigScreen notebookLaptop
 
 ----------------------------------------------------------------------------------------------------
