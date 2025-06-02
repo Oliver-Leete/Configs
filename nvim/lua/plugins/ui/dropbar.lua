@@ -39,17 +39,6 @@ return {
                 path = {
                     preview = false,
                 },
-                terminal = {
-                    name = function(buf)
-                        local name = vim.api.nvim_buf_get_name(buf)
-                        local term = require("toggleterm.terminal").find(function(t) return t.bufnr == buf end)
-                        if term then
-                            return term.display_name or term.name
-                        else
-                            return name
-                        end
-                    end,
-                },
             },
         },
         lazy = false,
