@@ -39,17 +39,17 @@ return {
     keys = {
         {
             "<leader>sr",
-            function() require("grug-far").open() end,
+            function() require("grug-far").open({ prefills = { flags = "--pcre2" } }) end,
             desc = "Search and Replace",
         },
         {
             "<leader>sR",
-            function() require("grug-far").open({ prefills = { paths = vim.fn.expand("%") } }) end,
+            function() require("grug-far").open({ prefills = { paths = vim.fn.expand("%"), flags = "--pcre2" } }) end,
             desc = "Search and Replace in file",
         },
         {
             "<leader>sr",
-            function() require("grug-far").open({ visualSelectionUsage = "operate-within-range" }) end,
+            function() require("grug-far").open({ visualSelectionUsage = "operate-within-range", flags = "--pcre2" }) end,
             mode = { "x" },
             desc = "Search within range",
         },
