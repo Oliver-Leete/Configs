@@ -2,12 +2,12 @@
 ---@type LazySpec
 return {
     {
-        "williamboman/mason.nvim",
+        "mason-org/mason.nvim",
         opts = {},
     },
     {
         "WhoIsSethDaniel/mason-tool-installer.nvim",
-        dependencies = { "williamboman/mason.nvim" },
+        dependencies = { "mason-org/mason.nvim" },
         opts = {
             ensure_installed = {
                 "bibtex-tidy",

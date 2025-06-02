@@ -16,8 +16,18 @@ local custom_attach = function(client, bufnr)
     bmap("n", "gD", function() require("snacks.picker").lsp_type_definitions() end, { desc = "Type Deffinition" })
     bmap("n", "gI", function() require("snacks.picker").lsp_implementations() end, { desc = "Implementations" })
 
-    bmap("n", "go", function() require("namu.namu_callhierarchy").show_outgoing_calls() end, { desc = "Outgoing calls" })
-    bmap("n", "gi", function() require("namu.namu_callhierarchy").show_incoming_calls() end, { desc = "Incoming calls" })
+    bmap(
+        "n",
+        "go",
+        function() require("namu.namu_callhierarchy").show_outgoing_calls() end,
+        { desc = "Outgoing calls" }
+    )
+    bmap(
+        "n",
+        "gi",
+        function() require("namu.namu_callhierarchy").show_incoming_calls() end,
+        { desc = "Incoming calls" }
+    )
     bmap("n", "gc", function() require("namu.namu_callhierarchy").show_both_calls() end, { desc = "Calls (in + out)" })
 
     bmap("n", ",rr", vim.lsp.buf.rename, { desc = "Rename variable" })
@@ -40,8 +50,8 @@ return {
     {
         "neovim/nvim-lspconfig",
         dependencies = {
-            "mason.nvim",
-            { "williamboman/mason-lspconfig.nvim", config = function() end },
+            { "mason-org/mason.nvim" },
+            { "mason-org/mason-lspconfig.nvim", config = function() end },
         },
         opts = function()
             ---@module "lspconfig"
@@ -113,7 +123,8 @@ return {
             local have_mason, mlsp = pcall(require, "mason-lspconfig")
             local all_mslp_servers = {}
             if have_mason then
-                all_mslp_servers = vim.tbl_keys(require("mason-lspconfig").get_mappings().lspconfig_to_package)
+                -- all_mslp_servers = vim.tbl_keys(require("mason-lspconfig").get_mappings().lspconfig_to_package)
+                all_mslp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
             end
 
             local ensure_installed = {} ---@type string[]
@@ -140,4 +151,8 @@ return {
             end
         end,
     },
+
+    -- pin to v1 for now
+    { "mason-org/mason.nvim", version = "^1.0.0" },
+    { "mason-org/mason-lspconfig.nvim", version = "^1.0.0" },
 }
