@@ -43,6 +43,7 @@ zsh/
 !nu/*
 !fish/conf.d/*
 !displayctl
+!zellij/*
 
 /rofi-themes
 /bin/startupScript
