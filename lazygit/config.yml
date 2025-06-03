@@ -1,4 +1,4 @@
-quitOnTopLevelReturn: true
+quitOnTopLevelReturn: false
 
 gui:
   sidePanelWidth: 0.2
