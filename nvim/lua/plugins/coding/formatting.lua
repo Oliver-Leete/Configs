@@ -23,6 +23,7 @@ return {
                     bibtex = { "bibtex-tidy" },
                     sh = { "shellharden", "shfmt" },
                     lua = { "stylua" },
+                    kdl = { "kdlfmt" },
                 },
                 default_format_opts = {
                     lsp_format = "fallback",
