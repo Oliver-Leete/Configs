@@ -57,3 +57,4 @@ zsh/
 /fish/conf.d/done.fish
 lnav
 helix/runtime/grammars/sources
+zellij/config.kdl.bak.1
