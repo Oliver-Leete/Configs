@@ -3,7 +3,7 @@
 return {
     "folke/which-key.nvim",
     event = { "VeryLazy" },
-    opts_extend = {  },
+    opts_extend = {},
     opts = {
         preset = "helix",
         triggers = {
@@ -45,13 +45,15 @@ return {
                 { "<leader>f", icon = "󰈞 " },
 
                 { "<leader>P", icon = " " },
-                { "<leader>p", icon = " " },
+                { "<leader>p", icon = " ", group = "Pickers" },
                 { "<leader>ps", icon = " " },
                 { "<leader>pp", icon = " " },
                 { "<leader>pS", icon = " " },
                 { "<leader>pw", icon = "󰑑 " },
                 { "<leader>pg", group = "Git pickers" },
                 { "<leader>po", group = "Option pickers" },
+
+                { "<leader>:", group = "Symbols" }
             },
         },
     },
