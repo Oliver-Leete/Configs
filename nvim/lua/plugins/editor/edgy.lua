@@ -8,6 +8,9 @@ return {
                 bottom = {
                     size = 20,
                 },
+                right = {
+                    size = 0.5,
+                },
             },
             close_when_all_hidden = true,
             exit_when_last = true,
@@ -15,7 +18,7 @@ return {
                 enabled = false,
             },
             wo = {
-                winbar = false,
+                winbar = true,
                 spell = false,
             },
             keys = {
@@ -104,6 +107,12 @@ return {
                     end,
                     open = "Trouble lsp open",
                 },
+            },
+            right = {
+                {
+                    title = "Iron Repl",
+                    ft = "iron"
+                }
             },
         },
     },
