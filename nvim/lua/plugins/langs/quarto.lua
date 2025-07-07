@@ -10,7 +10,7 @@ return {
         opts = {
             codeRunner = {
                 enabled = true,
-                default_method = function() end,
+                default_method = "iron",
             },
         },
         ft = { "quarto" },
@@ -51,12 +51,13 @@ return {
                 ft = "quarto",
                 desc = "Update quarto preview",
             },
-            { "<c-cr>", function() require("quarto.runner").run_cell() end, ft = "quarto", desc = "run cell" },
+            { "<leader>rc", function() require("quarto.runner").run_cell() end, ft = "quarto", desc = "run cell" },
             {
-                "<c-cr>",
+                "<leader>rr",
                 function() require("quarto.runner").run_range() end,
                 ft = "quarto",
                 desc = "run visual range",
+                mode = "x"
             },
         },
     },
