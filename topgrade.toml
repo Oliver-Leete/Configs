@@ -64,6 +64,7 @@ repos = [
 "XMonad" = "cd ~/.config; just xmonad-build-reload"
 "Xmobar" = "cd ~/.config; just xmobar-build-reload"
 "Locate DB" = "sudo updatedb"
+"uvx" = "uv tool upgrade --all"
 
 [brew]
 #greedy_cask = true
