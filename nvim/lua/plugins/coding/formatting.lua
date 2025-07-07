@@ -19,11 +19,16 @@ return {
                 formatters_by_ft = {
                     quarto = { "injected" },
                     julia = { "runic" },
-                    markdown = { "markdownlint" },
+                    markdown = { "markdownlint-cli2" },
                     bibtex = { "bibtex-tidy" },
                     sh = { "shellharden", "shfmt" },
                     lua = { "stylua" },
                     kdl = { "kdlfmt" },
+                    yaml = { "yamlfmt" },
+                    toml = { "taplo" },
+                    just = { "just" },
+                    haskell = { "ormolu" },
+                    json = { "jq" },
                 },
                 default_format_opts = {
                     lsp_format = "fallback",
