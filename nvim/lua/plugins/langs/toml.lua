@@ -8,7 +8,7 @@ return {
         opts = {
             servers = {
                 taplo = {
-                    mason = true,
+                    mason = false,
                 },
             },
         },

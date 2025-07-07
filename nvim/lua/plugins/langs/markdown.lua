@@ -8,6 +8,7 @@ return {
         ---@module "markview"
         ---@type mkv.config
         opts = {
+            experimental = { check_rtp_message = false },
             preview = {
                 enable = true,
                 enable_hybrid_mode = true,
