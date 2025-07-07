@@ -2,42 +2,6 @@
 ---@type LazySpec
 return {
     {
-        "lucobellic/edgy-group.nvim",
-        event = "VeryLazy",
-        dependencies = { "folke/edgy.nvim" },
-        keys = {
-            {
-                "<leader>sl",
-                function() require("edgy-group").open_group_offset("bottom", 1) end,
-                desc = "Edgy Group Next bottom",
-            },
-            {
-                "<leader>sh",
-                function() require("edgy-group").open_group_offset("bottom", -1) end,
-                desc = "Edgy Group Prev bottom",
-            },
-            { "<leader>ss", "<cmd>EdgyGroupSelect<cr>", desc = "Edgy Group Pick" },
-        },
-        opts = {
-            groups = {
-                bottom = {
-                    { icon = " ", titles = { "dap-view", "dap-repl", "dap-consol" }, pick_key = "d" },
-                    { icon = " ", titles = { "overseer-list" }, pick_key = "r" },
-                    { icon = " ", titles = { "terminal" }, pick_key = "t" },
-                    { icon = "󰙨 ", titles = { "neotest-panel" }, pick_key = "t" },
-                    { icon = " ", titles = { "trouble-diagnostics", "trouble-todo" }, pick_key = "x" },
-                    { icon = " ", titles = { "trouble-snacks" }, pick_key = "s" },
-                },
-                left = {
-                    { icon = "󰙨 ", titles = { "neotest-list" }, pick_key = "T" },
-                    { icon = " ", titles = { "trouble-lsp" }, pick_key = "l" },
-                },
-            },
-            toggle = true,
-        },
-    },
-
-    {
         "folke/edgy.nvim",
         opts = {
             options = {
@@ -109,32 +73,22 @@ return {
                     open = "Neotest output-panel",
                 },
                 {
-                    title = "overseer-list",
-                    ft = "OverseerList",
-                    size = { width = 0.15 },
-                    open = function() require("overseer").open() end,
-                },
-                {
-                    title = "overseer-task",
-                    ft = "",
-                    filter = function(buf, win)
-                        local task = vim.b[buf].overseer_task
-                        return task and task ~= 0 and vim.api.nvim_win_get_config(win).relative == ""
-                    end,
-                },
-                {
                     title = "terminal",
                     ft = "toggleterm",
                     open = "ToggleTermLast",
                     filter = function(buf, _)
                         local term = require("toggleterm.terminal").find(function(t) return t.bufnr == buf end)
-                        if term then
-                            return term.direction == "horizontal"
-                        end
+                        if term then return term.direction == "horizontal" end
                     end,
                 },
             },
             left = {
+                {
+                    title = "overseer-list",
+                    ft = "OverseerList",
+                    size = { width = 0.15 },
+                    open = function() require("overseer").open() end,
+                },
                 {
                     title = "neotest-list",
                     ft = "neotest-summary",

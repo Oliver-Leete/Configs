@@ -40,7 +40,7 @@ return {
             strategy = { "jobstart", preserve_output = true },
             dap = true,
             task_list = {
-                direction = "bottom",
+                direction = "left",
             },
             default_template_prompt = "allow",
             component_aliases = {
@@ -78,18 +78,6 @@ return {
                     overseer.run_action(tasks[1], "restart")
                 end
             end, {})
-        end,
-    },
-    {
-        "folke/edgy.nvim",
-        optional = true,
-        opts = function(_, opts)
-            opts.bottom = opts.bottom or {}
-            table.insert(opts.bottom, {
-                title = "overseer-list",
-                ft = "OverseerList",
-                open = "OverseerOpen",
-            })
         end,
     },
     {
