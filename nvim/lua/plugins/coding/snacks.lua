@@ -73,12 +73,12 @@ return {
                     vim.print = _G.dd
 
                     require("snacks.toggle").inlay_hints():map("<leader>zh")
+
                     require("snacks.toggle").indent():map("<leader>zi")
-                    require("snacks.toggle").dim():map("<leader>zd")
+                    require("snacks.toggle").dim():map("<leader>zf")
 
                     require("snacks.toggle").words():map("<leader>zw")
                     require("snacks.toggle").option("wrap", { name = "Wrap" }):map("<leader>zW")
-                    require("snacks.toggle").line_number():map("<leader>zl")
                     require("snacks.toggle")
                         .option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
                         :map("<leader>zH")
@@ -86,6 +86,25 @@ return {
                     require("snacks.toggle").zen():map("<leader>zx")
                     require("snacks.toggle").zoom():map("<leader>zz")
 
+                    require("snacks.toggle")
+                        .new({
+                            id = "line_diagnostics",
+                            name = "Line Diagnostics",
+                            get = function()
+                                local d = vim.diagnostic.config().virtual_lines
+                                return d and true or false
+                            end,
+                            set = function(state)
+                                if state then
+                                    vim.diagnostic.config({ virtual_lines = true })
+                                    require("tiny-inline-diagnostic").disable()
+                                else
+                                    vim.diagnostic.config({ virtual_lines = false })
+                                    require("tiny-inline-diagnostic").enable()
+                                end
+                            end,
+                        })
+                        :map("<leader>zd")
                     require("snacks.toggle").diagnostics():map("<leader>zD")
                     require("snacks.toggle").treesitter():map("<leader>zT")
                     require("snacks.toggle")
