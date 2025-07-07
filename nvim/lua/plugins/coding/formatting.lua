@@ -29,6 +29,7 @@ return {
                     just = { "just" },
                     haskell = { "ormolu" },
                     json = { "jq" },
+                    systemverilog = { "verible" },
                 },
                 default_format_opts = {
                     lsp_format = "fallback",
