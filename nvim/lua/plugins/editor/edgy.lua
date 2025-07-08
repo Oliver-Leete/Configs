@@ -71,11 +71,6 @@ return {
                     open = "Trouble todo open",
                 },
                 {
-                    title = "neotest-panel",
-                    ft = "neotest-output-panel",
-                    open = "Neotest output-panel",
-                },
-                {
                     title = "terminal",
                     ft = "toggleterm",
                     open = "ToggleTermLast",
@@ -93,12 +88,6 @@ return {
                     open = function() require("overseer").open() end,
                 },
                 {
-                    title = "neotest-list",
-                    ft = "neotest-summary",
-                    open = "Neotest summary",
-                    size = { width = 0.20 },
-                },
-                {
                     title = "trouble-lsp",
                     ft = "trouble",
                     filter = function(_, win)
@@ -111,8 +100,8 @@ return {
             right = {
                 {
                     title = "Iron Repl",
-                    ft = "iron"
-                }
+                    ft = "iron",
+                },
             },
         },
     },
