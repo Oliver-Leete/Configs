@@ -122,38 +122,30 @@ projects :: [Project]
 projects =
   [ Project {pName = "Tmp", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()},
     Project {pName = "Tmp2", pDir = "/tmp", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()},
-    Project {pName = "M", pDir = "~/.config", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = tBSpawn "M" persB},
+    Project {pName = "M", pDir = "~/.config", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()},
     Project {pName = "Blank1", pDir = "~/Documents", pApp1 = kitty, pApp1F = kittyF, pApp4 = br persB, pApp4F = brF persB, pStart = Just $ return ()},
     Project {pName = "Work1", pDir = "~/Projects/DECSAM", pApp1 = kitty, pApp1F = kittyF, pApp4 = br workB, pApp4F = brF workB, pStart = Just $ return ()},
     Project {pName = "Work2", pDir = "~/Projects/DECSAM", pApp1 = kitty, pApp1F = kittyF, pApp4 = br workB, pApp4F = brF workB, pStart = Just $ return ()},
-    Project {pName = "Films", pDir = "~/Videos/films", pApp1 = kitty, pApp1F = kittyF, pApp2 = deluge, pApp2F = delugeF, pApp4 = br filmB, pApp4F = brF filmB, pStart = fSpawn "Films"},
-    Project {pName = "Scin-Main", pDir = "~/Projects/Scintilla/Main", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br univB, pApp4F = brF univB, pStart = tBSpawn "Scin-Main" univB},
-    Project {pName = "Scin-Test", pDir = "~/Projects/Scintilla/Main", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp3 = zathura, pApp3F = zathuraF, pApp4 = br univB, pApp4F = brF univB, pStart = Just $ return ()}
+    Project {pName = "Films", pDir = "~/Videos/films", pApp1 = kitty, pApp1F = kittyF, pApp2 = deluge, pApp2F = delugeF, pApp4 = br filmB, pApp4F = brF filmB, pStart = Just $ return ()},
+    Project {pName = "Scin-Main", pDir = "~/Projects/Scintilla/Main", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp4 = br univB, pApp4F = brF univB, pStart = Just $ return ()},
+    Project {pName = "Scin-Test", pDir = "~/Projects/Scintilla/Main", pApp1 = kitty, pApp1F = kittyF, pApp2 = scinCont, pApp2F = scinContF, pApp4 = br univB, pApp4F = brF univB, pStart = Just $ return ()}
   ]
   where
     kitty = bindFirst [kt "action launch_os_window", l (upPointer $ Wgl.runOrRaiseNext "kitty" (className =? "kitty"))]
     kittyF = upPointer $ spawn "kitty"
 
-    sameForce r c = (upPointer $ Wgl.runOrRaiseNext r (className =? c), upPointer $ spawn r)
-    (zathura, zathuraF) = sameForce "zathura" "Zathura"
-    (deluge, delugeF) = sameForce "deluge" "Deluge-gtk"
+    deluge = upPointer $ Wgl.runOrRaiseNext "deluge" (className =? "Deluge-gtk")
+    delugeF = upPointer $ spawn "deluge"
     scinStart = "cd /home/oleete/Projects/Scintilla/Main; .venv/bin/python main.pyw"
-    (scinCont, scinContF) = (upPointer $ Wgl.runOrRaiseNext scinStart (title =? "Scintilla Control"), upPointer $ spawn scinStart)
+    scinCont = upPointer $ Wgl.runOrRaiseNext scinStart (title =? "Scintilla Control")
+    scinContF = upPointer $ spawn scinStart
 
     persB = "google-chrome-stable-personal"
     univB = "google-chrome-stable-uni"
     workB = "google-chrome-stable-work"
     filmB = "google-chrome-stable-Films"
-    br na = bindFirst [crm (P.sendKey controlMask xK_t), l (upPointer $ brS na)]
-    brS na = Wgl.raiseNextMaybeCustomFocus2 bringWindow (brF na) (className =? na)
-    brL na = Wgl.raiseNextMaybeCustomFocus3 (brF na) (className =? na)
+    br na = bindFirst [crm (P.sendKey controlMask xK_t), l (upPointer $ Wgl.raiseNextMaybeCustomFocus2 bringWindow (brF na) (className =? na))]
     brF na = upPointer $ spawn (myBrowserClass ++ " --class=" ++ na ++ " --user-data-dir=/home/oleete/.config/browser/" ++ na)
-
-    sl i = "sleep .1; " ++ i
-    tBSpawn ws na = Just $ do spawnOn ws myTerminal; brL na
-    bSpawn na = Just $ brL na
-    oSpawn ws app = Just $ spawnOn ws $ sl app
-    fSpawn ws = Just $ do spawnOn ws $ sl myBrowser; spawnOn ws ("sleep .2; " ++ myTerminal); spawnOn ws $ sl "deluge"
 
 myWorkspaces :: [String]
 myWorkspaces = map pName projects
