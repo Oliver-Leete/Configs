@@ -12,7 +12,12 @@ return {
                 statusline = 1000,
             },
             disabled_filetypes = {
-                winbar = {"dap-view", "dap-repl", "dap-view-term"},
+                winbar = {
+                    "dap-view",
+                    "dap-repl",
+                    "dap-view-term",
+                    "dap-view-help",
+                },
             },
         },
         sections = {
