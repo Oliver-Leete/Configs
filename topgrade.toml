@@ -8,7 +8,7 @@ skip_notify=true
 disable = [ "vim" ]
 
 # Ignore failures for these steps
-ignore_failures = [  "platformio_core" ]
+ignore_failures = []
 
 # Run specific steps - same options as the command line flag
 #only = ["system", "emacs"]
