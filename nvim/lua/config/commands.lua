@@ -2,6 +2,8 @@ vim.api.nvim_create_user_command("NavigateLeft", function() require("user.myfunc
 vim.api.nvim_create_user_command("NavigateBottom", function() require("user.myfuncs").nav_dir("j") end, { nargs = 0 })
 vim.api.nvim_create_user_command("NavigateTop", function() require("user.myfuncs").nav_dir("k") end, { nargs = 0 })
 vim.api.nvim_create_user_command("NavigateRight", function() require("user.myfuncs").nav_dir("l") end, { nargs = 0 })
+vim.api.nvim_create_user_command("NavigateTabNext", function() require("user.myfuncs").next_tab() end, { nargs = 0 })
+vim.api.nvim_create_user_command("NavigateTabPrev", function() require("user.myfuncs").prev_tab() end, { nargs = 0 })
 
 vim.api.nvim_create_user_command("DeleteBuffer", function() require("user.myfuncs").delete_buffer() end, { nargs = 0 })
 

@@ -55,7 +55,28 @@ end
 M.nav_dir = function(direction)
     local curwin = vim.api.nvim_get_current_win()
     vim.cmd.wincmd({ args = { direction } })
-    local newwin = vim.api.nvim_get_current_win() if curwin == newwin then vim.fn.system("/home/oleete/.cabal/bin/xmonadctl-exe winGo-" .. direction) end
+    local newwin = vim.api.nvim_get_current_win()
+    if curwin == newwin then vim.fn.system("/home/oleete/.cabal/bin/xmonadctl-exe winGo-" .. direction) end
+end
+
+M.next_tab = function()
+    local curtab = vim.api.nvim_get_current_tabpage()
+    local tabs = vim.api.nvim_list_tabpages()
+    if tabs[#tabs] == curtab then
+        vim.fn.system("kitty @ action next_tab")
+    else
+        vim.cmd.tabnext()
+    end
+end
+
+M.prev_tab = function()
+    local curtab = vim.api.nvim_get_current_tabpage()
+    local tabs = vim.api.nvim_list_tabpages()
+    if tabs[1] == curtab then
+        vim.fn.system("kitty @ action previous_tab")
+    else
+        vim.cmd.tabprev()
+    end
 end
 
 ---Run an action on a snacks picker trouble list, using the most recently set of the two lists.
