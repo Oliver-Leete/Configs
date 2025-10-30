@@ -18,6 +18,7 @@ fish_add_path --path /home/oleete/.local/bin
 fish_add_path --path /home/oleete/.config/bin
 fish_add_path --path /home/oleete/.cabal/bin
 fish_add_path --path /home/oleete/.ghcup/bin
+fish_add_path --path /home/oleete/.julia/bin
 
 pyenv init - | source
 
@@ -97,6 +98,10 @@ end
 
 function help
     $argv --help 2>&1 | bat --language=help -pp
+end
+
+function tree
+    br -c :pt $argv
 end
 
 # ghcup-env

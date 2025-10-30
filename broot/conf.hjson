@@ -32,9 +32,10 @@
 # directory, set a terminal_title pattern by uncommenting one of
 # the examples below and tuning it to your taste.
 #
-terminal_title: "broot"
+# terminal_title: "[broot] {git-name}"
 # terminal_title: "{file} 🐄"
 # terminal_title: "-= {file-name} =-"
+# reset_terminal_title_on_exit: false
 
 ###############################################################
 # Date/Time format
@@ -93,7 +94,7 @@ show_selection_mark: true
 # (see https://dystroy.org/broot/icons for installation and
 # troubleshooting)
 #
-icon_theme: nerdfont
+# icon_theme: vscode
 
 ###############################################################
 # Special paths
@@ -130,7 +131,7 @@ special_paths: {
 # to cancel (for example when you just opened broot), uncomment
 # this parameter
 # 
-quit_on_last_cancel: true
+# quit_on_last_cancel: true
 
 ###############################################################
 # Search modes
@@ -204,7 +205,59 @@ content_search_max_file_size: 10MB
 # This makes it possible to use shortcuts like 'space-n', 
 # 'ctrl-alt-a-b', 'shift-space', etc.
 #
-enable_kitty_keyboard: true
+enable_kitty_keyboard: false
+
+###############################################################
+# lines around matching line in filtered preview
+#
+# When searching the content of a file, you can have either
+# only the matching lines displayed, or some of the surrounding
+# ones too.
+#
+lines_before_match_in_preview: 1
+lines_after_match_in_preview: 1
+
+###############################################################
+# transformations before preview
+#
+# It's possible to define transformations to apply to some files
+# before calling one of the default preview renderers in broot.
+# Below are two examples that you may uncomment and adapt:
+#
+preview_transformers: [
+    // # Use mutool to render any PDF file as an image
+    // # In this example we use placeholders for the input and output files
+    // {
+    //     input_extensions: [ "pdf" ] // case doesn't matter
+    //     output_extension: png
+    //     mode: image
+    //     command: [ "mutool", "draw", "-w", "1000", "-o", "{output-path}", "{input-path}" ]
+    // }
+
+    // # Use LibreOffice to render Office files as images
+    // # In this example, {output-dir} is used to specify where LibreOffice must write the result
+    // {
+    //     input_extensions: [ "xls", "xlsx", "doc", "docx", "ppt", "pptx", "ods", "odt", "odp" ]
+    //     output_extension: png
+    //     mode: image
+    //     command: [
+    //         "libreoffice", "--headless",
+    //         "--convert-to", "png",
+    //         "--outdir", "{output-dir}",
+    //         "{input-path}"
+    //     ]
+    // }
+
+    // # Use jq to beautify JSON
+    // # In this example, the command refers to neither the input nor the output,
+    // # so broot pipes them to the stdin and stdout of the jq process
+    // {
+    //     input_extensions: [ "json" ] 
+    //     output_extension: json
+    //     mode: text
+    //     command: [ "jq" ]
+    // }
+]
 
 ###############################################################
 # Imports
@@ -229,8 +282,7 @@ imports: [
             unknown
         ]
         # (un)comment to choose your preferred skin
-        file: skins/kanagawa.hjson
-        //file: skins/dark-blue.hjson
+        file: skins/dark-blue.hjson
         //file: skins/catppuccin-macchiato.hjson
         //file: skins/catppuccin-mocha.hjson
         //file: skins/dark-gruvbox.hjson
