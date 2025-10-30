@@ -16,7 +16,6 @@
   "flash.nvim": { "branch": "main", "commit": "fcea7ff883235d9024dc41e638f164a450c14ca2" },
   "gcode.vim": { "branch": "master", "commit": "a3bbe029cac56684866246b821a0c87b23bb35bb" },
   "grug-far.nvim": { "branch": "main", "commit": "3e72397465f774b01aa38e4fe8e6eecf23d766d9" },
-  "haskell-scope-highlighting.nvim": { "branch": "master", "commit": "0ee8d06ef1a900977c9517e4fb2a55e5b5cbb03d" },
   "haskell-tools.nvim": { "branch": "master", "commit": "b8f8a5d1fa1431e61437e2c86e50ad718be6bd76" },
   "hover.nvim": { "branch": "main", "commit": "3b49066e09e03e63be6d6f43ae2b8bcd58301f63" },
   "inlayhint-filler.nvim": { "branch": "main", "commit": "eedd800f2380ddb690fd119eb97418d291a4d51d" },
