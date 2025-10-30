@@ -60,12 +60,6 @@ return {
         },
     },
     {
-        "Davidyz/coredumpy.nvim",
-        cmd = { "Coredumpy" },
-        opts = function() return { python = require("venv-selector").python } end,
-        dependencies = { "mfussenegger/nvim-dap" },
-    },
-    {
         "jay-babu/mason-nvim-dap.nvim",
         optional = true,
         opts = {
