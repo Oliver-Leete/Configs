@@ -18,7 +18,7 @@ return {
                 enabled = false,
             },
             wo = {
-                winbar = true,
+                winbar = false,
                 spell = false,
             },
             keys = {
@@ -27,22 +27,6 @@ return {
                 ["Q"] = function(win) win.view.edgebar:close() end,
             },
             bottom = {
-                {
-                    title = "dap-view",
-                    ft = "dap-view",
-                    open = function() require("dap-view").open() end,
-                },
-                {
-                    title = "dap-repl",
-                    ft = "dap-repl",
-                    open = function() require("dap-view").open() end,
-                },
-                {
-                    title = "dap-consol",
-                    ft = "dap-view-term",
-                    open = function() require("dap").repl.open() end,
-                    collapsed = false,
-                },
                 {
                     title = "trouble-snacks",
                     ft = "trouble",
@@ -82,12 +66,6 @@ return {
             },
             left = {
                 {
-                    title = "overseer-list",
-                    ft = "OverseerList",
-                    size = { width = 0.15 },
-                    open = function() require("overseer").open() end,
-                },
-                {
                     title = "trouble-lsp",
                     ft = "trouble",
                     filter = function(_, win)
@@ -101,6 +79,22 @@ return {
                 {
                     title = "Iron Repl",
                     ft = "iron",
+                },
+                {
+                    title = "dap-view",
+                    ft = "dap-view",
+                    open = function() require("dap-view").open() end,
+                },
+                {
+                    title = "dap-repl",
+                    ft = "dap-repl",
+                    open = function() require("dap-view").open() end,
+                },
+                {
+                    title = "dap-consol",
+                    ft = "dap-view-term",
+                    open = function() require("dap").repl.open() end,
+                    collapsed = false,
                 },
             },
         },
