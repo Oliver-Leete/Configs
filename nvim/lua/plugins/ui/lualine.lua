@@ -27,26 +27,9 @@ return {
                     end,
                 },
                 {
-                    "diff",
-                    source = function()
-                        local summary = vim.b.minidiff_summary
-                        if summary then
-                            return {
-                                added = summary.add,
-                                modified = summary.change,
-                                removed = summary.delete,
-                            }
-                        end
-                    end,
-                    symbols = { added = " ", modified = " ", removed = " " },
-                },
-                {
                     "diagnostics",
+                    sources = { "nvim_workspace_diagnostic" },
                     symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
-                },
-                {
-                    "overseer",
-                    icons = true,
                 },
                 {
                     function() return require("user.filmpicker").endtime() end,
@@ -97,6 +80,60 @@ return {
                 },
                 {
                     "location",
+                },
+            },
+        },
+        winbar = {
+            lualine_a = { "filename" },
+            lualine_b = {
+                {
+                    "diff",
+                    source = function()
+                        local summary = vim.b.minidiff_summary
+                        if summary then
+                            return {
+                                added = summary.add,
+                                modified = summary.change,
+                                removed = summary.delete,
+                            }
+                        end
+                    end,
+                    symbols = { added = " ", modified = " ", removed = " " },
+                },
+            },
+            lualine_c = { { function() return " " end } },
+            lualine_x = { { function() return " " end } },
+            lualine_y = {
+                {
+                    "diagnostics",
+                    symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
+                },
+            },
+        },
+        inactive_winbar = {
+            lualine_a = { "filename" },
+            lualine_b = {
+                {
+                    "diff",
+                    source = function()
+                        local summary = vim.b.minidiff_summary
+                        if summary then
+                            return {
+                                added = summary.add,
+                                modified = summary.change,
+                                removed = summary.delete,
+                            }
+                        end
+                    end,
+                    symbols = { added = " ", modified = " ", removed = " " },
+                },
+            },
+            lualine_c = { { function() return " " end } },
+            lualine_x = { { function() return " " end } },
+            lualine_y = {
+                {
+                    "diagnostics",
+                    symbols = { error = " ", warn = " ", info = " ", hint = "󰅽 " },
                 },
             },
         },
