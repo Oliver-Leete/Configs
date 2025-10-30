@@ -25,6 +25,8 @@ vim.opt.fillchars:append({
 })
 vim.opt.winborder = "rounded"
 
+vim.opt.jumpoptions:append({"stack", "view"})
+
 -- Saving
 vim.opt.confirm = true
 vim.opt.swapfile = false

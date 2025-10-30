@@ -30,6 +30,7 @@ return {
                     haskell = { "ormolu" },
                     json = { "jq" },
                     systemverilog = { "verible" },
+                    typst = { "typstyle" },
                 },
                 default_format_opts = {
                     lsp_format = "fallback",

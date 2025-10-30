@@ -55,7 +55,7 @@ return {
         dependencies = {
             {
                 "mfussenegger/nvim-dap-python",
-                config = function() require("dap-python").setup("/home/oleete/.local/pipx/venvs/debugpy/bin/python") end,
+                config = function() require("dap-python").setup("uv") end,
                 lazy = true,
             },
         },
@@ -69,7 +69,6 @@ return {
     {
         "jay-babu/mason-nvim-dap.nvim",
         optional = true,
-        ensure_installed = { "debugpy" },
         opts = {
             handlers = {
                 -- Don't mess up DAP adapters provided by nvim-dap-python

@@ -2,6 +2,7 @@
 ---@type LazySpec
 return {
     "stevearc/oil.nvim",
+    lazy = false,
     opts = {
         keymaps = {
             ["<esc>"] = "actions.close",

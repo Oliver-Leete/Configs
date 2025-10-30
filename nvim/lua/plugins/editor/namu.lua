@@ -2,6 +2,9 @@ local namu_defaults = {
     display = {
         format = "tree_guides",
     },
+    window = {
+        relative = "win"
+    },
     hierarchical_mode = true,
     preserve_hierarchy = true,
     movement = {

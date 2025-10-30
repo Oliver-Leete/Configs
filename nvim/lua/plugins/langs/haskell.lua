@@ -17,7 +17,6 @@ return {
     },
     {
         "kiyoon/haskell-scope-highlighting.nvim",
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
         ft = "haskell",
         keys = {
             {

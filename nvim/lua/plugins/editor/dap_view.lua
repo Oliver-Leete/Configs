@@ -3,7 +3,30 @@
 return {
     "igorlfs/nvim-dap-view",
     lazy = true,
-    opts = {},
+    opts = {
+        auto_toggle = true,
+        winbar = {
+            sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
+            headers = {
+                breakpoints = "[B]reakpoints",
+                scopes = "[S]copes",
+                exceptions = "[E]xceptions",
+                watches = "[W]atches",
+                threads = "[T]hreads",
+                repl = "[R]EPL",
+                console = "[C]onsole",
+            },
+            controls = { enabled = true },
+        },
+    },
+    cmd = {
+        "DapViewOpen",
+        "DapViewClose",
+        "DapViewToggle",
+        "DapViewWatch",
+        "DapViewJump",
+        "DapViewShow",
+    },
     config = function(_, opts)
         local dap, dv = require("dap"), require("dap-view")
         dv.setup(opts)

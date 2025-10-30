@@ -31,7 +31,8 @@ return {
             image = {
                 enabled = true,
                 doc = {
-                    inline = true,
+                    float = false,
+                    inline = false,
                     max_width = 120,
                     max_height = 100,
                 },
