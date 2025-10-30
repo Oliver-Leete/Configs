@@ -6,12 +6,12 @@ return {
         opts = {
             condition = function(buf)
                 return vim.bo[buf].modifiable
-                    and not vim.list_contains({ "oil", "qf", "OverseerForm" }, vim.bo[buf].filetype)
+                    and not vim.list_contains({ "oil", "qf" }, vim.bo[buf].filetype)
             end,
         },
     },
     {
-        "echasnovski/mini.misc",
+        "nvim-mini/mini.misc",
         config = function()
             require("mini.misc").setup_restore_cursor({
                 center = true,
@@ -19,7 +19,7 @@ return {
         end,
     },
     {
-        "echasnovski/mini.hipatterns",
+        "nvim-mini/mini.hipatterns",
         opts = function()
             return {
                 highlighters = {

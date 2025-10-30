@@ -17,7 +17,7 @@ return {
     {
         "Wansmer/treesj",
         dev = true,
-        dependencies = { "echasnovski/mini.splitjoin" },
+        dependencies = { "nvim-mini/mini.splitjoin" },
         opts = {
             use_default_keymaps = false,
             max_join_length = 10000,
@@ -50,7 +50,7 @@ return {
         },
     },
     {
-        "echasnovski/mini.splitjoin",
+        "nvim-mini/mini.splitjoin",
         opts = {
             mappings = {
                 toggle = "",

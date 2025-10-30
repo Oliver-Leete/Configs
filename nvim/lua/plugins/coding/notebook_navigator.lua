@@ -4,7 +4,7 @@ local ft = { "julia", "python" }
 return {
     "GCBallesteros/NotebookNavigator.nvim",
     dependencies = {
-        "echasnovski/mini.comment",
+        "nvim-mini/mini.comment",
         "akinsho/toggleterm.nvim",
         "anuvyklack/hydra.nvim",
     },

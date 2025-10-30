@@ -18,7 +18,7 @@ return {
         },
     },
     {
-        "echasnovski/mini.operators",
+        "nvim-mini/mini.operators",
         opts = {
             evaluate = { prefix = ",=" },
             exchange = {
@@ -38,7 +38,7 @@ return {
         },
     },
     {
-        "echasnovski/mini.align",
+        "nvim-mini/mini.align",
         opts = {
             mappings = {
                 start = "",
@@ -47,7 +47,7 @@ return {
         },
     },
     {
-        "echasnovski/mini.move",
+        "nvim-mini/mini.move",
         opts = {},
     },
     { "ap/vim-you-keep-using-that-word" },

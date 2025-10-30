@@ -1,7 +1,7 @@
 ---@module "lazy"
 ---@type LazySpec
 return {
-    "echasnovski/mini.bracketed",
+    "nvim-mini/mini.bracketed",
     opts = {
         buffer = { suffix = "", options = {} },
         comment = { suffix = "", options = {} },

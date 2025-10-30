@@ -1,9 +1,9 @@
 ---@module "lazy"
 ---@type LazySpec
 return {
-    "echasnovski/mini.ai",
+    "nvim-mini/mini.ai",
     dependencies = {
-        "echasnovski/mini.extra",
+        "nvim-mini/mini.extra",
         "nvim-treesitter/nvim-treesitter-textobjects",
     },
     config = function()

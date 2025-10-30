@@ -7,7 +7,7 @@ end
 ---@type LazySpec
 return {
     {
-        "echasnovski/mini.surround",
+        "nvim-mini/mini.surround",
         config = function()
             local ts_input = require("mini.surround").gen_spec.input.treesitter
             require("mini.surround").setup({
@@ -71,6 +71,7 @@ return {
         "altermo/ultimate-autopair.nvim",
         event = { "InsertEnter", "CmdlineEnter" },
         opts = {
+            { "$", "$", newline = true, space = true, dosurround = true, surround = true, ft = { "tex", "typst" } },
             close = {
                 enable = true,
                 map = "<A-p>",
