@@ -12,7 +12,6 @@ return {
             ensure_installed = {
                 "bibtex-tidy",
                 "codelldb",
-                "debugpy",
                 "gitlint",
                 "markdownlint",
                 "rust-analyzer",
