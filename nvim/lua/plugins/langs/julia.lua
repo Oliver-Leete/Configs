@@ -18,15 +18,4 @@ return {
         ft = { "julia" },
         opts = {},
     },
-    {
-        "akinsho/toggleterm.nvim",
-        optional = true,
-        opts = {
-            ft_repls = {
-                julia = {
-                    cmd = { "julia", "--project=@." },
-                },
-            },
-        },
-    },
 }

@@ -11,6 +11,9 @@ return {
             refresh = {
                 statusline = 1000,
             },
+            disabled_filetypes = {
+                winbar = {"dap-view", "dap-repl", "dap-view-term"},
+            },
         },
         sections = {
             lualine_a = {

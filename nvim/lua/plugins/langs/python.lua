@@ -36,7 +36,6 @@ return {
             "mfussenegger/nvim-dap-python",
         },
         lazy = true,
-        branch = "regexp",
         cmd = "VenvSelect",
         ft = { "python", "quarto" },
         keys = {

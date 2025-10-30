@@ -7,16 +7,14 @@ return {
         auto_toggle = true,
         winbar = {
             sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl" },
-            headers = {
-                breakpoints = "[B]reakpoints",
-                scopes = "[S]copes",
-                exceptions = "[E]xceptions",
-                watches = "[W]atches",
-                threads = "[T]hreads",
-                repl = "[R]EPL",
-                console = "[C]onsole",
-            },
             controls = { enabled = true },
+        },
+        windows = {
+            position = "right",
+            terminal = {
+                position = "below",
+                height = 0.5
+            }
         },
     },
     cmd = {

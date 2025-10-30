@@ -7,7 +7,6 @@ return {
             ---@module "haskell-tools"
             ---@type haskell-tools.Opts
             local opts = vim.defaulttable()
-            opts.tools.repl.handler = "toggleterm"
             opts.hls.settings.haskell.plugin.rename.config.crossModule = true
             opts.hls.settings.haskell.plugin.semanticTokens.globalOn = true
 
