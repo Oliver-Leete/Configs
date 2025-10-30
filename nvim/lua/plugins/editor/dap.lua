@@ -17,7 +17,6 @@ return {
     {
         "mfussenegger/nvim-dap",
         dependencies = {
-            { "jay-babu/mason-nvim-dap.nvim" },
             { "theHamsta/nvim-dap-virtual-text", opts = {} },
             { "liadOz/nvim-dap-repl-highlights", opts = {} },
         },
@@ -89,16 +88,6 @@ return {
             { "<leader>dR", function() require("dap").restart() end, desc = "Restart" },
 
             { "<leader>dx", function() require("dap").terminate() end, desc = "End session" },
-        },
-    },
-    {
-        "jay-babu/mason-nvim-dap.nvim",
-        dependencies = "mason.nvim",
-        cmd = { "DapInstall", "DapUninstall" },
-        opts = {
-            automatic_installation = false,
-            handlers = {},
-            ensure_installed = {},
         },
     },
 }
